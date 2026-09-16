@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import emailStarterStyles from "./email-starter.module.css";
+import emailEditorStyles from "./email-editor.module.css";
 import {
   Activity, Bell, Bot, Box, CalendarDays, ChevronDown, ChevronLeft, ChevronRight,
   CircleHelp, Code2, Copy, Database, FileCode2, Flag, Filter, Grid2X2, Image,
@@ -14,6 +15,7 @@ import {
 type Channel = "email" | "push" | "iam" | "content" | "banner" | "sms" | "webhook" | "whatsapp" | "line" | "multichannel" | "operator" | "feature" | "api";
 type CampaignStatus = "Draft" | "Active" | "Stopped";
 type Campaign = { id: string; name: string; channel: Channel; status: CampaignStatus; schedule: string; sent: number; edited: string; subject?: string; body?: string; audience?: string; conversion?: string };
+type EmailEditorMode = "operator" | "drag" | "html" | "template";
 
 const nav = [
   { group: "Quick links", items: [["Canvas", "canvas", Grid2X2], ["Campaigns", "campaigns", LayoutDashboard], ["Segments", "segments", Users]] },
@@ -218,8 +220,10 @@ function EmailCompose({ draft, update, variant, setVariant, openTest }: { draft:
   const [showTemplates, setShowTemplates] = useState(false);
   const [copied, setCopied] = useState(false);
   const [emailStart, setEmailStart] = useState(() => !draft.subject && !draft.body);
+  const [emailEditor, setEmailEditor] = useState<EmailEditorMode | null>(null);
   const [html, setHtml] = useState(`<div style="max-width:600px;margin:0 auto;padding:32px;font-family:Arial,sans-serif"><h1>September Exclusive</h1><p>Hi {{\${first_name} | default: 'there'}},</p><h2>Your September offer is here</h2><p>Thanks for being with us. Use code <b>SEPTEMBER20</b> to get 20% off this month's featured collection.</p><a href="https://example.com/offers">Claim your offer</a></div>`);
-  if (emailStart) return <EmailStart draft={draft} update={update} variant={variant} setVariant={setVariant} copied={copied} setCopied={setCopied} onStart={(choice) => { setEmailStart(false); if (choice === "html") setShowEditor(true); if (choice === "template") setShowTemplates(true); if (choice === "operator") update({ subject: "Your September offer is here", body: "Thanks for being with us. Use code SEPTEMBER20 to get 20% off this month's featured collection." }); }} />;
+  if (emailEditor) return <EmailMessageEditor mode={emailEditor} draft={draft} update={update} onClose={() => { setEmailEditor(null); setEmailStart(false); }} />;
+  if (emailStart) return <EmailStart draft={draft} update={update} variant={variant} setVariant={setVariant} copied={copied} setCopied={setCopied} onStart={setEmailEditor} />;
   const subject = draft.subject || "{% if ${language} == 'zh' %}九月专属优惠｜立减 20%{% else %}Your September Offer | 20% Off{% endif %}";
   const preheader = "{% if ${language} == 'zh' %}优惠码 SEPTEMBER20，9 月 30 日前有效。{% else %}Use code SEPTEMBER20 before September 30.{% endif %}";
   return <div className="editor-body email-compose-page">
@@ -264,6 +268,41 @@ function EmailStart({ draft, update, variant, setVariant, copied, setCopied, onS
       </div>
     </section>
   </div>;
+}
+
+function EmailMessageEditor({ mode, draft, update, onClose }: { mode: EmailEditorMode; draft: Campaign; update: (patch: Partial<Campaign>) => void; onClose: () => void }) {
+  const [subject, setSubject] = useState(draft.subject ?? "Your September offer is here");
+  const [body, setBody] = useState(draft.body ?? "Thanks for being with us. Use code SEPTEMBER20 to get 20% off this month’s featured collection.");
+  const [operatorPrompt, setOperatorPrompt] = useState("Create a warm welcome email with a first-purchase offer.");
+  const labels: Record<EmailEditorMode, string> = { operator: "Create with Operator", drag: "Drag-and-drop editor", html: "HTML code editor", template: "Templates" };
+  const applyTemplate = (nextSubject: string, nextBody: string) => { setSubject(nextSubject); setBody(nextBody); };
+  const saveAndReturn = () => { update({ subject, body }); onClose(); };
+  const addBlock = (name: string) => setBody(current => `${current}\n\n[${name} block]`);
+  return <section className={emailEditorStyles.page} aria-label="Email editor">
+    <header className={emailEditorStyles.header}>
+      <button className={emailEditorStyles.back} onClick={saveAndReturn}><ChevronLeft size={17}/> Back to campaign</button>
+      <div className={emailEditorStyles.title}><b>{labels[mode]}</b><small>{draft.name} · Variant 1</small></div>
+      <div className={emailEditorStyles.headerActions}><button className={emailEditorStyles.previewButton}><Smartphone size={15}/> Preview</button><button className={emailEditorStyles.saveButton} onClick={saveAndReturn}><Send size={14}/> Save</button></div>
+    </header>
+    <div className={emailEditorStyles.workspace}>
+      <aside className={emailEditorStyles.sidebar}>
+        {mode === "drag" && <><h2>Content</h2><p>Drag blocks onto the email canvas to build your message.</p><div className={emailEditorStyles.blockList}><button className={emailEditorStyles.block} onClick={() => addBlock("Text")}><FileCode2 size={16}/>Text</button><button className={emailEditorStyles.block} onClick={() => addBlock("Image")}><Image size={16}/>Image</button><button className={emailEditorStyles.block} onClick={() => addBlock("Button")}><MousePointerClick size={16}/>Button</button><button className={emailEditorStyles.block} onClick={() => addBlock("Divider")}><LayoutDashboard size={16}/>Divider</button></div></>}
+        {mode === "html" && <><h2>HTML code</h2><p>Edit your email source. The central canvas renders its current message content.</p><textarea className={emailEditorStyles.codeArea} value={body} onChange={event => setBody(event.target.value)} aria-label="Email HTML source"/></>}
+        {mode === "template" && <><h2>Templates</h2><p>Choose a template, then make changes in the settings panel.</p><div className={emailEditorStyles.templateList}><button className={`${emailEditorStyles.template} ${emailEditorStyles.templateActive}`} onClick={() => applyTemplate("Your September Offer | 20% Off", "Thanks for being with us. Use code SEPTEMBER20 to get 20% off this month’s featured collection.")}><b>September Offer</b><small>HTML Editor</small></button><button className={emailEditorStyles.template} onClick={() => applyTemplate("Welcome to Braze", "We’re glad you’re here. Explore the latest ways to make every customer interaction count.")}><b>Welcome email</b><small>Drag-and-drop Editor</small></button></div></>}
+        {mode === "operator" && <><h2>Operator</h2><p>Describe the email you want to create.</p><textarea className={emailEditorStyles.operatorPrompt} value={operatorPrompt} onChange={event => setOperatorPrompt(event.target.value)}/><button className={emailEditorStyles.generate} onClick={() => applyTemplate("Your first order offer", "Welcome! Use code WELCOME10 for 10% off your first purchase. This offer is ready whenever you are.")}><Sparkles size={14}/> Generate email</button></>}
+      </aside>
+      <main className={emailEditorStyles.canvas}>
+        <div className={emailEditorStyles.canvasLabel}>Email preview · 600 px</div>
+        <article className={emailEditorStyles.emailFrame}>
+          <div className={emailEditorStyles.brandLine}>BRAZE</div>
+          <div className={emailEditorStyles.message}><p className={emailEditorStyles.eyebrow}>September exclusive</p><h1>{subject}</h1><p>{"Hi {{${first_name} | default: 'there'}}"},</p><p>{body}</p><span className={emailEditorStyles.cta}>Claim your offer</span><p className={emailEditorStyles.footer}>You are receiving this email because you subscribed to updates. Unsubscribe</p></div>
+        </article>
+      </main>
+      <aside className={emailEditorStyles.settings}>
+        <h2>Message settings</h2><label className={emailEditorStyles.field}><span>Subject line</span><input value={subject} onChange={event => setSubject(event.target.value)}/></label><label className={emailEditorStyles.field}><span>Preheader</span><input defaultValue="Use code SEPTEMBER20 before September 30."/></label><label className={emailEditorStyles.field}><span>Message</span><textarea value={body} onChange={event => setBody(event.target.value)}/></label><div className={emailEditorStyles.note}>Personalization, content blocks, and link tracking are available in this local editor.</div>
+      </aside>
+    </div>
+  </section>;
 }
 
 function ChannelCompose({ draft, update, openTest }: { draft: Campaign; update: (patch: Partial<Campaign>) => void; openTest: () => void }) {
