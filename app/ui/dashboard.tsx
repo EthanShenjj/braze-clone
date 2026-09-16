@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, type CSSProperties, type MouseEvent as Re
 import { usePathname, useRouter } from "next/navigation";
 import emailStarterStyles from "./email-starter.module.css";
 import emailEditorStyles from "./email-editor.module.css";
+import brazeDndStyles from "./braze-dnd.module.css";
 import {
   Activity, Bell, Bot, Box, CalendarDays, ChevronDown, ChevronLeft, ChevronRight,
   CircleHelp, Code2, Copy, Database, FileCode2, Flag, Filter, Grid2X2, Image,
@@ -16,6 +17,8 @@ type Channel = "email" | "push" | "iam" | "content" | "banner" | "sms" | "webhoo
 type CampaignStatus = "Draft" | "Active" | "Stopped";
 type Campaign = { id: string; name: string; channel: Channel; status: CampaignStatus; schedule: string; sent: number; edited: string; subject?: string; body?: string; audience?: string; conversion?: string };
 type EmailEditorMode = "operator" | "drag" | "html" | "template";
+type EmailBlockKind = "Title" | "Paragraph" | "List" | "Button" | "Divider" | "Spacer" | "HTML" | "Menu";
+type EmailBlock = { id: string; kind: EmailBlockKind; text: string };
 
 const nav = [
   { group: "Quick links", items: [["Canvas", "canvas", Grid2X2], ["Campaigns", "campaigns", LayoutDashboard], ["Segments", "segments", Users]] },
@@ -278,6 +281,7 @@ function EmailMessageEditor({ mode, draft, update, onClose }: { mode: EmailEdito
   const applyTemplate = (nextSubject: string, nextBody: string) => { setSubject(nextSubject); setBody(nextBody); };
   const saveAndReturn = () => { update({ subject, body }); onClose(); };
   const addBlock = (name: string) => setBody(current => `${current}\n\n[${name} block]`);
+  if (mode === "drag") return <BrazeDragDropEditor draft={draft} update={update} onClose={onClose}/>;
   return <section className={emailEditorStyles.page} aria-label="Email editor">
     <header className={emailEditorStyles.header}>
       <button className={emailEditorStyles.back} onClick={saveAndReturn}><ChevronLeft size={17}/> Back to campaign</button>
@@ -286,7 +290,6 @@ function EmailMessageEditor({ mode, draft, update, onClose }: { mode: EmailEdito
     </header>
     <div className={emailEditorStyles.workspace}>
       <aside className={emailEditorStyles.sidebar}>
-        {mode === "drag" && <><h2>Content</h2><p>Drag blocks onto the email canvas to build your message.</p><div className={emailEditorStyles.blockList}><button className={emailEditorStyles.block} onClick={() => addBlock("Text")}><FileCode2 size={16}/>Text</button><button className={emailEditorStyles.block} onClick={() => addBlock("Image")}><Image size={16}/>Image</button><button className={emailEditorStyles.block} onClick={() => addBlock("Button")}><MousePointerClick size={16}/>Button</button><button className={emailEditorStyles.block} onClick={() => addBlock("Divider")}><LayoutDashboard size={16}/>Divider</button></div></>}
         {mode === "html" && <><h2>HTML code</h2><p>Edit your email source. The central canvas renders its current message content.</p><textarea className={emailEditorStyles.codeArea} value={body} onChange={event => setBody(event.target.value)} aria-label="Email HTML source"/></>}
         {mode === "template" && <><h2>Templates</h2><p>Choose a template, then make changes in the settings panel.</p><div className={emailEditorStyles.templateList}><button className={`${emailEditorStyles.template} ${emailEditorStyles.templateActive}`} onClick={() => applyTemplate("Your September Offer | 20% Off", "Thanks for being with us. Use code SEPTEMBER20 to get 20% off this month’s featured collection.")}><b>September Offer</b><small>HTML Editor</small></button><button className={emailEditorStyles.template} onClick={() => applyTemplate("Welcome to Braze", "We’re glad you’re here. Explore the latest ways to make every customer interaction count.")}><b>Welcome email</b><small>Drag-and-drop Editor</small></button></div></>}
         {mode === "operator" && <><h2>Operator</h2><p>Describe the email you want to create.</p><textarea className={emailEditorStyles.operatorPrompt} value={operatorPrompt} onChange={event => setOperatorPrompt(event.target.value)}/><button className={emailEditorStyles.generate} onClick={() => applyTemplate("Your first order offer", "Welcome! Use code WELCOME10 for 10% off your first purchase. This offer is ready whenever you are.")}><Sparkles size={14}/> Generate email</button></>}
@@ -300,6 +303,57 @@ function EmailMessageEditor({ mode, draft, update, onClose }: { mode: EmailEdito
       </main>
       <aside className={emailEditorStyles.settings}>
         <h2>Message settings</h2><label className={emailEditorStyles.field}><span>Subject line</span><input value={subject} onChange={event => setSubject(event.target.value)}/></label><label className={emailEditorStyles.field}><span>Preheader</span><input defaultValue="Use code SEPTEMBER20 before September 30."/></label><label className={emailEditorStyles.field}><span>Message</span><textarea value={body} onChange={event => setBody(event.target.value)}/></label><div className={emailEditorStyles.note}>Personalization, content blocks, and link tracking are available in this local editor.</div>
+      </aside>
+    </div>
+  </section>;
+}
+
+function BrazeDragDropEditor({ draft, update, onClose }: { draft: Campaign; update: (patch: Partial<Campaign>) => void; onClose: () => void }) {
+  const catalog: Array<{ kind: EmailBlockKind; help: string }> = [
+    { kind: "Title", help: "Add a heading" }, { kind: "Paragraph", help: "Add text" }, { kind: "List", help: "Add a list" },
+    { kind: "Button", help: "Add a CTA" }, { kind: "Divider", help: "Add a divider" }, { kind: "Spacer", help: "Add spacing" },
+    { kind: "HTML", help: "Add custom HTML" }, { kind: "Menu", help: "Add navigation" },
+  ];
+  const [tab, setTab] = useState<"content" | "design" | "personalization">("content");
+  const [blocks, setBlocks] = useState<EmailBlock[]>(() => draft.body ? [{ id: "paragraph_seed", kind: "Paragraph", text: draft.body }] : []);
+  const [selected, setSelected] = useState<string | null>(null);
+  const [desktop, setDesktop] = useState(true);
+  const defaults: Record<EmailBlockKind, string> = { Title: "Your email title", Paragraph: "Add your message here.", List: "First item\nSecond item\nThird item", Button: "Call to action", Divider: "", Spacer: "", HTML: "<p>Custom HTML</p>", Menu: "Home · Shop · Support" };
+  const add = (kind: EmailBlockKind) => { const block = { id: `block_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`, kind, text: defaults[kind] }; setBlocks(current => [...current, block]); setSelected(block.id); };
+  const selectedBlock = blocks.find(block => block.id === selected);
+  const save = () => { update({ body: blocks.map(block => `${block.kind}: ${block.text}`).join("\n") }); onClose(); };
+  const changeSelected = (text: string) => setBlocks(current => current.map(block => block.id === selected ? { ...block, text } : block));
+  const renderBlock = (block: EmailBlock) => {
+    const common = { className: `${brazeDndStyles.canvasBlock} ${selected === block.id ? brazeDndStyles.selected : ""}`, onClick: () => setSelected(block.id) };
+    if (block.kind === "Title") return <h1 key={block.id} {...common}>{block.text}</h1>;
+    if (block.kind === "Paragraph") return <p key={block.id} {...common}>{block.text}</p>;
+    if (block.kind === "List") return <ul key={block.id} {...common}>{block.text.split("\n").filter(Boolean).map(item => <li key={item}>{item}</li>)}</ul>;
+    if (block.kind === "Button") return <div key={block.id} {...common}><span className={brazeDndStyles.cta}>{block.text}</span></div>;
+    if (block.kind === "Divider") return <hr key={block.id} {...common}/>;
+    if (block.kind === "Spacer") return <div key={block.id} {...common} className={`${brazeDndStyles.canvasBlock} ${brazeDndStyles.spacer} ${selected === block.id ? brazeDndStyles.selected : ""}`}>Spacer</div>;
+    if (block.kind === "Menu") return <nav key={block.id} {...common}>{block.text}</nav>;
+    return <pre key={block.id} {...common}>{block.text}</pre>;
+  };
+  return <section className={brazeDndStyles.page} aria-label="Braze drag-and-drop email editor">
+    <header className={brazeDndStyles.header}><button onClick={save}><ChevronLeft size={17}/> Back to campaign</button><div><b>Drag-and-drop editor</b><small>{draft.name} · Variant 1</small></div><div className={brazeDndStyles.headerActions}><button className={desktop ? brazeDndStyles.activeDevice : ""} onClick={() => setDesktop(true)}>Desktop</button><button className={!desktop ? brazeDndStyles.activeDevice : ""} onClick={() => setDesktop(false)}>Mobile</button><button className={brazeDndStyles.preview}><Smartphone size={15}/> Preview & test</button><button className={brazeDndStyles.save} onClick={save}><Send size={14}/> Save</button></div></header>
+    <div className={brazeDndStyles.workspace}>
+      <aside className={brazeDndStyles.leftRail}>
+        <button className={tab === "content" ? brazeDndStyles.tabActive : ""} onClick={() => setTab("content")}>CONTENT</button>
+        <button className={tab === "design" ? brazeDndStyles.tabActive : ""} onClick={() => setTab("design")}>DESIGN AND BUILD</button>
+        <button className={tab === "personalization" ? brazeDndStyles.tabActive : ""} onClick={() => setTab("personalization")}>+ PERSONALIZATION</button>
+        <div className={brazeDndStyles.railNote}>{tab === "content" ? "Drag blocks from the right panel into your message." : tab === "design" ? "Set your email colors, typography, and global styles." : "Insert user attributes, Liquid, and saved content blocks."}</div>
+        <div className={brazeDndStyles.railLinks}><button>Learn more</button><button>Copywriter</button><button>Style settings</button></div>
+      </aside>
+      <main className={brazeDndStyles.canvasArea}>
+        <div className={brazeDndStyles.canvasTitle}>CONTENT · {desktop ? "DESKTOP" : "MOBILE"}</div>
+        <div className={`${brazeDndStyles.emailCanvas} ${desktop ? "" : brazeDndStyles.mobileCanvas}`} onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); const kind = event.dataTransfer.getData("braze-block") as EmailBlockKind; if (kind) add(kind); }}>
+          {blocks.length ? blocks.map(renderBlock) : <div className={brazeDndStyles.dropZone}>Drop content blocks here</div>}
+        </div>
+      </main>
+      <aside className={brazeDndStyles.rightPanel}>
+        {/* selectedBlock is intentionally read in a deferred click handler below. */}
+        {/* @ts-expect-error TypeScript narrows the else branch before the click handler runs. */}
+        {selectedBlock ? <><div className={brazeDndStyles.panelHeading}><b>{selectedBlock.kind}</b><button onClick={() => { setBlocks(current => current.filter(block => block.id !== selectedBlock.id)); setSelected(null); }}>Delete</button></div><label className={brazeDndStyles.blockField}>Content<textarea value={selectedBlock.text} onChange={event => changeSelected(event.target.value)}/></label><button className={brazeDndStyles.backToBlocks} onClick={() => setSelected(null)}>Back to content blocks</button></> : <>{tab === "content" && <><h2>Content</h2><p>Drag a block to the email canvas.</p><h3>BASIC BLOCKS</h3><div className={brazeDndStyles.blockCatalog}>{catalog.slice(0, 6).map(block => <button draggable key={block.kind} onDragStart={event => event.dataTransfer.setData("braze-block", block.kind)} onClick={() => add(block.kind)}><b>{block.kind}</b><small>{block.help}</small></button>)}</div><h3>ADVANCED</h3><div className={brazeDndStyles.blockCatalog}>{catalog.slice(6).map(block => <button draggable key={block.kind} onDragStart={event => event.dataTransfer.setData("braze-block", block.kind)} onClick={() => add(block.kind)}><b>{block.kind}</b><small>{block.help}</small></button>)}</div></>}{tab === "design" && <div className={brazeDndStyles.sideEmpty}><h2>Style settings</h2><p>Global styles apply to every content block in this email.</p><label>Background<input type="color" defaultValue="#ffffff"/></label><label>Text color<input type="color" defaultValue="#302b38"/></label></div>}{tab === "personalization" && <div className={brazeDndStyles.sideEmpty}><h2>Personalization</h2><p>Insert a user attribute or Liquid expression into a selected text block.</p><button onClick={() => selected ? changeSelected(`${selectedBlock?.text ?? ""} {{\${first_name}}`) : add("Paragraph")}>First name</button><button onClick={() => selected ? changeSelected(`${selectedBlock?.text ?? ""} {{\${email}}`) : add("Paragraph")}>Email address</button></div>}</>}
       </aside>
     </div>
   </section>;
