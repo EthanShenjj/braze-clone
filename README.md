@@ -11,6 +11,8 @@ npm run dev
 
 打开 `http://localhost:3000`。本地数据存储在 `.data/braze-local.sqlite`：Campaign、资源、1,000 个合成用户、消息事件、执行快照和审计记录在重启后仍会保留。通过 Demo Lab 的 **Reset sample data** 恢复种子数据。
 
+在 Vercel Serverless 环境中，SQLite 会写入函数的临时目录，因此数据只在同一实例存活期间保留；本地运行才提供重启后的持久化数据。生产持久化需要替换为托管数据库。
+
 ## 当前可演示的闭环
 
 1. 从 Campaigns 的创建菜单选择 13 个入口之一。

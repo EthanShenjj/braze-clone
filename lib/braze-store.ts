@@ -1,6 +1,7 @@
 import "server-only";
 
 import { mkdirSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 
@@ -12,7 +13,7 @@ export type CampaignRecord = {
 };
 export type ResourceRecord = { id: string; type: string; name: string; status: string; description: string; updatedAt: string; data: Record<string, unknown> };
 
-const databasePath = join(process.cwd(), ".data", "braze-local.sqlite");
+const databasePath = process.env.VERCEL ? join(tmpdir(), "braze-local-demo", "braze-local.sqlite") : join(process.cwd(), ".data", "braze-local.sqlite");
 let database: DatabaseSync | undefined;
 
 function now() { return new Date().toISOString(); }
