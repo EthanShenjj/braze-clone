@@ -91,17 +91,31 @@ export default function Dashboard() {
   useEffect(() => {
     const campaignId = pathname.match(/\/engagement\/campaigns\/(cmp_[^/]+)$/)?.[1];
     if (!campaignId) return;
-    void fetch(`/api/campaigns/${campaignId}`).then(response => response.ok ? response.json() : null).then(record => { if (record) setEditing(record); });
+    const storedDraft = window.sessionStorage.getItem(`braze:draft:${campaignId}`);
+    if (storedDraft) {
+      try { setEditing(JSON.parse(storedDraft) as Campaign); } catch { window.sessionStorage.removeItem(`braze:draft:${campaignId}`); }
+    }
+    void fetch(`/api/campaigns/${campaignId}`).then(response => response.ok ? response.json() : null).then(record => {
+      if (record) { setEditing(record); window.sessionStorage.removeItem(`braze:draft:${campaignId}`); }
+      else if (!storedDraft) { setEditing(null); setToast("Campaign draft could not be found."); }
+    });
   }, [pathname]);
   useEffect(() => { if (!toast) return; const id = window.setTimeout(() => setToast(""), 2800); return () => window.clearTimeout(id); }, [toast]);
 
   function openPage(key: string) {
     setCreateAnchor(null); setDrawer(null); setEditing(null); setPage(key); router.push(routeForPage(key));
   }
-  function start(channel: Channel) {
+  async function start(channel: Channel) {
     const id = `cmp_${Math.random().toString(36).slice(2, 10)}`;
     const item: Campaign = { id, name: `Untitled ${channelMeta[channel].title} Campaign`, channel, status: "Draft", schedule: "One time", sent: 0, edited: "Just now", audience: "All Users", conversion: "Make Purchase" };
-    setEditing(item); setCreateAnchor(null); setDrawer(null); router.push(`/engagement/campaigns/${id}?step=compose`);
+    setCreateAnchor(null); setDrawer(null);
+    window.sessionStorage.setItem(`braze:draft:${id}`, JSON.stringify(item));
+    const response = await fetch("/api/campaigns", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(item) });
+    if (!response.ok) { setEditing(item); setToast("Draft is open, but could not be saved yet."); return; }
+    const saved = await response.json() as Campaign;
+    setCampaigns(current => [saved, ...current.filter(campaign => campaign.id !== saved.id)]);
+    setEditing(saved);
+    router.push(`/engagement/campaigns/${id}?step=compose`);
   }
   async function saveCampaign(next: Campaign, publish = false) {
     const savedResponse = await fetch("/api/campaigns", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(next) });
