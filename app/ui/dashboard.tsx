@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import emailStarterStyles from "./email-starter.module.css";
 import {
   Activity, Bell, Bot, Box, CalendarDays, ChevronDown, ChevronLeft, ChevronRight,
   CircleHelp, Code2, Copy, Database, FileCode2, Flag, Filter, Grid2X2, Image,
@@ -216,7 +217,9 @@ function EmailCompose({ draft, update, variant, setVariant, openTest }: { draft:
   const [showEditor, setShowEditor] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [emailStart, setEmailStart] = useState(() => !draft.subject && !draft.body);
   const [html, setHtml] = useState(`<div style="max-width:600px;margin:0 auto;padding:32px;font-family:Arial,sans-serif"><h1>September Exclusive</h1><p>Hi {{\${first_name} | default: 'there'}},</p><h2>Your September offer is here</h2><p>Thanks for being with us. Use code <b>SEPTEMBER20</b> to get 20% off this month's featured collection.</p><a href="https://example.com/offers">Claim your offer</a></div>`);
+  if (emailStart) return <EmailStart draft={draft} update={update} variant={variant} setVariant={setVariant} copied={copied} setCopied={setCopied} onStart={(choice) => { setEmailStart(false); if (choice === "html") setShowEditor(true); if (choice === "template") setShowTemplates(true); if (choice === "operator") update({ subject: "Your September offer is here", body: "Thanks for being with us. Use code SEPTEMBER20 to get 20% off this month's featured collection." }); }} />;
   const subject = draft.subject || "{% if ${language} == 'zh' %}九月专属优惠｜立减 20%{% else %}Your September Offer | 20% Off{% endif %}";
   const preheader = "{% if ${language} == 'zh' %}优惠码 SEPTEMBER20，9 月 30 日前有效。{% else %}Use code SEPTEMBER20 before September 30.{% endif %}";
   return <div className="editor-body email-compose-page">
@@ -235,6 +238,30 @@ function EmailCompose({ draft, update, variant, setVariant, openTest }: { draft:
       <div className="email-document"><div className="email-document-top">September Offer</div><article><p className="email-kicker">September Exclusive</p><p>{"{% if ${language} == 'zh' %}"}</p><p>你好，{"{{${first_name} | default: '朋友'}}"}！</p><h1>九月专属礼遇已上线</h1><p>感谢一路相伴。使用优惠码 <b>SEPTEMBER20</b>，即可享受本月精选商品 20% 优惠。</p><a>立即领取优惠</a><p>优惠截止至 2026 年 9 月 30 日，条款与条件适用。</p><p>{"{% else %}"}</p><p>Hi {"{{${first_name} | default: 'there'}}"},</p><h1>Your September offer is here</h1><p>{draft.body || "Thanks for being with us. Use code SEPTEMBER20 to get 20% off this month's featured collection."}</p><a>Claim your offer</a><p>Offer ends September 30, 2026. Terms and conditions apply.</p><p>{"{% endif %}"}</p><hr/><p className="email-footer">Don't want to receive these emails? <a>Unsubscribe</a></p></article></div>
       <div className="email-actions"><button className="secondary" onClick={() => setShowTemplates(!showTemplates)}>Choose New Template</button><button className="secondary" onClick={openTest}>Preview and test</button></div>
       {showTemplates && <div className="template-picker"><b>Choose a template</b><button onClick={() => { update({subject:"Welcome to Braze"}); setShowTemplates(false); }}>Welcome email <small>Drag-and-Drop Editor</small></button><button onClick={() => { update({subject:"Your September Offer | 20% Off"}); setShowTemplates(false); }}>September Offer <small>HTML Editor</small></button></div>}
+    </section>
+  </div>;
+}
+
+function EmailStart({ draft, update, variant, setVariant, copied, setCopied, onStart }: { draft: Campaign; update: (patch: Partial<Campaign>) => void; variant: number; setVariant: (variant: number) => void; copied: boolean; setCopied: (copied: boolean) => void; onStart: (choice: "operator" | "drag" | "html" | "template") => void }) {
+  return <div className="editor-body email-compose-page">
+    <section className="braze-section campaign-details-section">
+      <h2>Campaign Details</h2>
+      <div className="campaign-name-line"><Field label="Campaign Name"><input value={draft.name} onChange={event => update({ name: event.target.value })} placeholder="Enter Campaign Name"/></Field><button className="inline-link">Add description</button><button className="tag-button"><Tags size={14}/> Tags <ChevronDown size={13}/></button></div>
+      <div className="campaign-id-line"><Field label="Campaign ID"><input value={draft.id} readOnly/></Field><button className="copy-id" onClick={() => { navigator.clipboard?.writeText(draft.id); setCopied(true); }}><Copy size={15}/>{copied ? "Copied" : "Copy"}</button></div>
+    </section>
+    <section className="braze-section email-composer-section">
+      <h2>Email Composer</h2>
+      <div className="variant-header"><h3>Variants</h3><div className="real-tabs"><button className={className(variant === 0 && "selected")} onClick={() => setVariant(0)}>Variant 1</button><button className={className(variant === 1 && "selected")} onClick={() => setVariant(1)}>Unnamed Variant</button><button className="plus-tab" onClick={() => setVariant(1)}><Plus size={16}/></button></div></div>
+      <div className={emailStarterStyles.starter}>
+        <h3>Create new email</h3><p>How would you like to start?</p>
+        <div className={emailStarterStyles.options}>
+          <button className={emailStarterStyles.option} onClick={() => onStart("operator")}><span className={emailStarterStyles.operatorIcon}><Sparkles size={18}/></span><b>Create with Operator</b><small>Generate a custom email</small></button>
+          <button className={emailStarterStyles.option} onClick={() => onStart("drag")}><span><LayoutDashboard size={19}/></span><b>Drag-and-drop editor</b><small>Start from scratch</small></button>
+          <button className={emailStarterStyles.option} onClick={() => onStart("html")}><span><Code2 size={20}/></span><b>HTML code editor</b><small>Start from scratch</small></button>
+          <button className={emailStarterStyles.option} onClick={() => onStart("template")}><span><FileCode2 size={19}/></span><b>Templates</b><small>Choose a template</small></button>
+        </div>
+        <label className={emailStarterStyles.upload}>Upload file<input type="file" accept=".html,.htm" onChange={event => { if (event.target.files?.length) { update({ body: "Imported HTML email" }); onStart("html"); } }}/></label>
+      </div>
     </section>
   </div>;
 }

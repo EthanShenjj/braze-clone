@@ -1,0 +1,96 @@
+.starter {
+  padding: 5px 0 9px;
+}
+
+.starter h3 {
+  margin: 0 0 4px;
+  color: #302b38;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.starter > p {
+  margin: 0 0 17px;
+  color: #706b78;
+  font-size: 12px;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  max-width: 800px;
+}
+
+.option {
+  min-height: 142px;
+  padding: 18px 15px;
+  border: 1px solid #d8d4df;
+  border-radius: 6px;
+  background: #fff;
+  color: #3b3542;
+  text-align: left;
+  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+.option:hover {
+  border-color: #7141d0;
+  background: #fcfbff;
+  box-shadow: 0 2px 7px rgba(49, 24, 89, .12);
+}
+
+.option > span {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  margin-bottom: 18px;
+  border-radius: 4px;
+  background: #f2eff7;
+  color: #5233a4;
+}
+
+.option .operatorIcon {
+  background: #f5edff;
+  color: #7229d8;
+}
+
+.option b,
+.option small {
+  display: block;
+}
+
+.option b {
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.option small {
+  color: #716b78;
+  font-size: 11px;
+}
+
+.upload {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  margin-top: 17px;
+  color: #5c30bd;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.upload input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 1040px) {
+  .options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
