@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Activity, Bell, Bot, Box, CalendarDays, ChevronDown, ChevronLeft, ChevronRight,
@@ -75,7 +75,7 @@ export default function Dashboard() {
   const [page, setPage] = useState("campaigns");
   const [drawer, setDrawer] = useState<string | null>(null);
   const [compact, setCompact] = useState(false);
-  const [createOpen, setCreateOpen] = useState(false);
+  const [createAnchor, setCreateAnchor] = useState<CSSProperties | null>(null);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [editing, setEditing] = useState<Campaign | null>(null);
   const [toast, setToast] = useState("");
@@ -96,12 +96,12 @@ export default function Dashboard() {
   useEffect(() => { if (!toast) return; const id = window.setTimeout(() => setToast(""), 2800); return () => window.clearTimeout(id); }, [toast]);
 
   function openPage(key: string) {
-    setCreateOpen(false); setDrawer(null); setEditing(null); setPage(key); router.push(routeForPage(key));
+    setCreateAnchor(null); setDrawer(null); setEditing(null); setPage(key); router.push(routeForPage(key));
   }
   function start(channel: Channel) {
     const id = `cmp_${Math.random().toString(36).slice(2, 10)}`;
     const item: Campaign = { id, name: `Untitled ${channelMeta[channel].title} Campaign`, channel, status: "Draft", schedule: "One time", sent: 0, edited: "Just now", audience: "All Users", conversion: "Make Purchase" };
-    setEditing(item); setCreateOpen(false); setDrawer(null); router.push(`/engagement/campaigns/${id}?step=compose`);
+    setEditing(item); setCreateAnchor(null); setDrawer(null); router.push(`/engagement/campaigns/${id}?step=compose`);
   }
   async function saveCampaign(next: Campaign, publish = false) {
     const savedResponse = await fetch("/api/campaigns", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(next) });
@@ -134,10 +134,10 @@ export default function Dashboard() {
       <div className="trial">◷ &nbsp;12 days left in your free trial. <button>Connect with sales</button></div>
       <header className="topbar"><button className="search-button" onClick={() => setToast("Workspace search is ready for this local demo.")}><Search size={16}/> Search workspace <kbd>⌘K</kbd></button><div className="top-actions"><CircleHelp size={18}/><Bell size={18}/><button className="profile">S</button><button className="operator-trigger" onClick={() => setOperatorOpen(!operatorOpen)}><Sparkles size={17}/></button></div></header>
       <div className="page-tabs"><button className={className("page-tab", !editing && "selected")} onClick={() => { setEditing(null); setPage("campaigns"); }}>Campaigns</button>{editing && <button className="page-tab selected">Edit '{editing.name}' <X size={14} onClick={() => setEditing(null)}/></button>}</div>
-      {editing ? <CampaignEditor campaign={editing} onSave={saveCampaign} onClose={() => openPage("campaigns")} /> : <PageContent page={page} campaigns={campaigns} openPage={openPage} onEdit={openCampaign} onCreate={() => setCreateOpen(true)} onStop={stopCampaign} notify={setToast} />}
+      {editing ? <CampaignEditor campaign={editing} onSave={saveCampaign} onClose={() => openPage("campaigns")} /> : <PageContent page={page} campaigns={campaigns} openPage={openPage} onEdit={openCampaign} onCreate={(event) => { const rect = event.currentTarget.getBoundingClientRect(); setCreateAnchor({ position: "fixed", top: rect.bottom + 6, left: Math.max(16, rect.right - 325), zIndex: 61 }); }} onStop={stopCampaign} notify={setToast} />}
     </main>
     {drawer && <NavigationDrawer name={titleFrom(drawer)} items={drawers[drawer]} close={() => setDrawer(null)} open={(name) => { if (name === "Campaigns") openPage("campaigns"); else openPage(name.toLowerCase().replace(/\s+/g, "-")); }} />}
-    {createOpen && <CreateMenu start={start} close={() => setCreateOpen(false)} />}
+    {createAnchor && <CreateMenu anchor={createAnchor} start={start} close={() => setCreateAnchor(null)} />}
     {operatorOpen && <Operator close={() => setOperatorOpen(false)} start={start} />}
     {toast && <div className="toast"><ShieldCheck size={18}/><span>{toast}</span><button onClick={() => setToast("")}><X size={15}/></button></div>}
   </div>;
@@ -152,9 +152,9 @@ function drawerDescription(name: string) {
   return descriptions[name] || `Manage ${name.toLowerCase()} for this workspace`;
 }
 
-function CreateMenu({ start, close }: { start: (channel: Channel) => void; close: () => void }) {
+function CreateMenu({ anchor, start, close }: { anchor: CSSProperties; start: (channel: Channel) => void; close: () => void }) {
   const standard: Channel[] = ["email", "push", "iam", "content", "banner", "sms", "webhook", "whatsapp", "line"];
-  return <div className="modal-backdrop" onMouseDown={close}><section className="create-menu" onMouseDown={e => e.stopPropagation()}><button className="create-option operator-option" onClick={() => start("operator")}><Sparkles size={17}/><span><b>Create with Operator</b><small>Generate a coordinated campaign draft</small></span></button><p>MESSAGE ONE OR MORE CHANNELS</p><button className="create-option" onClick={() => start("multichannel")}><Grid2X2 size={17}/><span><b>Multichannel</b><small>Coordinate messages across channels</small></span></button><p>SINGLE CHANNEL</p>{standard.map(channel => { const meta = channelMeta[channel]; const Icon = meta.icon; return <button className="create-option" key={channel} onClick={() => start(channel)}><Icon size={17}/><span><b>{meta.title}</b><small>{channel === "iam" ? "1 / 200 active" : channel === "content" ? "0 / 500 active" : channel === "banner" ? "0 / 200 active" : ""}</small></span></button>; })}<p>FEATURE FLAGS</p><button className="create-option" onClick={() => start("feature")}><Flag size={17}/><span><b>Feature flag experiment</b><small>0 / 1 active</small></span></button><p>TRACK MESSAGES SENT VIA API</p><button className="create-option" onClick={() => start("api")}><Code2 size={17}/><span><b>API campaign</b></span></button></section></div>;
+  return <div className="create-popover-layer" style={{ position: "fixed", inset: 0, zIndex: 60 }} onMouseDown={close}><section className="create-menu" style={anchor} onMouseDown={e => e.stopPropagation()}><button className="create-option operator-option" onClick={() => start("operator")}><Sparkles size={17}/><span><b>Create with Operator</b><small>Generate a coordinated campaign draft</small></span></button><p>MESSAGE ONE OR MORE CHANNELS</p><button className="create-option" onClick={() => start("multichannel")}><Grid2X2 size={17}/><span><b>Multichannel</b><small>Coordinate messages across channels</small></span></button><p>SINGLE CHANNEL</p>{standard.map(channel => { const meta = channelMeta[channel]; const Icon = meta.icon; return <button className="create-option" key={channel} onClick={() => start(channel)}><Icon size={17}/><span><b>{meta.title}</b><small>{channel === "iam" ? "1 / 200 active" : channel === "content" ? "0 / 500 active" : channel === "banner" ? "0 / 200 active" : ""}</small></span></button>; })}<p>FEATURE FLAGS</p><button className="create-option" onClick={() => start("feature")}><Flag size={17}/><span><b>Feature flag experiment</b><small>0 / 1 active</small></span></button><p>TRACK MESSAGES SENT VIA API</p><button className="create-option" onClick={() => start("api")}><Code2 size={17}/><span><b>API campaign</b></span></button></section></div>;
 }
 
 function Operator({ close, start }: { close: () => void; start: (channel: Channel) => void }) {
@@ -162,7 +162,7 @@ function Operator({ close, start }: { close: () => void; start: (channel: Channe
   return <aside className="operator"><header><h2><Sparkles size={16}/> BrazeAI Operator™</h2><button onClick={close}><X size={17}/></button></header><div className="operator-chat">What kind of campaign would you like to create?</div><div className="operator-chat">I can choose channels, draft copy, and configure targeting for a local campaign draft.</div><textarea value={prompt} onChange={e => setPrompt(e.target.value)} placeholder="Ask Operator to create a campaign…"/><button className="primary" style={{marginTop:10,width:"100%"}} onClick={() => { start("operator"); }}>Generate campaign plan</button></aside>;
 }
 
-function PageContent({ page, campaigns, openPage, onEdit, onCreate, onStop, notify }: { page: string; campaigns: Campaign[]; openPage: (p: string) => void; onEdit: (c: Campaign) => void; onCreate: () => void; onStop: (id: string) => void; notify: (m: string) => void }) {
+function PageContent({ page, campaigns, openPage, onEdit, onCreate, onStop, notify }: { page: string; campaigns: Campaign[]; openPage: (p: string) => void; onEdit: (c: Campaign) => void; onCreate: (event: ReactMouseEvent<HTMLButtonElement>) => void; onStop: (id: string) => void; notify: (m: string) => void }) {
   if (page === "campaigns") return <CampaignList campaigns={campaigns} onEdit={onEdit} onCreate={onCreate} onStop={onStop}/>;
   if (page === "canvas") return <LiveCanvas notify={notify}/>;
   if (page === "getting-started") return <GettingStarted openPage={openPage}/>;
@@ -174,7 +174,7 @@ function PageContent({ page, campaigns, openPage, onEdit, onCreate, onStop, noti
   return <ModuleWorkspace title={titleFrom(page)} page={page} notify={notify} openPage={openPage}/>;
 }
 
-function CampaignList({ campaigns, onEdit, onCreate, onStop }: { campaigns: Campaign[]; onEdit: (c: Campaign) => void; onCreate: () => void; onStop: (id: string) => void }) {
+function CampaignList({ campaigns, onEdit, onCreate, onStop }: { campaigns: Campaign[]; onEdit: (c: Campaign) => void; onCreate: (event: ReactMouseEvent<HTMLButtonElement>) => void; onStop: (id: string) => void }) {
   const [search, setSearch] = useState(""); const [status, setStatus] = useState("All"); const [sort, setSort] = useState<"name" | "edited">("edited");
   const filtered = useMemo(() => campaigns.filter(c => c.name.toLowerCase().includes(search.toLowerCase()) && (status === "All" || c.status === status)).sort((a,b) => sort === "name" ? a.name.localeCompare(b.name) : b.edited.localeCompare(a.edited)), [campaigns, search, status, sort]);
   return <section className="page-content"><div className="page-heading"><div><div className="title-line"><h1>Campaigns</h1><span className="access-pill">Limited access</span></div><p>Campaigns let you send a single, targeted message through email, push, SMS, and more, ensuring timely communication with your audience</p></div><div className="heading-actions"><button className="secondary">Send feedback</button><button className="secondary">Take a tour <ChevronDown size={14}/></button><button className="primary" onClick={onCreate}><Plus size={16}/> Create campaign <ChevronDown size={14}/></button></div></div><div className="filters"><label>Status<select value={status} onChange={e => setStatus(e.target.value)}><option>All</option><option>Draft</option><option>Active</option><option>Stopped</option></select></label><label>Tag<select><option>Select...</option><option>Lifecycle</option><option>Promotional</option></select></label><button className="secondary"><Filter size={15}/> Filters</button><button className="secondary"><Grid2X2 size={15}/> Columns</button><button className="text-button" onClick={() => { setStatus("All"); setSearch(""); }}>Reset filters</button><div className="filter-search"><Search size={15}/><input placeholder="Search" value={search} onChange={e => setSearch(e.target.value)}/></div></div><div className="result-heading"><span>{filtered.length} Results</span><small>{status !== "All" ? `Status: ${status}` : "All campaigns"}</small></div><div className="table-wrap"><table><thead><tr><th onClick={() => setSort("name")}>Name {sort === "name" && "↑"}</th><th>Status</th><th>Stop date</th><th>Campaign type</th><th>Entry schedule</th><th>Sent</th><th>Last edited</th><th></th></tr></thead><tbody>{filtered.map(c => { const Icon = channelMeta[c.channel].icon; return <tr key={c.id}><td><button className="link-button" onClick={() => onEdit(c)}>{c.name}</button></td><td><span className={className("status", c.status.toLowerCase())}>{c.status}</span></td><td>—</td><td><span className="channel-cell"><Icon size={14}/>{channelMeta[c.channel].title}</span></td><td>{c.schedule}</td><td>{c.sent.toLocaleString()}</td><td>{c.edited}</td><td><button className="icon-button" onClick={() => c.status === "Active" ? onStop(c.id) : onEdit(c)} title={c.status === "Active" ? "Stop campaign" : "Edit campaign"}><MoreHorizontal size={18}/></button></td></tr>; })}</tbody></table></div></section>;
