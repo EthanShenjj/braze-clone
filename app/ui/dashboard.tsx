@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import emailStarterStyles from "./email-starter.module.css";
 import emailEditorStyles from "./email-editor.module.css";
 import brazeDndStyles from "./braze-dnd.module.css";
+import { campaignValidationIssues } from "@/lib/campaign-validation";
 import {
   Activity, Bell, Bot, Box, CalendarDays, ChevronDown, ChevronLeft, ChevronRight,
   CircleHelp, Code2, Copy, Database, FileCode2, Flag, Filter, Grid2X2, Image,
@@ -15,10 +16,20 @@ import {
 
 type Channel = "email" | "push" | "iam" | "content" | "banner" | "sms" | "webhook" | "whatsapp" | "line" | "multichannel" | "operator" | "feature" | "api";
 type CampaignStatus = "Draft" | "Active" | "Stopped";
-type Campaign = { id: string; name: string; channel: Channel; status: CampaignStatus; schedule: string; sent: number; edited: string; subject?: string; body?: string; audience?: string; conversion?: string };
+type Campaign = { id: string; name: string; channel: Channel; status: CampaignStatus; schedule: string; sent: number; edited: string; subject?: string; body?: string; audience?: string; conversion?: string; config?: Record<string, unknown> };
 type EmailEditorMode = "operator" | "drag" | "html" | "template";
 type EmailBlockKind = "Title" | "Paragraph" | "List" | "Button" | "Divider" | "Spacer" | "HTML" | "Menu";
 type EmailBlock = { id: string; kind: EmailBlockKind; text: string };
+type EmailVariant = { id: string; name: string; subject?: string; body?: string; editorMode?: EmailEditorMode; blocks?: EmailBlock[] };
+
+function emailVariants(campaign: Campaign): EmailVariant[] {
+  const stored = campaign.config?.variants;
+  return Array.isArray(stored) && stored.length ? stored as EmailVariant[] : [{ id: "var_1", name: "Variant 1" }];
+}
+
+function EmailVariantTabs({ variants, selected, onSelect, onAdd }: { variants: EmailVariant[]; selected: number; onSelect: (index: number) => void; onAdd: () => void }) {
+  return <div className="variant-header"><h3>Variants</h3><div className="real-tabs">{variants.map((item, index) => <button key={item.id} className={className(selected === index && "selected")} onClick={() => onSelect(index)}>{item.name}</button>)}<button className="plus-tab" aria-label="Add variant" onClick={onAdd}><Plus size={16}/></button></div></div>;
+}
 
 const nav = [
   { group: "Quick links", items: [["Canvas", "canvas", Grid2X2], ["Campaigns", "campaigns", LayoutDashboard], ["Segments", "segments", Users]] },
@@ -125,14 +136,15 @@ export default function Dashboard() {
   }
   async function saveCampaign(next: Campaign, publish = false) {
     const savedResponse = await fetch("/api/campaigns", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(next) });
-    if (!savedResponse.ok) { setToast("Unable to save campaign."); return; }
+    if (!savedResponse.ok) { setToast("Unable to save campaign."); return false; }
     const saved = await savedResponse.json() as Campaign;
     if (publish) {
       const launched = await fetch(`/api/campaigns/${saved.id}/launch`, { method: "POST" });
-      if (!launched.ok) { setToast("Campaign saved, but launch validation failed."); return; }
+      if (!launched.ok) { setToast("Campaign saved, but launch validation failed."); return false; }
       const result = await launched.json(); setEditing(result.campaign); setToast(`Campaign launched for ${result.run.delivered.toLocaleString()} reachable users.`);
-    } else { setEditing(saved); setToast("Changes were saved to local SQLite."); }
+    } else { setEditing(saved); setToast("Draft saved."); }
     await refreshCampaigns();
+    return true;
   }
   async function stopCampaign(id: string) {
     const response = await fetch(`/api/campaigns/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: "Stopped" }) });
@@ -153,8 +165,8 @@ export default function Dashboard() {
     <main className="main-area">
       <div className="trial">◷ &nbsp;12 days left in your free trial. <button>Connect with sales</button></div>
       <header className="topbar"><button className="search-button" onClick={() => setToast("Workspace search is ready for this local demo.")}><Search size={16}/> Search workspace <kbd>⌘K</kbd></button><div className="top-actions"><CircleHelp size={18}/><Bell size={18}/><button className="profile">S</button><button className="operator-trigger" onClick={() => setOperatorOpen(!operatorOpen)}><Sparkles size={17}/></button></div></header>
-      <div className="page-tabs"><button className={className("page-tab", !editing && "selected")} onClick={() => { setEditing(null); setPage("campaigns"); }}>Campaigns</button>{editing && <button className="page-tab selected">Edit '{editing.name}' <X size={14} onClick={() => setEditing(null)}/></button>}</div>
-      {editing ? <CampaignEditor campaign={editing} onSave={saveCampaign} onClose={() => openPage("campaigns")} /> : <PageContent page={page} campaigns={campaigns} openPage={openPage} onEdit={openCampaign} onCreate={(event) => { const rect = event.currentTarget.getBoundingClientRect(); setCreateAnchor({ position: "fixed", top: rect.bottom + 6, left: Math.max(16, rect.right - 325), zIndex: 61 }); }} onStop={stopCampaign} notify={setToast} />}
+      <div className="page-tabs"><button className={className("page-tab", !editing && "selected")} onClick={() => openPage("campaigns")}>Campaigns</button>{editing && <button className="page-tab selected">Edit '{editing.name}' <X size={14} onClick={() => openPage("campaigns")}/></button>}</div>
+      {editing ? <CampaignEditor key={editing.id} campaign={editing} onSave={saveCampaign} onClose={() => openPage("campaigns")} /> : <PageContent page={page} campaigns={campaigns} openPage={openPage} onEdit={openCampaign} onCreate={(event) => { const rect = event.currentTarget.getBoundingClientRect(); setCreateAnchor({ position: "fixed", top: rect.bottom + 6, left: Math.max(16, rect.right - 325), zIndex: 61 }); }} onStop={stopCampaign} notify={setToast} />}
     </main>
     {drawer && <NavigationDrawer name={titleFrom(drawer)} items={drawers[drawer]} close={() => setDrawer(null)} open={(name) => { if (name === "Campaigns") openPage("campaigns"); else openPage(name.toLowerCase().replace(/\s+/g, "-")); }} />}
     {createAnchor && <CreateMenu anchor={createAnchor} start={start} close={() => setCreateAnchor(null)} />}
@@ -200,34 +212,74 @@ function CampaignList({ campaigns, onEdit, onCreate, onStop }: { campaigns: Camp
   return <section className="page-content"><div className="page-heading"><div><div className="title-line"><h1>Campaigns</h1><span className="access-pill">Limited access</span></div><p>Campaigns let you send a single, targeted message through email, push, SMS, and more, ensuring timely communication with your audience</p></div><div className="heading-actions"><button className="secondary">Send feedback</button><button className="secondary">Take a tour <ChevronDown size={14}/></button><button className="primary" onClick={onCreate}><Plus size={16}/> Create campaign <ChevronDown size={14}/></button></div></div><div className="filters"><label>Status<select value={status} onChange={e => setStatus(e.target.value)}><option>All</option><option>Draft</option><option>Active</option><option>Stopped</option></select></label><label>Tag<select><option>Select...</option><option>Lifecycle</option><option>Promotional</option></select></label><button className="secondary"><Filter size={15}/> Filters</button><button className="secondary"><Grid2X2 size={15}/> Columns</button><button className="text-button" onClick={() => { setStatus("All"); setSearch(""); }}>Reset filters</button><div className="filter-search"><Search size={15}/><input placeholder="Search" value={search} onChange={e => setSearch(e.target.value)}/></div></div><div className="result-heading"><span>{filtered.length} Results</span><small>{status !== "All" ? `Status: ${status}` : "All campaigns"}</small></div><div className="table-wrap"><table><thead><tr><th onClick={() => setSort("name")}>Name {sort === "name" && "↑"}</th><th>Status</th><th>Stop date</th><th>Campaign type</th><th>Entry schedule</th><th>Sent</th><th>Last edited</th><th></th></tr></thead><tbody>{filtered.map(c => { const Icon = channelMeta[c.channel].icon; return <tr key={c.id}><td><button className="link-button" onClick={() => onEdit(c)}>{c.name}</button></td><td><span className={className("status", c.status.toLowerCase())}>{c.status}</span></td><td>—</td><td><span className="channel-cell"><Icon size={14}/>{channelMeta[c.channel].title}</span></td><td>{c.schedule}</td><td>{c.sent.toLocaleString()}</td><td>{c.edited}</td><td><button className="icon-button" onClick={() => c.status === "Active" ? onStop(c.id) : onEdit(c)} title={c.status === "Active" ? "Stop campaign" : "Edit campaign"}><MoreHorizontal size={18}/></button></td></tr>; })}</tbody></table></div></section>;
 }
 
-function CampaignEditor({ campaign, onSave, onClose }: { campaign: Campaign; onSave: (c: Campaign, publish?: boolean) => void; onClose: () => void }) {
+function CampaignEditor({ campaign, onSave, onClose }: { campaign: Campaign; onSave: (c: Campaign, publish?: boolean) => Promise<boolean>; onClose: () => void }) {
   const [draft, setDraft] = useState(campaign); const [step, setStep] = useState(0); const [variant, setVariant] = useState(0); const [testOpen, setTestOpen] = useState(false);
   const steps = ["Compose Messages", "Schedule Delivery", "Target Audiences", "Assign Conversions", "Review Summary"];
   const update = (patch: Partial<Campaign>) => setDraft(d => ({ ...d, ...patch }));
+  const launchIssues = campaignValidationIssues(draft);
+  const saveMessage = async (patch: Partial<Campaign>) => {
+    const next = { ...draft, ...patch };
+    setDraft(next);
+    return onSave(next);
+  };
+  const goToStep = (next: number) => {
+    if (next < 0 || next >= steps.length) return;
+    setStep(next);
+    const url = new URL(window.location.href);
+    url.searchParams.set("step", ["compose", "schedule", "audience", "conversions", "review"][next]);
+    window.history.pushState(null, "", url);
+  };
+  useEffect(() => {
+    const syncStep = () => {
+      const current = new URLSearchParams(window.location.search).get("step");
+      const index = ["compose", "schedule", "audience", "conversions", "review"].indexOf(current ?? "compose");
+      setStep(index < 0 ? 0 : index);
+    };
+    syncStep();
+    window.addEventListener("popstate", syncStep);
+    return () => window.removeEventListener("popstate", syncStep);
+  }, [campaign.id]);
   const ChannelIcon = channelMeta[draft.channel].icon;
-  return <section className="editor-page"><div className="editor-steps">{steps.map((item, i) => <button key={item} className={className("editor-step", step === i && "current", step > i && "complete")} onClick={() => setStep(i)}><span>{step > i ? "✓" : i + 1}</span>{item}</button>)}</div><div className="editor-title"><h1>{draft.name || `Untitled ${channelMeta[draft.channel].title} Campaign`}</h1><span><ChannelIcon size={14}/>{channelMeta[draft.channel].title}</span></div>{step === 0 && <Compose draft={draft} update={update} variant={variant} setVariant={setVariant} openTest={() => setTestOpen(true)}/>} {step === 1 && <Schedule draft={draft} update={update}/>} {step === 2 && <Audience draft={draft} update={update}/>} {step === 3 && <Conversions draft={draft} update={update}/>} {step === 4 && <Review draft={draft} go={setStep}/>}<footer className="editor-footer"><button className="secondary" disabled={step === 0} onClick={() => setStep(s => s - 1)}><ChevronLeft size={16}/> Back</button><span>All changes saved locally</span><button className="secondary" onClick={() => onSave(draft)}>Save Draft</button>{step === 4 ? <button className="primary" onClick={() => onSave(draft, true)}><Send size={15}/> Launch Campaign</button> : <button className="primary" onClick={() => setStep(s => s + 1)}>Next: {steps[step + 1]} <ChevronRight size={16}/></button>}</footer>{testOpen && <TestModal draft={draft} close={() => setTestOpen(false)}/>}<button className="close-editor" onClick={onClose}><X size={18}/> Close editor</button></section>;
+  return <section className="editor-page"><div className="editor-steps">{steps.map((item, i) => <button key={item} className={className("editor-step", step === i && "current", step > i && "complete")} onClick={() => goToStep(i)}><span>{step > i ? "✓" : i + 1}</span>{item}</button>)}</div><div className="editor-title"><h1>{draft.name || `Untitled ${channelMeta[draft.channel].title} Campaign`}</h1><span><ChannelIcon size={14}/>{channelMeta[draft.channel].title}</span></div>{step === 0 && <Compose draft={draft} update={update} saveEmail={saveMessage} variant={variant} setVariant={setVariant} openTest={() => setTestOpen(true)}/>} {step === 1 && <Schedule draft={draft} update={update}/>} {step === 2 && <Audience draft={draft} update={update}/>} {step === 3 && <Conversions draft={draft} update={update}/>} {step === 4 && <Review draft={draft} go={goToStep} issues={launchIssues}/>}<footer className="editor-footer"><button className="secondary" disabled={step === 0} onClick={() => goToStep(step - 1)}><ChevronLeft size={16}/> Back</button><span>Save your changes before leaving this page</span><button className="secondary" onClick={() => onSave(draft)}>Save Draft</button>{step === 4 ? <button className="primary" disabled={Boolean(launchIssues.length) || draft.status === "Active"} onClick={() => onSave(draft, true)}><Send size={15}/>{draft.status === "Active" ? "Campaign Active" : "Launch Campaign"}</button> : <button className="primary" onClick={() => goToStep(step + 1)}>Next: {steps[step + 1]} <ChevronRight size={16}/></button>}</footer>{testOpen && <TestModal draft={draft} close={() => setTestOpen(false)}/>}<button className="close-editor" onClick={onClose}><X size={18}/> Close editor</button></section>;
 }
 
-function Compose({ draft, update, variant, setVariant, openTest }: { draft: Campaign; update: (p: Partial<Campaign>) => void; variant: number; setVariant: (x: number) => void; openTest: () => void }) {
+function Compose({ draft, update, saveEmail, variant, setVariant, openTest }: { draft: Campaign; update: (p: Partial<Campaign>) => void; saveEmail: (p: Partial<Campaign>) => Promise<boolean>; variant: number; setVariant: (x: number) => void; openTest: () => void }) {
   const channel = draft.channel;
-  if (channel === "email") return <EmailCompose draft={draft} update={update} variant={variant} setVariant={setVariant} openTest={openTest}/>;
+  if (channel === "email") return <EmailCompose draft={draft} update={update} saveEmail={saveEmail} variant={variant} setVariant={setVariant} openTest={openTest}/>;
   return <ChannelCompose draft={draft} update={update} openTest={openTest}/>;
   const isEmail = channel === "multichannel" || channel === "operator";
   const isWebhook = channel === "webhook"; const isText = channel === "sms" || channel === "whatsapp" || channel === "line";
   return <div className="editor-body"><section className="editor-card"><h2>Campaign Details</h2><div className="form-grid"><Field label="Campaign Name"><input value={draft.name} onChange={e => update({ name: e.target.value })}/></Field><Field label="Teams"><select><option>Select teams...</option><option>Lifecycle Marketing</option><option>Growth</option></select></Field></div><Field label="Description"><textarea placeholder="Describe this campaign"/></Field><button className="tag-button"><Tags size={14}/> Tags</button></section><section className="editor-card"><div className="card-heading"><div><h2>{channelMeta[channel].title} Composer</h2><p>{channelMeta[channel].description}</p></div><button className="secondary" onClick={openTest}>Preview and test</button></div><div className="variant-row"><b>Variants</b><button className={className("variant", variant === 0 && "active")} onClick={() => setVariant(0)}>Variant 1</button><button className={className("variant", variant === 1 && "active")} onClick={() => setVariant(1)}>Variant 2</button><button className="add-variant" onClick={() => setVariant(1)}><Plus size={15}/></button></div><div className="composer-grid"><div className="composer-form">{isEmail && <><Field label="From"><select><option>Powered by Braze &lt;braze@mta-h466.bftmail.com&gt;</option></select></Field><Field label="Subject"><input value={draft.subject || "Your welcome offer is here"} onChange={e => update({ subject: e.target.value })}/></Field><Field label="Preheader"><input placeholder="Optional preheader text"/></Field><div className="segmented"><button className="selected">Drag-and-drop editor</button><button>HTML editor</button></div></>}{channel === "push" && <><div className="segmented"><button className="selected">iOS</button><button>Android</button><button>Web</button></div><Field label="Notification title"><input value={draft.subject || "Your welcome offer is here"} onChange={e => update({subject: e.target.value})}/></Field><Field label="Deep link"><input defaultValue="myapp://offers/welcome"/></Field></>}{(channel === "iam" || channel === "content" || channel === "banner") && <><Field label="Message title"><input value={draft.subject || "Welcome to the family"} onChange={e => update({subject: e.target.value})}/></Field><div className="segmented"><button className="selected">Modal</button><button>Slideup</button><button>Full</button></div><Field label="Call to action"><input defaultValue="Shop now"/></Field></>}{isText && <><Field label="Sender / subscription group"><select><option>Promotional messages</option><option>Transactional</option></select></Field><Field label="Message"><textarea value={draft.body || "Welcome to Braze! Use code WELCOME10 for 10% off."} onChange={e => update({body: e.target.value})}/></Field><small>{(draft.body || "").length || 58} characters · 1 segment</small></>}{isWebhook && <><div className="form-grid"><Field label="HTTP method"><select><option>POST</option><option>PUT</option><option>GET</option></select></Field><Field label="Authentication"><select><option>Bearer token</option><option>None</option></select></Field></div><Field label="Webhook URL"><input defaultValue="https://api.example.com/events"/></Field><Field label="Request body"><textarea defaultValue={'{\n  "user_id": "{{${user_id}}}",\n  "event": "campaign_sent"\n}'}/></Field></>}{(channel === "feature" || channel === "api" || channel === "operator") && <><Field label={channel === "operator" ? "Campaign goal" : "Configuration"}><textarea value={draft.body || "Welcome new users and encourage their first purchase."} onChange={e => update({body: e.target.value})}/></Field><div className="subtle-note">This local demo models the configuration and event flow without calling an external service.</div></>}{!isText && !isWebhook && channel !== "feature" && channel !== "api" && <Field label="Message"><textarea value={draft.body || "Thanks for being with us. Use code SEPTEMBER20 to get 20% off this month’s featured collection."} onChange={e => update({body: e.target.value})}/></Field>}</div><MessagePreview draft={draft}/></div></section></div>;
 }
 
-function EmailCompose({ draft, update, variant, setVariant, openTest }: { draft: Campaign; update: (p: Partial<Campaign>) => void; variant: number; setVariant: (x: number) => void; openTest: () => void }) {
+function EmailCompose({ draft, update, saveEmail, variant, setVariant, openTest }: { draft: Campaign; update: (p: Partial<Campaign>) => void; saveEmail: (p: Partial<Campaign>) => Promise<boolean>; variant: number; setVariant: (x: number) => void; openTest: () => void }) {
+  const variants = emailVariants(draft);
+  const current = variants[variant] ?? variants[0];
+  const currentSubject = current.subject ?? (variant === 0 ? draft.subject : undefined);
+  const currentBody = current.body ?? (variant === 0 ? draft.body : undefined);
+  const savedEditorMode = current.editorMode ?? (variant === 0 ? draft.config?.emailEditorMode as EmailEditorMode | undefined : undefined);
+  const savedBlocks = current.blocks ?? (variant === 0 && Array.isArray(draft.config?.emailBlocks) ? draft.config.emailBlocks as EmailBlock[] : []);
+  const variantDraft: Campaign = { ...draft, subject: currentSubject, body: currentBody, config: { ...draft.config, emailEditorMode: savedEditorMode, emailBlocks: savedBlocks } };
   const [showSending, setShowSending] = useState(false);
   const [showEditor, setShowEditor] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [emailStart, setEmailStart] = useState(() => !draft.subject && !draft.body);
+  const [emailStart, setEmailStart] = useState(() => !currentSubject && !currentBody);
   const [emailEditor, setEmailEditor] = useState<EmailEditorMode | null>(null);
+  useEffect(() => { setEmailStart(!currentSubject && !currentBody); setEmailEditor(null); }, [variant]);
+  const variantPatch = (patch: Partial<Campaign>) => {
+    const next = [...variants];
+    next[variant] = { ...current, subject: patch.subject ?? currentSubject, body: patch.body ?? currentBody, editorMode: (patch.config?.emailEditorMode as EmailEditorMode | undefined) ?? savedEditorMode, blocks: Array.isArray(patch.config?.emailBlocks) ? patch.config.emailBlocks as EmailBlock[] : savedBlocks };
+    const config = { ...draft.config, variants: next, ...(variant === 0 ? { emailEditorMode: next[0].editorMode, emailBlocks: next[0].blocks } : {}) };
+    return variant === 0 ? { ...patch, config } : { config };
+  };
+  const updateVariant = (patch: Partial<Campaign>) => update(variantPatch(patch));
+  const saveVariant = (patch: Partial<Campaign>) => saveEmail(variantPatch(patch));
+  const addVariant = () => { const next = [...variants, { id: `var_${crypto.randomUUID().slice(0, 8)}`, name: `Variant ${variants.length + 1}` }]; update({ config: { ...draft.config, variants: next } }); setVariant(next.length - 1); };
   const [html, setHtml] = useState(`<div style="max-width:600px;margin:0 auto;padding:32px;font-family:Arial,sans-serif"><h1>September Exclusive</h1><p>Hi {{\${first_name} | default: 'there'}},</p><h2>Your September offer is here</h2><p>Thanks for being with us. Use code <b>SEPTEMBER20</b> to get 20% off this month's featured collection.</p><a href="https://example.com/offers">Claim your offer</a></div>`);
-  if (emailEditor) return <EmailMessageEditor mode={emailEditor} draft={draft} update={update} onClose={() => { setEmailEditor(null); setEmailStart(false); }} />;
-  if (emailStart) return <EmailStart draft={draft} update={update} variant={variant} setVariant={setVariant} copied={copied} setCopied={setCopied} onStart={setEmailEditor} />;
-  const subject = draft.subject || "{% if ${language} == 'zh' %}九月专属优惠｜立减 20%{% else %}Your September Offer | 20% Off{% endif %}";
+  if (emailEditor) return <EmailMessageEditor key={current.id} mode={emailEditor} variantName={current.name} draft={variantDraft} save={saveVariant} onClose={() => { setEmailEditor(null); setEmailStart(false); }} />;
+  if (emailStart) return <EmailStart draft={draft} update={update} importHtml={body => updateVariant({ body, config: { emailEditorMode: "html" } })} variants={variants} variant={variant} setVariant={setVariant} addVariant={addVariant} copied={copied} setCopied={setCopied} onStart={setEmailEditor} />;
+  const subject = currentSubject || "{% if ${language} == 'zh' %}九月专属优惠｜立减 20%{% else %}Your September Offer | 20% Off{% endif %}";
   const preheader = "{% if ${language} == 'zh' %}优惠码 SEPTEMBER20，9 月 30 日前有效。{% else %}Use code SEPTEMBER20 before September 30.{% endif %}";
   return <div className="editor-body email-compose-page">
     <section className="braze-section campaign-details-section">
@@ -237,19 +289,19 @@ function EmailCompose({ draft, update, variant, setVariant, openTest }: { draft:
     </section>
     <section className="braze-section email-composer-section">
       <h2>Email Composer</h2>
-      <div className="variant-header"><h3>Variants</h3><div className="real-tabs"><button className={className(variant === 0 && "selected")} onClick={() => setVariant(0)}>Variant 1</button><button className={className(variant === 1 && "selected")} onClick={() => setVariant(1)}>Unnamed Variant</button><button className="plus-tab" onClick={() => setVariant(1)}><Plus size={16}/></button></div></div>
+      <EmailVariantTabs variants={variants} selected={variant} onSelect={setVariant} onAdd={addVariant}/>
       <div className="sending-info"><div><h3>Sending info</h3><dl><div><dt>From:</dt><dd>Powered by Braze &lt;braze@mta-h466.bftmail.com&gt;</dd></div><div><dt>Subject:</dt><dd>{subject}</dd></div><div><dt>Preheader:</dt><dd>{preheader}</dd></div><div><dt>One-click list-unsubscribe:</dt><dd>Use workspace default</dd></div></dl></div><button className="secondary small" onClick={() => setShowSending(!showSending)}>Edit sending info</button></div>
-      {showSending && <div className="sending-editor"><div className="form-grid"><Field label="From"><select><option>Powered by Braze &lt;braze@mta-h466.bftmail.com&gt;</option></select></Field><Field label="From display name"><input defaultValue="Powered by Braze"/></Field></div><Field label="Subject"><input value={subject} onChange={e => update({subject:e.target.value})}/></Field><Field label="Preheader"><input defaultValue={preheader}/></Field><Toggle title="One-click list-unsubscribe" help="Use the workspace default list-unsubscribe setting." checked/></div>}
-      <div className="email-body-heading"><div><h3>Email body</h3><p>HTML Editor</p></div><button className="secondary" onClick={() => setShowEditor(!showEditor)}>Edit message</button></div>
+      {showSending && <div className="sending-editor"><div className="form-grid"><Field label="From"><select><option>Powered by Braze &lt;braze@mta-h466.bftmail.com&gt;</option></select></Field><Field label="From display name"><input defaultValue="Powered by Braze"/></Field></div><Field label="Subject"><input value={subject} onChange={e => updateVariant({subject:e.target.value})}/></Field><Field label="Preheader"><input defaultValue={preheader}/></Field><Toggle title="One-click list-unsubscribe" help="Use the workspace default list-unsubscribe setting." checked/></div>}
+      <div className="email-body-heading"><div><h3>Email body</h3><p>{savedEditorMode === "drag" ? "Drag-and-drop Editor" : "HTML Editor"}</p></div><button className="secondary" onClick={() => setEmailEditor(savedEditorMode ?? "html")}>Edit message</button></div>
       {showEditor && <div className="html-workbench"><div className="editor-toolbar"><button className="selected"><FileCode2 size={14}/> HTML</button><button>Preview</button><button>Personalization</button><button>Content blocks</button></div><textarea value={html} onChange={e => setHtml(e.target.value)} aria-label="Email HTML editor"/></div>}
-      <div className="email-document"><div className="email-document-top">September Offer</div><article><p className="email-kicker">September Exclusive</p><p>{"{% if ${language} == 'zh' %}"}</p><p>你好，{"{{${first_name} | default: '朋友'}}"}！</p><h1>九月专属礼遇已上线</h1><p>感谢一路相伴。使用优惠码 <b>SEPTEMBER20</b>，即可享受本月精选商品 20% 优惠。</p><a>立即领取优惠</a><p>优惠截止至 2026 年 9 月 30 日，条款与条件适用。</p><p>{"{% else %}"}</p><p>Hi {"{{${first_name} | default: 'there'}}"},</p><h1>Your September offer is here</h1><p>{draft.body || "Thanks for being with us. Use code SEPTEMBER20 to get 20% off this month's featured collection."}</p><a>Claim your offer</a><p>Offer ends September 30, 2026. Terms and conditions apply.</p><p>{"{% endif %}"}</p><hr/><p className="email-footer">Don't want to receive these emails? <a>Unsubscribe</a></p></article></div>
+      <div className="email-document"><div className="email-document-top">{currentSubject || "September Offer"}</div><article>{savedEditorMode === "drag" ? savedBlocks.length ? savedBlocks.map(block => block.kind === "Title" ? <h1 key={block.id}>{block.text}</h1> : block.kind === "Divider" ? <hr key={block.id}/> : block.kind === "Spacer" ? <div key={block.id} style={{height:24}}/> : block.kind === "Button" ? <a key={block.id}>{block.text}</a> : <p key={block.id}>{block.text}</p>) : <p>No content blocks yet.</p> : <><p className="email-kicker">September Exclusive</p><p>{"{% if ${language} == 'zh' %}"}</p><p>你好，{"{{${first_name} | default: '朋友'}}"}！</p><h1>九月专属礼遇已上线</h1><p>感谢一路相伴。使用优惠码 <b>SEPTEMBER20</b>，即可享受本月精选商品 20% 优惠。</p><a>立即领取优惠</a><p>优惠截止至 2026 年 9 月 30 日，条款与条件适用。</p><p>{"{% else %}"}</p><p>Hi {"{{${first_name} | default: 'there'}}"},</p><h1>Your September offer is here</h1><p>{currentBody || "Thanks for being with us. Use code SEPTEMBER20 to get 20% off this month's featured collection."}</p><a>Claim your offer</a><p>Offer ends September 30, 2026. Terms and conditions apply.</p><p>{"{% endif %}"}</p><hr/><p className="email-footer">Don't want to receive these emails? <a>Unsubscribe</a></p></>}</article></div>
       <div className="email-actions"><button className="secondary" onClick={() => setShowTemplates(!showTemplates)}>Choose New Template</button><button className="secondary" onClick={openTest}>Preview and test</button></div>
-      {showTemplates && <div className="template-picker"><b>Choose a template</b><button onClick={() => { update({subject:"Welcome to Braze"}); setShowTemplates(false); }}>Welcome email <small>Drag-and-Drop Editor</small></button><button onClick={() => { update({subject:"Your September Offer | 20% Off"}); setShowTemplates(false); }}>September Offer <small>HTML Editor</small></button></div>}
+      {showTemplates && <div className="template-picker"><b>Choose a template</b><button onClick={() => { updateVariant({subject:"Welcome to Braze"}); setShowTemplates(false); }}>Welcome email <small>Drag-and-Drop Editor</small></button><button onClick={() => { updateVariant({subject:"Your September Offer | 20% Off"}); setShowTemplates(false); }}>September Offer <small>HTML Editor</small></button></div>}
     </section>
   </div>;
 }
 
-function EmailStart({ draft, update, variant, setVariant, copied, setCopied, onStart }: { draft: Campaign; update: (patch: Partial<Campaign>) => void; variant: number; setVariant: (variant: number) => void; copied: boolean; setCopied: (copied: boolean) => void; onStart: (choice: "operator" | "drag" | "html" | "template") => void }) {
+function EmailStart({ draft, update, importHtml, variants, variant, setVariant, addVariant, copied, setCopied, onStart }: { draft: Campaign; update: (patch: Partial<Campaign>) => void; importHtml: (body: string) => void; variants: EmailVariant[]; variant: number; setVariant: (variant: number) => void; addVariant: () => void; copied: boolean; setCopied: (copied: boolean) => void; onStart: (choice: "operator" | "drag" | "html" | "template") => void }) {
   return <div className="editor-body email-compose-page">
     <section className="braze-section campaign-details-section">
       <h2>Campaign Details</h2>
@@ -258,7 +310,7 @@ function EmailStart({ draft, update, variant, setVariant, copied, setCopied, onS
     </section>
     <section className="braze-section email-composer-section">
       <h2>Email Composer</h2>
-      <div className="variant-header"><h3>Variants</h3><div className="real-tabs"><button className={className(variant === 0 && "selected")} onClick={() => setVariant(0)}>Variant 1</button><button className={className(variant === 1 && "selected")} onClick={() => setVariant(1)}>Unnamed Variant</button><button className="plus-tab" onClick={() => setVariant(1)}><Plus size={16}/></button></div></div>
+      <EmailVariantTabs variants={variants} selected={variant} onSelect={setVariant} onAdd={addVariant}/>
       <div className={emailStarterStyles.starter}>
         <h3>Create new email</h3><p>How would you like to start?</p>
         <div className={emailStarterStyles.options}>
@@ -267,25 +319,25 @@ function EmailStart({ draft, update, variant, setVariant, copied, setCopied, onS
           <button className={emailStarterStyles.option} onClick={() => onStart("html")}><span><Code2 size={20}/></span><b>HTML code editor</b><small>Start from scratch</small></button>
           <button className={emailStarterStyles.option} onClick={() => onStart("template")}><span><FileCode2 size={19}/></span><b>Templates</b><small>Choose a template</small></button>
         </div>
-        <label className={emailStarterStyles.upload}>Upload file<input type="file" accept=".html,.htm" onChange={event => { if (event.target.files?.length) { update({ body: "Imported HTML email" }); onStart("html"); } }}/></label>
+        <label className={emailStarterStyles.upload}>Upload file<input type="file" accept=".html,.htm" onChange={async event => { const file = event.target.files?.[0]; if (!file) return; importHtml(await file.text()); onStart("html"); }}/></label>
       </div>
     </section>
   </div>;
 }
 
-function EmailMessageEditor({ mode, draft, update, onClose }: { mode: EmailEditorMode; draft: Campaign; update: (patch: Partial<Campaign>) => void; onClose: () => void }) {
+function EmailMessageEditor({ mode, variantName, draft, save, onClose }: { mode: EmailEditorMode; variantName: string; draft: Campaign; save: (patch: Partial<Campaign>) => Promise<boolean>; onClose: () => void }) {
   const [subject, setSubject] = useState(draft.subject ?? "Your September offer is here");
   const [body, setBody] = useState(draft.body ?? "Thanks for being with us. Use code SEPTEMBER20 to get 20% off this month’s featured collection.");
   const [operatorPrompt, setOperatorPrompt] = useState("Create a warm welcome email with a first-purchase offer.");
   const labels: Record<EmailEditorMode, string> = { operator: "Create with Operator", drag: "Drag-and-drop editor", html: "HTML code editor", template: "Templates" };
   const applyTemplate = (nextSubject: string, nextBody: string) => { setSubject(nextSubject); setBody(nextBody); };
-  const saveAndReturn = () => { update({ subject, body }); onClose(); };
+  const saveAndReturn = async () => { if (await save({ subject, body, config: { ...draft.config, emailEditorMode: mode } })) onClose(); };
   const addBlock = (name: string) => setBody(current => `${current}\n\n[${name} block]`);
-  if (mode === "drag") return <BrazeDragDropEditor draft={draft} update={update} onClose={onClose}/>;
+  if (mode === "drag") return <BrazeDragDropEditor draft={draft} variantName={variantName} save={save} onClose={onClose}/>;
   return <section className={emailEditorStyles.page} aria-label="Email editor">
     <header className={emailEditorStyles.header}>
       <button className={emailEditorStyles.back} onClick={saveAndReturn}><ChevronLeft size={17}/> Back to campaign</button>
-      <div className={emailEditorStyles.title}><b>{labels[mode]}</b><small>{draft.name} · Variant 1</small></div>
+      <div className={emailEditorStyles.title}><b>{labels[mode]}</b><small>{draft.name} · {variantName}</small></div>
       <div className={emailEditorStyles.headerActions}><button className={emailEditorStyles.previewButton}><Smartphone size={15}/> Preview</button><button className={emailEditorStyles.saveButton} onClick={saveAndReturn}><Send size={14}/> Save</button></div>
     </header>
     <div className={emailEditorStyles.workspace}>
@@ -308,20 +360,20 @@ function EmailMessageEditor({ mode, draft, update, onClose }: { mode: EmailEdito
   </section>;
 }
 
-function BrazeDragDropEditor({ draft, update, onClose }: { draft: Campaign; update: (patch: Partial<Campaign>) => void; onClose: () => void }) {
+function BrazeDragDropEditor({ draft, variantName, save: saveCampaignMessage, onClose }: { draft: Campaign; variantName: string; save: (patch: Partial<Campaign>) => Promise<boolean>; onClose: () => void }) {
   const catalog: Array<{ kind: EmailBlockKind; help: string }> = [
     { kind: "Title", help: "Add a heading" }, { kind: "Paragraph", help: "Add text" }, { kind: "List", help: "Add a list" },
     { kind: "Button", help: "Add a CTA" }, { kind: "Divider", help: "Add a divider" }, { kind: "Spacer", help: "Add spacing" },
     { kind: "HTML", help: "Add custom HTML" }, { kind: "Menu", help: "Add navigation" },
   ];
   const [tab, setTab] = useState<"content" | "design" | "personalization">("content");
-  const [blocks, setBlocks] = useState<EmailBlock[]>(() => draft.body ? [{ id: "paragraph_seed", kind: "Paragraph", text: draft.body }] : []);
+  const [blocks, setBlocks] = useState<EmailBlock[]>(() => Array.isArray(draft.config?.emailBlocks) ? draft.config.emailBlocks as EmailBlock[] : draft.body ? [{ id: "paragraph_seed", kind: "Paragraph", text: draft.body }] : []);
   const [selected, setSelected] = useState<string | null>(null);
   const [desktop, setDesktop] = useState(true);
   const defaults: Record<EmailBlockKind, string> = { Title: "Your email title", Paragraph: "Add your message here.", List: "First item\nSecond item\nThird item", Button: "Call to action", Divider: "", Spacer: "", HTML: "<p>Custom HTML</p>", Menu: "Home · Shop · Support" };
   const add = (kind: EmailBlockKind) => { const block = { id: `block_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`, kind, text: defaults[kind] }; setBlocks(current => [...current, block]); setSelected(block.id); };
   const selectedBlock = blocks.find(block => block.id === selected);
-  const save = () => { update({ body: blocks.map(block => `${block.kind}: ${block.text}`).join("\n") }); onClose(); };
+  const save = async () => { if (await saveCampaignMessage({ body: blocks.map(block => block.text).filter(Boolean).join("\n"), config: { ...draft.config, emailEditorMode: "drag", emailBlocks: blocks } })) onClose(); };
   const changeSelected = (text: string) => setBlocks(current => current.map(block => block.id === selected ? { ...block, text } : block));
   const renderBlock = (block: EmailBlock) => {
     const common = { className: `${brazeDndStyles.canvasBlock} ${selected === block.id ? brazeDndStyles.selected : ""}`, onClick: () => setSelected(block.id) };
@@ -335,7 +387,7 @@ function BrazeDragDropEditor({ draft, update, onClose }: { draft: Campaign; upda
     return <pre key={block.id} {...common}>{block.text}</pre>;
   };
   return <section className={brazeDndStyles.page} aria-label="Braze drag-and-drop email editor">
-    <header className={brazeDndStyles.header}><button onClick={save}><ChevronLeft size={17}/> Back to campaign</button><div><b>Drag-and-drop editor</b><small>{draft.name} · Variant 1</small></div><div className={brazeDndStyles.headerActions}><button className={desktop ? brazeDndStyles.activeDevice : ""} onClick={() => setDesktop(true)}>Desktop</button><button className={!desktop ? brazeDndStyles.activeDevice : ""} onClick={() => setDesktop(false)}>Mobile</button><button className={brazeDndStyles.preview}><Smartphone size={15}/> Preview & test</button><button className={brazeDndStyles.save} onClick={save}><Send size={14}/> Save</button></div></header>
+    <header className={brazeDndStyles.header}><button onClick={save}><ChevronLeft size={17}/> Back to campaign</button><div><b>Drag-and-drop editor</b><small>{draft.name} · {variantName}</small></div><div className={brazeDndStyles.headerActions}><button className={desktop ? brazeDndStyles.activeDevice : ""} onClick={() => setDesktop(true)}>Desktop</button><button className={!desktop ? brazeDndStyles.activeDevice : ""} onClick={() => setDesktop(false)}>Mobile</button><button className={brazeDndStyles.preview}><Smartphone size={15}/> Preview & test</button><button className={brazeDndStyles.save} onClick={save}><Send size={14}/> Save</button></div></header>
     <div className={brazeDndStyles.workspace}>
       <aside className={brazeDndStyles.leftRail}>
         <button className={tab === "content" ? brazeDndStyles.tabActive : ""} onClick={() => setTab("content")}>CONTENT</button>
@@ -399,11 +451,50 @@ function ApiCampaignFields({ draft, update }: { draft: Campaign; update: (patch:
 function ChannelPanel({ title, help, children }: { title: string; help: string; children: ReactNode }) { return <section className="channel-panel"><h3>{title}</h3><p>{help}</p>{children}</section>; }
 
 function Field({ label, children }: { label: string; children: ReactNode }) { return <label className="field"><span>{label}</span>{children}</label>; }
-function Schedule({ draft, update }: { draft: Campaign; update: (p: Partial<Campaign>) => void }) { return <div className="editor-body"><section className="editor-card"><h2>Schedule Delivery</h2><div className="segmented wide"><button className="selected">Scheduled delivery</button><button>Action-based delivery</button><button>API-triggered</button></div><div className="form-grid"><Field label="Send option"><select value={draft.schedule} onChange={e => update({schedule:e.target.value})}><option>One time</option><option>Action-based</option><option>API-triggered</option></select></Field><Field label="Time zone"><select><option>Company time zone (UTC+08:00)</option><option>Recipient local time</option></select></Field><Field label="Start date"><input type="date" defaultValue="2026-09-17"/></Field><Field label="Send time"><input type="time" defaultValue="10:00"/></Field></div><Toggle title="Recurring schedule" help="Repeat this campaign daily, weekly, or monthly."/><Toggle title="Quiet hours" help="Do not send between 9 PM and 8 AM." checked/><Toggle title="Allow users to become re-eligible" help="Users may receive this campaign more than once."/><Field label="Rate limit"><input type="number" defaultValue="5000"/></Field></section></div>; }
-function Audience({ draft, update }: { draft: Campaign; update: (p: Partial<Campaign>) => void }) { const [filters, setFilters] = useState([0]); return <div className="editor-body"><section className="editor-card"><h2>Target Audiences</h2><div className="audience-layout"><div><Field label="Target users by segment"><select value={draft.audience} onChange={e => update({audience:e.target.value})}><option>All Users</option><option>Recent Purchasers</option><option>New Users</option></select></Field><div className="filter-box"><b>Additional filters</b>{filters.map((id) => <div className="filter-row" key={id}><select><option>Custom attribute</option><option>Engagement</option></select><select><option>country</option><option>first_name</option></select><select><option>equals US</option><option>is not blank</option></select><button onClick={() => setFilters(f => f.filter(x => x !== id))}><X size={14}/></button></div>)}<button className="secondary small" onClick={() => setFilters(f => [...f, Date.now()])}><Plus size={14}/> Add filter</button></div><Field label="Subscription group"><select><option>Promotional messages</option><option>All subscribed users</option></select></Field></div><div className="audience-meter"><div className="meter-ring"><span>38.4K</span></div><b>Estimated reachable audience</b><small>Users who match current targeting and subscription rules.</small></div></div></section></div>; }
+function Schedule({ draft, update }: { draft: Campaign; update: (p: Partial<Campaign>) => void }) {
+  const delivery = (draft.config?.delivery ?? {}) as Record<string, unknown>;
+  const changeDelivery = (patch: Record<string, unknown>) => update({ config: { ...draft.config, delivery: { ...delivery, ...patch } } });
+  const mode = draft.schedule === "Action-based" || draft.schedule === "API-triggered" ? draft.schedule : "One time";
+  return <div className="editor-body"><section className="editor-card"><h2>Schedule Delivery</h2>
+    <div className="segmented wide">{[["One time", "Scheduled delivery"], ["Action-based", "Action-based delivery"], ["API-triggered", "API-triggered"]].map(([value, label]) => <button key={value} className={className(mode === value && "selected")} onClick={() => update({ schedule: value })}>{label}</button>)}</div>
+    {mode === "One time" && <div className="form-grid"><Field label="Time zone"><select value={String(delivery.timezone ?? "Company time zone (UTC+08:00)")} onChange={event => changeDelivery({ timezone: event.target.value })}><option>Company time zone (UTC+08:00)</option><option>Recipient local time</option></select></Field><Field label="Start date"><input type="date" value={String(delivery.startDate ?? "2026-09-17")} onChange={event => changeDelivery({ startDate: event.target.value })}/></Field><Field label="Send time"><input type="time" value={String(delivery.sendTime ?? "10:00")} onChange={event => changeDelivery({ sendTime: event.target.value })}/></Field></div>}
+    {mode === "Action-based" && <div className="form-grid"><Field label="Trigger event"><select value={String(delivery.triggerEvent ?? "Start Session")} onChange={event => changeDelivery({ triggerEvent: event.target.value })}><option>Start Session</option><option>Make Purchase</option><option>Perform Custom Event</option></select></Field><Field label="Delay in minutes"><input type="number" min="0" value={Number(delivery.delayMinutes ?? 0)} onChange={event => changeDelivery({ delayMinutes: Number(event.target.value) })}/></Field></div>}
+    {mode === "API-triggered" && <div className="subtle-note">Messages are sent when this campaign is triggered through the API.</div>}
+    {mode === "One time" && <Toggle title="Recurring schedule" help="Repeat this campaign daily, weekly, or monthly." value={Boolean(delivery.recurring)} onChange={value => changeDelivery({ recurring: value })}/>}
+    <Toggle title="Quiet hours" help="Do not send between 9 PM and 8 AM." value={delivery.quietHours !== false} onChange={value => changeDelivery({ quietHours: value })}/>
+    <Toggle title="Allow users to become re-eligible" help="Users may receive this campaign more than once." value={Boolean(delivery.reeligible)} onChange={value => changeDelivery({ reeligible: value })}/>
+    <Field label="Rate limit"><input type="number" min="1" value={Number(delivery.rateLimit ?? 5000)} onChange={event => changeDelivery({ rateLimit: Math.max(1, Number(event.target.value) || 1) })}/></Field>
+  </section></div>;
+}
+function Audience({ draft, update }: { draft: Campaign; update: (p: Partial<Campaign>) => void }) {
+  const country = typeof draft.config?.audienceCountry === "string" ? draft.config.audienceCountry : "";
+  const [estimate, setEstimate] = useState<{ matching: number; reachable: number } | null>(null);
+  useEffect(() => {
+    const controller = new AbortController();
+    const query = new URLSearchParams({ audience: draft.audience ?? "All Users" });
+    if (country) query.set("country", country);
+    fetch(`/api/audience/estimate?${query}`, { signal: controller.signal })
+      .then(response => response.ok ? response.json() : null)
+      .then(result => { if (result) setEstimate(result); })
+      .catch(() => {});
+    return () => controller.abort();
+  }, [draft.audience, country]);
+  const updateCountry = (next: string) => update({ config: { ...draft.config, audienceCountry: next } });
+  const percentage = estimate?.matching ? Math.round(estimate.reachable / estimate.matching * 100) : 0;
+  return <div className="editor-body"><section className="editor-card"><h2>Target Audiences</h2><div className="audience-layout"><div>
+    <Field label="Target users by segment"><select value={draft.audience ?? "All Users"} onChange={event => update({ audience: event.target.value })}><option>All Users</option><option>Recent Purchasers</option><option>New Users</option></select></Field>
+    <div className="filter-box"><b>Additional filters</b>{country && <div className="filter-row"><select aria-label="Filter type" value="Custom attribute" onChange={() => {}}><option>Custom attribute</option></select><select aria-label="Filter field" value="country" onChange={() => {}}><option>country</option></select><select aria-label="Country" value={country} onChange={event => updateCountry(event.target.value)}>{["US", "GB", "CN", "SG", "DE"].map(value => <option key={value}>{value}</option>)}</select><button aria-label="Remove country filter" onClick={() => updateCountry("")}><X size={14}/></button></div>}<button className="secondary small" disabled={Boolean(country)} onClick={() => updateCountry("US")}><Plus size={14}/> Add filter</button></div>
+    <Field label="Subscription group"><select><option>Promotional messages</option></select></Field>
+  </div><div className="audience-meter"><div className="meter-ring" style={{ background: `conic-gradient(#6736df 0 ${percentage}%, #e4e0eb ${percentage}%)` }}><span>{estimate ? estimate.reachable.toLocaleString() : "…"}</span></div><b>Estimated reachable audience</b><small>{estimate ? `${estimate.matching.toLocaleString()} matching users · ${percentage}% reachable after subscription checks.` : "Calculating from local users…"}</small></div></div></section></div>;
+}
 function Conversions({ draft, update }: { draft: Campaign; update: (p: Partial<Campaign>) => void }) { const [events, setEvents] = useState([0]); return <div className="editor-body"><section className="editor-card"><h2>Assign Conversions</h2><p>Track the actions users take after receiving this campaign.</p>{events.map(id => <div className="conversion-row" key={id}><Field label="Conversion event"><select value={draft.conversion} onChange={e => update({conversion:e.target.value})}><option>Make Purchase</option><option>Start Session</option><option>Perform Custom Event</option></select></Field><Field label="Conversion deadline"><select><option>3 days</option><option>7 days</option><option>30 days</option></select></Field>{events.length > 1 && <button className="remove" onClick={() => setEvents(v => v.filter(x => x !== id))}>Remove</button>}</div>)}<button className="secondary" onClick={() => setEvents(v => [...v, Date.now()])}><Plus size={15}/> Add conversion event</button></section></div>; }
-function Review({ draft, go }: { draft: Campaign; go: (step: number) => void }) { const sections = [["Campaign details", draft.name, 0], ["Messages", `${channelMeta[draft.channel].title} · Variant 1`, 0], ["Delivery", draft.schedule, 1], ["Audience", draft.audience || "All Users", 2], ["Conversions", draft.conversion || "Make Purchase", 3]]; return <div className="editor-body"><section className="editor-card"><h2>Review Summary</h2><div className="review-grid">{sections.map(([title, value, index]) => <div className="review-item" key={String(title)}><b>{title} <span>✓</span></b><p>{value}</p><button className="secondary small" onClick={() => go(Number(index))}>Edit</button></div>)}</div><div className="launch-panel"><ShieldCheck size={22}/><div><b>Ready to launch</b><p>Configuration is valid. Launch will generate local-only delivery and engagement events.</p></div></div></section></div>; }
-function Toggle({ title, help, checked = false }: { title: string; help: string; checked?: boolean }) { const [value, setValue] = useState(checked); return <div className="toggle-row"><div><b>{title}</b><small>{help}</small></div><button className={className("switch", value && "on")} onClick={() => setValue(!value)}><i/></button></div>; }
+function Review({ draft, go, issues }: { draft: Campaign; go: (step: number) => void; issues: string[] }) {
+  const delivery = (draft.config?.delivery ?? {}) as Record<string, unknown>;
+  const timing = draft.schedule === "One time" ? `${draft.schedule} · ${String(delivery.startDate ?? "2026-09-17")} ${String(delivery.sendTime ?? "10:00")}` : draft.schedule;
+  const sections = [["Campaign details", draft.name, 0], ["Messages", `${channelMeta[draft.channel].title} · ${draft.channel === "email" ? emailVariants(draft).length : 1} variant(s)`, 0], ["Delivery", timing, 1], ["Audience", draft.audience || "All Users", 2], ["Conversions", draft.conversion || "Make Purchase", 3]];
+  return <div className="editor-body"><section className="editor-card"><h2>Review Summary</h2><div className="review-grid">{sections.map(([title, value, index]) => <div className="review-item" key={String(title)}><b>{title} <span>{issues.some(issue => String(title) === "Campaign details" ? issue.includes("campaign name") : String(title) === "Messages" && !issue.includes("campaign name")) ? "!" : "✓"}</span></b><p>{value}</p><button className="secondary small" onClick={() => go(Number(index))}>Edit</button></div>)}</div>{issues.length ? <div className="launch-panel" role="alert" style={{ background: "#fff1f1", color: "#933b48" }}><X size={22}/><div><b>Complete before launch</b>{issues.map(issue => <p key={issue}>{issue}</p>)}</div></div> : <div className="launch-panel"><ShieldCheck size={22}/><div><b>Ready to launch</b><p>This campaign is ready to launch.</p></div></div>}</section></div>;
+}
+function Toggle({ title, help, checked = false, value, onChange }: { title: string; help: string; checked?: boolean; value?: boolean; onChange?: (value: boolean) => void }) { const [localValue, setLocalValue] = useState(checked); const active = value ?? localValue; return <div className="toggle-row"><div><b>{title}</b><small>{help}</small></div><button type="button" role="switch" aria-checked={active} aria-label={title} className={className("switch", active && "on")} onClick={() => { if (onChange) onChange(!active); else setLocalValue(!active); }}><i/></button></div>; }
 function MessagePreview({ draft }: { draft: Campaign }) { const title = draft.subject || "Your welcome offer is here"; const body = draft.body || "Thanks for being with us. Use code SEPTEMBER20 to get 20% off."; const channel = draft.channel; return <div className="preview-panel"><div className="preview-head"><span>Preview</span><small>Live preview</small></div><div className="device-stage">{channel === "email" || channel === "multichannel" ? <article className="email-preview"><small>From: Powered by Braze</small><h3>{title}</h3><div className="email-image"/><h2>September Exclusive</h2><p>{body}</p><button>Claim your offer</button></article> : channel === "webhook" ? <pre>POST https://api.example.com/events{`\n\n`}{'{'}{`\n  "user_id": "user_1024",`}{`\n  "event": "campaign_sent"`}{`\n}`}</pre> : <div className="phone"><div className="phone-top">9:41</div>{channel === "iam" ? <div className="iam-card"><div className="email-image"/><h3>{title}</h3><p>{body}</p><button>Shop now</button></div> : channel === "content" ? <div className="content-card"><div className="email-image"/><b>{title}</b><p>{body}</p></div> : channel === "banner" ? <div className="banner-card"><b>{title}</b><p>{body}</p><button>Shop now</button></div> : <div className="notification"><b>{title}</b><p>{body}</p></div>}</div>}</div></div>; }
 function LegacyTestModal({ draft, close }: { draft: Campaign; close: () => void }) { const [sent, setSent] = useState(false); return <div className="modal-backdrop"><section className="test-modal"><button className="modal-close" onClick={close}><X size={18}/></button><h2>Preview and test</h2><p>Send a simulated test event to the local activity log. No external service is contacted.</p><Field label="Test user"><input defaultValue="marketing.qa@example.com"/></Field>{sent ? <div className="test-success"><ShieldCheck size={18}/><span>Test event created for {channelMeta[draft.channel].title}.</span></div> : <button className="primary" onClick={() => setSent(true)}><Send size={15}/> Send test</button>}</section></div>; }
 

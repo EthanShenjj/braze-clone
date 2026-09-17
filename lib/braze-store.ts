@@ -4,6 +4,7 @@ import { mkdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
+import { campaignValidationIssues } from "./campaign-validation";
 
 export type Channel = "email" | "push" | "iam" | "content" | "banner" | "sms" | "webhook" | "whatsapp" | "line" | "multichannel" | "operator" | "feature" | "api";
 export type CampaignStatus = "Draft" | "Active" | "Stopped" | "Archived";
@@ -138,11 +139,28 @@ export function upsertCampaign(input: Partial<CampaignRecord> & Pick<CampaignRec
 export function archiveCampaign(id: string) { db().prepare("UPDATE campaigns SET archived_at = ?, status = 'Archived', edited_at = ? WHERE id = ?").run(now(), now(), id); audit("campaign", id, "archived", {}); }
 export function stopCampaign(id: string) { db().prepare("UPDATE campaigns SET status = 'Stopped', edited_at = ? WHERE id = ?").run(now(), id); audit("campaign", id, "stopped", {}); return getCampaign(id); }
 
+export function estimateAudience(audience = "All Users", country?: string) {
+  const clauses: string[] = [];
+  const values: string[] = [];
+  if (audience === "New Users" || audience === "Recent Purchasers") { clauses.push("lifecycle = ?"); values.push(audience); }
+  if (country && ["US", "GB", "CN", "SG", "DE"].includes(country)) { clauses.push("country = ?"); values.push(country); }
+  const where = clauses.length ? `WHERE ${clauses.join(" AND ")}` : "";
+  const result = db().prepare(`SELECT count(*) AS matching, sum(CASE WHEN subscribed = 1 AND reachable = 1 THEN 1 ELSE 0 END) AS reachable FROM users ${where}`).get(...values) as { matching: number; reachable: number | null };
+  return { matching: result.matching, reachable: result.reachable ?? 0 };
+}
+
 export function launchCampaign(id: string) {
   const conn = db(); const campaign = getCampaign(id);
   if (!campaign) throw new Error("Campaign not found");
+  if (campaign.status === "Active") {
+    const latest = conn.prepare("SELECT id, eligible_count, delivered_count, failed_count FROM execution_runs WHERE campaign_id = ? ORDER BY created_at DESC LIMIT 1").get(id) as { id: string; eligible_count: number; delivered_count: number; failed_count: number } | undefined;
+    return { campaign, run: { id: latest?.id ?? "existing", eligible: latest?.eligible_count ?? 0, delivered: latest?.delivered_count ?? 0, failed: latest?.failed_count ?? 0, alreadyLaunched: true } };
+  }
+  const issues = campaignValidationIssues(campaign);
+  if (issues.length) throw new Error(issues.join(" "));
   const audience = campaign.audience === "New Users" ? "lifecycle = 'New Users'" : campaign.audience === "Recent Purchasers" ? "lifecycle = 'Recent Purchasers'" : "1 = 1";
-  const users = conn.prepare(`SELECT id, reachable, subscribed FROM users WHERE ${audience}`).all() as { id: string; reachable: number; subscribed: number }[];
+  const country = typeof campaign.config.audienceCountry === "string" && ["US", "GB", "CN", "SG", "DE"].includes(campaign.config.audienceCountry) ? campaign.config.audienceCountry : null;
+  const users = conn.prepare(`SELECT id, reachable, subscribed FROM users WHERE ${audience}${country ? " AND country = ?" : ""}`).all(...(country ? [country] : [])) as { id: string; reachable: number; subscribed: number }[];
   const eligible = users.filter(user => user.reachable && user.subscribed);
   const runId = uid("run"); const timestamp = now();
   const insertEvent = conn.prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)");
