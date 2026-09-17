@@ -50,3 +50,9 @@
 本轮没有新增真实 Braze Canvas 参考截图，因此以上是功能补齐，不代表视觉 1:1 验收。多数二级页复用通用列表、渠道适配器、独立 Worker、Playwright 截图基线和 Vercel 持久数据库仍未完成。
 
 下一轮最有价值的验收是：在真实账号逐一打开现成的 IAM、Banner、WhatsApp、SMS 草稿和各主要二级页，记录字段/状态/截图；再依清单逐页修正并建立截图差异测试。没有实测的渠道不应声称 1:1 完成。
+
+## Messaging 抽屉交互补查（2026-09-17）
+
+- 外部 Chrome 中的真实 Braze `Messaging` 抽屉，在 `Campaigns` 下有独立的 `View by channel` 展开入口。本地此前只有带右箭头的 Campaigns 页面入口；已补齐可展开的渠道列表，选择后进入 Campaigns 并按渠道筛选，筛选写入 URL，刷新可恢复。
+- 当前页再次点 Campaigns 原先会关闭抽屉但停留在同一页面，容易误以为点击无效；现在当前项有明确选中样式。`Messaging Diagnostics` 等页面的路由映射也已修正，二级页顶部的 Create 按钮会打开实际输入表单。
+- 这次只修复导航行为与筛选。Feature Flags、Landing Pages、Surveys、Messaging Diagnostics 等目的页仍复用通用资源页，不能标记为 Braze 页面 1:1 完成。

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type ReactNode } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createPortal } from "react-dom";
 import emailStarterStyles from "./email-starter.module.css";
 import emailEditorStyles from "./email-editor.module.css";
@@ -10,6 +10,7 @@ import brazeSendingStyles from "./braze-sending.module.css";
 import pushStyles from "./push-editor.module.css";
 import LiveCanvas from "./live-canvas";
 import LiveUserSearch from "./live-user-search";
+import { pageFromPath, pageKeyForDrawerItem, routeForPage } from "@/lib/navigation";
 import { campaignValidationIssues } from "@/lib/campaign-validation";
 import {
   Activity, Bell, Bot, Box, CalendarDays, ChevronDown, ChevronLeft, ChevronRight,
@@ -84,20 +85,6 @@ function audienceSummary(draft: Campaign) {
   return parts.length ? parts.join(" · ") : "No segments or filters selected";
 }
 
-const routeForPage = (page: string) => {
-  const routes: Record<string, string> = { campaigns: "/engagement/campaigns/campaigns?start=0&limit=12&sortby=last_edited&sortdir=-1&display=list", canvas: "/engagement/canvas", "getting-started": "/home", performance: "/analytics/performance-overview", agents: "/agent-console", messaging: "/messaging", audience: "/audience", content: "/content", analytics: "/analytics", partners: "/partner-integrations", data: "/data-settings", settings: "/settings", segments: "/audience/segments", "landing-pages": "/messaging/landing-pages", "search-users": "/audience/search-users", catalogs: "/content/catalogs", "content-calendar": "/messaging/content-calendar", "messaging-diagnostics": "/messaging/diagnostics" };
-  return routes[page] ?? `/${page}`;
-};
-
-const pageFromPath = (pathname: string) => {
-  if (pathname.includes("/engagement/campaigns")) return "campaigns";
-  if (pathname === "/engagement/canvas") return "canvas";
-  if (pathname === "/home") return "getting-started";
-  const leaf = pathname.split("/").filter(Boolean).at(-1);
-  if (leaf === "performance-overview") return "performance";
-  return leaf || "campaigns";
-};
-
 export default function Dashboard() {
   const router = useRouter(); const pathname = usePathname();
   const [page, setPage] = useState("campaigns");
@@ -131,6 +118,10 @@ export default function Dashboard() {
 
   function openPage(key: string) {
     setCreateAnchor(null); setDrawer(null); setEditing(null); setPage(key); router.push(routeForPage(key));
+  }
+  function openCampaignChannel(channel: Channel) {
+    setCreateAnchor(null); setDrawer(null); setEditing(null); setPage("campaigns");
+    router.push(`${routeForPage("campaigns")}&channel=${encodeURIComponent(channel)}`);
   }
   async function start(channel: Channel) {
     const id = `cmp_${Math.random().toString(36).slice(2, 10)}`;
@@ -190,15 +181,17 @@ export default function Dashboard() {
       <div className="page-tabs"><button className={className("page-tab", !editing && "selected")} onClick={() => openPage(editing ? "campaigns" : page)}>{editing ? "Campaigns" : page === "performance" ? "Performance Overview" : page === "agents" ? "Agent Console" : page === "partners" ? "Partner Integrations" : page === "data" ? "Data Settings" : titleFrom(page)}</button>{editing && <button className="page-tab selected">Edit '{editing.name}' <X size={14} onClick={() => openPage("campaigns")}/></button>}</div>
       {editing ? <CampaignEditor key={editing.id} campaign={editing} onSave={saveCampaign} onClose={() => openPage("campaigns")} /> : <PageContent page={page} campaigns={campaigns} openPage={openPage} onEdit={openCampaign} onCreate={(event) => { const rect = event.currentTarget.getBoundingClientRect(); setCreateAnchor({ position: "fixed", top: rect.bottom + 6, left: Math.max(16, rect.right - 325), zIndex: 61 }); }} onStop={stopCampaign} onArchive={archiveCampaign} onDuplicate={duplicateCampaign} notify={setToast} />}
     </main>
-    {drawer && <NavigationDrawer name={titleFrom(drawer)} items={drawers[drawer]} close={() => setDrawer(null)} open={(name) => { if (name === "Campaigns") openPage("campaigns"); else openPage(name.toLowerCase().replace(/[\s/]+/g, "-")); }} />}
+    {drawer && <NavigationDrawer name={titleFrom(drawer)} items={drawers[drawer]} activePage={page} close={() => setDrawer(null)} open={openPage} openCampaignChannel={openCampaignChannel} />}
     {createAnchor && <CreateMenu anchor={createAnchor} start={start} close={() => setCreateAnchor(null)} />}
     {operatorOpen && <Operator close={() => setOperatorOpen(false)} start={start} />}
     {toast && <div className="toast"><ShieldCheck size={18}/><span>{toast}</span><button onClick={() => setToast("")}><X size={15}/></button></div>}
   </div>;
 }
 
-function NavigationDrawer({ name, items, close, open }: { name: string; items: string[]; close: () => void; open: (name: string) => void }) {
-  return <div className="drawer-backdrop" onMouseDown={close}><section className="nav-drawer" onMouseDown={e => e.stopPropagation()}><header><h2>{name}</h2><button onClick={close}><X size={18}/></button></header><div className="drawer-list">{items.map((item, index) => <button key={item} onClick={() => open(item)}><span className="drawer-icon">{index % 3 === 0 ? <Grid2X2 size={18}/> : index % 3 === 1 ? <Activity size={18}/> : <Settings size={18}/>}</span><span><b>{item}</b><small>{drawerDescription(item)}</small></span><ChevronRight size={16}/></button>)}</div></section></div>;
+function NavigationDrawer({ name, items, activePage, close, open, openCampaignChannel }: { name: string; items: string[]; activePage: string; close: () => void; open: (page: string) => void; openCampaignChannel: (channel: Channel) => void }) {
+  const [channelsOpen, setChannelsOpen] = useState(false);
+  const channels: Channel[] = ["email", "push", "iam", "content", "banner", "sms", "webhook", "whatsapp", "line"];
+  return <div className="drawer-backdrop" onMouseDown={close}><section className="nav-drawer" onMouseDown={e => e.stopPropagation()}><header><h2>{name}</h2><button type="button" aria-label="Close navigation" onClick={close}><X size={18}/></button></header><div className="drawer-list">{items.map((item, index) => { const key = pageKeyForDrawerItem(item); return <div key={item}><button type="button" aria-current={activePage === key ? "page" : undefined} onClick={() => open(key)}><span className="drawer-icon">{index % 3 === 0 ? <Grid2X2 size={18}/> : index % 3 === 1 ? <Activity size={18}/> : <Settings size={18}/>}</span><span><b>{item}</b><small>{drawerDescription(item)}</small></span><ChevronRight size={16}/></button>{name === "Messaging" && item === "Campaigns" && <div className="drawer-channel-group"><button type="button" className="drawer-channel-toggle" aria-expanded={channelsOpen} onClick={() => setChannelsOpen(!channelsOpen)}>View by channel <ChevronDown size={14} className={channelsOpen ? "open" : ""}/></button>{channelsOpen && <div className="drawer-channel-list">{channels.map(channel => <button type="button" key={channel} onClick={() => openCampaignChannel(channel)}>{channelMeta[channel].title}</button>)}</div>}</div>}</div>; })}</div></section></div>;
 }
 
 function drawerDescription(name: string) {
@@ -226,17 +219,18 @@ function PageContent({ page, campaigns, openPage, onEdit, onCreate, onStop, onAr
   if (page === "message-activity-log") return <ActivityLogPage />;
   if (page === "search-users") return <LiveUserSearch notify={notify}/>;
   if (page === "catalogs") return <CatalogWorkspace notify={notify}/>;
-  return <ModuleWorkspace title={titleFrom(page)} page={page} notify={notify} openPage={openPage}/>;
+  return <ModuleWorkspace key={page} title={titleFrom(page)} page={page} notify={notify} openPage={openPage}/>;
 }
 
-type CampaignListQuery = { search: string; status: string; sort: "name" | "edited"; direction: 1 | -1; start: number; limit: number };
+type CampaignListQuery = { search: string; status: string; channel: Channel | "all"; sort: "name" | "edited"; direction: 1 | -1; start: number; limit: number };
 
-function readCampaignListQuery(): CampaignListQuery {
-  const params = new URLSearchParams(window.location.search);
+function readCampaignListQuery(params: URLSearchParams): CampaignListQuery {
   const status = params.get("columnFilters[status]") ?? "All";
+  const channel = params.get("channel");
   return {
     search: params.get("globalFilter") ?? "",
     status: status === "active" ? "Active" : status === "draft" ? "Draft" : status === "stopped" ? "Stopped" : "All",
+    channel: channel && channel in channelMeta ? channel as Channel : "all",
     sort: params.get("sortby") === "name" ? "name" : "edited",
     direction: params.get("sortdir") === "1" ? 1 : -1,
     start: Math.max(0, Number(params.get("start")) || 0),
@@ -245,12 +239,9 @@ function readCampaignListQuery(): CampaignListQuery {
 }
 
 function CampaignList({ campaigns, onEdit, onCreate, onStop, onArchive, onDuplicate }: { campaigns: Campaign[]; onEdit: (c: Campaign) => void; onCreate: (event: ReactMouseEvent<HTMLButtonElement>) => void; onStop: (id: string) => void; onArchive: (id: string) => Promise<boolean>; onDuplicate: (campaign: Campaign) => Promise<void> }) {
-  const [query, setQuery] = useState<CampaignListQuery>({ search: "", status: "All", sort: "edited", direction: -1, start: 0, limit: 12 });
-  useEffect(() => {
-    const sync = () => setQuery(readCampaignListQuery());
-    sync(); window.addEventListener("popstate", sync);
-    return () => window.removeEventListener("popstate", sync);
-  }, []);
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState<CampaignListQuery>({ search: "", status: "All", channel: "all", sort: "edited", direction: -1, start: 0, limit: 12 });
+  useEffect(() => { setQuery(readCampaignListQuery(searchParams)); }, [searchParams]);
   const changeQuery = (patch: Partial<CampaignListQuery>, replace = false) => {
     const next = { ...query, ...patch };
     setQuery(next);
@@ -258,6 +249,8 @@ function CampaignList({ campaigns, onEdit, onCreate, onStop, onArchive, onDuplic
     url.searchParams.set("start", String(next.start));
     url.searchParams.set("limit", String(next.limit));
     url.searchParams.set("globalFilter", next.search);
+    if (next.channel === "all") url.searchParams.delete("channel");
+    else url.searchParams.set("channel", next.channel);
     if (next.status === "All") url.searchParams.delete("columnFilters[status]");
     else url.searchParams.set("columnFilters[status]", next.status.toLowerCase());
     url.searchParams.set("sortby", next.sort === "name" ? "name" : "last_edited");
@@ -265,10 +258,10 @@ function CampaignList({ campaigns, onEdit, onCreate, onStop, onArchive, onDuplic
     url.searchParams.set("display", "list");
     window.history[replace ? "replaceState" : "pushState"](null, "", url);
   };
-  const filtered = useMemo(() => campaigns.filter(c => c.name.toLowerCase().includes(query.search.toLowerCase()) && (query.status === "All" || c.status === query.status)).sort((a, b) => (query.sort === "name" ? a.name.localeCompare(b.name) : a.edited.localeCompare(b.edited)) * query.direction), [campaigns, query]);
+  const filtered = useMemo(() => campaigns.filter(c => c.name.toLowerCase().includes(query.search.toLowerCase()) && (query.status === "All" || c.status === query.status) && (query.channel === "all" || c.channel === query.channel)).sort((a, b) => (query.sort === "name" ? a.name.localeCompare(b.name) : a.edited.localeCompare(b.edited)) * query.direction), [campaigns, query]);
   const start = Math.min(query.start, Math.max(0, Math.ceil(filtered.length / query.limit) - 1) * query.limit);
   const paged = filtered.slice(start, start + query.limit);
-  return <section className="page-content"><div className="page-heading"><div><div className="title-line"><h1>Campaigns</h1><span className="access-pill">Limited access</span></div><p>Campaigns let you send a single, targeted message through email, push, SMS, and more, ensuring timely communication with your audience</p></div><div className="heading-actions"><button className="secondary">Send feedback</button><button className="secondary">Take a tour <ChevronDown size={14}/></button><button className="primary" onClick={onCreate}><Plus size={16}/> Create campaign <ChevronDown size={14}/></button></div></div><div className="filters"><label>Status<select value={query.status} onChange={e => changeQuery({ status: e.target.value, start: 0 })}><option>All</option><option>Draft</option><option>Active</option><option>Stopped</option></select></label><label>Tag<select><option>Select...</option><option>Lifecycle</option><option>Promotional</option></select></label><button className="secondary"><Filter size={15}/> Filters</button><button className="secondary"><Grid2X2 size={15}/> Columns</button><button className="text-button" onClick={() => changeQuery({ status: "All", search: "", start: 0 })}>Reset filters</button><div className="filter-search"><Search size={15}/><input placeholder="Search" value={query.search} onChange={e => changeQuery({ search: e.target.value, start: 0 }, true)}/></div></div><div className="result-heading"><span>{filtered.length} Results</span><small>{query.status !== "All" ? "Status: " + query.status : "All campaigns"}</small></div><div className="table-wrap"><table><thead><tr><th onClick={() => changeQuery({ sort: "name", direction: query.sort === "name" && query.direction === 1 ? -1 : 1, start: 0 })}>Name {query.sort === "name" ? query.direction === 1 ? "↑" : "↓" : ""}</th><th>Status</th><th>Stop date</th><th>Campaign type</th><th>Entry schedule</th><th>Sent</th><th>Last edited</th><th></th></tr></thead><tbody>{paged.map(c => { const Icon = channelMeta[c.channel].icon; return <tr key={c.id}><td><button className="link-button" onClick={() => onEdit(c)}>{c.name}</button></td><td><span className={className("status", c.status.toLowerCase())}>{c.status}</span></td><td>—</td><td><span className="channel-cell"><Icon size={14}/>{channelMeta[c.channel].title}</span></td><td>{c.schedule}</td><td>{c.sent.toLocaleString()}</td><td>{c.edited}</td><td><CampaignRowActions campaign={c} onEdit={onEdit} onStop={onStop} onArchive={onArchive} onDuplicate={onDuplicate}/></td></tr>; })}</tbody></table></div><div className="campaign-pagination"><span>{filtered.length ? start + 1 : 0}–{Math.min(start + query.limit, filtered.length)} of {filtered.length}</span><label>Rows per page <select value={query.limit} onChange={e => changeQuery({ limit: Number(e.target.value), start: 0 })}><option value="12">12</option><option value="24">24</option><option value="48">48</option></select></label><button className="secondary small" disabled={start === 0} onClick={() => changeQuery({ start: Math.max(0, start - query.limit) })} aria-label="Previous page"><ChevronLeft size={15}/></button><button className="secondary small" disabled={start + query.limit >= filtered.length} onClick={() => changeQuery({ start: start + query.limit })} aria-label="Next page"><ChevronRight size={15}/></button></div></section>;
+  return <section className="page-content"><div className="page-heading"><div><div className="title-line"><h1>Campaigns</h1><span className="access-pill">Limited access</span></div><p>Campaigns let you send a single, targeted message through email, push, SMS, and more, ensuring timely communication with your audience</p></div><div className="heading-actions"><button className="secondary">Send feedback</button><button className="secondary">Take a tour <ChevronDown size={14}/></button><button className="primary" onClick={onCreate}><Plus size={16}/> Create campaign <ChevronDown size={14}/></button></div></div><div className="filters"><label>Status<select value={query.status} onChange={e => changeQuery({ status: e.target.value, start: 0 })}><option>All</option><option>Draft</option><option>Active</option><option>Stopped</option></select></label><label>Tag<select><option>Select...</option><option>Lifecycle</option><option>Promotional</option></select></label><button className="secondary"><Filter size={15}/> Filters</button><button className="secondary"><Grid2X2 size={15}/> Columns</button><button className="text-button" onClick={() => changeQuery({ status: "All", channel: "all", search: "", start: 0 })}>Reset filters</button><div className="filter-search"><Search size={15}/><input placeholder="Search" value={query.search} onChange={e => changeQuery({ search: e.target.value, start: 0 }, true)}/></div></div><div className="result-heading"><span>{filtered.length} Results</span><small>{query.channel !== "all" ? channelMeta[query.channel].title : query.status !== "All" ? "Status: " + query.status : "All campaigns"}</small></div><div className="table-wrap"><table><thead><tr><th onClick={() => changeQuery({ sort: "name", direction: query.sort === "name" && query.direction === 1 ? -1 : 1, start: 0 })}>Name {query.sort === "name" ? query.direction === 1 ? "↑" : "↓" : ""}</th><th>Status</th><th>Stop date</th><th>Campaign type</th><th>Entry schedule</th><th>Sent</th><th>Last edited</th><th></th></tr></thead><tbody>{paged.map(c => { const Icon = channelMeta[c.channel].icon; return <tr key={c.id}><td><button className="link-button" onClick={() => onEdit(c)}>{c.name}</button></td><td><span className={className("status", c.status.toLowerCase())}>{c.status}</span></td><td>—</td><td><span className="channel-cell"><Icon size={14}/>{channelMeta[c.channel].title}</span></td><td>{c.schedule}</td><td>{c.sent.toLocaleString()}</td><td>{c.edited}</td><td><CampaignRowActions campaign={c} onEdit={onEdit} onStop={onStop} onArchive={onArchive} onDuplicate={onDuplicate}/></td></tr>; })}</tbody></table></div><div className="campaign-pagination"><span>{filtered.length ? start + 1 : 0}–{Math.min(start + query.limit, filtered.length)} of {filtered.length}</span><label>Rows per page <select value={query.limit} onChange={e => changeQuery({ limit: Number(e.target.value), start: 0 })}><option value="12">12</option><option value="24">24</option><option value="48">48</option></select></label><button className="secondary small" disabled={start === 0} onClick={() => changeQuery({ start: Math.max(0, start - query.limit) })} aria-label="Previous page"><ChevronLeft size={15}/></button><button className="secondary small" disabled={start + query.limit >= filtered.length} onClick={() => changeQuery({ start: start + query.limit })} aria-label="Next page"><ChevronRight size={15}/></button></div></section>;
 }
 
 function CampaignRowActions({ campaign, onEdit, onStop, onArchive, onDuplicate }: { campaign: Campaign; onEdit: (campaign: Campaign) => void; onStop: (id: string) => void; onArchive: (id: string) => Promise<boolean>; onDuplicate: (campaign: Campaign) => Promise<void> }) {
@@ -795,8 +788,21 @@ function ActivityLogPage() {
 }
 
 function ModuleWorkspace({ title, page, notify, openPage }: { title: string; page: string; notify: (message: string) => void; openPage: (page: string) => void }) {
+  const [creating, setCreating] = useState(false);
   const domain = ["segments", "segment-extensions", "global-control-group", "suppression-lists", "subscription-group-management", "email-preference-centers", "search-users", "manage-audience", "import-users", "locations"].includes(page) ? "audience" : ["media-library", "banner-templates", "canvas-templates", "content-blocks", "email-link-templates", "email-templates", "in-app-message-templates", "webhook-templates", "promotion-codes", "catalogs", "brand-guidelines"].includes(page) ? "content" : ["technology-partners", "currents", "data-sharing", "solutions-partners"].includes(page) ? "integrations" : ["custom-attributes", "custom-events", "products", "cloud-data-ingestion", "data-transformation"].includes(page) ? "data" : page.includes("settings") || ["app-settings", "apis-and-identifiers", "internal-groups", "exports-log", "tag-management", "email-preferences", "frequency-capping-rules", "push-settings", "approval-workflow", "localization-settings", "banner-placements", "messaging-rate-limits", "billing", "user-management"].includes(page) ? "settings" : "messaging";
-  return <section className="page-content module-workspace"><div className="page-heading"><div><div className="title-line"><h1>{title}</h1><span className="access-pill">Limited access</span></div><p>{moduleDescription(domain, title)}</p></div><div className="heading-actions"><button className="secondary" onClick={() => notify(`${title} export prepared from local SQLite.`)}>Export</button><button className="primary" onClick={() => void document.getElementById("resource-name")?.focus()}><Plus size={16}/> Create {singular(title)}</button></div></div><DomainConfiguration domain={domain} page={page} openPage={openPage} notify={notify}/><PersistentResourceList page={page} title={title} notify={notify}/></section>;
+  const exportResources = async () => {
+    try {
+      const response = await fetch(`/api/resources/${page}`);
+      if (!response.ok) throw new Error("Export request failed");
+      const result = await response.json();
+      const url = URL.createObjectURL(new Blob([JSON.stringify(result.data, null, 2)], { type: "application/json" }));
+      const link = document.createElement("a");
+      link.href = url; link.download = `${page}.json`; document.body.append(link); link.click(); link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      notify(`${title} exported as JSON.`);
+    } catch { notify(`Unable to export ${title.toLowerCase()}.`); }
+  };
+  return <section className="page-content module-workspace"><div className="page-heading"><div><div className="title-line"><h1>{title}</h1><span className="access-pill">Limited access</span></div><p>{moduleDescription(domain, title)}</p></div><div className="heading-actions"><button className="secondary" onClick={() => void exportResources()}>Export</button><button className="primary" onClick={() => setCreating(true)}><Plus size={16}/> Create {singular(title)}</button></div></div><DomainConfiguration domain={domain} page={page} openPage={openPage} notify={notify}/><PersistentResourceList page={page} title={title} notify={notify} creating={creating} setCreating={setCreating}/></section>;
 }
 
 function moduleDescription(domain: string, title: string) { const copy: Record<string, string> = { audience: "Define users, subscriptions, eligibility, and audience controls used by local campaign execution.", content: "Manage reusable message content, templates, media, catalogs, and promotion data.", integrations: "Configure local representations of partner connections, data sharing, and delivery logs.", data: "Define the data schema and ingestion inputs that power targeting and personalization.", settings: "Configure workspace defaults, governance, channel settings, and local access controls.", messaging: "Configure message assets, entry rules, and delivery diagnostics." }; return copy[domain] ?? `Manage ${title.toLowerCase()} for this workspace.`; }
@@ -810,12 +816,12 @@ function DomainConfiguration({ domain, page, openPage, notify }: { domain: strin
   return <section className="domain-config"><h2>Workspace configuration</h2><div className="form-grid"><Field label="Status"><select><option>Active</option><option>Draft</option></select></Field><Field label="Owner"><select><option>Lifecycle Marketing</option><option>Growth</option></select></Field></div><button className="secondary small" onClick={() => notify("Messaging configuration saved.")}>Save configuration</button></section>;
 }
 
-function PersistentResourceList({ page, title, notify }: { page: string; title: string; notify: (message: string) => void }) {
-  const [rows, setRows] = useState<{ id: string; name: string; status: string; description: string; updatedAt: string }[]>([]); const [query, setQuery] = useState(""); const [creating, setCreating] = useState(false); const [name, setName] = useState("");
+function PersistentResourceList({ page, title, notify, creating, setCreating }: { page: string; title: string; notify: (message: string) => void; creating: boolean; setCreating: (value: boolean) => void }) {
+  const [rows, setRows] = useState<{ id: string; name: string; status: string; description: string; updatedAt: string }[]>([]); const [query, setQuery] = useState(""); const [name, setName] = useState("");
   const load = async () => { const response = await fetch(`/api/resources/${page}?q=${encodeURIComponent(query)}`); if (response.ok) { const result = await response.json(); setRows(result.data); } };
   useEffect(() => { void load(); }, [page, query]);
   const create = async () => { if (!name.trim()) return; const response = await fetch(`/api/resources/${page}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, description: `Local ${title.toLowerCase()} resource` }) }); if (response.ok) { setName(""); setCreating(false); await load(); notify(`${title} resource saved to local SQLite.`); } };
-  return <section className="resource-workspace"><div className="list-toolbar"><div className="filter-search"><Search size={15}/><input placeholder={`Search ${title.toLowerCase()}`} value={query} onChange={event => setQuery(event.target.value)}/></div><button className="secondary" onClick={() => setCreating(value => !value)}><Plus size={15}/> Create</button></div>{creating && <div className="resource-create"><input id="resource-name" autoFocus placeholder={`Name this ${singular(title).toLowerCase()}`} value={name} onChange={event => setName(event.target.value)} onKeyDown={event => { if (event.key === "Enter") void create(); }}/><button className="primary small" onClick={() => void create()}>Save</button></div>}<div className="resource-cards">{rows.length ? rows.map(row => <article key={row.id}><div className="resource-avatar">{row.name[0]}</div><div><b>{row.name}</b><p>{row.description}</p><small>{row.status} · {new Date(row.updatedAt).toLocaleString()}</small></div><button className="icon-button" onClick={() => notify(`${row.name} opened in its local workspace.`)}><MoreHorizontal size={18}/></button></article>) : <div className="empty-inline">No {title.toLowerCase()} resources found.</div>}</div></section>;
+  return <section className="resource-workspace"><div className="list-toolbar"><div className="filter-search"><Search size={15}/><input placeholder={`Search ${title.toLowerCase()}`} value={query} onChange={event => setQuery(event.target.value)}/></div><button className="secondary" onClick={() => setCreating(!creating)}><Plus size={15}/> Create</button></div>{creating && <div className="resource-create"><input id="resource-name" autoFocus placeholder={`Name this ${singular(title).toLowerCase()}`} value={name} onChange={event => setName(event.target.value)} onKeyDown={event => { if (event.key === "Enter") void create(); }}/><button className="primary small" onClick={() => void create()}>Save</button></div>}<div className="resource-cards">{rows.length ? rows.map(row => <article key={row.id}><div className="resource-avatar">{row.name[0]}</div><div><b>{row.name}</b><p>{row.description}</p><small>{row.status} · {new Date(row.updatedAt).toLocaleString()}</small></div><button className="icon-button" onClick={() => notify(`${row.name} opened in its local workspace.`)}><MoreHorizontal size={18}/></button></article>) : <div className="empty-inline">No {title.toLowerCase()} resources found.</div>}</div></section>;
 }
 
 type Catalog = { id: string; name: string; status: string; description: string; data: { fields?: string[] }; itemCount: number };

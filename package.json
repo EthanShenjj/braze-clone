@@ -9,6 +9,7 @@
     "dev": "next dev",
     "build": "next build",
     "test:canvas": "node --experimental-strip-types --test tests/canvas-model.test.mjs",
+    "test:navigation": "node --experimental-strip-types --test tests/navigation.test.mjs",
     "start": "next start",
     "lint": "next lint"
   },
