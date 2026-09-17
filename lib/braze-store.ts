@@ -245,7 +245,7 @@ export function activityLog(limit = 50) {
 }
 
 export function demoAction(action: string) {
-  if (action === "reset") { const conn = db(); conn.exec("DELETE FROM message_events; DELETE FROM execution_runs; DELETE FROM audit_log; DELETE FROM campaigns; DELETE FROM users; DELETE FROM resources;"); seed(conn); return { message: "Sample data reset" }; }
+  if (action === "reset") { const conn = db(); conn.exec("DELETE FROM message_events; DELETE FROM execution_runs; DELETE FROM audit_log; DELETE FROM campaigns; DELETE FROM users; DELETE FROM catalog_items; DELETE FROM resources;"); seed(conn); return { message: "Sample data reset" }; }
   if (action === "advance") { const draft = getCampaign("cmp_3d084f2b"); if (draft) upsertCampaign({ ...draft, schedule: "One time" }); return { message: "Simulated time advanced by one day" }; }
   if (action === "failure") { const active = db().prepare("SELECT id, channel FROM campaigns WHERE status = 'Active' LIMIT 1").get() as { id: string; channel: string } | undefined; if (active) db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), active.id, active.channel, "user_1", "failed", now(), JSON.stringify({ reason: "rate_limit" })); return { message: "Rate-limit failure injected" }; }
   return { message: "Delivery receipts generated from the current execution state" };

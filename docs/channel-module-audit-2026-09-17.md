@@ -1,0 +1,41 @@
+# 非 Email 渠道与模块复核（2026-09-17）
+
+这份清单区分两类证据：**Chrome 实测**表示在用户已登录的真实 Braze 页面读取了当前账号可见结构；**代码核查**表示检查本地 Next.js 工程，不能据此声称与 Braze 视觉一致。当前只逐屏实测了 Email 和一个已有的 Push 草稿，其余渠道尚缺真实页面截图。创建菜单的 13 个入口均可打开本地草稿，但入口可用不等于功能完成。
+
+## Campaign 渠道
+
+| 渠道 / 入口 | 证据 | 当前本地状态 | 主要缺口 |
+|---|---|---|---|
+| Email | Chrome 实测 + 本地 UI | 五步流程、发送信息、HTML/拖拽编辑和变体可保存 | 拖拽行网格、完整工具栏、真实 Liquid 渲染、邮件测试细节和逐像素验收未完成 |
+| Push notification | Chrome 实测 + 本地 UI | 已补真实页面的双平台预览、Compose/Settings/Test、内容、交互、素材与发送选项结构；修改写入活动配置 | 与真实设备渲染、凭证状态、语言管理、平台差异、媒体库和发送测试仍不同 |
+| In-app message | 代码核查 | 布局、文本、按钮、触发方式和频控开关可编辑并保存 | 无真实 SDK 展示规则、视觉编辑器、设备预览及会话执行 |
+| Content Card | 代码核查 | 卡片类型、类别、文本、图片 URL、点击、置顶和过期字段可保存 | 无真实卡片设计器、媒体库、同步/移除状态及曝光统计 |
+| Banner | 代码核查 | Placement、优先级、文本、按钮和目的地址可保存，含简化预览 | 未读取已注册 Placement；尺寸、样式和优先级效果未接入执行 |
+| SMS/MMS/RCS | 代码核查 | 类型、订阅组、号码、文本、媒体 URL 和退订选项可保存 | 分段数只是本地估算；无运营商规则、媒体渲染、真实 RCS 卡片与回执 |
+| Webhook | 代码核查 | 方法、鉴权、URL、Headers 和 Body 可保存，预览显示本地模拟请求 | 无真实 Braze 布局、变量渲染、鉴权校验、重试和可追踪的响应记录；不会访问外部地址 |
+| WhatsApp | 代码核查 | 模板、语言、媒体、参数文本和按钮 URL 可保存 | 模板状态为本地示例；无实际账号/模板同步、参数校验及渠道预览 |
+| LINE | 代码核查 | 消息类型、账号、正文、图片和动作 URL 可保存 | 无真实账号配置、Flex 编辑器、身份映射与回调 |
+| Multichannel | 代码核查 | 渠道勾选与规则可保存 | 无各渠道独立内容、真实 fallback 调度与跨渠道去重 |
+| Create with Operator | 代码核查 | 确定性的建议文案可保存 | 输入目标不会驱动真实规划；未形成可编辑的多渠道方案 |
+| Feature flag experiment | 代码核查 | flag key、rollout、值和转化配置可保存 | 无独立实验流程、稳定曝光状态、SDK flag 评估与归因 |
+| API campaign | 代码核查 | 标识、事件描述与外部归因开关可保存 | 无外部事件接收/标识匹配，仍共用普通 Campaign 的发布模拟 |
+
+真实 Push 草稿的 Compose 包含：凭证缺失提示、iOS/Android 预览、Device/Notification State、Compose/Settings/Test 标签、Notification type、Language、Title/Message/Android summary、Interactions、Action buttons、三类 Assets、Push destination 与 Android delivery priority。本地此前只有平台按钮、标题、正文、链接、图片和声音，且多个控件没有持久化。本轮已针对这些可见结构和字段修正，但没有据此将 Push 标为 1:1 验收通过。
+
+## 其他功能模块
+
+| 模块 | 已存在的功能 | 确认的问题 | 当前判定 |
+|---|---|---|---|
+| Campaign 列表与全局框架 | 列表 URL 筛选、分页、复制、归档；侧栏与菜单 | 真实列表有行选择、Teams、编辑者/创建者等列；本地 Columns/Filters、顶部搜索、帮助/通知/账户多为无结果控件 | 部分实现 |
+| Canvas | `LiveCanvas` 有基础拖动、点选连线、缩放、复制、删除、撤销重做和 SQLite 保存 | 保存每次新增资源，但刷新不加载保存的图；节点属性只有名称；连线验证只数边；执行是当前节点逐项标记，没有用户路径事件 | 原型 |
+| Audience | Campaign 内有分群、国家筛选与可达人数计算 | Segments、用户搜索、订阅组、Suppression、Import 等二级页多用通用资源页，未改变真实用户/订阅数据 | 大部分占位 |
+| Content / Catalogs | Catalogs 有独立 catalog/item SQLite CRUD；其他资源列表可创建 | Catalog 字段架构和导入导出不完整，未实际供个性化渲染；媒体、模板、内容块等仍是通用资源页 | Catalog 部分实现，其他原型 |
+| Analytics | 共有消息事件驱动的指标与柱图；Message Activity Log 读取 SQLite | 多个报表入口共用一张 `LiveReportPage`；没有原版查询构建器、指标设置、报表定义、活动维度；图表数据与过滤口径仍简化 | 部分实现 |
+| Demo Lab | reset 与 failure 会改 SQLite；本轮修正 reset 对 catalog_items 的清理 | advance 只更新种子活动而没有推进任务时钟；receipts 返回提示但不写新回执 | 部分操作空转 |
+| Agent Console / Integrations / Data Settings / Settings | 菜单、按域区分的说明和 SQLite 资源行 | 大量二级页共用 `ModuleWorkspace`；连接测试、部分 Save/Export 只 toast，不能形成对应配置或审计记录 | 大部分占位 |
+| 执行服务 | Campaign 发布写执行快照、消息事件和审计日志；受众、订阅、国家排除与控制组参与本地计算 | 没有独立 Worker、排期队列、重启恢复、渠道专属适配器或真实触发；不同渠道仍走同一即时发送循环 | 简化模拟 |
+| 路由与质量保障 | Campaign 深链接和列表查询参数可恢复；Next 构建可通过 | 多数二级页没有真实原版路径/详情页；无 Playwright 用例、截图基线、像素差异报告 | 未验收 |
+
+当前开发版保留了两个未接入路由的旧组件 `CanvasPage` 和 `CollectionPage`。评估当前 UI 应查看 `PageContent` 实际分派到的 `LiveCanvas`、`LiveReportPage` 和 `ModuleWorkspace`，以免把死代码误作当前实现。Vercel 的 SQLite 在临时目录，不能作为持久演示数据源；本地 `.data/braze-local.sqlite` 可持久化。
+
+下一轮最有价值的验收是：在真实账号逐一打开现成的 IAM、Banner、WhatsApp、SMS 草稿和各主要二级页，记录字段/状态/截图；再依清单逐页修正并建立截图差异测试。没有实测的渠道不应声称 1:1 完成。
