@@ -18,3 +18,82 @@
 .campaign-pagination select{height:28px;border:1px solid #c9c5d1;border-radius:4px;background:#fff;padding:0 6px;color:#393341}
 .campaign-pagination button{min-width:29px;padding:0 5px}
 .campaign-pagination button:disabled{opacity:.45;cursor:not-allowed}
+.app-shell{--rail:230px}
+.main-area{padding-top:26px}
+.trial{height:26px;padding-top:5px;font-size:11px}
+.topbar{height:55px;top:26px}
+.page-tabs{height:36px;padding-left:24px}
+.editor-page{max-width:940px;padding:18px 0 105px}
+.editor-access{width:max-content;display:flex;align-items:center;gap:4px;margin:0 30px 17px;padding:5px 10px;border-radius:4px;background:#eeeaff;color:#5746a0;font-size:11px;font-weight:750}
+.editor-steps{display:flex;justify-content:space-between;gap:4px;padding:0 20px 18px}
+.editor-step{flex:1;min-width:0;min-height:38px;justify-content:flex-start;gap:14px;padding:0 9px;white-space:normal;text-align:left;color:#5a5562;font-size:12px;font-weight:750;line-height:1.2}
+.editor-step:after{display:none}
+.editor-step>span{flex:0 0 31px;width:31px;height:31px;background:#ece9ff;color:#5a51ab;font-size:14px}
+.editor-step.current{color:#30234f}
+.editor-step.current>span{background:#2e1659;color:#fff}
+.editor-step.complete>span{background:#d9f4e8;color:#228162}
+.editor-step b{max-width:92px}
+.editor-body{padding:0 20px}
+.editor-card{padding:38px;margin-bottom:15px;border-radius:9px}
+.editor-footer{left:var(--rail);height:62px;justify-content:space-between;gap:12px;padding:0 12px 0 18px}
+.editor-footer .footer-arrow{display:grid;place-items:center;flex:0 0 26px;width:26px;height:32px;border:0;background:transparent;color:#645c6d}
+.editor-footer-steps{display:flex;align-items:center;justify-content:center;gap:36px;flex:1;min-width:0}
+.editor-footer .footer-step{display:flex;align-items:center;gap:4px;min-width:0;padding:0;border:0;background:transparent;color:#5c5565;font-size:12px;font-weight:750}
+.editor-footer .footer-step span{display:grid;place-items:center;flex:0 0 21px;width:21px;height:21px;margin:0;border-radius:50%;background:#ebe7ff;color:#5a51a3;font-size:11px}
+.editor-footer .footer-step.current{color:#31234f}
+.editor-footer .footer-step.current span{background:#2d1659;color:#fff}
+.editor-footer .footer-step.complete span{background:#d9f4e8;color:#278365}
+.editor-footer .footer-save{height:36px;min-width:105px;padding:0 15px;border:1px solid #b394f8;border-radius:7px;background:#fff;color:#6636c6;font-size:12px;font-weight:750}
+.editor-footer .footer-launch{height:36px}
+.editor-close-shortcut{display:none}
+.braze-section{padding:37px 38px;border-radius:9px;box-shadow:0 3px 9px #32284712}
+.braze-section h2{font-size:16px;margin-bottom:25px}
+@media(max-width:900px){.app-shell{--rail:58px}.editor-footer{left:58px}.editor-footer-steps{gap:8px}.editor-footer .footer-step{font-size:0}.editor-footer .footer-step span{font-size:11px}.editor-step{gap:5px;font-size:10px}.braze-section{padding:22px}}
+.campaign-details-section .campaign-name-line{display:block;border:0;padding:0}
+.campaign-details-section .campaign-name-line .field{width:min(385px,100%);margin-bottom:9px}
+.campaign-details-section .field{font-size:12px}
+.campaign-details-section .field input{height:36px}
+.campaign-details-section .inline-link{height:29px;display:inline-flex;align-items:center;gap:5px;margin:0 0 15px;color:#6737cb;font-size:12px}
+.campaign-tag-line{position:relative;display:flex;align-items:center;gap:8px;min-height:33px;margin:0 0 24px}
+.campaign-tag-line .tag-button{height:30px}
+.campaign-tag{padding:5px 8px;border-radius:12px;background:#f1ebff;color:#5d32b8;font-size:11px;font-weight:700}
+.campaign-tags-menu{position:absolute;z-index:5;top:32px;left:0;display:grid;min-width:170px;padding:5px;border:1px solid #d9d2e2;border-radius:5px;background:#fff;box-shadow:0 8px 18px #24143b26}
+.campaign-tags-menu button{border:0;background:#fff;padding:8px;text-align:left;font-size:11px}
+.campaign-tags-menu button:hover{background:#f5f0ff}
+.campaign-details-section .campaign-id-line{border-top:1px solid #e5e1e9;padding-top:28px;gap:0}
+.campaign-details-section .campaign-id-line .field{width:min(265px,70%);margin:0}
+.campaign-details-section .campaign-id-line input{border-radius:5px 0 0 5px;text-overflow:ellipsis}
+.campaign-details-section .copy-id{height:36px;min-width:89px;justify-content:center;border-radius:0 5px 5px 0;font-size:12px}
+.braze-flow .editor-card,.braze-review .editor-card{padding:38px;margin-bottom:15px;box-shadow:0 3px 10px #32284712}
+.braze-flow h2,.braze-review h2{font-size:16px;margin:0 0 17px;color:#303039}
+.braze-flow h3,.braze-review h3{font-size:13px;margin:0 0 13px;color:#33313a}
+.braze-flow p,.braze-review p{font-size:12px;line-height:1.55;color:#494552}
+.delivery-types{display:grid;grid-template-columns:repeat(3,minmax(0,186px));gap:8px;margin:12px 0 15px}
+.delivery-type{position:relative;display:flex;flex-direction:column;align-items:flex-start;min-height:136px;padding:19px 20px;border:1px solid #b8b4c0;border-radius:7px;background:#fff;text-align:left;color:#36323d}
+.delivery-type.selected{border-color:#a77cff;background:#fcf8ff}
+.delivery-type .delivery-icon{display:grid;place-items:center;width:19px;height:20px;margin:0 0 12px;color:#3d6072}
+.delivery-type b{font-size:13px;margin-bottom:6px}
+.delivery-type small{max-width:145px;font-size:12px;line-height:1.35;color:#38343d}
+.delivery-radio{position:absolute;top:11px;right:12px;width:21px;height:21px;border:1px solid #bfc0c9;border-radius:50%;background:#fff}
+.delivery-type.selected .delivery-radio{border-color:#8445e4;background:#8445e4;box-shadow:inset 0 0 0 3px #fff}
+.timing-choices{display:grid;gap:18px;margin:22px 0}
+.timing-choice,.checkline{display:flex;align-items:flex-start;gap:10px;font-size:12px;color:#403b47}
+.timing-choice input,.checkline input{accent-color:#6532c5;margin:2px 0}
+.timing-choice span{display:grid;gap:4px}.timing-choice small{font-size:11px;color:#625b69}
+.schedule-fields{display:grid;gap:14px;max-width:610px;margin:16px 0 20px 25px}
+.schedule-fields .field{max-width:270px}.schedule-fields .form-grid{grid-template-columns:repeat(2,minmax(0,270px))}
+.next-send{padding:13px 15px;border:1px solid #e3dfe9;border-radius:5px;background:#faf9fc;color:#524c5a;font-size:12px}
+.braze-flow .checkline{margin:20px 0}.braze-flow .field{max-width:320px}
+.audience-segment-select{width:265px!important;font-style:italic}.audience-divider{border-top:1px solid #ece8ef;margin:22px 0}
+.braze-filter-group{border:1px solid #d9d5de;border-radius:13px;overflow:hidden;margin-top:22px}
+.braze-filter-head{display:flex;justify-content:space-between;align-items:center;min-height:43px;padding:0 16px;border-bottom:1px solid #ddd8e2;color:#5b5661;font-size:13px}
+.braze-filter-head select{width:56px;height:27px;border:1px solid #aa82ed;border-radius:7px;color:#6433c2;font-size:11px;font-weight:700}
+.braze-filter-content{display:flex;align-items:center;gap:8px;min-height:88px;padding:20px 46px}.braze-filter-content select{max-width:355px;min-width:140px;height:36px;border:1px solid #b9b5c0;border-radius:5px;background:#fff;padding:0 10px;color:#5c5662}.braze-filter-content button{border:0;background:transparent;color:#a4a0aa}
+.filter-actions{display:flex;gap:18px;margin:18px 0}.filter-actions button{display:flex;align-items:center;gap:5px;border:0;background:transparent;color:#6233bd;font-size:12px;font-weight:700}
+.exclusion-group{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid #e6dfe9;border-radius:5px;font-size:11px}.exclusion-group select{height:28px}
+.audience-summary{padding:17px 0;border-top:1px solid #e9e4ed}.audience-summary h3{margin-bottom:6px}.audience-summary p{margin:0 0 9px}.audience-summary input{height:31px;margin-left:10px}
+.audience-provider{width:100%;border-collapse:collapse;margin:16px 0 27px;font-size:11px}.audience-provider th,.audience-provider td{padding:9px;text-align:left;border:1px solid #e6e2e9}.audience-provider th{background:#faf9fb}
+.split-row{display:flex;gap:15px}.split-row .field{max-width:160px}.population-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;padding:12px 0}.population-grid strong{display:block;margin:12px 0;font-size:24px}.population-grid p,.population-grid small{font-size:11px;color:#6f6876}.population-grid table{width:100%;border-collapse:collapse;font-size:11px}.population-grid td,.population-grid th{border-bottom:1px solid #e8e4eb;padding:7px;text-align:left}.population-grid td:last-child{text-align:right}.population-bar{height:8px;border-radius:6px;background:#eeeaf1;overflow:hidden}.population-bar span{display:block;height:100%;background:#6534c9}
+.braze-conversion{border-bottom:1px solid #ebe7ee;padding:0 0 22px;margin:0 0 22px}.braze-conversion .field{margin:0 0 20px}.braze-conversion .field>small{display:block;margin:6px 0 11px;color:#645e6a;font-size:11px}.conversion-title{display:flex;align-items:center;justify-content:space-between}.conversion-title button{border:0;background:transparent;color:#8b858e}.conversion-title button:disabled{opacity:.5}.conversion-deadline{display:flex;gap:8px}.conversion-deadline input{width:100px}.conversion-deadline select{width:120px}.deadline-summary{font-size:11px;color:#514b58}
+.braze-review>h2{font-size:17px;margin:10px 0 16px}.review-reach{padding:13px 15px;border:1px solid #c9e0f7;border-radius:5px;background:#ecf6ff;color:#284b75;font-size:12px;margin-bottom:16px}.review-issues{padding:12px;border:1px solid #f4c8cc;border-radius:5px;background:#fff1f1;color:#873b42;font-size:11px;margin-bottom:16px}.review-issues p{margin:4px 0;color:inherit}.review-card-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ebe7ed;padding-bottom:14px;margin-bottom:20px}.review-card-head h3{font-size:16px;margin:0}.review-card-head button{border:0;background:transparent;color:#6132bf;font-size:12px;font-weight:700}.review-variant{font-size:12px;line-height:1.6}.review-variant>div{margin-bottom:5px}.review-variant h3{font-size:14px}.review-email-preview{max-width:600px;min-height:140px;margin:14px 0;border:1px solid #e3e0e8;background:#fff;padding:22px;font-family:Arial,sans-serif}.braze-review h4{margin:21px 0 7px;font-size:12px}.braze-review ul{padding-left:22px;font-size:12px;color:#4f4955}
+@media(max-width:900px){.delivery-types{grid-template-columns:repeat(3,minmax(0,1fr))}.delivery-type{padding:14px;min-height:150px}.braze-flow .editor-card,.braze-review .editor-card{padding:22px}.population-grid{grid-template-columns:1fr}}

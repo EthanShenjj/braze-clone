@@ -1,5 +1,6 @@
 import "server-only";
 
+import { createHash } from "node:crypto";
 import { mkdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -139,14 +140,17 @@ export function upsertCampaign(input: Partial<CampaignRecord> & Pick<CampaignRec
 export function archiveCampaign(id: string) { db().prepare("UPDATE campaigns SET archived_at = ?, status = 'Archived', edited_at = ? WHERE id = ?").run(now(), now(), id); audit("campaign", id, "archived", {}); }
 export function stopCampaign(id: string) { db().prepare("UPDATE campaigns SET status = 'Stopped', edited_at = ? WHERE id = ?").run(now(), id); audit("campaign", id, "stopped", {}); return getCampaign(id); }
 
-export function estimateAudience(audience = "All Users", country?: string) {
+export function estimateAudience(audience = "All Users", country?: string, excludeCountry?: string, eligibility = "subscribed") {
   const clauses: string[] = [];
   const values: string[] = [];
   if (audience === "New Users" || audience === "Recent Purchasers") { clauses.push("lifecycle = ?"); values.push(audience); }
   if (country && ["US", "GB", "CN", "SG", "DE"].includes(country)) { clauses.push("country = ?"); values.push(country); }
+  if (excludeCountry && ["US", "GB", "CN", "SG", "DE"].includes(excludeCountry)) { clauses.push("country != ?"); values.push(excludeCountry); }
   const where = clauses.length ? `WHERE ${clauses.join(" AND ")}` : "";
-  const result = db().prepare(`SELECT count(*) AS matching, sum(CASE WHEN subscribed = 1 AND reachable = 1 THEN 1 ELSE 0 END) AS reachable FROM users ${where}`).get(...values) as { matching: number; reachable: number | null };
-  return { matching: result.matching, reachable: result.reachable ?? 0 };
+  const eligible = eligibility === "all" ? "reachable = 1" : "subscribed = 1 AND reachable = 1";
+  const result = db().prepare(`SELECT count(*) AS matching, sum(CASE WHEN ${eligible} THEN 1 ELSE 0 END) AS reachable FROM users ${where}`).get(...values) as { matching: number; reachable: number | null };
+  const workspace = db().prepare("SELECT count(*) AS total FROM users").get() as { total: number };
+  return { matching: result.matching, reachable: result.reachable ?? 0, total: workspace.total };
 }
 
 export function launchCampaign(id: string) {
@@ -160,16 +164,21 @@ export function launchCampaign(id: string) {
   if (issues.length) throw new Error(issues.join(" "));
   const audience = campaign.audience === "New Users" ? "lifecycle = 'New Users'" : campaign.audience === "Recent Purchasers" ? "lifecycle = 'Recent Purchasers'" : "1 = 1";
   const country = typeof campaign.config.audienceCountry === "string" && ["US", "GB", "CN", "SG", "DE"].includes(campaign.config.audienceCountry) ? campaign.config.audienceCountry : null;
-  const users = conn.prepare(`SELECT id, reachable, subscribed FROM users WHERE ${audience}${country ? " AND country = ?" : ""}`).all(...(country ? [country] : [])) as { id: string; reachable: number; subscribed: number }[];
-  const eligible = users.filter(user => user.reachable && user.subscribed);
+  const excludedCountry = typeof campaign.config.audienceExcludeCountry === "string" && ["US", "GB", "CN", "SG", "DE"].includes(campaign.config.audienceExcludeCountry) ? campaign.config.audienceExcludeCountry : null;
+  const users = conn.prepare(`SELECT id, reachable, subscribed FROM users WHERE ${audience}${country ? " AND country = ?" : ""}${excludedCountry ? " AND country != ?" : ""} ORDER BY id`).all(...(country ? [country] : []), ...(excludedCountry ? [excludedCountry] : [])) as { id: string; reachable: number; subscribed: number }[];
+  const requireSubscription = campaign.config.subscribeEligibility !== "all";
+  const controlGroup = Math.min(100, Math.max(0, Number(campaign.config.controlGroup ?? 20)));
+  const maxUsers = campaign.config.limitVolume ? Math.max(1, Number(campaign.config.maxUsers ?? 100)) : Infinity;
+  const eligible = users.filter(user => user.reachable && (!requireSubscription || user.subscribed));
   const runId = uid("run"); const timestamp = now();
   const insertEvent = conn.prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)");
   let delivered = 0; let failed = 0;
   for (const user of users) {
-    const deliverable = user.reachable && user.subscribed;
-    const eventType = deliverable ? "delivered" : user.subscribed ? "unreachable" : "suppressed";
+    const deliverable = user.reachable && (!requireSubscription || user.subscribed);
+    const inControl = deliverable && createHash("sha256").update(`${id}:${user.id}`).digest()[0] / 256 * 100 < controlGroup;
+    const eventType = !deliverable ? user.subscribed ? "unreachable" : "suppressed" : inControl ? "control" : delivered >= maxUsers ? "held_back" : "delivered";
     insertEvent.run(uid("evt"), id, campaign.channel, user.id, eventType, timestamp, JSON.stringify({ runId }));
-    if (deliverable) { delivered += 1; if (delivered % 4 === 0) insertEvent.run(uid("evt"), id, campaign.channel, user.id, "opened", timestamp, JSON.stringify({ runId })); if (delivered % 9 === 0) insertEvent.run(uid("evt"), id, campaign.channel, user.id, "clicked", timestamp, JSON.stringify({ runId })); } else { failed += 1; }
+    if (eventType === "delivered") { delivered += 1; if (delivered % 4 === 0) insertEvent.run(uid("evt"), id, campaign.channel, user.id, "opened", timestamp, JSON.stringify({ runId })); if (delivered % 9 === 0) insertEvent.run(uid("evt"), id, campaign.channel, user.id, "clicked", timestamp, JSON.stringify({ runId })); } else if (eventType === "unreachable" || eventType === "suppressed") { failed += 1; }
   }
   conn.prepare("INSERT INTO execution_runs VALUES (?, ?, ?, ?, ?, ?, ?, ?)").run(runId, id, "completed", eligible.length, delivered, failed, timestamp, JSON.stringify(campaign));
   conn.prepare("UPDATE campaigns SET status = 'Active', sent = sent + ?, edited_at = ? WHERE id = ?").run(delivered, timestamp, id);

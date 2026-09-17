@@ -1,7 +1,7 @@
 # Braze 复刻缺口审计
 
 审计日期：2026-09-16  
-审计方法：检查本地工程的路由、状态模型、页面组件和可执行交互。未把“菜单可以打开”计入页面完成。当前外部 Braze 浏览器会话不可读取，因此视觉差异只记录已从代码确认的缺口；后续需补充逐屏截图对比。
+审计方法：检查本地工程的路由、状态模型、页面组件和可执行交互。未把“菜单可以打开”计入页面完成。本文前半部分是 2026-09-16 的历史基线；最新状态见文末复查记录。
 
 ## 结论
 
@@ -132,3 +132,22 @@
 - 行菜单可编辑、复制、停止与归档。复制创建独立 Draft 并打开编辑页；归档更新 SQLite，列表随即移除。菜单使用浮层避免被表格滚动容器裁切。
 - 本地浏览器验证了带 `active` 状态的深链接、重置筛选后的 URL 与结果数，以及复制后打开编辑页和归档后结果数恢复。`npm run build` 通过。
 - **视觉 1:1 仍未验收**：外部 Chrome 的 Braze Campaign 页尚未在可读取的前台显示；当前修改只解决已确认的本地交互缺口。
+
+## 2026-09-17 外部 Chrome 对照复查
+
+已通过用户打开的外部 Chrome 读取真实 Braze Email Campaign 的 Compose、Schedule Delivery、Target Audiences、Assign Conversions、Review Summary，以及 Sending Info 和 Drag-and-Drop 子编辑器。对照的是当前账号可见的 Limited access 状态，截图视口约 1272 × 768；尚未完成 1440 × 900、1280 × 800、1920 × 1080 的差异量化。此前“外部页面不可读取”的记录已过时。
+
+| 页面 | 本轮实测的真实结构 | 本地改动 | 状态 |
+|---|---|---|---|
+| Campaign 顶部与底部 | Limited access、五步横向导航、固定底栏和 Save Draft | 对齐主要层级和位置，保留本地模拟 Launch 入口 | 布局接近，未通过截图阈值 |
+| Email Campaign Details | 名称、描述、标签、Campaign ID 纵向排列 | 改为纵向结构，描述和标签可保存 | 交互已实现，视觉待精修 |
+| Sending Info | 独立全屏编辑器，左侧分区、右侧预览、底部 Done | 改为独立编辑器并保存到变体 | 结构已实现，部分高级字段仍简化 |
+| Drag-and-Drop | 左图标栏及分区栏、中间白色画布、右侧 CONTENT/ROWS/SETTINGS | 重建三栏、块目录和属性编辑，块保存到 SQLite | 核心编辑可用，行网格和完整工具栏未还原 |
+| Schedule | Delivery 三选卡；单独的 Time-Based Scheduling Options 和 Delivery Controls | 已拆成对应卡片，选择、时间及再进入配置持久化 | 结构接近，触发/频控细节未验收 |
+| Target Audiences | Targeting Options、分群搜索、Filter group、Audience Summary、User Lookup、订阅、A/B、Suppression Lists、Total Population | 已拆为对应区块；国家筛选、排除、订阅、控制组和人数读取同一草稿 | 仅覆盖部分筛选类型与本地数据 |
+| Assign Conversions | 最多 4 个转化事件，事件类型、目标应用、归因窗口 | 多事件及期限写入配置，审核读取该配置 | 字段集未完全还原 |
+| Review Summary | 可达人数提示；Messages、Delivery、Target Audience、Conversion Events 分卡及编辑跳转 | 按真实层级重排，读取变体、排期、受众估算和转化配置 | 视觉待精修，真实账号发布受限 |
+
+本地 UI 已验证：选择国家筛选时估算从 840 变为 168；增加第二个转化事件并保存后，SQLite 中保留筛选条件与两个事件，Review 同步显示。构建通过。尚未完成逐像素验收，不能称为 1:1 完成。
+
+必须纠正上一节的误记：当前代码中的 Canvas 仍是固定位置的按钮节点，Save/Launch 仍为提示，不具备真实拖拽、连线、缩放、撤销重做或执行追踪。Playwright 脚本、参考截图和截图差异验收也没有实际落地。多数二级页继续复用通用资源列表。Vercel 的 SQLite 位于临时目录，不保证跨实例持久化；本地 SQLite 可持久化。
