@@ -17,6 +17,13 @@ export type CampaignRecord = {
 };
 export type ResourceRecord = { id: string; type: string; name: string; status: string; description: string; updatedAt: string; data: Record<string, unknown> };
 export type UserRecord = { id: string; email: string; firstName: string; country: string; lifecycle: string; subscribed: boolean; reachable: boolean; attributes: Record<string, unknown> };
+export type CatalogSelectionRecord = {
+  catalogId: string; name: string; description: string; filters: Array<{ field: string; operator: "equals"; value: string }>;
+  randomSort: boolean; sortField: string; sortDirection: string; resultLimit: number; updatedAt: string;
+};
+export type RecommendationRecord = ResourceRecord & {
+  data: { catalogId?: string; selectionName?: string; recommendationType?: string; trackingType?: string; propertyName?: string };
+};
 
 const databasePath = process.env.VERCEL ? join(tmpdir(), "braze-local-demo", "braze-local.sqlite") : join(process.cwd(), ".data", "braze-local.sqlite");
 let database: DatabaseSync | undefined;
@@ -47,6 +54,15 @@ function db() {
     CREATE TABLE IF NOT EXISTS catalog_items (
       id TEXT NOT NULL, catalog_id TEXT NOT NULL, name TEXT NOT NULL, fields_json TEXT NOT NULL DEFAULT '{}',
       updated_at TEXT NOT NULL, PRIMARY KEY (catalog_id, id)
+    );
+    CREATE TABLE IF NOT EXISTS catalog_selections (
+      catalog_id TEXT NOT NULL, name TEXT NOT NULL, description TEXT NOT NULL, filters_json TEXT NOT NULL,
+      random_sort INTEGER NOT NULL DEFAULT 0, sort_field TEXT NOT NULL DEFAULT '', sort_direction TEXT NOT NULL DEFAULT '',
+      result_limit INTEGER NOT NULL DEFAULT 3, updated_at TEXT NOT NULL, PRIMARY KEY (catalog_id, name)
+    );
+    CREATE TABLE IF NOT EXISTS catalog_subscriptions (
+      catalog_id TEXT NOT NULL, user_id TEXT NOT NULL, item_id TEXT NOT NULL, subscription_type TEXT NOT NULL,
+      created_at TEXT NOT NULL, PRIMARY KEY (catalog_id, user_id, item_id, subscription_type)
     );
     CREATE TABLE IF NOT EXISTS message_events (
       id TEXT PRIMARY KEY, campaign_id TEXT NOT NULL, channel TEXT NOT NULL, user_id TEXT NOT NULL,
@@ -81,6 +97,17 @@ function seedSampleCatalog(conn: DatabaseSync) {
   );
   const insert = conn.prepare("INSERT OR IGNORE INTO catalog_items VALUES (?, ?, ?, ?, ?)");
   for (const row of sampleCatalogRows) insert.run(row.id, sampleCatalogId, row.name, JSON.stringify(row.fields), timestamp);
+  conn.prepare("INSERT OR IGNORE INTO catalog_selections VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)").run(
+    sampleCatalogId,
+    "Gaming",
+    "Selection for Gaming Catalog Items",
+    JSON.stringify([{ field: "Product_type", operator: "equals", value: "Gaming" }]),
+    1,
+    "",
+    "",
+    3,
+    timestamp,
+  );
 }
 
 function seed(conn: DatabaseSync) {
@@ -322,9 +349,9 @@ export function updateCatalog(id: string, patch: Partial<Pick<ResourceRecord, "n
   db().prepare("UPDATE resources SET name = ?, status = ?, description = ?, updated_at = ?, data_json = ? WHERE id = ?").run(next.name, next.status, next.description, next.updatedAt, JSON.stringify(next.data), id);
   audit("catalog", id, "updated", { fields: (next.data as { fields?: unknown }).fields }); return next;
 }
-export function listCatalogItems(catalogId: string, q = "") {
+export function listCatalogItems(catalogId: string, q = ""): Array<{ id: string; name: string; fields: Record<string, unknown>; updatedAt: string }> {
   const rows = db().prepare("SELECT * FROM catalog_items WHERE catalog_id = ? AND (lower(name) LIKE lower(?) OR lower(id) LIKE lower(?)) ORDER BY updated_at DESC").all(catalogId, `%${q}%`, `%${q}%`) as Record<string, unknown>[];
-  return rows.map(row => ({ id: String(row.id), name: String(row.name), fields: parseJson(String(row.fields_json), {}), updatedAt: String(row.updated_at) }));
+  return rows.map(row => ({ id: String(row.id), name: String(row.name), fields: parseJson<Record<string, unknown>>(String(row.fields_json), {}), updatedAt: String(row.updated_at) }));
 }
 export function upsertCatalogItem(catalogId: string, input: { id: string; name: string; fields?: Record<string, unknown> }) {
   if (!getResource(catalogId)) throw new Error("Catalog not found"); const updatedAt = now();
@@ -332,6 +359,86 @@ export function upsertCatalogItem(catalogId: string, input: { id: string; name: 
   audit("catalog_item", `${catalogId}:${input.id}`, "upserted", {}); return { ...input, fields: input.fields ?? {}, updatedAt };
 }
 export function removeCatalogItem(catalogId: string, id: string) { db().prepare("DELETE FROM catalog_items WHERE catalog_id = ? AND id = ?").run(catalogId, id); audit("catalog_item", `${catalogId}:${id}`, "deleted", {}); }
+
+function mapCatalogSelection(row: Record<string, unknown>): CatalogSelectionRecord {
+  return {
+    catalogId: String(row.catalog_id),
+    name: String(row.name),
+    description: String(row.description),
+    filters: parseJson(String(row.filters_json), []),
+    randomSort: Boolean(row.random_sort),
+    sortField: String(row.sort_field),
+    sortDirection: String(row.sort_direction),
+    resultLimit: Number(row.result_limit),
+    updatedAt: String(row.updated_at),
+  };
+}
+
+export function listCatalogSelections(catalogId: string, query = "") {
+  const term = `%${query.trim()}%`;
+  const rows = db().prepare("SELECT * FROM catalog_selections WHERE catalog_id = ? AND lower(name) LIKE lower(?) ORDER BY updated_at DESC, name COLLATE NOCASE ASC").all(catalogId, term) as Record<string, unknown>[];
+  return rows.map(mapCatalogSelection);
+}
+
+export function getCatalogSelection(catalogId: string, name: string) {
+  const row = db().prepare("SELECT * FROM catalog_selections WHERE catalog_id = ? AND name = ?").get(catalogId, name) as Record<string, unknown> | undefined;
+  return row ? mapCatalogSelection(row) : null;
+}
+
+export function getUser(id: string) {
+  const row = db().prepare("SELECT * FROM users WHERE id = ?").get(id) as Record<string, unknown> | undefined;
+  return row ? mapUser(row) : null;
+}
+
+export function randomCatalogPreviewUser() {
+  const row = db().prepare("SELECT * FROM users WHERE reachable = 1 ORDER BY id LIMIT 1 OFFSET ?").get((new Date().getUTCMinutes() * 17 + new Date().getUTCSeconds()) % 900) as Record<string, unknown> | undefined;
+  return row ? mapUser(row) : getUser("user_1");
+}
+
+export function previewCatalogSelection(catalogId: string, name: string, userId?: string) {
+  const selection = getCatalogSelection(catalogId, name);
+  if (!selection) return null;
+  const user = userId ? getUser(userId) : randomCatalogPreviewUser();
+  if (!user) return null;
+  let items = listCatalogItems(catalogId);
+  for (const filter of selection.filters) {
+    items = items.filter(item => String(filter.field === "id" ? item.id : item.fields[filter.field] ?? "") === filter.value);
+  }
+  if (selection.randomSort) {
+    items.sort((left, right) => createHash("sha256").update(`${catalogId}:${name}:${user.id}:${left.id}`).digest("hex").localeCompare(createHash("sha256").update(`${catalogId}:${name}:${user.id}:${right.id}`).digest("hex")));
+  }
+  return { selection, user, items: items.slice(0, selection.resultLimit) };
+}
+
+export function listCatalogSubscriptions(catalogId: string, limit = 10) {
+  return db().prepare("SELECT user_id AS userId, item_id AS itemId, subscription_type AS subscriptionType, created_at AS createdAt FROM catalog_subscriptions WHERE catalog_id = ? ORDER BY created_at DESC LIMIT ?").all(catalogId, Math.max(1, Math.min(limit, 100))) as Array<{ userId: string; itemId: string; subscriptionType: string; createdAt: string }>;
+}
+
+function mapRecommendation(resource: ResourceRecord): RecommendationRecord {
+  return resource as RecommendationRecord;
+}
+
+export function createRecommendation() {
+  const timestamp = new Date();
+  const name = `New Recommendation - ${timestamp.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}, ${timestamp.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}`;
+  const record = createResource({ type: "recommendations", name, description: "", data: { catalogId: "", selectionName: "", recommendationType: "", trackingType: "purchase_object", propertyName: "product_id" } });
+  audit("recommendation", record.id, "created", {});
+  return mapRecommendation(record);
+}
+
+export function getRecommendation(id: string) {
+  const record = getResource(id);
+  return record?.type === "recommendations" ? mapRecommendation(record) : null;
+}
+
+export function updateRecommendation(id: string, patch: Partial<Pick<RecommendationRecord, "name" | "description" | "data">>) {
+  const current = getRecommendation(id);
+  if (!current) return null;
+  const next: RecommendationRecord = { ...current, ...patch, data: { ...current.data, ...patch.data }, updatedAt: now() };
+  db().prepare("UPDATE resources SET name = ?, description = ?, updated_at = ?, data_json = ? WHERE id = ?").run(next.name, next.description, next.updatedAt, JSON.stringify(next.data), id);
+  audit("recommendation", id, "updated", { configured: Boolean(next.data.catalogId && next.data.recommendationType) });
+  return next;
+}
 
 export function reportOverview(range = "30") {
   const since = new Date(Date.now() - Number(range) * 86_400_000).toISOString();
@@ -353,7 +460,7 @@ export function getDemoState() {
 
 export function demoAction(action: string) {
   const conn = db();
-  if (action === "reset") { conn.exec("DELETE FROM message_events; DELETE FROM execution_runs; DELETE FROM canvas_runs; DELETE FROM demo_receipts; DELETE FROM demo_state; DELETE FROM audit_log; DELETE FROM campaigns; DELETE FROM users; DELETE FROM catalog_items; DELETE FROM resources;"); seed(conn); seedSampleCatalog(conn); return { message: "Sample data reset", state: getDemoState() }; }
+  if (action === "reset") { conn.exec("DELETE FROM message_events; DELETE FROM execution_runs; DELETE FROM canvas_runs; DELETE FROM demo_receipts; DELETE FROM demo_state; DELETE FROM audit_log; DELETE FROM campaigns; DELETE FROM users; DELETE FROM catalog_subscriptions; DELETE FROM catalog_selections; DELETE FROM catalog_items; DELETE FROM resources;"); seed(conn); seedSampleCatalog(conn); return { message: "Sample data reset", state: getDemoState() }; }
   if (action === "advance") {
     const current = getDemoState().simulatedTime;
     const next = new Date(new Date(current).getTime() + 86_400_000).toISOString();

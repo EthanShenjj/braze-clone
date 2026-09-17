@@ -20,4 +20,6 @@ test("known deep links restore their intended page", () => {
   equal(pageFromPath("/agent-console"), "agents");
   equal(pageFromPath("/messaging/diagnostics"), "messaging-diagnostics");
   equal(pageFromPath("/dashboard/catalogs/6aa75e3e337509005eebb467/6aa75e37db69160082adb7ae"), "catalogs");
+  equal(pageFromPath("/dashboard/catalogs/6aa75e3e337509005eebb467/selection/Gaming/6aa75e37db69160082adb7ae"), "catalogs");
+  equal(pageFromPath("/engagement/predictions/res_example/6aa75e37db69160082adb7ae"), "catalogs");
 });

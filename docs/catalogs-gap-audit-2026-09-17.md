@@ -1,5 +1,11 @@
 # Catalogs 1:1 差异复核（2026-09-17）
 
+## 修复结果（2026-09-17）
+
+本表中已确认的当前账号可见流程已经实现并经过本地 SQLite API 与浏览器回归：`Gaming` 现为独立深链接页面，可抽取用户并生成 3 条结果预览；`Create recommendation` 会创建持久化记录并进入三步页面；Catalogs 的搜索、排序、空状态、只读 Settings 展开、页签和首屏路由均已更新。Catalogs 也恢复了试用横条和 230px 侧栏，不再用 Catalogs 专用样式覆盖全局框架。
+
+仍然不能列为“已验证”的项目只包括当前 **View only** 账号无法打开的界面：可编辑账号的创建目录、导入、schema 管理、Selection 编辑/删除和真实订阅写入。它们不再用通用占位界面冒充为已复刻功能。
+
 基准：已登录外部 Chrome 中当前账号可见的 `Catalogs` 列表、`Sample_Catalog` 的 Preview / Selections / Settings、`Gaming` Selection 详情，以及 `Create recommendation` 入口。对照线上复刻版 `braze-clone.vercel.app` 和本地代码。当前账号为 **View only**，因此不能据此断定可编辑账号的创建、导入与删除界面长什么样；这些流程需要另外取得有权限的参考页面。
 
 | 优先级 | 页面 / 操作 | Braze 实测 | 当前复刻版 | 差异性质 |

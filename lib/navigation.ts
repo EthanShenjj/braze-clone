@@ -29,6 +29,7 @@ export function routeForPage(page: string) {
 
 export function pageFromPath(pathname: string) {
   if (/^\/engagement\/campaigns\/cmp_[^/]+$/.test(pathname)) return "campaigns";
+  if (/^\/engagement\/predictions\/[^/]+\/[^/]+$/.test(pathname)) return "catalogs";
   if (/^\/(?:content|dashboard)\/catalogs\//.test(pathname)) return "catalogs";
   return pagesByPath.get(pathname) ?? pathname.split("/").filter(Boolean).at(-1) ?? "campaigns";
 }

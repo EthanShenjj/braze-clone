@@ -87,7 +87,7 @@ function audienceSummary(draft: Campaign) {
 
 export default function Dashboard() {
   const router = useRouter(); const pathname = usePathname();
-  const [page, setPage] = useState("campaigns");
+  const [page, setPage] = useState(() => pageFromPath(pathname));
   const [drawer, setDrawer] = useState<string | null>(null);
   const [compact, setCompact] = useState(false);
   const [createAnchor, setCreateAnchor] = useState<CSSProperties | null>(null);
