@@ -16,7 +16,7 @@ const routes: Record<string, string> = {
   segments: "/audience/segments",
   "landing-pages": "/messaging/landing-pages",
   "search-users": "/audience/search-users",
-  catalogs: "/content/catalogs",
+  catalogs: "/dashboard/catalogs/6aa75e37db69160082adb7ae?locale=en",
   "content-calendar": "/messaging/content-calendar",
   "messaging-diagnostics": "/messaging/diagnostics",
 };
@@ -29,6 +29,7 @@ export function routeForPage(page: string) {
 
 export function pageFromPath(pathname: string) {
   if (/^\/engagement\/campaigns\/cmp_[^/]+$/.test(pathname)) return "campaigns";
+  if (/^\/(?:content|dashboard)\/catalogs\//.test(pathname)) return "catalogs";
   return pagesByPath.get(pathname) ?? pathname.split("/").filter(Boolean).at(-1) ?? "campaigns";
 }
 

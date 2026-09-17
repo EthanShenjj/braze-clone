@@ -51,6 +51,12 @@
 
 下一轮最有价值的验收是：在真实账号逐一打开现成的 IAM、Banner、WhatsApp、SMS 草稿和各主要二级页，记录字段/状态/截图；再依清单逐页修正并建立截图差异测试。没有实测的渠道不应声称 1:1 完成。
 
+## Catalogs 真实页面对照与修正（2026-09-17）
+
+- 已在外部 Chrome 检查当前账号的 Catalogs 列表、`Sample_Catalog` 详情、Preview 项目表、Selections 和 Settings。真实列表显示 `View only`、一条样例目录、来源、31 条项目、4KB 使用量；详情有 Preview / Selections / Settings 三个标签，Selections 存在 `Gaming`。样例数据依真实可见字段建立 SQLite 种子，页面现在有分开的列表和详情路由，不再将两者挤在同一屏。
+- 本地 Preview 支持按项目 ID 搜索、字段过滤、分页和查看项目；Selections 能筛选名字并查看对应的六条 Gaming 项目；Settings 保留只读状态、通知规则及订阅区域；刷新或直接打开详情链接会恢复页面。另保留本地可创建目录与编辑项目的演示入口，实际账号的 `View only` 页面不显示该入口。
+- 这些是已比对的页面结构和基本交互，**不代表 Catalogs 已 1:1 完成**。目录创建向导、CSV 导入、推荐算法、真实 Selection 编辑与权限、订阅规则和通知调度仍缺少实现；部分按钮仍只给出本地限制提示。尚未为目录页建立相同视口的逐像素截图基线。其他 Content 页面和大量二级模块仍有通用列表占位。
+
 ## Messaging 抽屉交互补查（2026-09-17）
 
 - 外部 Chrome 中的真实 Braze `Messaging` 抽屉，在 `Campaigns` 下有独立的 `View by channel` 展开入口。本地此前只有带右箭头的 Campaigns 页面入口；已补齐可展开的渠道列表，选择后进入 Campaigns 并按渠道筛选，筛选写入 URL，刷新可恢复。

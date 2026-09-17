@@ -7,6 +7,7 @@ import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { campaignValidationIssues } from "./campaign-validation";
 import { type CanvasGraph, type CanvasRun, type CanvasTrace, validateCanvasGraph } from "./canvas-model";
+import { sampleCatalogId, sampleCatalogRows } from "./sample-catalog";
 
 export type Channel = "email" | "push" | "iam" | "content" | "banner" | "sms" | "webhook" | "whatsapp" | "line" | "multichannel" | "operator" | "feature" | "api";
 export type CampaignStatus = "Draft" | "Active" | "Stopped" | "Archived";
@@ -68,7 +69,18 @@ function db() {
     );
   `);
   seed(database);
+  seedSampleCatalog(database);
   return database;
+}
+
+function seedSampleCatalog(conn: DatabaseSync) {
+  const timestamp = "2026-09-13T22:38:00.000Z";
+  conn.prepare("INSERT OR IGNORE INTO resources VALUES (?, 'catalogs', ?, 'View only', ?, ?, ?)").run(
+    sampleCatalogId, "Sample_Catalog", "Sample catalog items for Decorumsoft", timestamp,
+    JSON.stringify({ fields: ["Product_id", "Product_type", "Product_category", "item_name", "description", "price", "image"], source: "Braze", size: "4KB", sample: true }),
+  );
+  const insert = conn.prepare("INSERT OR IGNORE INTO catalog_items VALUES (?, ?, ?, ?, ?)");
+  for (const row of sampleCatalogRows) insert.run(row.id, sampleCatalogId, row.name, JSON.stringify(row.fields), timestamp);
 }
 
 function seed(conn: DatabaseSync) {
@@ -311,7 +323,7 @@ export function updateCatalog(id: string, patch: Partial<Pick<ResourceRecord, "n
   audit("catalog", id, "updated", { fields: (next.data as { fields?: unknown }).fields }); return next;
 }
 export function listCatalogItems(catalogId: string, q = "") {
-  const rows = db().prepare("SELECT * FROM catalog_items WHERE catalog_id = ? AND lower(name) LIKE lower(?) ORDER BY updated_at DESC").all(catalogId, `%${q}%`) as Record<string, unknown>[];
+  const rows = db().prepare("SELECT * FROM catalog_items WHERE catalog_id = ? AND (lower(name) LIKE lower(?) OR lower(id) LIKE lower(?)) ORDER BY updated_at DESC").all(catalogId, `%${q}%`, `%${q}%`) as Record<string, unknown>[];
   return rows.map(row => ({ id: String(row.id), name: String(row.name), fields: parseJson(String(row.fields_json), {}), updatedAt: String(row.updated_at) }));
 }
 export function upsertCatalogItem(catalogId: string, input: { id: string; name: string; fields?: Record<string, unknown> }) {
@@ -341,7 +353,7 @@ export function getDemoState() {
 
 export function demoAction(action: string) {
   const conn = db();
-  if (action === "reset") { conn.exec("DELETE FROM message_events; DELETE FROM execution_runs; DELETE FROM canvas_runs; DELETE FROM demo_receipts; DELETE FROM demo_state; DELETE FROM audit_log; DELETE FROM campaigns; DELETE FROM users; DELETE FROM catalog_items; DELETE FROM resources;"); seed(conn); return { message: "Sample data reset", state: getDemoState() }; }
+  if (action === "reset") { conn.exec("DELETE FROM message_events; DELETE FROM execution_runs; DELETE FROM canvas_runs; DELETE FROM demo_receipts; DELETE FROM demo_state; DELETE FROM audit_log; DELETE FROM campaigns; DELETE FROM users; DELETE FROM catalog_items; DELETE FROM resources;"); seed(conn); seedSampleCatalog(conn); return { message: "Sample data reset", state: getDemoState() }; }
   if (action === "advance") {
     const current = getDemoState().simulatedTime;
     const next = new Date(new Date(current).getTime() + 86_400_000).toISOString();

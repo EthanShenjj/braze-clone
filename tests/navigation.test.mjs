@@ -19,4 +19,5 @@ test("known deep links restore their intended page", () => {
   equal(pageFromPath("/analytics/performance-overview"), "performance");
   equal(pageFromPath("/agent-console"), "agents");
   equal(pageFromPath("/messaging/diagnostics"), "messaging-diagnostics");
+  equal(pageFromPath("/dashboard/catalogs/6aa75e3e337509005eebb467/6aa75e37db69160082adb7ae"), "catalogs");
 });
