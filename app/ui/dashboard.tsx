@@ -13,10 +13,11 @@ import LiveUserSearch from "./live-user-search";
 import CatalogWorkspace from "./catalog-workspace";
 import { pageFromPath, pageKeyForDrawerItem, routeForPage } from "@/lib/navigation";
 import { campaignValidationIssues } from "@/lib/campaign-validation";
+import { localeNames, normalizeLocale, supportedLocales, translate, type Locale } from "@/lib/i18n";
 import {
   Activity, Bell, Bot, Box, CalendarDays, ChevronDown, ChevronLeft, ChevronRight,
   CircleHelp, Code2, Copy, Database, Eye, FileCode2, Flag, Filter, Grid2X2, Image,
-  LayoutDashboard, LineChart, List, LockKeyhole, Mail, MapPin, MessageCircle, MoreHorizontal,
+  LayoutDashboard, Languages, LineChart, List, LockKeyhole, Mail, MapPin, MessageCircle, MoreHorizontal,
   MousePointerClick, Plus, Search, Send, Settings, Share2, ShieldCheck, Smartphone,
   Sparkles, Tags, Trash2, Type, Users, Video, Webhook, X, Zap
 } from "lucide-react";
@@ -86,7 +87,8 @@ function audienceSummary(draft: Campaign) {
 }
 
 export default function Dashboard() {
-  const router = useRouter(); const pathname = usePathname();
+  const router = useRouter(); const pathname = usePathname(); const searchParams = useSearchParams();
+  const [locale, setLocale] = useState<Locale>(() => normalizeLocale(searchParams.get("locale")));
   const [page, setPage] = useState(() => pageFromPath(pathname));
   const [drawer, setDrawer] = useState<string | null>(null);
   const [compact, setCompact] = useState(false);
@@ -102,6 +104,7 @@ export default function Dashboard() {
   };
   useEffect(() => { void refreshCampaigns(); }, []);
   useEffect(() => { setPage(pageFromPath(pathname)); }, [pathname]);
+  useEffect(() => { document.documentElement.lang = locale; window.localStorage.setItem("braze:locale", locale); }, [locale]);
   useEffect(() => {
     const campaignId = pathname.match(/\/engagement\/campaigns\/(cmp_[^/]+)$/)?.[1];
     if (!campaignId) return;
@@ -118,6 +121,12 @@ export default function Dashboard() {
 
   function openPage(key: string) {
     setCreateAnchor(null); setDrawer(null); setEditing(null); setPage(key); router.push(routeForPage(key));
+  }
+  function changeLocale(nextLocale: Locale) {
+    setLocale(nextLocale);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("locale", nextLocale);
+    router.replace(`${pathname}?${params.toString()}`);
   }
   function openCampaignChannel(channel: Channel) {
     setCreateAnchor(null); setDrawer(null); setEditing(null); setPage("campaigns");
@@ -170,16 +179,16 @@ export default function Dashboard() {
       <div className="brand-mark">b</div>
       <button className="workspace" onClick={() => setCompact(!compact)}><ChevronLeft size={16}/><span>Demo – Thinkingai</span></button>
       {nav.map(section => <div className="nav-section" key={section.group}>
-        {section.group && <span className="nav-caption">{section.group}</span>}
-        {section.items.map(([label, key, Icon]) => <button key={key} className={className("nav-item", (page === key || drawer === key) && "active")} onClick={() => key in drawers ? setDrawer(drawer === key ? null : key) : openPage(key)}><Icon size={17}/><span>{label}</span></button>)}
+        {section.group && <span className="nav-caption">{translate(locale, section.group)}</span>}
+        {section.items.map(([label, key, Icon]) => <button key={key} className={className("nav-item", (page === key || drawer === key) && "active")} onClick={() => key in drawers ? setDrawer(drawer === key ? null : key) : openPage(key)}><Icon size={17}/><span>{translate(locale, label)}</span></button>)}
       </div>)}
       <div className="brand-word">braze</div>
     </aside>
     <main className="main-area">
       <div className="trial">◷ &nbsp;12 days left in your free trial. <button>Connect with sales</button></div>
-      <header className="topbar"><button className="search-button" onClick={() => setToast("Workspace search is ready for this local demo.")}><Search size={16}/> Search workspace <kbd>⌘K</kbd></button><div className="top-actions"><CircleHelp size={18}/><Bell size={18}/><button className="profile">S</button><button className="operator-trigger" onClick={() => setOperatorOpen(!operatorOpen)}><Sparkles size={17}/></button></div></header>
-      {page !== "catalogs" && <div className="page-tabs"><button className={className("page-tab", !editing && "selected")} onClick={() => openPage(editing ? "campaigns" : page)}>{editing ? "Campaigns" : page === "performance" ? "Performance Overview" : page === "agents" ? "Agent Console" : page === "partners" ? "Partner Integrations" : page === "data" ? "Data Settings" : titleFrom(page)}</button>{editing && <button className="page-tab selected">Edit '{editing.name}' <X size={14} onClick={() => openPage("campaigns")}/></button>}</div>}
-      {editing ? <CampaignEditor key={editing.id} campaign={editing} onSave={saveCampaign} onClose={() => openPage("campaigns")} /> : <PageContent page={page} campaigns={campaigns} openPage={openPage} onEdit={openCampaign} onCreate={(event) => { const rect = event.currentTarget.getBoundingClientRect(); setCreateAnchor({ position: "fixed", top: rect.bottom + 6, left: Math.max(16, rect.right - 325), zIndex: 61 }); }} onStop={stopCampaign} onArchive={archiveCampaign} onDuplicate={duplicateCampaign} notify={setToast} />}
+      <header className="topbar"><button className="search-button" onClick={() => setToast("Workspace search is ready for this local demo.")}><Search size={16}/> {translate(locale, "Search workspace")} <kbd>⌘K</kbd></button><div className="top-actions"><label className="language-picker"><Languages size={16}/><select aria-label={translate(locale, "Language")} value={locale} onChange={event => changeLocale(event.target.value as Locale)}>{supportedLocales.map(value => <option value={value} key={value}>{localeNames[value]}</option>)}</select></label><CircleHelp size={18}/><Bell size={18}/><button className="profile">S</button><button className="operator-trigger" onClick={() => setOperatorOpen(!operatorOpen)}><Sparkles size={17}/></button></div></header>
+      {page !== "catalogs" && <div className="page-tabs"><button className={className("page-tab", !editing && "selected")} onClick={() => openPage(editing ? "campaigns" : page)}>{editing ? translate(locale, "Campaigns") : translate(locale, page === "performance" ? "Performance Overview" : page === "agents" ? "Agent Console" : page === "partners" ? "Partner Integrations" : page === "data" ? "Data Settings" : titleFrom(page))}</button>{editing && <button className="page-tab selected">Edit '{editing.name}' <X size={14} onClick={() => openPage("campaigns")}/></button>}</div>}
+      {editing ? <CampaignEditor key={editing.id} campaign={editing} onSave={saveCampaign} onClose={() => openPage("campaigns")} /> : <PageContent locale={locale} page={page} campaigns={campaigns} openPage={openPage} onEdit={openCampaign} onCreate={(event) => { const rect = event.currentTarget.getBoundingClientRect(); setCreateAnchor({ position: "fixed", top: rect.bottom + 6, left: Math.max(16, rect.right - 325), zIndex: 61 }); }} onStop={stopCampaign} onArchive={archiveCampaign} onDuplicate={duplicateCampaign} notify={setToast} />}
     </main>
     {drawer && <NavigationDrawer name={titleFrom(drawer)} items={drawers[drawer]} activePage={page} close={() => setDrawer(null)} open={openPage} openCampaignChannel={openCampaignChannel} />}
     {createAnchor && <CreateMenu anchor={createAnchor} start={start} close={() => setCreateAnchor(null)} />}
@@ -209,7 +218,7 @@ function Operator({ close, start }: { close: () => void; start: (channel: Channe
   return <aside className="operator"><header><h2><Sparkles size={16}/> BrazeAI Operator™</h2><button onClick={close}><X size={17}/></button></header><div className="operator-chat">What kind of campaign would you like to create?</div><div className="operator-chat">I can choose channels, draft copy, and configure targeting for a local campaign draft.</div><textarea value={prompt} onChange={e => setPrompt(e.target.value)} placeholder="Ask Operator to create a campaign…"/><button className="primary" style={{marginTop:10,width:"100%"}} onClick={() => { start("operator"); }}>Generate campaign plan</button></aside>;
 }
 
-function PageContent({ page, campaigns, openPage, onEdit, onCreate, onStop, onArchive, onDuplicate, notify }: { page: string; campaigns: Campaign[]; openPage: (p: string) => void; onEdit: (c: Campaign) => void; onCreate: (event: ReactMouseEvent<HTMLButtonElement>) => void; onStop: (id: string) => void; onArchive: (id: string) => Promise<boolean>; onDuplicate: (campaign: Campaign) => Promise<void>; notify: (m: string) => void }) {
+function PageContent({ locale, page, campaigns, openPage, onEdit, onCreate, onStop, onArchive, onDuplicate, notify }: { locale: Locale; page: string; campaigns: Campaign[]; openPage: (p: string) => void; onEdit: (c: Campaign) => void; onCreate: (event: ReactMouseEvent<HTMLButtonElement>) => void; onStop: (id: string) => void; onArchive: (id: string) => Promise<boolean>; onDuplicate: (campaign: Campaign) => Promise<void>; notify: (m: string) => void }) {
   if (page === "campaigns") return <CampaignList campaigns={campaigns} onEdit={onEdit} onCreate={onCreate} onStop={onStop} onArchive={onArchive} onDuplicate={onDuplicate}/>;
   if (page === "canvas") return <LiveCanvas notify={notify}/>;
   if (page === "getting-started") return <GettingStarted openPage={openPage}/>;
@@ -218,7 +227,7 @@ function PageContent({ page, campaigns, openPage, onEdit, onCreate, onStop, onAr
   if (["report-builder", "custom-events-report", "global-control-group-report", "query-builder", "engagement-reports", "revenue-report", "segment-insights", "dashboard-builder", "email-performance", "push-performance", "sms-mms-rcs-performance", "conversions"].includes(page)) return <LiveReportPage title={titleFrom(page)} />;
   if (page === "message-activity-log") return <ActivityLogPage />;
   if (page === "search-users") return <LiveUserSearch notify={notify}/>;
-  if (page === "catalogs") return <CatalogWorkspace notify={notify}/>;
+  if (page === "catalogs") return <CatalogWorkspace locale={locale} notify={notify}/>;
   return <ModuleWorkspace key={page} title={titleFrom(page)} page={page} notify={notify} openPage={openPage}/>;
 }
 
