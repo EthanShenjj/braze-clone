@@ -114,7 +114,7 @@ export function listCampaigns(input: { q?: string; status?: string; limit?: numb
   if (input.status && input.status !== "All") { clauses.push("status = ?"); values.push(input.status); }
   const order = input.sort === "name" ? "name COLLATE NOCASE ASC" : "edited_at DESC";
   const count = conn.prepare(`SELECT count(*) AS count FROM campaigns WHERE ${clauses.join(" AND ")}`).get(...values) as { count: number };
-  const limit = Math.min(Math.max(input.limit ?? 12, 1), 100);
+  const limit = Math.min(Math.max(input.limit ?? 12, 1), 1000);
   const offset = Math.max(input.offset ?? 0, 0);
   const rows = conn.prepare(`SELECT * FROM campaigns WHERE ${clauses.join(" AND ")} ORDER BY ${order} LIMIT ? OFFSET ?`).all(...values, limit, offset) as Record<string, unknown>[];
   return { data: rows.map(mapCampaign), total: count.count, limit, offset };

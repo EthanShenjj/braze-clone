@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { createPortal } from "react-dom";
 import emailStarterStyles from "./email-starter.module.css";
 import emailEditorStyles from "./email-editor.module.css";
 import brazeDndStyles from "./braze-dnd.module.css";
@@ -99,8 +100,7 @@ export default function Dashboard() {
   const [operatorOpen, setOperatorOpen] = useState(false);
 
   const refreshCampaigns = async () => {
-    const query = new URLSearchParams(window.location.search);
-    const response = await fetch(`/api/campaigns?${new URLSearchParams({ limit: "100", q: query.get("globalFilter") ?? "", status: query.get("columnFilters[status]") ?? "All", sort: query.get("sortby") === "name" ? "name" : "edited" })}`);
+    const response = await fetch(`/api/campaigns?${new URLSearchParams({ limit: "1000", status: "All", sort: "edited" })}`);
     if (response.ok) { const result = await response.json(); setCampaigns(result.data); }
   };
   useEffect(() => { void refreshCampaigns(); }, []);
@@ -150,6 +150,18 @@ export default function Dashboard() {
     const response = await fetch(`/api/campaigns/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: "Stopped" }) });
     if (response.ok) { await refreshCampaigns(); setToast("Campaign stopped."); }
   }
+  async function archiveCampaign(id: string) {
+    const response = await fetch(`/api/campaigns/${id}`, { method: "DELETE" });
+    if (!response.ok) { setToast("Unable to archive campaign."); return false; }
+    await refreshCampaigns(); setToast("Campaign archived."); return true;
+  }
+  async function duplicateCampaign(campaign: Campaign) {
+    const copy: Campaign = { ...campaign, id: `cmp_${crypto.randomUUID().slice(0, 8)}`, name: `${campaign.name} (copy)`, status: "Draft", sent: 0, edited: "Just now" };
+    const response = await fetch("/api/campaigns", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(copy) });
+    if (!response.ok) { setToast("Unable to duplicate campaign."); return; }
+    const saved = await response.json() as Campaign;
+    await refreshCampaigns(); openCampaign(saved);
+  }
   function openCampaign(campaign: Campaign) { setEditing(campaign); router.push(`/engagement/campaigns/${campaign.id}?step=compose`); }
 
   return <div className={className("app-shell", compact && "compact")}> 
@@ -166,7 +178,7 @@ export default function Dashboard() {
       <div className="trial">◷ &nbsp;12 days left in your free trial. <button>Connect with sales</button></div>
       <header className="topbar"><button className="search-button" onClick={() => setToast("Workspace search is ready for this local demo.")}><Search size={16}/> Search workspace <kbd>⌘K</kbd></button><div className="top-actions"><CircleHelp size={18}/><Bell size={18}/><button className="profile">S</button><button className="operator-trigger" onClick={() => setOperatorOpen(!operatorOpen)}><Sparkles size={17}/></button></div></header>
       <div className="page-tabs"><button className={className("page-tab", !editing && "selected")} onClick={() => openPage("campaigns")}>Campaigns</button>{editing && <button className="page-tab selected">Edit '{editing.name}' <X size={14} onClick={() => openPage("campaigns")}/></button>}</div>
-      {editing ? <CampaignEditor key={editing.id} campaign={editing} onSave={saveCampaign} onClose={() => openPage("campaigns")} /> : <PageContent page={page} campaigns={campaigns} openPage={openPage} onEdit={openCampaign} onCreate={(event) => { const rect = event.currentTarget.getBoundingClientRect(); setCreateAnchor({ position: "fixed", top: rect.bottom + 6, left: Math.max(16, rect.right - 325), zIndex: 61 }); }} onStop={stopCampaign} notify={setToast} />}
+      {editing ? <CampaignEditor key={editing.id} campaign={editing} onSave={saveCampaign} onClose={() => openPage("campaigns")} /> : <PageContent page={page} campaigns={campaigns} openPage={openPage} onEdit={openCampaign} onCreate={(event) => { const rect = event.currentTarget.getBoundingClientRect(); setCreateAnchor({ position: "fixed", top: rect.bottom + 6, left: Math.max(16, rect.right - 325), zIndex: 61 }); }} onStop={stopCampaign} onArchive={archiveCampaign} onDuplicate={duplicateCampaign} notify={setToast} />}
     </main>
     {drawer && <NavigationDrawer name={titleFrom(drawer)} items={drawers[drawer]} close={() => setDrawer(null)} open={(name) => { if (name === "Campaigns") openPage("campaigns"); else openPage(name.toLowerCase().replace(/\s+/g, "-")); }} />}
     {createAnchor && <CreateMenu anchor={createAnchor} start={start} close={() => setCreateAnchor(null)} />}
@@ -194,8 +206,8 @@ function Operator({ close, start }: { close: () => void; start: (channel: Channe
   return <aside className="operator"><header><h2><Sparkles size={16}/> BrazeAI Operator™</h2><button onClick={close}><X size={17}/></button></header><div className="operator-chat">What kind of campaign would you like to create?</div><div className="operator-chat">I can choose channels, draft copy, and configure targeting for a local campaign draft.</div><textarea value={prompt} onChange={e => setPrompt(e.target.value)} placeholder="Ask Operator to create a campaign…"/><button className="primary" style={{marginTop:10,width:"100%"}} onClick={() => { start("operator"); }}>Generate campaign plan</button></aside>;
 }
 
-function PageContent({ page, campaigns, openPage, onEdit, onCreate, onStop, notify }: { page: string; campaigns: Campaign[]; openPage: (p: string) => void; onEdit: (c: Campaign) => void; onCreate: (event: ReactMouseEvent<HTMLButtonElement>) => void; onStop: (id: string) => void; notify: (m: string) => void }) {
-  if (page === "campaigns") return <CampaignList campaigns={campaigns} onEdit={onEdit} onCreate={onCreate} onStop={onStop}/>;
+function PageContent({ page, campaigns, openPage, onEdit, onCreate, onStop, onArchive, onDuplicate, notify }: { page: string; campaigns: Campaign[]; openPage: (p: string) => void; onEdit: (c: Campaign) => void; onCreate: (event: ReactMouseEvent<HTMLButtonElement>) => void; onStop: (id: string) => void; onArchive: (id: string) => Promise<boolean>; onDuplicate: (campaign: Campaign) => Promise<void>; notify: (m: string) => void }) {
+  if (page === "campaigns") return <CampaignList campaigns={campaigns} onEdit={onEdit} onCreate={onCreate} onStop={onStop} onArchive={onArchive} onDuplicate={onDuplicate}/>;
   if (page === "canvas") return <LiveCanvas notify={notify}/>;
   if (page === "getting-started") return <GettingStarted openPage={openPage}/>;
   if (page === "performance") return <Performance campaigns={campaigns}/>;
@@ -206,10 +218,52 @@ function PageContent({ page, campaigns, openPage, onEdit, onCreate, onStop, noti
   return <ModuleWorkspace title={titleFrom(page)} page={page} notify={notify} openPage={openPage}/>;
 }
 
-function CampaignList({ campaigns, onEdit, onCreate, onStop }: { campaigns: Campaign[]; onEdit: (c: Campaign) => void; onCreate: (event: ReactMouseEvent<HTMLButtonElement>) => void; onStop: (id: string) => void }) {
-  const [search, setSearch] = useState(""); const [status, setStatus] = useState("All"); const [sort, setSort] = useState<"name" | "edited">("edited");
-  const filtered = useMemo(() => campaigns.filter(c => c.name.toLowerCase().includes(search.toLowerCase()) && (status === "All" || c.status === status)).sort((a,b) => sort === "name" ? a.name.localeCompare(b.name) : b.edited.localeCompare(a.edited)), [campaigns, search, status, sort]);
-  return <section className="page-content"><div className="page-heading"><div><div className="title-line"><h1>Campaigns</h1><span className="access-pill">Limited access</span></div><p>Campaigns let you send a single, targeted message through email, push, SMS, and more, ensuring timely communication with your audience</p></div><div className="heading-actions"><button className="secondary">Send feedback</button><button className="secondary">Take a tour <ChevronDown size={14}/></button><button className="primary" onClick={onCreate}><Plus size={16}/> Create campaign <ChevronDown size={14}/></button></div></div><div className="filters"><label>Status<select value={status} onChange={e => setStatus(e.target.value)}><option>All</option><option>Draft</option><option>Active</option><option>Stopped</option></select></label><label>Tag<select><option>Select...</option><option>Lifecycle</option><option>Promotional</option></select></label><button className="secondary"><Filter size={15}/> Filters</button><button className="secondary"><Grid2X2 size={15}/> Columns</button><button className="text-button" onClick={() => { setStatus("All"); setSearch(""); }}>Reset filters</button><div className="filter-search"><Search size={15}/><input placeholder="Search" value={search} onChange={e => setSearch(e.target.value)}/></div></div><div className="result-heading"><span>{filtered.length} Results</span><small>{status !== "All" ? `Status: ${status}` : "All campaigns"}</small></div><div className="table-wrap"><table><thead><tr><th onClick={() => setSort("name")}>Name {sort === "name" && "↑"}</th><th>Status</th><th>Stop date</th><th>Campaign type</th><th>Entry schedule</th><th>Sent</th><th>Last edited</th><th></th></tr></thead><tbody>{filtered.map(c => { const Icon = channelMeta[c.channel].icon; return <tr key={c.id}><td><button className="link-button" onClick={() => onEdit(c)}>{c.name}</button></td><td><span className={className("status", c.status.toLowerCase())}>{c.status}</span></td><td>—</td><td><span className="channel-cell"><Icon size={14}/>{channelMeta[c.channel].title}</span></td><td>{c.schedule}</td><td>{c.sent.toLocaleString()}</td><td>{c.edited}</td><td><button className="icon-button" onClick={() => c.status === "Active" ? onStop(c.id) : onEdit(c)} title={c.status === "Active" ? "Stop campaign" : "Edit campaign"}><MoreHorizontal size={18}/></button></td></tr>; })}</tbody></table></div></section>;
+type CampaignListQuery = { search: string; status: string; sort: "name" | "edited"; direction: 1 | -1; start: number; limit: number };
+
+function readCampaignListQuery(): CampaignListQuery {
+  const params = new URLSearchParams(window.location.search);
+  const status = params.get("columnFilters[status]") ?? "All";
+  return {
+    search: params.get("globalFilter") ?? "",
+    status: status === "active" ? "Active" : status === "draft" ? "Draft" : status === "stopped" ? "Stopped" : "All",
+    sort: params.get("sortby") === "name" ? "name" : "edited",
+    direction: params.get("sortdir") === "1" ? 1 : -1,
+    start: Math.max(0, Number(params.get("start")) || 0),
+    limit: [12, 24, 48].includes(Number(params.get("limit"))) ? Number(params.get("limit")) : 12,
+  };
+}
+
+function CampaignList({ campaigns, onEdit, onCreate, onStop, onArchive, onDuplicate }: { campaigns: Campaign[]; onEdit: (c: Campaign) => void; onCreate: (event: ReactMouseEvent<HTMLButtonElement>) => void; onStop: (id: string) => void; onArchive: (id: string) => Promise<boolean>; onDuplicate: (campaign: Campaign) => Promise<void> }) {
+  const [query, setQuery] = useState<CampaignListQuery>({ search: "", status: "All", sort: "edited", direction: -1, start: 0, limit: 12 });
+  useEffect(() => {
+    const sync = () => setQuery(readCampaignListQuery());
+    sync(); window.addEventListener("popstate", sync);
+    return () => window.removeEventListener("popstate", sync);
+  }, []);
+  const changeQuery = (patch: Partial<CampaignListQuery>, replace = false) => {
+    const next = { ...query, ...patch };
+    setQuery(next);
+    const url = new URL(window.location.href);
+    url.searchParams.set("start", String(next.start));
+    url.searchParams.set("limit", String(next.limit));
+    url.searchParams.set("globalFilter", next.search);
+    if (next.status === "All") url.searchParams.delete("columnFilters[status]");
+    else url.searchParams.set("columnFilters[status]", next.status.toLowerCase());
+    url.searchParams.set("sortby", next.sort === "name" ? "name" : "last_edited");
+    url.searchParams.set("sortdir", String(next.direction));
+    url.searchParams.set("display", "list");
+    window.history[replace ? "replaceState" : "pushState"](null, "", url);
+  };
+  const filtered = useMemo(() => campaigns.filter(c => c.name.toLowerCase().includes(query.search.toLowerCase()) && (query.status === "All" || c.status === query.status)).sort((a, b) => (query.sort === "name" ? a.name.localeCompare(b.name) : a.edited.localeCompare(b.edited)) * query.direction), [campaigns, query]);
+  const start = Math.min(query.start, Math.max(0, Math.ceil(filtered.length / query.limit) - 1) * query.limit);
+  const paged = filtered.slice(start, start + query.limit);
+  return <section className="page-content"><div className="page-heading"><div><div className="title-line"><h1>Campaigns</h1><span className="access-pill">Limited access</span></div><p>Campaigns let you send a single, targeted message through email, push, SMS, and more, ensuring timely communication with your audience</p></div><div className="heading-actions"><button className="secondary">Send feedback</button><button className="secondary">Take a tour <ChevronDown size={14}/></button><button className="primary" onClick={onCreate}><Plus size={16}/> Create campaign <ChevronDown size={14}/></button></div></div><div className="filters"><label>Status<select value={query.status} onChange={e => changeQuery({ status: e.target.value, start: 0 })}><option>All</option><option>Draft</option><option>Active</option><option>Stopped</option></select></label><label>Tag<select><option>Select...</option><option>Lifecycle</option><option>Promotional</option></select></label><button className="secondary"><Filter size={15}/> Filters</button><button className="secondary"><Grid2X2 size={15}/> Columns</button><button className="text-button" onClick={() => changeQuery({ status: "All", search: "", start: 0 })}>Reset filters</button><div className="filter-search"><Search size={15}/><input placeholder="Search" value={query.search} onChange={e => changeQuery({ search: e.target.value, start: 0 }, true)}/></div></div><div className="result-heading"><span>{filtered.length} Results</span><small>{query.status !== "All" ? "Status: " + query.status : "All campaigns"}</small></div><div className="table-wrap"><table><thead><tr><th onClick={() => changeQuery({ sort: "name", direction: query.sort === "name" && query.direction === 1 ? -1 : 1, start: 0 })}>Name {query.sort === "name" ? query.direction === 1 ? "↑" : "↓" : ""}</th><th>Status</th><th>Stop date</th><th>Campaign type</th><th>Entry schedule</th><th>Sent</th><th>Last edited</th><th></th></tr></thead><tbody>{paged.map(c => { const Icon = channelMeta[c.channel].icon; return <tr key={c.id}><td><button className="link-button" onClick={() => onEdit(c)}>{c.name}</button></td><td><span className={className("status", c.status.toLowerCase())}>{c.status}</span></td><td>—</td><td><span className="channel-cell"><Icon size={14}/>{channelMeta[c.channel].title}</span></td><td>{c.schedule}</td><td>{c.sent.toLocaleString()}</td><td>{c.edited}</td><td><CampaignRowActions campaign={c} onEdit={onEdit} onStop={onStop} onArchive={onArchive} onDuplicate={onDuplicate}/></td></tr>; })}</tbody></table></div><div className="campaign-pagination"><span>{filtered.length ? start + 1 : 0}–{Math.min(start + query.limit, filtered.length)} of {filtered.length}</span><label>Rows per page <select value={query.limit} onChange={e => changeQuery({ limit: Number(e.target.value), start: 0 })}><option value="12">12</option><option value="24">24</option><option value="48">48</option></select></label><button className="secondary small" disabled={start === 0} onClick={() => changeQuery({ start: Math.max(0, start - query.limit) })} aria-label="Previous page"><ChevronLeft size={15}/></button><button className="secondary small" disabled={start + query.limit >= filtered.length} onClick={() => changeQuery({ start: start + query.limit })} aria-label="Next page"><ChevronRight size={15}/></button></div></section>;
+}
+
+function CampaignRowActions({ campaign, onEdit, onStop, onArchive, onDuplicate }: { campaign: Campaign; onEdit: (campaign: Campaign) => void; onStop: (id: string) => void; onArchive: (id: string) => Promise<boolean>; onDuplicate: (campaign: Campaign) => Promise<void> }) {
+  const [anchor, setAnchor] = useState<{ top: number; left: number } | null>(null);
+  const act = (action: () => void) => { setAnchor(null); action(); };
+  return <><button className="icon-button" aria-label={`Actions for ${campaign.name}`} aria-expanded={Boolean(anchor)} onClick={event => { if (anchor) { setAnchor(null); return; } const rect = event.currentTarget.getBoundingClientRect(); setAnchor({ top: Math.min(rect.bottom + 4, window.innerHeight - 148), left: Math.max(8, Math.min(rect.right - 130, window.innerWidth - 138)) }); }}><MoreHorizontal size={18}/></button>{anchor && createPortal(<div className="campaign-menu-layer" onMouseDown={() => setAnchor(null)}><div className="campaign-action-menu" style={anchor} onMouseDown={event => event.stopPropagation()}><button onClick={() => act(() => onEdit(campaign))}>Edit</button><button onClick={() => act(() => void onDuplicate(campaign))}>Duplicate</button>{campaign.status === "Active" && <button onClick={() => act(() => onStop(campaign.id))}>Stop</button>}<button onClick={() => act(() => void onArchive(campaign.id))}>Archive</button></div></div>, document.body)}</>;
 }
 
 function CampaignEditor({ campaign, onSave, onClose }: { campaign: Campaign; onSave: (c: Campaign, publish?: boolean) => Promise<boolean>; onClose: () => void }) {
