@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "test:canvas": "node --experimental-strip-types --test tests/canvas-model.test.mjs",
     "start": "next start",
     "lint": "next lint"
   },

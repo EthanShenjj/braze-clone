@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { campaignValidationIssues } from "./campaign-validation";
+import { type CanvasGraph, type CanvasRun, type CanvasTrace, validateCanvasGraph } from "./canvas-model";
 
 export type Channel = "email" | "push" | "iam" | "content" | "banner" | "sms" | "webhook" | "whatsapp" | "line" | "multichannel" | "operator" | "feature" | "api";
 export type CampaignStatus = "Draft" | "Active" | "Stopped" | "Archived";
@@ -14,6 +15,7 @@ export type CampaignRecord = {
   edited: string; subject?: string; body?: string; audience?: string; conversion?: string; config: Record<string, unknown>;
 };
 export type ResourceRecord = { id: string; type: string; name: string; status: string; description: string; updatedAt: string; data: Record<string, unknown> };
+export type UserRecord = { id: string; email: string; firstName: string; country: string; lifecycle: string; subscribed: boolean; reachable: boolean; attributes: Record<string, unknown> };
 
 const databasePath = process.env.VERCEL ? join(tmpdir(), "braze-local-demo", "braze-local.sqlite") : join(process.cwd(), ".data", "braze-local.sqlite");
 let database: DatabaseSync | undefined;
@@ -53,6 +55,13 @@ function db() {
       id TEXT PRIMARY KEY, campaign_id TEXT NOT NULL, state TEXT NOT NULL, eligible_count INTEGER NOT NULL,
       delivered_count INTEGER NOT NULL, failed_count INTEGER NOT NULL, created_at TEXT NOT NULL, snapshot_json TEXT NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS canvas_runs (
+      id TEXT PRIMARY KEY, canvas_id TEXT NOT NULL, created_at TEXT NOT NULL,
+      entered_count INTEGER NOT NULL, completed_count INTEGER NOT NULL, message_count INTEGER NOT NULL,
+      snapshot_json TEXT NOT NULL, traces_json TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS demo_state (key TEXT PRIMARY KEY, value TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS demo_receipts (delivery_id TEXT PRIMARY KEY, generated_at TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS audit_log (
       id TEXT PRIMARY KEY, entity_type TEXT NOT NULL, entity_id TEXT NOT NULL, action TEXT NOT NULL,
       created_at TEXT NOT NULL, detail_json TEXT NOT NULL DEFAULT '{}'
@@ -153,6 +162,28 @@ export function estimateAudience(audience = "All Users", country?: string, exclu
   return { matching: result.matching, reachable: result.reachable ?? 0, total: workspace.total };
 }
 
+function mapUser(row: Record<string, unknown>): UserRecord {
+  return { id: String(row.id), email: String(row.email), firstName: String(row.first_name), country: String(row.country), lifecycle: String(row.lifecycle), subscribed: Boolean(row.subscribed), reachable: Boolean(row.reachable), attributes: parseJson(String(row.attributes_json), {}) };
+}
+
+export function searchUsers(query = "", start = 0, limit = 20) {
+  const offset = Number.isFinite(start) ? Math.max(0, Math.floor(start)) : 0;
+  const pageSize = Number.isFinite(limit) ? Math.min(100, Math.max(1, Math.floor(limit))) : 20;
+  const term = query.trim().toLowerCase();
+  const condition = "instr(lower(id), ?) > 0 OR instr(lower(email), ?) > 0 OR instr(lower(first_name), ?) > 0";
+  const total = (db().prepare(`SELECT count(*) AS count FROM users WHERE ${condition}`).get(term, term, term) as { count: number }).count;
+  const rows = db().prepare(`SELECT * FROM users WHERE ${condition} ORDER BY CAST(SUBSTR(id, 6) AS INTEGER) LIMIT ? OFFSET ?`).all(term, term, term, pageSize, offset) as Record<string, unknown>[];
+  return { data: rows.map(mapUser), total, start: offset, limit: pageSize };
+}
+
+export function setUserSubscription(id: string, subscribed: boolean) {
+  const result = db().prepare("UPDATE users SET subscribed = ? WHERE id = ?").run(subscribed ? 1 : 0, id);
+  if (!result.changes) return null;
+  audit("user", id, "subscription_changed", { subscribed });
+  const row = db().prepare("SELECT * FROM users WHERE id = ?").get(id) as Record<string, unknown>;
+  return mapUser(row);
+}
+
 export function launchCampaign(id: string) {
   const conn = db(); const campaign = getCampaign(id);
   if (!campaign) throw new Error("Campaign not found");
@@ -210,6 +241,64 @@ export function getResource(id: string) {
   return row ? { id: String(row.id), type: String(row.type), name: String(row.name), status: String(row.status), description: String(row.description), updatedAt: String(row.updated_at), data: parseJson(String(row.data_json), {}) } : null;
 }
 
+const localCanvasId = "canvas_local_main";
+export function getCanvasWorkspace() {
+  const resource = getResource(localCanvasId);
+  const rows = db().prepare("SELECT * FROM canvas_runs WHERE canvas_id = ? ORDER BY created_at DESC LIMIT 8").all(localCanvasId) as Record<string, unknown>[];
+  const runs: CanvasRun[] = rows.map(row => ({ id: String(row.id), createdAt: String(row.created_at), entered: Number(row.entered_count), completed: Number(row.completed_count), messages: Number(row.message_count), traces: parseJson(String(row.traces_json), [] as CanvasTrace[]) }));
+  return { graph: resource?.data ?? null, updatedAt: resource?.updatedAt ?? null, runs };
+}
+
+export function saveCanvasGraph(graph: CanvasGraph, expectedUpdatedAt?: string | null) {
+  const existing = getResource(localCanvasId);
+  if (existing && expectedUpdatedAt !== undefined && expectedUpdatedAt !== existing.updatedAt) throw new Error("Canvas draft changed in another tab. Reload before saving.");
+  const updatedAt = now();
+  db().prepare("INSERT INTO resources VALUES (?, 'canvas', ?, 'Draft', ?, ?, ?) ON CONFLICT(id) DO UPDATE SET updated_at=excluded.updated_at, data_json=excluded.data_json")
+    .run(localCanvasId, "Local canvas draft", "Saved visual journey graph", updatedAt, JSON.stringify(graph));
+  audit("canvas", localCanvasId, existing ? "updated" : "created", { nodeCount: graph.nodes.length, edgeCount: graph.edges.length });
+  return { graph, updatedAt };
+}
+
+export function launchCanvasGraph(): CanvasRun {
+  const saved = getResource(localCanvasId);
+  if (!saved) throw new Error("Save the Canvas draft before launching.");
+  const graph = saved.data as CanvasGraph;
+  const issues = validateCanvasGraph(graph);
+  if (issues.length) throw new Error(issues.join(" "));
+  const users = db().prepare("SELECT id, country, lifecycle, subscribed FROM users WHERE reachable = 1 AND subscribed = 1 ORDER BY id LIMIT 10").all() as { id: string; country: string; lifecycle: string; subscribed: number }[];
+  const runId = uid("canvasrun"); const timestamp = now();
+  let messages = 0;
+  const traces: CanvasTrace[] = [];
+  const insertEvent = db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)");
+  db().exec("BEGIN");
+  try {
+    for (const user of users) {
+      const steps: CanvasTrace["steps"] = [];
+      let current = graph.nodes.find(node => node.kind === "entry")!;
+      while (current) {
+        steps.push({ nodeId: current.id, label: current.label, kind: current.kind, at: timestamp });
+        if (current.kind === "message") {
+          insertEvent.run(uid("evt"), localCanvasId, current.config?.channel ?? "email", user.id, "delivered", timestamp, JSON.stringify({ canvasRunId: runId, nodeId: current.id, simulated: true }));
+          messages += 1;
+        }
+        const routes = graph.edges.filter(([from]) => from === current.id);
+        const condition = current.kind === "branch" && current.config?.attribute
+          ? String(user[current.config.attribute as keyof typeof user]) === current.config.value : true;
+        const nextId = routes[current.kind === "branch" && !condition ? 1 : 0]?.[1];
+        const next = graph.nodes.find(node => node.id === nextId);
+        if (!next) break;
+        current = next;
+      }
+      traces.push({ userId: user.id, steps });
+    }
+    const run: CanvasRun = { id: runId, createdAt: timestamp, entered: users.length, completed: traces.length, messages, traces };
+    db().prepare("INSERT INTO canvas_runs VALUES (?, ?, ?, ?, ?, ?, ?, ?)").run(run.id, localCanvasId, timestamp, run.entered, run.completed, run.messages, JSON.stringify(graph), JSON.stringify(traces));
+    audit("canvas", localCanvasId, "launched", { runId, entered: run.entered, messages });
+    db().exec("COMMIT");
+    return run;
+  } catch (error) { db().exec("ROLLBACK"); throw error; }
+}
+
 export function listCatalogs() {
   const catalogs = listResources("catalogs"); const conn = db();
   return catalogs.map(catalog => ({ ...catalog, itemCount: (conn.prepare("SELECT count(*) AS count FROM catalog_items WHERE catalog_id = ?").get(catalog.id) as { count: number }).count }));
@@ -236,19 +325,52 @@ export function reportOverview(range = "30") {
   const since = new Date(Date.now() - Number(range) * 86_400_000).toISOString();
   const rows = db().prepare("SELECT event_type, count(*) AS count FROM message_events WHERE created_at >= ? GROUP BY event_type").all(since) as { event_type: string; count: number }[];
   const counts = Object.fromEntries(rows.map(row => [row.event_type, row.count]));
-  const runs = db().prepare("SELECT * FROM execution_runs ORDER BY created_at DESC LIMIT 12").all() as { created_at: string; delivered_count: number }[];
+  const runs = db().prepare("SELECT created_at, delivered_count FROM execution_runs WHERE created_at >= ? UNION ALL SELECT created_at, message_count AS delivered_count FROM canvas_runs WHERE created_at >= ? ORDER BY created_at DESC LIMIT 12").all(since, since) as { created_at: string; delivered_count: number }[];
   return { delivered: counts.delivered ?? 0, opened: counts.opened ?? 0, clicked: counts.clicked ?? 0, suppressed: counts.suppressed ?? 0, unreachable: counts.unreachable ?? 0, series: runs.reverse().map(run => ({ date: run.created_at, delivered: run.delivered_count })) };
 }
 
 export function activityLog(limit = 50) {
-  return db().prepare(`SELECT e.*, c.name AS campaign_name FROM message_events e LEFT JOIN campaigns c ON c.id = e.campaign_id ORDER BY e.created_at DESC LIMIT ?`).all(limit) as Record<string, unknown>[];
+  return db().prepare(`SELECT e.*, COALESCE(c.name, r.name) AS campaign_name FROM message_events e LEFT JOIN campaigns c ON c.id = e.campaign_id LEFT JOIN resources r ON r.id = e.campaign_id ORDER BY e.created_at DESC LIMIT ?`).all(limit) as Record<string, unknown>[];
+}
+
+export function getDemoState() {
+  const saved = db().prepare("SELECT value FROM demo_state WHERE key = 'simulated_time'").get() as { value: string } | undefined;
+  const pending = db().prepare("SELECT count(*) AS count FROM message_events e LEFT JOIN demo_receipts d ON d.delivery_id = e.id WHERE e.event_type = 'delivered' AND d.delivery_id IS NULL").get() as { count: number };
+  return { simulatedTime: saved?.value ?? now(), pendingReceipts: pending.count };
 }
 
 export function demoAction(action: string) {
-  if (action === "reset") { const conn = db(); conn.exec("DELETE FROM message_events; DELETE FROM execution_runs; DELETE FROM audit_log; DELETE FROM campaigns; DELETE FROM users; DELETE FROM catalog_items; DELETE FROM resources;"); seed(conn); return { message: "Sample data reset" }; }
-  if (action === "advance") { const draft = getCampaign("cmp_3d084f2b"); if (draft) upsertCampaign({ ...draft, schedule: "One time" }); return { message: "Simulated time advanced by one day" }; }
-  if (action === "failure") { const active = db().prepare("SELECT id, channel FROM campaigns WHERE status = 'Active' LIMIT 1").get() as { id: string; channel: string } | undefined; if (active) db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), active.id, active.channel, "user_1", "failed", now(), JSON.stringify({ reason: "rate_limit" })); return { message: "Rate-limit failure injected" }; }
-  return { message: "Delivery receipts generated from the current execution state" };
+  const conn = db();
+  if (action === "reset") { conn.exec("DELETE FROM message_events; DELETE FROM execution_runs; DELETE FROM canvas_runs; DELETE FROM demo_receipts; DELETE FROM demo_state; DELETE FROM audit_log; DELETE FROM campaigns; DELETE FROM users; DELETE FROM catalog_items; DELETE FROM resources;"); seed(conn); return { message: "Sample data reset", state: getDemoState() }; }
+  if (action === "advance") {
+    const current = getDemoState().simulatedTime;
+    const next = new Date(new Date(current).getTime() + 86_400_000).toISOString();
+    conn.prepare("INSERT INTO demo_state VALUES ('simulated_time', ?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").run(next);
+    audit("demo", "simulated_time", "advanced", { from: current, to: next });
+    return { message: `Demo clock advanced to ${next}. Scheduled jobs are not implemented.`, state: getDemoState() };
+  }
+  if (action === "failure") { const active = conn.prepare("SELECT id, channel FROM campaigns WHERE status = 'Active' LIMIT 1").get() as { id: string; channel: string } | undefined; if (!active) return { message: "No active campaign is available for failure injection.", state: getDemoState() }; conn.prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), active.id, active.channel, "user_1", "failed", getDemoState().simulatedTime, JSON.stringify({ reason: "rate_limit", simulated: true })); return { message: "Rate-limit failure recorded in Message Activity Log.", state: getDemoState() }; }
+  if (action === "receipts") {
+    const rows = conn.prepare("SELECT e.id, e.campaign_id, e.channel, e.user_id FROM message_events e LEFT JOIN demo_receipts d ON d.delivery_id = e.id WHERE e.event_type = 'delivered' AND d.delivery_id IS NULL ORDER BY e.created_at, e.id LIMIT 100").all() as { id: string; campaign_id: string; channel: string; user_id: string }[];
+    const timestamp = getDemoState().simulatedTime;
+    const insertEvent = conn.prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)");
+    const mark = conn.prepare("INSERT INTO demo_receipts VALUES (?, ?)");
+    let generated = 0;
+    conn.exec("BEGIN");
+    try {
+      for (const [index, row] of rows.entries()) {
+        const supportsOpen = ["email", "push", "whatsapp", "line"].includes(row.channel);
+        const supportsClick = ["email", "push", "sms", "whatsapp", "line", "iam", "content", "banner"].includes(row.channel);
+        if (supportsOpen && index % 2 === 0) { insertEvent.run(uid("evt"), row.campaign_id, row.channel, row.user_id, "opened", timestamp, JSON.stringify({ deliveryId: row.id, simulated: true })); generated += 1; }
+        if (supportsClick && index % 4 === 0) { insertEvent.run(uid("evt"), row.campaign_id, row.channel, row.user_id, "clicked", timestamp, JSON.stringify({ deliveryId: row.id, simulated: true })); generated += 1; }
+        mark.run(row.id, timestamp);
+      }
+      audit("demo", "receipts", "generated", { processed: rows.length, events: generated });
+      conn.exec("COMMIT");
+    } catch (error) { conn.exec("ROLLBACK"); throw error; }
+    return { message: `${generated} receipt events generated from ${rows.length} deliveries.`, state: getDemoState() };
+  }
+  throw new Error(`Unsupported demo action: ${action}`);
 }
 
 function audit(entityType: string, entityId: string, action: string, detail: Record<string, unknown>) { db().prepare("INSERT INTO audit_log VALUES (?, ?, ?, ?, ?, ?)").run(uid("audit"), entityType, entityId, action, now(), JSON.stringify(detail)); }

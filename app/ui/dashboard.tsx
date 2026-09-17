@@ -8,6 +8,8 @@ import emailEditorStyles from "./email-editor.module.css";
 import brazeDndStyles from "./braze-dnd.module.css";
 import brazeSendingStyles from "./braze-sending.module.css";
 import pushStyles from "./push-editor.module.css";
+import LiveCanvas from "./live-canvas";
+import LiveUserSearch from "./live-user-search";
 import { campaignValidationIssues } from "@/lib/campaign-validation";
 import {
   Activity, Bell, Bot, Box, CalendarDays, ChevronDown, ChevronLeft, ChevronRight,
@@ -89,9 +91,10 @@ const routeForPage = (page: string) => {
 
 const pageFromPath = (pathname: string) => {
   if (pathname.includes("/engagement/campaigns")) return "campaigns";
-  if (pathname.includes("canvas")) return "canvas";
+  if (pathname === "/engagement/canvas") return "canvas";
   if (pathname === "/home") return "getting-started";
   const leaf = pathname.split("/").filter(Boolean).at(-1);
+  if (leaf === "performance-overview") return "performance";
   return leaf || "campaigns";
 };
 
@@ -184,10 +187,10 @@ export default function Dashboard() {
     <main className="main-area">
       <div className="trial">◷ &nbsp;12 days left in your free trial. <button>Connect with sales</button></div>
       <header className="topbar"><button className="search-button" onClick={() => setToast("Workspace search is ready for this local demo.")}><Search size={16}/> Search workspace <kbd>⌘K</kbd></button><div className="top-actions"><CircleHelp size={18}/><Bell size={18}/><button className="profile">S</button><button className="operator-trigger" onClick={() => setOperatorOpen(!operatorOpen)}><Sparkles size={17}/></button></div></header>
-      <div className="page-tabs"><button className={className("page-tab", !editing && "selected")} onClick={() => openPage("campaigns")}>Campaigns</button>{editing && <button className="page-tab selected">Edit '{editing.name}' <X size={14} onClick={() => openPage("campaigns")}/></button>}</div>
+      <div className="page-tabs"><button className={className("page-tab", !editing && "selected")} onClick={() => openPage(editing ? "campaigns" : page)}>{editing ? "Campaigns" : page === "performance" ? "Performance Overview" : page === "agents" ? "Agent Console" : page === "partners" ? "Partner Integrations" : page === "data" ? "Data Settings" : titleFrom(page)}</button>{editing && <button className="page-tab selected">Edit '{editing.name}' <X size={14} onClick={() => openPage("campaigns")}/></button>}</div>
       {editing ? <CampaignEditor key={editing.id} campaign={editing} onSave={saveCampaign} onClose={() => openPage("campaigns")} /> : <PageContent page={page} campaigns={campaigns} openPage={openPage} onEdit={openCampaign} onCreate={(event) => { const rect = event.currentTarget.getBoundingClientRect(); setCreateAnchor({ position: "fixed", top: rect.bottom + 6, left: Math.max(16, rect.right - 325), zIndex: 61 }); }} onStop={stopCampaign} onArchive={archiveCampaign} onDuplicate={duplicateCampaign} notify={setToast} />}
     </main>
-    {drawer && <NavigationDrawer name={titleFrom(drawer)} items={drawers[drawer]} close={() => setDrawer(null)} open={(name) => { if (name === "Campaigns") openPage("campaigns"); else openPage(name.toLowerCase().replace(/\s+/g, "-")); }} />}
+    {drawer && <NavigationDrawer name={titleFrom(drawer)} items={drawers[drawer]} close={() => setDrawer(null)} open={(name) => { if (name === "Campaigns") openPage("campaigns"); else openPage(name.toLowerCase().replace(/[\s/]+/g, "-")); }} />}
     {createAnchor && <CreateMenu anchor={createAnchor} start={start} close={() => setCreateAnchor(null)} />}
     {operatorOpen && <Operator close={() => setOperatorOpen(false)} start={start} />}
     {toast && <div className="toast"><ShieldCheck size={18}/><span>{toast}</span><button onClick={() => setToast("")}><X size={15}/></button></div>}
@@ -221,6 +224,7 @@ function PageContent({ page, campaigns, openPage, onEdit, onCreate, onStop, onAr
   if (page === "demo-lab") return <LiveDemoLab notify={notify}/>;
   if (["report-builder", "custom-events-report", "global-control-group-report", "query-builder", "engagement-reports", "revenue-report", "segment-insights", "dashboard-builder", "email-performance", "push-performance", "sms-mms-rcs-performance", "conversions"].includes(page)) return <LiveReportPage title={titleFrom(page)} />;
   if (page === "message-activity-log") return <ActivityLogPage />;
+  if (page === "search-users") return <LiveUserSearch notify={notify}/>;
   if (page === "catalogs") return <CatalogWorkspace notify={notify}/>;
   return <ModuleWorkspace title={titleFrom(page)} page={page} notify={notify} openPage={openPage}/>;
 }
@@ -772,62 +776,22 @@ function LiveReportPage({ title }: { title: string }) {
   useEffect(() => { void fetch(`/api/reports/overview?days=${range}`).then(response => response.json()).then(setOverview); }, [range]);
   const delivered = overview?.delivered ?? 0; const opened = overview?.opened ?? 0; const clicked = overview?.clicked ?? 0;
   const max = Math.max(...(overview?.series.map(point => point.delivered) ?? [1]), 1);
-  return <section className="page-content"><div className="page-heading"><div><h1>{title}</h1><p>Metrics are calculated from local execution runs and message events.</p></div><select className="date-select" value={range} onChange={event => setRange(event.target.value)}><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option></select></div><div className="metric-grid">{[["Delivered", delivered], ["Opened", opened], ["Clicked", clicked], ["Suppressed", overview?.suppressed ?? 0], ["Unreachable", overview?.unreachable ?? 0]].map(([label, value]) => <div className="metric" key={String(label)}><small>{label}</small><b>{Number(value).toLocaleString()}</b><span>{delivered ? `${Math.round(Number(value) / delivered * 100)}% of delivered` : "No executions yet"}</span></div>)}</div><section className="chart-card"><div><h2>Campaign delivery runs</h2><p>Each bar is a completed local execution snapshot.</p></div><div className="bar-chart" aria-label="Delivery run chart">{overview?.series.length ? overview.series.map((point, index) => <span key={`${point.date}-${index}`} title={`${point.delivered} delivered`} style={{ height: `${Math.max(8, point.delivered / max * 100)}%` }}/>) : <p className="empty-inline">Launch a campaign or send a test to create report data.</p>}</div></section></section>;
+  return <section className="page-content"><div className="page-heading"><div><h1>{title}</h1><p>Metrics are calculated from local execution runs and message events.</p></div><select className="date-select" value={range} onChange={event => setRange(event.target.value)}><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option></select></div><div className="metric-grid">{[["Delivered", delivered], ["Opened", opened], ["Clicked", clicked], ["Suppressed", overview?.suppressed ?? 0], ["Unreachable", overview?.unreachable ?? 0]].map(([label, value]) => <div className="metric" key={String(label)}><small>{label}</small><b>{Number(value).toLocaleString()}</b><span>{delivered ? `${Math.round(Number(value) / delivered * 100)}% of delivered` : "No executions yet"}</span></div>)}</div><section className="chart-card"><div><h2>Delivery runs</h2><p>Each bar is a completed local Campaign or Canvas execution snapshot.</p></div><div className="bar-chart" aria-label="Delivery run chart">{overview?.series.length ? overview.series.map((point, index) => <span key={`${point.date}-${index}`} title={`${point.delivered} delivered`} style={{ height: `${Math.max(8, point.delivered / max * 100)}%` }}/>) : <p className="empty-inline">Launch a Campaign or Canvas to create report data.</p>}</div></section></section>;
 }
 
 function LiveDemoLab({ notify }: { notify: (message: string) => void }) {
   const [working, setWorking] = useState<string | null>(null);
-  const actions = [["advance", "Advance simulated time", "Move local schedules forward by one day"], ["receipts", "Generate delivery receipts", "Generate receipts from completed executions"], ["failure", "Inject a failure", "Write a rate-limit failure into the activity log"], ["reset", "Reset sample data", "Restore campaigns, resources, users and local events"]] as const;
-  const run = async (action: string) => { setWorking(action); const response = await fetch("/api/demo", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action }) }); const result = await response.json(); setWorking(null); notify(result.message ?? "Demo action completed."); };
-  return <section className="page-content"><div className="page-heading"><div><h1>Demo Lab</h1><p>Control the same SQLite data that powers campaign execution, activity, and reports.</p></div></div><div className="lab-grid">{actions.map(([action, title, description]) => <button key={action} className="lab-action" disabled={working !== null} onClick={() => void run(action)}><Zap size={20}/><b>{working === action ? "Working…" : title}</b><small>{description}</small></button>)}</div></section>;
+  const [state, setState] = useState<{ simulatedTime: string; pendingReceipts: number } | null>(null);
+  useEffect(() => { void fetch("/api/demo").then(response => response.json()).then(setState).catch(() => {}); }, []);
+  const actions = [["advance", "Advance demo clock", "Move the local demo clock forward by one day"], ["receipts", "Generate delivery receipts", "Write eligible open and click events from completed deliveries"], ["failure", "Inject a failure", "Write a rate-limit failure into the activity log"], ["reset", "Reset sample data", "Restore campaigns, resources, users and local events"]] as const;
+  const run = async (action: string) => { setWorking(action); try { const response = await fetch("/api/demo", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action }) }); const result = await response.json(); if (!response.ok) throw new Error(result.error ?? "Demo action failed."); setState(result.state); notify(result.message); } catch (cause) { notify(cause instanceof Error ? cause.message : "Demo action failed."); } finally { setWorking(null); } };
+  return <section className="page-content"><div className="page-heading"><div><h1>Demo Lab</h1><p>Control the same SQLite data that powers campaign execution, activity, and reports.</p></div></div>{state && <div className="demo-state"><b>Demo clock: {new Date(state.simulatedTime).toLocaleString()}</b><span>{state.pendingReceipts} deliveries awaiting receipt generation</span><small>The clock is a local simulation; it does not trigger scheduled campaigns.</small></div>}<div className="lab-grid">{actions.map(([action, title, description]) => <button key={action} className="lab-action" disabled={working !== null} onClick={() => void run(action)}><Zap size={20}/><b>{working === action ? "Working…" : title}</b><small>{description}</small></button>)}</div></section>;
 }
 
 function ActivityLogPage() {
   const [events, setEvents] = useState<Record<string, unknown>[]>([]);
   useEffect(() => { void fetch("/api/activity").then(response => response.json()).then(result => setEvents(result.data)); }, []);
   return <section className="page-content"><div className="page-heading"><div><h1>Message Activity Log</h1><p>Local test, delivery, engagement, suppression and failure events.</p></div></div><div className="table-wrap"><table><thead><tr><th>Event</th><th>Campaign</th><th>Channel</th><th>User</th><th>Timestamp</th></tr></thead><tbody>{events.length ? events.map(event => <tr key={String(event.id)}><td><span className="status active">{String(event.event_type)}</span></td><td>{String(event.campaign_name ?? event.campaign_id)}</td><td>{String(event.channel)}</td><td>{String(event.user_id)}</td><td>{new Date(String(event.created_at)).toLocaleString()}</td></tr>) : <tr><td colSpan={5}>No message events have been recorded.</td></tr>}</tbody></table></div></section>;
-}
-
-type JourneyNode = { id: string; label: string; kind: "entry" | "delay" | "message" | "branch" | "update"; x: number; y: number };
-type JourneyState = { nodes: JourneyNode[]; edges: [string, string][] };
-
-function LiveCanvas({ notify }: { notify: (message: string) => void }) {
-  const initial: JourneyState = { nodes: [{ id: "entry", label: "Audience entry", kind: "entry", x: 110, y: 190 }, { id: "delay", label: "Delay · 1 day", kind: "delay", x: 360, y: 190 }, { id: "email", label: "Email message", kind: "message", x: 610, y: 190 }], edges: [["entry", "delay"], ["delay", "email"]] };
-  const [history, setHistory] = useState<JourneyState[]>([initial]); const [cursor, setCursor] = useState(0);
-  const [selected, setSelected] = useState("email"); const [zoom, setZoom] = useState(1); const [linkFrom, setLinkFrom] = useState<string | null>(null); const [execution, setExecution] = useState<string[]>([]);
-  const state = history[cursor];
-  const commit = (next: JourneyState) => { setHistory(previous => [...previous.slice(0, cursor + 1), next]); setCursor(value => value + 1); };
-  const add = (kind: JourneyNode["kind"]) => { const label = kind === "message" ? "Email message" : kind === "delay" ? "Delay · 1 day" : kind === "branch" ? "Action path" : kind === "update" ? "Update user" : "Audience entry"; const id = `${kind}_${Date.now()}`; commit({ ...state, nodes: [...state.nodes, { id, label, kind, x: 180 + state.nodes.length * 48, y: 320, } ] }); setSelected(id); };
-  const move = (id: string, event: React.PointerEvent<HTMLButtonElement>) => {
-    const element = event.currentTarget;
-    const start = { x: event.clientX, y: event.clientY, left: Number(element.dataset.x), top: Number(element.dataset.y) };
-    let latest = { x: start.left, y: start.top };
-    element.setPointerCapture(event.pointerId);
-    const onMove = (pointer: PointerEvent) => {
-      const x = Math.max(20, start.left + (pointer.clientX - start.x) / zoom);
-      const y = Math.max(20, start.top + (pointer.clientY - start.y) / zoom);
-      latest = { x, y };
-      setHistory(previous => previous.map((snapshot, index) => index === cursor ? { ...snapshot, nodes: snapshot.nodes.map(node => node.id === id ? { ...node, x, y } : node) } : snapshot));
-    };
-    const onUp = () => {
-      element.removeEventListener("pointermove", onMove); element.removeEventListener("pointerup", onUp);
-      setHistory(previous => {
-        const current = previous[cursor];
-        const next = { ...current, nodes: current.nodes.map(node => node.id === id ? { ...node, ...latest } : node) };
-        return [...previous.slice(0, cursor + 1), next];
-      });
-      setCursor(value => value + 1);
-    };
-    element.addEventListener("pointermove", onMove); element.addEventListener("pointerup", onUp);
-  };
-  const connect = (id: string) => { if (!linkFrom) { setLinkFrom(id); return; } if (linkFrom !== id && !state.edges.some(edge => edge[0] === linkFrom && edge[1] === id)) commit({ ...state, edges: [...state.edges, [linkFrom, id]] }); setLinkFrom(null); };
-  const rename = (label: string) => commit({ ...state, nodes: state.nodes.map(node => node.id === selected ? { ...node, label } : node) });
-  const remove = () => { commit({ nodes: state.nodes.filter(node => node.id !== selected), edges: state.edges.filter(edge => !edge.includes(selected)) }); setSelected(""); };
-  const copy = () => { const node = state.nodes.find(item => item.id === selected); if (!node) return; const id = `${node.kind}_${Date.now()}`; commit({ ...state, nodes: [...state.nodes, { ...node, id, label: `${node.label} copy`, x: node.x + 36, y: node.y + 48 }] }); setSelected(id); };
-  const save = async () => { await fetch("/api/resources/canvas", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: "Local canvas draft", description: "Saved visual journey graph", data: state }) }); notify("Canvas graph saved to local SQLite."); };
-  const launch = () => { if (state.nodes.length < 2 || state.edges.length < state.nodes.length - 1) { notify("Canvas needs connected steps before it can launch."); return; } setExecution(state.nodes.map(node => `${node.label}: completed`)); notify("Canvas execution simulated for the current journey graph."); };
-  const selectedNode = state.nodes.find(node => node.id === selected);
-  return <section className="canvas-page"><div className="page-heading"><div><h1>Canvas</h1><p>Build, validate, persist, and simulate a local customer journey.</p></div><div className="heading-actions"><button className="secondary" disabled={cursor === 0} onClick={() => setCursor(value => value - 1)}>Undo</button><button className="secondary" disabled={cursor === history.length - 1} onClick={() => setCursor(value => value + 1)}>Redo</button><button className="secondary" onClick={() => void save()}>Save Draft</button><button className="primary" onClick={launch}>Launch Canvas</button></div></div><div className="canvas-shell live-canvas-shell"><aside><h3>Steps</h3>{(["entry", "message", "delay", "branch", "update"] as JourneyNode["kind"][]).map(kind => <button key={kind} onClick={() => add(kind)}><Plus size={14}/>{kind === "entry" ? "Audience Paths" : kind === "message" ? "Message" : kind === "delay" ? "Delay" : kind === "branch" ? "Action Paths" : "Update User"}</button>)}<hr/><h3>Inspector</h3>{selectedNode ? <><label>Step name<input value={selectedNode.label} onChange={event => rename(event.target.value)}/></label><button className="secondary small" onClick={copy}>Copy step</button><button className="text-button danger" onClick={remove}>Delete step</button></> : <p>Select a node</p>}<hr/><h3>Execution</h3>{execution.length ? execution.map(item => <small className="execution-item" key={item}>✓ {item}</small>) : <small>Launch to inspect the local path.</small>}</aside><div className="journey-canvas live-journey-canvas"><div className="zoom-control"><button onClick={() => setZoom(value => Math.max(.6, value - .1))}>−</button><span>{Math.round(zoom * 100)}%</span><button onClick={() => setZoom(value => Math.min(1.5, value + .1))}>+</button></div><div className="canvas-world" style={{ transform: `scale(${zoom})` }}>{state.edges.map(([from, to]) => { const start = state.nodes.find(node => node.id === from); const end = state.nodes.find(node => node.id === to); return start && end ? <svg className="canvas-edge" key={`${from}-${to}`}><line x1={start.x + 160} y1={start.y + 36} x2={end.x} y2={end.y + 36}/></svg> : null; })}{state.nodes.map(node => <button key={node.id} data-x={node.x} data-y={node.y} className={className("journey-node", selected === node.id && "selected", linkFrom === node.id && "link-source")} style={{ left: node.x, top: node.y }} onPointerDown={event => move(node.id, event)} onClick={() => { setSelected(node.id); connect(node.id); }}><span className="node-grip">⋮⋮</span>{node.kind === "entry" ? <Users size={18}/> : node.kind === "delay" ? <CalendarDays size={18}/> : node.kind === "branch" ? <MousePointerClick size={18}/> : node.kind === "update" ? <Activity size={18}/> : <Mail size={18}/>}<span>{node.label}</span></button>)}</div>{linkFrom && <div className="connect-hint">Select another node to create a connection.</div>}</div></div></section>;
 }
 
 function ModuleWorkspace({ title, page, notify, openPage }: { title: string; page: string; notify: (message: string) => void; openPage: (page: string) => void }) {

@@ -4,6 +4,8 @@
 
 ## 启动
 
+需要 Node.js 22（项目使用内置 `node:sqlite`）。
+
 ```bash
 npm install
 npm run dev
@@ -19,7 +21,10 @@ npm run dev
 2. 编辑活动、内容、排期、受众和转化目标。
 3. 预览并生成本地测试事件，保存草稿或模拟发布；发布会按受众、订阅状态和可达性生成本地回执。
 4. 在活动列表中查看状态和发送量，在 Message Activity Log 与分析页查看同一批事件。
-5. 通过 Canvas、Segments、模板、设置与 Demo Lab 继续配置和生成模拟数据。
+5. Canvas 草稿可保存和刷新恢复；模拟运行会记录用户节点路径，消息事件进入活动日志与报表。Demo Lab 可生成去重的打开/点击回执。
+6. Search Users 可查询合成用户并修改本地订阅状态；Campaign 的可达人数会读取更新后的用户数据。
+
+当前 Canvas 不具备真实调度 Worker；Demo Lab 的时钟推进只更新本地时钟。其他模块的逐项完成度见[渠道与模块审计](docs/channel-module-audit-2026-09-17.md)，菜单可进入不代表 1:1 验收通过。
 
 ## 安全边界
 
@@ -31,3 +36,4 @@ Webhook、AI、第三方渠道与连接测试均为本地模拟，不会向外�
 - [本地架构与数据闭环](docs/architecture.md)
 - [营销渠道配置与投递逻辑](docs/channel-delivery-logic.md)
 - [浏览器回归测试](tests/README.md)
+- Canvas 图校验：`npm run test:canvas`
