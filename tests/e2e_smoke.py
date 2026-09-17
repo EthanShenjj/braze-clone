@@ -1,10 +1,11 @@
 """Run with the webapp-testing with_server helper; see tests/README.md."""
 
+import os
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 
-BASE_URL = "http://127.0.0.1:3000"
+BASE_URL = os.environ.get("BASE_URL", "http://127.0.0.1:3000")
 ARTIFACTS = Path("tests/artifacts")
 
 
@@ -21,7 +22,7 @@ def main() -> None:
         campaigns = page.request.get(f"{BASE_URL}/api/campaigns").json()
         assert campaigns["total"] >= 4
         campaign_id = "cmp_e2e_email"
-        page.request.post(f"{BASE_URL}/api/campaigns", data={
+        created = page.request.post(f"{BASE_URL}/api/campaigns", data={
             "id": campaign_id,
             "name": "E2E Email Campaign",
             "channel": "email",
@@ -31,11 +32,13 @@ def main() -> None:
             "subject": "E2E subject",
             "body": "E2E body",
         })
+        assert created.ok, created.text()
         launched = page.request.post(f"{BASE_URL}/api/campaigns/{campaign_id}/launch")
-        assert launched.ok
+        assert launched.ok, launched.text()
         assert launched.json()["run"]["delivered"] > 0
 
         page.goto(f"{BASE_URL}/engagement/campaigns/{campaign_id}?step=compose", wait_until="networkidle")
+        page.get_by_text("Campaign Details").wait_for(timeout=10_000)
         assert page.get_by_text("Campaign Details").is_visible()
         assert page.get_by_text("Email Composer").is_visible()
         page.screenshot(path=str(ARTIFACTS / "email-compose.png"), full_page=True)
@@ -46,6 +49,26 @@ def main() -> None:
 
         report = page.request.get(f"{BASE_URL}/api/reports/overview?days=30").json()
         assert report["delivered"] > 0
+
+        groups = page.request.get(f"{BASE_URL}/api/subscription-groups").json()["data"]
+        promotions = next(group for group in groups if group["id"] == "sg_promotions")
+        baseline = page.request.get(f"{BASE_URL}/api/audience/estimate?audience=All+Users&eligibility=subscribed&subscriptionGroupId={promotions['id']}").json()["reachable"]
+        changed = page.request.patch(f"{BASE_URL}/api/subscription-groups/{promotions['id']}/members", data={"userId": "user_1", "state": "unsubscribed"})
+        assert changed.ok
+        after_unsubscribe = page.request.get(f"{BASE_URL}/api/audience/estimate?audience=All+Users&eligibility=subscribed&subscriptionGroupId={promotions['id']}").json()["reachable"]
+        assert after_unsubscribe == baseline - 1
+        restored = page.request.patch(f"{BASE_URL}/api/subscription-groups/{promotions['id']}/members", data={"userId": "user_1", "state": "subscribed"})
+        assert restored.ok
+
+        page.goto(f"{BASE_URL}/users/subscription_groups/6aa75e37db69160082adb7ae?locale=en", wait_until="networkidle")
+        assert page.get_by_role("heading", name="Subscription Group Management").is_visible()
+        page.get_by_text("Promotions", exact=True).wait_for(timeout=10_000)
+        assert page.get_by_text("Promotions", exact=True).is_visible()
+        page.screenshot(path=str(ARTIFACTS / "subscription-groups.png"), full_page=True)
+
+        page.goto(f"{BASE_URL}/users/subscription_groups/preference_centers/6aa75e37db69160082adb7ae?locale=en", wait_until="networkidle")
+        assert page.get_by_role("heading", name="Email Preference Centers").is_visible()
+        page.screenshot(path=str(ARTIFACTS / "email-preference-centers.png"), full_page=True)
         browser.close()
 
 

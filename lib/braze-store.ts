@@ -24,6 +24,16 @@ export type CatalogSelectionRecord = {
 export type RecommendationRecord = ResourceRecord & {
   data: { catalogId?: string; selectionName?: string; recommendationType?: string; trackingType?: string; propertyName?: string };
 };
+export type SubscriptionChannel = "Email" | "SMS" | "WhatsApp";
+export type SubscriptionState = "subscribed" | "unsubscribed";
+export type SubscriptionGroupRecord = {
+  id: string; name: string; description: string; channel: SubscriptionChannel; status: "Active" | "Archived";
+  createdAt: string; updatedAt: string; subscriberCount: number;
+};
+export type SubscriptionMemberRecord = UserRecord & { state: SubscriptionState; updatedAt: string };
+export type PreferenceCenterRecord = {
+  id: string; name: string; description: string; groupIds: string[]; status: "Active" | "Draft"; updatedAt: string;
+};
 
 const databasePath = process.env.VERCEL ? join(tmpdir(), "braze-local-demo", "braze-local.sqlite") : join(process.cwd(), ".data", "braze-local.sqlite");
 let database: DatabaseSync | undefined;
@@ -63,6 +73,18 @@ function db() {
     CREATE TABLE IF NOT EXISTS catalog_subscriptions (
       catalog_id TEXT NOT NULL, user_id TEXT NOT NULL, item_id TEXT NOT NULL, subscription_type TEXT NOT NULL,
       created_at TEXT NOT NULL, PRIMARY KEY (catalog_id, user_id, item_id, subscription_type)
+    );
+    CREATE TABLE IF NOT EXISTS subscription_groups (
+      id TEXT PRIMARY KEY, name TEXT NOT NULL UNIQUE, description TEXT NOT NULL, channel TEXT NOT NULL,
+      status TEXT NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS subscription_group_memberships (
+      group_id TEXT NOT NULL, user_id TEXT NOT NULL, state TEXT NOT NULL, updated_at TEXT NOT NULL,
+      PRIMARY KEY (group_id, user_id)
+    );
+    CREATE TABLE IF NOT EXISTS preference_centers (
+      id TEXT PRIMARY KEY, name TEXT NOT NULL, description TEXT NOT NULL, group_ids_json TEXT NOT NULL,
+      status TEXT NOT NULL, updated_at TEXT NOT NULL
     );
     CREATE TABLE IF NOT EXISTS message_events (
       id TEXT PRIMARY KEY, campaign_id TEXT NOT NULL, channel TEXT NOT NULL, user_id TEXT NOT NULL,
@@ -112,7 +134,7 @@ function seedSampleCatalog(conn: DatabaseSync) {
 
 function seed(conn: DatabaseSync) {
   const existing = conn.prepare("SELECT count(*) AS count FROM campaigns").get() as { count: number };
-  if (existing.count) { seedCatalogItems(conn); return; }
+  if (existing.count) { seedCatalogItems(conn); seedSubscriptionGroups(conn); return; }
   const created = now();
   const campaigns: CampaignRecord[] = [
     { id: "cmp_3d084f2b", name: "New Campaign - September 16, 2026", channel: "email", status: "Draft", schedule: "One time", sent: 0, edited: created, subject: "{% if ${language} == 'zh' %}九月专属优惠｜立减 20%{% else %}Your September Offer | 20% Off{% endif %}", body: "Thanks for being with us. Use code SEPTEMBER20 to get 20% off.", audience: "All Users", conversion: "Make Purchase", config: { variants: [{ id: "var_1", name: "Variant 1" }], delivery: { timezone: "UTC+08:00" } } },
@@ -137,6 +159,7 @@ function seed(conn: DatabaseSync) {
   ];
   for (const [id, type, name, status, description, data] of resources) insertResource.run(id, type, name, status, description, created, JSON.stringify(data));
   seedCatalogItems(conn);
+  seedSubscriptionGroups(conn);
 }
 
 function seedCatalogItems(conn: DatabaseSync) {
@@ -149,6 +172,32 @@ function seedCatalogItems(conn: DatabaseSync) {
     ["SKU-0926-03", "Travel Bottle", { price: 28, inventory: 88, category: "Home", image: "https://images.example.test/bottle.jpg" }],
   ];
   items.forEach(([id, name, fields]) => insert.run(id, "catalog_featured", name, JSON.stringify(fields), timestamp));
+}
+
+function seedSubscriptionGroups(conn: DatabaseSync) {
+  const existing = conn.prepare("SELECT count(*) AS count FROM subscription_groups").get() as { count: number };
+  if (existing.count) return;
+  const timestamp = "2026-09-16T10:49:34.230Z";
+  const groups: Array<[string, string, string, SubscriptionChannel]> = [
+    ["sg_product_updates", "Product updates", "Feature launches, release notes, and product education.", "Email"],
+    ["sg_promotions", "Promotions", "Offers, seasonal campaigns, and member-only savings.", "Email"],
+    ["sg_sms_alerts", "SMS alerts", "Time-sensitive order and account notifications.", "SMS"],
+    ["sg_whatsapp_updates", "WhatsApp updates", "Approved WhatsApp template updates.", "WhatsApp"],
+  ];
+  const insertGroup = conn.prepare("INSERT INTO subscription_groups VALUES (?, ?, ?, ?, 'Active', ?, ?)");
+  const insertMembership = conn.prepare("INSERT INTO subscription_group_memberships VALUES (?, ?, ?, ?)");
+  for (const [id, name, description, channel] of groups) insertGroup.run(id, name, description, channel, timestamp, timestamp);
+  for (let index = 1; index <= 1000; index += 1) {
+    const userId = `user_${index}`;
+    if (index % 2 !== 0) insertMembership.run("sg_product_updates", userId, "subscribed", timestamp);
+    if (index % 3 !== 0) insertMembership.run("sg_promotions", userId, "subscribed", timestamp);
+    if (index % 4 !== 0) insertMembership.run("sg_sms_alerts", userId, index % 11 === 0 ? "unsubscribed" : "subscribed", timestamp);
+    if (index % 5 !== 0) insertMembership.run("sg_whatsapp_updates", userId, "subscribed", timestamp);
+  }
+  conn.prepare("INSERT INTO preference_centers VALUES (?, ?, ?, ?, 'Active', ?)").run(
+    "pc_marketing_preferences", "Marketing preferences", "Let users choose the email updates they want to receive.",
+    JSON.stringify(["sg_product_updates", "sg_promotions"]), timestamp,
+  );
 }
 
 function mapCampaign(row: Record<string, unknown>): CampaignRecord {
@@ -188,15 +237,16 @@ export function upsertCampaign(input: Partial<CampaignRecord> & Pick<CampaignRec
 export function archiveCampaign(id: string) { db().prepare("UPDATE campaigns SET archived_at = ?, status = 'Archived', edited_at = ? WHERE id = ?").run(now(), now(), id); audit("campaign", id, "archived", {}); }
 export function stopCampaign(id: string) { db().prepare("UPDATE campaigns SET status = 'Stopped', edited_at = ? WHERE id = ?").run(now(), id); audit("campaign", id, "stopped", {}); return getCampaign(id); }
 
-export function estimateAudience(audience = "All Users", country?: string, excludeCountry?: string, eligibility = "subscribed") {
+export function estimateAudience(audience = "All Users", country?: string, excludeCountry?: string, eligibility = "subscribed", subscriptionGroupId?: string) {
   const clauses: string[] = [];
   const values: string[] = [];
   if (audience === "New Users" || audience === "Recent Purchasers") { clauses.push("lifecycle = ?"); values.push(audience); }
   if (country && ["US", "GB", "CN", "SG", "DE"].includes(country)) { clauses.push("country = ?"); values.push(country); }
   if (excludeCountry && ["US", "GB", "CN", "SG", "DE"].includes(excludeCountry)) { clauses.push("country != ?"); values.push(excludeCountry); }
   const where = clauses.length ? `WHERE ${clauses.join(" AND ")}` : "";
-  const eligible = eligibility === "all" ? "reachable = 1" : "subscribed = 1 AND reachable = 1";
-  const result = db().prepare(`SELECT count(*) AS matching, sum(CASE WHEN ${eligible} THEN 1 ELSE 0 END) AS reachable FROM users ${where}`).get(...values) as { matching: number; reachable: number | null };
+  const eligible = eligibility === "all" ? "u.reachable = 1" : subscriptionGroupId ? "u.reachable = 1 AND m.state = 'subscribed'" : "u.subscribed = 1 AND u.reachable = 1";
+  const membership = subscriptionGroupId ? "LEFT JOIN subscription_group_memberships m ON m.user_id = u.id AND m.group_id = ?" : "";
+  const result = db().prepare(`SELECT count(*) AS matching, sum(CASE WHEN ${eligible} THEN 1 ELSE 0 END) AS reachable FROM users u ${membership} ${where.replaceAll("lifecycle", "u.lifecycle").replaceAll("country", "u.country")}`).get(...(subscriptionGroupId ? [subscriptionGroupId] : []), ...values) as { matching: number; reachable: number | null };
   const workspace = db().prepare("SELECT count(*) AS total FROM users").get() as { total: number };
   return { matching: result.matching, reachable: result.reachable ?? 0, total: workspace.total };
 }
@@ -223,6 +273,78 @@ export function setUserSubscription(id: string, subscribed: boolean) {
   return mapUser(row);
 }
 
+function mapSubscriptionGroup(row: Record<string, unknown>): SubscriptionGroupRecord {
+  return {
+    id: String(row.id), name: String(row.name), description: String(row.description), channel: row.channel as SubscriptionChannel,
+    status: row.status as "Active" | "Archived", createdAt: String(row.created_at), updatedAt: String(row.updated_at), subscriberCount: Number(row.subscriber_count ?? 0),
+  };
+}
+
+export function listSubscriptionGroups(input: { q?: string; channel?: string; status?: string } = {}) {
+  const clauses: string[] = ["1 = 1"]; const values: string[] = [];
+  if (input.q?.trim()) { clauses.push("(lower(g.name) LIKE lower(?) OR lower(g.description) LIKE lower(?))"); values.push(`%${input.q.trim()}%`, `%${input.q.trim()}%`); }
+  if (input.channel && input.channel !== "All channels") { clauses.push("g.channel = ?"); values.push(input.channel); }
+  if (input.status && input.status !== "All statuses") { clauses.push("g.status = ?"); values.push(input.status); }
+  const rows = db().prepare(`SELECT g.*, sum(CASE WHEN m.state = 'subscribed' THEN 1 ELSE 0 END) AS subscriber_count
+    FROM subscription_groups g LEFT JOIN subscription_group_memberships m ON m.group_id = g.id
+    WHERE ${clauses.join(" AND ")} GROUP BY g.id ORDER BY g.updated_at DESC, g.name COLLATE NOCASE ASC`).all(...values) as Record<string, unknown>[];
+  return rows.map(mapSubscriptionGroup);
+}
+
+export function getSubscriptionGroup(id: string) {
+  const row = db().prepare(`SELECT g.*, sum(CASE WHEN m.state = 'subscribed' THEN 1 ELSE 0 END) AS subscriber_count
+    FROM subscription_groups g LEFT JOIN subscription_group_memberships m ON m.group_id = g.id WHERE g.id = ? GROUP BY g.id`).get(id) as Record<string, unknown> | undefined;
+  return row ? mapSubscriptionGroup(row) : null;
+}
+
+export function createSubscriptionGroup(input: { name: string; description?: string; channel: SubscriptionChannel }) {
+  const name = input.name.trim();
+  if (!name) throw new Error("Subscription group name is required.");
+  const record: SubscriptionGroupRecord = { id: uid("sg"), name, description: input.description?.trim() || "", channel: input.channel, status: "Active", createdAt: now(), updatedAt: now(), subscriberCount: 0 };
+  db().prepare("INSERT INTO subscription_groups VALUES (?, ?, ?, ?, ?, ?, ?)").run(record.id, record.name, record.description, record.channel, record.status, record.createdAt, record.updatedAt);
+  audit("subscription_group", record.id, "created", { channel: record.channel }); return record;
+}
+
+export function updateSubscriptionGroup(id: string, patch: Partial<Pick<SubscriptionGroupRecord, "name" | "description" | "channel" | "status">>) {
+  const current = getSubscriptionGroup(id); if (!current) return null;
+  const next = { ...current, ...patch, name: patch.name?.trim() || current.name, updatedAt: now() };
+  db().prepare("UPDATE subscription_groups SET name = ?, description = ?, channel = ?, status = ?, updated_at = ? WHERE id = ?").run(next.name, next.description, next.channel, next.status, next.updatedAt, id);
+  audit("subscription_group", id, next.status === "Archived" ? "archived" : "updated", { channel: next.channel });
+  return getSubscriptionGroup(id);
+}
+
+export function listSubscriptionMembers(groupId: string, input: { q?: string; state?: string; start?: number; limit?: number } = {}) {
+  if (!getSubscriptionGroup(groupId)) return null;
+  const clauses = ["m.group_id = ?"]; const values: (string | number)[] = [groupId];
+  if (input.q?.trim()) { clauses.push("(lower(u.id) LIKE lower(?) OR lower(u.email) LIKE lower(?) OR lower(u.first_name) LIKE lower(?))"); values.push(`%${input.q.trim()}%`, `%${input.q.trim()}%`, `%${input.q.trim()}%`); }
+  if (input.state && input.state !== "All statuses") { clauses.push("m.state = ?"); values.push(input.state); }
+  const where = clauses.join(" AND ");
+  const total = (db().prepare(`SELECT count(*) AS count FROM subscription_group_memberships m JOIN users u ON u.id = m.user_id WHERE ${where}`).get(...values) as { count: number }).count;
+  const start = Math.max(0, Math.floor(input.start ?? 0)); const limit = Math.min(100, Math.max(1, Math.floor(input.limit ?? 20)));
+  const rows = db().prepare(`SELECT u.*, m.state, m.updated_at AS membership_updated_at FROM subscription_group_memberships m JOIN users u ON u.id = m.user_id WHERE ${where} ORDER BY m.updated_at DESC, u.id LIMIT ? OFFSET ?`).all(...values, limit, start) as Record<string, unknown>[];
+  return { data: rows.map(row => ({ ...mapUser(row), state: row.state as SubscriptionState, updatedAt: String(row.membership_updated_at) })), total, start, limit };
+}
+
+export function setSubscriptionMember(groupId: string, userId: string, state: SubscriptionState) {
+  if (!getSubscriptionGroup(groupId) || !getUser(userId)) return null;
+  const timestamp = now();
+  db().prepare("INSERT INTO subscription_group_memberships VALUES (?, ?, ?, ?) ON CONFLICT(group_id,user_id) DO UPDATE SET state=excluded.state, updated_at=excluded.updated_at").run(groupId, userId, state, timestamp);
+  audit("subscription_group", groupId, "member_subscription_changed", { userId, state });
+  return { groupId, userId, state, updatedAt: timestamp };
+}
+
+function mapPreferenceCenter(row: Record<string, unknown>): PreferenceCenterRecord {
+  return { id: String(row.id), name: String(row.name), description: String(row.description), groupIds: parseJson(String(row.group_ids_json), []), status: row.status as "Active" | "Draft", updatedAt: String(row.updated_at) };
+}
+
+export function listPreferenceCenters() { return (db().prepare("SELECT * FROM preference_centers ORDER BY updated_at DESC").all() as Record<string, unknown>[]).map(mapPreferenceCenter); }
+export function createPreferenceCenter(input: { name: string; description?: string; groupIds?: string[]; status?: "Active" | "Draft" }) {
+  const name = input.name.trim(); if (!name) throw new Error("Preference center name is required.");
+  const record: PreferenceCenterRecord = { id: uid("pc"), name, description: input.description?.trim() || "", groupIds: input.groupIds ?? [], status: input.status ?? "Draft", updatedAt: now() };
+  db().prepare("INSERT INTO preference_centers VALUES (?, ?, ?, ?, ?, ?)").run(record.id, record.name, record.description, JSON.stringify(record.groupIds), record.status, record.updatedAt);
+  audit("preference_center", record.id, "created", { groupCount: record.groupIds.length }); return record;
+}
+
 export function launchCampaign(id: string) {
   const conn = db(); const campaign = getCampaign(id);
   if (!campaign) throw new Error("Campaign not found");
@@ -235,18 +357,20 @@ export function launchCampaign(id: string) {
   const audience = campaign.audience === "New Users" ? "lifecycle = 'New Users'" : campaign.audience === "Recent Purchasers" ? "lifecycle = 'Recent Purchasers'" : "1 = 1";
   const country = typeof campaign.config.audienceCountry === "string" && ["US", "GB", "CN", "SG", "DE"].includes(campaign.config.audienceCountry) ? campaign.config.audienceCountry : null;
   const excludedCountry = typeof campaign.config.audienceExcludeCountry === "string" && ["US", "GB", "CN", "SG", "DE"].includes(campaign.config.audienceExcludeCountry) ? campaign.config.audienceExcludeCountry : null;
-  const users = conn.prepare(`SELECT id, reachable, subscribed FROM users WHERE ${audience}${country ? " AND country = ?" : ""}${excludedCountry ? " AND country != ?" : ""} ORDER BY id`).all(...(country ? [country] : []), ...(excludedCountry ? [excludedCountry] : [])) as { id: string; reachable: number; subscribed: number }[];
+  const subscriptionGroupId = typeof campaign.config.subscriptionGroupId === "string" ? campaign.config.subscriptionGroupId : null;
+  const users = conn.prepare(`SELECT u.id, u.reachable, u.subscribed${subscriptionGroupId ? ", m.state AS subscription_state" : ""} FROM users u ${subscriptionGroupId ? "LEFT JOIN subscription_group_memberships m ON m.user_id = u.id AND m.group_id = ?" : ""} WHERE ${audience.replaceAll("lifecycle", "u.lifecycle")}${country ? " AND u.country = ?" : ""}${excludedCountry ? " AND u.country != ?" : ""} ORDER BY u.id`).all(...(subscriptionGroupId ? [subscriptionGroupId] : []), ...(country ? [country] : []), ...(excludedCountry ? [excludedCountry] : [])) as { id: string; reachable: number; subscribed: number; subscription_state?: SubscriptionState }[];
   const requireSubscription = campaign.config.subscribeEligibility !== "all";
   const controlGroup = Math.min(100, Math.max(0, Number(campaign.config.controlGroup ?? 20)));
   const maxUsers = campaign.config.limitVolume ? Math.max(1, Number(campaign.config.maxUsers ?? 100)) : Infinity;
-  const eligible = users.filter(user => user.reachable && (!requireSubscription || user.subscribed));
+  const subscribed = (user: { subscribed: number; subscription_state?: SubscriptionState }) => subscriptionGroupId ? user.subscription_state === "subscribed" : Boolean(user.subscribed);
+  const eligible = users.filter(user => user.reachable && (!requireSubscription || subscribed(user)));
   const runId = uid("run"); const timestamp = now();
   const insertEvent = conn.prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)");
   let delivered = 0; let failed = 0;
   for (const user of users) {
-    const deliverable = user.reachable && (!requireSubscription || user.subscribed);
+    const deliverable = user.reachable && (!requireSubscription || subscribed(user));
     const inControl = deliverable && createHash("sha256").update(`${id}:${user.id}`).digest()[0] / 256 * 100 < controlGroup;
-    const eventType = !deliverable ? user.subscribed ? "unreachable" : "suppressed" : inControl ? "control" : delivered >= maxUsers ? "held_back" : "delivered";
+    const eventType = !deliverable ? subscribed(user) ? "unreachable" : "suppressed" : inControl ? "control" : delivered >= maxUsers ? "held_back" : "delivered";
     insertEvent.run(uid("evt"), id, campaign.channel, user.id, eventType, timestamp, JSON.stringify({ runId }));
     if (eventType === "delivered") { delivered += 1; if (delivered % 4 === 0) insertEvent.run(uid("evt"), id, campaign.channel, user.id, "opened", timestamp, JSON.stringify({ runId })); if (delivered % 9 === 0) insertEvent.run(uid("evt"), id, campaign.channel, user.id, "clicked", timestamp, JSON.stringify({ runId })); } else if (eventType === "unreachable" || eventType === "suppressed") { failed += 1; }
   }
@@ -460,7 +584,7 @@ export function getDemoState() {
 
 export function demoAction(action: string) {
   const conn = db();
-  if (action === "reset") { conn.exec("DELETE FROM message_events; DELETE FROM execution_runs; DELETE FROM canvas_runs; DELETE FROM demo_receipts; DELETE FROM demo_state; DELETE FROM audit_log; DELETE FROM campaigns; DELETE FROM users; DELETE FROM catalog_subscriptions; DELETE FROM catalog_selections; DELETE FROM catalog_items; DELETE FROM resources;"); seed(conn); seedSampleCatalog(conn); return { message: "Sample data reset", state: getDemoState() }; }
+  if (action === "reset") { conn.exec("DELETE FROM message_events; DELETE FROM execution_runs; DELETE FROM canvas_runs; DELETE FROM demo_receipts; DELETE FROM demo_state; DELETE FROM audit_log; DELETE FROM campaigns; DELETE FROM users; DELETE FROM catalog_subscriptions; DELETE FROM catalog_selections; DELETE FROM catalog_items; DELETE FROM resources; DELETE FROM subscription_group_memberships; DELETE FROM subscription_groups; DELETE FROM preference_centers;"); seed(conn); seedSampleCatalog(conn); return { message: "Sample data reset", state: getDemoState() }; }
   if (action === "advance") {
     const current = getDemoState().simulatedTime;
     const next = new Date(new Date(current).getTime() + 86_400_000).toISOString();

@@ -22,4 +22,6 @@ test("known deep links restore their intended page", () => {
   equal(pageFromPath("/dashboard/catalogs/6aa75e3e337509005eebb467/6aa75e37db69160082adb7ae"), "catalogs");
   equal(pageFromPath("/dashboard/catalogs/6aa75e3e337509005eebb467/selection/Gaming/6aa75e37db69160082adb7ae"), "catalogs");
   equal(pageFromPath("/engagement/predictions/res_example/6aa75e37db69160082adb7ae"), "catalogs");
+  equal(pageFromPath("/users/subscription_groups/6aa75e37db69160082adb7ae"), "subscription-group-management");
+  equal(pageFromPath("/users/subscription_groups/preference_centers/6aa75e37db69160082adb7ae"), "email-preference-centers");
 });
