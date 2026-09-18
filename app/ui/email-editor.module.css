@@ -136,6 +136,14 @@
 .field input,.field textarea { width:100%; border:1px solid #d8d2e1; border-radius:4px; padding:8px 9px; color:#39323f; font-size:11px; }
 .field textarea { min-height:112px; resize:vertical; line-height:1.45; }
 .note { padding:11px; border-radius:5px; background:#f6f2fe; color:#5d536b; font-size:11px; line-height:1.5; }
+.personalizationTools { position:relative; margin:8px 0 14px; }
+.personalizationTools>button { display:inline-flex; align-items:center; gap:6px; min-height:32px; padding:0 10px; border:1px solid #d8d2e1; border-radius:5px; background:#fff; color:#5932b5; font-size:11px; font-weight:750; }
+.personalizationPicker { position:relative; z-index:20; display:grid; gap:5px; width:min(420px,100%); padding:12px; border:1px solid #d8d2e1; border-radius:6px; background:#fff; box-shadow:0 10px 24px rgba(42,27,69,.18); }
+.personalizationPicker>div { display:grid; gap:3px; margin-bottom:4px; }.personalizationPicker>div b { font-size:12px; }.personalizationPicker>div small { color:#77717e; font-size:10px; }
+.personalizationPicker>button { display:flex; align-items:center; justify-content:space-between; gap:10px; min-height:37px; padding:7px 8px; border:1px solid #e3dfea; border-radius:4px; background:#fff; color:#3e3848; text-align:left; }
+.personalizationPicker>button:hover { border-color:#8144d6; background:#faf7ff; }.personalizationPicker>button span { display:grid; gap:2px; }.personalizationPicker>button span small { color:#77717e; font-size:10px; }.personalizationPicker code { max-width:190px; overflow:hidden; color:#6233bf; font:10px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace; text-overflow:ellipsis; white-space:nowrap; }
+.formArea label { position:relative; }.formArea label>.personalizationPicker { position:absolute; top:64px; left:0; }
+.formArea input { width:100%; height:37px; box-sizing:border-box; padding:0 10px; border:1px solid #b9bac4; border-radius:6px; color:#3b3b44; font-size:12px; }
 
 @media (max-width: 900px) {
   .workspace { grid-template-columns: 220px minmax(340px, 1fr); }

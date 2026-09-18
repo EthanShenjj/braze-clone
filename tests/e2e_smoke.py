@@ -1,6 +1,7 @@
 """Run with the webapp-testing with_server helper; see tests/README.md."""
 
 import os
+import re
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
@@ -42,6 +43,20 @@ def main() -> None:
         assert page.get_by_text("Campaign Details").is_visible()
         assert page.get_by_text("Email Composer").is_visible()
         page.screenshot(path=str(ARTIFACTS / "email-compose.png"), full_page=True)
+
+        page.goto(f"{BASE_URL}/engagement/campaigns/cmp_3d084f2b?step=compose", wait_until="networkidle")
+        page.get_by_text("Email Composer").wait_for(timeout=10_000)
+        page.get_by_role("button", name="Edit message").click()
+        page.get_by_role("button", name="Personalization").first.click()
+        page.get_by_role("dialog", name="Insert into HTML").get_by_role("button", name=re.compile("First name")).click()
+        assert "first_name" in page.get_by_label("Email HTML source").input_value()
+        page.get_by_role("button", name="Sending settings").click()
+        page.get_by_role("heading", name="Sending Info").wait_for(timeout=10_000)
+        page.get_by_label("From display name").fill("Lifecycle Team")
+        page.get_by_role("textbox", name="From address").fill("lifecycle@example.test")
+        page.get_by_role("button", name="Done").click()
+        page.get_by_role("heading", name="Sending info", exact=True).wait_for(timeout=10_000)
+        assert page.get_by_text("Lifecycle Team <lifecycle@example.test>").is_visible()
 
         page.goto(f"{BASE_URL}/settings/message-activity-log", wait_until="networkidle")
         assert page.get_by_role("heading", name="Message Activity Log").is_visible()
