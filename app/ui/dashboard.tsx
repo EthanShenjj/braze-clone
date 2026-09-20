@@ -12,6 +12,7 @@ import LiveCanvas from "./live-canvas";
 import LiveUserSearch from "./live-user-search";
 import CatalogWorkspace from "./catalog-workspace";
 import { PreferenceCenterWorkspace, SubscriptionGroupWorkspace } from "./subscription-group-workspace";
+import InAppCampaignCompose from "./in-app-message";
 import { pageFromPath, pageKeyForDrawerItem, routeForPage } from "@/lib/navigation";
 import { campaignValidationIssues } from "@/lib/campaign-validation";
 import { localeNames, normalizeLocale, supportedLocales, translate, type Locale } from "@/lib/i18n";
@@ -589,6 +590,7 @@ function BrazeDragDropEditor({ draft, variantName, save: saveCampaignMessage, on
 
 function ChannelCompose({ draft, update, openTest }: { draft: Campaign; update: (patch: Partial<Campaign>) => void; openTest: () => void }) {
   const [copied, setCopied] = useState(false);
+  if (draft.channel === "iam") return <InAppCampaignCompose draft={draft} update={update}/>;
   return <div className="editor-body email-compose-page"><EmailCampaignDetails draft={draft} update={update} copied={copied} setCopied={setCopied}/>{draft.channel === "push" ? <PushFields draft={draft} update={update} openTest={openTest}/> : <section className="braze-section channel-workspace"><div className="card-heading"><div><h2>Compose {channelMeta[draft.channel].title.toLowerCase()}</h2><p>{channelMeta[draft.channel].description}</p></div><button className="secondary" onClick={openTest}>Preview and test</button></div><ChannelFields draft={draft} update={update}/></section>}</div>;
 }
 

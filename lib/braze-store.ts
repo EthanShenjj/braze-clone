@@ -134,16 +134,17 @@ function seedSampleCatalog(conn: DatabaseSync) {
 
 function seed(conn: DatabaseSync) {
   const existing = conn.prepare("SELECT count(*) AS count FROM campaigns").get() as { count: number };
-  if (existing.count) { seedCatalogItems(conn); seedSubscriptionGroups(conn); return; }
   const created = now();
   const campaigns: CampaignRecord[] = [
     { id: "cmp_3d084f2b", name: "New Campaign - September 16, 2026", channel: "email", status: "Draft", schedule: "One time", sent: 0, edited: created, subject: "{% if ${language} == 'zh' %}九月专属优惠｜立减 20%{% else %}Your September Offer | 20% Off{% endif %}", body: "Thanks for being with us. Use code SEPTEMBER20 to get 20% off.", audience: "All Users", conversion: "Make Purchase", config: { variants: [{ id: "var_1", name: "Variant 1" }], delivery: { timezone: "UTC+08:00" } } },
     { id: "cmp_newsletter", name: "Newsletter Welcome", channel: "email", status: "Active", schedule: "Action-based", sent: 420, edited: created, subject: "Welcome to Braze", body: "Your latest offers are waiting.", audience: "New Users", conversion: "Start Session", config: {} },
     { id: "cmp_push_primer", name: "Push Primer", channel: "push", status: "Active", schedule: "Action-based", sent: 301, edited: created, subject: "New offers are ready", body: "Open the app to see your personalized offer.", audience: "All Users", conversion: "Make Purchase", config: { platform: "iOS" } },
     { id: "cmp_banner", name: "Referral Banner", channel: "banner", status: "Draft", schedule: "One time", sent: 0, edited: created, subject: "Invite a friend", body: "Give $10, get $10.", audience: "Recent Purchasers", conversion: "Make Purchase", config: { placement: "home_top" } },
+    { id: "cmp_iam", name: "Welcome Offer IAM", channel: "iam", status: "Active", schedule: "Action-based", sent: 4784, edited: created, subject: "WELCOME", body: "Thanks for signing up! Use this offer code for 10% off your next order. WELCOME10", audience: "New Users", conversion: "Start Session", config: { channelValues: { sendTo: "Both Mobile Apps & Web Browsers", layout: "Modal" } } },
   ];
-  const insertCampaign = conn.prepare("INSERT INTO campaigns VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)");
+  const insertCampaign = conn.prepare("INSERT OR IGNORE INTO campaigns VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)");
   for (const campaign of campaigns) insertCampaign.run(campaign.id, campaign.name, campaign.channel, campaign.status, campaign.schedule, campaign.sent, campaign.edited, campaign.subject ?? null, campaign.body ?? null, campaign.audience ?? null, campaign.conversion ?? null, JSON.stringify(campaign.config));
+  if (existing.count) { seedCatalogItems(conn); seedSubscriptionGroups(conn); return; }
   const insertUser = conn.prepare("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
   const countries = ["US", "GB", "CN", "SG", "DE"];
   for (let index = 1; index <= 1000; index += 1) {
