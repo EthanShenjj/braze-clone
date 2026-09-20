@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type CSSProperties, type DragEvent } from "react";
+import { createPortal } from "react-dom";
 import {
   ChevronDown, ChevronLeft, ChevronRight, Code2, Copy, Eye, GripVertical, Image as ImageIcon,
   LayoutDashboard, Languages, Link2, MousePointerClick, Plus, Redo2, Smartphone,
@@ -62,6 +63,7 @@ type InAppVariant = {
   sendTo: "Both Mobile Apps & Web Browsers" | "Mobile Apps" | "Web Browsers";
   pages: InAppPage[];
   accessibilityLanguage: string;
+  accessibilityLanguageLiquid?: string;
   global: InAppGlobalStyle;
   customCode?: boolean;
   customHtml?: string;
@@ -129,6 +131,7 @@ function variantsFor(campaign: InAppCampaign): InAppVariant[] {
     sendTo: (channelValues.sendTo as InAppVariant["sendTo"]) ?? "Both Mobile Apps & Web Browsers",
     pages: [defaultPage(0, campaign)],
     accessibilityLanguage: String(channelValues.accessibilityLanguage ?? ""),
+    accessibilityLanguageLiquid: String(channelValues.accessibilityLanguageLiquid ?? ""),
     global: { ...defaultGlobal, displayType: (channelValues.layout as InAppGlobalStyle["displayType"]) ?? "Modal" },
   }];
 }
@@ -165,7 +168,54 @@ function defaultCustomHtml(page: InAppPage) {
 </html>`;
 }
 
-function InAppPreview({ page, global, device, editor = false, onDrop, onSelectBlock }: { page: InAppPage; global: InAppGlobalStyle; device: Device; editor?: boolean; onDrop?: (kind: BlockKind) => void; onSelectBlock?: (id: string) => void }) {
+const liquidPreviewAttributes: Record<string, string> = {
+  language: "en",
+  country: "US",
+  first_name: "Jordan",
+  last_name: "Lee",
+  email: "jordan@example.com",
+  preferred_locale: "en-US",
+};
+
+function validateLanguageLiquid(value: string) {
+  if (!value.trim()) return "Enter a Liquid expression.";
+  const openOutputs = (value.match(/{{/g) ?? []).length;
+  const closeOutputs = (value.match(/}}/g) ?? []).length;
+  if (openOutputs !== closeOutputs) return "Liquid output braces are not balanced.";
+  const stack: string[] = [];
+  const paired: Record<string, string> = { endif: "if", endcase: "case", endunless: "unless" };
+  for (const match of value.matchAll(/{%\s*(if|case|unless|endif|endcase|endunless)\b[^%]*%}/g)) {
+    const tag = match[1];
+    if (tag in paired) {
+      if (stack.pop() !== paired[tag]) return `Unexpected ${tag} tag.`;
+    } else stack.push(tag);
+  }
+  if (stack.length) return `Missing end${stack[stack.length - 1]} tag.`;
+  return "";
+}
+
+function liquidVariable(expression: string) {
+  const [source, ...filters] = expression.split("|").map(part => part.trim());
+  const key = source.replace(/^\$?{?|}?$/g, "").replace(/^custom_attribute\.?/, "");
+  let result = liquidPreviewAttributes[key] ?? "";
+  for (const filter of filters) {
+    const [name, rawArgument] = filter.split(":").map(part => part.trim());
+    const argument = rawArgument?.replace(/^['"]|['"]$/g, "") ?? "";
+    if (name === "default" && !result) result = argument;
+    if (name === "upcase") result = result.toUpperCase();
+    if (name === "downcase") result = result.toLowerCase();
+  }
+  return result;
+}
+
+function renderLanguageLiquid(value: string) {
+  let output = value;
+  output = output.replace(/{%\s*if\s+\$?{?(\w+)}?\s*==\s*['"]([^'"]+)['"]\s*%}([\s\S]*?){%\s*else\s*%}([\s\S]*?){%\s*endif\s*%}/g, (_, key: string, expected: string, truthy: string, fallback: string) => liquidPreviewAttributes[key] === expected ? truthy : fallback);
+  output = output.replace(/{{\s*([\s\S]*?)\s*}}/g, (_, expression: string) => liquidVariable(expression));
+  return output.replace(/{%[^%]*%}/g, "").trim();
+}
+
+function InAppPreview({ page, global, device, editor = false, htmlLanguage, onDrop, onSelectBlock }: { page: InAppPage; global: InAppGlobalStyle; device: Device; editor?: boolean; htmlLanguage?: string; onDrop?: (kind: BlockKind) => void; onSelectBlock?: (id: string) => void }) {
   const frameStyle = { "--iam-overlay": `${global.overlayColor}${Math.round(global.overlayOpacity * 2.55).toString(16).padStart(2, "0")}` } as CSSProperties;
   const cardStyle: CSSProperties = {
     maxWidth: global.maxWidth,
@@ -180,7 +230,7 @@ function InAppPreview({ page, global, device, editor = false, onDrop, onSelectBl
     backgroundSize: "cover",
   };
   return <div className={`${styles.deviceFrame} ${styles[device]}`} style={frameStyle} onDragOver={event => event.preventDefault()} onDrop={(event: DragEvent<HTMLDivElement>) => { event.preventDefault(); const kind = event.dataTransfer.getData("iam-block") as BlockKind; if (kind) onDrop?.(kind); }}>
-    <article className={`${styles.messageCard} ${styles[global.displayType.replace(" ", "").toLowerCase()]}`} style={cardStyle}>
+    <article lang={htmlLanguage || undefined} className={`${styles.messageCard} ${styles[global.displayType.replace(" ", "").toLowerCase()]}`} style={cardStyle}>
       <button className={styles.messageClose} aria-label={global.closeAccessibleName || "Close Message"} style={{ color: global.closeColor, fontSize: global.closeSize, background: global.closeBackgroundColor, border: `${global.closeBorderWidth}px solid ${global.closeBorderColor}`, borderRadius: global.closeRadius }}><X size={global.closeSize}/></button>
       {page.imageUrl && <img src={page.imageUrl} alt="Message media"/>}
       <section className={styles.messageCopy}><h2>{page.title}</h2><p>{page.body}</p></section>
@@ -200,6 +250,7 @@ export default function InAppCampaignCompose({ draft, update }: { draft: InAppCa
   const [copied, setCopied] = useState(false);
   const current = variants[selectedVariant] ?? variants[0];
   const page = current.pages[0] ?? defaultPage(0, draft);
+  const currentHtmlLanguage = current.accessibilityLanguageLiquid ? renderLanguageLiquid(current.accessibilityLanguageLiquid) : current.accessibilityLanguage;
 
   const persistVariants = (next: InAppVariant[], activeIndex = selectedVariant) => {
     const active = next[activeIndex] ?? next[0];
@@ -216,6 +267,7 @@ export default function InAppCampaignCompose({ draft, update }: { draft: InAppCa
           sendTo: active.sendTo,
           layout: active.global.displayType,
           accessibilityLanguage: active.accessibilityLanguage,
+          accessibilityLanguageLiquid: active.accessibilityLanguageLiquid ?? "",
           pageCount: active.pages.length,
           editorMode: active.customCode ? "Custom code" : "Drag-and-drop",
         },
@@ -249,14 +301,14 @@ export default function InAppCampaignCompose({ draft, update }: { draft: InAppCa
       <label className={styles.sendTo}>Send To<select value={current.sendTo} onChange={event => replaceCurrent({ ...current, sendTo: event.target.value as InAppVariant["sendTo"] })}><option>Both Mobile Apps &amp; Web Browsers</option><option>Mobile Apps</option><option>Web Browsers</option></select></label>
       <div className={styles.composeHeading}><h3>Compose In-App Message</h3><button onClick={() => setEditorOpen(true)}><span>✎</span> Edit Message</button></div>
       <div className={styles.previewArea}>
-        <aside><h4>Page Preview</h4><div className={styles.deviceTabs}>{devices.map(item => <button title={item.label} aria-label={item.label} className={device === item.id ? styles.activeDevice : ""} key={item.id} onClick={() => setDevice(item.id)}>{deviceIcon(item.id)}</button>)}</div><button className={styles.pageTile}><span className={styles.pageThumb}><InAppPreview page={page} global={current.global} device="phonePortrait"/></span><b>{page.name}</b><small>{current.pages.length}</small></button></aside>
-        <main><InAppPreview page={page} global={current.global} device={device}/></main>
+        <aside><h4>Page Preview</h4><div className={styles.deviceTabs}>{devices.map(item => <button title={item.label} aria-label={item.label} className={device === item.id ? styles.activeDevice : ""} key={item.id} onClick={() => setDevice(item.id)}>{deviceIcon(item.id)}</button>)}</div><button className={styles.pageTile}><span className={styles.pageThumb}><InAppPreview page={page} global={current.global} device="phonePortrait" htmlLanguage={currentHtmlLanguage}/></span><b>{page.name}</b><small>{current.pages.length}</small></button></aside>
+        <main><InAppPreview page={page} global={current.global} device={device} htmlLanguage={currentHtmlLanguage}/></main>
       </div>
       <p className={styles.previewNote}>Always test your messages on a real device, as actual rendering may vary.</p>
       <div className={styles.composerActions}><button disabled={current.customCode} onClick={() => setConversionOpen(true)}>{current.customCode ? "Custom code enabled" : "Switch/convert to custom code"}</button><a href="https://www.braze.com/docs/user_guide/message_building_by_channel/in-app_messages/drag_and_drop/" target="_blank">Docs</a><button disabled>Update template</button></div>
     </section>
     {conversionOpen && <div className={styles.dialogBackdrop} role="presentation"><section className={styles.conversionDialog} role="dialog" aria-modal="true" aria-labelledby="iam-conversion-title"><button className={styles.dialogClose} aria-label="Close conversion dialog" onClick={() => setConversionOpen(false)}><X size={18}/></button><Code2 size={25}/><h2 id="iam-conversion-title">Switch to custom code?</h2><p>Your message will be converted to HTML. Continue editing and previewing it in the custom code editor.</p><div><button onClick={() => setConversionOpen(false)}>Cancel</button><button onClick={() => { replaceCurrent({ ...current, customCode: true, customHtml: current.customHtml || defaultCustomHtml(page) }); setConversionOpen(false); setEditorOpen(true); }}>Switch to custom code</button></div></section></div>}
-    {editorOpen && (current.customCode ? <InAppCodeEditor initial={current} close={() => setEditorOpen(false)} done={next => { replaceCurrent(next); setEditorOpen(false); }}/> : <InAppEditor initial={current} close={() => setEditorOpen(false)} done={next => { replaceCurrent(next); setEditorOpen(false); }}/>) }
+    {editorOpen && typeof document !== "undefined" && createPortal(current.customCode ? <InAppCodeEditor initial={current} close={() => setEditorOpen(false)} done={next => { replaceCurrent(next); setEditorOpen(false); }}/> : <InAppEditor initial={current} close={() => setEditorOpen(false)} done={next => { replaceCurrent(next); setEditorOpen(false); }}/>, document.body)}
   </div>;
 }
 
@@ -276,6 +328,8 @@ function InAppEditor({ initial, close, done }: { initial: InAppVariant; close: (
   const [selectedPage, setSelectedPage] = useState(0);
   const [global, setGlobal] = useState<InAppGlobalStyle>(initial.global);
   const [language, setLanguage] = useState(initial.accessibilityLanguage);
+  const [languageLiquid, setLanguageLiquid] = useState(initial.accessibilityLanguageLiquid ?? "");
+  const [languageLiquidEnabled, setLanguageLiquidEnabled] = useState(Boolean(initial.accessibilityLanguageLiquid));
   const [device, setDevice] = useState<Device>("phonePortrait");
   const [scope, setScope] = useState<"all" | "page">("all");
   const [history, setHistory] = useState<InAppPage[][]>([]);
@@ -308,18 +362,57 @@ function InAppEditor({ initial, close, done }: { initial: InAppVariant; close: (
     commitPages(next);
     setSelectedPage(Math.max(0, next.findIndex(item => item.id === selectedId)));
   };
-  const save = () => done({ ...initial, pages, global, accessibilityLanguage: language });
+  const htmlLanguage = languageLiquidEnabled && !validateLanguageLiquid(languageLiquid) ? renderLanguageLiquid(languageLiquid) : language;
+  const save = () => done({ ...initial, pages, global, accessibilityLanguage: languageLiquidEnabled ? "" : language, accessibilityLanguageLiquid: languageLiquidEnabled ? languageLiquid : "" });
 
   return <section className={styles.editor} aria-label="In-app message editor">
     <header className={styles.editorTabs} role="tablist">{(["compose", "settings", "preview"] as const).map(value => <button role="tab" aria-selected={tab === value} className={tab === value ? styles.activeTab : ""} key={value} onClick={() => setTab(value)}>{value === "compose" ? "Compose" : value === "settings" ? "Settings" : "Preview & Test"}</button>)}</header>
 
-    {tab === "settings" ? <div className={styles.settingsPage}><aside>Edit your in-app message settings</aside><main><h2>Accessibility</h2><p>Set the accessibility language for your message&apos;s HTML. Screen readers and assistive tools use this to pronounce content with the correct language and dialect.</p><label>Language<select aria-label="Accessibility language" value={language} onChange={event => setLanguage(event.target.value)}><option value="">Select...</option><option>English</option><option>Chinese (Simplified)</option><option>Japanese</option><option>Korean</option></select></label><button className={styles.liquidLanguage}><Plus size={16}/> Add language with Liquid</button></main></div> : tab === "preview" ? <div className={styles.previewWorkspace}><PreviewSidebar pages={pages} selected={selectedPage} select={setSelectedPage}/><main><InAppPreview page={page} global={global} device={device}/><div className={styles.previewDevices}>{devices.filter(item => ["phonePortrait", "tabletPortrait", "desktop"].includes(item.id)).map(item => <button key={item.id} title={item.label} className={device === item.id ? styles.activeDevice : ""} onClick={() => setDevice(item.id)}>{deviceIcon(item.id)}</button>)}</div></main><aside className={styles.testPanel}><h3>Test Recipients</h3><p>Select at least one Content Test Group or individual user to receive this test message.</p><label>Add individual users<input value={recipient} onChange={event => { setRecipient(event.target.value); setTestSent(false); }} placeholder="External ids, emails, or phone numbers"/></label><label className={styles.check}><input type="checkbox"/> Override recipients&apos; attributes with current preview user&apos;s attributes</label><button disabled={!recipient.trim()} onClick={() => setTestSent(true)}>Send Test</button>{testSent && <div className={styles.testSuccess}>Test message simulated for {recipient}.</div>}<label>Preview message as user<select><option>Random user</option><option>user_1024</option></select></label><button>Get random user</button></aside></div> : <div className={styles.composeWorkspace}>
+    {tab === "settings" ? <InAppSettings language={language} setLanguage={setLanguage} liquidEnabled={languageLiquidEnabled} setLiquidEnabled={setLanguageLiquidEnabled} liquid={languageLiquid} setLiquid={setLanguageLiquid}/> : tab === "preview" ? <div className={styles.previewWorkspace}><PreviewSidebar pages={pages} selected={selectedPage} select={setSelectedPage}/><main><InAppPreview page={page} global={global} device={device} htmlLanguage={htmlLanguage}/><div className={styles.previewDevices}>{devices.filter(item => ["phonePortrait", "tabletPortrait", "desktop"].includes(item.id)).map(item => <button key={item.id} title={item.label} className={device === item.id ? styles.activeDevice : ""} onClick={() => setDevice(item.id)}>{deviceIcon(item.id)}</button>)}</div></main><aside className={styles.testPanel}><h3>Test Recipients</h3><p>Select at least one Content Test Group or individual user to receive this test message.</p><label>Add individual users<input value={recipient} onChange={event => { setRecipient(event.target.value); setTestSent(false); }} placeholder="External ids, emails, or phone numbers"/></label><label className={styles.check}><input type="checkbox"/> Override recipients&apos; attributes with current preview user&apos;s attributes</label><button disabled={!recipient.trim()} onClick={() => setTestSent(true)}>Send Test</button>{testSent && <div className={styles.testSuccess}>Test message simulated for {recipient}.</div>}<label>Preview message as user<select><option>Random user</option><option>user_1024</option></select></label><button>Get random user</button></aside></div> : <div className={styles.composeWorkspace}>
       <aside className={styles.blockSidebar}><PagesPanel pages={pages} selected={selectedPage} select={setSelectedPage} add={addPage} remove={removePage} move={movePage}/><section><h3>Rows</h3><p>Drag a row into your message</p><div className={styles.rowChoices}>{[1, 2, 3].map(columns => <button key={columns} onClick={() => updatePage({ columns })}>{Array.from({ length: columns }, (_, index) => <i key={index}/>)}</button>)}</div></section>{blockGroups.map(group => <section key={group.title}><h3>{group.title}</h3><p>Drag and drop a block into a row</p><div className={styles.blockGrid}>{group.blocks.map(kind => <button draggable onDragStart={event => event.dataTransfer.setData("iam-block", kind)} onClick={() => addBlock(kind)} key={kind}>{blockIcon(kind)}<span>{kind}</span></button>)}</div></section>)}<button className={styles.manageLanguages}><Languages size={16}/> Manage languages</button></aside>
-      <main className={styles.canvasStage}><div className={styles.canvasTools}><button disabled={!history.length} onClick={undo} title="Undo"><Undo2 size={17}/></button><button disabled={!future.length} onClick={redo} title="Redo"><Redo2 size={17}/></button>{devices.filter(item => ["phonePortrait", "tabletPortrait", "desktop"].includes(item.id)).map(item => <button key={item.id} title={item.label} className={device === item.id ? styles.activeDevice : ""} onClick={() => setDevice(item.id)}>{deviceIcon(item.id)}</button>)}<button title="Add Personalization" onClick={() => setPersonalizationOpen(value => !value)}><Sparkles size={17}/></button></div>{personalizationOpen && <div className={styles.personalization}><b>Add Personalization</b>{["{{${first_name}}}", "{{${email}}}", "{{${language}}}"].map(token => <button key={token} onClick={() => { updatePage({ body: `${page.body} ${token}` }); setPersonalizationOpen(false); }}>{token}</button>)}</div>}<InAppPreview page={page} global={global} device={device} editor onDrop={addBlock}/></main>
+      <main className={styles.canvasStage}><div className={styles.canvasTools}><button disabled={!history.length} onClick={undo} title="Undo"><Undo2 size={17}/></button><button disabled={!future.length} onClick={redo} title="Redo"><Redo2 size={17}/></button>{devices.filter(item => ["phonePortrait", "tabletPortrait", "desktop"].includes(item.id)).map(item => <button key={item.id} title={item.label} className={device === item.id ? styles.activeDevice : ""} onClick={() => setDevice(item.id)}>{deviceIcon(item.id)}</button>)}<button title="Add Personalization" onClick={() => setPersonalizationOpen(value => !value)}><Sparkles size={17}/></button></div>{personalizationOpen && <div className={styles.personalization}><b>Add Personalization</b>{["{{${first_name}}}", "{{${email}}}", "{{${language}}}"].map(token => <button key={token} onClick={() => { updatePage({ body: `${page.body} ${token}` }); setPersonalizationOpen(false); }}>{token}</button>)}</div>}<InAppPreview page={page} global={global} device={device} editor htmlLanguage={htmlLanguage} onDrop={addBlock}/></main>
       <aside className={styles.inspector}><div className={styles.scopeTabs}><button className={scope === "all" ? styles.activeScope : ""} onClick={() => setScope("all")}>All pages</button><button className={scope === "page" ? styles.activeScope : ""} onClick={() => setScope("page")}>Current page</button></div>{scope === "all" ? <GlobalInspector global={global} update={patch => setGlobal(current => ({ ...current, ...patch }))}/> : <PageInspector page={page} update={updatePage}/>}</aside>
     </div>}
     <footer className={styles.editorFooter}><button>Send feedback</button><span/><button className={styles.cancel} onClick={close}>Cancel</button><button className={styles.done} onClick={save}>Done</button><button aria-label="BrazeAI Operator"><Sparkles size={18}/></button></footer>
   </section>;
+}
+
+function InAppSettings({ language, setLanguage, liquidEnabled, setLiquidEnabled, liquid, setLiquid }: { language: string; setLanguage: (value: string) => void; liquidEnabled: boolean; setLiquidEnabled: (value: boolean) => void; liquid: string; setLiquid: (value: string) => void }) {
+  const [personalizationOpen, setPersonalizationOpen] = useState(false);
+  const [personalizationType, setPersonalizationType] = useState("Default Attributes");
+  const [attribute, setAttribute] = useState("language");
+  const [defaultValue, setDefaultValue] = useState("en");
+  const [copied, setCopied] = useState(false);
+  const attributeOptions = personalizationType === "Custom Attributes" ? [{ value: "preferred_locale", label: "preferred_locale" }, { value: "app_language", label: "app_language" }] : personalizationType === "Device Properties" ? [{ value: "language", label: "Device language" }, { value: "country", label: "Device country" }] : [{ value: "language", label: "Language" }, { value: "country", label: "Country" }, { value: "first_name", label: "First name" }, { value: "last_name", label: "Last name" }, { value: "email", label: "Email" }];
+  const variable = personalizationType === "Custom Attributes" ? `\${custom_attribute.${attribute}}` : `\${${attribute}}`;
+  const safeDefault = defaultValue.replaceAll("'", "\\'");
+  const snippet = `{{${variable}${defaultValue ? ` | default: '${safeDefault}'` : ""}}}`;
+  const issue = liquidEnabled ? validateLanguageLiquid(liquid) : "";
+  const resolved = liquidEnabled && !issue ? renderLanguageLiquid(liquid) : "";
+  const changeType = (next: string) => { setPersonalizationType(next); setAttribute(next === "Custom Attributes" ? "preferred_locale" : "language"); setCopied(false); };
+  return <div className={styles.settingsPage}>
+    <aside>Edit your in-app message settings</aside>
+    <main className={styles.accessibilitySettings}>
+      <h2>Accessibility</h2>
+      <p>Set the <a href="https://www.braze.com/docs/user_guide/message_building_by_channel/in-app_messages/" target="_blank">accessibility language</a> for your message&apos;s HTML. Screen readers and assistive tools use this to pronounce content with the correct language and dialect. Select a language or use Liquid to set it dynamically.</p>
+      <label>Language <span className={styles.infoDot} title="Sets the HTML lang attribute">i</span><select aria-label="Accessibility language" disabled={liquidEnabled} value={language} onChange={event => setLanguage(event.target.value)}><option value="">Select...</option><option value="en">English</option><option value="zh-CN">Chinese (Simplified)</option><option value="ja">Japanese</option><option value="ko">Korean</option></select></label>
+      {!liquidEnabled ? <button className={styles.liquidLanguage} onClick={() => { setLiquidEnabled(true); setLiquid(""); }}><Plus size={16}/> Add language with Liquid</button> : <section className={styles.liquidSection}>
+        <label>Language attribute from Liquid <span className={styles.infoDot} title="The rendered value becomes the HTML lang attribute">i</span><span className={styles.liquidInput}><textarea aria-label="Liquid language expression" value={liquid} onChange={event => setLiquid(event.target.value)} placeholder="Type in a value"/><button aria-label="Add Liquid personalization" onClick={() => setPersonalizationOpen(value => !value)}><Plus size={16}/></button></span></label>
+        {issue ? <p className={styles.liquidError}>{issue}</p> : <p className={styles.liquidValid}>Valid Liquid · Preview HTML language: <b>{resolved || "(empty)"}</b></p>}
+        <button className={styles.removeLiquid} onClick={() => { setLiquidEnabled(false); setLiquid(""); setPersonalizationOpen(false); }}><Trash2 size={16}/> Remove Liquid</button>
+        {personalizationOpen && <aside className={styles.liquidPersonalization} role="dialog" aria-label="Add Personalization">
+          <button className={styles.personalizationClose} aria-label="Close personalization" onClick={() => setPersonalizationOpen(false)}><X size={17}/></button>
+          <h3>Add Personalization</h3>
+          <label>Personalization type<select aria-label="Personalization type" value={personalizationType} onChange={event => changeType(event.target.value)}><option>Default Attributes</option><option>Custom Attributes</option><option>Device Properties</option></select></label>
+          <label>Attribute<select aria-label="Liquid attribute" value={attribute} onChange={event => { setAttribute(event.target.value); setCopied(false); }}>{attributeOptions.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>
+          <label>Default value <span>(Optional)</span><input aria-label="Liquid default value" value={defaultValue} onChange={event => { setDefaultValue(event.target.value); setCopied(false); }} placeholder="Enter default value"/></label>
+          <label>Liquid Snippet<span className={styles.snippetField}><code>{snippet}</code><button aria-label="Copy Liquid snippet" onClick={() => { void navigator.clipboard?.writeText(snippet); setCopied(true); }}><Copy size={18}/></button></span></label>
+          {copied && <small>Copied to clipboard</small>}
+          <button className={styles.insertLiquid} onClick={() => { setLiquid(snippet); setPersonalizationOpen(false); }}>Insert Liquid Snippet</button>
+        </aside>}
+      </section>}
+    </main>
+  </div>;
 }
 
 function PagesPanel({ pages, selected, select, add, remove, move }: { pages: InAppPage[]; selected: number; select: (index: number) => void; add: () => void; remove: (index: number) => void; move: (from: number, to: number) => void }) {

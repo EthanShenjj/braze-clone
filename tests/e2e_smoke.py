@@ -13,7 +13,10 @@ ARTIFACTS = Path("tests/artifacts")
 def main() -> None:
     ARTIFACTS.mkdir(parents=True, exist_ok=True)
     with sync_playwright() as playwright:
-        browser = playwright.chromium.launch(headless=True)
+        browser = playwright.chromium.launch(
+            headless=True,
+            executable_path=os.environ.get("PLAYWRIGHT_CHROMIUM_EXECUTABLE"),
+        )
         page = browser.new_page(viewport={"width": 1440, "height": 900})
 
         page.goto(f"{BASE_URL}/engagement/campaigns/campaigns?start=0&limit=12", wait_until="networkidle")
@@ -77,13 +80,29 @@ def main() -> None:
         page.get_by_role("tab", name="Settings").click()
         assert page.get_by_role("heading", name="Accessibility").is_visible()
         page.get_by_label("Accessibility language").select_option(label="Japanese")
+        page.get_by_role("button", name="Add language with Liquid").click()
+        assert page.get_by_label("Accessibility language").is_disabled()
+        page.get_by_role("button", name="Add Liquid personalization").click()
+        personalization = page.get_by_role("dialog", name="Add Personalization")
+        personalization.get_by_label("Personalization type").select_option(label="Default Attributes")
+        personalization.get_by_label("Liquid attribute").select_option(label="Language")
+        personalization.get_by_label("Liquid default value").fill("en")
+        page.screenshot(path=str(ARTIFACTS / "in-app-liquid-personalization.png"))
+        personalization.get_by_role("button", name="Insert Liquid Snippet").click()
+        assert page.get_by_label("Liquid language expression").input_value() == "{{${language} | default: 'en'}}"
+        page.screenshot(path=str(ARTIFACTS / "in-app-liquid-settings.png"))
+        liquid_status = page.get_by_text("Valid Liquid · Preview HTML language:", exact=False)
+        assert liquid_status.is_visible()
+        assert liquid_status.locator("b").inner_text() == "en"
         page.get_by_role("tab", name="Preview & Test").click()
+        assert page.locator("article[lang='en']").count() == 1
         page.get_by_label("Add individual users").fill("user_1024")
         page.get_by_role("button", name="Send Test").click()
         assert page.get_by_text(re.compile("Test message simulated for user_1024")).is_visible()
         page.screenshot(path=str(ARTIFACTS / "in-app-preview-test.png"))
         page.get_by_role("button", name="Done").click()
         page.get_by_role("heading", name="Page Preview").wait_for(timeout=10_000)
+        assert page.locator("article[lang='en']").count() >= 1
         page.get_by_role("button", name="Switch/convert to custom code").click()
         assert page.get_by_role("dialog", name="Switch to custom code?").is_visible()
         page.get_by_role("dialog", name="Switch to custom code?").get_by_role("button", name="Cancel").click()
