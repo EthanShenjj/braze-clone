@@ -584,8 +584,15 @@ export function getRecommendation(id: string) {
 }
 
 export function updateRecommendation(id: string, patch: Partial<Pick<RecommendationRecord, "name" | "description" | "data">>, persisted?: RecommendationRecord | null) {
-  const current = getRecommendation(id) ?? persisted;
-  if (!current) return null;
+  const current = getRecommendation(id) ?? persisted ?? {
+    id,
+    type: "recommendations",
+    name: patch.name?.trim() || "New Recommendation",
+    status: "Draft",
+    description: patch.description ?? "",
+    updatedAt: now(),
+    data: patch.data ?? { trackingType: "purchase_object", propertyName: "product_id" },
+  };
   const next: RecommendationRecord = { ...current, ...patch, data: { ...current.data, ...patch.data }, updatedAt: now() };
   db().prepare(`INSERT INTO resources (id, type, name, status, description, updated_at, data_json)
     VALUES (?, 'recommendations', ?, ?, ?, ?, ?)
