@@ -24,4 +24,5 @@ test("known deep links restore their intended page", () => {
   equal(pageFromPath("/engagement/predictions/res_example/6aa75e37db69160082adb7ae"), "catalogs");
   equal(pageFromPath("/users/subscription_groups/6aa75e37db69160082adb7ae"), "subscription-group-management");
   equal(pageFromPath("/users/subscription_groups/preference_centers/6aa75e37db69160082adb7ae"), "email-preference-centers");
+  equal(pageFromPath("/engagement/global_message_settings/global-control-settings/6aa75e37db69160082adb7ae"), "global-control-group");
 });

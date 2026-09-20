@@ -10,6 +10,7 @@ test("normalizes supported and unsupported locales", () => {
 
 test("translates interface copy and keeps business data unchanged", () => {
   assert.equal(translate("zh-CN", "Campaigns"), "营销活动");
+  assert.equal(translate("zh-CN", "Global Control Group Settings"), "全局控制组设置");
   assert.equal(translate("zh-CN", "Sample_Catalog"), "Sample_Catalog");
   assert.equal(translate("en", "Campaigns"), "Campaigns");
 });

@@ -11,6 +11,7 @@ import pushStyles from "./push-editor.module.css";
 import LiveCanvas from "./live-canvas";
 import LiveUserSearch from "./live-user-search";
 import CatalogWorkspace from "./catalog-workspace";
+import GlobalControlGroup from "./global-control-group";
 import { PreferenceCenterWorkspace, SubscriptionGroupWorkspace } from "./subscription-group-workspace";
 import InAppCampaignCompose from "./in-app-message";
 import { pageFromPath, pageKeyForDrawerItem, routeForPage } from "@/lib/navigation";
@@ -216,9 +217,9 @@ export default function Dashboard() {
       <div className="brand-word">braze</div>
     </aside>
     <main className="main-area">
-      <div className="trial">◷ &nbsp;{translate(locale, "12 days left in your free trial.")} <button>{translate(locale, "Connect with sales")}</button></div>
-      <header className="topbar"><button className="search-button" onClick={() => setToast("Workspace search is ready for this local demo.")}><Search size={16}/> {translate(locale, "Search workspace")} <kbd>⌘K</kbd></button><div className="top-actions"><label className="language-picker"><Languages size={16}/><select aria-label={translate(locale, "Language")} value={locale} onChange={event => changeLocale(event.target.value as Locale)}>{supportedLocales.map(value => <option value={value} key={value}>{localeNames[value]}</option>)}</select></label><CircleHelp size={18}/><Bell size={18}/><button className="profile">S</button><button className="operator-trigger" onClick={() => setOperatorOpen(!operatorOpen)}><Sparkles size={17}/></button></div></header>
-      {page !== "catalogs" && <div className="page-tabs"><button className={className("page-tab", !editing && "selected")} onClick={() => openPage(editing ? "campaigns" : page)}>{editing ? translate(locale, "Campaigns") : translate(locale, page === "performance" ? "Performance Overview" : page === "agents" ? "Agent Console" : page === "partners" ? "Partner Integrations" : page === "data" ? "Data Settings" : titleFrom(page))}</button>{editing && <button className="page-tab selected">{translate(locale, "Edit")} '{editing.name}' <X size={14} onClick={() => openPage("campaigns")}/></button>}</div>}
+      <div className="trial">◷ &nbsp;{translate(locale, "8 days left in your free trial.")} <button>{translate(locale, "Connect with sales")}</button></div>
+      <header className="topbar"><button className="search-button" onClick={() => setToast("Workspace search is ready for this local demo.")}><Search size={16}/> {translate(locale, "Search workspace")} <kbd>⌘K</kbd></button><div className="top-actions"><CircleHelp size={18}/><Users size={18}/><label className="language-picker"><Languages size={16}/><select aria-label={translate(locale, "Language")} value={locale} onChange={event => changeLocale(event.target.value as Locale)}>{supportedLocales.map(value => <option value={value} key={value}>{localeNames[value]}</option>)}</select></label><Bell size={18}/><button className="profile">S</button><ChevronDown size={17}/><button className="operator-trigger" onClick={() => setOperatorOpen(!operatorOpen)}><Sparkles size={17}/></button></div></header>
+      {!['catalogs', 'global-control-group'].includes(page) && <div className="page-tabs"><button className={className("page-tab", !editing && "selected")} onClick={() => openPage(editing ? "campaigns" : page)}>{editing ? translate(locale, "Campaigns") : translate(locale, page === "performance" ? "Performance Overview" : page === "agents" ? "Agent Console" : page === "partners" ? "Partner Integrations" : page === "data" ? "Data Settings" : titleFrom(page))}</button>{editing && <button className="page-tab selected">{translate(locale, "Edit")} '{editing.name}' <X size={14} onClick={() => openPage("campaigns")}/></button>}</div>}
       {editing ? <CampaignEditor locale={locale} key={editing.id} campaign={editing} onSave={saveCampaign} onClose={() => openPage("campaigns")} /> : <PageContent locale={locale} page={page} campaigns={campaigns} openPage={openPage} onEdit={openCampaign} onCreate={(event) => { const rect = event.currentTarget.getBoundingClientRect(); setCreateAnchor({ position: "fixed", top: rect.bottom + 6, left: Math.max(16, rect.right - 325), zIndex: 61 }); }} onStop={stopCampaign} onArchive={archiveCampaign} onDuplicate={duplicateCampaign} notify={setToast} />}
     </main>
     {drawer && <NavigationDrawer locale={locale} name={titleFrom(drawer)} items={drawers[drawer]} activePage={page} close={() => setDrawer(null)} open={openPage} openCampaignChannel={openCampaignChannel} />}
@@ -258,6 +259,7 @@ function PageContent({ locale, page, campaigns, openPage, onEdit, onCreate, onSt
   if (["report-builder", "custom-events-report", "global-control-group-report", "query-builder", "engagement-reports", "revenue-report", "segment-insights", "dashboard-builder", "email-performance", "push-performance", "sms-mms-rcs-performance", "conversions"].includes(page)) return <LiveReportPage locale={locale} title={titleFrom(page)} />;
   if (page === "message-activity-log") return <ActivityLogPage locale={locale} />;
   if (page === "search-users") return <LiveUserSearch locale={locale} notify={notify}/>;
+  if (page === "global-control-group") return <GlobalControlGroup locale={locale}/>;
   if (page === "catalogs") return <CatalogWorkspace locale={locale} notify={notify}/>;
   if (page === "subscription-group-management") return <SubscriptionGroupWorkspace locale={locale} notify={notify}/>;
   if (page === "email-preference-centers") return <PreferenceCenterWorkspace locale={locale} notify={notify}/>;
