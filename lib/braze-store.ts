@@ -36,7 +36,7 @@ export type PreferenceCenterRecord = {
   id: string; name: string; description: string; groupIds: string[]; status: "Active" | "Draft"; updatedAt: string;
 };
 
-const databasePath = process.env.VERCEL ? join(tmpdir(), "braze-local-demo", "braze-local.sqlite") : join(process.cwd(), ".data", "braze-local.sqlite");
+const databasePath = process.env.BRAZE_DATABASE_PATH ?? (process.env.VERCEL ? join(tmpdir(), "braze-local-demo", "braze-local.sqlite") : join(process.cwd(), ".data", "braze-local.sqlite"));
 let database: DatabaseSync | undefined;
 
 function now() { return new Date().toISOString(); }
@@ -583,11 +583,15 @@ export function getRecommendation(id: string) {
   return record?.type === "recommendations" ? mapRecommendation(record) : null;
 }
 
-export function updateRecommendation(id: string, patch: Partial<Pick<RecommendationRecord, "name" | "description" | "data">>) {
-  const current = getRecommendation(id);
+export function updateRecommendation(id: string, patch: Partial<Pick<RecommendationRecord, "name" | "description" | "data">>, persisted?: RecommendationRecord | null) {
+  const current = getRecommendation(id) ?? persisted;
   if (!current) return null;
   const next: RecommendationRecord = { ...current, ...patch, data: { ...current.data, ...patch.data }, updatedAt: now() };
-  db().prepare("UPDATE resources SET name = ?, description = ?, updated_at = ?, data_json = ? WHERE id = ?").run(next.name, next.description, next.updatedAt, JSON.stringify(next.data), id);
+  db().prepare(`INSERT INTO resources (id, type, name, status, description, updated_at, data_json)
+    VALUES (?, 'recommendations', ?, ?, ?, ?, ?)
+    ON CONFLICT(id) DO UPDATE SET name = excluded.name, status = excluded.status,
+      description = excluded.description, updated_at = excluded.updated_at, data_json = excluded.data_json`)
+    .run(id, next.name, next.status || "Draft", next.description, next.updatedAt, JSON.stringify(next.data));
   audit("recommendation", id, "updated", { configured: Boolean(next.data.catalogId && next.data.recommendationType) });
   return next;
 }
