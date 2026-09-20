@@ -83,7 +83,7 @@ Content-Type: application/json
 {"user_id":"user_456","event":"campaign_sent"}
 ```
 
-服务端需要连接超时、总体超时、有限重试、重试退避、URL 白名单与私网地址拦截。HTTP 200 表示服务端接受请求，不代表业务完成。当前本地版本不解析或调用填写的 URL，只在预览与日志中显示合成响应。
+服务端包含 120 秒超时、最多五次有限重试与退避、目标主机白名单、DNS 检查和私网地址拦截。HTTP 20x 计为成功；408、429 和 5xx 可重试，30x 与其他 4xx 不重试。编辑器支持变体、结构化 Headers、JSON/Raw Text、Liquid、翻译标签、模板、按用户预览与测试响应。外联默认关闭，启用方式见 README；每次 attempt 都写入 `webhook_attempts`，敏感 Header 不进入活动日志。
 
 ## 调度、频控、实验与归因
 
@@ -98,6 +98,6 @@ Content-Type: application/json
 | 数据持久化 | 浏览器 localStorage | SQLite/PostgreSQL + 版本控制 |
 | 调度 | 点击发布即时生成事件 | 队列、Worker、延迟任务和重试 |
 | 渠道投递 | Mock adapter | ESP、APNs、FCM、运营商、Meta、LINE API |
-| Webhook | 不外联的请求预览 | 白名单 HTTP client、签名、超时与审计 |
+| Webhook | 默认关闭；可显式启用白名单 HTTP client、超时、重试与 attempt 审计 | 队列 Worker、托管密钥与更高吞吐的投递集群 |
 | 报表 | 确定性模拟指标 | 事件仓库、聚合任务与归因模型 |
 | AI / SQL | 明示为本地演示 | 受控模型、权限、成本与审计策略 |

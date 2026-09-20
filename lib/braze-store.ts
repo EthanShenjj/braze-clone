@@ -9,6 +9,8 @@ import { campaignValidationIssues } from "./campaign-validation";
 import { type CanvasGraph, type CanvasRun, type CanvasTrace, validateCanvasGraph } from "./canvas-model";
 import { sampleCatalogId, sampleCatalogRows, sampleRecommendationId } from "./sample-catalog";
 import { sampleSegmentByName, sampleSegments } from "./sample-segments";
+import { deliverWebhook, webhookDeliveryCapability, type WebhookDeliveryResult } from "./webhook-delivery";
+import { normalizeWebhookVariants, redactHeaders, renderWebhookText, webhookPreviewUser, type WebhookVariant } from "./webhook-model";
 
 export type Channel = "email" | "push" | "iam" | "content" | "banner" | "sms" | "webhook" | "whatsapp" | "line" | "multichannel" | "operator" | "feature" | "api";
 export type CampaignStatus = "Draft" | "Active" | "Stopped" | "Archived";
@@ -94,6 +96,12 @@ function db() {
     CREATE TABLE IF NOT EXISTS execution_runs (
       id TEXT PRIMARY KEY, campaign_id TEXT NOT NULL, state TEXT NOT NULL, eligible_count INTEGER NOT NULL,
       delivered_count INTEGER NOT NULL, failed_count INTEGER NOT NULL, created_at TEXT NOT NULL, snapshot_json TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS webhook_attempts (
+      id TEXT PRIMARY KEY, campaign_id TEXT NOT NULL, user_id TEXT NOT NULL, is_test INTEGER NOT NULL,
+      variant_id TEXT NOT NULL, attempt INTEGER NOT NULL, status_code INTEGER, outcome TEXT NOT NULL,
+      method TEXT NOT NULL, url TEXT NOT NULL, response_body TEXT NOT NULL, error TEXT NOT NULL,
+      duration_ms INTEGER NOT NULL, created_at TEXT NOT NULL
     );
     CREATE TABLE IF NOT EXISTS canvas_runs (
       id TEXT PRIMARY KEY, canvas_id TEXT NOT NULL, created_at TEXT NOT NULL,
@@ -373,7 +381,44 @@ export function createPreferenceCenter(input: { name: string; description?: stri
   audit("preference_center", record.id, "created", { groupCount: record.groupIds.length }); return record;
 }
 
-export function launchCampaign(id: string) {
+function webhookContext(user: { id: string; email?: string; firstName?: string; country?: string; attributes?: Record<string, unknown> } | null, custom: Record<string, unknown> = {}): Record<string, unknown> {
+  if (!user) return { ...webhookPreviewUser, ...custom };
+  return {
+    user_id: user.id,
+    external_id: user.id,
+    email: user.email ?? "",
+    first_name: user.firstName ?? "",
+    country: user.country ?? "",
+    ...(user.attributes ?? {}),
+    attributes: user.attributes ?? {},
+    ...custom,
+  };
+}
+
+function recordWebhookResult(campaignId: string, userId: string, variant: WebhookVariant, result: WebhookDeliveryResult, isTest: boolean) {
+  const timestamp = now();
+  const insert = db().prepare("INSERT INTO webhook_attempts VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+  for (const attempt of result.attempts) insert.run(uid("wha"), campaignId, userId, isTest ? 1 : 0, variant.id, attempt.attempt, attempt.statusCode, attempt.outcome, result.method, result.url, attempt.responseBody, attempt.error, attempt.durationMs, timestamp);
+  return {
+    url: result.url,
+    method: result.method,
+    requestHeaders: redactHeaders(result.requestHeaders),
+    requestBody: result.requestBody,
+    attempts: result.attempts,
+    delivered: result.delivered,
+  };
+}
+
+function recordBlockedWebhook(campaignId: string, userId: string, variant: WebhookVariant, error: string, isTest: boolean, suppliedContext?: Record<string, unknown>) {
+  const timestamp = now();
+  const context = suppliedContext ?? webhookContext(getUser(userId));
+  const url = renderWebhookText(variant.url, context, String(context.language ?? "en"), variant.translations);
+  db().prepare("INSERT INTO webhook_attempts VALUES (?, ?, ?, ?, ?, 1, NULL, 'blocked', ?, ?, '', ?, 0, ?)")
+    .run(uid("wha"), campaignId, userId, isTest ? 1 : 0, variant.id, variant.method, url, error, timestamp);
+  return { url, method: variant.method, requestHeaders: redactHeaders(variant.headers), requestBody: variant.body, attempts: [{ attempt: 1, statusCode: null, outcome: "blocked" as const, responseBody: "", error, durationMs: 0 }], delivered: false };
+}
+
+export async function launchCampaign(id: string) {
   const conn = db(); const campaign = getCampaign(id);
   if (!campaign) throw new Error("Campaign not found");
   if (campaign.status === "Active") {
@@ -389,18 +434,43 @@ export function launchCampaign(id: string) {
   const users = conn.prepare(`SELECT u.id, u.reachable, u.subscribed${subscriptionGroupId ? ", m.state AS subscription_state" : ""} FROM users u ${subscriptionGroupId ? "LEFT JOIN subscription_group_memberships m ON m.user_id = u.id AND m.group_id = ?" : ""} WHERE ${audience.sql}${country ? " AND u.country = ?" : ""}${excludedCountry ? " AND u.country != ?" : ""} ORDER BY u.id`).all(...(subscriptionGroupId ? [subscriptionGroupId] : []), ...audience.values, ...(country ? [country] : []), ...(excludedCountry ? [excludedCountry] : [])) as { id: string; reachable: number; subscribed: number; subscription_state?: SubscriptionState }[];
   const requireSubscription = campaign.config.subscribeEligibility !== "all";
   const controlGroup = Math.min(100, Math.max(0, Number(campaign.config.controlGroup ?? 20)));
-  const maxUsers = campaign.config.limitVolume ? Math.max(1, Number(campaign.config.maxUsers ?? 100)) : Infinity;
+  const configuredMaxUsers = campaign.config.limitVolume ? Math.max(1, Number(campaign.config.maxUsers ?? 100)) : Infinity;
+  const maxUsers = campaign.channel === "webhook" ? Math.min(configuredMaxUsers, Math.max(1, Number(process.env.WEBHOOK_MAX_DELIVERIES_PER_RUN ?? 100))) : configuredMaxUsers;
   const subscribed = (user: { subscribed: number; subscription_state?: SubscriptionState }) => subscriptionGroupId ? user.subscription_state === "subscribed" : Boolean(user.subscribed);
   const eligible = users.filter(user => user.reachable && (!requireSubscription || subscribed(user)));
   const runId = uid("run"); const timestamp = now();
   const insertEvent = conn.prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)");
-  let delivered = 0; let failed = 0;
+  let delivered = 0; let failed = 0; let webhookProcessed = 0;
+  const webhookVariants = campaign.channel === "webhook" ? normalizeWebhookVariants(campaign) : [];
   for (const user of users) {
     const deliverable = user.reachable && (!requireSubscription || subscribed(user));
     const inControl = deliverable && createHash("sha256").update(`${id}:${user.id}`).digest()[0] / 256 * 100 < controlGroup;
-    const eventType = !deliverable ? subscribed(user) ? "unreachable" : "suppressed" : inControl ? "control" : delivered >= maxUsers ? "held_back" : "delivered";
-    insertEvent.run(uid("evt"), id, campaign.channel, user.id, eventType, timestamp, JSON.stringify({ runId }));
-    if (eventType === "delivered") { delivered += 1; if (delivered % 4 === 0) insertEvent.run(uid("evt"), id, campaign.channel, user.id, "opened", timestamp, JSON.stringify({ runId })); if (delivered % 9 === 0) insertEvent.run(uid("evt"), id, campaign.channel, user.id, "clicked", timestamp, JSON.stringify({ runId })); } else if (eventType === "unreachable" || eventType === "suppressed") { failed += 1; }
+    let eventType = !deliverable ? subscribed(user) ? "unreachable" : "suppressed" : inControl ? "control" : (campaign.channel === "webhook" ? webhookProcessed : delivered) >= maxUsers ? "held_back" : "delivered";
+    let eventData: Record<string, unknown> = { runId };
+    if (eventType === "delivered" && campaign.channel === "webhook") {
+      webhookProcessed += 1;
+      const hash = createHash("sha256").update(`${id}:${user.id}:variant`).digest()[0];
+      const variant = webhookVariants[hash % webhookVariants.length];
+      const profile = getUser(user.id);
+      const context = webhookContext(profile);
+      try {
+        const result = await deliverWebhook(variant, context, String(context.language ?? "en"));
+        eventData = { ...eventData, webhook: recordWebhookResult(id, user.id, variant, result, false) };
+        if (!result.delivered) eventType = "failed";
+      } catch (cause) {
+        const error = cause instanceof Error ? cause.message : "Webhook delivery failed.";
+        eventData = { ...eventData, webhook: recordBlockedWebhook(id, user.id, variant, error, false, context) };
+        eventType = "failed";
+      }
+    }
+    insertEvent.run(uid("evt"), id, campaign.channel, user.id, eventType, timestamp, JSON.stringify(eventData));
+    if (eventType === "delivered") {
+      delivered += 1;
+      if (campaign.channel !== "webhook") {
+        if (delivered % 4 === 0) insertEvent.run(uid("evt"), id, campaign.channel, user.id, "opened", timestamp, JSON.stringify({ runId }));
+        if (delivered % 9 === 0) insertEvent.run(uid("evt"), id, campaign.channel, user.id, "clicked", timestamp, JSON.stringify({ runId }));
+      }
+    } else if (eventType === "unreachable" || eventType === "suppressed" || eventType === "failed") { failed += 1; }
   }
   conn.prepare("INSERT INTO execution_runs VALUES (?, ?, ?, ?, ?, ?, ?, ?)").run(runId, id, "completed", eligible.length, delivered, failed, timestamp, JSON.stringify(campaign));
   conn.prepare("UPDATE campaigns SET status = 'Active', sent = sent + ?, edited_at = ? WHERE id = ?").run(delivered, timestamp, id);
@@ -408,14 +478,44 @@ export function launchCampaign(id: string) {
   return { campaign: getCampaign(id), run: { id: runId, eligible: eligible.length, delivered, failed } };
 }
 
-export function sendTestCampaign(id: string, recipient = "marketing.qa@example.com") {
+export async function sendTestCampaign(id: string, input: { recipient?: string; mode?: "random" | "existing" | "custom"; customUser?: Record<string, unknown>; variantId?: string; locale?: string } | string = {}) {
   const campaign = getCampaign(id);
   if (!campaign) throw new Error("Campaign not found");
+  const options = typeof input === "string" ? { recipient: input } : input;
+  const recipient = options.recipient || "user_1";
   const timestamp = now();
+  if (campaign.channel === "webhook") {
+    const issues = campaignValidationIssues(campaign);
+    if (issues.length) throw new Error(issues.join(" "));
+    const row = options.mode === "random"
+      ? db().prepare("SELECT * FROM users WHERE reachable = 1 ORDER BY id LIMIT 1").get() as Record<string, unknown> | undefined
+      : db().prepare("SELECT * FROM users WHERE id = ? OR lower(email) = lower(?) LIMIT 1").get(recipient, recipient) as Record<string, unknown> | undefined;
+    const user = row ? mapUser(row) : null;
+    const userId = user?.id ?? "custom_test_user";
+    const context = webhookContext(user, options.mode === "custom" ? options.customUser : {});
+    const variants = normalizeWebhookVariants(campaign);
+    const variant = variants.find(item => item.id === options.variantId) ?? variants[0];
+    let result: WebhookDeliveryResult;
+    try { result = await deliverWebhook(variant, context, options.locale || String(context.language ?? "en"), 1); }
+    catch (cause) { result = recordBlockedWebhook(id, userId, variant, cause instanceof Error ? cause.message : "Webhook delivery failed.", true, context); }
+    const safeResult = result.attempts[0]?.outcome === "blocked" ? result : recordWebhookResult(id, userId, variant, result, true);
+    db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), id, campaign.channel, userId, result.delivered ? "delivered" : "failed", timestamp, JSON.stringify({ test: true, recipient, webhook: safeResult }));
+    audit("campaign", id, "webhook_test_sent", { recipient, delivered: result.delivered, statusCode: result.attempts.at(-1)?.statusCode ?? null });
+    return { recipient, campaign: campaign.name, channel: campaign.channel, createdAt: timestamp, webhook: safeResult, capability: webhookDeliveryCapability() };
+  }
   db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), id, campaign.channel, "test_user", "delivered", timestamp, JSON.stringify({ test: true, recipient }));
   audit("campaign", id, "test_sent", { recipient });
   return { recipient, campaign: campaign.name, channel: campaign.channel, createdAt: timestamp };
 }
+
+export function listWebhookAttempts(campaignId?: string, limit = 100) {
+  const rows = campaignId
+    ? db().prepare("SELECT * FROM webhook_attempts WHERE campaign_id = ? ORDER BY created_at DESC, attempt DESC LIMIT ?").all(campaignId, Math.min(500, Math.max(1, limit)))
+    : db().prepare("SELECT * FROM webhook_attempts ORDER BY created_at DESC, attempt DESC LIMIT ?").all(Math.min(500, Math.max(1, limit)));
+  return rows as Record<string, unknown>[];
+}
+
+export { webhookDeliveryCapability };
 
 export function listResources(type: string, q = "") {
   const rows = db().prepare("SELECT * FROM resources WHERE type = ? AND lower(name) LIKE lower(?) ORDER BY updated_at DESC").all(type, `%${q}%`) as Record<string, unknown>[];
@@ -684,7 +784,7 @@ export function getDemoState() {
 
 export function demoAction(action: string) {
   const conn = db();
-  if (action === "reset") { conn.exec("DELETE FROM message_events; DELETE FROM execution_runs; DELETE FROM canvas_runs; DELETE FROM demo_receipts; DELETE FROM demo_state; DELETE FROM audit_log; DELETE FROM campaigns; DELETE FROM users; DELETE FROM catalog_subscriptions; DELETE FROM catalog_selections; DELETE FROM catalog_items; DELETE FROM resources; DELETE FROM subscription_group_memberships; DELETE FROM subscription_groups; DELETE FROM preference_centers;"); seed(conn); seedSampleCatalog(conn); return { message: "Sample data reset", state: getDemoState() }; }
+  if (action === "reset") { conn.exec("DELETE FROM webhook_attempts; DELETE FROM message_events; DELETE FROM execution_runs; DELETE FROM canvas_runs; DELETE FROM demo_receipts; DELETE FROM demo_state; DELETE FROM audit_log; DELETE FROM campaigns; DELETE FROM users; DELETE FROM catalog_subscriptions; DELETE FROM catalog_selections; DELETE FROM catalog_items; DELETE FROM resources; DELETE FROM subscription_group_memberships; DELETE FROM subscription_groups; DELETE FROM preference_centers;"); seed(conn); seedSampleCatalog(conn); return { message: "Sample data reset", state: getDemoState() }; }
   if (action === "advance") {
     const current = getDemoState().simulatedTime;
     const next = new Date(new Date(current).getTime() + 86_400_000).toISOString();

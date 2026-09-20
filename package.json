@@ -11,6 +11,7 @@
     "test:canvas": "node --experimental-strip-types --test tests/canvas-model.test.mjs",
     "test:i18n": "node --experimental-strip-types --test tests/i18n.test.mjs",
     "test:navigation": "node --experimental-strip-types --test tests/navigation.test.mjs",
+    "test:webhook": "node --experimental-strip-types --test tests/webhook-model.test.mjs",
     "start": "next start",
     "lint": "next lint"
   },

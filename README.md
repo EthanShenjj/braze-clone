@@ -1,6 +1,6 @@
 # Braze Local Demo
 
-一个可本地运行的 Braze 控制台交互复刻项目。界面保留英文，产品与渠道说明使用中文。它不会调用 Braze、APNs、FCM、邮件服务商或任何用户填写的 Webhook 地址。
+一个可本地运行的 Braze 控制台交互复刻项目。界面保留英文，产品与渠道说明使用中文。它不会调用 Braze、APNs、FCM 或邮件服务商；Webhook 外联默认关闭，只有显式启用并加入主机白名单后才会发送。
 
 ## 启动
 
@@ -28,7 +28,15 @@ npm run dev
 
 ## 安全边界
 
-Webhook、AI、第三方渠道与连接测试均为本地模拟，不会向外部网络发送请求或消息。代码中的示例用户、地址和指标均为合成数据。
+AI、第三方消息渠道与连接测试默认均为本地模拟。Webhook 支持真实测试和投递，但采用安全关闭策略：
+
+```bash
+WEBHOOK_DELIVERY_ENABLED=true \
+WEBHOOK_ALLOWED_HOSTS=hooks.example.com,api.example.com \
+npm run dev
+```
+
+Webhook 只接受 HTTP/HTTPS 及标准端口 80/443；目标主机必须在 `WEBHOOK_ALLOWED_HOSTS`，并默认阻止私网、loopback 和 link-local 地址。仅在受控本地测试中可设置 `WEBHOOK_ALLOW_PRIVATE_HOSTS=true`。还可通过 `WEBHOOK_TIMEOUT_MS`、`WEBHOOK_MAX_ATTEMPTS` 和 `WEBHOOK_MAX_DELIVERIES_PER_RUN` 调整 120 秒超时、最多五次重试和单次发布上限。代码中的示例用户、地址和指标均为合成数据。
 
 ## 文档
 

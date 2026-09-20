@@ -1,3 +1,6 @@
+import { normalizeWebhookVariants, validateWebhookVariant } from "./webhook-model";
+import { validateWhatsAppCampaign } from "./whatsapp-model";
+
 export type CampaignForValidation = {
   name: string;
   channel: string;
@@ -12,8 +15,12 @@ export function campaignValidationIssues(campaign: CampaignForValidation): strin
   if (campaign.channel === "email" && !campaign.subject?.trim()) issues.push("Add an email subject line in Sending info.");
   const blocks = campaign.config?.emailBlocks;
   const hasBlocks = Array.isArray(blocks) && blocks.length > 0;
-  if (!campaign.body?.trim() && !(campaign.channel === "email" && hasBlocks) && !["feature", "api"].includes(campaign.channel)) {
+  if (campaign.channel === "whatsapp") {
+    issues.push(...validateWhatsAppCampaign(campaign));
+  } else if (campaign.channel === "webhook") {
+    issues.push(...normalizeWebhookVariants(campaign).flatMap(variant => validateWebhookVariant(variant)));
+  } else if (!campaign.body?.trim() && !(campaign.channel === "email" && hasBlocks) && !["feature", "api"].includes(campaign.channel)) {
     issues.push("Add message content before launching.");
   }
-  return issues;
+  return [...new Set(issues)];
 }
