@@ -78,6 +78,9 @@ def main() -> None:
         page.screenshot(path=str(ARTIFACTS / "in-app-preview-test.png"))
         page.get_by_role("button", name="Done").click()
         page.get_by_role("heading", name="Page Preview").wait_for(timeout=10_000)
+        page.get_by_role("button", name="Switch/convert to custom code").click()
+        assert page.get_by_role("dialog", name="Switch to custom code?").is_visible()
+        page.get_by_role("dialog", name="Switch to custom code?").get_by_role("button", name="Cancel").click()
 
         page.goto(f"{BASE_URL}/settings/message-activity-log", wait_until="networkidle")
         assert page.get_by_role("heading", name="Message Activity Log").is_visible()

@@ -64,6 +64,7 @@ type InAppVariant = {
   accessibilityLanguage: string;
   global: InAppGlobalStyle;
   customCode?: boolean;
+  customHtml?: string;
 };
 
 const devices: Array<{ id: Device; label: string }> = [
@@ -145,6 +146,25 @@ function blockIcon(kind: BlockKind) {
   return <LayoutDashboard size={20}/>;
 }
 
+function defaultCustomHtml(page: InAppPage) {
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: rgba(30, 30, 30, .72); font-family: Arial, sans-serif; }
+      .message { width: min(390px, calc(100vw - 48px)); padding: 32px; border-radius: 8px; background: white; text-align: center; box-sizing: border-box; }
+      h1 { margin: 0 0 14px; font-size: 26px; } p { line-height: 1.5; }
+      button { margin-top: 12px; padding: 12px 22px; border: 0; border-radius: 5px; background: #008294; color: white; font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <main class="message"><h1>${page.title}</h1><p>${page.body}</p><button>${page.buttonText}</button></main>
+  </body>
+</html>`;
+}
+
 function InAppPreview({ page, global, device, editor = false, onDrop, onSelectBlock }: { page: InAppPage; global: InAppGlobalStyle; device: Device; editor?: boolean; onDrop?: (kind: BlockKind) => void; onSelectBlock?: (id: string) => void }) {
   const frameStyle = { "--iam-overlay": `${global.overlayColor}${Math.round(global.overlayOpacity * 2.55).toString(16).padStart(2, "0")}` } as CSSProperties;
   const cardStyle: CSSProperties = {
@@ -175,6 +195,7 @@ export default function InAppCampaignCompose({ draft, update }: { draft: InAppCa
   const variants = variantsFor(draft);
   const [selectedVariant, setSelectedVariant] = useState(0);
   const [editorOpen, setEditorOpen] = useState(false);
+  const [conversionOpen, setConversionOpen] = useState(false);
   const [device, setDevice] = useState<Device>("phonePortrait");
   const [copied, setCopied] = useState(false);
   const current = variants[selectedVariant] ?? variants[0];
@@ -232,10 +253,21 @@ export default function InAppCampaignCompose({ draft, update }: { draft: InAppCa
         <main><InAppPreview page={page} global={current.global} device={device}/></main>
       </div>
       <p className={styles.previewNote}>Always test your messages on a real device, as actual rendering may vary.</p>
-      <div className={styles.composerActions}><button onClick={() => replaceCurrent({ ...current, customCode: !current.customCode })}>Switch/convert to custom code</button><a href="https://www.braze.com/docs/user_guide/message_building_by_channel/in-app_messages/drag_and_drop/" target="_blank">Docs</a><button disabled>Update template</button></div>
+      <div className={styles.composerActions}><button disabled={current.customCode} onClick={() => setConversionOpen(true)}>{current.customCode ? "Custom code enabled" : "Switch/convert to custom code"}</button><a href="https://www.braze.com/docs/user_guide/message_building_by_channel/in-app_messages/drag_and_drop/" target="_blank">Docs</a><button disabled>Update template</button></div>
     </section>
-    {editorOpen && <InAppEditor initial={current} close={() => setEditorOpen(false)} done={next => { replaceCurrent(next); setEditorOpen(false); }}/>} 
+    {conversionOpen && <div className={styles.dialogBackdrop} role="presentation"><section className={styles.conversionDialog} role="dialog" aria-modal="true" aria-labelledby="iam-conversion-title"><button className={styles.dialogClose} aria-label="Close conversion dialog" onClick={() => setConversionOpen(false)}><X size={18}/></button><Code2 size={25}/><h2 id="iam-conversion-title">Switch to custom code?</h2><p>Your message will be converted to HTML. Continue editing and previewing it in the custom code editor.</p><div><button onClick={() => setConversionOpen(false)}>Cancel</button><button onClick={() => { replaceCurrent({ ...current, customCode: true, customHtml: current.customHtml || defaultCustomHtml(page) }); setConversionOpen(false); setEditorOpen(true); }}>Switch to custom code</button></div></section></div>}
+    {editorOpen && (current.customCode ? <InAppCodeEditor initial={current} close={() => setEditorOpen(false)} done={next => { replaceCurrent(next); setEditorOpen(false); }}/> : <InAppEditor initial={current} close={() => setEditorOpen(false)} done={next => { replaceCurrent(next); setEditorOpen(false); }}/>) }
   </div>;
+}
+
+function InAppCodeEditor({ initial, close, done }: { initial: InAppVariant; close: () => void; done: (variant: InAppVariant) => void }) {
+  const [html, setHtml] = useState(initial.customHtml || defaultCustomHtml(initial.pages[0]));
+  const [preview, setPreview] = useState(false);
+  return <section className={styles.codeEditor} aria-label="In-app custom code editor">
+    <header><div><Code2 size={18}/><span><b>Custom code editor</b><small>{initial.name}</small></span></div><nav><button className={!preview ? styles.activeCodeTab : ""} onClick={() => setPreview(false)}>Compose</button><button className={preview ? styles.activeCodeTab : ""} onClick={() => setPreview(true)}>Preview</button></nav></header>
+    <main>{preview ? <div className={styles.codePreview}><iframe title="Custom code preview" sandbox="allow-forms allow-popups" srcDoc={html}/></div> : <div className={styles.codeWorkspace}><aside><h3>HTML</h3><p>Build a fully custom in-app message with HTML and CSS.</p><button onClick={() => setHtml(defaultCustomHtml(initial.pages[0]))}>Reset starter code</button></aside><textarea aria-label="In-app message HTML" spellCheck={false} value={html} onChange={event => setHtml(event.target.value)}/></div>}</main>
+    <footer className={styles.editorFooter}><button>Send feedback</button><span/><button className={styles.cancel} onClick={close}>Cancel</button><button className={styles.done} onClick={() => done({ ...initial, customCode: true, customHtml: html })}>Done</button><button aria-label="BrazeAI Operator"><Sparkles size={18}/></button></footer>
+  </section>;
 }
 
 function InAppEditor({ initial, close, done }: { initial: InAppVariant; close: () => void; done: (variant: InAppVariant) => void }) {
