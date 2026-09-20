@@ -19,7 +19,7 @@ export type CampaignRecord = {
 export type ResourceRecord = { id: string; type: string; name: string; status: string; description: string; updatedAt: string; data: Record<string, unknown> };
 export type UserRecord = { id: string; email: string; firstName: string; country: string; lifecycle: string; subscribed: boolean; reachable: boolean; attributes: Record<string, unknown> };
 export type CatalogSelectionRecord = {
-  catalogId: string; name: string; description: string; filters: Array<{ field: string; operator: "equals"; value: string }>;
+  catalogId: string; name: string; description: string; filters: Array<{ field: string; operator: "equals" | "not_equals" | "contains" | "not_contains" | "greater_than" | "less_than" | "exists" | "not_exists"; value: string }>;
   randomSort: boolean; sortField: string; sortDirection: string; resultLimit: number; updatedAt: string;
 };
 export type RecommendationRecord = ResourceRecord & {
@@ -494,12 +494,39 @@ export function listCatalogs() {
   const catalogs = listResources("catalogs"); const conn = db();
   return catalogs.map(catalog => ({ ...catalog, itemCount: (conn.prepare("SELECT count(*) AS count FROM catalog_items WHERE catalog_id = ?").get(catalog.id) as { count: number }).count }));
 }
-export function createCatalog(name: string) { return createResource({ type: "catalogs", name, description: "Local product catalog", data: { fields: ["sku", "name", "price", "image"] } }); }
+export function createCatalog(input: string | { id?: string; name: string; description?: string; data?: Record<string, unknown> }) {
+  const value = typeof input === "string" ? { name: input } : input;
+  if (value.id) {
+    const timestamp = now();
+    const record: ResourceRecord = { id: value.id, type: "catalogs", name: value.name, status: "Draft", description: value.description ?? "", updatedAt: timestamp, data: value.data ?? { fields: [], fieldTypes: {}, source: "Braze", size: "1KB" } };
+    db().prepare("INSERT INTO resources VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET name=excluded.name, description=excluded.description, updated_at=excluded.updated_at, data_json=excluded.data_json").run(record.id, record.type, record.name, record.status, record.description, record.updatedAt, JSON.stringify(record.data));
+    audit("catalog", record.id, "created", {});
+    return record;
+  }
+  return createResource({
+    type: "catalogs",
+    name: value.name,
+    description: value.description ?? "",
+    data: value.data ?? { fields: [], fieldTypes: {}, source: "Braze", size: "1KB" },
+  });
+}
 export function updateCatalog(id: string, patch: Partial<Pick<ResourceRecord, "name" | "description" | "data" | "status">>) {
   const current = getResource(id); if (!current || current.type !== "catalogs") return null;
   const next = { ...current, ...patch, data: patch.data ?? current.data, updatedAt: now() };
   db().prepare("UPDATE resources SET name = ?, status = ?, description = ?, updated_at = ?, data_json = ? WHERE id = ?").run(next.name, next.status, next.description, next.updatedAt, JSON.stringify(next.data), id);
   audit("catalog", id, "updated", { fields: (next.data as { fields?: unknown }).fields }); return next;
+}
+export function removeCatalog(id: string) {
+  const conn = db();
+  conn.exec("BEGIN");
+  try {
+    conn.prepare("DELETE FROM catalog_subscriptions WHERE catalog_id = ?").run(id);
+    conn.prepare("DELETE FROM catalog_selections WHERE catalog_id = ?").run(id);
+    conn.prepare("DELETE FROM catalog_items WHERE catalog_id = ?").run(id);
+    conn.prepare("DELETE FROM resources WHERE id = ? AND type = 'catalogs'").run(id);
+    audit("catalog", id, "deleted", {});
+    conn.exec("COMMIT");
+  } catch (error) { conn.exec("ROLLBACK"); throw error; }
 }
 export function listCatalogItems(catalogId: string, q = ""): Array<{ id: string; name: string; fields: Record<string, unknown>; updatedAt: string }> {
   const rows = db().prepare("SELECT * FROM catalog_items WHERE catalog_id = ? AND (lower(name) LIKE lower(?) OR lower(id) LIKE lower(?)) ORDER BY updated_at DESC").all(catalogId, `%${q}%`, `%${q}%`) as Record<string, unknown>[];
@@ -537,6 +564,26 @@ export function getCatalogSelection(catalogId: string, name: string) {
   return row ? mapCatalogSelection(row) : null;
 }
 
+export function upsertCatalogSelection(catalogId: string, input: Omit<CatalogSelectionRecord, "catalogId" | "updatedAt">, originalName?: string) {
+  if (!getResource(catalogId)) throw new Error("Catalog not found");
+  const timestamp = now();
+  if (originalName && originalName !== input.name) db().prepare("DELETE FROM catalog_selections WHERE catalog_id = ? AND name = ?").run(catalogId, originalName);
+  db().prepare(`INSERT INTO catalog_selections VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(catalog_id,name) DO UPDATE SET description=excluded.description, filters_json=excluded.filters_json,
+    random_sort=excluded.random_sort, sort_field=excluded.sort_field, sort_direction=excluded.sort_direction,
+    result_limit=excluded.result_limit, updated_at=excluded.updated_at`).run(
+      catalogId, input.name, input.description, JSON.stringify(input.filters), input.randomSort ? 1 : 0,
+      input.sortField, input.sortDirection, Math.max(1, Math.min(50, input.resultLimit)), timestamp,
+    );
+  audit("catalog_selection", `${catalogId}:${input.name}`, originalName ? "updated" : "created", {});
+  return getCatalogSelection(catalogId, input.name)!;
+}
+
+export function removeCatalogSelection(catalogId: string, name: string) {
+  db().prepare("DELETE FROM catalog_selections WHERE catalog_id = ? AND name = ?").run(catalogId, name);
+  audit("catalog_selection", `${catalogId}:${name}`, "deleted", {});
+}
+
 export function getUser(id: string) {
   const row = db().prepare("SELECT * FROM users WHERE id = ?").get(id) as Record<string, unknown> | undefined;
   return row ? mapUser(row) : null;
@@ -554,10 +601,24 @@ export function previewCatalogSelection(catalogId: string, name: string, userId?
   if (!user) return null;
   let items = listCatalogItems(catalogId);
   for (const filter of selection.filters) {
-    items = items.filter(item => String(filter.field === "id" ? item.id : item.fields[filter.field] ?? "") === filter.value);
+    items = items.filter(item => {
+      const raw = filter.field === "id" ? item.id : item.fields[filter.field];
+      const left = String(raw ?? "").toLowerCase(); const right = filter.value.toLowerCase();
+      if (filter.operator === "not_equals") return left !== right;
+      if (filter.operator === "contains") return left.includes(right);
+      if (filter.operator === "not_contains") return !left.includes(right);
+      if (filter.operator === "greater_than") return Number(raw) > Number(filter.value);
+      if (filter.operator === "less_than") return Number(raw) < Number(filter.value);
+      if (filter.operator === "exists") return raw != null && raw !== "";
+      if (filter.operator === "not_exists") return raw == null || raw === "";
+      return left === right;
+    });
   }
   if (selection.randomSort) {
     items.sort((left, right) => createHash("sha256").update(`${catalogId}:${name}:${user.id}:${left.id}`).digest("hex").localeCompare(createHash("sha256").update(`${catalogId}:${name}:${user.id}:${right.id}`).digest("hex")));
+  } else if (selection.sortField) {
+    const direction = selection.sortDirection === "descending" ? -1 : 1;
+    items.sort((left, right) => String(left.fields[selection.sortField] ?? "").localeCompare(String(right.fields[selection.sortField] ?? "")) * direction);
   }
   return { selection, user, items: items.slice(0, selection.resultLimit) };
 }

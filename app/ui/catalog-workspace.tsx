@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ArrowDown, ArrowUp, ChevronLeft, ChevronRight, CircleHelp, Eye, MessageCircle, Search, SlidersHorizontal, X } from "lucide-react";
 import { sampleCatalogId, sampleWorkspaceId } from "@/lib/sample-catalog";
 import { formatDate, formatNumber, translate, withLocale, type Locale } from "@/lib/i18n";
+import CatalogStudio, { RecommendationStudio } from "./catalog-studio";
 import "./catalog-workspace.css";
 
 type Catalog = { id: string; name: string; description: string; status: string; updatedAt: string; itemCount: number; data: { fields?: string[]; source?: string; size?: string; sample?: boolean } };
@@ -24,10 +25,8 @@ const formatCatalogDate = (locale: Locale, value: string) => formatDate(locale, 
 export default function CatalogWorkspace({ locale, notify }: { locale: Locale; notify: (message: string) => void }) {
   const pathname = usePathname();
   const recommendation = pathname.match(/^\/engagement\/predictions\/([^/]+)\/([^/]+)$/);
-  const selection = pathname.match(/^\/dashboard\/catalogs\/([^/]+)\/selection\/([^/]+)\/([^/]+)$/);
-  if (recommendation) return <RecommendationWorkspace locale={locale} id={recommendation[1]} notify={notify}/>;
-  if (selection) return <SelectionWorkspace catalogId={selection[1]} selectionName={decodeURIComponent(selection[2])} locale={locale} notify={notify}/>;
-  return <CatalogOverview locale={locale} notify={notify}/>;
+  if (recommendation) return <RecommendationStudio locale={locale} id={recommendation[1]} notify={notify}/>;
+  return <CatalogStudio locale={locale} notify={notify}/>;
 }
 
 function CatalogOverview({ locale, notify }: { locale: Locale; notify: (message: string) => void }) {
