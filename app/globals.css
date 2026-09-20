@@ -86,7 +86,7 @@
 .schedule-fields .field{max-width:270px}.schedule-fields .form-grid{grid-template-columns:repeat(2,minmax(0,270px))}
 .next-send{padding:13px 15px;border:1px solid #e3dfe9;border-radius:5px;background:#faf9fc;color:#524c5a;font-size:12px}
 .braze-flow .checkline{margin:20px 0}.braze-flow .field{max-width:320px}
-.audience-segment-select{width:265px!important;font-style:italic}.audience-divider{border-top:1px solid #ece8ef;margin:22px 0}
+.audience-segment-select{width:265px!important;font-style:italic}.audience-segment-select.has-value{font-style:normal}.audience-divider{border-top:1px solid #ece8ef;margin:22px 0}
 .braze-filter-group{border:1px solid #d9d5de;border-radius:13px;overflow:hidden;margin-top:22px}
 .braze-filter-head{display:flex;justify-content:space-between;align-items:center;min-height:43px;padding:0 16px;border-bottom:1px solid #ddd8e2;color:#5b5661;font-size:13px}
 .braze-filter-head select{width:56px;height:27px;border:1px solid #aa82ed;border-radius:7px;color:#6433c2;font-size:11px;font-weight:700}

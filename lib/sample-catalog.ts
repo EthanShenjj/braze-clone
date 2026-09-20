@@ -1,5 +1,6 @@
 export const sampleCatalogId = "6aa75e3e337509005eebb467";
 export const sampleWorkspaceId = "6aa75e37db69160082adb7ae";
+export const sampleRecommendationId = "res_229b97d59fa8412b";
 
 type SampleRow = readonly [id: string, type: string, category: string, name: string, description: string, price: number, imageId: string];
 

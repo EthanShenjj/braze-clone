@@ -7,7 +7,8 @@ import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { campaignValidationIssues } from "./campaign-validation";
 import { type CanvasGraph, type CanvasRun, type CanvasTrace, validateCanvasGraph } from "./canvas-model";
-import { sampleCatalogId, sampleCatalogRows } from "./sample-catalog";
+import { sampleCatalogId, sampleCatalogRows, sampleRecommendationId } from "./sample-catalog";
+import { sampleSegmentByName, sampleSegments } from "./sample-segments";
 
 export type Channel = "email" | "push" | "iam" | "content" | "banner" | "sms" | "webhook" | "whatsapp" | "line" | "multichannel" | "operator" | "feature" | "api";
 export type CampaignStatus = "Draft" | "Active" | "Stopped" | "Archived";
@@ -130,6 +131,13 @@ function seedSampleCatalog(conn: DatabaseSync) {
     3,
     timestamp,
   );
+  conn.prepare("INSERT OR IGNORE INTO resources VALUES (?, 'recommendations', ?, 'Draft', ?, ?, ?)").run(
+    sampleRecommendationId,
+    "New Recommendation",
+    "Recommend relevant Sample_Catalog items to each customer.",
+    timestamp,
+    JSON.stringify({ catalogId: "", selectionName: "", recommendationType: "", trackingType: "purchase_object", propertyName: "product_id" }),
+  );
 }
 
 function seed(conn: DatabaseSync) {
@@ -140,11 +148,11 @@ function seed(conn: DatabaseSync) {
     { id: "cmp_newsletter", name: "Newsletter Welcome", channel: "email", status: "Active", schedule: "Action-based", sent: 420, edited: created, subject: "Welcome to Braze", body: "Your latest offers are waiting.", audience: "New Users", conversion: "Start Session", config: {} },
     { id: "cmp_push_primer", name: "Push Primer", channel: "push", status: "Active", schedule: "Action-based", sent: 301, edited: created, subject: "New offers are ready", body: "Open the app to see your personalized offer.", audience: "All Users", conversion: "Make Purchase", config: { platform: "iOS" } },
     { id: "cmp_banner", name: "Referral Banner", channel: "banner", status: "Draft", schedule: "One time", sent: 0, edited: created, subject: "Invite a friend", body: "Give $10, get $10.", audience: "Recent Purchasers", conversion: "Make Purchase", config: { placement: "home_top" } },
-    { id: "cmp_iam", name: "Welcome Offer IAM", channel: "iam", status: "Active", schedule: "Action-based", sent: 4784, edited: created, subject: "WELCOME", body: "Thanks for signing up! Use this offer code for 10% off your next order. WELCOME10", audience: "New Users", conversion: "Start Session", config: { channelValues: { sendTo: "Both Mobile Apps & Web Browsers", layout: "Modal" } } },
+    { id: "cmp_iam", name: "Welcome Offer IAM", channel: "iam", status: "Active", schedule: "One time", sent: 4784, edited: created, subject: "WELCOME", body: "Thanks for signing up! Use this offer code for 10% off your next order. WELCOME10", audience: "New Users", conversion: "Start Session", config: { channelValues: { sendTo: "Both Mobile Apps & Web Browsers", layout: "Modal" }, delivery: { timing: "designated", frequency: "One time", startDate: "2026-09-17", sendTime: "10:00" } } },
   ];
   const insertCampaign = conn.prepare("INSERT OR IGNORE INTO campaigns VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)");
   for (const campaign of campaigns) insertCampaign.run(campaign.id, campaign.name, campaign.channel, campaign.status, campaign.schedule, campaign.sent, campaign.edited, campaign.subject ?? null, campaign.body ?? null, campaign.audience ?? null, campaign.conversion ?? null, JSON.stringify(campaign.config));
-  if (existing.count) { seedCatalogItems(conn); seedSubscriptionGroups(conn); return; }
+  if (existing.count) { seedSampleSegments(conn, created); seedCatalogItems(conn); seedSubscriptionGroups(conn); return; }
   const insertUser = conn.prepare("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
   const countries = ["US", "GB", "CN", "SG", "DE"];
   for (let index = 1; index <= 1000; index += 1) {
@@ -153,14 +161,21 @@ function seed(conn: DatabaseSync) {
   }
   const insertResource = conn.prepare("INSERT INTO resources VALUES (?, ?, ?, ?, ?, ?, ?)");
   const resources: Array<[string, string, string, string, string, Record<string, unknown>]> = [
-    ["seg_recent", "segments", "Recent Purchasers", "Active", "Customers who made a purchase in the past 30 days", { filters: [{ field: "last_purchase", operator: "within", value: "30 days" }] }],
     ["tmpl_september", "email-templates", "September offer", "Active", "Reusable email template with Liquid localization", { editor: "html" }],
     ["catalog_featured", "catalogs", "Featured collection", "Active", "20 products with price and image fields", { fields: ["sku", "name", "price", "image"] }],
     ["canvas_welcome", "canvas", "Welcome journey", "Draft", "Entry, delay, email and conversion journey", { nodes: [], edges: [] }],
   ];
   for (const [id, type, name, status, description, data] of resources) insertResource.run(id, type, name, status, description, created, JSON.stringify(data));
+  seedSampleSegments(conn, created);
   seedCatalogItems(conn);
   seedSubscriptionGroups(conn);
+}
+
+function seedSampleSegments(conn: DatabaseSync, timestamp: string) {
+  const insert = conn.prepare(`INSERT INTO resources VALUES (?, 'segments', ?, 'Active', ?, ?, ?)
+    ON CONFLICT(id) DO UPDATE SET type = excluded.type, name = excluded.name, status = excluded.status,
+      description = excluded.description, updated_at = excluded.updated_at, data_json = excluded.data_json`);
+  for (const segment of sampleSegments) insert.run(segment.id, segment.name, segment.description, timestamp, JSON.stringify({ filters: [segment.rule] }));
 }
 
 function seedCatalogItems(conn: DatabaseSync) {
@@ -238,16 +253,28 @@ export function upsertCampaign(input: Partial<CampaignRecord> & Pick<CampaignRec
 export function archiveCampaign(id: string) { db().prepare("UPDATE campaigns SET archived_at = ?, status = 'Archived', edited_at = ? WHERE id = ?").run(now(), now(), id); audit("campaign", id, "archived", {}); }
 export function stopCampaign(id: string) { db().prepare("UPDATE campaigns SET status = 'Stopped', edited_at = ? WHERE id = ?").run(now(), id); audit("campaign", id, "stopped", {}); return getCampaign(id); }
 
+function audienceCondition(audience: string) {
+  const segment = sampleSegmentByName(audience);
+  if (!segment) return { sql: "1 = 1", values: [] as (string | number)[] };
+  const { rule } = segment;
+  if (rule.field === "attribute") {
+    if (!rule.attribute) return { sql: "1 = 1", values: [] as (string | number)[] };
+    return { sql: `json_extract(u.attributes_json, '$.${rule.attribute}') = ?`, values: [rule.value] };
+  }
+  const columns = { lifecycle: "u.lifecycle", country: "u.country", subscribed: "u.subscribed", reachable: "u.reachable" } as const;
+  return { sql: `${columns[rule.field]} = ?`, values: [rule.value] };
+}
+
 export function estimateAudience(audience = "All Users", country?: string, excludeCountry?: string, eligibility = "subscribed", subscriptionGroupId?: string) {
-  const clauses: string[] = [];
-  const values: string[] = [];
-  if (audience === "New Users" || audience === "Recent Purchasers") { clauses.push("lifecycle = ?"); values.push(audience); }
-  if (country && ["US", "GB", "CN", "SG", "DE"].includes(country)) { clauses.push("country = ?"); values.push(country); }
-  if (excludeCountry && ["US", "GB", "CN", "SG", "DE"].includes(excludeCountry)) { clauses.push("country != ?"); values.push(excludeCountry); }
+  const audienceRule = audienceCondition(audience);
+  const clauses: string[] = audienceRule.sql === "1 = 1" ? [] : [audienceRule.sql];
+  const values: (string | number)[] = [...audienceRule.values];
+  if (country && ["US", "GB", "CN", "SG", "DE"].includes(country)) { clauses.push("u.country = ?"); values.push(country); }
+  if (excludeCountry && ["US", "GB", "CN", "SG", "DE"].includes(excludeCountry)) { clauses.push("u.country != ?"); values.push(excludeCountry); }
   const where = clauses.length ? `WHERE ${clauses.join(" AND ")}` : "";
   const eligible = eligibility === "all" ? "u.reachable = 1" : subscriptionGroupId ? "u.reachable = 1 AND m.state = 'subscribed'" : "u.subscribed = 1 AND u.reachable = 1";
   const membership = subscriptionGroupId ? "LEFT JOIN subscription_group_memberships m ON m.user_id = u.id AND m.group_id = ?" : "";
-  const result = db().prepare(`SELECT count(*) AS matching, sum(CASE WHEN ${eligible} THEN 1 ELSE 0 END) AS reachable FROM users u ${membership} ${where.replaceAll("lifecycle", "u.lifecycle").replaceAll("country", "u.country")}`).get(...(subscriptionGroupId ? [subscriptionGroupId] : []), ...values) as { matching: number; reachable: number | null };
+  const result = db().prepare(`SELECT count(*) AS matching, sum(CASE WHEN ${eligible} THEN 1 ELSE 0 END) AS reachable FROM users u ${membership} ${where}`).get(...(subscriptionGroupId ? [subscriptionGroupId] : []), ...values) as { matching: number; reachable: number | null };
   const workspace = db().prepare("SELECT count(*) AS total FROM users").get() as { total: number };
   return { matching: result.matching, reachable: result.reachable ?? 0, total: workspace.total };
 }
@@ -355,11 +382,11 @@ export function launchCampaign(id: string) {
   }
   const issues = campaignValidationIssues(campaign);
   if (issues.length) throw new Error(issues.join(" "));
-  const audience = campaign.audience === "New Users" ? "lifecycle = 'New Users'" : campaign.audience === "Recent Purchasers" ? "lifecycle = 'Recent Purchasers'" : "1 = 1";
+  const audience = audienceCondition(campaign.audience ?? "All Users");
   const country = typeof campaign.config.audienceCountry === "string" && ["US", "GB", "CN", "SG", "DE"].includes(campaign.config.audienceCountry) ? campaign.config.audienceCountry : null;
   const excludedCountry = typeof campaign.config.audienceExcludeCountry === "string" && ["US", "GB", "CN", "SG", "DE"].includes(campaign.config.audienceExcludeCountry) ? campaign.config.audienceExcludeCountry : null;
   const subscriptionGroupId = typeof campaign.config.subscriptionGroupId === "string" ? campaign.config.subscriptionGroupId : null;
-  const users = conn.prepare(`SELECT u.id, u.reachable, u.subscribed${subscriptionGroupId ? ", m.state AS subscription_state" : ""} FROM users u ${subscriptionGroupId ? "LEFT JOIN subscription_group_memberships m ON m.user_id = u.id AND m.group_id = ?" : ""} WHERE ${audience.replaceAll("lifecycle", "u.lifecycle")}${country ? " AND u.country = ?" : ""}${excludedCountry ? " AND u.country != ?" : ""} ORDER BY u.id`).all(...(subscriptionGroupId ? [subscriptionGroupId] : []), ...(country ? [country] : []), ...(excludedCountry ? [excludedCountry] : [])) as { id: string; reachable: number; subscribed: number; subscription_state?: SubscriptionState }[];
+  const users = conn.prepare(`SELECT u.id, u.reachable, u.subscribed${subscriptionGroupId ? ", m.state AS subscription_state" : ""} FROM users u ${subscriptionGroupId ? "LEFT JOIN subscription_group_memberships m ON m.user_id = u.id AND m.group_id = ?" : ""} WHERE ${audience.sql}${country ? " AND u.country = ?" : ""}${excludedCountry ? " AND u.country != ?" : ""} ORDER BY u.id`).all(...(subscriptionGroupId ? [subscriptionGroupId] : []), ...audience.values, ...(country ? [country] : []), ...(excludedCountry ? [excludedCountry] : [])) as { id: string; reachable: number; subscribed: number; subscription_state?: SubscriptionState }[];
   const requireSubscription = campaign.config.subscribeEligibility !== "all";
   const controlGroup = Math.min(100, Math.max(0, Number(campaign.config.controlGroup ?? 20)));
   const maxUsers = campaign.config.limitVolume ? Math.max(1, Number(campaign.config.maxUsers ?? 100)) : Infinity;
