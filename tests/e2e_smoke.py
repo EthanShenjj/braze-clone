@@ -55,11 +55,10 @@ def main() -> None:
         assert "first_name" in page.get_by_label("Email HTML source").input_value()
         page.get_by_role("button", name="Sending settings").click()
         page.get_by_role("heading", name="Sending Info").wait_for(timeout=10_000)
-        page.get_by_label("From display name").fill("Lifecycle Team")
-        page.get_by_role("textbox", name="From address").fill("lifecycle@example.test")
+        page.get_by_label("From address (verified sending identity)").select_option(label="Thinkingai Marketing <marketing@thinkingai.com>")
         page.get_by_role("button", name="Done").click()
         page.get_by_role("heading", name="Sending info", exact=True).wait_for(timeout=10_000)
-        assert page.get_by_text("Lifecycle Team <lifecycle@example.test>").is_visible()
+        assert page.get_by_text("Thinkingai Marketing <marketing@thinkingai.com>").is_visible()
 
         page.goto(f"{BASE_URL}/engagement/campaigns/cmp_iam?step=compose", wait_until="networkidle")
         page.get_by_role("heading", name="Message Composer").wait_for(timeout=10_000)
@@ -109,7 +108,7 @@ def main() -> None:
 
         page.goto(f"{BASE_URL}/settings/message-activity-log", wait_until="networkidle")
         assert page.get_by_role("heading", name="Message Activity Log").is_visible()
-        assert page.get_by_text("delivered").first.is_visible()
+        assert page.locator("tbody").get_by_text("delivered", exact=True).first.is_visible()
 
         report = page.request.get(f"{BASE_URL}/api/reports/overview?days=30").json()
         assert report["delivered"] > 0

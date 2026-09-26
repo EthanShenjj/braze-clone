@@ -11,6 +11,7 @@ import { sampleCatalogId, sampleCatalogRows, sampleRecommendationId } from "./sa
 import { sampleSegmentByName, sampleSegments } from "./sample-segments";
 import { deliverWebhook, webhookDeliveryCapability, type WebhookDeliveryResult } from "./webhook-delivery";
 import { normalizeWebhookVariants, redactHeaders, renderWebhookText, webhookPreviewUser, type WebhookVariant } from "./webhook-model";
+import { normalizePreferenceCenterConfig, preferenceCenterDefaultConfig, type PreferenceCenterConfig } from "./preference-center-model";
 
 export type Channel = "email" | "push" | "iam" | "content" | "banner" | "sms" | "webhook" | "whatsapp" | "line" | "multichannel" | "operator" | "feature" | "api";
 export type CampaignStatus = "Draft" | "Active" | "Stopped" | "Archived";
@@ -35,8 +36,11 @@ export type SubscriptionGroupRecord = {
 };
 export type SubscriptionMemberRecord = UserRecord & { state: SubscriptionState; updatedAt: string };
 export type PreferenceCenterRecord = {
-  id: string; name: string; description: string; groupIds: string[]; status: "Active" | "Draft"; updatedAt: string;
+  id: string; name: string; description: string; groupIds: string[]; status: "Active" | "Draft" | "Archived"; updatedAt: string;
+  config: PreferenceCenterConfig; version: number;
 };
+export type PreferenceCenterEvent = { id: string; centerId: string; userId: string; eventType: "viewed" | "submitted" | "submission_failed"; createdAt: string; details: Record<string, unknown> };
+export type PreferenceCenterVersion = { version: number; createdAt: string; name: string; status: PreferenceCenterRecord["status"] };
 
 const databasePath = process.env.BRAZE_DATABASE_PATH ?? (process.env.VERCEL ? join(tmpdir(), "braze-local-demo", "braze-local.sqlite") : join(process.cwd(), ".data", "braze-local.sqlite"));
 let database: DatabaseSync | undefined;
@@ -87,7 +91,15 @@ function db() {
     );
     CREATE TABLE IF NOT EXISTS preference_centers (
       id TEXT PRIMARY KEY, name TEXT NOT NULL, description TEXT NOT NULL, group_ids_json TEXT NOT NULL,
-      status TEXT NOT NULL, updated_at TEXT NOT NULL
+      status TEXT NOT NULL, updated_at TEXT NOT NULL, config_json TEXT NOT NULL DEFAULT '{}', version INTEGER NOT NULL DEFAULT 1
+    );
+    CREATE TABLE IF NOT EXISTS preference_center_versions (
+      center_id TEXT NOT NULL, version INTEGER NOT NULL, name TEXT NOT NULL, status TEXT NOT NULL,
+      config_json TEXT NOT NULL, created_at TEXT NOT NULL, PRIMARY KEY (center_id, version)
+    );
+    CREATE TABLE IF NOT EXISTS preference_center_events (
+      id TEXT PRIMARY KEY, center_id TEXT NOT NULL, user_id TEXT NOT NULL, event_type TEXT NOT NULL,
+      created_at TEXT NOT NULL, detail_json TEXT NOT NULL DEFAULT '{}'
     );
     CREATE TABLE IF NOT EXISTS message_events (
       id TEXT PRIMARY KEY, campaign_id TEXT NOT NULL, channel TEXT NOT NULL, user_id TEXT NOT NULL,
@@ -115,7 +127,12 @@ function db() {
       created_at TEXT NOT NULL, detail_json TEXT NOT NULL DEFAULT '{}'
     );
   `);
+  const preferenceColumns = database.prepare("PRAGMA table_info(preference_centers)").all() as Array<{ name: string }>;
+  if (!preferenceColumns.some(column => column.name === "config_json")) database.exec("ALTER TABLE preference_centers ADD COLUMN config_json TEXT NOT NULL DEFAULT '{}'");
+  if (!preferenceColumns.some(column => column.name === "version")) database.exec("ALTER TABLE preference_centers ADD COLUMN version INTEGER NOT NULL DEFAULT 1");
   seed(database);
+  database.prepare("UPDATE preference_centers SET config_json = ? WHERE config_json = '{}' OR config_json IS NULL").run(JSON.stringify(preferenceCenterDefaultConfig));
+  database.exec("INSERT OR IGNORE INTO preference_center_versions (center_id, version, name, status, config_json, created_at) SELECT id, version, name, status, config_json, updated_at FROM preference_centers");
   seedSampleCatalog(database);
   return database;
 }
@@ -218,9 +235,12 @@ function seedSubscriptionGroups(conn: DatabaseSync) {
     if (index % 4 !== 0) insertMembership.run("sg_sms_alerts", userId, index % 11 === 0 ? "unsubscribed" : "subscribed", timestamp);
     if (index % 5 !== 0) insertMembership.run("sg_whatsapp_updates", userId, "subscribed", timestamp);
   }
-  conn.prepare("INSERT INTO preference_centers VALUES (?, ?, ?, ?, 'Active', ?)").run(
+  conn.prepare("INSERT INTO preference_centers (id, name, description, group_ids_json, status, updated_at, config_json, version) VALUES (?, ?, ?, ?, 'Active', ?, ?, 1)").run(
     "pc_marketing_preferences", "Marketing preferences", "Let users choose the email updates they want to receive.",
-    JSON.stringify(["sg_product_updates", "sg_promotions"]), timestamp,
+    JSON.stringify(["sg_product_updates", "sg_promotions"]), timestamp, JSON.stringify(preferenceCenterDefaultConfig),
+  );
+  conn.prepare("INSERT OR IGNORE INTO preference_center_versions VALUES (?, 1, ?, 'Active', ?, ?)").run(
+    "pc_marketing_preferences", "Marketing preferences", JSON.stringify(preferenceCenterDefaultConfig), timestamp,
   );
 }
 
@@ -273,10 +293,38 @@ function audienceCondition(audience: string) {
   return { sql: `${columns[rule.field]} = ?`, values: [rule.value] };
 }
 
-export function estimateAudience(audience = "All Users", country?: string, excludeCountry?: string, eligibility = "subscribed", subscriptionGroupId?: string) {
+export type AudienceFilter = { field: string; operator: string; value: string };
+
+// Translates saved segment filters into SQL clauses shared by estimates and launches.
+function audienceFilterClauses(filters: AudienceFilter[]) {
+  const clauses: string[] = [];
+  const values: (string | number)[] = [];
+  for (const filter of filters) {
+    if (!filter.value) continue;
+    const operator = filter.operator;
+    if (filter.field === "country") { clauses.push(operator === "not_equals" ? "u.country != ?" : "u.country = ?"); values.push(filter.value); }
+    else if (filter.field === "lifecycle") { clauses.push(operator === "not_equals" ? "u.lifecycle != ?" : "u.lifecycle = ?"); values.push(filter.value); }
+    else if (filter.field === "subscribed") { clauses.push("u.subscribed = ?"); values.push(String(filter.value) === "true" ? 1 : 0); }
+    else if (filter.field === "email") { clauses.push("instr(lower(u.email), lower(?)) > 0"); values.push(filter.value); }
+    else if (filter.field.startsWith("attr:")) { const key = filter.field.slice(5).replace(/'/g, ""); clauses.push(`json_extract(u.attributes_json, '$.${key}') = ?`); values.push(filter.value); }
+  }
+  return { clauses, values };
+}
+
+export function savedSegmentFilters(name?: string | null): AudienceFilter[] {
+  if (!name) return [];
+  const saved = listResources("segments").find(row => row.name.toLowerCase() === name.toLowerCase());
+  const data = (saved?.data ?? {}) as Record<string, unknown>;
+  return (Array.isArray(data.filters) ? data.filters : []) as AudienceFilter[];
+}
+
+export function estimateAudience(audience = "All Users", country?: string, excludeCountry?: string, eligibility = "subscribed", subscriptionGroupId?: string, filters: AudienceFilter[] = []) {
   const audienceRule = audienceCondition(audience);
   const clauses: string[] = audienceRule.sql === "1 = 1" ? [] : [audienceRule.sql];
   const values: (string | number)[] = [...audienceRule.values];
+  const filterClauses = audienceFilterClauses(filters);
+  clauses.push(...filterClauses.clauses);
+  values.push(...filterClauses.values);
   if (country && ["US", "GB", "CN", "SG", "DE"].includes(country)) { clauses.push("u.country = ?"); values.push(country); }
   if (excludeCountry && ["US", "GB", "CN", "SG", "DE"].includes(excludeCountry)) { clauses.push("u.country != ?"); values.push(excludeCountry); }
   const where = clauses.length ? `WHERE ${clauses.join(" AND ")}` : "";
@@ -370,15 +418,85 @@ export function setSubscriptionMember(groupId: string, userId: string, state: Su
 }
 
 function mapPreferenceCenter(row: Record<string, unknown>): PreferenceCenterRecord {
-  return { id: String(row.id), name: String(row.name), description: String(row.description), groupIds: parseJson(String(row.group_ids_json), []), status: row.status as "Active" | "Draft", updatedAt: String(row.updated_at) };
+  return {
+    id: String(row.id), name: String(row.name), description: String(row.description), groupIds: parseJson(String(row.group_ids_json), []),
+    status: row.status as PreferenceCenterRecord["status"], updatedAt: String(row.updated_at),
+    config: normalizePreferenceCenterConfig(parseJson(String(row.config_json ?? "{}"), {})), version: Number(row.version ?? 1),
+  };
 }
 
 export function listPreferenceCenters() { return (db().prepare("SELECT * FROM preference_centers ORDER BY updated_at DESC").all() as Record<string, unknown>[]).map(mapPreferenceCenter); }
-export function createPreferenceCenter(input: { name: string; description?: string; groupIds?: string[]; status?: "Active" | "Draft" }) {
+export function getPreferenceCenter(id: string) {
+  const row = db().prepare("SELECT * FROM preference_centers WHERE id = ?").get(id) as Record<string, unknown> | undefined;
+  return row ? mapPreferenceCenter(row) : null;
+}
+export function createPreferenceCenter(input: { name: string; description?: string; groupIds?: string[]; status?: PreferenceCenterRecord["status"]; config?: PreferenceCenterConfig }) {
   const name = input.name.trim(); if (!name) throw new Error("Preference center name is required.");
-  const record: PreferenceCenterRecord = { id: uid("pc"), name, description: input.description?.trim() || "", groupIds: input.groupIds ?? [], status: input.status ?? "Draft", updatedAt: now() };
-  db().prepare("INSERT INTO preference_centers VALUES (?, ?, ?, ?, ?, ?)").run(record.id, record.name, record.description, JSON.stringify(record.groupIds), record.status, record.updatedAt);
+  const record: PreferenceCenterRecord = { id: uid("pc"), name, description: input.description?.trim() || "", groupIds: input.groupIds ?? [], status: input.status ?? "Draft", updatedAt: now(), config: normalizePreferenceCenterConfig(input.config), version: 1 };
+  db().prepare("INSERT INTO preference_centers (id, name, description, group_ids_json, status, updated_at, config_json, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?)").run(record.id, record.name, record.description, JSON.stringify(record.groupIds), record.status, record.updatedAt, JSON.stringify(record.config), record.version);
+  db().prepare("INSERT INTO preference_center_versions VALUES (?, ?, ?, ?, ?, ?)").run(record.id, record.version, record.name, record.status, JSON.stringify(record.config), record.updatedAt);
   audit("preference_center", record.id, "created", { groupCount: record.groupIds.length }); return record;
+}
+
+export function updatePreferenceCenter(id: string, patch: Partial<Pick<PreferenceCenterRecord, "name" | "description" | "groupIds" | "status" | "config">>) {
+  const current = getPreferenceCenter(id); if (!current) return null;
+  const name = patch.name?.trim() || current.name;
+  const description = patch.description === undefined ? current.description : patch.description.trim();
+  const groupIds = patch.groupIds ?? current.groupIds;
+  const status = patch.status ?? current.status;
+  const config = patch.config ? normalizePreferenceCenterConfig(patch.config) : current.config;
+  const updatedAt = now();
+  const version = current.version + 1;
+  db().prepare("UPDATE preference_centers SET name = ?, description = ?, group_ids_json = ?, status = ?, updated_at = ?, config_json = ?, version = ? WHERE id = ?").run(name, description, JSON.stringify(groupIds), status, updatedAt, JSON.stringify(config), version, id);
+  db().prepare("INSERT INTO preference_center_versions VALUES (?, ?, ?, ?, ?, ?)").run(id, version, name, status, JSON.stringify(config), updatedAt);
+  audit("preference_center", id, "updated", { groupCount: groupIds.length, status, version });
+  return { id, name, description, groupIds, status, updatedAt, config, version } satisfies PreferenceCenterRecord;
+}
+
+export function listPreferenceCenterVersions(id: string): PreferenceCenterVersion[] {
+  return db().prepare("SELECT version, name, status, created_at FROM preference_center_versions WHERE center_id = ? ORDER BY version DESC LIMIT 20").all(id).map(row => {
+    const value = row as Record<string, unknown>;
+    return { version: Number(value.version), name: String(value.name), status: value.status as PreferenceCenterRecord["status"], createdAt: String(value.created_at) };
+  });
+}
+
+function preferenceCenterToken(centerId: string, userId: string) { return createHash("sha256").update(`local-preference-center:${centerId}:${userId}`).digest("hex").slice(0, 28); }
+export function createPreferenceCenterLink(centerId: string, userId: string) {
+  if (!getPreferenceCenter(centerId) || !getUser(userId)) return null;
+  return { centerId, userId, token: preferenceCenterToken(centerId, userId) };
+}
+export function getPublicPreferenceCenter(centerId: string, userId: string, token?: string | null) {
+  const center = getPreferenceCenter(centerId); const user = getUser(userId);
+  if (!center || !user || center.status !== "Active") return null;
+  if (token && token !== preferenceCenterToken(centerId, userId)) return null;
+  const groups = center.groupIds.map(id => getSubscriptionGroup(id)).filter((group): group is SubscriptionGroupRecord => group !== null).filter(group => group.channel === "Email" && group.status === "Active").map(group => {
+    const membership = db().prepare("SELECT state FROM subscription_group_memberships WHERE group_id = ? AND user_id = ?").get(group.id, userId) as { state?: SubscriptionState } | undefined;
+    return { ...group, state: membership?.state ?? "unsubscribed" };
+  });
+  const eventId = uid("pcevt");
+  db().prepare("INSERT INTO preference_center_events VALUES (?, ?, ?, 'viewed', ?, ?)").run(eventId, centerId, userId, now(), JSON.stringify({ version: center.version }));
+  return { center, user, groups };
+}
+export function submitPublicPreferenceCenter(centerId: string, userId: string, token: string | null | undefined, states: Record<string, boolean>) {
+  const center = getPreferenceCenter(centerId); const user = getUser(userId);
+  if (!center || !user || center.status !== "Active" || token !== preferenceCenterToken(centerId, userId)) return null;
+  const groupIds = center.groupIds.filter(id => {
+    const group = getSubscriptionGroup(id); return group?.channel === "Email" && group.status === "Active";
+  });
+  db().exec("BEGIN");
+  try {
+    for (const groupId of groupIds) setSubscriptionMember(groupId, userId, states[groupId] ? "subscribed" : "unsubscribed");
+    const eventId = uid("pcevt"); const timestamp = now();
+    db().prepare("INSERT INTO preference_center_events VALUES (?, ?, ?, 'submitted', ?, ?)").run(eventId, centerId, userId, timestamp, JSON.stringify({ version: center.version, states }));
+    audit("preference_center", centerId, "submitted", { userId, subscribedGroups: groupIds.filter(id => states[id]).length });
+    db().exec("COMMIT");
+    return { updatedAt: timestamp, groupIds };
+  } catch (error) { db().exec("ROLLBACK"); throw error; }
+}
+export function preferenceCenterAnalytics(centerId: string) {
+  const rows = db().prepare("SELECT event_type, count(*) AS count FROM preference_center_events WHERE center_id = ? GROUP BY event_type").all(centerId) as Array<{ event_type: string; count: number }>;
+  const counts = Object.fromEntries(rows.map(row => [row.event_type, row.count]));
+  return { views: counts.viewed ?? 0, submissions: counts.submitted ?? 0, failures: counts.submission_failed ?? 0 };
 }
 
 function webhookContext(user: { id: string; email?: string; firstName?: string; country?: string; attributes?: Record<string, unknown> } | null, custom: Record<string, unknown> = {}): Record<string, unknown> {
@@ -428,24 +546,63 @@ export async function launchCampaign(id: string) {
   const issues = campaignValidationIssues(campaign);
   if (issues.length) throw new Error(issues.join(" "));
   const audience = audienceCondition(campaign.audience ?? "All Users");
+  const segmentFilters = savedSegmentFilters(campaign.audience);
+  const filterClauses = audienceFilterClauses(segmentFilters);
   const country = typeof campaign.config.audienceCountry === "string" && ["US", "GB", "CN", "SG", "DE"].includes(campaign.config.audienceCountry) ? campaign.config.audienceCountry : null;
   const excludedCountry = typeof campaign.config.audienceExcludeCountry === "string" && ["US", "GB", "CN", "SG", "DE"].includes(campaign.config.audienceExcludeCountry) ? campaign.config.audienceExcludeCountry : null;
   const subscriptionGroupId = typeof campaign.config.subscriptionGroupId === "string" ? campaign.config.subscriptionGroupId : null;
-  const users = conn.prepare(`SELECT u.id, u.reachable, u.subscribed${subscriptionGroupId ? ", m.state AS subscription_state" : ""} FROM users u ${subscriptionGroupId ? "LEFT JOIN subscription_group_memberships m ON m.user_id = u.id AND m.group_id = ?" : ""} WHERE ${audience.sql}${country ? " AND u.country = ?" : ""}${excludedCountry ? " AND u.country != ?" : ""} ORDER BY u.id`).all(...(subscriptionGroupId ? [subscriptionGroupId] : []), ...audience.values, ...(country ? [country] : []), ...(excludedCountry ? [excludedCountry] : [])) as { id: string; reachable: number; subscribed: number; subscription_state?: SubscriptionState }[];
+  const allClauses = [audience.sql, ...filterClauses.clauses];
+  if (country) allClauses.push("u.country = ?");
+  if (excludedCountry) allClauses.push("u.country != ?");
+  const allValues = [...audience.values, ...filterClauses.values, ...(country ? [country] : []), ...(excludedCountry ? [excludedCountry] : [])];
+  const users = conn.prepare(`SELECT u.id, u.reachable, u.subscribed, u.email${subscriptionGroupId ? ", m.state AS subscription_state" : ""} FROM users u ${subscriptionGroupId ? "LEFT JOIN subscription_group_memberships m ON m.user_id = u.id AND m.group_id = ?" : ""} WHERE ${allClauses.join(" AND ")} ORDER BY u.id`).all(...(subscriptionGroupId ? [subscriptionGroupId] : []), ...allValues) as { id: string; reachable: number; subscribed: number; email: string; subscription_state?: SubscriptionState }[];
+  // Suppression list entries exclude matching emails and whole domains from sends.
+  const suppressionEntries = listResources("suppression-lists").map(row => row.name.toLowerCase().replace(/^@/, ""));
+  const isSuppressed = (email: string) => suppressionEntries.some(entry => email.toLowerCase() === entry || email.toLowerCase().endsWith(`@${entry}`));
+  // Frequency capping rules limit delivered messages per user inside each window.
+  const freqRecord = listResources("frequency-capping-rules")[0];
+  const freqData = (freqRecord?.data ?? {}) as { enabled?: boolean; rules?: Array<{ kind: string; limit: number; window: string }> };
+  const freqRules = freqData.enabled === true ? (freqData.rules ?? []).filter(rule => rule.limit > 0) : [];
+  const freqCappedUsers = new Set<string>();
+  for (const rule of freqRules) {
+    const windowMs = rule.window === "per week" ? 7 * 86400000 : rule.window === "per month" ? 30 * 86400000 : 86400000;
+    const cutoff = new Date(Date.now() - windowMs).toISOString();
+    const channelClause = rule.kind === "All channels" ? "" : " AND channel = ?";
+    const rows = conn.prepare(`SELECT user_id, count(*) AS sent FROM message_events WHERE event_type = 'delivered' AND created_at >= ?${channelClause} GROUP BY user_id`).all(cutoff, ...(rule.kind === "All channels" ? [] : [rule.kind])) as Array<{ user_id: string; sent: number }>;
+    for (const row of rows) if (row.sent >= rule.limit) freqCappedUsers.add(row.user_id);
+  }
   const requireSubscription = campaign.config.subscribeEligibility !== "all";
   const controlGroup = Math.min(100, Math.max(0, Number(campaign.config.controlGroup ?? 20)));
   const configuredMaxUsers = campaign.config.limitVolume ? Math.max(1, Number(campaign.config.maxUsers ?? 100)) : Infinity;
   const maxUsers = campaign.channel === "webhook" ? Math.min(configuredMaxUsers, Math.max(1, Number(process.env.WEBHOOK_MAX_DELIVERIES_PER_RUN ?? 100))) : configuredMaxUsers;
   const subscribed = (user: { subscribed: number; subscription_state?: SubscriptionState }) => subscriptionGroupId ? user.subscription_state === "subscribed" : Boolean(user.subscribed);
   const eligible = users.filter(user => user.reachable && (!requireSubscription || subscribed(user)));
+  // Quiet hours defer deliveries whose designated send time falls inside the window.
+  const delivery = (campaign.config.delivery ?? {}) as Record<string, unknown>;
+  const quietActive = delivery.quietHours === true && typeof delivery.quietStart === "string" && typeof delivery.quietEnd === "string";
+  let quietDeferred = false;
+  if (quietActive) {
+    const sendTime = String(delivery.sendTime ?? "10:00");
+    const start = String(delivery.quietStart); const end = String(delivery.quietEnd);
+    quietDeferred = start <= end ? sendTime >= start && sendTime < end : sendTime >= start || sendTime < end;
+  }
   const runId = uid("run"); const timestamp = now();
   const insertEvent = conn.prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)");
-  let delivered = 0; let failed = 0; let webhookProcessed = 0;
+  let delivered = 0; let failed = 0; let webhookProcessed = 0; let deferredCount = 0; let frequencyCapped = 0; let suppressedCount = 0;
   const webhookVariants = campaign.channel === "webhook" ? normalizeWebhookVariants(campaign) : [];
   for (const user of users) {
     const deliverable = user.reachable && (!requireSubscription || subscribed(user));
     const inControl = deliverable && createHash("sha256").update(`${id}:${user.id}`).digest()[0] / 256 * 100 < controlGroup;
-    let eventType = !deliverable ? subscribed(user) ? "unreachable" : "suppressed" : inControl ? "control" : (campaign.channel === "webhook" ? webhookProcessed : delivered) >= maxUsers ? "held_back" : "delivered";
+    let eventType = !deliverable ? subscribed(user) ? "unreachable" : "suppressed"
+      : isSuppressed(user.email) ? "suppressed"
+      : freqCappedUsers.has(user.id) ? "frequency_capped"
+      : inControl ? "control"
+      : (campaign.channel === "webhook" ? webhookProcessed : delivered) >= maxUsers ? "held_back"
+      : quietDeferred ? "deferred"
+      : "delivered";
+    if (eventType === "suppressed" && deliverable) suppressedCount += 1;
+    if (eventType === "frequency_capped") frequencyCapped += 1;
+    if (eventType === "deferred") deferredCount += 1;
     let eventData: Record<string, unknown> = { runId };
     if (eventType === "delivered" && campaign.channel === "webhook") {
       webhookProcessed += 1;
@@ -472,10 +629,10 @@ export async function launchCampaign(id: string) {
       }
     } else if (eventType === "unreachable" || eventType === "suppressed" || eventType === "failed") { failed += 1; }
   }
-  conn.prepare("INSERT INTO execution_runs VALUES (?, ?, ?, ?, ?, ?, ?, ?)").run(runId, id, "completed", eligible.length, delivered, failed, timestamp, JSON.stringify(campaign));
+  conn.prepare("INSERT INTO execution_runs VALUES (?, ?, ?, ?, ?, ?, ?, ?)").run(runId, id, "completed", eligible.length, delivered, failed, timestamp, JSON.stringify({ campaign, quietHoursDeferred: quietDeferred, deferredCount, frequencyCapped, suppressionListHits: suppressedCount }));
   conn.prepare("UPDATE campaigns SET status = 'Active', sent = sent + ?, edited_at = ? WHERE id = ?").run(delivered, timestamp, id);
-  audit("campaign", id, "launched", { runId, eligible: eligible.length, delivered, failed });
-  return { campaign: getCampaign(id), run: { id: runId, eligible: eligible.length, delivered, failed } };
+  audit("campaign", id, "launched", { runId, eligible: eligible.length, delivered, failed, deferred: deferredCount, frequencyCapped, suppressionListHits: suppressedCount });
+  return { campaign: getCampaign(id), run: { id: runId, eligible: eligible.length, delivered, failed, deferred: deferredCount, frequencyCapped, suppressionListHits: suppressedCount, quietHoursDeferred: quietDeferred } };
 }
 
 export async function sendTestCampaign(id: string, input: { recipient?: string; mode?: "random" | "existing" | "custom"; customUser?: Record<string, unknown>; variantId?: string; locale?: string } | string = {}) {
@@ -508,6 +665,20 @@ export async function sendTestCampaign(id: string, input: { recipient?: string; 
   return { recipient, campaign: campaign.name, channel: campaign.channel, createdAt: timestamp };
 }
 
+// API campaigns receive externally-sent message events for attribution.
+export function recordExternalEvent(campaignId: string, input: { userId?: string; event?: string; attributes?: Record<string, unknown> }) {
+  const campaign = getCampaign(campaignId);
+  if (!campaign) throw new Error("Campaign not found");
+  const allowed = ["sent", "delivered", "opened", "clicked", "conversion", "failed"];
+  const event = allowed.includes(String(input.event)) ? String(input.event) : null;
+  if (!event) throw new Error(`event must be one of: ${allowed.join(", ")}`);
+  const userId = String(input.userId ?? "").trim() || "external_user";
+  const timestamp = now();
+  db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), campaignId, campaign.channel, userId, event, timestamp, JSON.stringify({ external: true, attributes: input.attributes ?? {} }));
+  audit("campaign", campaignId, "external_event", { userId, event });
+  return { recorded: true, campaign: campaign.name, event, userId, createdAt: timestamp };
+}
+
 export function listWebhookAttempts(campaignId?: string, limit = 100) {
   const rows = campaignId
     ? db().prepare("SELECT * FROM webhook_attempts WHERE campaign_id = ? ORDER BY created_at DESC, attempt DESC LIMIT ?").all(campaignId, Math.min(500, Math.max(1, limit)))
@@ -530,6 +701,25 @@ export function createResource(input: Pick<ResourceRecord, "type" | "name"> & Pa
 export function getResource(id: string) {
   const row = db().prepare("SELECT * FROM resources WHERE id = ?").get(id) as Record<string, unknown> | undefined;
   return row ? { id: String(row.id), type: String(row.type), name: String(row.name), status: String(row.status), description: String(row.description), updatedAt: String(row.updated_at), data: parseJson(String(row.data_json), {}) } : null;
+}
+
+export function updateResource(id: string, input: { name?: string; status?: string; description?: string; data?: Record<string, unknown> }, expectedUpdatedAt?: string) {
+  const existing = getResource(id);
+  if (!existing) throw new Error("Resource not found");
+  if (expectedUpdatedAt !== undefined && expectedUpdatedAt !== existing.updatedAt) throw new Error("Resource changed in another tab. Reload before saving.");
+  const updatedAt = now();
+  db().prepare("UPDATE resources SET name = ?, status = ?, description = ?, updated_at = ?, data_json = ? WHERE id = ?")
+    .run(input.name ?? existing.name, input.status ?? existing.status, input.description ?? existing.description, updatedAt, JSON.stringify(input.data ?? existing.data), id);
+  audit("resource", id, "updated", { type: existing.type });
+  return getResource(id)!;
+}
+
+export function deleteResource(id: string) {
+  const existing = getResource(id);
+  if (!existing) throw new Error("Resource not found");
+  db().prepare("DELETE FROM resources WHERE id = ?").run(id);
+  audit("resource", id, "archived", { type: existing.type });
+  return existing;
 }
 
 const localCanvasId = "canvas_local_main";
@@ -768,8 +958,17 @@ export function reportOverview(range = "30") {
   const since = new Date(Date.now() - Number(range) * 86_400_000).toISOString();
   const rows = db().prepare("SELECT event_type, count(*) AS count FROM message_events WHERE created_at >= ? GROUP BY event_type").all(since) as { event_type: string; count: number }[];
   const counts = Object.fromEntries(rows.map(row => [row.event_type, row.count]));
+  // Per-channel breakdown so the channel performance reports show distinct data.
+  const channelRows = db().prepare("SELECT channel, event_type, count(*) AS count FROM message_events WHERE created_at >= ? GROUP BY channel, event_type").all(since) as { channel: string; event_type: string; count: number }[];
+  const channels: Record<string, Record<string, number>> = {};
+  for (const row of channelRows) {
+    channels[row.channel] = channels[row.channel] ?? {};
+    channels[row.channel][row.event_type] = row.count;
+  }
+  // Per-campaign breakdown for dimension tables.
+  const campaignRows = db().prepare(`SELECT e.campaign_id, COALESCE(c.name, r.name) AS name, e.channel, sum(CASE WHEN e.event_type = 'delivered' THEN 1 ELSE 0 END) AS delivered, sum(CASE WHEN e.event_type = 'opened' THEN 1 ELSE 0 END) AS opened, sum(CASE WHEN e.event_type = 'clicked' THEN 1 ELSE 0 END) AS clicked, sum(CASE WHEN e.event_type = 'failed' THEN 1 ELSE 0 END) AS failed FROM message_events e LEFT JOIN campaigns c ON c.id = e.campaign_id LEFT JOIN resources r ON r.id = e.campaign_id WHERE e.created_at >= ? GROUP BY e.campaign_id ORDER BY delivered DESC LIMIT 12`).all(since) as Array<{ campaign_id: string; name: string; channel: string; delivered: number; opened: number; clicked: number; failed: number }>;
   const runs = db().prepare("SELECT created_at, delivered_count FROM execution_runs WHERE created_at >= ? UNION ALL SELECT created_at, message_count AS delivered_count FROM canvas_runs WHERE created_at >= ? ORDER BY created_at DESC LIMIT 12").all(since, since) as { created_at: string; delivered_count: number }[];
-  return { delivered: counts.delivered ?? 0, opened: counts.opened ?? 0, clicked: counts.clicked ?? 0, suppressed: counts.suppressed ?? 0, unreachable: counts.unreachable ?? 0, series: runs.reverse().map(run => ({ date: run.created_at, delivered: run.delivered_count })) };
+  return { delivered: counts.delivered ?? 0, opened: counts.opened ?? 0, clicked: counts.clicked ?? 0, suppressed: counts.suppressed ?? 0, unreachable: counts.unreachable ?? 0, deferred: counts.deferred ?? 0, frequency_capped: counts.frequency_capped ?? 0, channels, campaigns: campaignRows, series: runs.reverse().map(run => ({ date: run.created_at, delivered: run.delivered_count })) };
 }
 
 export function activityLog(limit = 50) {
@@ -784,7 +983,7 @@ export function getDemoState() {
 
 export function demoAction(action: string) {
   const conn = db();
-  if (action === "reset") { conn.exec("DELETE FROM webhook_attempts; DELETE FROM message_events; DELETE FROM execution_runs; DELETE FROM canvas_runs; DELETE FROM demo_receipts; DELETE FROM demo_state; DELETE FROM audit_log; DELETE FROM campaigns; DELETE FROM users; DELETE FROM catalog_subscriptions; DELETE FROM catalog_selections; DELETE FROM catalog_items; DELETE FROM resources; DELETE FROM subscription_group_memberships; DELETE FROM subscription_groups; DELETE FROM preference_centers;"); seed(conn); seedSampleCatalog(conn); return { message: "Sample data reset", state: getDemoState() }; }
+  if (action === "reset") { conn.exec("DELETE FROM webhook_attempts; DELETE FROM message_events; DELETE FROM execution_runs; DELETE FROM canvas_runs; DELETE FROM demo_receipts; DELETE FROM demo_state; DELETE FROM audit_log; DELETE FROM campaigns; DELETE FROM users; DELETE FROM catalog_subscriptions; DELETE FROM catalog_selections; DELETE FROM catalog_items; DELETE FROM resources; DELETE FROM subscription_group_memberships; DELETE FROM subscription_groups; DELETE FROM preference_center_events; DELETE FROM preference_center_versions; DELETE FROM preference_centers;"); seed(conn); seedSampleCatalog(conn); return { message: "Sample data reset", state: getDemoState() }; }
   if (action === "advance") {
     const current = getDemoState().simulatedTime;
     const next = new Date(new Date(current).getTime() + 86_400_000).toISOString();

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Activity, CalendarDays, Mail, MousePointerClick, Plus, Users } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Activity, CalendarDays, ExternalLink, Mail, MousePointerClick, Plus, Users } from "lucide-react";
 import { type CanvasGraph, type CanvasNode, type CanvasNodeKind, type CanvasRun, initialCanvasGraph, isCanvasGraph, validateCanvasGraph } from "@/lib/canvas-model";
 import { formatDate, formatNumber, normalizeLocale, translate, type Locale } from "@/lib/i18n";
 
@@ -24,6 +25,7 @@ export default function LiveCanvas({ locale: localeValue = "en", notify }: { loc
   const [working, setWorking] = useState(false);
   const [error, setError] = useState("");
   const graph = history[cursor];
+  const router = useRouter();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -114,6 +116,20 @@ export default function LiveCanvas({ locale: localeValue = "en", notify }: { loc
     finally { setWorking(false); }
   };
 
+  const openFullEditor = async (node: CanvasNode) => {
+    const campaignId = node.config?.linkedCampaignId ?? `cmp_canvas_${node.id.replace(/[^a-z0-9]/gi, "").slice(-6)}`;
+    const response = await fetch("/api/campaigns", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
+      id: campaignId,
+      name: `Canvas · ${node.label}`,
+      channel: node.config?.channel === "push" ? "push" : node.config?.channel === "sms" ? "sms" : node.config?.channel === "iam" ? "iam" : "email",
+      status: "Draft", schedule: "One time", audience: "All Users", conversion: "Start Session",
+      subject: node.config?.subject ?? node.label, body: node.config?.message ?? "",
+    }) });
+    if (!response.ok) { setError("Could not create the linked campaign draft."); return; }
+    if (campaignId !== node.config?.linkedCampaignId) changeNode(node.id, { config: { ...node.config, linkedCampaignId: campaignId } });
+    router.push(`/engagement/campaigns/${campaignId}?step=compose&locale=${locale}`);
+  };
+
   const visible: CanvasGraph = drag?.moved ? { ...graph, nodes: graph.nodes.map(node => node.id === drag.id ? { ...node, x: drag.x, y: drag.y } : node) } : graph;
   const selectedNode = graph.nodes.find(node => node.id === selected);
   const run = runs.find(item => item.id === runId);
@@ -125,7 +141,8 @@ export default function LiveCanvas({ locale: localeValue = "en", notify }: { loc
     <div className="canvas-shell live-canvas-shell"><aside><h3>{translate(locale, "Steps")}</h3>{(["entry", "message", "delay", "branch", "update"] as CanvasNodeKind[]).map(kind => <button key={kind} onClick={() => add(kind)}><Plus size={14}/>{translate(locale, kind === "entry" ? "Audience Paths" : kind === "message" ? "Message" : kind === "delay" ? "Delay" : kind === "branch" ? "Action Paths" : "Update User")}</button>)}
       <hr/><h3>{translate(locale, "Inspector")}</h3>{selectedNode ? <><label>{translate(locale, "Step name")}<input value={selectedNode.label} onChange={event => changeNode(selected, { label: event.target.value })}/></label>
         {selectedNode.kind === "delay" && <label>{translate(locale, "Delay (hours)")}<input type="number" min="1" value={selectedNode.config?.durationHours ?? 24} onChange={event => changeConfig(selected, { durationHours: Number(event.target.value) })}/></label>}
-        {selectedNode.kind === "message" && <><label>{translate(locale, "Channel")}<select value={selectedNode.config?.channel ?? "email"} onChange={event => changeConfig(selected, { channel: event.target.value })}><option value="email">{translate(locale, "Email")}</option><option value="push">{translate(locale, "Push notification")}</option><option value="sms">SMS</option><option value="iam">{translate(locale, "In-app message")}</option></select></label><label>{translate(locale, "Message")}<textarea value={selectedNode.config?.message ?? ""} onChange={event => changeConfig(selected, { message: event.target.value })}/></label></>}
+        {selectedNode.kind === "entry" && <><label>Re-entry<select value={selectedNode.config?.reEntry ?? "none"} onChange={event => changeConfig(selected, { reEntry: event.target.value as "none" | "after1d" | "after7d" | "always" })}><option value="none">Users can only enter once</option><option value="after1d">Re-enter after 1 day</option><option value="after7d">Re-enter after 7 days</option><option value="always">Re-enter every time</option></select></label><label>Conversion event<select value={selectedNode.config?.conversionEvent ?? "Start Session"} onChange={event => changeConfig(selected, { conversionEvent: event.target.value })}><option>Start Session</option><option>Makes Purchase</option><option>Performs Custom Event</option><option>Opens Email</option></select></label><label>Conversion deadline (days)<input type="number" min="1" value={selectedNode.config?.conversionDeadlineDays ?? 3} onChange={event => changeConfig(selected, { conversionDeadlineDays: Number(event.target.value) || 3 })}/></label></>}
+        {selectedNode.kind === "message" && <><label>{translate(locale, "Channel")}<select value={selectedNode.config?.channel ?? "email"} onChange={event => changeConfig(selected, { channel: event.target.value })}><option value="email">{translate(locale, "Email")}</option><option value="push">{translate(locale, "Push notification")}</option><option value="sms">SMS</option><option value="iam">{translate(locale, "In-app message")}</option></select></label><label>Subject<input value={selectedNode.config?.subject ?? ""} onChange={event => changeConfig(selected, { subject: event.target.value })}/></label><label>{translate(locale, "Message")}<textarea value={selectedNode.config?.message ?? ""} onChange={event => changeConfig(selected, { message: event.target.value })}/></label><button className="secondary small" onClick={() => void openFullEditor(selectedNode!)}><ExternalLink size={13}/> Open in full editor</button>{selectedNode.config?.linkedCampaignId && <small>Linked campaign: {selectedNode.config.linkedCampaignId}</small>}</>}
         {selectedNode.kind === "branch" && <><label>{translate(locale, "Attribute")}<select value={selectedNode.config?.attribute ?? "country"} onChange={event => changeConfig(selected, { attribute: event.target.value })}><option value="country">{translate(locale, "Country")}</option><option value="lifecycle">{translate(locale, "Lifecycle")}</option><option value="subscribed">{translate(locale, "Subscribed")}</option></select></label><label>{translate(locale, "Equals")}<input value={selectedNode.config?.value ?? ""} onChange={event => changeConfig(selected, { value: event.target.value })}/></label><small>{translate(locale, "First outgoing route is Yes; second is No.")}</small></>}
         <button className="secondary small" onClick={() => setLinkFrom(selected)}>{translate(locale, "Connect from this step")}</button><button className="secondary small" onClick={copy}>{translate(locale, "Copy step")}</button><button className="text-button danger" onClick={remove}>{translate(locale, "Delete step")}</button></> : <p>{translate(locale, "Select a node")}</p>}
       <hr/><h3>{translate(locale, "Execution")}</h3>{runs.length ? <><label>{translate(locale, "Run")}<select value={run?.id ?? ""} onChange={event => { const next = runs.find(item => item.id === event.target.value); setRunId(next?.id ?? null); setTraceUser(next?.traces[0]?.userId ?? null); }}>{runs.map(item => <option key={item.id} value={item.id}>{formatDate(locale, item.createdAt, { dateStyle: "medium", timeStyle: "short" })}</option>)}</select></label><small>{formatNumber(locale, run?.entered ?? 0)} {translate(locale, "entered")} · {formatNumber(locale, run?.completed ?? 0)} {translate(locale, "completed")} · {formatNumber(locale, run?.messages ?? 0)} {translate(locale, "messages")}</small><label>{translate(locale, "User path")}<select value={trace?.userId ?? ""} onChange={event => setTraceUser(event.target.value)}>{run?.traces.map(item => <option key={item.userId}>{item.userId}</option>)}</select></label>{trace?.steps.map((step, index) => <small className="execution-item" key={`${step.nodeId}-${index}`}>✓ {step.label}</small>)}</> : <small>{translate(locale, "Launch to inspect the local path.")}</small>}</aside>

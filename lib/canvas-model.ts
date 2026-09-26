@@ -9,8 +9,13 @@ export type CanvasNode = {
     durationHours?: number;
     channel?: string;
     message?: string;
+    subject?: string;
     attribute?: string;
     value?: string;
+    reEntry?: "none" | "after1d" | "after7d" | "always";
+    conversionEvent?: string;
+    conversionDeadlineDays?: number;
+    linkedCampaignId?: string;
   };
 };
 export type CanvasGraph = { nodes: CanvasNode[]; edges: [string, string][] };

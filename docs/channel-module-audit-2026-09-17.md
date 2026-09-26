@@ -62,3 +62,34 @@
 - 外部 Chrome 中的真实 Braze `Messaging` 抽屉，在 `Campaigns` 下有独立的 `View by channel` 展开入口。本地此前只有带右箭头的 Campaigns 页面入口；已补齐可展开的渠道列表，选择后进入 Campaigns 并按渠道筛选，筛选写入 URL，刷新可恢复。
 - 当前页再次点 Campaigns 原先会关闭抽屉但停留在同一页面，容易误以为点击无效；现在当前项有明确选中样式。`Messaging Diagnostics` 等页面的路由映射也已修正，二级页顶部的 Create 按钮会打开实际输入表单。
 - 这次只修复导航行为与筛选。Feature Flags、Landing Pages、Surveys、Messaging Diagnostics 等目的页仍复用通用资源页，不能标记为 Braze 页面 1:1 完成。
+
+## 邮件编辑器 1:1 重做与全站功能化（2026-09-26）
+
+### Email 编辑器（本轮重做，交互级复刻）
+
+- **数据模型**：新 `lib/email-editor-model.ts` 定义行→列→块三层结构（`EmailRow/EmailCell/EmailBlock`），旧扁平 `emailBlocks` 自动迁移为单列行；launch 校验与 Review 摘要读取新结构。
+- **拖拽编辑器**（`app/ui/email-dnd-editor.tsx`）：块可跨行/列拖拽移动、上下移动、复制、删除；ROWS 面板插入 1–4 列真实行，列宽可调；每类块有完整属性面板（Button 链接/配色/圆角，Image 媒体库/alt/宽度，Social/Menu 逐项编辑等）；画布内富文本（粗/斜/下划线/删除线/链接/列表/对齐）；Undo/Redo（含 ⌘Z）与自动保存。
+- **左栏真实化**：Link Management 列出并编辑全部链接；Languages 面板按语言维护块级翻译（回退英文）；Style Settings 含全局字体/链接色/内容区背景/宽度。
+- **HTML/纯文本编辑器**：HTML 实时渲染（Liquid 已解析）+ Liquid 语法校验；新增纯文本编辑器入口。
+- **模板库弹窗**：搜索 + 编辑器类型筛选 + 预览；工作区 Templates 页保存的模板自动进入画廊。
+- **Personalization 选择器**：7 大类 Liquid token（含 custom attributes、catalog、content blocks、promotion codes、connected content）。
+- **Sending Info**：From 改为已验证身份下拉；Advanced 增加 open/click tracking 与 Google Analytics UTM；Languages 支持分语言的 subject/preheader 翻译。
+- **Preview & Test**：Random/Existing/Custom user 模式对全部渠道开放；邮件预览支持桌面/移动/深色模式；DnD 编辑器内的测试图标接入真实弹窗。
+- **Compose 页**：移除死代码与写死的预览模板；补 Teams 字段；多 Variant A/B 百分比分配与超额校验。
+- `tests/e2e_smoke.py` 已按新交互更新（验证身份下拉），全流程通过；新增 `tests/artifacts/email-dnd-editor.png`、`email-preview-test.png` 视觉基线。
+
+### 环境修复（影响全站，非 Email 改动）
+
+- `next.config.ts` 增加 `allowedDevOrigins: ["127.0.0.1", "localhost"]`。此前 Next 16 将 127.0.0.1 的 dev 资源请求判为跨域并阻断，导致所有使用 `next/navigation` 的页面水合失败（页面可见但完全不可交互）。该问题先于本轮改动存在。
+
+### 全站功能化（"每个控件可点击"）
+
+- `/api/resources` 新增 PATCH（带 expectedUpdatedAt 并发检查）与 DELETE。
+- 新 `app/ui/module-workspaces.tsx` 替换通用占位页：Segments/Segment Extensions（筛选构建器+真实用户估算）、Media Library（上传/复制/删除）、Templates（各渠道 CRUD）、Content Blocks、Promotion Codes（批量生成）、Brand Guidelines、Report Builder（指标+范围+保存）、Query Builder（事件流过滤+保存查询）、APIs and Identifiers（密钥生成）、Frequency Capping（开关+规则 CRUD）、Tag Management、Suppression Lists、Import Users（CSV 解析入库）、Locations（按国家聚合可达率）；Settings 域 7 个页面改为持久化表单。
+- **跨页打通**：自建 Segment 出现在 Campaign 受众下拉，且 `/api/audience/estimate` 真正应用其筛选条件；Media Library 图片进入拖拽编辑器媒体选择器；Templates 页邮件模板进入编辑器画廊。
+- **全局控件**：⌘K 工作区搜索（活动+页面，键盘导航）、通知下拉（读取活动流）、头像菜单、Take a tour 导览、Campaign 列表 Columns 选择器（localStorage 记忆）与 Filters 弹层（渠道/标签/状态）、Message Activity Log 筛选、GCG 百分比可编辑保存、Schedule 静默时段时间选择、Target 用户查找真实查询。
+- 通用 `ModuleWorkspace` 列表补齐：创建含描述、行内编辑、归档删除。
+
+### 仍未完成（不代表本轮验收范围）
+
+- 视觉层面未与真实 Braze 对应页做逐像素比对（无新参考截图）；拖拽编辑器的块属性编辑（逐键）不进入 Undo 历史；多语言邮件正文渲染仍按回退逻辑模拟；Catalogs CSV 导入、Selection 编辑器、真实调度 Worker、渠道专属回执等维持原状。

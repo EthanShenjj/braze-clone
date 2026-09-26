@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import {
   Check, CheckCircle2, Copy, FileText, Image as ImageIcon, Info, Link2, List,
-  LockKeyhole, MessageCircle, MessageSquareText, MousePointerClick, Phone, Plus,
+  LockKeyhole, MessageCircle, MessageSquareText, MousePointerClick, Phone, Plus, RefreshCw,
   Trash2, Video,
 } from "lucide-react";
 import {
@@ -28,7 +28,8 @@ function displayTemplate(templateId: string) {
   return `${template.name} · ${template.language}`;
 }
 
-export default function WhatsAppEditor({ draft, update }: { draft: CampaignLike; update: (patch: { body?: string; config?: Record<string, unknown> }) => void }) {
+export default function WhatsAppEditor({ draft, update, notify = () => {} }: { draft: CampaignLike; update: (patch: { body?: string; config?: Record<string, unknown> }) => void; notify?: (m: string) => void }) {
+  const channelValues = (draft.config?.channelValues ?? {}) as Record<string, unknown>;
   const variants = normalizeWhatsAppVariants(draft);
   const [selected, setSelected] = useState(0);
   const active = variants[selected] ?? variants[0];
@@ -86,6 +87,7 @@ export default function WhatsAppEditor({ draft, update }: { draft: CampaignLike;
       <div><h3>Message variants</h3><p>Test different WhatsApp content while keeping the same audience and schedule.</p></div>
       <div className={styles.variantActions}>
         <div className={styles.variantTabs}>{variants.map((variant, index) => <button type="button" className={index === selected ? styles.activeTab : ""} onClick={() => setSelected(index)} key={variant.id}>{variant.name}<small>{variant.mode === "template" ? "Template" : "Response"}</small></button>)}<button type="button" className={styles.addTab} aria-label="Add WhatsApp variant" onClick={addVariant}><Plus size={16}/></button></div>
+        <button type="button" className={styles.iconAction} title={`Sync ${whatsappTemplates.length} templates from the local registry`} aria-label="Sync templates" onClick={() => { const at = new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }); update({ config: { ...draft.config, channelValues: { ...channelValues, lastTemplateSync: new Date().toISOString() } } }); notify(`${whatsappTemplates.length} WhatsApp templates synced (${at}).`); }}><RefreshCw size={15}/></button>
         <button type="button" className={styles.iconAction} aria-label="Duplicate variant" onClick={duplicateVariant}><Copy size={15}/></button>
         <button type="button" className={styles.iconAction} aria-label="Delete variant" disabled={variants.length === 1} onClick={removeVariant}><Trash2 size={15}/></button>
       </div>
