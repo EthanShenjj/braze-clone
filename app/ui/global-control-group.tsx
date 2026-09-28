@@ -15,6 +15,7 @@ export default function GlobalControlGroup({ locale, notify }: { locale: Locale;
   const [total, setTotal] = useState<number | null>(null);
   const [resourceId, setResourceId] = useState<string | null>(null);
   const [dirty, setDirty] = useState(false);
+  const [baseline, setBaseline] = useState({ percentage: 5, tags: "" });
 
   useEffect(() => {
     void fetch("/api/resources/global-control-group").then(r => r.json()).then(result => {
@@ -25,6 +26,7 @@ export default function GlobalControlGroup({ locale, notify }: { locale: Locale;
         if (typeof data.percentage === "number") setPercentage(data.percentage);
         if (Array.isArray(data.exclusionTags)) setTags(data.exclusionTags.join(", "));
         setSaved(Boolean(data.enabled));
+        setBaseline({ percentage: typeof data.percentage === "number" ? data.percentage : 5, tags: Array.isArray(data.exclusionTags) ? data.exclusionTags.join(", ") : "" });
       }
     }).catch(() => {});
     void fetch("/api/audience/estimate?audience=All%20Users&eligibility=all").then(r => r.json()).then(d => setTotal(d.total ?? null)).catch(() => {});
@@ -42,7 +44,15 @@ export default function GlobalControlGroup({ locale, notify }: { locale: Locale;
     setResourceId(record.id);
     setSaved(true);
     setDirty(false);
+    setBaseline({ percentage, tags });
     notify?.("Global Control Group settings saved.");
+  };
+
+  const cancel = () => {
+    setPercentage(baseline.percentage);
+    setTags(baseline.tags);
+    setDirty(false);
+    notify?.("Changes discarded.");
   };
 
   const gcgCount = total !== null ? Math.round(total * percentage / 100) : null;
@@ -91,7 +101,7 @@ export default function GlobalControlGroup({ locale, notify }: { locale: Locale;
         </div>
 
         <div className={styles.actions}>
-          <button type="button" onClick={() => notify?.("Changes discarded.")}>{translate(locale, "Cancel")}</button>
+          <button type="button" onClick={cancel}>{translate(locale, "Cancel")}</button>
           <button type="button" className={styles.save} onClick={() => void save()}>{saved && !dirty ? translate(locale, "All users") + " ✓" : translate(locale, "Save")}</button>
         </div>
       </div>

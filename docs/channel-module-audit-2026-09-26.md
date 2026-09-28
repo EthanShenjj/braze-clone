@@ -38,3 +38,12 @@
 ## 验证
 
 tsc 通过；4 个单测套件全绿；`tests/e2e_smoke.py` 通过；专项 E2E 验证：自建分群筛选接入发布（GB 分群只发给 GB 可达用户）、抑制名单减少发送量、渠道对比/活动明细表渲染、Canvas 打开完整编辑器、外部事件记录进活动日志。
+
+## IAM / SMS / Catalog 能力补全（2026-09-26 第三轮）
+
+- **In-App Message**：Settings 新增 Display Trigger（会话开始 / 自定义事件含名称与属性过滤 / 特定时间）、消息有效期（起止日期）、频控（开关 + 每用户上限与窗口），持久化到 `channelValues.iamDelivery`；"Update template" 真实保存变体（页面 + 样式）到 In-App Message Templates 资源页。
+- **SMS/MMS/RCS**：MMS 媒体可从 Media Library 选择；新增链接短链/追踪开关（写入段数说明）；RCS Rich Card 编辑器（标题/描述/媒体/建议回复/建议操作 + 实时预览卡）；发送号码池（美国长号/免费/英国）；订阅组下拉读取真实 SMS 订阅组并直接写入发布引擎使用的 `config.subscriptionGroupId`（compose 与受众步骤同步）。
+- **Catalog → 消息个性化**：`{% catalog_select "Name" "itemId" "fieldName" %}` 与 `{% render_catalog 'Name' %}` 从真实目录项目解析（编辑器预览与 Preview & Test 均生效），个性化选择器更新为真实 token；`useCatalogItems` 拉取全部目录项目构建解析数据。
+- **Catalog 通知引擎**：`POST /api/catalogs/[id]/notify` 按 Back-in-stock / Price-drop 规则扫描订阅，匹配项生成本地 push 事件（活动日志/报表可见），订阅发送后过期；新增 `POST /api/catalogs/[id]/subscriptions`（此前订阅只读不可创建）；Settings 页新增 "Run rule check"。
+- 修复并发改动引入的 SSR 崩溃（NotificationsMenu 直接访问 window.localStorage）。
+- 验证：9/9 专项 E2E（通知引擎入队/活动日志/订阅过期、IAM 设置与模板、RCS/MMS、catalog_select 解析），smoke + 4 单测套件 + tsc 全绿。

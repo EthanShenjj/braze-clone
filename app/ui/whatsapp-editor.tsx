@@ -121,9 +121,16 @@ export default function WhatsAppEditor({ draft, update, notify = () => {} }: { d
 
 function TemplateComposer({ variant, patch, chooseTemplate }: { variant: WhatsAppVariant; patch: (patch: Partial<WhatsAppVariant>) => void; chooseTemplate: (templateId: string) => void }) {
   const template = getWhatsAppTemplate(variant.templateId);
+  const [listOpen, setListOpen] = useState(false);
   return <>
     <section className={styles.section}>
-      <div className={styles.sectionHeading}><div><h3>Approved template</h3><p>Each language is a separate approved template.</p></div><button type="button" className={styles.textButton}>Manage templates</button></div>
+      <div className={styles.sectionHeading}><div><h3>Approved template</h3><p>Each language is a separate approved template.</p></div><button type="button" className={styles.textButton} aria-expanded={listOpen} onClick={() => setListOpen(!listOpen)}>Manage templates</button></div>
+      {listOpen && <div className={styles.templateMeta} style={{ display: "block", marginBottom: 10 }}>
+        {whatsappTemplates.map(item => <button type="button" key={item.id} className={styles.textButton} style={{ display: "flex", width: "100%", justifyContent: "space-between", padding: "8px 4px" }} onClick={() => { chooseTemplate(item.id); setListOpen(false); }}>
+          <span><b>{item.name}</b> · {item.language}</span>
+          <span>{item.category}{variant.templateId === item.id ? " · ✓ in use" : ""}</span>
+        </button>)}
+      </div>}
       <label>Template<select value={variant.templateId} onChange={event => chooseTemplate(event.target.value)}>{whatsappTemplates.map(item => <option value={item.id} key={item.id}>{displayTemplate(item.id)} · {item.category}</option>)}</select></label>
       <div className={styles.templateMeta}><span className={styles.approved}><CheckCircle2 size={14}/> {template.status}</span><span>{template.category}</span><span>{template.language}</span><span>Last synced just now</span></div>
     </section>
@@ -158,12 +165,13 @@ function EditableOptions({ title, help, values, limit, onChange }: { title: stri
 
 function WhatsAppPreview({ variant }: { variant: WhatsAppVariant }) {
   const template = getWhatsAppTemplate(variant.templateId);
+  const [device, setDevice] = useState("WhatsApp · iPhone");
   const message = useMemo(() => renderWhatsAppVariant(variant), [variant]);
   const account = whatsappAccounts.find(item => item.id === variant.businessAccount) ?? whatsappAccounts[0];
   const buttons = variant.mode === "template" ? [template.button.label] : variant.responseLayout === "quick_reply" ? variant.quickReplies : variant.responseLayout === "list" ? ["View options"] : variant.responseLayout === "cta" ? [variant.responseButtonText] : [];
   return <aside className={styles.previewColumn}>
-    <div className={styles.previewHeader}><div><h3>Preview</h3><p>Personalized for <b>Carla Rodriguez</b></p></div><select aria-label="Preview device"><option>WhatsApp · iPhone</option><option>WhatsApp · Android</option></select></div>
-    <div className={styles.phone}>
+    <div className={styles.previewHeader}><div><h3>Preview</h3><p>Personalized for <b>Carla Rodriguez</b></p></div><select aria-label="Preview device" value={device} onChange={event => setDevice(event.target.value)}><option>WhatsApp · iPhone</option><option>WhatsApp · Android</option></select></div>
+    <div className={styles.phone} style={device.includes("Android") ? { maxWidth: 340, borderRadius: 4 } : undefined}>
       <div className={styles.phoneStatus}><span>9:41</span><span>● ●●</span></div>
       <div className={styles.whatsAppBar}><span className={styles.back}>‹</span><span className={styles.avatar}>{account.name.slice(0, 1)}</span><div><b>{account.name}</b><small>business account</small></div><Video size={17}/><Phone size={16}/></div>
       <div className={styles.chat}>

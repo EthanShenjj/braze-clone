@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type CSSProperties, type DragEvent } from "react";
+import { useEffect, useState, type CSSProperties, type DragEvent } from "react";
 import { createPortal } from "react-dom";
 import {
   ChevronDown, ChevronLeft, ChevronRight, Code2, Copy, Eye, GripVertical, Image as ImageIcon,
@@ -57,6 +57,23 @@ type InAppGlobalStyle = {
   overlayColor: string;
   overlayOpacity: number;
 };
+export type InAppDelivery = {
+  triggerType: "Session start" | "Custom event" | "Specific time";
+  triggerEventName: string;
+  triggerEventProperty: string;
+  triggerTime: string;
+  durationStart: string;
+  durationEnd: string;
+  frequencyCapEnabled: boolean;
+  frequencyCapLimit: number;
+  frequencyCapDays: number;
+};
+
+const defaultDelivery: InAppDelivery = {
+  triggerType: "Session start", triggerEventName: "", triggerEventProperty: "", triggerTime: "",
+  durationStart: "", durationEnd: "", frequencyCapEnabled: false, frequencyCapLimit: 1, frequencyCapDays: 7,
+};
+
 type InAppVariant = {
   id: string;
   name: string;
@@ -229,28 +246,54 @@ function InAppPreview({ page, global, device, editor = false, htmlLanguage, onDr
     backgroundPosition: "center",
     backgroundSize: "cover",
   };
+  const renderBlock = (block: ExtraBlock) => {
+    if (block.kind === "Spacer") return <div key={block.id} style={{ height: 18 }}/>;
+    if (block.kind === "Custom Code") return <div key={block.id} dangerouslySetInnerHTML={{ __html: block.text }} />;
+    if (block.kind === "Short Text" || block.kind === "Email Capture" || block.kind === "Phone Capture") return <label key={block.id} className={styles.extraField}><span>{block.text}</span><input type={block.kind === "Email Capture" ? "email" : block.kind === "Phone Capture" ? "tel" : "text"} placeholder={block.kind}/></label>;
+    if (block.kind === "Dropdown") return <select key={block.id} className={styles.extraField} aria-label={block.text}><option value="">{block.text}</option>{block.text.split("|").slice(1).map(option => <option key={option}>{option.trim()}</option>)}</select>;
+    if (block.kind === "Checkbox" || block.kind === "Checkbox Group" || block.kind === "Radio Button") return <label key={block.id} className={styles.extraCheck}><input type={block.kind === "Radio Button" ? "radio" : "checkbox"}/><span>{block.text}</span></label>;
+    return <button type="button" key={block.id} className={styles.extraBlock}>{block.kind === "Link" ? <u>{block.text}</u> : block.text}</button>;
+  };
   return <div className={`${styles.deviceFrame} ${styles[device]}`} style={frameStyle} onDragOver={event => event.preventDefault()} onDrop={(event: DragEvent<HTMLDivElement>) => { event.preventDefault(); const kind = event.dataTransfer.getData("iam-block") as BlockKind; if (kind) onDrop?.(kind); }}>
+    {global.closePosition === "Outside modal" && <button className={styles.messageClose} aria-label={global.closeAccessibleName || "Close Message"} style={{ color: global.closeColor, fontSize: global.closeSize, background: global.closeBackgroundColor, border: `${global.closeBorderWidth}px solid ${global.closeBorderColor}`, borderRadius: global.closeRadius }}><X size={global.closeSize}/></button>}
     <article lang={htmlLanguage || undefined} className={`${styles.messageCard} ${styles[global.displayType.replace(" ", "").toLowerCase()]}`} style={cardStyle}>
-      <button className={styles.messageClose} aria-label={global.closeAccessibleName || "Close Message"} style={{ color: global.closeColor, fontSize: global.closeSize, background: global.closeBackgroundColor, border: `${global.closeBorderWidth}px solid ${global.closeBorderColor}`, borderRadius: global.closeRadius }}><X size={global.closeSize}/></button>
+      {global.closePosition !== "Outside modal" && <button className={styles.messageClose} aria-label={global.closeAccessibleName || "Close Message"} style={{ color: global.closeColor, fontSize: global.closeSize, background: global.closeBackgroundColor, border: `${global.closeBorderWidth}px solid ${global.closeBorderColor}`, borderRadius: global.closeRadius }}><X size={global.closeSize}/></button>}
       {page.imageUrl && <img src={page.imageUrl} alt="Message media"/>}
       <section className={styles.messageCopy}><h2>{page.title}</h2><p>{page.body}</p></section>
-      {page.extraBlocks.map(block => <button type="button" key={block.id} className={styles.extraBlock} onClick={() => onSelectBlock?.(block.id)}>{block.kind === "Spacer" ? "Spacer" : block.text}</button>)}
+      <div style={page.columns > 1 ? { display: "grid", gridTemplateColumns: `repeat(${page.columns}, 1fr)`, gap: 10 } : undefined}>
+        {page.extraBlocks.map(block => editor ? <span key={block.id} role={block.kind === "Spacer" || block.kind === "Custom Code" ? undefined : "button"} style={{ display: "block", cursor: "pointer" }} onClick={() => onSelectBlock?.(block.id)}>{renderBlock(block)}</span> : renderBlock(block))}
+      </div>
       <button className={styles.messageCta} style={{ background: global.buttonColor, color: global.buttonTextColor }}>{page.buttonText}</button>
       {editor && <div className={styles.canvasOutline}>Drop blocks into this message</div>}
     </article>
   </div>;
 }
 
-export default function InAppCampaignCompose({ draft, update }: { draft: InAppCampaign; update: (patch: Partial<InAppCampaign>) => void }) {
+export default function InAppCampaignCompose({ draft, update, notify = () => {} }: { draft: InAppCampaign; update: (patch: Partial<InAppCampaign>) => void; notify?: (message: string) => void }) {
   const variants = variantsFor(draft);
   const [selectedVariant, setSelectedVariant] = useState(0);
   const [editorOpen, setEditorOpen] = useState(false);
   const [conversionOpen, setConversionOpen] = useState(false);
   const [device, setDevice] = useState<Device>("phonePortrait");
   const [copied, setCopied] = useState(false);
+  const [showDescription, setShowDescription] = useState(Boolean(draft.config?.description));
+  const [tagsOpen, setTagsOpen] = useState(false);
+  const [previewPage, setPreviewPage] = useState(0);
+  const [templateSaved, setTemplateSaved] = useState(false);
   const current = variants[selectedVariant] ?? variants[0];
-  const page = current.pages[0] ?? defaultPage(0, draft);
+  const page = current.pages[previewPage] ?? current.pages[0] ?? defaultPage(0, draft);
+  const description = typeof draft.config?.description === "string" ? draft.config.description : "";
+  const tags = Array.isArray(draft.config?.tags) ? draft.config.tags as string[] : [];
+  const toggleTag = (tag: string) => update({ config: { ...draft.config, tags: tags.includes(tag) ? tags.filter(item => item !== tag) : [...tags, tag] } });
   const currentHtmlLanguage = current.accessibilityLanguageLiquid ? renderLanguageLiquid(current.accessibilityLanguageLiquid) : current.accessibilityLanguage;
+  const channelValues = (draft.config?.channelValues ?? {}) as Record<string, unknown>;
+  const delivery: InAppDelivery = { ...defaultDelivery, ...((channelValues.iamDelivery ?? {}) as Partial<InAppDelivery>) };
+  const updateDelivery = (patch: Partial<InAppDelivery>) => update({ config: { ...draft.config, channelValues: { ...channelValues, iamDelivery: { ...delivery, ...patch } } } });
+  const saveTemplate = async () => {
+    const response = await fetch("/api/resources/in-app-message-templates", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: draft.name || "IAM template", description: `${current.global.displayType} · ${current.pages.length} page(s)`, data: { pages: current.pages, global: current.global, sendTo: current.sendTo } }) });
+    setTemplateSaved(response.ok);
+    notify(response.ok ? "Saved to In-App Message Templates." : "Could not save the template.");
+  };
 
   const persistVariants = (next: InAppVariant[], activeIndex = selectedVariant) => {
     const active = next[activeIndex] ?? next[0];
@@ -290,8 +333,12 @@ export default function InAppCampaignCompose({ draft, update }: { draft: InAppCa
     <section className={styles.campaignDetails}>
       <h2>Campaign Details</h2>
       <label>Campaign Name<input value={draft.name} onChange={event => update({ name: event.target.value })} placeholder="Enter Campaign Name"/></label>
-      <button className={styles.inlineAction}><Plus size={16}/> Add description</button>
-      <button className={styles.tagButton}>◆ &nbsp; Tags <ChevronDown size={13}/></button>
+      {showDescription ? <label>Description<textarea value={description} onChange={event => update({ config: { ...draft.config, description: event.target.value } })} placeholder="Describe this campaign"/></label> : <button className={styles.inlineAction} onClick={() => setShowDescription(true)}><Plus size={16}/> Add description</button>}
+      <div>
+        <button className={styles.tagButton} aria-expanded={tagsOpen} onClick={() => setTagsOpen(!tagsOpen)}>◆ &nbsp; Tags <ChevronDown size={13}/></button>
+        {tags.map(tag => <span key={tag} style={{ display: "inline-block", margin: "4px 6px 0 0", padding: "3px 10px", borderRadius: 12, background: "#efeaf7", fontSize: 12.5 }}>{tag}</span>)}
+        {tagsOpen && <div style={{ marginTop: 6, display: "flex", flexWrap: "wrap", gap: 6 }}>{["Lifecycle", "Promotional", "Retention", "Onboarding"].map(tag => <button key={tag} onClick={() => toggleTag(tag)} style={{ padding: "5px 12px", border: "1px solid #d9d5df", borderRadius: 16, background: tags.includes(tag) ? "#efeaf7" : "#fff", fontSize: 12.5 }}>{tags.includes(tag) ? "✓ " : ""}{tag}</button>)}</div>}
+      </div>
       <div className={styles.idRow}><label>Campaign ID<input value={draft.id} readOnly/></label><button onClick={() => { void navigator.clipboard?.writeText(draft.id); setCopied(true); }}><Copy size={16}/>{copied ? "Copied" : "Copy"}</button></div>
     </section>
 
@@ -301,28 +348,28 @@ export default function InAppCampaignCompose({ draft, update }: { draft: InAppCa
       <label className={styles.sendTo}>Send To<select value={current.sendTo} onChange={event => replaceCurrent({ ...current, sendTo: event.target.value as InAppVariant["sendTo"] })}><option>Both Mobile Apps &amp; Web Browsers</option><option>Mobile Apps</option><option>Web Browsers</option></select></label>
       <div className={styles.composeHeading}><h3>Compose In-App Message</h3><button onClick={() => setEditorOpen(true)}><span>✎</span> Edit Message</button></div>
       <div className={styles.previewArea}>
-        <aside><h4>Page Preview</h4><div className={styles.deviceTabs}>{devices.map(item => <button title={item.label} aria-label={item.label} className={device === item.id ? styles.activeDevice : ""} key={item.id} onClick={() => setDevice(item.id)}>{deviceIcon(item.id)}</button>)}</div><button className={styles.pageTile}><span className={styles.pageThumb}><InAppPreview page={page} global={current.global} device="phonePortrait" htmlLanguage={currentHtmlLanguage}/></span><b>{page.name}</b><small>{current.pages.length}</small></button></aside>
+        <aside><h4>Page Preview</h4><div className={styles.deviceTabs}>{devices.map(item => <button title={item.label} aria-label={item.label} className={device === item.id ? styles.activeDevice : ""} key={item.id} onClick={() => setDevice(item.id)}>{deviceIcon(item.id)}</button>)}</div>{current.pages.map((pageItem, index) => <button className={styles.pageTile} key={pageItem.id} onClick={() => setPreviewPage(index)} style={index === previewPage ? { outline: "2px solid #008294" } : undefined}><span className={styles.pageThumb}><InAppPreview page={pageItem} global={current.global} device="phonePortrait" htmlLanguage={currentHtmlLanguage}/></span><b>{pageItem.name}</b><small>{current.pages.length}</small></button>)}</aside>
         <main><InAppPreview page={page} global={current.global} device={device} htmlLanguage={currentHtmlLanguage}/></main>
       </div>
       <p className={styles.previewNote}>Always test your messages on a real device, as actual rendering may vary.</p>
-      <div className={styles.composerActions}><button disabled={current.customCode} onClick={() => setConversionOpen(true)}>{current.customCode ? "Custom code enabled" : "Switch/convert to custom code"}</button><a href="https://www.braze.com/docs/user_guide/message_building_by_channel/in-app_messages/drag_and_drop/" target="_blank">Docs</a><button disabled>Update template</button></div>
+      <div className={styles.composerActions}><button disabled={current.customCode} onClick={() => setConversionOpen(true)}>{current.customCode ? "Custom code enabled" : "Switch/convert to custom code"}</button><a href="https://www.braze.com/docs/user_guide/message_building_by_channel/in-app_messages/drag_and_drop/" target="_blank">Docs</a><button onClick={() => void saveTemplate()}>{templateSaved ? "Template saved ✓" : "Update template"}</button></div>
     </section>
     {conversionOpen && <div className={styles.dialogBackdrop} role="presentation"><section className={styles.conversionDialog} role="dialog" aria-modal="true" aria-labelledby="iam-conversion-title"><button className={styles.dialogClose} aria-label="Close conversion dialog" onClick={() => setConversionOpen(false)}><X size={18}/></button><Code2 size={25}/><h2 id="iam-conversion-title">Switch to custom code?</h2><p>Your message will be converted to HTML. Continue editing and previewing it in the custom code editor.</p><div><button onClick={() => setConversionOpen(false)}>Cancel</button><button onClick={() => { replaceCurrent({ ...current, customCode: true, customHtml: current.customHtml || defaultCustomHtml(page) }); setConversionOpen(false); setEditorOpen(true); }}>Switch to custom code</button></div></section></div>}
-    {editorOpen && typeof document !== "undefined" && createPortal(current.customCode ? <InAppCodeEditor initial={current} close={() => setEditorOpen(false)} done={next => { replaceCurrent(next); setEditorOpen(false); }}/> : <InAppEditor initial={current} close={() => setEditorOpen(false)} done={next => { replaceCurrent(next); setEditorOpen(false); }}/>, document.body)}
+    {editorOpen && typeof document !== "undefined" && createPortal(current.customCode ? <InAppCodeEditor initial={current} notify={notify} close={() => setEditorOpen(false)} done={next => { replaceCurrent(next); setEditorOpen(false); }}/> : <InAppEditor initial={current} notify={notify} close={() => setEditorOpen(false)} done={next => { replaceCurrent(next); setEditorOpen(false); }} delivery={delivery} updateDelivery={updateDelivery}/>, document.body)}
   </div>;
 }
 
-function InAppCodeEditor({ initial, close, done }: { initial: InAppVariant; close: () => void; done: (variant: InAppVariant) => void }) {
+function InAppCodeEditor({ initial, notify = () => {}, close, done }: { initial: InAppVariant; notify?: (message: string) => void; close: () => void; done: (variant: InAppVariant) => void }) {
   const [html, setHtml] = useState(initial.customHtml || defaultCustomHtml(initial.pages[0]));
   const [preview, setPreview] = useState(false);
   return <section className={styles.codeEditor} aria-label="In-app custom code editor">
     <header><div><Code2 size={18}/><span><b>Custom code editor</b><small>{initial.name}</small></span></div><nav><button className={!preview ? styles.activeCodeTab : ""} onClick={() => setPreview(false)}>Compose</button><button className={preview ? styles.activeCodeTab : ""} onClick={() => setPreview(true)}>Preview</button></nav></header>
     <main>{preview ? <div className={styles.codePreview}><iframe title="Custom code preview" sandbox="allow-forms allow-popups" srcDoc={html}/></div> : <div className={styles.codeWorkspace}><aside><h3>HTML</h3><p>Build a fully custom in-app message with HTML and CSS.</p><button onClick={() => setHtml(defaultCustomHtml(initial.pages[0]))}>Reset starter code</button></aside><textarea aria-label="In-app message HTML" spellCheck={false} value={html} onChange={event => setHtml(event.target.value)}/></div>}</main>
-    <footer className={styles.editorFooter}><button>Send feedback</button><span/><button className={styles.cancel} onClick={close}>Cancel</button><button className={styles.done} onClick={() => done({ ...initial, customCode: true, customHtml: html })}>Done</button><button aria-label="BrazeAI Operator"><Sparkles size={18}/></button></footer>
+    <footer className={styles.editorFooter}><button onClick={() => notify("Thanks — feedback is recorded in the local demo.")}>Send feedback</button><span/><button className={styles.cancel} onClick={close}>Cancel</button><button className={styles.done} onClick={() => done({ ...initial, customCode: true, customHtml: html })}>Done</button><button aria-label="BrazeAI Operator" onClick={() => notify("BrazeAI Operator™ is not available for custom code in this demo.")}><Sparkles size={18}/></button></footer>
   </section>;
 }
 
-function InAppEditor({ initial, close, done }: { initial: InAppVariant; close: () => void; done: (variant: InAppVariant) => void }) {
+function InAppEditor({ initial, notify = () => {}, close, done, delivery, updateDelivery }: { initial: InAppVariant; notify?: (message: string) => void; close: () => void; done: (variant: InAppVariant) => void; delivery?: InAppDelivery; updateDelivery?: (patch: Partial<InAppDelivery>) => void }) {
   const [tab, setTab] = useState<EditorTab>("compose");
   const [pages, setPages] = useState<InAppPage[]>(initial.pages);
   const [selectedPage, setSelectedPage] = useState(0);
@@ -337,6 +384,9 @@ function InAppEditor({ initial, close, done }: { initial: InAppVariant; close: (
   const [recipient, setRecipient] = useState("");
   const [testSent, setTestSent] = useState(false);
   const [personalizationOpen, setPersonalizationOpen] = useState(false);
+  const [previewUsers, setPreviewUsers] = useState<string[]>([]);
+  const [previewUser, setPreviewUser] = useState("Random user");
+  useEffect(() => { void fetch("/api/users?limit=5").then(r => r.json()).then(d => setPreviewUsers(((d.data ?? []) as Array<{ id?: string }>).map(user => String(user.id ?? "")).filter(Boolean))).catch(() => {}); }, []);
   const page = pages[selectedPage] ?? pages[0];
 
   const commitPages = (next: InAppPage[]) => { setHistory(current => [...current, pages].slice(-30)); setPages(next); setFuture([]); };
@@ -368,16 +418,16 @@ function InAppEditor({ initial, close, done }: { initial: InAppVariant; close: (
   return <section className={styles.editor} aria-label="In-app message editor">
     <header className={styles.editorTabs} role="tablist">{(["compose", "settings", "preview"] as const).map(value => <button role="tab" aria-selected={tab === value} className={tab === value ? styles.activeTab : ""} key={value} onClick={() => setTab(value)}>{value === "compose" ? "Compose" : value === "settings" ? "Settings" : "Preview & Test"}</button>)}</header>
 
-    {tab === "settings" ? <InAppSettings language={language} setLanguage={setLanguage} liquidEnabled={languageLiquidEnabled} setLiquidEnabled={setLanguageLiquidEnabled} liquid={languageLiquid} setLiquid={setLanguageLiquid}/> : tab === "preview" ? <div className={styles.previewWorkspace}><PreviewSidebar pages={pages} selected={selectedPage} select={setSelectedPage}/><main><InAppPreview page={page} global={global} device={device} htmlLanguage={htmlLanguage}/><div className={styles.previewDevices}>{devices.filter(item => ["phonePortrait", "tabletPortrait", "desktop"].includes(item.id)).map(item => <button key={item.id} title={item.label} className={device === item.id ? styles.activeDevice : ""} onClick={() => setDevice(item.id)}>{deviceIcon(item.id)}</button>)}</div></main><aside className={styles.testPanel}><h3>Test Recipients</h3><p>Select at least one Content Test Group or individual user to receive this test message.</p><label>Add individual users<input value={recipient} onChange={event => { setRecipient(event.target.value); setTestSent(false); }} placeholder="External ids, emails, or phone numbers"/></label><label className={styles.check}><input type="checkbox"/> Override recipients&apos; attributes with current preview user&apos;s attributes</label><button disabled={!recipient.trim()} onClick={() => setTestSent(true)}>Send Test</button>{testSent && <div className={styles.testSuccess}>Test message simulated for {recipient}.</div>}<label>Preview message as user<select><option>Random user</option><option>user_1024</option></select></label><button>Get random user</button></aside></div> : <div className={styles.composeWorkspace}>
-      <aside className={styles.blockSidebar}><PagesPanel pages={pages} selected={selectedPage} select={setSelectedPage} add={addPage} remove={removePage} move={movePage}/><section><h3>Rows</h3><p>Drag a row into your message</p><div className={styles.rowChoices}>{[1, 2, 3].map(columns => <button key={columns} onClick={() => updatePage({ columns })}>{Array.from({ length: columns }, (_, index) => <i key={index}/>)}</button>)}</div></section>{blockGroups.map(group => <section key={group.title}><h3>{group.title}</h3><p>Drag and drop a block into a row</p><div className={styles.blockGrid}>{group.blocks.map(kind => <button draggable onDragStart={event => event.dataTransfer.setData("iam-block", kind)} onClick={() => addBlock(kind)} key={kind}>{blockIcon(kind)}<span>{kind}</span></button>)}</div></section>)}<button className={styles.manageLanguages}><Languages size={16}/> Manage languages</button></aside>
+    {tab === "settings" ? <InAppSettings language={language} setLanguage={setLanguage} liquidEnabled={languageLiquidEnabled} setLiquidEnabled={setLanguageLiquidEnabled} liquid={languageLiquid} setLiquid={setLanguageLiquid} delivery={delivery} updateDelivery={updateDelivery}/> : tab === "preview" ? <div className={styles.previewWorkspace}><PreviewSidebar pages={pages} selected={selectedPage} select={setSelectedPage}/><main><InAppPreview page={page} global={global} device={device} htmlLanguage={htmlLanguage}/><div className={styles.previewDevices}>{devices.filter(item => ["phonePortrait", "tabletPortrait", "desktop"].includes(item.id)).map(item => <button key={item.id} title={item.label} className={device === item.id ? styles.activeDevice : ""} onClick={() => setDevice(item.id)}>{deviceIcon(item.id)}</button>)}</div></main><aside className={styles.testPanel}><h3>Test Recipients</h3><p>Select at least one Content Test Group or individual user to receive this test message.</p><label>Add individual users<input value={recipient} onChange={event => { setRecipient(event.target.value); setTestSent(false); }} placeholder="External ids, emails, or phone numbers"/></label><label className={styles.check}><input type="checkbox"/> Override recipients&apos; attributes with current preview user&apos;s attributes</label><button disabled={!recipient.trim()} onClick={() => setTestSent(true)}>Send Test</button>{testSent && <div className={styles.testSuccess}>Test message simulated for {recipient}.</div>}<label>Preview message as user<select value={previewUser} onChange={event => setPreviewUser(event.target.value)}><option>Random user</option>{previewUsers.map(user => <option key={user}>{user}</option>)}</select></label><button onClick={() => { if (!previewUsers.length) return; setPreviewUser(previewUsers[Math.floor(Math.random() * previewUsers.length)]); }}>Get random user</button></aside></div> : <div className={styles.composeWorkspace}>
+      <aside className={styles.blockSidebar}><PagesPanel pages={pages} selected={selectedPage} select={setSelectedPage} add={addPage} remove={removePage} move={movePage}/><section><h3>Rows</h3><p>Drag a row into your message</p><div className={styles.rowChoices}>{[1, 2, 3].map(columns => <button key={columns} onClick={() => updatePage({ columns })}>{Array.from({ length: columns }, (_, index) => <i key={index}/>)}</button>)}</div></section>{blockGroups.map(group => <section key={group.title}><h3>{group.title}</h3><p>Drag and drop a block into a row</p><div className={styles.blockGrid}>{group.blocks.map(kind => <button draggable onDragStart={event => event.dataTransfer.setData("iam-block", kind)} onClick={() => addBlock(kind)} key={kind}>{blockIcon(kind)}<span>{kind}</span></button>)}</div></section>)}<button className={styles.manageLanguages} onClick={() => setTab("settings")}><Languages size={16}/> Manage languages</button></aside>
       <main className={styles.canvasStage}><div className={styles.canvasTools}><button disabled={!history.length} onClick={undo} title="Undo"><Undo2 size={17}/></button><button disabled={!future.length} onClick={redo} title="Redo"><Redo2 size={17}/></button>{devices.filter(item => ["phonePortrait", "tabletPortrait", "desktop"].includes(item.id)).map(item => <button key={item.id} title={item.label} className={device === item.id ? styles.activeDevice : ""} onClick={() => setDevice(item.id)}>{deviceIcon(item.id)}</button>)}<button title="Add Personalization" onClick={() => setPersonalizationOpen(value => !value)}><Sparkles size={17}/></button></div>{personalizationOpen && <div className={styles.personalization}><b>Add Personalization</b>{["{{${first_name}}}", "{{${email}}}", "{{${language}}}"].map(token => <button key={token} onClick={() => { updatePage({ body: `${page.body} ${token}` }); setPersonalizationOpen(false); }}>{token}</button>)}</div>}<InAppPreview page={page} global={global} device={device} editor htmlLanguage={htmlLanguage} onDrop={addBlock}/></main>
       <aside className={styles.inspector}><div className={styles.scopeTabs}><button className={scope === "all" ? styles.activeScope : ""} onClick={() => setScope("all")}>All pages</button><button className={scope === "page" ? styles.activeScope : ""} onClick={() => setScope("page")}>Current page</button></div>{scope === "all" ? <GlobalInspector global={global} update={patch => setGlobal(current => ({ ...current, ...patch }))}/> : <PageInspector page={page} update={updatePage}/>}</aside>
     </div>}
-    <footer className={styles.editorFooter}><button>Send feedback</button><span/><button className={styles.cancel} onClick={close}>Cancel</button><button className={styles.done} onClick={save}>Done</button><button aria-label="BrazeAI Operator"><Sparkles size={18}/></button></footer>
+    <footer className={styles.editorFooter}><button onClick={() => notify("Thanks — feedback is recorded in the local demo.")}>Send feedback</button><span/><button className={styles.cancel} onClick={close}>Cancel</button><button className={styles.done} onClick={save}>Done</button><button aria-label="BrazeAI Operator" onClick={() => notify("BrazeAI Operator™ copywriting is not available in this demo editor.")}><Sparkles size={18}/></button></footer>
   </section>;
 }
 
-function InAppSettings({ language, setLanguage, liquidEnabled, setLiquidEnabled, liquid, setLiquid }: { language: string; setLanguage: (value: string) => void; liquidEnabled: boolean; setLiquidEnabled: (value: boolean) => void; liquid: string; setLiquid: (value: string) => void }) {
+function InAppSettings({ language, setLanguage, liquidEnabled, setLiquidEnabled, liquid, setLiquid, delivery, updateDelivery }: { language: string; setLanguage: (value: string) => void; liquidEnabled: boolean; setLiquidEnabled: (value: boolean) => void; liquid: string; setLiquid: (value: string) => void; delivery?: InAppDelivery; updateDelivery?: (patch: Partial<InAppDelivery>) => void }) {
   const [personalizationOpen, setPersonalizationOpen] = useState(false);
   const [personalizationType, setPersonalizationType] = useState("Default Attributes");
   const [attribute, setAttribute] = useState("language");
@@ -393,6 +443,25 @@ function InAppSettings({ language, setLanguage, liquidEnabled, setLiquidEnabled,
   return <div className={styles.settingsPage}>
     <aside>Edit your in-app message settings</aside>
     <main className={styles.accessibilitySettings}>
+      {delivery && updateDelivery && <><h2>Display Trigger</h2>
+      <p>Choose when this in-app message displays for eligible users.</p>
+      <label>Trigger<select aria-label="Display trigger" value={delivery.triggerType} onChange={event => updateDelivery({ triggerType: event.target.value as InAppDelivery["triggerType"] })}><option>Session start</option><option>Custom event</option><option>Specific time</option></select></label>
+      {delivery.triggerType === "Custom event" && <label>Event name<input aria-label="Trigger event name" value={delivery.triggerEventName} onChange={event => updateDelivery({ triggerEventName: event.target.value })} placeholder="e.g. viewed_checkout"/></label>}
+      {delivery.triggerType === "Custom event" && <label>Event property filter <small>(Optional)</small><input aria-label="Trigger event property" value={delivery.triggerEventProperty} onChange={event => updateDelivery({ triggerEventProperty: event.target.value })} placeholder="e.g. cart_value > 50"/></label>}
+      {delivery.triggerType === "Specific time" && <label>Display at<input aria-label="Trigger time" type="datetime-local" value={delivery.triggerTime} onChange={event => updateDelivery({ triggerTime: event.target.value })}/></label>}
+      <h2>Message Duration</h2>
+      <p>The message stops displaying after the end date.</p>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+        <label>Start date<input aria-label="Display start date" type="date" value={delivery.durationStart} onChange={event => updateDelivery({ durationStart: event.target.value })}/></label>
+        <label>End date<input aria-label="Display end date" type="date" value={delivery.durationEnd} onChange={event => updateDelivery({ durationEnd: event.target.value })}/></label>
+      </div>
+      <h2>Frequency Capping</h2>
+      <p>Limit how often a user sees this message.</p>
+      <label style={{ display: "flex", alignItems: "center", gap: 8 }}><input type="checkbox" checked={delivery.frequencyCapEnabled} onChange={event => updateDelivery({ frequencyCapEnabled: event.target.checked })}/> Respect frequency capping</label>
+      {delivery.frequencyCapEnabled && <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+        <label>Max impressions per user<input aria-label="Frequency cap limit" type="number" min={1} value={delivery.frequencyCapLimit} onChange={event => updateDelivery({ frequencyCapLimit: Math.max(1, Number(event.target.value) || 1) })}/></label>
+        <label>Window (days)<input aria-label="Frequency cap window" type="number" min={1} value={delivery.frequencyCapDays} onChange={event => updateDelivery({ frequencyCapDays: Math.max(1, Number(event.target.value) || 1) })}/></label>
+      </div>}</>}
       <h2>Accessibility</h2>
       <p>Set the <a href="https://www.braze.com/docs/user_guide/message_building_by_channel/in-app_messages/" target="_blank">accessibility language</a> for your message&apos;s HTML. Screen readers and assistive tools use this to pronounce content with the correct language and dialect. Select a language or use Liquid to set it dynamically.</p>
       <label>Language <span className={styles.infoDot} title="Sets the HTML lang attribute">i</span><select aria-label="Accessibility language" disabled={liquidEnabled} value={language} onChange={event => setLanguage(event.target.value)}><option value="">Select...</option><option value="en">English</option><option value="zh-CN">Chinese (Simplified)</option><option value="ja">Japanese</option><option value="ko">Korean</option></select></label>

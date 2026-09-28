@@ -201,8 +201,15 @@ export function ImportUsersWorkspace({ locale, notify }: { locale: Locale; notif
   const showPreview = () => setPreview(parsed);
   const runImport = async () => {
     const [header, ...body] = parsed;
-    await create({ name: `Import ${new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" })} (${body.length} users)`, description: `Columns: ${header.join(", ")}`, data: { header, count: body.length, rows: body } });
-    setPreview(null); notify(`Imported ${body.length} user rows into the local workspace.`);
+    const rowObjects = body.map(row => Object.fromEntries(header.map((key, i) => [key, row[i] ?? ""])));
+    let result: { imported?: number; skipped?: number } = {};
+    try {
+      const response = await fetch("/api/users", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ rows: rowObjects }) });
+      if (response.ok) result = await response.json();
+    } catch {}
+    await create({ name: `Import ${new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" })} (${body.length} users)`, description: `Columns: ${header.join(", ")}`, data: { header, count: body.length, rows: body, imported: result.imported ?? 0, skipped: result.skipped ?? 0 } });
+    setPreview(null);
+    notify(result.imported !== undefined ? `Imported ${result.imported} new users (${result.skipped ?? 0} existing IDs skipped) — visible in Search Users and audience estimates.` : `Recorded ${body.length} user rows, but the user store was unavailable.`);
   };
   return <section className="page-content module-workspace">
     <WorkspaceHeading title="Import Users" subtitle="Paste or upload a CSV of user rows. The import is recorded in local SQLite with a row-level preview." />
@@ -440,14 +447,19 @@ export function CustomAttributesWorkspace({ locale }: { locale: Locale }) {
 
 export function CustomEventsWorkspace({ locale, notify }: { locale: Locale; notify: (m: string) => void }) {
   const [events, setEvents] = useState<Record<string, unknown>[]>([]);
-  useEffect(() => { void fetch("/api/activity").then(r => r.json()).then(d => setEvents(d.data ?? [])).catch(() => {}); }, []);
+  const [loading, setLoading] = useState(false);
+  const loadEvents = () => {
+    setLoading(true);
+    void fetch("/api/activity").then(r => r.json()).then(d => { setEvents(d.data ?? []); }).catch(() => notify("Unable to load the event stream.")).finally(() => setLoading(false));
+  };
+  useEffect(loadEvents, []);
   const counts = useMemo(() => {
     const map = new Map<string, number>();
     for (const event of events) map.set(String(event.event_type), (map.get(String(event.event_type)) ?? 0) + 1);
     return [...map.entries()].sort((a, b) => b[1] - a[1]);
   }, [events]);
   return <section className="page-content module-workspace">
-    <WorkspaceHeading title="Custom Events" subtitle="Event distribution recorded by local campaign and Canvas executions." actions={<button className="primary" onClick={() => notify("Custom events stream from local message execution — launch a campaign to record more.")}><Zap size={15} /> Refresh</button>} />
+    <WorkspaceHeading title="Custom Events" subtitle="Event distribution recorded by local campaign and Canvas executions." actions={<button className="primary" disabled={loading} onClick={loadEvents}><Zap size={15} /> {loading ? "Refreshing…" : "Refresh"}</button>} />
     <div className={styles.card}>
       <div className={styles.grid3}>{counts.map(([type, count]) => <div className={styles.stat} key={type}><b>{formatNumber(locale, count)}</b><small>{type}</small></div>)}</div>
       <table className={styles.table}><thead><tr><th>Event</th><th>Campaign</th><th>User</th><th>Time</th></tr></thead><tbody>
@@ -718,14 +730,26 @@ export function WorkspaceSearch({ locale, open, onClose, openPage, openCampaign 
 
 export function NotificationsMenu({ locale, open, onClose, openPage }: { locale: Locale; open: boolean; onClose: () => void; openPage: (key: string) => void }) {
   const [events, setEvents] = useState<ActivityEvent[]>([]);
+  const [lastReadAt, setLastReadAt] = useState<string>("");
+  useEffect(() => { setLastReadAt(window.localStorage.getItem("braze:notifications-read") ?? ""); }, []);
   useEffect(() => { if (open) void fetch("/api/activity").then(r => r.json()).then(d => setEvents((d.data ?? []).slice(0, 8))).catch(() => {}); }, [open]);
   if (!open) return null;
+  const markAllRead = () => {
+    const newest = events[0]?.created_at ? String(events[0].created_at) : new Date().toISOString();
+    window.localStorage.setItem("braze:notifications-read", newest);
+    setLastReadAt(newest);
+  };
   return <div className={styles.menu} role="dialog" aria-label="Notifications">
     <b style={{ padding: "4px 10px", fontSize: 12 }}>Recent activity</b>
-    {events.length ? events.map(event => <div className={styles.notifItem} key={event.id}><b>{event.event_type} · {event.channel}</b><small>{event.campaign_name} · {event.user_id}</small></div>)
+    {events.length ? events.map(event => {
+      const unread = !lastReadAt || String(event.created_at) > lastReadAt;
+      return <div className={styles.notifItem} key={event.id} style={unread ? { background: "#f3effb" } : undefined}>
+        <b>{event.event_type} · {event.channel}{unread ? " ●" : ""}</b><small>{event.campaign_name} · {event.user_id}</small>
+      </div>;
+    })
       : <div className={styles.notifItem}><small>No recorded activity yet.</small></div>}
     <button onClick={() => { openPage("message-activity-log"); onClose(); }}>View all activity <span className={styles.menuMeta}>→</span></button>
-    <button onClick={onClose}><Bell size={14} /> Mark all as read</button>
+    <button onClick={markAllRead}><Bell size={14} /> Mark all as read</button>
   </div>;
 }
 

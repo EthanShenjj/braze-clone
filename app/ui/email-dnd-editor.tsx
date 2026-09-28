@@ -17,7 +17,7 @@ import {
   blockText, defaultBlock, defaultStyle, downloadHtmlFile, emailFontFamilies, emailLocales, emailTemplates, escapeHtml,
   extractLinks, liquidIssues, liquidTokens, makeCell, makeRow, newId, normalizeRows, normalizeStyle,
   resolveLiquidPreview, rowsToPlainText, type EmailBlock, type EmailBlockKind, type EmailEditorLocale, type EmailLink,
-  type EmailRow, type EmailStyle, type MenuItem, type PreviewUser, type SocialItem,
+  type EmailRow, type EmailStyle, type MenuItem, type PreviewUser, type SocialItem, type WorkspaceLiquid,
 } from "@/lib/email-editor-model";
 import { getWhatsAppTemplate, normalizeWhatsAppVariants, renderWhatsAppVariant } from "@/lib/whatsapp-model";
 import { translate, type Locale } from "@/lib/i18n";
@@ -29,6 +29,42 @@ type EditorMode = "operator" | "drag" | "html" | "plain" | "template";
 const className = (...values: (string | false | undefined)[]) => values.filter(Boolean).join(" ");
 
 type VariantConfig = { id: string; name: string; subject?: string; body?: string; editorMode?: string; rows?: unknown; sending?: Record<string, unknown> };
+
+// Fetches saved Content Blocks and Promotion Code lists so Liquid previews render real workspace data.
+function useWorkspaceLiquid(): WorkspaceLiquid {
+  const [maps, setMaps] = useState<WorkspaceLiquid>({});
+  useEffect(() => {
+    void Promise.all([
+      fetch("/api/resources/content-blocks").then(r => r.json()).catch(() => ({ data: [] })),
+      fetch("/api/resources/promotion-codes").then(r => r.json()).catch(() => ({ data: [] })),
+    ]).then(([blocks, codes]) => {
+      const contentBlocks: Record<string, string> = {};
+      for (const row of ((blocks.data ?? []) as Array<{ name: string; data?: { content?: unknown } }>)) contentBlocks[row.name] = String(row.data?.content ?? "");
+      const promotionCodes: Record<string, string[]> = {};
+      for (const row of ((codes.data ?? []) as Array<{ name: string; data?: { codes?: unknown } }>)) {
+        if (Array.isArray(row.data?.codes)) promotionCodes[row.name] = (row.data.codes as unknown[]).map(code => String(code)).filter(Boolean);
+      }
+      setMaps({ contentBlocks, promotionCodes });
+    });
+  }, []);
+  return maps;
+}
+
+// Fetches every catalog's items so {% catalog_select %} previews resolve live data.
+function useCatalogItems() {
+  const [catalogItems, setCatalogItems] = useState<NonNullable<WorkspaceLiquid["catalogItems"]>>({});
+  useEffect(() => {
+    void fetch("/api/catalogs").then(r => r.json()).then(async catalogs => {
+      const rows = ((catalogs.data ?? []) as Array<{ id: string; name: string }>).slice(0, 5);
+      const entries = await Promise.all(rows.map(async catalog => {
+        const items = await fetch(`/api/catalogs/${encodeURIComponent(catalog.id)}/items`).then(r => r.json()).then(d => ((d.data ?? []) as Array<{ id: string; name: string; fields: Record<string, unknown> }>).slice(0, 100)).catch(() => []);
+        return [catalog.name.toLowerCase(), items] as const;
+      }));
+      setCatalogItems(Object.fromEntries(entries));
+    }).catch(() => {});
+  }, []);
+  return catalogItems;
+}
 
 export function emailVariantList(draft: EmailCampaignLike): VariantConfig[] {
   const stored = draft.config?.variants;
@@ -881,6 +917,7 @@ export function EmailTemplateGallery({ locale, onApply, onClose }: { locale: Loc
 // --- Preview & test modal ------------------------------------------------------
 
 export function TestModal({ locale, draft, variantIndex = 0, close }: { locale: Locale; draft: EmailCampaignLike; variantIndex?: number; close: () => void }) {
+  const workspace = { ...useWorkspaceLiquid(), catalogItems: useCatalogItems() };
   const [mode, setMode] = useState<"random" | "existing" | "custom">("existing");
   const [recipient, setRecipient] = useState(draft.channel === "webhook" ? "user_1" : draft.channel === "whatsapp" ? "+1 415 555 0138" : "marketing.qa@example.com");
   const [customUser, setCustomUser] = useState('{\n  "user_id": "custom_1",\n  "email": "custom@example.com",\n  "first_name": "Custom",\n  "language": "en"\n}');
@@ -903,6 +940,7 @@ export function TestModal({ locale, draft, variantIndex = 0, close }: { locale: 
   const sendingInfo = (current?.sending ?? draft.config?.emailSending) as Record<string, unknown> | undefined;
   const localeAliases: Record<string, string> = { zh: "zh-CN", "zh-cn": "zh-CN", zh_cn: "zh-CN", en_us: "en" };
   const normalizedTestLocale = localeAliases[testLocale.toLowerCase()] ?? testLocale;
+  const previewLocale = (emailLocales.some(item => item.code === normalizedTestLocale) ? normalizedTestLocale : "en") as EmailEditorLocale;
   const subjectTranslations = (sendingInfo?.subjectTranslations ?? {}) as Record<string, string>;
   const preheaderTranslations = (sendingInfo?.preheaderTranslations ?? {}) as Record<string, string>;
   const subjectLine = subjectTranslations[normalizedTestLocale] ?? current?.subject ?? draft.subject ?? "";
@@ -943,7 +981,22 @@ export function TestModal({ locale, draft, variantIndex = 0, close }: { locale: 
   const attempt = webhook?.attempts?.at(-1);
 
   const frameStyle = { maxWidth: device === "mobile" ? 340 : 600, width: "100%", margin: "0 auto" } as CSSProperties;
-  const rowsHtml = `<table role="presentation" width="100%" style="border-collapse:collapse">${rows.map(row => `<tr><td style="padding:${row.padding ?? 10}px;${row.bg ? `background:${row.bg};` : ""}"><table role="presentation" width="100%" style="border-collapse:collapse"><tr>${row.cells.map(cell => `<td width="${cell.width}%" style="vertical-align:top;padding:0 8px">${cell.blocks.map(block => blockToHtml(block, "en", defaultStyle())).join("")}</td>`).join("")}</tr></table></td></tr>`).join("")}</table>`;
+  const savedStyle = { ...defaultStyle(), ...((draft.config?.emailStyle ?? {}) as Record<string, never>) };
+  const rowsHtml = resolveLiquidPreview(`<table role="presentation" width="100%" style="border-collapse:collapse">${rows.map(row => `<tr><td style="padding:${row.padding ?? 10}px;${row.bg ? `background:${row.bg};` : ""}"><table role="presentation" width="100%" style="border-collapse:collapse"><tr>${row.cells.map(cell => `<td width="${cell.width}%" style="vertical-align:top;padding:0 8px">${cell.blocks.map(block => blockToHtml(block, previewLocale, savedStyle)).join("")}</td>`).join("")}</tr></table></td></tr>`).join("")}</table>`, previewUser, previewLocale, workspace);
+  const channelValuesPreview = (draft.config?.channelValues ?? {}) as Record<string, unknown>;
+  const messageSubject = current?.subject ?? draft.subject ?? "";
+  const messageBody = current?.body ?? draft.body ?? "";
+  const channelPreviews: Array<[string, ReactNode]> = [
+    ["push", <div key="push" style={{ border: "1px solid #d9d5df", borderRadius: 18, padding: 16, background: dark ? "#1d1d27" : "#f6f5f9" }}><b>{messageSubject || "Title"}</b><p style={{ margin: "6px 0 8px" }}>{messageBody || "Your message will appear here."}</p><small>{String(channelValuesPreview.summaryAndroid ?? "now")}</small></div>],
+    ["iam", <div key="iam" style={{ border: "1px solid #d9d5df", borderRadius: 10, padding: 16, textAlign: "center" }}><b>{messageSubject || "Message title"}</b><p style={{ margin: "8px 0 12px" }}>{messageBody || "Message body"}</p><button type="button" style={{ padding: "9px 18px", border: 0, borderRadius: 5, background: "#008294", color: "#fff", fontWeight: 700 }}>{String(channelValuesPreview.buttonText ?? "Shop now")}</button></div>],
+    ["content", <div key="content" style={{ border: "1px solid #d9d5df", borderRadius: 8, padding: 14 }}><small>{String(channelValuesPreview.category ?? "Promotions")}</small><b style={{ display: "block" }}>{messageSubject || "Card title"}</b><p style={{ margin: "6px 0 0" }}>{messageBody || "Card description"}</p>{Boolean(channelValuesPreview.pinned) && <small>Pinned to top</small>}</div>],
+    ["banner", <div key="banner" style={{ borderRadius: 8, padding: 14, background: dark ? "#2a2438" : "#efeaf7", display: "flex", gap: 12, alignItems: "center", justifyContent: "space-between" }}><div><b>{messageSubject || "Banner title"}</b><p style={{ margin: "4px 0 0", fontSize: 13 }}>{messageBody || "Banner message"}</p></div><button type="button" style={{ padding: "8px 14px", border: 0, borderRadius: 5, background: "#008294", color: "#fff" }}>{String(channelValuesPreview.buttonLabel ?? "Learn more")}</button></div>],
+    ["sms", <div key="sms" style={{ border: "1px solid #d9d5df", borderRadius: 12, padding: 12, background: dark ? "#1d1d27" : "#e7f5ee" }}><p style={{ margin: 0, whiteSpace: "pre-wrap" }}>{messageBody || "Write your message"}{channelValuesPreview.appendStop !== false ? "\n\nTxt STOP to end" : ""}</p><small style={{ textAlign: "right", display: "block" }}>{String(channelValuesPreview.sendingNumber ?? "+1 415 555 0100")}</small></div>],
+    ["line", <div key="line" style={{ border: "1px solid #d9d5df", borderRadius: 12, padding: 12, background: dark ? "#1d1d27" : "#e7f5ee" }}><p style={{ margin: 0, whiteSpace: "pre-wrap" }}>{messageBody || "Write a LINE message"}</p></div>],
+  ];
+  const channelPreview = channelPreviews.find(([channel]) => channel === draft.channel);
+  const multichannelChannels = Array.isArray(channelValuesPreview.channels) ? channelValuesPreview.channels as string[] : [];
+  const multichannelContent = (channelValuesPreview.channelContent ?? {}) as Record<string, string>;
 
   return <div className={styles.modalBackdrop} onMouseDown={close}>
     <section className={styles.testModal} onMouseDown={event => event.stopPropagation()}>
@@ -959,7 +1012,7 @@ export function TestModal({ locale, draft, variantIndex = 0, close }: { locale: 
               <option value="custom">Custom user</option>
             </select>
           </label>
-          {mode === "existing" && <label className={styles.testField}>Email or external user ID
+          {mode === "existing" && <label className={styles.testField}>{isEmail ? "Email or external user ID" : "External user ID"}
             <input value={recipient} onChange={event => setRecipient(event.target.value)} />
           </label>}
           {mode === "random" && <button type="button" className={styles.sendButton} style={{ alignSelf: "end" }} onClick={() => void pickRandom()}>Load random user</button>}
@@ -985,17 +1038,22 @@ export function TestModal({ locale, draft, variantIndex = 0, close }: { locale: 
           {rows.length
             ? <div className={className(styles.emailTestFrame, device === "mobile" && styles.mobile, dark && styles.darkMode)} style={frameStyle} dangerouslySetInnerHTML={{ __html: rowsHtml }} />
             : htmlBody
-              ? <div className={className(styles.emailTestFrame, device === "mobile" && styles.mobile, dark && styles.darkMode)} style={frameStyle} dangerouslySetInnerHTML={{ __html: resolveLiquidPreview(htmlBody, previewUser, "en") }} />
+              ? <div className={className(styles.emailTestFrame, device === "mobile" && styles.mobile, dark && styles.darkMode)} style={frameStyle} dangerouslySetInnerHTML={{ __html: resolveLiquidPreview(htmlBody, previewUser, "en", workspace) }} />
               : <div className={className(styles.emailTestFrame, device === "mobile" && styles.mobile, dark && styles.darkMode)} style={frameStyle}>
                   <p className={styles.tFrom}>From: Powered by Braze &lt;braze@mta-h466.bftmail.com&gt;</p>
-                  <p className={styles.tSubject}>{resolveLiquidPreview(subjectLine, previewUser, "en")}</p>
-                  {preheader && <p className={styles.tPreheader}>{resolveLiquidPreview(preheader, previewUser, "en")}</p>}
-                  <pre style={{ whiteSpace: "pre-wrap", fontFamily: "inherit" }}>{resolveLiquidPreview(plainBody, previewUser, "en")}</pre>
+                  <p className={styles.tSubject}>{resolveLiquidPreview(subjectLine, previewUser, "en", workspace)}</p>
+                  {preheader && <p className={styles.tPreheader}>{resolveLiquidPreview(preheader, previewUser, "en", workspace)}</p>}
+                  <pre style={{ whiteSpace: "pre-wrap", fontFamily: "inherit" }}>{resolveLiquidPreview(plainBody, previewUser, "en", workspace)}</pre>
                 </div>}
         </>}
         {isWhatsapp && whatsappVariant && <div className={styles.emailTestFrame} style={frameStyle}>
           <div>{renderWhatsAppVariant(whatsappVariant)}</div>
           {whatsappVariant.mode === "template" && getWhatsAppTemplate(whatsappVariant.templateId).footer && <small>{getWhatsAppTemplate(whatsappVariant.templateId).footer}</small>}
+        </div>}
+        {channelPreview && <div className={className(styles.emailTestFrame, dark && styles.darkMode)} style={frameStyle}>{channelPreview[1]}</div>}
+        {draft.channel === "multichannel" && <div className={className(styles.emailTestFrame, dark && styles.darkMode)} style={frameStyle}>
+          <p className={styles.tSubject}>{subjectLine}</p>
+          {(multichannelChannels.length ? multichannelChannels : ["Email", "Push notification"]).map(channel => <div key={channel} style={{ border: "1px solid #d9d5df", borderRadius: 8, padding: 10, marginBottom: 8 }}><small>{channel}</small><p style={{ margin: "4px 0 0", fontSize: 13 }}>{multichannelContent[channel] || messageBody || `Write the ${channel.toLowerCase()} message`}</p></div>)}
         </div>}
         <div style={{ marginTop: 16 }}>
           <button className={styles.sendButton} disabled={state === "sending"} onClick={() => void send()}>{state === "sending" ? "Sending…" : isWhatsapp ? "Record simulated test" : "Send test"}</button>
@@ -1037,6 +1095,7 @@ function GeneralEmailEditor({ locale, mode, variantName, draft, save, onClose, o
   onModeChange: (mode: EditorMode) => void; onOpenTest: () => void;
 }) {
   const sending = (draft.config?.emailSending ?? {}) as Record<string, unknown>;
+  const workspace = { ...useWorkspaceLiquid(), catalogItems: useCatalogItems() };
   const [subject, setSubject] = useState(draft.subject ?? "");
   const [preheader, setPreheader] = useState(typeof sending.preheader === "string" ? sending.preheader : "");
   const [body, setBody] = useState(variantBody(draft));
@@ -1066,10 +1125,10 @@ function GeneralEmailEditor({ locale, mode, variantName, draft, save, onClose, o
       void save({ subject: template.subject, body: rowsToPlainText(template.rows), config: { ...draft.config, emailEditorMode: "drag", emailRows: template.rows, emailStyle: normalizeStyle(draft.config?.emailStyle), emailSending: { ...sending, preheader: template.preheader } } });
       onModeChange("drag");
     } else if (template.html) {
-      setSubject(template.subject); setPreheader(template.preheader); setBody(template.html);
+      void save({ subject: template.subject, body: template.html, config: { ...draft.config, emailEditorMode: "html", emailSending: { ...sending, preheader: template.preheader } } });
       onModeChange("html");
     } else if (template.plain) {
-      setSubject(template.subject); setPreheader(template.preheader); setBody(template.plain);
+      void save({ subject: template.subject, body: template.plain, config: { ...draft.config, emailEditorMode: "plain", emailSending: { ...sending, preheader: template.preheader } } });
       onModeChange("plain");
     }
     setGalleryOpen(false);
@@ -1097,8 +1156,8 @@ function GeneralEmailEditor({ locale, mode, variantName, draft, save, onClose, o
     <div className={styles.genBody}>
       <main className={styles.genMain}>
         <div className={styles.genCanvasLabel}>{translate(locale, "Email preview")} · {mode === "plain" ? "plain text" : "600 px"}</div>
-        {mode === "html" && <article className={styles.emailFrame} dangerouslySetInnerHTML={{ __html: resolveLiquidPreview(body || "<p style='color:#9a93a8'>Start typing HTML on the left to see it rendered here.</p>") }} />}
-        {mode === "plain" && <article className={styles.plainFrame}>{resolveLiquidPreview(body || "Write your plain-text email on the left.")}</article>}
+        {mode === "html" && <article className={styles.emailFrame} dangerouslySetInnerHTML={{ __html: resolveLiquidPreview(body || "<p style='color:#9a93a8'>Start typing HTML on the left to see it rendered here.</p>", undefined, "en", workspace) }} />}
+        {mode === "plain" && <article className={styles.plainFrame}>{resolveLiquidPreview(body || "Write your plain-text email on the left.", undefined, "en", workspace)}</article>}
         {(mode === "template" || mode === "operator") && <article className={styles.emailFrame}>
           <p className={styles.tSubject}>{subject || "Message preview"}</p>
           <div style={{ display: "grid", placeItems: "center", minHeight: 180, border: "1px dashed #c9c2d8", borderRadius: 8, color: "#8d8698", fontSize: 13, padding: 20, textAlign: "center" }}>

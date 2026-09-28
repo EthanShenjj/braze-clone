@@ -98,12 +98,13 @@ function PreferenceCenterBuilder({ locale, center, groups, back, notify }: { loc
 
 function PreferenceCanvasBlock({ block, selected, choose, content, groups, showDescriptions, showGlobalControls }: { block: PreferenceBlock; selected: boolean; choose: () => void; content: string; groups: Group[]; showDescriptions: boolean; showGlobalControls: boolean }) {
   const selectable = selected ? styles.canvasBlockSelected : styles.canvasBlock;
-  if (block.type === "image") return <button className={`${selectable} ${styles.canvasBrand}`} onClick={choose}><span>t</span><b>{content}</b></button>;
-  if (block.type === "title") return <button className={`${selectable} ${styles.canvasTitle}`} onClick={choose}>{content}</button>;
-  if (block.type === "paragraph") return <button className={`${selectable} ${styles.canvasParagraph}`} onClick={choose}>{content}</button>;
-  if (block.type === "divider") return <button className={`${selectable} ${styles.canvasDivider}`} onClick={choose}><i/></button>;
-  if (block.type === "spacer") return <button className={`${selectable} ${styles.canvasSpacer}`} onClick={choose}>Spacer</button>;
-  if (block.type === "button") return <button className={`${selectable} ${styles.canvasButtonWrap}`} onClick={choose}><span>{content}</span></button>;
+  const style = { textAlign: block.style?.align ?? "left", fontSize: block.style?.fontSize ? `${block.style.fontSize}px` : undefined } as const;
+  if (block.type === "image") return <button className={`${selectable} ${styles.canvasBrand}`} style={style} onClick={choose}><span>t</span><b>{content}</b></button>;
+  if (block.type === "title") return <button className={`${selectable} ${styles.canvasTitle}`} style={style} onClick={choose}>{content}</button>;
+  if (block.type === "paragraph") return <button className={`${selectable} ${styles.canvasParagraph}`} style={style} onClick={choose}>{content}</button>;
+  if (block.type === "divider") return <button className={`${selectable} ${styles.canvasDivider}`} style={style} onClick={choose}><i/></button>;
+  if (block.type === "spacer") return <button className={`${selectable} ${styles.canvasSpacer}`} style={style} onClick={choose}>Spacer</button>;
+  if (block.type === "button") return <button className={`${selectable} ${styles.canvasButtonWrap}`} style={style} onClick={choose}><span>{content}</span></button>;
   return <button className={`${selectable} ${styles.canvasPreferences}`} onClick={choose}><div className={styles.preferenceBlockHeader}><span>Email preferences</span><small>Select the messages you want to receive.</small></div>{showGlobalControls && <label><input type="checkbox" defaultChecked/> Subscribe to all email</label>}{groups.length ? groups.map(group => <label key={group.id}><input type="checkbox" defaultChecked/><span><b>{group.name}</b>{showDescriptions && <small>{group.description}</small>}</span></label>) : <div className={styles.emptyGroups}>Add Email subscription groups in Block properties.</div>}{showGlobalControls && <label className={styles.unsubscribeAll}><input type="checkbox"/> Unsubscribe from all email</label>}</button>;
 }
 

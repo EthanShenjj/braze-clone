@@ -215,8 +215,9 @@ export const liquidTokens: LiquidToken[] = [
   { category: "Custom attributes", label: "points_balance", value: "{{custom_attribute.${points_balance}}}" },
   { category: "Campaign", label: "Campaign name", value: "{{campaign.${name}}}" },
   { category: "Campaign", label: "Campaign ID", value: "{{campaign.${api_id}}}" },
-  { category: "Catalog", label: "Product name", value: "{% render_catalog 'products' %}", help: "Catalog: products" },
-  { category: "Catalog", label: "Selected item field", value: "{{ products.[first].name }}" },
+  { category: "Catalog", label: "Item field", value: '{% catalog_select "Sample_Catalog" "SKU-0926" "name" %}', help: "Resolves from live catalog items" },
+  { category: "Catalog", label: "Item price", value: '{% catalog_select "Sample_Catalog" "SKU-0926" "price" %}' },
+  { category: "Catalog", label: "First catalog item", value: "{% render_catalog 'Sample_Catalog' %}" },
   { category: "Content blocks", label: "Footer content block", value: "{% renderblock 'email_footer' %}" },
   { category: "Content blocks", label: "Header banner block", value: "{% renderblock 'email_header' %}" },
   { category: "Promotion codes", label: "September promo code", value: "{% promotion_code 'september20' %}" },
@@ -228,10 +229,14 @@ export const liquidTokens: LiquidToken[] = [
 
 export type PreviewUser = { first_name?: string; last_name?: string; email?: string; country?: string; city?: string; language?: string; time_zone?: string; user_id?: string; [key: string]: unknown };
 
+// Saved workspace data (Content Blocks, Promotion Codes lists) used to resolve
+// {% renderblock %} and {% promotion_code %} instead of placeholder text.
+export type WorkspaceLiquid = { contentBlocks?: Record<string, string>; promotionCodes?: Record<string, string[]>; catalogItems?: Record<string, Array<{ id: string; name: string; fields: Record<string, unknown> }>> };
+
 const defaultUser: PreviewUser = { first_name: "Sofia", last_name: "Chen", email: "sofia@example.com", country: "US", city: "San Francisco", language: "en", time_zone: "America/Los_Angeles", user_id: "user_1024" };
 
 // Resolves the Liquid subset used by the local editor so previews feel real.
-export function resolveLiquidPreview(source: string, user: PreviewUser = defaultUser, locale: EmailEditorLocale = "en") {
+export function resolveLiquidPreview(source: string, user: PreviewUser = defaultUser, locale: EmailEditorLocale = "en", workspace?: WorkspaceLiquid) {
   let text = source;
   const profile = { ...defaultUser, ...user, language: user.language ?? locale } as Record<string, unknown>;
   text = text.replace(/\{\%\s*if\s+\$\{language\}\s*==\s*'([^']*)'\s*\%\}([\s\S]*?)\{\%\s*else\s*\%\}([\s\S]*?)\{\%\s*endif\s*\%\}/g, (_match, code, when, otherwise) => String(profile.language) === code ? when : otherwise);
@@ -243,7 +248,24 @@ export function resolveLiquidPreview(source: string, user: PreviewUser = default
     return format.replace("%B", now.toLocaleString("en-US", { month: "long" })).replace("%d", String(now.getDate()).padStart(2, "0")).replace("%Y", String(now.getFullYear()));
   });
   text = text.replace(/\{\{\$\{(\w+)\}\}/g, (_match, key: string) => String(profile[key] ?? ""));
-  text = text.replace(/\{\%\s*(renderblock|promotion_code|render_catalog|connected_content)[^%]*\%\}/g, (_match, tag: string) => tag === "promotion_code" ? "SEPTEMBER20" : tag === "render_catalog" ? "Aurora Knit Sweater" : tag === "renderblock" ? "[content block]" : "[connected content]");
+  text = text.replace(/\{\%\s*renderblock\s+'([^']*)'\s*\%\}/g, (_match, name: string) => workspace?.contentBlocks?.[name] ?? `[content block: ${name}]`);
+  const pickCode = (_match: string, name?: string) => {
+    const list = (name && workspace?.promotionCodes?.[name]) || Object.values(workspace?.promotionCodes ?? {})[0];
+    return list?.length ? list[Math.floor(Math.random() * list.length)] : "SEPTEMBER20";
+  };
+  text = text.replace(/\{\%\s*promotion_code\s*(?:'([^']*)'\s*)?\%\}/g, pickCode);
+  text = text.replace(/\{%\s*catalog_select\s+"([^"]+)"\s+"([^"]+)"\s*(?:"([^"]+)")?\s*%\}/g, (_match, name: string, itemId: string, field?: string) => {
+    const items = workspace?.catalogItems?.[name.toLowerCase()];
+    const item = items?.find(candidate => candidate.id === itemId) ?? items?.find(candidate => candidate.name === itemId) ?? items?.[0];
+    if (!item) return `[${name}:${itemId}]`;
+    const lookup = String(field ?? "name");
+    return String(item.fields[lookup] ?? (item as unknown as Record<string, unknown>)[lookup] ?? item.name);
+  });
+  text = text.replace(/\{%\s*render_catalog\s+['"]([^'"]+)['"]\s*%\}/g, (_match, name: string) => {
+    const first = workspace?.catalogItems?.[name.toLowerCase()]?.[0];
+    return first ? String(first.fields.name ?? first.name) : "[catalog items]";
+  });
+  text = text.replace(/\{%\s*connected_content[^%]*\%\}/g, "[connected content]");
   text = text.replace(/\{\%[^%]*\%\}/g, "");
   return text;
 }

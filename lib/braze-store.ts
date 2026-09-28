@@ -357,6 +357,35 @@ export function setUserSubscription(id: string, subscribed: boolean) {
   return mapUser(row);
 }
 
+const userField = (row: Record<string, string>, ...keys: string[]) => {
+  for (const key of keys) {
+    const value = row[key] ?? row[key.replace(/_/g, " ")] ?? row[key.replace(/_/g, "-")];
+    if (value) return value.trim();
+  }
+  return "";
+};
+
+export function importUsers(rows: Array<Record<string, string>>) {
+  const insert = db().prepare("INSERT OR IGNORE INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+  const now = Date.now();
+  let imported = 0;
+  let skipped = 0;
+  rows.forEach((row, index) => {
+    const id = userField(row, "id", "user_id", "external_id") || `user_import_${now}_${index + 1}`;
+    const email = userField(row, "email") || `${id}@example.test`;
+    const firstName = userField(row, "first_name") || "Imported user";
+    const country = userField(row, "country") || "US";
+    const lifecycle = userField(row, "lifecycle", "segment") || "All Users";
+    const subscribed = Number(!/^(false|0|no|unsubscribed)$/i.test(userField(row, "subscribed")));
+    const reachable = Number(!/^(false|0|no|unreachable)$/i.test(userField(row, "reachable")));
+    const attributes: Record<string, string> = {};
+    for (const [key, value] of Object.entries(row)) if (!["id", "user_id", "external_id", "email", "first_name", "country", "lifecycle", "segment", "subscribed", "reachable"].includes(key) && value) attributes[key] = value.trim();
+    const result = insert.run(id, email, firstName, country, lifecycle, subscribed, reachable, JSON.stringify(attributes));
+    if (result.changes) { imported += 1; audit("user", id, "imported", { email }); } else skipped += 1;
+  });
+  return { imported, skipped };
+}
+
 function mapSubscriptionGroup(row: Record<string, unknown>): SubscriptionGroupRecord {
   return {
     id: String(row.id), name: String(row.name), description: String(row.description), channel: row.channel as SubscriptionChannel,
@@ -818,6 +847,46 @@ export function removeCatalog(id: string) {
     conn.exec("COMMIT");
   } catch (error) { conn.exec("ROLLBACK"); throw error; }
 }
+export function subscribeCatalogItem(catalogId: string, input: { userId?: string; itemId?: string; subscriptionType?: string }) {
+  const userId = String(input.userId ?? "").trim();
+  const itemId = String(input.itemId ?? "").trim();
+  if (!userId || !itemId) throw new Error("userId and itemId are required");
+  const subscriptionType = String(input.subscriptionType ?? "back_in_stock");
+  db().prepare("INSERT OR IGNORE INTO catalog_subscriptions VALUES (?, ?, ?, ?, ?)").run(catalogId, userId, itemId, subscriptionType, now());
+  audit("catalog", catalogId, "subscribed", { userId, itemId, subscriptionType });
+  return listCatalogSubscriptions(catalogId, 10);
+}
+
+// Runs the back-in-stock / price-drop rules for a catalog: queues a push
+// notification per matching subscription and expires it after sending.
+export function runCatalogNotifications(catalogId: string) {
+  const catalog = getResource(catalogId);
+  if (!catalog) throw new Error("Catalog not found");
+  const catalogData = (catalog.data ?? {}) as Record<string, unknown>;
+  const settings = (catalogData.settings ?? {}) as { backInStock?: boolean; priceDrop?: boolean; inventoryField?: string; priceField?: string };
+  if (!settings.backInStock && !settings.priceDrop) throw new Error("Enable the back-in-stock or price-drop rule first.");
+  const items = listCatalogItems(catalogId);
+  const subs = db().prepare("SELECT user_id, item_id FROM catalog_subscriptions WHERE catalog_id = ?").all(catalogId) as Array<{ user_id: string; item_id: string }>;
+  const insertEvent = db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)");
+  const timestamp = now();
+  let queued = 0; let skipped = 0;
+  for (const sub of subs) {
+    if (queued >= 50) { skipped += 1; continue; }
+    const item = items.find(candidate => candidate.id === sub.item_id);
+    if (!item) { skipped += 1; continue; }
+    const fields = item.fields ?? {};
+    const inStock = settings.backInStock && settings.inventoryField ? Number(fields[settings.inventoryField] ?? 0) > 0 : false;
+    const priceDropped = settings.priceDrop && settings.priceField ? Number(fields[settings.priceField] ?? 0) > 0 : false;
+    if (!inStock && !priceDropped) { skipped += 1; continue; }
+    const kind = inStock ? "back_in_stock" : "price_drop";
+    insertEvent.run(uid("evt"), catalogId, "push", sub.user_id, "delivered", timestamp, JSON.stringify({ catalogNotification: { kind, item: item.id, name: item.name } }));
+    db().prepare("DELETE FROM catalog_subscriptions WHERE catalog_id = ? AND user_id = ? AND item_id = ?").run(catalogId, sub.user_id, sub.item_id);
+    queued += 1;
+  }
+  audit("catalog", catalogId, "notification_check", { queued, skipped });
+  return { queued, skipped, remaining: Math.max(0, subs.length - queued - skipped) };
+}
+
 export function listCatalogItems(catalogId: string, q = ""): Array<{ id: string; name: string; fields: Record<string, unknown>; updatedAt: string }> {
   const rows = db().prepare("SELECT * FROM catalog_items WHERE catalog_id = ? AND (lower(name) LIKE lower(?) OR lower(id) LIKE lower(?)) ORDER BY updated_at DESC").all(catalogId, `%${q}%`, `%${q}%`) as Record<string, unknown>[];
   return rows.map(row => ({ id: String(row.id), name: String(row.name), fields: parseJson<Record<string, unknown>>(String(row.fields_json), {}), updatedAt: String(row.updated_at) }));

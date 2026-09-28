@@ -1,10 +1,17 @@
-import { searchUsers, setUserSubscription } from "@/lib/braze-store";
+import { importUsers, searchUsers, setUserSubscription } from "@/lib/braze-store";
 
 export const runtime = "nodejs";
 
 export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
   return Response.json(searchUsers(params.get("q") ?? "", Number(params.get("start") ?? 0), Number(params.get("limit") ?? 20)));
+}
+
+export async function POST(request: Request) {
+  const input = await request.json().catch(() => null);
+  if (!input || !Array.isArray(input.rows)) return Response.json({ error: "Provide a rows array of user objects." }, { status: 400 });
+  const clean = input.rows.filter((row: unknown) => row && typeof row === "object" && !Array.isArray(row)) as Array<Record<string, string>>;
+  return Response.json(importUsers(clean));
 }
 
 export async function PATCH(request: Request) {
