@@ -140,7 +140,10 @@ export default function CatalogStudio({ locale, notify }: { locale: Locale; noti
   const items = selectedId ? remoteItems[selectedId] ?? [] : [];
   const selections = selectedId ? remoteSelections[selectedId] ?? [] : [];
   const settings = selected?.data.settings ?? emptySettings;
-  const editable = Boolean(selected && !selected.data.sample);
+  // The seeded catalog keeps its schema and items read only. Selections are
+  // workspace configuration, so their list and detail routes remain editable.
+  const selectionEditingContext = Boolean(selectionRoute) || searchParams.get("tab") === "selections";
+  const editable = Boolean(selected && (!selected.data.sample || selectionEditingContext));
 
   function updateRecord(id: string, update: (record: LocalCatalogRecord) => LocalCatalogRecord) {
     const catalog = remoteCatalogs.find(value => value.id === id); if (!catalog) return;

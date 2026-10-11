@@ -1,5 +1,4 @@
 import { getCatalogSelection, removeCatalogSelection, upsertCatalogSelection } from "@/lib/braze-store";
-import { sampleCatalogId } from "@/lib/sample-catalog";
 import { catalogErrorResponse } from "@/lib/catalog-api";
 
 export const runtime = "nodejs";
@@ -10,11 +9,10 @@ export async function GET(_request: Request, context: RouteContext<"/api/catalog
   return selection ? Response.json(selection) : Response.json({ error: "Selection not found" }, { status: 404 });
 }
 export async function PATCH(request: Request, context: RouteContext<"/api/catalogs/[id]/selections/[name]">) {
-  try { const { id, name } = await context.params; if (id === sampleCatalogId) return Response.json({ error: "Sample_Catalog is view only" }, { status: 403 }); return Response.json(upsertCatalogSelection(id, await request.json(), decodeURIComponent(name))); } catch (error) { return catalogErrorResponse(error); }
+  try { const { id, name } = await context.params; return Response.json(upsertCatalogSelection(id, await request.json(), decodeURIComponent(name))); } catch (error) { return catalogErrorResponse(error); }
 }
 export async function DELETE(_request: Request, context: RouteContext<"/api/catalogs/[id]/selections/[name]">) {
   const { id, name } = await context.params;
-  if (id === sampleCatalogId) return Response.json({ error: "Sample_Catalog is view only" }, { status: 403 });
   removeCatalogSelection(id, decodeURIComponent(name));
   return new Response(null, { status: 204 });
 }
