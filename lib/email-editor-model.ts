@@ -1,6 +1,7 @@
 // Row-based email editor data model mirroring the Braze drag-and-drop builder:
 // a message is a stack of rows, each row holds one or more columns (cells),
 // and every cell holds a stack of content blocks.
+import { selectionMatches, type CatalogFilter } from "./catalog-model";
 
 export type EmailBlockKind =
   | "Title" | "Paragraph" | "List" | "Button" | "Divider" | "Spacer"
@@ -231,7 +232,21 @@ export type PreviewUser = { first_name?: string; last_name?: string; email?: str
 
 // Saved workspace data (Content Blocks, Promotion Codes lists) used to resolve
 // {% renderblock %} and {% promotion_code %} instead of placeholder text.
-export type WorkspaceLiquid = { contentBlocks?: Record<string, string>; promotionCodes?: Record<string, string[]>; catalogItems?: Record<string, Array<{ id: string; name: string; fields: Record<string, unknown> }>> };
+export type WorkspaceCatalogItem = { id: string; name: string; fields: Record<string, unknown> };
+export type WorkspaceCatalogSelection = {
+  name: string;
+  filters: Array<{ field: string; operator: string; value: string }>;
+  randomSort: boolean;
+  sortField: string;
+  sortDirection: string;
+  resultLimit: number;
+};
+export type WorkspaceLiquid = {
+  contentBlocks?: Record<string, string>;
+  promotionCodes?: Record<string, string[]>;
+  catalogItems?: Record<string, WorkspaceCatalogItem[]>;
+  catalogSelections?: Record<string, WorkspaceCatalogSelection[]>;
+};
 
 const defaultUser: PreviewUser = { first_name: "Sofia", last_name: "Chen", email: "sofia@example.com", country: "US", city: "San Francisco", language: "en", time_zone: "America/Los_Angeles", user_id: "user_1024" };
 
@@ -256,10 +271,37 @@ export function resolveLiquidPreview(source: string, user: PreviewUser = default
   text = text.replace(/\{\%\s*promotion_code\s*(?:'([^']*)'\s*)?\%\}/g, pickCode);
   text = text.replace(/\{%\s*catalog_select\s+"([^"]+)"\s+"([^"]+)"\s*(?:"([^"]+)")?\s*%\}/g, (_match, name: string, itemId: string, field?: string) => {
     const items = workspace?.catalogItems?.[name.toLowerCase()];
-    const item = items?.find(candidate => candidate.id === itemId) ?? items?.find(candidate => candidate.name === itemId) ?? items?.[0];
-    if (!item) return `[${name}:${itemId}]`;
+    const item = items?.find(candidate => candidate.id === itemId) ?? items?.find(candidate => candidate.name === itemId);
+    if (!item) return "";
     const lookup = String(field ?? "name");
     return String(item.fields[lookup] ?? (item as unknown as Record<string, unknown>)[lookup] ?? item.name);
+  });
+  let activeCatalogItems: WorkspaceCatalogItem[] = [];
+  const tokenParts = (value: string) => [...value.matchAll(/"([^"]*)"|'([^']*)'|([^\s]+)/g)].map(match => match[1] ?? match[2] ?? match[3]);
+  const profileValue = (value: string) => value.replace(/\{\{\s*(?:custom_attribute\.)?\$\{(\w+)\}\s*\}\}/g, (_match, key: string) => String(profile[key] ?? ""));
+  text = text.replace(/\{%\s*(catalog_items|catalog_selection_items)\s*([^%]*?)\s*%\}|\{\{\s*items\[(\d+)]\.([\w-]+)\s*\}\}/g, (match, tag: string | undefined, rawArguments: string | undefined, itemIndex: string | undefined, field: string | undefined) => {
+    if (tag) {
+      const parts = tokenParts(rawArguments ?? "");
+      const catalogName = parts.shift() ?? "";
+      const catalogItems = workspace?.catalogItems?.[catalogName.toLowerCase()] ?? [];
+      if (tag === "catalog_items") {
+        const ids = parts.filter(part => !part.startsWith(":"));
+        activeCatalogItems = ids.map(id => catalogItems.find(item => item.id === profileValue(id) || item.name === profileValue(id))).filter((item): item is WorkspaceCatalogItem => Boolean(item));
+      } else {
+        const selectionName = parts[0] ?? "";
+        const selection = workspace?.catalogSelections?.[catalogName.toLowerCase()]?.find(candidate => candidate.name.toLowerCase() === selectionName.toLowerCase());
+        activeCatalogItems = selection ? catalogItems.filter(item => selectionMatches(item, selection.filters as CatalogFilter[], profile)) : [];
+        if (selection?.sortField) {
+          const direction = selection.sortDirection === "descending" ? -1 : 1;
+          activeCatalogItems = [...activeCatalogItems].sort((left, right) => String(left.fields[selection.sortField] ?? "").localeCompare(String(right.fields[selection.sortField] ?? "")) * direction);
+        }
+        activeCatalogItems = activeCatalogItems.slice(0, selection?.resultLimit ?? 0);
+      }
+      return "";
+    }
+    const item = activeCatalogItems[Number(itemIndex)];
+    if (!item || !field) return "";
+    return String(field === "id" ? item.id : field === "name" ? item.fields[field] ?? item.name : item.fields[field] ?? "");
   });
   text = text.replace(/\{%\s*render_catalog\s+['"]([^'"]+)['"]\s*%\}/g, (_match, name: string) => {
     const first = workspace?.catalogItems?.[name.toLowerCase()]?.[0];

@@ -109,9 +109,23 @@ export const whatsappTemplates: WhatsAppTemplate[] = [
   },
 ];
 
-export function getWhatsAppTemplate(id: string) {
-  return whatsappTemplates.find(template => template.id === id) ?? whatsappTemplates[0];
+export type WhatsAppCampaignLike = { body?: string; config?: Record<string, unknown> };
+
+export function getWhatsAppTemplate(id: string, extras?: WhatsAppTemplate[]) {
+  return whatsappTemplates.find(template => template.id === id) ?? extras?.find(template => template.id === id) ?? whatsappTemplates[0];
 }
+
+// Custom templates submitted from the editor live in campaign config with a
+// simulated Meta approval lifecycle (Pending → Approved/Rejected).
+export function customWhatsAppTemplates(campaign: WhatsAppCampaignLike): WhatsAppTemplate[] {
+  return Array.isArray(campaign.config?.whatsappCustomTemplates) ? campaign.config.whatsappCustomTemplates as WhatsAppTemplate[] : [];
+}
+
+export function upsertCustomWhatsAppTemplate(campaign: WhatsAppCampaignLike, template: WhatsAppTemplate): WhatsAppTemplate[] {
+  const existing = customWhatsAppTemplates(campaign).filter(item => item.id !== template.id);
+  return [...existing, template];
+}
+
 
 export function createWhatsAppVariant(index = 0): WhatsAppVariant {
   const template = whatsappTemplates[0];
@@ -139,8 +153,6 @@ export function createWhatsAppVariant(index = 0): WhatsAppVariant {
   };
 }
 
-type WhatsAppCampaignLike = { body?: string; config?: Record<string, unknown> };
-
 export function normalizeWhatsAppVariants(campaign: WhatsAppCampaignLike): WhatsAppVariant[] {
   const stored = campaign.config?.whatsappVariants;
   if (Array.isArray(stored) && stored.length) return stored as WhatsAppVariant[];
@@ -158,9 +170,9 @@ export function normalizeWhatsAppVariants(campaign: WhatsAppCampaignLike): Whats
   }];
 }
 
-export function renderWhatsAppVariant(variant: WhatsAppVariant) {
+export function renderWhatsAppVariant(variant: WhatsAppVariant, extras?: WhatsAppTemplate[]) {
   if (variant.mode === "response") return variant.responseBody;
-  const template = getWhatsAppTemplate(variant.templateId);
+  const template = getWhatsAppTemplate(variant.templateId, extras);
   return template.body.replace(/\{\{(\d+)\}\}/g, (_match, key: string) => {
     const variable = variant.variables.find(item => item.key === key);
     return variable?.value.trim() || variable?.fallback.trim() || `{{${key}}}`;
@@ -178,7 +190,7 @@ export function validateWhatsAppCampaign(campaign: WhatsAppCampaignLike): string
     if (!variant.businessAccount) issues.push(`${prefix} Select a WhatsApp Business Account.`);
     if (!variant.subscriptionGroup) issues.push(`${prefix} Select a WhatsApp subscription group.`);
     if (variant.mode === "template") {
-      const template = getWhatsAppTemplate(variant.templateId);
+      const template = getWhatsAppTemplate(variant.templateId, customWhatsAppTemplates(campaign));
       if (!variant.templateId) issues.push(`${prefix} Select an approved template.`);
       if (template.status !== "Approved") issues.push(`${prefix} The selected template is not approved.`);
       for (const variable of variant.variables) {

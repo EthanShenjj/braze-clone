@@ -35,6 +35,61 @@
 .tokenGroup button{display:block;width:100%;margin:0 0 4px;padding:7px 8px;border:1px solid #e3ddf0;border-radius:4px;background:#fbf9ff;color:#4b3a86;text-align:left;font-size:11px;cursor:pointer}
 .tokenGroup button:hover{border-color:#853bde;background:#f3edff}
 .tokenGroup code{display:block;margin-top:2px;color:#8a8fa0;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.personalizationPage{grid-template-columns:300px minmax(0,1fr) 393px;grid-template-rows:14px minmax(0,1fr) 51px}
+.personalizationPage .header{overflow:hidden;padding:0}
+.personalizationPage .header>*{display:none}
+.personalizationPage .iconRail{display:none}
+.personalizationPage .leftRail{grid-column:1;padding:0;border-right:1px solid #e5e5e6;background:#f9f9fa}
+.personalizationPage .canvasArea{grid-column:2;background:#fff}
+.personalizationPage .rightPanel{grid-column:3}
+.personalizationPage .rightTabs{height:50px}
+.personalizationPage .footer{min-height:51px;padding:0 12px}
+.personalizationPage .footer .download,.personalizationPage .footer .done{height:40px;border-radius:9px;font-size:14px}
+.personalizationPanel{min-height:100%;background:#f9f9fa;color:#272932}
+.personalizationHead{position:sticky;z-index:3;top:0;display:flex;align-items:center;min-height:64px;padding:0 5px 0 25px;background:#f9f9fa}
+.personalizationHead h2{flex:1;margin:0;transform:translateY(5px);font-size:16px;line-height:1.2;font-weight:750;letter-spacing:-.01em}
+.personalizationHead button{position:absolute;top:2px;right:5px;display:grid;place-items:center;width:28px;height:28px;border:0;background:transparent;color:#686a72;cursor:pointer}
+.personalizationHead button svg{width:17px;height:17px}
+.personalizationHead button:hover{color:#2f3138}
+.personalizationForm{display:grid;gap:31px;padding:16px 23px 28px 25px}
+.personalizationForm>label{display:grid;gap:7px;color:#292b32;font-size:12px;font-weight:720}
+.personalizationForm select{width:100%;height:42px;padding:0 42px 0 15px;border:1px solid #8a8790;border-radius:8px;background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m5 7.5 5 5 5-5' fill='none' stroke='%235f6067' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-position:right 12px center;background-repeat:no-repeat;background-size:14px 14px;color:#2f3037;font-family:inherit;font-size:14px;font-weight:400;line-height:1.2;appearance:none}
+.personalizationForm select.placeholderSelect{color:#707078;font-style:italic}
+.personalizationForm select:focus{border-color:#8746ef;outline:2px solid #8746ef;outline-offset:-2px;background-image:linear-gradient(#b8b6bd,#b8b6bd),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m5 7.5 5 5 5-5' fill='none' stroke='%235f6067' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-position:right 39px center,right 12px center;background-size:1px 24px,14px 14px}
+.personalizationForm select:disabled{background-color:#f4f3f5;color:#8a8890}
+.optionFieldset{min-width:0;margin:0;padding:0;border:0}
+.optionFieldset legend{display:flex;width:100%;align-items:center;justify-content:space-between;margin-bottom:9px;color:#292b32;font-size:13px;font-weight:720}
+.optionFieldset legend span{color:#77737f;font-size:11px;font-weight:600}
+.checkList{display:grid;max-height:184px;overflow:auto;border:1px solid #d2ced8;border-radius:8px;background:#fff}
+.checkList>label,.fieldGrid>label{display:flex;align-items:center;gap:10px;min-height:44px;padding:7px 11px;border-bottom:1px solid #ece9ef;background:#fff;color:#414149;cursor:pointer}
+.checkList>label:last-of-type{border-bottom:0}
+.checkList>label.checkedOption,.fieldGrid>label.checkedOption{background:#f5efff;color:#52229d}
+.checkList input,.fieldGrid input{width:16px;height:16px;margin:0;accent-color:#742bd4}
+.checkList span{display:grid;gap:1px;min-width:0}
+.checkList b{font-size:12px}
+.checkList small{overflow:hidden;color:#797580;font-size:11px;font-weight:500;text-overflow:ellipsis;white-space:nowrap}
+.checkList p{margin:0;padding:14px;color:#77737f;font-size:12px}
+.fieldGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));max-height:150px;overflow:auto;border:1px solid #d2ced8;border-radius:8px}
+.fieldGrid>label{min-width:0;border-right:1px solid #ece9ef;font-size:11px;font-weight:600}
+.fieldGrid>label span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fieldHint{margin-top:-2px;color:#827e88;font-size:11px;font-weight:500}
+.snippetField{display:flex;min-height:42px;border:1px solid #89868f;border-radius:8px;background:#fff;overflow:hidden}
+.snippetField code{flex:1;overflow:auto;padding:9px 12px 9px 14px;color:#35313f;font:12px/1.5 "SF Mono",Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+.snippetField button{display:grid;flex:0 0 45px;place-items:center;border:0;background:#6826e1;color:#fff;cursor:pointer}
+.snippetField button svg{width:18px;height:18px}
+.snippetField button:hover{background:#6421bd}
+.insertSnippet{min-height:44px;border:0;border-radius:8px;background:#7027cf;color:#fff;font-size:13px;font-weight:750;cursor:pointer}
+.insertSnippet:hover{background:#6020b6}
+.copyFeedback{margin-top:-20px;color:#4f2a9b;font-size:11px;font-weight:650}
+.personalizationError{margin:-16px 0 0;padding:9px 11px;border:1px solid #edc9cd;border-radius:6px;background:#fff4f5;color:#963f48;font-size:11px}
+.personalizationEmpty{margin:-16px 0 0;color:#77737f;font-size:12px;line-height:1.45}
+.legacyTokens{display:grid;gap:7px}
+.legacyTokens p{margin:0 0 4px;color:#77737f;font-size:12px;line-height:1.45}
+.legacyTokens button{display:grid;gap:3px;padding:10px 11px;border:1px solid #ded8e8;border-radius:7px;background:#fff;color:#3f326f;text-align:left;cursor:pointer}
+.legacyTokens button:hover{border-color:#8138dc;background:#f8f4ff}
+.legacyTokens b{font-size:12px}
+.legacyTokens code{overflow:hidden;color:#85808c;font-size:10px;text-overflow:ellipsis;white-space:nowrap}
+.personalizationPanel button:focus-visible,.personalizationPanel input:focus-visible{outline:2px solid #762bd5;outline-offset:2px}
 .canvasArea{grid-column:3;grid-row:2;position:relative;overflow:auto;background:#eceaf0}
 .deviceModes{position:sticky;z-index:6;top:12px;left:12px;display:flex;width:max-content;height:33px;margin:12px 0 -33px 12px;border:1px solid #dbd9e1;background:#fff}
 .deviceModes button{width:32px;height:32px;display:grid;place-items:center;border:0;background:#fff;color:#41464e;cursor:pointer}
@@ -209,5 +264,5 @@
 .webhookResult pre{max-height:120px;overflow:auto;margin:8px 0 0;padding:8px;border-radius:5px;background:#2b2533;color:#d9d2ec;font-size:11px}
 .sendButton{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 16px;border:0;border-radius:6px;background:#6736d8;color:#fff;font-size:13px;font-weight:700;cursor:pointer}
 .sendButton:disabled{opacity:.55;cursor:default}
-@media(max-width:1180px){.page{grid-template-columns:48px 150px minmax(0,1fr) 300px}}
-@media(max-width:900px){.page{grid-template-columns:44px 130px minmax(0,1fr)}.rightPanel{display:none}.genBody{grid-template-columns:minmax(0,1fr)}.genSide{display:none}.galleryBody{grid-template-columns:minmax(0,1fr)}.galleryPreview{display:none}}
+@media(max-width:1180px){.page{grid-template-columns:48px 150px minmax(0,1fr) 300px}.personalizationPage{grid-template-columns:300px minmax(0,1fr) 330px}}
+@media(max-width:900px){.page{grid-template-columns:44px 130px minmax(0,1fr)}.rightPanel{display:none}.personalizationPage{grid-template-columns:300px minmax(0,1fr)}.personalizationPage .rightPanel{display:none}.genBody{grid-template-columns:minmax(0,1fr)}.genSide{display:none}.galleryBody{grid-template-columns:minmax(0,1fr)}.galleryPreview{display:none}}

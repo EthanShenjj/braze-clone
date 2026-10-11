@@ -12,6 +12,7 @@ import { sampleSegmentByName, sampleSegments } from "./sample-segments";
 import { deliverWebhook, webhookDeliveryCapability, type WebhookDeliveryResult } from "./webhook-delivery";
 import { normalizeWebhookVariants, redactHeaders, renderWebhookText, webhookPreviewUser, type WebhookVariant } from "./webhook-model";
 import { normalizePreferenceCenterConfig, preferenceCenterDefaultConfig, type PreferenceCenterConfig } from "./preference-center-model";
+import { CatalogValidationError, catalogFields, selectionMatches, validateCatalogItem, validateCatalogName, validateFields, validateSelection, type CatalogField, type CatalogFilter, type CatalogSelectionInput } from "./catalog-model";
 
 export type Channel = "email" | "push" | "iam" | "content" | "banner" | "sms" | "webhook" | "whatsapp" | "line" | "multichannel" | "operator" | "feature" | "api";
 export type CampaignStatus = "Draft" | "Active" | "Stopped" | "Archived";
@@ -22,7 +23,7 @@ export type CampaignRecord = {
 export type ResourceRecord = { id: string; type: string; name: string; status: string; description: string; updatedAt: string; data: Record<string, unknown> };
 export type UserRecord = { id: string; email: string; firstName: string; country: string; lifecycle: string; subscribed: boolean; reachable: boolean; attributes: Record<string, unknown> };
 export type CatalogSelectionRecord = {
-  catalogId: string; name: string; description: string; filters: Array<{ field: string; operator: "equals" | "not_equals" | "contains" | "not_contains" | "greater_than" | "less_than" | "exists" | "not_exists"; value: string }>;
+  catalogId: string; name: string; description: string; filters: CatalogFilter[];
   randomSort: boolean; sortField: string; sortDirection: string; resultLimit: number; updatedAt: string;
 };
 export type RecommendationRecord = ResourceRecord & {
@@ -815,6 +816,10 @@ export function listCatalogs() {
 }
 export function createCatalog(input: string | { id?: string; name: string; description?: string; data?: Record<string, unknown> }) {
   const value = typeof input === "string" ? { name: input } : input;
+  validateCatalogName(value.name);
+  validateFields(catalogFields(value.data ?? {}), "api");
+  const duplicate = listResources("catalogs").find(record => record.name.toLowerCase() === value.name.toLowerCase());
+  if (duplicate && duplicate.id !== value.id) throw new CatalogValidationError("Catalog names must be unique.", "duplicate_catalog_name");
   if (value.id) {
     const timestamp = now();
     const record: ResourceRecord = { id: value.id, type: "catalogs", name: value.name, status: "Draft", description: value.description ?? "", updatedAt: timestamp, data: value.data ?? { fields: [], fieldTypes: {}, source: "Braze", size: "1KB" } };
@@ -829,8 +834,57 @@ export function createCatalog(input: string | { id?: string; name: string; descr
     data: value.data ?? { fields: [], fieldTypes: {}, source: "Braze", size: "1KB" },
   });
 }
+
+export function createCatalogWithItems(input: { id?: string; name: string; description?: string; fields: CatalogField[]; items: Array<{ id: string; name: string; fields?: Record<string, unknown> }>; source: "browser" | "csv" }) {
+  validateCatalogName(input.name); validateFields(input.fields, input.source);
+  const seen = new Set<string>();
+  for (const item of input.items) {
+    if (seen.has(item.id)) throw new CatalogValidationError(`Duplicate item id: ${item.id}.`, "duplicate_item_id");
+    seen.add(item.id); validateCatalogItem(item, input.fields);
+  }
+  const conn = db(); conn.exec("BEGIN");
+  try {
+    const record = createCatalog({ id: input.id, name: input.name, description: input.description, data: { fields: input.fields.map(field => field.name), fieldTypes: Object.fromEntries(input.fields.map(field => [field.name, field.type])), source: input.source === "csv" ? "CSV upload" : "Braze", size: `${Math.max(1, Math.ceil(JSON.stringify(input.items).length / 1024))}KB` } });
+    const insert = conn.prepare("INSERT INTO catalog_items VALUES (?, ?, ?, ?, ?)"); const timestamp = now();
+    for (const item of input.items) insert.run(item.id, record.id, item.name || item.id, JSON.stringify(item.fields ?? {}), timestamp);
+    conn.exec("COMMIT"); return { ...record, itemCount: input.items.length };
+  } catch (error) { conn.exec("ROLLBACK"); throw error; }
+}
+
+export function addCatalogFields(catalogId: string, fields: CatalogField[]) {
+  const catalog = getResource(catalogId); if (!catalog || catalog.type !== "catalogs") throw new CatalogValidationError("Catalog not found.", "catalog_not_found");
+  validateFields(fields, "browser");
+  const current = catalogFields(catalog.data); validateFields([...current, ...fields], "api");
+  const data = { ...catalog.data, fields: [...current, ...fields].map(field => field.name), fieldTypes: Object.fromEntries([...current, ...fields].map(field => [field.name, field.type])) };
+  return updateCatalog(catalogId, { data });
+}
+
+export function applyCatalogItemCsvUpdate(catalogId: string, mode: "merge" | "delete", items: Array<{ id: string; name?: string; fields?: Record<string, unknown> }>) {
+  const catalog = getResource(catalogId); if (!catalog || catalog.type !== "catalogs") throw new CatalogValidationError("Catalog not found.", "catalog_not_found");
+  const fields = catalogFields(catalog.data); const ids = new Set<string>();
+  for (const item of items) {
+    if (ids.has(item.id)) throw new CatalogValidationError(`Duplicate item id: ${item.id}.`, "duplicate_item_id");
+    ids.add(item.id);
+    if (mode === "delete") { if (!item.id?.trim()) throw new CatalogValidationError("Each CSV row requires an id.", "invalid_item_id"); }
+    else validateCatalogItem({ ...item, name: item.name ?? item.id }, fields);
+  }
+  const conn = db(); conn.exec("BEGIN");
+  try {
+    if (mode === "delete") { const remove = conn.prepare("DELETE FROM catalog_items WHERE catalog_id = ? AND id = ?"); for (const item of items) remove.run(catalogId, item.id); }
+    else { const upsert = conn.prepare("INSERT INTO catalog_items VALUES (?, ?, ?, ?, ?) ON CONFLICT(catalog_id,id) DO UPDATE SET name=excluded.name, fields_json=excluded.fields_json, updated_at=excluded.updated_at"); const timestamp = now(); for (const item of items) upsert.run(item.id, catalogId, item.name || item.id, JSON.stringify(item.fields ?? {}), timestamp); }
+    audit("catalog_item", catalogId, mode === "delete" ? "csv_deleted" : "csv_merged", { items: items.length }); conn.exec("COMMIT"); return listCatalogItems(catalogId);
+  } catch (error) { conn.exec("ROLLBACK"); throw error; }
+}
 export function updateCatalog(id: string, patch: Partial<Pick<ResourceRecord, "name" | "description" | "data" | "status">>) {
   const current = getResource(id); if (!current || current.type !== "catalogs") return null;
+  if (patch.name && patch.name !== current.name) throw new CatalogValidationError("Catalog names cannot be changed after creation.", "catalog_name_immutable");
+  if (patch.data) {
+    const currentFields = catalogFields(current.data); const nextFields = catalogFields(patch.data); validateFields(nextFields, "api");
+    for (const field of currentFields) {
+      const next = nextFields.find(candidate => candidate.name === field.name);
+      if (!next || next.type !== field.type) throw new CatalogValidationError("Existing catalog fields and field types cannot be changed.", "catalog_schema_immutable");
+    }
+  }
   const next = { ...current, ...patch, data: patch.data ?? current.data, updatedAt: now() };
   db().prepare("UPDATE resources SET name = ?, status = ?, description = ?, updated_at = ?, data_json = ? WHERE id = ?").run(next.name, next.status, next.description, next.updatedAt, JSON.stringify(next.data), id);
   audit("catalog", id, "updated", { fields: (next.data as { fields?: unknown }).fields }); return next;
@@ -892,7 +946,8 @@ export function listCatalogItems(catalogId: string, q = ""): Array<{ id: string;
   return rows.map(row => ({ id: String(row.id), name: String(row.name), fields: parseJson<Record<string, unknown>>(String(row.fields_json), {}), updatedAt: String(row.updated_at) }));
 }
 export function upsertCatalogItem(catalogId: string, input: { id: string; name: string; fields?: Record<string, unknown> }) {
-  if (!getResource(catalogId)) throw new Error("Catalog not found"); const updatedAt = now();
+  const catalog = getResource(catalogId); if (!catalog || catalog.type !== "catalogs") throw new CatalogValidationError("Catalog not found.", "catalog_not_found");
+  validateCatalogItem(input, catalogFields(catalog.data)); const updatedAt = now();
   db().prepare("INSERT INTO catalog_items VALUES (?, ?, ?, ?, ?) ON CONFLICT(catalog_id,id) DO UPDATE SET name=excluded.name, fields_json=excluded.fields_json, updated_at=excluded.updated_at").run(input.id, catalogId, input.name, JSON.stringify(input.fields ?? {}), updatedAt);
   audit("catalog_item", `${catalogId}:${input.id}`, "upserted", {}); return { ...input, fields: input.fields ?? {}, updatedAt };
 }
@@ -924,7 +979,11 @@ export function getCatalogSelection(catalogId: string, name: string) {
 }
 
 export function upsertCatalogSelection(catalogId: string, input: Omit<CatalogSelectionRecord, "catalogId" | "updatedAt">, originalName?: string) {
-  if (!getResource(catalogId)) throw new Error("Catalog not found");
+  const catalog = getResource(catalogId); if (!catalog || catalog.type !== "catalogs") throw new CatalogValidationError("Catalog not found.", "catalog_not_found");
+  const current = getCatalogSelection(catalogId, originalName ?? input.name);
+  validateSelection(input as CatalogSelectionInput, catalogFields(catalog.data), listCatalogSelections(catalogId).length, Boolean(current));
+  if (originalName && originalName !== input.name) throw new CatalogValidationError("Selection names cannot be changed after creation.", "selection_name_immutable");
+  if (!originalName && current) throw new CatalogValidationError("A selection with this name already exists.", "duplicate_selection_name");
   const timestamp = now();
   if (originalName && originalName !== input.name) db().prepare("DELETE FROM catalog_selections WHERE catalog_id = ? AND name = ?").run(catalogId, originalName);
   db().prepare(`INSERT INTO catalog_selections VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -958,21 +1017,7 @@ export function previewCatalogSelection(catalogId: string, name: string, userId?
   if (!selection) return null;
   const user = userId ? getUser(userId) : randomCatalogPreviewUser();
   if (!user) return null;
-  let items = listCatalogItems(catalogId);
-  for (const filter of selection.filters) {
-    items = items.filter(item => {
-      const raw = filter.field === "id" ? item.id : item.fields[filter.field];
-      const left = String(raw ?? "").toLowerCase(); const right = filter.value.toLowerCase();
-      if (filter.operator === "not_equals") return left !== right;
-      if (filter.operator === "contains") return left.includes(right);
-      if (filter.operator === "not_contains") return !left.includes(right);
-      if (filter.operator === "greater_than") return Number(raw) > Number(filter.value);
-      if (filter.operator === "less_than") return Number(raw) < Number(filter.value);
-      if (filter.operator === "exists") return raw != null && raw !== "";
-      if (filter.operator === "not_exists") return raw == null || raw === "";
-      return left === right;
-    });
-  }
+  let items = listCatalogItems(catalogId).filter(item => selectionMatches(item, selection.filters, user.attributes));
   if (selection.randomSort) {
     items.sort((left, right) => createHash("sha256").update(`${catalogId}:${name}:${user.id}:${left.id}`).digest("hex").localeCompare(createHash("sha256").update(`${catalogId}:${name}:${user.id}:${right.id}`).digest("hex")));
   } else if (selection.sortField) {

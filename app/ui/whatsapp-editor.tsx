@@ -8,8 +8,9 @@ import {
 } from "lucide-react";
 import {
   getWhatsAppTemplate, normalizeWhatsAppVariants,
-  renderWhatsAppVariant, whatsappAccounts, whatsappTemplates,
-  type WhatsAppResponseLayout, type WhatsAppVariant,
+  customWhatsAppTemplates, renderWhatsAppVariant, upsertCustomWhatsAppTemplate, whatsappAccounts, whatsappTemplates,
+  type WhatsAppResponseLayout, type WhatsAppTemplate, type WhatsAppVariant,
+  type WhatsAppCampaignLike,
 } from "@/lib/whatsapp-model";
 import styles from "./whatsapp-editor.module.css";
 
@@ -23,14 +24,18 @@ const responseLayouts: Array<{ value: WhatsAppResponseLayout; label: string; hel
   { value: "list", label: "List message", help: "Present up to ten selectable options", icon: List },
 ];
 
-function displayTemplate(templateId: string) {
-  const template = getWhatsAppTemplate(templateId);
+function displayTemplate(templateId: string, extras?: ReturnType<typeof customWhatsAppTemplates>) {
+  const template = getWhatsAppTemplate(templateId, extras);
   return `${template.name} · ${template.language}`;
 }
 
 export default function WhatsAppEditor({ draft, update, notify = () => {} }: { draft: CampaignLike; update: (patch: { body?: string; config?: Record<string, unknown> }) => void; notify?: (m: string) => void }) {
   const channelValues = (draft.config?.channelValues ?? {}) as Record<string, unknown>;
   const variants = normalizeWhatsAppVariants(draft);
+  const customTemplates = customWhatsAppTemplates(draft);
+  const allTemplates = [...customTemplates, ...whatsappTemplates];
+  const templateFor = (id: string) => getWhatsAppTemplate(id, customTemplates);
+  const [submitOpen, setSubmitOpen] = useState(false);
   const [selected, setSelected] = useState(0);
   const active = variants[selected] ?? variants[0];
 
@@ -57,7 +62,7 @@ export default function WhatsAppEditor({ draft, update, notify = () => {} }: { d
 
   const patchActive = (patch: Partial<WhatsAppVariant>) => saveVariants(variants.map((variant, index) => index === selected ? { ...variant, ...patch } : variant));
   const chooseTemplate = (templateId: string) => {
-    const template = getWhatsAppTemplate(templateId);
+    const template = templateFor(templateId);
     patchActive({
       templateId,
       language: template.language,
@@ -87,7 +92,7 @@ export default function WhatsAppEditor({ draft, update, notify = () => {} }: { d
       <div><h3>Message variants</h3><p>Test different WhatsApp content while keeping the same audience and schedule.</p></div>
       <div className={styles.variantActions}>
         <div className={styles.variantTabs}>{variants.map((variant, index) => <button type="button" className={index === selected ? styles.activeTab : ""} onClick={() => setSelected(index)} key={variant.id}>{variant.name}<small>{variant.mode === "template" ? "Template" : "Response"}</small></button>)}<button type="button" className={styles.addTab} aria-label="Add WhatsApp variant" onClick={addVariant}><Plus size={16}/></button></div>
-        <button type="button" className={styles.iconAction} title={`Sync ${whatsappTemplates.length} templates from the local registry`} aria-label="Sync templates" onClick={() => { const at = new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }); update({ config: { ...draft.config, channelValues: { ...channelValues, lastTemplateSync: new Date().toISOString() } } }); notify(`${whatsappTemplates.length} WhatsApp templates synced (${at}).`); }}><RefreshCw size={15}/></button>
+        <button type="button" className={styles.iconAction} title={`Sync ${allTemplates.length} templates from the local registry`} aria-label="Sync templates" onClick={() => { const at = new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }); update({ config: { ...draft.config, channelValues: { ...channelValues, lastTemplateSync: new Date().toISOString() } } }); notify(`${whatsappTemplates.length} WhatsApp templates synced (${at}).`); }}><RefreshCw size={15}/></button>
         <button type="button" className={styles.iconAction} aria-label="Duplicate variant" onClick={duplicateVariant}><Copy size={15}/></button>
         <button type="button" className={styles.iconAction} aria-label="Delete variant" disabled={variants.length === 1} onClick={removeVariant}><Trash2 size={15}/></button>
       </div>
@@ -111,7 +116,7 @@ export default function WhatsAppEditor({ draft, update, notify = () => {} }: { d
           </div>
         </section>
 
-        {active.mode === "template" ? <TemplateComposer variant={active} patch={patchActive} chooseTemplate={chooseTemplate}/> : <ResponseComposer variant={active} patch={patchActive}/>} 
+        {active.mode === "template" ? <TemplateComposer variant={active} patch={patchActive} chooseTemplate={chooseTemplate} customTemplates={customTemplates} draft={draft} update={update}/> : <ResponseComposer variant={active} patch={patchActive}/>}
       </div>
 
       <WhatsAppPreview variant={active}/>
@@ -119,19 +124,39 @@ export default function WhatsAppEditor({ draft, update, notify = () => {} }: { d
   </div>;
 }
 
-function TemplateComposer({ variant, patch, chooseTemplate }: { variant: WhatsAppVariant; patch: (patch: Partial<WhatsAppVariant>) => void; chooseTemplate: (templateId: string) => void }) {
-  const template = getWhatsAppTemplate(variant.templateId);
+function TemplateComposer({ variant, patch, chooseTemplate, customTemplates, draft, update }: { variant: WhatsAppVariant; patch: (patch: Partial<WhatsAppVariant>) => void; chooseTemplate: (templateId: string) => void; customTemplates: WhatsAppTemplate[]; draft: WhatsAppCampaignLike; update: (patch: { body?: string; config?: Record<string, unknown> }) => void }) {
+  const template = getWhatsAppTemplate(variant.templateId, customTemplates);
   const [listOpen, setListOpen] = useState(false);
+  const [submitOpen, setSubmitOpen] = useState(false);
+  const allTemplates = [...customTemplates, ...whatsappTemplates];
+  const [form, setForm] = useState({ name: "", category: "Marketing", language: "English (US)", headerType: "none" as WhatsAppTemplate["headerType"], body: "Hi {{1}}, here is your offer: {{2}}", footer: "" });
+  const submitTemplate = () => {
+    if (!form.name.trim() || !form.body.trim()) return;
+    const id = `custom_${form.name.toLowerCase().replace(/[^a-z0-9]+/g, "_").slice(0, 20)}_${Date.now().toString(36).slice(-4)}`;
+    const variableCount = new Set(form.body.matchAll(/\{\{(\d+)\}\}/g)).size;
+    const next: WhatsAppTemplate = { id, name: form.name.trim(), language: form.language, category: form.category as WhatsAppTemplate["category"], status: "Pending", headerType: form.headerType, body: form.body, footer: form.footer, variables: Array.from({ length: variableCount }, (_, index) => ({ key: String(index + 1), label: `Variable ${index + 1}`, example: "example", fallback: "" })), button: { type: "quick_reply", label: "OK" } };
+    update({ config: { ...draft.config, whatsappCustomTemplates: upsertCustomWhatsAppTemplate(draft, next) } });
+    // Defer selection until the parent re-renders with the new config, otherwise the
+    // variant patch below would be written from a stale draft and drop the template.
+    window.setTimeout(() => chooseTemplate(id), 0);
+    setSubmitOpen(false);
+  };
   return <>
     <section className={styles.section}>
       <div className={styles.sectionHeading}><div><h3>Approved template</h3><p>Each language is a separate approved template.</p></div><button type="button" className={styles.textButton} aria-expanded={listOpen} onClick={() => setListOpen(!listOpen)}>Manage templates</button></div>
       {listOpen && <div className={styles.templateMeta} style={{ display: "block", marginBottom: 10 }}>
-        {whatsappTemplates.map(item => <button type="button" key={item.id} className={styles.textButton} style={{ display: "flex", width: "100%", justifyContent: "space-between", padding: "8px 4px" }} onClick={() => { chooseTemplate(item.id); setListOpen(false); }}>
+        {allTemplates.map(item => <button type="button" key={item.id} className={styles.textButton} style={{ display: "flex", width: "100%", justifyContent: "space-between", padding: "8px 4px" }} onClick={() => { chooseTemplate(item.id); setListOpen(false); }}>
           <span><b>{item.name}</b> · {item.language}</span>
           <span>{item.category}{variant.templateId === item.id ? " · ✓ in use" : ""}</span>
         </button>)}
       </div>}
-      <label>Template<select value={variant.templateId} onChange={event => chooseTemplate(event.target.value)}>{whatsappTemplates.map(item => <option value={item.id} key={item.id}>{displayTemplate(item.id)} · {item.category}</option>)}</select></label>
+      <label>Template<select value={variant.templateId} onChange={event => chooseTemplate(event.target.value)}>{allTemplates.map(item => <option value={item.id} key={item.id}>{displayTemplate(item.id, customTemplates)} · {item.category} · {item.status}</option>)}</select></label>
+      <button type="button" className={styles.textButton} style={{ fontWeight: 750, padding: "8px 4px" }} onClick={() => setSubmitOpen(!submitOpen)}>{submitOpen ? "Cancel submission" : "+ Submit template"}</button>
+      {customTemplates.length > 0 && <div style={{ display: "grid", gap: 6, margin: "10px 0" }}>{customTemplates.filter(item => item.status === "Pending").map(item => <div key={item.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", border: "1px solid #e3dfe6", borderRadius: 6, fontSize: 11 }}>
+        <span style={{ flex: 1 }}><b>{item.name}</b> · {item.category} · <span style={{ color: "#a2701d" }}>Pending Meta review</span></span>
+        <button type="button" className="secondary small" onClick={() => update({ config: { ...draft.config, whatsappCustomTemplates: upsertCustomWhatsAppTemplate(draft, { ...item, status: "Approved" }) } })}>Simulate approval</button>
+        <button type="button" className="secondary small" style={{ color: "#a4474f" }} onClick={() => update({ config: { ...draft.config, whatsappCustomTemplates: upsertCustomWhatsAppTemplate(draft, { ...item, status: "Rejected" }) } })}>Reject</button>
+      </div>)}</div>}
       <div className={styles.templateMeta}><span className={styles.approved}><CheckCircle2 size={14}/> {template.status}</span><span>{template.category}</span><span>{template.language}</span><span>Last synced just now</span></div>
     </section>
 
@@ -142,6 +167,20 @@ function TemplateComposer({ variant, patch, chooseTemplate }: { variant: WhatsAp
       <div className={styles.variableList}>{variant.variables.map((variable, index) => <div className={styles.variableRow} key={variable.key}><span className={styles.variableToken}>{`{{${variable.key}}}`}</span><div><b>{variable.label}</b><small>Example: {template.variables[index]?.example}</small></div><label>Value<input value={variable.value} onChange={event => patch({ variables: variant.variables.map(item => item.key === variable.key ? { ...item, value: event.target.value } : item) })}/></label><label>Fallback<input value={variable.fallback} onChange={event => patch({ variables: variant.variables.map(item => item.key === variable.key ? { ...item, fallback: event.target.value } : item) })}/></label></div>)}</div>
       {template.footer && <div className={styles.contentGroup}><div className={styles.contentLabel}><span><FileText size={16}/> Footer</span></div><div className={styles.lockedCopy}>{template.footer}</div></div>}
       <div className={styles.contentGroup}><div className={styles.contentLabel}><span><MousePointerClick size={16}/> Button</span><small>{template.button.type.replaceAll("_", " ")}</small></div><div className={styles.buttonConfig}><span>{template.button.label}</span>{template.button.type === "website" && <label>Destination URL<input value={variant.buttonUrl} onChange={event => patch({ buttonUrl: event.target.value })} placeholder="https://example.com/path/{{1}}"/></label>}</div></div>
+      {template.status === "Pending" && <p style={{ color: "#a2701d", fontSize: 11, fontWeight: 750 }}>This template is pending Meta review — simulate approval from the banner above before sending.</p>}
+      {submitOpen && <section className={styles.liquidSection} style={{ marginTop: 14 }}>
+        <h3>Submit template for approval</h3>
+        <label>Template name<input aria-label="Template name" value={form.name} onChange={event => setForm({ ...form, name: event.target.value })} placeholder="e.g. shipping_update"/></label>
+        <label>Category<select aria-label="Template category" value={form.category} onChange={event => setForm({ ...form, category: event.target.value })}><option>Marketing</option><option>Utility</option><option>Authentication</option></select></label>
+        <label>Language<select aria-label="Template language" value={form.language} onChange={event => setForm({ ...form, language: event.target.value })}><option>English (US)</option><option>Chinese (Simplified)</option><option>Japanese</option><option>Korean</option></select></label>
+        <label>Header<select aria-label="Header type" value={form.headerType} onChange={event => setForm({ ...form, headerType: event.target.value as WhatsAppTemplate["headerType"] })}><option value="none">None</option><option value="text">Text</option><option value="image">Image</option></select></label>
+        <label>Body <small>(use {'{{1}}'}, {'{{2}}'}… for variables)</small><textarea aria-label="Template body" value={form.body} onChange={event => setForm({ ...form, body: event.target.value })}/></label>
+        <label>Footer <small>(Optional)</small><input aria-label="Template footer" value={form.footer} onChange={event => setForm({ ...form, footer: event.target.value })}/></label>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button type="button" className="primary small" disabled={!form.name.trim() || !form.body.trim()} onClick={submitTemplate}>Submit for approval</button>
+          <button type="button" className="secondary small" onClick={() => setSubmitOpen(false)}>Cancel</button>
+        </div>
+      </section>}
     </section>
   </>;
 }

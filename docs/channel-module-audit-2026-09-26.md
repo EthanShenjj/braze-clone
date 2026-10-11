@@ -47,3 +47,12 @@ tsc 通过；4 个单测套件全绿；`tests/e2e_smoke.py` 通过；专项 E2E 
 - **Catalog 通知引擎**：`POST /api/catalogs/[id]/notify` 按 Back-in-stock / Price-drop 规则扫描订阅，匹配项生成本地 push 事件（活动日志/报表可见），订阅发送后过期；新增 `POST /api/catalogs/[id]/subscriptions`（此前订阅只读不可创建）；Settings 页新增 "Run rule check"。
 - 修复并发改动引入的 SSR 崩溃（NotificationsMenu 直接访问 window.localStorage）。
 - 验证：9/9 专项 E2E（通知引擎入队/活动日志/订阅过期、IAM 设置与模板、RCS/MMS、catalog_select 解析），smoke + 4 单测套件 + tsc 全绿。
+
+## 渠道编辑能力补全（2026-09-26 第四轮：IAM / SMS / WhatsApp / LINE）
+
+- **In-App Message**：页面按钮升级为最多两个（主/次样式），每个按钮可配置 on-click 行为（关闭消息 / 打开 deep link / 打开 Web URL + 目标地址）；新增块级检查器——选中块可编辑内容、图片 URL、写入用户属性的表单映射（Phone/Email Capture 等）、逐块文字颜色/字号/对齐；Slideup 支持顶部/底部位置。
+- **SMS/MMS/RCS**：MMS 新增主题与"非 MMS 设备降级文本"（必填提示）；RCS 支持多卡 Carousel（最多 5 张，逐卡标题/描述/媒体/建议回复/操作 + 轮播预览，可增删卡）；SMS 模板保存/加载（In-App 之外的第三个模板资源页 sms-templates）。
+- **WhatsApp**：模板生命周期模拟——"Submit template"（名称/分类/语言/header 类型/含 {{n}} 变量的正文/footer）→ Pending Meta review → 模拟批准/拒绝 → Approved 后进入可选模板列表；自定义模板存于 campaign config 并被变体规范化、校验和渲染解析（getWhatsAppTemplate 支持 extras）。
+- **LINE**：重写为多消息栈（最多 5 条：文本/图片/Flex/轮播混排，可增删排序），图片消息含 alt text，轮播支持最多 5 列（标题/描述/图片/跳转），带整栈预览。
+- **修复**：CampaignEditor 的 update 改为 config 浅合并——修复 WhatsApp 提交模板后被随后的变体 patch（基于旧 draft 闭包）覆盖的丢数据问题；LINE 消息栈存储位置归位到 channelValues。
+- 验证：10/10 专项 E2E；smoke + 4 单测套件 + tsc 全绿。

@@ -6,7 +6,7 @@
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type DragEvent as ReactDragEvent, type ReactNode } from "react";
 import {
-  AlignCenter, AlignLeft, AlignRight, ArrowDown, ArrowUp, Bold, ChevronLeft, Code2, Copy, Eraser, Eye, Facebook, FileCode2,
+  AlignCenter, AlignLeft, AlignRight, ArrowDown, ArrowUp, Bold, Check, ChevronLeft, Code2, Copy, Eraser, Eye, Facebook, FileCode2,
   Film, GripVertical, Image as ImageIcon, Instagram, Italic, LayoutDashboard, Linkedin, Link2,
   List as ListIcon, ListOrdered, Mail, Menu as MenuIcon, Minus, Moon, Monitor, MousePointerClick, Music2, Plus, Redo2,
   Share2, Smartphone, Sparkles, Square, Strikethrough, Grid2X2 as DividerIcon, Trash2, Type, Twitter,
@@ -50,20 +50,50 @@ function useWorkspaceLiquid(): WorkspaceLiquid {
   return maps;
 }
 
-// Fetches every catalog's items so {% catalog_select %} previews resolve live data.
-function useCatalogItems() {
-  const [catalogItems, setCatalogItems] = useState<NonNullable<WorkspaceLiquid["catalogItems"]>>({});
+type CatalogSummary = {
+  id: string;
+  name: string;
+  data?: { fields?: string[]; fieldTypes?: Record<string, string> };
+};
+type CatalogSelection = NonNullable<WorkspaceLiquid["catalogSelections"]>[string][number] & { catalogId?: string };
+type CatalogWorkspaceState = {
+  catalogs: CatalogSummary[];
+  itemsByCatalog: Record<string, NonNullable<WorkspaceLiquid["catalogItems"]>[string]>;
+  selectionsByCatalog: Record<string, CatalogSelection[]>;
+  workspace: WorkspaceLiquid;
+  loading: boolean;
+  error: string;
+};
+
+// Loads the real catalog schema, items, and selections used by the composer and previews.
+function useCatalogWorkspace(): CatalogWorkspaceState {
+  const [state, setState] = useState<Omit<CatalogWorkspaceState, "workspace">>({ catalogs: [], itemsByCatalog: {}, selectionsByCatalog: {}, loading: true, error: "" });
   useEffect(() => {
     void fetch("/api/catalogs").then(r => r.json()).then(async catalogs => {
-      const rows = ((catalogs.data ?? []) as Array<{ id: string; name: string }>).slice(0, 5);
+      const rows = (catalogs.data ?? []) as CatalogSummary[];
       const entries = await Promise.all(rows.map(async catalog => {
-        const items = await fetch(`/api/catalogs/${encodeURIComponent(catalog.id)}/items`).then(r => r.json()).then(d => ((d.data ?? []) as Array<{ id: string; name: string; fields: Record<string, unknown> }>).slice(0, 100)).catch(() => []);
-        return [catalog.name.toLowerCase(), items] as const;
+        const [itemsResponse, selectionsResponse] = await Promise.all([
+          fetch(`/api/catalogs/${encodeURIComponent(catalog.id)}/items`).then(r => r.ok ? r.json() : Promise.reject(new Error("items"))),
+          fetch(`/api/catalogs/${encodeURIComponent(catalog.id)}/selections`).then(r => r.ok ? r.json() : Promise.reject(new Error("selections"))),
+        ]);
+        return {
+          catalog,
+          items: (itemsResponse.data ?? []) as NonNullable<WorkspaceLiquid["catalogItems"]>[string],
+          selections: (selectionsResponse.data ?? []) as CatalogSelection[],
+        };
       }));
-      setCatalogItems(Object.fromEntries(entries));
-    }).catch(() => {});
+      setState({
+        catalogs: rows,
+        itemsByCatalog: Object.fromEntries(entries.map(entry => [entry.catalog.id, entry.items])),
+        selectionsByCatalog: Object.fromEntries(entries.map(entry => [entry.catalog.id, entry.selections])),
+        loading: false,
+        error: "",
+      });
+    }).catch(() => setState(current => ({ ...current, loading: false, error: "Catalog data could not be loaded. Try reopening personalization." })));
   }, []);
-  return catalogItems;
+  const catalogItems = Object.fromEntries(state.catalogs.map(catalog => [catalog.name.toLowerCase(), state.itemsByCatalog[catalog.id] ?? []]));
+  const catalogSelections = Object.fromEntries(state.catalogs.map(catalog => [catalog.name.toLowerCase(), state.selectionsByCatalog[catalog.id] ?? []]));
+  return { ...state, workspace: { catalogItems, catalogSelections } };
 }
 
 export function emailVariantList(draft: EmailCampaignLike): VariantConfig[] {
@@ -105,7 +135,7 @@ function saveStateLabel(state: "saved" | "saving" | "unsaved") {
 
 // --- Rich text --------------------------------------------------------------
 
-function RichText({ html, editable, onCommit, style, className: css, onFocus }: { html: string; editable: boolean; onCommit: (html: string) => void; style?: CSSProperties; className?: string; onFocus?: () => void }) {
+function RichText({ html, editable, onCommit, style, className: css, onFocus, blockId }: { html: string; editable: boolean; onCommit: (html: string) => void; style?: CSSProperties; className?: string; onFocus?: () => void; blockId?: string }) {
   const ref = useRef<HTMLDivElement | null>(null);
   const committed = useRef(html);
   useEffect(() => {
@@ -115,6 +145,7 @@ function RichText({ html, editable, onCommit, style, className: css, onFocus }: 
   return <div
     ref={ref}
     className={css}
+    data-email-block-id={blockId}
     style={style}
     contentEditable={editable}
     suppressContentEditableWarning
@@ -142,6 +173,104 @@ export function PersonalizationMenu({ title, onInsert }: { title: string; onInse
         {token.label}<code>{token.value}</code>
       </button>)}
     </div>)}
+  </div>;
+}
+
+const personalizationTypes = [
+  ["Catalog Items", "Catalog"],
+  ["Default Attributes", "User profile"],
+  ["Custom Attributes", "Custom attributes"],
+  ["Campaign", "Campaign"],
+  ["Content Blocks", "Content blocks"],
+  ["Promotion Codes", "Promotion codes"],
+  ["Connected Content", "Connected Content"],
+  ["Liquid Helpers", "Liquid helpers"],
+] as const;
+
+function CatalogPersonalizationPanel({ data, onInsert, onClose }: { data: CatalogWorkspaceState; onInsert: (snippet: string) => void; onClose: () => void }) {
+  const [type, setType] = useState<(typeof personalizationTypes)[number][0]>("Catalog Items");
+  const [catalogId, setCatalogId] = useState("");
+  const [method, setMethod] = useState<"items" | "selection">("items");
+  const [itemIds, setItemIds] = useState<string[]>([]);
+  const [selectionName, setSelectionName] = useState("");
+  const [fields, setFields] = useState<string[]>([]);
+  const [feedback, setFeedback] = useState("");
+  const catalog = data.catalogs.find(candidate => candidate.id === catalogId);
+  const items = data.itemsByCatalog[catalogId] ?? [];
+  const selections = data.selectionsByCatalog[catalogId] ?? [];
+  const availableFields = useMemo(() => {
+    const inferred = items.flatMap(item => Object.keys(item.fields ?? {}));
+    return [...new Set(["id", ...(catalog?.data?.fields ?? []), ...inferred])];
+  }, [catalog?.data?.fields, items]);
+  const category = personalizationTypes.find(entry => entry[0] === type)?.[1] ?? "User profile";
+  const fallbackTokens = liquidTokens.filter(token => token.category === category);
+  const resetCatalog = (nextId: string) => { setCatalogId(nextId); setItemIds([]); setSelectionName(""); setFields([]); setFeedback(""); };
+  const selectItem = (id: string) => setItemIds(current => current.includes(id) ? current.filter(value => value !== id) : current.length < 3 ? [...current, id] : current);
+  const selectField = (field: string) => setFields(current => current.includes(field) ? current.filter(value => value !== field) : [...current, field]);
+  const tag = catalog
+    ? method === "items"
+      ? `{% catalog_items ${catalog.name}${itemIds.length ? ` ${itemIds.join(" ")}` : ""} %}`
+      : `{% catalog_selection_items ${catalog.name}${selectionName ? ` ${selectionName}` : ""} %}`
+    : "{% catalog_items %}";
+  const count = method === "items" ? itemIds.length : 3;
+  const output = fields.length && (itemIds.length || selectionName)
+    ? Array.from({ length: count }, (_, index) => fields.map(field => `{{ items[${index}].${field} }}`).join(" ")).join("\n")
+    : "";
+  const snippet = output ? `${tag}\n${output}` : tag;
+  const complete = Boolean(catalog && fields.length && (method === "items" ? itemIds.length : selectionName));
+  const copySnippet = async () => {
+    try { await navigator.clipboard.writeText(snippet); setFeedback("Copied"); }
+    catch { setFeedback("Copy failed"); }
+  };
+
+  return <div className={styles.personalizationPanel} role="dialog" aria-label="Add Personalization">
+    <div className={styles.personalizationHead}><h2>Add Personalization</h2><button type="button" onClick={onClose} aria-label="Close personalization"><X size={22} /></button></div>
+    <div className={styles.personalizationForm}>
+      <label>Personalization type
+        <select aria-label="Personalization type" autoFocus value={type} onChange={event => { setType(event.target.value as typeof type); setFeedback(""); }}>
+          {personalizationTypes.map(([label]) => <option key={label}>{label}</option>)}
+        </select>
+      </label>
+      {type === "Catalog Items" ? <>
+        <label>Catalog name
+          <select className={!catalogId ? styles.placeholderSelect : undefined} aria-label="Catalog name" value={catalogId} disabled={data.loading} onChange={event => resetCatalog(event.target.value)}>
+            <option value="">{data.loading ? "Loading catalogs…" : "Select a Catalog"}</option>
+            {data.catalogs.map(option => <option value={option.id} key={option.id}>{option.name}</option>)}
+          </select>
+        </label>
+        {data.error && <p className={styles.personalizationError}>{data.error}</p>}
+        {!data.loading && !data.error && !data.catalogs.length && <p className={styles.personalizationEmpty}>No catalogs are available. Create a catalog before adding catalog personalization.</p>}
+        {catalog && <>
+          <label>Item selection method
+            <select aria-label="Item selection method" value={method} onChange={event => { setMethod(event.target.value as typeof method); setItemIds([]); setSelectionName(""); setFeedback(""); }}>
+              <option value="items">Choose catalog items</option><option value="selection">Use a selection</option>
+            </select>
+          </label>
+          {method === "items" ? <fieldset className={styles.optionFieldset}><legend>Catalog items <span>{itemIds.length}/3 selected</span></legend>
+            <div className={styles.checkList}>
+              {items.map(item => <label key={item.id} className={itemIds.includes(item.id) ? styles.checkedOption : ""}><input type="checkbox" checked={itemIds.includes(item.id)} disabled={!itemIds.includes(item.id) && itemIds.length === 3} onChange={() => selectItem(item.id)} /><span><b>{item.id}</b><small>{item.name}</small></span></label>)}
+              {!items.length && <p>No items are available in this catalog.</p>}
+            </div>
+          </fieldset> : <label>Selection
+            <select className={!selectionName ? styles.placeholderSelect : undefined} aria-label="Catalog selection" value={selectionName} onChange={event => { setSelectionName(event.target.value); setFeedback(""); }}>
+              <option value="">Select a Selection</option>{selections.map(selection => <option key={selection.name}>{selection.name}</option>)}
+            </select>
+            {!selections.length && <small className={styles.fieldHint}>This catalog has no selections.</small>}
+          </label>}
+          <fieldset className={styles.optionFieldset}><legend>Information to display <span>{fields.length} selected</span></legend>
+            <div className={styles.fieldGrid}>{availableFields.map(field => <label key={field} className={fields.includes(field) ? styles.checkedOption : ""}><input type="checkbox" checked={fields.includes(field)} onChange={() => selectField(field)} /><span>{field}</span></label>)}</div>
+          </fieldset>
+        </>}
+        <label>Liquid Snippet
+          <span className={styles.snippetField}><code>{snippet}</code><button type="button" aria-label="Copy Liquid snippet" onClick={() => void copySnippet()}>{feedback === "Copied" ? <Check size={19} /> : <Copy size={19} />}</button></span>
+        </label>
+        {feedback && <span className={feedback === "Copy failed" ? styles.personalizationError : styles.copyFeedback} role="status">{feedback}</span>}
+        {complete && <button type="button" className={styles.insertSnippet} onClick={() => { onInsert(snippet); setFeedback("Inserted"); }}>Insert Liquid Snippet</button>}
+      </> : <div className={styles.legacyTokens}>
+        <p>Select a value to insert it into the current content block.</p>
+        {fallbackTokens.map(token => <button type="button" key={token.label} onClick={() => onInsert(token.value)}><b>{token.label}</b><code>{token.value}</code></button>)}
+      </div>}
+    </div>
   </div>;
 }
 
@@ -287,8 +416,12 @@ export function BrazeEmailDndEditor({ locale, draft, variantName, save, onClose,
   const [linkDialog, setLinkDialog] = useState(false);
   const [linkUrl, setLinkUrl] = useState("https://");
   const [operatorOpen, setOperatorOpen] = useState(false);
+  const workspaceResources = useWorkspaceLiquid();
+  const catalogData = useCatalogWorkspace();
+  const liquidWorkspace = { ...workspaceResources, ...catalogData.workspace };
 
   const dragRef = useRef<DragPayload | null>(null);
+  const richRangeRef = useRef<{ blockId: string; range: Range } | null>(null);
   const [dropHint, setDropHint] = useState<string | null>(null);
   const past = useRef<{ rows: EmailRow[]; style: EmailStyle }[]>([]);
   const future = useRef<{ rows: EmailRow[]; style: EmailStyle }[]>([]);
@@ -318,6 +451,18 @@ export function BrazeEmailDndEditor({ locale, draft, variantName, save, onClose,
     setSelection(null); setHistoryTick(t => t + 1);
   };
   useEffect(() => { void historyTick; }, [historyTick]);
+  useEffect(() => {
+    const rememberRange = () => {
+      const selectionValue = window.getSelection();
+      if (!selectionValue?.rangeCount) return;
+      const node = selectionValue.anchorNode;
+      const element = (node instanceof HTMLElement ? node : node?.parentElement)?.closest<HTMLElement>("[data-email-block-id]");
+      const blockId = element?.dataset.emailBlockId;
+      if (blockId) richRangeRef.current = { blockId, range: selectionValue.getRangeAt(0).cloneRange() };
+    };
+    document.addEventListener("selectionchange", rememberRange);
+    return () => document.removeEventListener("selectionchange", rememberRange);
+  }, []);
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement;
@@ -476,6 +621,43 @@ export function BrazeEmailDndEditor({ locale, draft, variantName, save, onClose,
   const localeInfo = emailLocales.find(item => item.code === editingLocale);
   const translatedCount = rows.flatMap(row => row.cells).flatMap(cell => cell.blocks).filter(block => editingLocale !== "en" && block.translations?.[editingLocale]).length;
 
+  const insertPersonalization = (snippet: string) => {
+    const lines = snippet.split("\n");
+    const storedHtml = lines.map(escapeHtml).join("<br>");
+    const remembered = richRangeRef.current;
+    const editor = remembered ? [...document.querySelectorAll<HTMLElement>("[data-email-block-id]")].find(element => element.dataset.emailBlockId === remembered.blockId) : undefined;
+    if (remembered && editor?.isContentEditable && selectedBlock?.block.id === remembered.blockId && editor.contains(remembered.range.commonAncestorContainer)) {
+      snapshot();
+      const range = remembered.range;
+      range.deleteContents();
+      const fragment = document.createDocumentFragment();
+      let finalNode: Node | null = null;
+      lines.forEach((line, index) => {
+        if (index) fragment.append(document.createElement("br"));
+        finalNode = document.createTextNode(line);
+        fragment.append(finalNode);
+      });
+      range.insertNode(fragment);
+      if (finalNode) { range.setStartAfter(finalNode); range.collapse(true); }
+      const browserSelection = window.getSelection();
+      browserSelection?.removeAllRanges(); browserSelection?.addRange(range);
+      richRangeRef.current = { blockId: remembered.blockId, range: range.cloneRange() };
+      updateBlockText(remembered.blockId, editor.innerHTML);
+      return;
+    }
+    if (selectedBlock) {
+      snapshot();
+      const current = blockText(selectedBlock.block, editingLocale);
+      updateBlockText(selectedBlock.block.id, `${current}${current ? "<br>" : ""}${storedHtml}`);
+      return;
+    }
+    const block = { ...defaultBlock("Paragraph"), text: storedHtml };
+    const next = rows.length ? [...rows] : [makeRow(1)];
+    next[next.length - 1] = { ...next[next.length - 1], cells: next[next.length - 1].cells.map((cell, index) => index === next[next.length - 1].cells.length - 1 ? { ...cell, blocks: [...cell.blocks, block] } : cell) };
+    commitRows(next);
+    setSelection({ rowId: next[next.length - 1].id, cellId: next[next.length - 1].cells.at(-1)?.id, blockId: block.id });
+  };
+
   const execute = (command: string, value?: string) => { document.execCommand(command, false, value); };
   const applyLink = () => { if (linkUrl && linkUrl !== "https://") execute("createLink", linkUrl); setLinkDialog(false); };
 
@@ -523,8 +705,9 @@ export function BrazeEmailDndEditor({ locale, draft, variantName, save, onClose,
                 {["Title", "Paragraph", "List"].includes(block.kind)
                   ? <RichText
                       className={styles.richText}
-                      html={blockText(block, editingLocale)}
+                      html={selection?.blockId === block.id ? blockText(block, editingLocale) : resolveLiquidPreview(blockText(block, editingLocale), undefined, editingLocale, liquidWorkspace)}
                       editable={selection?.blockId === block.id}
+                      blockId={block.id}
                       onCommit={next => updateBlockText(block.id, next)}
                       onFocus={() => setRichFocus(true)}
                       style={{
@@ -553,7 +736,7 @@ export function BrazeEmailDndEditor({ locale, draft, variantName, save, onClose,
     />
   </div>;
 
-  return <section className={styles.page} aria-label={translate(locale, "Braze drag-and-drop email editor")}>
+  return <section className={className(styles.page, leftMode === "personalization" && styles.personalizationPage)} aria-label={translate(locale, "Braze drag-and-drop email editor")}>
     <header className={styles.header}>
       <button className={styles.headerButton} onClick={() => void saveAndClose()}><ChevronLeft size={15} /> {translate(locale, "Back to campaign")}</button>
       <div className={styles.headerTitle}><b>{draft.name}</b><small>{variantName}</small></div>
@@ -569,38 +752,32 @@ export function BrazeEmailDndEditor({ locale, draft, variantName, save, onClose,
       <button title={translate(locale, "Preview & Test")} onClick={onOpenTest}><Eye size={21} /></button>
     </nav>
     <aside className={styles.leftRail}>
-      <div className={styles.leftTitle}>{translate(locale, "CONTENT")}<button aria-label={translate(locale, "Back to campaign")} onClick={() => void saveAndClose()}><ChevronLeft size={15} /></button></div>
-      {(["content", "links", "personalization", "languages"] as const).map(mode => <button key={mode} className={leftMode === mode ? styles.leftActive : ""} onClick={() => setLeftMode(mode)}>
-        {translate(locale, { content: "Content Build", links: "Link Management", personalization: "Personalization", languages: "Languages" }[mode])}
-        {mode === "links" && linksCount ? ` (${linksCount})` : ""}
-      </button>)}
-      {leftMode === "links" && <div className={styles.leftPanel}><b>{translate(locale, "Link Management")}</b>
-        {links.length ? links.map(link => <div className={styles.linkRow} key={link.key}>
-          <span className={styles.linkKind}>{link.kind}</span>
-          <label>{link.label || "Link"}</label>
-          <input value={link.href} onChange={event => updateLink(link, event.target.value)} placeholder="https://"/>
-        </div>) : <p>No links yet. Add a button, image link, or in-text link.</p>}
-      </div>}
-      {leftMode === "personalization" && <div className={styles.leftPanel}><PersonalizationMenu title={translate(locale, "Personalization")} onInsert={token => {
-        const target = selectedBlock ?? null;
-        if (target) updateBlockText(target.block.id, `${blockText(target.block, editingLocale)} ${token}`);
-        else {
-          const block = { ...defaultBlock("Paragraph"), text: token };
-          const next = rows.length ? [...rows] : [makeRow(1)];
-          next[next.length - 1] = { ...next[next.length - 1], cells: next[next.length - 1].cells.map((cell, index) => index === next[next.length - 1].cells.length - 1 ? { ...cell, blocks: [...cell.blocks, block] } : cell) };
-          commitRows(next);
-        }
-      }} /></div>}
-      {leftMode === "languages" && <div className={styles.leftPanel}>
-        <b>{translate(locale, "Languages")}</b>
-        {emailLocales.map(item => <button type="button" key={item.code} className={className(styles.localeRow, editingLocale === item.code && styles.localeActive)} onClick={() => setEditingLocale(item.code)}>
-          <span>{item.label}</span><span className={className(styles.dot, (item.code === "en" || rows.flatMap(row => row.cells).flatMap(cell => cell.blocks).some(block => block.translations?.[item.code])) && styles.done)} />
-        </button>)}
-        <p className={styles.localeHint}>{editingLocale === "en" ? "English is the default locale." : `Editing ${localeInfo?.label}. Content falls back to English when no translation exists. ${translatedCount} block(s) translated.`}</p>
-      </div>}
-      <small>{translate(locale, "Create with Operator")}</small>
-      <button onClick={() => { const block = { ...defaultBlock("Paragraph"), text: "A fresh offer, just for you, {{${first_name} | default: 'there'}}." }; const row = makeRow(1, [block]); commitRows([...rows, row]); }}>✎ &nbsp; {translate(locale, "Copy")}</button>
-      <button className={styles.styleLink} onClick={() => { setSelection(null); setRightTab("settings"); }}>{translate(locale, "Style Settings")} ↗</button>
+      {leftMode === "personalization"
+        ? <CatalogPersonalizationPanel data={catalogData} onInsert={insertPersonalization} onClose={() => setLeftMode("content")} />
+        : <>
+          <div className={styles.leftTitle}>{translate(locale, "CONTENT")}<button aria-label={translate(locale, "Back to campaign")} onClick={() => void saveAndClose()}><ChevronLeft size={15} /></button></div>
+          {(["content", "links", "personalization", "languages"] as const).map(mode => <button key={mode} className={leftMode === mode ? styles.leftActive : ""} onClick={() => setLeftMode(mode)}>
+            {translate(locale, { content: "Content Build", links: "Link Management", personalization: "Personalization", languages: "Languages" }[mode])}
+            {mode === "links" && linksCount ? ` (${linksCount})` : ""}
+          </button>)}
+          {leftMode === "links" && <div className={styles.leftPanel}><b>{translate(locale, "Link Management")}</b>
+            {links.length ? links.map(link => <div className={styles.linkRow} key={link.key}>
+              <span className={styles.linkKind}>{link.kind}</span>
+              <label>{link.label || "Link"}</label>
+              <input value={link.href} onChange={event => updateLink(link, event.target.value)} placeholder="https://"/>
+            </div>) : <p>No links yet. Add a button, image link, or in-text link.</p>}
+          </div>}
+          {leftMode === "languages" && <div className={styles.leftPanel}>
+            <b>{translate(locale, "Languages")}</b>
+            {emailLocales.map(item => <button type="button" key={item.code} className={className(styles.localeRow, editingLocale === item.code && styles.localeActive)} onClick={() => setEditingLocale(item.code)}>
+              <span>{item.label}</span><span className={className(styles.dot, (item.code === "en" || rows.flatMap(row => row.cells).flatMap(cell => cell.blocks).some(block => block.translations?.[item.code])) && styles.done)} />
+            </button>)}
+            <p className={styles.localeHint}>{editingLocale === "en" ? "English is the default locale." : `Editing ${localeInfo?.label}. Content falls back to English when no translation exists. ${translatedCount} block(s) translated.`}</p>
+          </div>}
+          <small>{translate(locale, "Create with Operator")}</small>
+          <button onClick={() => { const block = { ...defaultBlock("Paragraph"), text: "A fresh offer, just for you, {{${first_name} | default: 'there'}}." }; const row = makeRow(1, [block]); commitRows([...rows, row]); }}>✎ &nbsp; {translate(locale, "Copy")}</button>
+          <button className={styles.styleLink} onClick={() => { setSelection(null); setRightTab("settings"); }}>{translate(locale, "Style Settings")} ↗</button>
+        </>}
     </aside>
     <main className={styles.canvasArea}>
       <div className={styles.deviceModes}>
@@ -917,7 +1094,8 @@ export function EmailTemplateGallery({ locale, onApply, onClose }: { locale: Loc
 // --- Preview & test modal ------------------------------------------------------
 
 export function TestModal({ locale, draft, variantIndex = 0, close }: { locale: Locale; draft: EmailCampaignLike; variantIndex?: number; close: () => void }) {
-  const workspace = { ...useWorkspaceLiquid(), catalogItems: useCatalogItems() };
+  const catalogData = useCatalogWorkspace();
+  const workspace = { ...useWorkspaceLiquid(), ...catalogData.workspace };
   const [mode, setMode] = useState<"random" | "existing" | "custom">("existing");
   const [recipient, setRecipient] = useState(draft.channel === "webhook" ? "user_1" : draft.channel === "whatsapp" ? "+1 415 555 0138" : "marketing.qa@example.com");
   const [customUser, setCustomUser] = useState('{\n  "user_id": "custom_1",\n  "email": "custom@example.com",\n  "first_name": "Custom",\n  "language": "en"\n}');
@@ -1095,7 +1273,8 @@ function GeneralEmailEditor({ locale, mode, variantName, draft, save, onClose, o
   onModeChange: (mode: EditorMode) => void; onOpenTest: () => void;
 }) {
   const sending = (draft.config?.emailSending ?? {}) as Record<string, unknown>;
-  const workspace = { ...useWorkspaceLiquid(), catalogItems: useCatalogItems() };
+  const catalogData = useCatalogWorkspace();
+  const workspace = { ...useWorkspaceLiquid(), ...catalogData.workspace };
   const [subject, setSubject] = useState(draft.subject ?? "");
   const [preheader, setPreheader] = useState(typeof sending.preheader === "string" ? sending.preheader : "");
   const [body, setBody] = useState(variantBody(draft));
