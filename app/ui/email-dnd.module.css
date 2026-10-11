@@ -35,28 +35,30 @@
 .tokenGroup button{display:block;width:100%;margin:0 0 4px;padding:7px 8px;border:1px solid #e3ddf0;border-radius:4px;background:#fbf9ff;color:#4b3a86;text-align:left;font-size:11px;cursor:pointer}
 .tokenGroup button:hover{border-color:#853bde;background:#f3edff}
 .tokenGroup code{display:block;margin-top:2px;color:#8a8fa0;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.personalizationPage{grid-template-columns:300px minmax(0,1fr) 393px;grid-template-rows:14px minmax(0,1fr) 51px}
+.personalizationPage{grid-template-columns:clamp(240px,21.2vw,300px) minmax(0,1fr) clamp(320px,27.8vw,393px);grid-template-rows:12px minmax(0,1fr) 51px;overflow:hidden}
 .personalizationPage .header{overflow:hidden;padding:0}
 .personalizationPage .header>*{display:none}
 .personalizationPage .iconRail{display:none}
 .personalizationPage .leftRail{grid-column:1;padding:0;border-right:1px solid #e5e5e6;background:#f9f9fa}
 .personalizationPage .canvasArea{grid-column:2;background:#fff}
 .personalizationPage .rightPanel{grid-column:3}
-.personalizationPage .rightTabs{height:50px}
+.personalizationPage .rightTabs{height:44px}
 .personalizationPage .footer{min-height:51px;padding:0 12px}
 .personalizationPage .footer .download,.personalizationPage .footer .done{height:40px;border-radius:9px;font-size:14px}
 .personalizationPanel{min-height:100%;background:#f9f9fa;color:#272932}
-.personalizationHead{position:sticky;z-index:3;top:0;display:flex;align-items:center;min-height:64px;padding:0 5px 0 25px;background:#f9f9fa}
+.personalizationHead{position:sticky;z-index:3;top:0;display:flex;align-items:center;min-height:53px;padding:0 5px 0 21px;background:#f9f9fa}
 .personalizationHead h2{flex:1;margin:0;transform:translateY(5px);font-size:16px;line-height:1.2;font-weight:750;letter-spacing:-.01em}
 .personalizationHead button{position:absolute;top:2px;right:5px;display:grid;place-items:center;width:28px;height:28px;border:0;background:transparent;color:#686a72;cursor:pointer}
 .personalizationHead button svg{width:17px;height:17px}
 .personalizationHead button:hover{color:#2f3138}
-.personalizationForm{display:grid;gap:31px;padding:16px 23px 28px 25px}
+.personalizationForm{display:grid;gap:23px;padding:13px 20px 28px 21px}
 .personalizationForm>label{display:grid;gap:7px;color:#292b32;font-size:12px;font-weight:720}
-.personalizationForm select{width:100%;height:42px;padding:0 42px 0 15px;border:1px solid #8a8790;border-radius:8px;background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m5 7.5 5 5 5-5' fill='none' stroke='%235f6067' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-position:right 12px center;background-repeat:no-repeat;background-size:14px 14px;color:#2f3037;font-family:inherit;font-size:14px;font-weight:400;line-height:1.2;appearance:none}
+.personalizationForm select{width:100%;height:36px;padding:0 42px 0 15px;border:1px solid #8a8790;border-radius:8px;background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m5 7.5 5 5 5-5' fill='none' stroke='%235f6067' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-position:right 12px center;background-repeat:no-repeat;background-size:14px 14px;color:#2f3037;font-family:inherit;font-size:14px;font-weight:400;line-height:1.2;appearance:none}
 .personalizationForm select.placeholderSelect{color:#707078;font-style:italic}
 .personalizationForm select:focus{border-color:#8746ef;outline:2px solid #8746ef;outline-offset:-2px;background-image:linear-gradient(#b8b6bd,#b8b6bd),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m5 7.5 5 5 5-5' fill='none' stroke='%235f6067' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-position:right 39px center,right 12px center;background-size:1px 24px,14px 14px}
 .personalizationForm select:disabled{background-color:#f4f3f5;color:#8a8890}
+.personalizationForm>label:first-child select{border:2px solid #8746ef}
+.personalizationForm>label.snippetLabel{gap:3px}
 .optionFieldset{min-width:0;margin:0;padding:0;border:0}
 .optionFieldset legend{display:flex;width:100%;align-items:center;justify-content:space-between;margin-bottom:9px;color:#292b32;font-size:13px;font-weight:720}
 .optionFieldset legend span{color:#77737f;font-size:11px;font-weight:600}
@@ -73,9 +75,9 @@
 .fieldGrid>label{min-width:0;border-right:1px solid #ece9ef;font-size:11px;font-weight:600}
 .fieldGrid>label span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fieldHint{margin-top:-2px;color:#827e88;font-size:11px;font-weight:500}
-.snippetField{display:flex;min-height:42px;border:1px solid #89868f;border-radius:8px;background:#fff;overflow:hidden}
-.snippetField code{flex:1;overflow:auto;padding:9px 12px 9px 14px;color:#35313f;font:12px/1.5 "SF Mono",Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
-.snippetField button{display:grid;flex:0 0 45px;place-items:center;border:0;background:#6826e1;color:#fff;cursor:pointer}
+.snippetField{display:flex;min-height:36px;border:1px solid #89868f;border-radius:8px;background:#fff;overflow:hidden}
+.snippetField code{flex:1;overflow:auto;padding:8px 10px 8px 13px;color:#35313f;font:11px/1.45 "SF Mono",Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+.snippetField button{display:grid;flex:0 0 38px;place-items:center;border:0;background:#6826e1;color:#fff;cursor:pointer}
 .snippetField button svg{width:18px;height:18px}
 .snippetField button:hover{background:#6421bd}
 .insertSnippet{min-height:44px;border:0;border-radius:8px;background:#7027cf;color:#fff;font-size:13px;font-weight:750;cursor:pointer}
@@ -95,6 +97,13 @@
 .deviceModes button{width:32px;height:32px;display:grid;place-items:center;border:0;background:#fff;color:#41464e;cursor:pointer}
 .deviceModes .deviceActive{background:#7133d4;color:#fff}
 .emailCanvas{width:var(--canvas-width);min-height:560px;margin:58px auto 60px;background:#fff;box-shadow:0 2px 14px #2b213d1a}
+.canvasHistory{position:fixed;z-index:12;bottom:63px;left:calc(clamp(240px,21.2vw,300px) + 17px);display:flex;gap:10px}
+.canvasHistory>button,.canvasHistory>span{height:34px;border:1px solid #ddd9e3;border-radius:6px;background:#fff;box-shadow:0 1px 3px #241b3120}
+.canvasHistory>button{display:grid;width:34px;padding:0;place-items:center;color:#30343d;cursor:pointer}
+.canvasHistory>span{display:flex;overflow:hidden}
+.canvasHistory>span button{display:grid;width:34px;height:32px;padding:0;place-items:center;border:0;border-right:1px solid #e4e0e8;background:#fff;color:#30343d;cursor:pointer}
+.canvasHistory>span button:last-child{border-right:0}
+.canvasHistory button:disabled{color:#b9b6bd;cursor:default}
 .rowShell{position:relative}
 .rowDropLine{height:3px;margin:0 8px;background:transparent}
 .rowDropLine.active{background:#7133d4}
@@ -119,6 +128,7 @@
 .richText:focus{outline:2px solid #8b35e7;outline-offset:2px}
 .textToolbar{position:sticky;z-index:8;top:52px;display:flex;flex-wrap:wrap;gap:2px;width:max-content;margin:0 auto 8px;padding:4px;border:1px solid #d9d4e2;border-radius:7px;background:#fff;box-shadow:0 4px 12px #2b213d1f}
 .textToolbar button{display:grid;place-items:center;min-width:28px;height:28px;padding:0 5px;border:0;border-radius:4px;background:transparent;color:#3e424b;font-size:13px;font-weight:700;cursor:pointer}
+.textToolbar select{height:28px;max-width:118px;padding:0 22px 0 7px;border:0;border-radius:4px;background:#f7f5fa;color:#3e424b;font-size:11px}
 .textToolbar button:hover{background:#efebf5}
 .textToolbar .sep{width:1px;height:20px;margin:4px 3px;background:#e4e0ea}
 .dropZone{display:grid;min-height:200px;place-items:center;margin:24px;border:1px dashed #b7aec4;color:#7a7280;font-size:13px}
@@ -132,7 +142,8 @@
 .htmlBlock pre{margin:0;padding:8px;background:#f6f4f9;font-size:12px;white-space:pre-wrap;word-break:break-word}
 .rightPanel{grid-column:4;grid-row:2;position:relative;overflow:auto;border-left:1px solid #e1dee5;background:#f9fafd}
 .rightTabs{position:sticky;z-index:2;top:0;display:grid;grid-template-columns:repeat(3,1fr);height:46px;border-bottom:1px solid #e4e1e8;background:#f9fafd}
-.rightTabs button{border:0;border-right:1px solid #e4e1e8;background:transparent;color:#868b94;font-size:12px;font-weight:750;cursor:pointer}
+.rightTabs button{display:flex;align-items:center;justify-content:center;gap:8px;border:0;border-right:1px solid #e4e1e8;background:transparent;color:#868b94;font-size:12px;font-weight:750;cursor:pointer}
+.rightTabs button svg{flex:none}
 .rightTabs button.rightActive{background:#fff;color:#333841}
 .catalogPane{padding:14px}
 .catalogPane h3{display:flex;align-items:center;justify-content:space-between;margin:0 0 14px;padding:1px 4px;color:#3d424c;font-size:12px;font-weight:650}
@@ -147,13 +158,17 @@
 .rowCatalog button span{display:flex;gap:6px}
 .rowCatalog button i{display:block;flex:1;height:38px;background:#e9e6ef}
 .properties{background:#fff}
-.propertyHead{display:flex;align-items:center;height:46px;padding-left:13px;border-bottom:1px solid #e3e0e7}
+.propertyHead{display:flex;align-items:center;height:40px;padding-left:17px;border-bottom:1px solid #e3e0e7}
 .propertyHead b{flex:1;font-size:11px;font-weight:750}
-.propertyHead button{width:39px;height:46px;border:0;border-left:1px solid #e6e2e9;background:#fff;color:#50535c;cursor:pointer}
+.propertyHead button{width:39px;height:40px;border:0;border-left:1px solid #e6e2e9;background:#fff;color:#50535c;cursor:pointer}
+.propertyHead button.propertyActionActive{background:#f1eafe;color:#6e2dd4}
 .propertyRow{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:52px;margin:0;padding:0 16px;border-bottom:1px solid #e7e4eb;color:#3e424b;font-size:12px}
 .propertyRow>span:first-child{font-weight:650}
 .propertyRow select,.propertyRow input[type=text],.propertyRow input[type=number],.propertyRow input[type=url]{width:170px;min-height:33px;padding:0 9px;border:1px solid #d9d5df;border-radius:5px;background:#fff;color:#3a3a43;font-size:12px}
 .propertyRow input[type=color]{width:92px;height:33px;padding:4px;border:1px solid #d9d5df;border-radius:5px;background:#fff}
+.colorControl{display:flex;align-items:center;width:132px;height:34px;overflow:hidden;border:1px solid #d9d5df;border-radius:5px;background:#fff}
+.colorControl input[type=color]{width:42px;height:34px;padding:4px;border:0;border-right:1px solid #e3dfe7;border-radius:0;background:#fff}
+.colorControl code{flex:1;text-align:center;color:#30333b;font:12px/1 ui-monospace,SFMono-Regular,Menlo,monospace}
 .propertyColumn{display:grid;gap:8px;margin:0;padding:12px 16px;border-bottom:1px solid #e7e4eb;color:#3e424b;font-size:12px;font-weight:650}
 .propertyColumn textarea,.propertyColumn input{min-height:33px;padding:7px 9px;border:1px solid #d9d5df;border-radius:5px;font:12px/1.5 inherit}
 .propertyColumn textarea{min-height:95px;resize:vertical}
@@ -167,6 +182,20 @@
 .cellWidths label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;color:#4b4655}
 .cellWidths input{width:74px;min-height:29px;padding:0 7px;border:1px solid #d9d5df;border-radius:4px;font-size:12px}
 .toggleRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid #e7e4eb;font-size:12px}
+.commentComposer{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:10px 14px;border-bottom:1px solid #e7e4eb;background:#fbf9ff}
+.commentComposer textarea{min-height:54px;padding:8px;border:1px solid #d9d5df;border-radius:5px;font:12px/1.4 inherit;resize:vertical}
+.commentComposer button{align-self:end;height:32px;padding:0 11px;border:0;border-radius:5px;background:#6c2dd5;color:#fff;font-size:11px;font-weight:750}
+.commentComposer button:disabled{opacity:.45}
+.propertySection{height:36px;padding:0 17px;border-top:1px solid #dbd8df;border-bottom:1px solid #dbd8df;background:#e9e9eb;color:#2e3138;font-size:11px;font-weight:800;line-height:36px}
+.paddingHead{display:flex;align-items:center;justify-content:space-between;min-height:48px;padding:0 17px;color:#3e424b;font-size:12px}
+.paddingHead>label{display:flex;align-items:center;gap:8px;color:#5e6068;font-size:11px;font-weight:500}
+.paddingHead input{width:31px;height:17px;appearance:none;border-radius:9px;background:#dedee3;cursor:not-allowed}
+.paddingHead input:after{display:block;width:13px;height:13px;margin:2px;border-radius:50%;background:#777983;content:""}
+.hideRow{display:flex;align-items:center;justify-content:space-between;min-height:54px;padding:0 17px;border-bottom:1px solid #e7e4eb;color:#3e424b;font-size:12px;font-weight:650}
+.hidePicker{display:flex;height:34px;overflow:hidden;border:1px solid #ddd9e3;border-radius:5px;background:#fff}
+.hidePicker button{min-width:39px;padding:0 9px;border:0;border-right:1px solid #e3dfe7;background:#fff;color:#4d5058;font-size:11px;font-weight:750;cursor:pointer}
+.hidePicker button:last-child{border-right:0}
+.hidePicker button.hideActive{background:#6d2ed5;color:#fff}
 .mediaPicker{display:grid;gap:6px;margin:0 16px 12px;padding:10px;border:1px solid #e3ddf0;border-radius:6px;background:#fbf9ff}
 .mediaPicker button{display:flex;align-items:center;gap:8px;padding:7px;border:1px solid #e3ddf0;border-radius:4px;background:#fff;color:#4b3a86;font-size:11px;cursor:pointer}
 .mediaPicker label.upload{display:flex;align-items:center;gap:8px;padding:7px;border:1px dashed #b7a6e2;border-radius:4px;color:#5932b5;font-size:11px;cursor:pointer}

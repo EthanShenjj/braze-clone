@@ -7,9 +7,9 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type DragEvent as ReactDragEvent, type ReactNode } from "react";
 import {
   AlignCenter, AlignLeft, AlignRight, ArrowDown, ArrowUp, Bold, Check, ChevronLeft, Code2, Copy, Eraser, Eye, Facebook, FileCode2,
-  Film, GripVertical, Image as ImageIcon, Instagram, Italic, LayoutDashboard, Linkedin, Link2,
-  List as ListIcon, ListOrdered, Mail, Menu as MenuIcon, Minus, Moon, Monitor, MousePointerClick, Music2, Plus, Redo2,
-  Share2, Smartphone, Sparkles, Square, Strikethrough, Grid2X2 as DividerIcon, Trash2, Type, Twitter,
+  Film, GripVertical, Image as ImageIcon, Instagram, Italic, LayoutDashboard, LayoutGrid, Linkedin, Link2,
+  List as ListIcon, ListOrdered, Mail, Menu as MenuIcon, Minus, Moon, Monitor, MousePointerClick, Music2, Plus, Redo2, RotateCcw,
+  MessageSquare, PanelTop, Rows3, Share2, Smartphone, Sparkles, Square, Strikethrough, Grid2X2 as DividerIcon, Trash2, Type, Twitter,
   Underline, Undo2, Upload, X, Youtube,
 } from "lucide-react";
 import styles from "./email-dnd.module.css";
@@ -69,7 +69,7 @@ type CatalogWorkspaceState = {
 function useCatalogWorkspace(): CatalogWorkspaceState {
   const [state, setState] = useState<Omit<CatalogWorkspaceState, "workspace">>({ catalogs: [], itemsByCatalog: {}, selectionsByCatalog: {}, loading: true, error: "" });
   useEffect(() => {
-    void fetch("/api/catalogs").then(r => r.json()).then(async catalogs => {
+    void fetch("/api/catalogs").then(r => r.ok ? r.json() : Promise.reject(new Error("catalogs"))).then(async catalogs => {
       const rows = (catalogs.data ?? []) as CatalogSummary[];
       const entries = await Promise.all(rows.map(async catalog => {
         const [itemsResponse, selectionsResponse] = await Promise.all([
@@ -212,9 +212,13 @@ function CatalogPersonalizationPanel({ data, onInsert, onClose }: { data: Catalo
       ? `{% catalog_items ${catalog.name}${itemIds.length ? ` ${itemIds.join(" ")}` : ""} %}`
       : `{% catalog_selection_items ${catalog.name}${selectionName ? ` ${selectionName}` : ""} %}`
     : "{% catalog_items %}";
-  const count = method === "items" ? itemIds.length : 3;
+  const selectedSelection = selections.find(selection => selection.name === selectionName);
+  const count = method === "items" ? itemIds.length : Math.max(0, Number(selectedSelection?.resultLimit ?? 0));
+  const fieldExpression = (index: number, field: string) => /^[A-Za-z_][A-Za-z0-9_]*$/.test(field)
+    ? `{{ items[${index}].${field} }}`
+    : `{{ items[${index}]['${field.replaceAll("'", "\\'")}'] }}`;
   const output = fields.length && (itemIds.length || selectionName)
-    ? Array.from({ length: count }, (_, index) => fields.map(field => `{{ items[${index}].${field} }}`).join(" ")).join("\n")
+    ? Array.from({ length: count }, (_, index) => fields.map(field => fieldExpression(index, field)).join(" ")).join("\n")
     : "";
   const snippet = output ? `${tag}\n${output}` : tag;
   const complete = Boolean(catalog && fields.length && (method === "items" ? itemIds.length : selectionName));
@@ -261,7 +265,7 @@ function CatalogPersonalizationPanel({ data, onInsert, onClose }: { data: Catalo
             <div className={styles.fieldGrid}>{availableFields.map(field => <label key={field} className={fields.includes(field) ? styles.checkedOption : ""}><input type="checkbox" checked={fields.includes(field)} onChange={() => selectField(field)} /><span>{field}</span></label>)}</div>
           </fieldset>
         </>}
-        <label>Liquid Snippet
+        <label className={styles.snippetLabel}>Liquid Snippet
           <span className={styles.snippetField}><code>{snippet}</code><button type="button" aria-label="Copy Liquid snippet" onClick={() => void copySnippet()}>{feedback === "Copied" ? <Check size={19} /> : <Copy size={19} />}</button></span>
         </label>
         {feedback && <span className={feedback === "Copy failed" ? styles.personalizationError : styles.copyFeedback} role="status">{feedback}</span>}
@@ -277,6 +281,7 @@ function CatalogPersonalizationPanel({ data, onInsert, onClose }: { data: Catalo
 // --- Export -----------------------------------------------------------------
 
 function alignValue(align?: string) { return align === "center" ? "center" : align === "right" ? "right" : "left"; }
+function blockPadding(block: EmailBlock) { return block.style?.contentPadding ?? (["Title", "Paragraph", "List"].includes(block.kind) ? 10 : 0); }
 
 function blockToHtml(block: EmailBlock, locale: EmailEditorLocale, style: EmailStyle) {
   const text = blockText(block, locale);
@@ -285,8 +290,8 @@ function blockToHtml(block: EmailBlock, locale: EmailEditorLocale, style: EmailS
   const font = s.fontFamily ?? style.fontFamily;
   const linkColor = style.linkColor;
   switch (block.kind) {
-    case "Title": return `<h1 style="margin:0 0 16px;text-align:${align};font-family:${font};font-size:${s.fontSize ?? 34}px;line-height:1.2;color:${s.color ?? "#2e3c47"}">${text}</h1>`;
-    case "Paragraph": return `<p style="margin:0 0 15px;text-align:${align};font-family:${font};font-size:${s.fontSize ?? 15}px;line-height:${s.lineHeight ?? 1.5};color:${s.color ?? style.textColor}">${text}</p>`;
+    case "Title": return `<h1 style="margin:0 0 16px;text-align:${align};font-family:${font};font-size:${s.fontSize ?? 34}px;line-height:${s.lineHeight ?? 1.2};letter-spacing:${s.letterSpacing ?? 0}px;color:${s.color ?? "#2e3c47"}">${text}</h1>`;
+    case "Paragraph": return `<p style="margin:0 0 15px;text-align:${align};font-family:${font};font-size:${s.fontSize ?? 15}px;line-height:${s.lineHeight ?? 1.5};letter-spacing:${s.letterSpacing ?? 0}px;color:${s.color ?? style.textColor}">${text}</p>`;
     case "List": {
       const items = text.split("\n").filter(Boolean).map(item => `<li style="margin:0 0 6px">${escapeHtml(item)}</li>`).join("");
       const tag = block.ordered ? "ol" : "ul";
@@ -310,8 +315,8 @@ function blockToHtml(block: EmailBlock, locale: EmailEditorLocale, style: EmailS
 }
 
 function rowsToExportHtml(rows: EmailRow[], style: EmailStyle, locale: EmailEditorLocale) {
-  const body = rows.map(row => `<tr><td style="padding:${row.padding ?? 10}px;${row.bg ? `background:${row.bg};` : ""}"><table role="presentation" width="100%" style="border-collapse:collapse"><tr>${row.cells.map(cell => `<td width="${cell.width}%" style="vertical-align:top;padding:0 8px">${cell.blocks.map(block => blockToHtml(block, locale, style)).join("")}</td>`).join("")}</tr></table></td></tr>`).join("");
-  return `<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width"/></head><body style="margin:0;background:${style.canvasBg};color:${style.textColor}"><div style="max-width:${style.contentWidth}px;margin:0 auto;background:${style.contentBg};font-family:${style.fontFamily}"><table role="presentation" width="100%" style="border-collapse:collapse">${body}</table></div></body></html>`;
+  const body = rows.map(row => `<tr><td style="padding:${row.padding ?? 10}px;${row.bg ? `background:${row.bg};` : ""}"><table role="presentation" width="100%" style="border-collapse:collapse"><tr>${row.cells.map(cell => `<td width="${cell.width}%" style="vertical-align:top;padding:0 8px">${cell.blocks.map(block => `<div class="${block.style?.hideOn === "desktop" ? "hide-desktop" : block.style?.hideOn === "mobile" ? "hide-mobile" : ""}" style="padding:${blockPadding(block)}px">${blockToHtml(block, locale, style)}</div>`).join("")}</td>`).join("")}</tr></table></td></tr>`).join("");
+  return `<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width"/><style>.hide-desktop{display:none!important}@media(max-width:600px){.hide-desktop{display:block!important}.hide-mobile{display:none!important}}</style></head><body style="margin:0;background:${style.canvasBg};color:${style.textColor}"><div style="max-width:${style.contentWidth}px;margin:0 auto;background:${style.contentBg};font-family:${style.fontFamily}"><table role="presentation" width="100%" style="border-collapse:collapse">${body}</table></div></body></html>`;
 }
 
 // --- Canvas block rendering -------------------------------------------------
@@ -321,11 +326,11 @@ const socialIcons = { Facebook, X: Twitter, Instagram, LinkedIn: Linkedin, YouTu
 function CanvasBlockBody({ block, locale, style }: { block: EmailBlock; locale: EmailEditorLocale; style: EmailStyle }) {
   const s = block.style ?? {};
   const align = alignValue(s.align);
-  const common: CSSProperties = { textAlign: align, fontFamily: s.fontFamily ?? style.fontFamily, color: s.color ?? style.textColor };
+  const common: CSSProperties = { textAlign: align, fontFamily: s.fontFamily ?? style.fontFamily, color: s.color ?? style.textColor, letterSpacing: s.letterSpacing ?? 0 };
   const linkStyle = { color: style.linkColor } as CSSProperties;
   switch (block.kind) {
-    case "Title": return <RichText html={blockText(block, locale)} editable={false} onCommit={() => {}} style={{ ...common, fontSize: s.fontSize ?? 34, fontWeight: 700, lineHeight: 1.2, margin: "0 0 16px" }} />;
-    case "Paragraph": return <RichText html={blockText(block, locale)} editable={false} onCommit={() => {}} style={{ ...common, fontSize: s.fontSize ?? 15, lineHeight: s.lineHeight ?? 1.5, margin: "0 0 15px" }} />;
+    case "Title": return <RichText html={blockText(block, locale)} editable={false} onCommit={() => {}} style={{ ...common, fontSize: s.fontSize ?? 34, fontWeight: 700, lineHeight: s.lineHeight ?? 1.2, margin: "0 0 16px", ["--link-color" as string]: s.linkColor ?? style.linkColor }} />;
+    case "Paragraph": return <RichText html={blockText(block, locale)} editable={false} onCommit={() => {}} style={{ ...common, fontSize: s.fontSize ?? 15, lineHeight: s.lineHeight ?? 1.5, margin: "0 0 15px", ["--link-color" as string]: s.linkColor ?? style.linkColor }} />;
     case "List": {
       const items = blockText(block, locale).split("\n").filter(Boolean).map((item, index) => <li key={index} style={{ margin: "0 0 6px" }}>{item}</li>);
       return block.ordered
@@ -449,6 +454,12 @@ export function BrazeEmailDndEditor({ locale, draft, variantName, save, onClose,
     past.current = [...past.current, { rows, style }];
     setRows(next.rows); setStyle(next.style);
     setSelection(null); setHistoryTick(t => t + 1);
+  };
+  const resetToSaved = () => {
+    snapshot();
+    setRows(variantRows(draft));
+    setStyle(normalizeStyle(draft.config?.emailStyle));
+    setSelection(null);
   };
   useEffect(() => { void historyTick; }, [historyTick]);
   useEffect(() => {
@@ -687,6 +698,10 @@ export function BrazeEmailDndEditor({ locale, draft, variantName, save, onClose,
           {cell.blocks.map(block => <div
             key={block.id}
             className={className(styles.blockShell, selection?.blockId === block.id && styles.blockSelected)}
+            style={{
+              padding: blockPadding(block),
+              display: block.style?.hideOn === (desktop ? "desktop" : "mobile") ? "none" : undefined,
+            }}
           >
             <div className={styles.blockTools}>
               <button className={styles.drag} draggable aria-label="Drag block" onDragStart={event => { dragRef.current = { type: "block", rowId: row.id, cellId: cell.id, blockId: block.id }; event.dataTransfer.effectAllowed = "move"; }} onDragEnd={() => { dragRef.current = null; setDropHint(null); }}><GripVertical size={12} /></button>
@@ -712,13 +727,13 @@ export function BrazeEmailDndEditor({ locale, draft, variantName, save, onClose,
                       onFocus={() => setRichFocus(true)}
                       style={{
                         ...block.kind === "Title"
-                          ? { fontSize: block.style?.fontSize ?? 34, fontWeight: 700, lineHeight: 1.2, margin: "0 0 16px", textAlign: alignValue(block.style?.align) }
+                          ? { fontSize: block.style?.fontSize ?? 34, fontWeight: 700, lineHeight: block.style?.lineHeight ?? 1.2, margin: "0 0 16px", textAlign: alignValue(block.style?.align), letterSpacing: block.style?.letterSpacing ?? 0 }
                           : block.kind === "List"
-                            ? { fontSize: block.style?.fontSize ?? 15, textAlign: alignValue(block.style?.align) }
-                            : { fontSize: block.style?.fontSize ?? 15, lineHeight: block.style?.lineHeight ?? 1.5, margin: "0 0 15px", textAlign: alignValue(block.style?.align) },
+                            ? { fontSize: block.style?.fontSize ?? 15, textAlign: alignValue(block.style?.align), letterSpacing: block.style?.letterSpacing ?? 0 }
+                            : { fontSize: block.style?.fontSize ?? 15, lineHeight: block.style?.lineHeight ?? 1.5, margin: "0 0 15px", textAlign: alignValue(block.style?.align), letterSpacing: block.style?.letterSpacing ?? 0 },
                         fontFamily: block.style?.fontFamily ?? style.fontFamily,
                         color: block.style?.color ?? style.textColor,
-                        ["--link-color" as string]: style.linkColor,
+                        ["--link-color" as string]: block.style?.linkColor ?? style.linkColor,
                       }}
                     />
                   : <CanvasBlockBody block={block} locale={editingLocale} style={style} />}
@@ -785,6 +800,9 @@ export function BrazeEmailDndEditor({ locale, draft, variantName, save, onClose,
         <button className={!desktop ? styles.deviceActive : ""} title="Mobile" onClick={() => setDesktop(false)}><Smartphone size={15} /></button>
       </div>
       {richFocus && selectedBlock && ["Title", "Paragraph", "List"].includes(selectedBlock.block.kind) && <div className={styles.textToolbar}>
+        <select title="Font family" aria-label="Font family" value={selectedBlock.block.style?.fontFamily ?? style.fontFamily} onChange={event => updateBlockStyle(selectedBlock.block.id, { fontFamily: event.target.value })}>{emailFontFamilies.map(font => <option key={font} value={font}>{font.split(",")[0].replaceAll("'", "")}</option>)}</select>
+        <select title="Font size" aria-label="Font size" value={selectedBlock.block.style?.fontSize ?? (selectedBlock.block.kind === "Title" ? 34 : 15)} onChange={event => updateBlockStyle(selectedBlock.block.id, { fontSize: Number(event.target.value) })}>{[10, 12, 14, 15, 16, 18, 20, 22, 24, 28, 34, 40, 48, 56, 64].map(value => <option key={value}>{value}</option>)}</select>
+        <span className={styles.sep} />
         <button title="Bold" onMouseDown={event => event.preventDefault()} onClick={() => execute("bold")}><Bold size={14} /></button>
         <button title="Italic" onMouseDown={event => event.preventDefault()} onClick={() => execute("italic")}><Italic size={14} /></button>
         <button title="Underline" onMouseDown={event => event.preventDefault()} onClick={() => execute("underline")}><Underline size={14} /></button>
@@ -803,7 +821,7 @@ export function BrazeEmailDndEditor({ locale, draft, variantName, save, onClose,
       </div>}
       <div
         className={styles.emailCanvas}
-        style={{ ["--canvas-width" as string]: desktop ? `${style.contentWidth}px` : "360px", background: style.contentBg, maxWidth: desktop ? style.contentWidth : 360, fontFamily: style.fontFamily, color: style.textColor, position: "relative" }}
+        style={{ ["--canvas-width" as string]: desktop ? `${style.contentWidth}px` : "360px", width: "calc(100% - 32px)", background: style.contentBg, maxWidth: desktop ? style.contentWidth : 360, fontFamily: style.fontFamily, color: style.textColor, position: "relative" }}
         onDragOver={event => { if (dragRef.current?.type === "row" || dragRef.current?.type === "new") event.preventDefault(); }}
         onDrop={event => {
           event.preventDefault();
@@ -823,9 +841,19 @@ export function BrazeEmailDndEditor({ locale, draft, variantName, save, onClose,
           <button onClick={() => setOperatorOpen(false)}>Close</button>
         </div>}
       </div>
+      {leftMode === "personalization" && <div className={styles.canvasHistory}>
+        <button type="button" title="Reset to last saved" onClick={resetToSaved}><RotateCcw size={16}/></button>
+        <span>
+          <button type="button" title={translate(locale, "Undo")} aria-label={translate(locale, "Undo")} disabled={!past.current.length} onClick={undo}><Undo2 size={16}/></button>
+          <button type="button" title={translate(locale, "Redo")} aria-label={translate(locale, "Redo")} disabled={!future.current.length} onClick={redo}><Redo2 size={16}/></button>
+        </span>
+      </div>}
     </main>
     <aside className={styles.rightPanel}>
-      <div className={styles.rightTabs}>{(["content", "rows", "settings"] as const).map(name => <button key={name} className={className(rightTab === name && !selectedBlock && !selectedRow && styles.rightActive)} onClick={() => { setSelection(null); setRightTab(name); }}>{translate(locale, name.toUpperCase())}</button>)}</div>
+      <div className={styles.rightTabs}>{(["content", "rows", "settings"] as const).map(name => {
+        const Icon = name === "content" ? LayoutGrid : name === "rows" ? Rows3 : PanelTop;
+        return <button key={name} className={className(rightTab === name && styles.rightActive)} onClick={() => { setSelection(null); setRightTab(name); }}><Icon size={18}/><span>{translate(locale, name.toUpperCase())}</span></button>;
+      })}</div>
       {selectedBlock ? <BlockProperties
         key={selectedBlock.block.id}
         locale={locale}
@@ -883,6 +911,13 @@ function Stepper({ value, onChange, min = 0, max = 200, suffix }: { value: numbe
   </span>;
 }
 
+function ColorControl({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  return <span className={styles.colorControl}>
+    <input type="color" value={value} onChange={event => onChange(event.target.value)} />
+    <code>{value}</code>
+  </span>;
+}
+
 function AlignPicker({ value, onChange }: { value: "left" | "center" | "right" | undefined; onChange: (value: "left" | "center" | "right") => void }) {
   return <span className={styles.alignButtons}>
     {(["left", "center", "right"] as const).map(align => <button key={align} type="button" className={value === align ? styles.alignActive : ""} onClick={() => onChange(align)}>{align === "left" ? <AlignLeft size={14} /> : align === "center" ? <AlignCenter size={14} /> : <AlignRight size={14} />}</button>)}
@@ -899,6 +934,8 @@ function BlockProperties({ locale, block, style, onPatch, onPatchStyle, onDelete
   const socialItems = ((block.items ?? []) as SocialItem[]).slice();
   const menuItems = ((block.items ?? []) as MenuItem[]).slice();
   const [mediaOpen, setMediaOpen] = useState(false);
+  const [commentOpen, setCommentOpen] = useState(false);
+  const [comment, setComment] = useState("");
   const [library, setLibrary] = useState<Array<{ id: string; name: string; src: string }>>([]);
   useEffect(() => {
     if (!mediaOpen) return;
@@ -911,12 +948,15 @@ function BlockProperties({ locale, block, style, onPatch, onPatchStyle, onDelete
     reader.onload = () => onPatch({ src: String(reader.result) });
     reader.readAsDataURL(file);
   };
+  const isText = block.kind === "Title" || block.kind === "Paragraph" || block.kind === "List";
   return <div className={styles.properties}>
-    <div className={styles.propertyHead}><b>{block.kind.toUpperCase()} PROPERTIES</b>
+    <div className={styles.propertyHead}><b>{isText ? "TEXT PROPERTIES" : `${block.kind.toUpperCase()} PROPERTIES`}</b>
+      <button title="Comments" aria-label="Comments" className={commentOpen ? styles.propertyActionActive : undefined} onClick={() => setCommentOpen(value => !value)}><MessageSquare size={16} /></button>
       <button title="Delete" onClick={onDelete}><Trash2 size={15} /></button>
       <button title="Duplicate" onClick={onDuplicate}><Copy size={15} /></button>
       <button title="Close" onClick={onClose}><X size={16} /></button>
     </div>
+    {commentOpen && <div className={styles.commentComposer}><textarea aria-label="Block comment" value={comment} onChange={event => setComment(event.target.value)} placeholder="Add a comment about this block"/><button type="button" disabled={!comment.trim()} onClick={() => setCommentOpen(false)}>Add comment</button></div>}
     {(block.kind === "Button" || block.kind === "Image" || block.kind === "Video" || block.kind === "Menu") && <PropertyRow label="Link URL">
       <input type="url" value={block.href ?? ""} onChange={event => onPatch({ href: event.target.value })} placeholder="https://" />
     </PropertyRow>}
@@ -989,12 +1029,18 @@ function BlockProperties({ locale, block, style, onPatch, onPatchStyle, onDelete
           <option value="34">H1 · 34px</option><option value="28">H2 · 28px</option><option value="22">H3 · 22px</option>
         </select>
       </PropertyRow>}
-      <PropertyRow label="Font family"><select value={s.fontFamily ?? style.fontFamily} onChange={event => onPatchStyle({ fontFamily: event.target.value })}>{emailFontFamilies.map(font => <option key={font} value={font}>{font.split(",")[0].replaceAll("'", "")}</option>)}</select></PropertyRow>
-      <PropertyRow label="Font size"><Stepper value={s.fontSize ?? (block.kind === "Title" ? 34 : 15)} min={10} max={64} onChange={value => onPatchStyle({ fontSize: value })} /></PropertyRow>
-      <PropertyRow label="Text color"><input type="color" value={s.color ?? (block.kind === "Title" ? "#2e3c47" : style.textColor)} onChange={event => onPatchStyle({ color: event.target.value })} /></PropertyRow>
-      {block.kind === "Paragraph" && <PropertyRow label="Line height"><Stepper value={Math.round((s.lineHeight ?? 1.5) * 10)} min={10} max={30} onChange={value => onPatchStyle({ lineHeight: value / 10 })} /></PropertyRow>}
-      <PropertyRow label="Align"><AlignPicker value={s.align} onChange={align => onPatchStyle({ align })} /></PropertyRow>
-      <div className={styles.propertyColumn}><span>Content ({block.kind === "Title" ? "supports Liquid" : "rich text — edit on canvas"})</span><textarea value={blockText(block, "en").replace(/<[^>]+>/g, "")} onChange={event => onPatch({ text: escapeHtml(event.target.value) })} /></div>
+      <PropertyRow label="Text color"><ColorControl value={s.color ?? (block.kind === "Title" ? "#2e3c47" : style.textColor)} onChange={color => onPatchStyle({ color })} /></PropertyRow>
+      <PropertyRow label="Link color"><ColorControl value={s.linkColor ?? style.linkColor} onChange={linkColor => onPatchStyle({ linkColor })} /></PropertyRow>
+      <PropertyRow label="Line height"><select value={String(s.lineHeight ?? (block.kind === "Title" ? 1.2 : 1.5))} onChange={event => onPatchStyle({ lineHeight: Number(event.target.value) })}>{[1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.8, 2].map(value => <option key={value} value={value}>{value.toFixed(1)}</option>)}</select></PropertyRow>
+      <PropertyRow label="Letter spacing"><Stepper value={s.letterSpacing ?? 0} min={-5} max={20} onChange={letterSpacing => onPatchStyle({ letterSpacing })} /></PropertyRow>
+      <div className={styles.propertySection}>BLOCK OPTIONS</div>
+      <div className={styles.paddingHead}><b>Padding</b><label><span>More options</span><input type="checkbox" aria-label="More padding options" disabled /></label></div>
+      <PropertyRow label="All sides"><Stepper value={s.contentPadding ?? 10} min={0} max={60} onChange={contentPadding => onPatchStyle({ contentPadding })} /></PropertyRow>
+      <div className={styles.hideRow}><span>Hide on</span><div className={styles.hidePicker}>
+        <button type="button" className={(s.hideOn ?? "none") === "none" ? styles.hideActive : undefined} onClick={() => onPatchStyle({ hideOn: "none" })}>OFF</button>
+        <button type="button" aria-label="Hide on desktop" className={s.hideOn === "desktop" ? styles.hideActive : undefined} onClick={() => onPatchStyle({ hideOn: "desktop" })}><Monitor size={15}/></button>
+        <button type="button" aria-label="Hide on mobile" className={s.hideOn === "mobile" ? styles.hideActive : undefined} onClick={() => onPatchStyle({ hideOn: "mobile" })}><Smartphone size={15}/></button>
+      </div></div>
     </>}
   </div>;
 }
@@ -1160,7 +1206,7 @@ export function TestModal({ locale, draft, variantIndex = 0, close }: { locale: 
 
   const frameStyle = { maxWidth: device === "mobile" ? 340 : 600, width: "100%", margin: "0 auto" } as CSSProperties;
   const savedStyle = { ...defaultStyle(), ...((draft.config?.emailStyle ?? {}) as Record<string, never>) };
-  const rowsHtml = resolveLiquidPreview(`<table role="presentation" width="100%" style="border-collapse:collapse">${rows.map(row => `<tr><td style="padding:${row.padding ?? 10}px;${row.bg ? `background:${row.bg};` : ""}"><table role="presentation" width="100%" style="border-collapse:collapse"><tr>${row.cells.map(cell => `<td width="${cell.width}%" style="vertical-align:top;padding:0 8px">${cell.blocks.map(block => blockToHtml(block, previewLocale, savedStyle)).join("")}</td>`).join("")}</tr></table></td></tr>`).join("")}</table>`, previewUser, previewLocale, workspace);
+  const rowsHtml = resolveLiquidPreview(`<table role="presentation" width="100%" style="border-collapse:collapse">${rows.map(row => `<tr><td style="padding:${row.padding ?? 10}px;${row.bg ? `background:${row.bg};` : ""}"><table role="presentation" width="100%" style="border-collapse:collapse"><tr>${row.cells.map(cell => `<td width="${cell.width}%" style="vertical-align:top;padding:0 8px">${cell.blocks.map(block => block.style?.hideOn === device ? "" : `<div style="padding:${blockPadding(block)}px">${blockToHtml(block, previewLocale, savedStyle)}</div>`).join("")}</td>`).join("")}</tr></table></td></tr>`).join("")}</table>`, previewUser, previewLocale, workspace);
   const channelValuesPreview = (draft.config?.channelValues ?? {}) as Record<string, unknown>;
   const messageSubject = current?.subject ?? draft.subject ?? "";
   const messageBody = current?.body ?? draft.body ?? "";

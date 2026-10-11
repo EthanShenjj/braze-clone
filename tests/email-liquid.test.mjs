@@ -52,3 +52,19 @@ test("catalog output remains empty when a selection has no matches", () => {
   );
   equal(result, "");
 });
+
+test("catalog preview resolves bracket fields generated for non-identifier names", () => {
+  const bracketWorkspace = {
+    ...workspace,
+    catalogItems: {
+      games: [{ id: "1234", name: "Tales", fields: { "display-name": "Tales of the North" } }],
+    },
+  };
+  const result = resolveLiquidPreview(
+    "{% catalog_items Games 1234 %}{{ items[0]['display-name'] }}",
+    undefined,
+    "en",
+    bracketWorkspace,
+  );
+  equal(result, "Tales of the North");
+});

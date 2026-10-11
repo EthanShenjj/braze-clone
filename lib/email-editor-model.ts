@@ -22,6 +22,10 @@ export type EmailBlockStyle = {
   strike?: boolean;
   fontFamily?: string;
   lineHeight?: number;
+  letterSpacing?: number;
+  linkColor?: string;
+  contentPadding?: number;
+  hideOn?: "none" | "desktop" | "mobile";
   radius?: number;
   padding?: number;
   thickness?: number;
@@ -70,7 +74,7 @@ export function newId(prefix: string) {
 }
 
 export function defaultStyle(): EmailStyle {
-  return { canvasBg: "#f4f2f7", contentBg: "#ffffff", contentWidth: 600, fontFamily: emailFontFamilies[0], linkColor: "#6736d8", textColor: "#4c5058" };
+  return { canvasBg: "#f4f2f7", contentBg: "#ffffff", contentWidth: 600, fontFamily: emailFontFamilies[0], linkColor: "#1871d8", textColor: "#101b24" };
 }
 
 export function normalizeStyle(value: unknown): EmailStyle {
@@ -91,7 +95,7 @@ export function defaultBlock(kind: EmailBlockKind): EmailBlock {
   const base: EmailBlock = { id: newId("block"), kind, text: "" };
   switch (kind) {
     case "Title": return { ...base, text: "I'm a new title block", style: { fontSize: 34, align: "center", color: "#2e3c47" } };
-    case "Paragraph": return { ...base, text: "Add your message here.", style: { fontSize: 15, align: "left", color: "#4c5058", lineHeight: 1.5 } };
+    case "Paragraph": return { ...base, text: "Add your message here.", style: { fontSize: 15, align: "left", color: "#101b24", lineHeight: 1.2, contentPadding: 10 } };
     case "List": return { ...base, text: "First item\nSecond item\nThird item", ordered: false, style: { fontSize: 15, align: "left", color: "#4c5058" } };
     case "Button": return { ...base, text: "Call to action", href: "https://example.com", style: { bgColor: "#6136cc", color: "#ffffff", radius: 4, padding: 12, align: "center", fontSize: 14 } };
     case "Divider": return { ...base, style: { thickness: 1, padding: 20, color: "#dcd9e0" } };
@@ -279,7 +283,7 @@ export function resolveLiquidPreview(source: string, user: PreviewUser = default
   let activeCatalogItems: WorkspaceCatalogItem[] = [];
   const tokenParts = (value: string) => [...value.matchAll(/"([^"]*)"|'([^']*)'|([^\s]+)/g)].map(match => match[1] ?? match[2] ?? match[3]);
   const profileValue = (value: string) => value.replace(/\{\{\s*(?:custom_attribute\.)?\$\{(\w+)\}\s*\}\}/g, (_match, key: string) => String(profile[key] ?? ""));
-  text = text.replace(/\{%\s*(catalog_items|catalog_selection_items)\s*([^%]*?)\s*%\}|\{\{\s*items\[(\d+)]\.([\w-]+)\s*\}\}/g, (match, tag: string | undefined, rawArguments: string | undefined, itemIndex: string | undefined, field: string | undefined) => {
+  text = text.replace(/\{%\s*(catalog_items|catalog_selection_items)\s*([^%]*?)\s*%\}|\{\{\s*items\[(\d+)](?:\.([\w-]+)|\[['"]([^'"]+)['"]])\s*\}\}/g, (match, tag: string | undefined, rawArguments: string | undefined, itemIndex: string | undefined, dotField: string | undefined, bracketField: string | undefined) => {
     if (tag) {
       const parts = tokenParts(rawArguments ?? "");
       const catalogName = parts.shift() ?? "";
@@ -299,6 +303,7 @@ export function resolveLiquidPreview(source: string, user: PreviewUser = default
       }
       return "";
     }
+    const field = dotField ?? bracketField;
     const item = activeCatalogItems[Number(itemIndex)];
     if (!item || !field) return "";
     return String(field === "id" ? item.id : field === "name" ? item.fields[field] ?? item.name : item.fields[field] ?? "");
