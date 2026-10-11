@@ -67,11 +67,18 @@ function blockToMjml(block: EmailBlock, globalStyle: EmailStyle) {
   return `<mj-text ${mjmlAttributes(common)}>${blockText(block, "en") || block.kind}</mj-text>`;
 }
 
-export function legacyRowsToMjml(rowsValue: unknown, styleValue: unknown) {
+export function legacyRowsToMjml(rowsValue: unknown, styleValue: unknown, fallbackContent = "") {
   const rows = normalizeRows(rowsValue, undefined);
   const style = normalizeStyle(styleValue);
   const body = rows.map(row => `<mj-section ${mjmlAttributes({ "background-color": row.bg || style.contentBg, padding: `${row.padding ?? 10}px` })}>${row.cells.map(cell => `<mj-column width="${cell.width}%">${cell.blocks.map(block => blockToMjml(block, style)).join("")}</mj-column>`).join("")}</mj-section>`).join("");
-  const fallback = `<mj-section background-color="${attr(style.contentBg)}"><mj-column><mj-text color="${attr(style.textColor)}" font-family="${attr(style.fontFamily)}" font-size="15px" line-height="1.5" padding="10px">Add your message here.</mj-text></mj-column></mj-section>`;
+  const bodyMatch = fallbackContent.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+  const fallbackHtml = bodyMatch?.[1] ?? fallbackContent;
+  const fallbackBody = fallbackHtml
+    ? /<\/?[a-z][\s\S]*>/i.test(fallbackHtml)
+      ? `<mj-raw>${fallbackHtml}</mj-raw>`
+      : `<mj-text color="${attr(style.textColor)}" font-family="${attr(style.fontFamily)}" font-size="15px" line-height="1.5" padding="10px">${escapeHtml(fallbackHtml).replaceAll("\n", "<br>")}</mj-text>`
+    : `<mj-text color="${attr(style.textColor)}" font-family="${attr(style.fontFamily)}" font-size="15px" line-height="1.5" padding="10px">Add your message here.</mj-text>`;
+  const fallback = `<mj-section background-color="${attr(style.contentBg)}"><mj-column>${fallbackBody}</mj-column></mj-section>`;
   return `<mjml><mj-head></mj-head><mj-body width="${style.contentWidth}px" background-color="${attr(style.canvasBg)}">${body || fallback}</mj-body></mjml>`;
 }
 
@@ -187,7 +194,7 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
   const snapshotRef = useRef<EditorSnapshot>({ project: {}, mjml: "", html: draft.body ?? "" });
   const savedProject = draft.config?.emailGrapesProject as Record<string, unknown> | undefined;
   const canLoadSavedProject = draft.config?.emailGrapesSchemaVersion === 1;
-  const initialMjml = useMemo(() => normalizeMjml(typeof draft.config?.emailMjml === "string" ? draft.config.emailMjml : legacyRowsToMjml(draft.config?.emailRows, draft.config?.emailStyle)), [draft.config?.emailMjml, draft.config?.emailRows, draft.config?.emailStyle]);
+  const initialMjml = useMemo(() => normalizeMjml(typeof draft.config?.emailMjml === "string" ? draft.config.emailMjml : legacyRowsToMjml(draft.config?.emailRows, draft.config?.emailStyle, draft.body)), [draft.body, draft.config?.emailMjml, draft.config?.emailRows, draft.config?.emailStyle]);
 
   const capture = useCallback((editor = editorRef.current) => {
     if (!editor || !readyRef.current) return snapshotRef.current;

@@ -455,7 +455,7 @@ function EmailCompose({ locale, draft, update, saveEmail, variant, setVariant, o
   const current = variants[variant] ?? variants[0];
   const currentSubject = current.subject ?? (variant === 0 ? draft.subject : undefined);
   const currentBody = current.body ?? (variant === 0 ? draft.body : undefined);
-  const savedEditorMode = current.editorMode ?? (variant === 0 ? draft.config?.emailEditorMode as EmailEditorMode | undefined : undefined);
+  const savedEditorMode = current.editorMode ?? (variant === 0 ? draft.config?.emailEditorMode as EmailEditorMode | undefined : undefined) ?? "drag";
   const savedRows = current.rows ?? (variant === 0 && Array.isArray(draft.config?.emailRows) ? draft.config.emailRows as EmailRow[] : []);
   const savedStyle = current.style ?? (variant === 0 ? draft.config?.emailStyle as EmailStyle | undefined : undefined);
   const savedSending = current.sending ?? (variant === 0 ? draft.config?.emailSending as EmailSending | undefined : undefined);
