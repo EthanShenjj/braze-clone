@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowDown, ArrowUp, ChevronDown, ChevronLeft, ChevronRight, CircleHelp,
@@ -10,6 +10,7 @@ import {
 import { formatDate, formatNumber, withLocale, type Locale } from "@/lib/i18n";
 import { sampleCatalogId, sampleWorkspaceId } from "@/lib/sample-catalog";
 import { BROWSER_FIELD_TYPES, operatorsFor, selectionMatches, type CatalogFilter, type CatalogFilterOperator } from "@/lib/catalog-model";
+import { applyLiquidSuggestion, filterLiquidSuggestions, liquidCompletionContext, selectionLiquidSuggestions, type LiquidSuggestion } from "@/lib/liquid-autocomplete";
 import "./catalog-workspace.css";
 
 type FieldType = "string" | "number" | "boolean" | "time" | "geo" | "object" | "array";
@@ -273,12 +274,79 @@ function ItemDialog({ fields, item, close, save }: { fields: CatalogField[]; ite
 
 function ItemDrawer({ item, fields, editable, close, edit, remove }: { item: Item; fields: CatalogField[]; editable: boolean; close: () => void; edit: () => void; remove: () => void }) { return <aside className="catalog-item-drawer"><header><h2>View Item</h2><button onClick={close}><X size={18}/></button></header><dl><div><dt>id</dt><dd>{item.id}</dd></div>{fields.map(field => <div key={field.name}><dt>{field.name}</dt><dd>{display(item.fields[field.name])}</dd></div>)}</dl>{editable && <footer className="catalog-drawer-actions"><button className="secondary danger" onClick={remove}><Trash2 size={15}/> Delete</button><button className="primary" onClick={edit}><Pencil size={15}/> Edit item</button></footer>}</aside>; }
 
+let customAttributeRequest: Promise<string[]> | null = null;
+
+function loadCustomAttributeNames() {
+  if (!customAttributeRequest) customAttributeRequest = fetch("/api/users/attributes")
+    .then(response => response.ok ? response.json() : { data: [] })
+    .then((payload: { data?: string[] }) => payload.data ?? [])
+    .catch(() => []);
+  return customAttributeRequest;
+}
+
+function LiquidValueInput({ value, placeholder, onChange }: { value: string; placeholder: string; onChange: (value: string) => void }) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [customAttributes, setCustomAttributes] = useState<string[]>([]);
+  const [completion, setCompletion] = useState<ReturnType<typeof liquidCompletionContext>>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  useEffect(() => { void loadCustomAttributeNames().then(setCustomAttributes); }, []);
+  const suggestions = useMemo(() => selectionLiquidSuggestions(customAttributes), [customAttributes]);
+  const visible = completion ? filterLiquidSuggestions(suggestions, completion.query).slice(0, 8) : [];
+
+  function updateCompletion(nextValue: string, caret: number) {
+    const next = liquidCompletionContext(nextValue, caret);
+    setCompletion(next);
+    setActiveIndex(0);
+  }
+  function choose(suggestion: LiquidSuggestion) {
+    const caret = completion?.caret ?? value.length;
+    const next = applyLiquidSuggestion(value, caret, suggestion.value);
+    onChange(next.value);
+    setCompletion(null);
+    requestAnimationFrame(() => { inputRef.current?.focus(); inputRef.current?.setSelectionRange(next.caret, next.caret); });
+  }
+  return <div className="selection-liquid-input"><input ref={inputRef} role="combobox" aria-label="Filter value or Liquid" aria-autocomplete="list" aria-expanded={Boolean(completion && visible.length)} aria-controls="selection-liquid-suggestions" value={value} placeholder={placeholder} onFocus={event => updateCompletion(value, event.currentTarget.selectionStart ?? value.length)} onChange={event => { const next = event.target.value; onChange(next); updateCompletion(next, event.target.selectionStart ?? next.length); }} onBlur={() => setCompletion(null)} onKeyDown={event => {
+    if (!completion || !visible.length) return;
+    if (event.key === "ArrowDown") { event.preventDefault(); setActiveIndex(index => (index + 1) % visible.length); }
+    else if (event.key === "ArrowUp") { event.preventDefault(); setActiveIndex(index => (index - 1 + visible.length) % visible.length); }
+    else if (event.key === "Enter" || event.key === "Tab") { event.preventDefault(); choose(visible[activeIndex] ?? visible[0]); }
+    else if (event.key === "Escape") { event.preventDefault(); setCompletion(null); }
+  }}/>{completion && visible.length > 0 && <div className="selection-liquid-menu" id="selection-liquid-suggestions" role="listbox" aria-label="Liquid suggestions">{visible.map((suggestion, index) => <button type="button" role="option" aria-selected={index === activeIndex} className={index === activeIndex ? "active" : ""} key={suggestion.value} onMouseDown={event => event.preventDefault()} onClick={() => choose(suggestion)}><b>{suggestion.label}</b><small>{suggestion.category}</small><code>{suggestion.value}</code></button>)}</div>}</div>;
+}
+
 const operatorLabel: Record<FilterOperator, string> = { equals: "Equals", not_equals: "Does not equal", greater_than: "Greater than", less_than: "Less than", is: "Is", before: "Before", after: "After", includes_value: "Includes value", not_includes_value: "Does not include value", geo_within: "Geo within", geo_outside: "Geo outside", contains: "Contains", not_contains: "Does not contain", exists: "Exists", not_exists: "Does not exist" };
 function SelectionDialog({ catalogId, fields, initial, close, save }: { catalogId: string; fields: CatalogField[]; initial?: Selection; close: () => void; save: (selection: Selection, originalName?: string) => void }) {
   const [name, setName] = useState(initial?.name ?? ""); const [description, setDescription] = useState(initial?.description ?? ""); const [filters, setFilters] = useState<Selection["filters"]>(initial?.filters ?? []); const [randomSort, setRandomSort] = useState(initial?.randomSort ?? true); const [sortField, setSortField] = useState(initial?.sortField ?? ""); const [sortDirection, setSortDirection] = useState<"ascending" | "descending">(initial?.sortDirection ?? "ascending"); const [resultLimit, setResultLimit] = useState(initial?.resultLimit ?? 3);
   const valid = /^[A-Za-z0-9_-]{1,250}$/.test(name) && filters.length <= 10 && filters.every(filter => filter.field && filter.value.trim()) && (randomSort || Boolean(sortField));
   function finish() { save({ catalogId, name, description, filters, randomSort, sortField: randomSort ? "" : sortField, sortDirection, resultLimit: Math.max(1, Math.min(50, resultLimit)), updatedAt: now() }, initial?.name); }
-  return <Modal title={initial ? "Edit selection" : "Create selection"} subtitle="Selections personalize catalog results for each user." close={close} footer={<><button className="secondary" onClick={close}>Cancel</button><button className="primary" disabled={!valid} onClick={finish}>{initial ? "Save changes" : "Create Selection"}</button></>}><div className="catalog-form"><label>Name<input value={name} disabled={Boolean(initial)} onChange={event => setName(event.target.value.replace(/[^A-Za-z0-9_-]/g, ""))}/></label><label>Description <small>Optional</small><textarea value={description} onChange={event => setDescription(event.target.value)}/></label><h3>Filter settings <small>Optional · up to 10</small></h3>{filters.map((filter, index) => { const field = fields.find(candidate => candidate.name === filter.field); const supported = field ? operatorsFor(field.type) : ["equals"] as FilterOperator[]; const choices = supported.includes(filter.operator) ? supported : [filter.operator, ...supported]; return <div className="selection-filter-editor" key={index}><select value={filter.field} onChange={event => { const next = fields.find(candidate => candidate.name === event.target.value); setFilters(filters.map((value, position) => position === index ? { ...value, field: event.target.value, operator: next ? operatorsFor(next.type)[0] : "equals" } : value)); }}><option value="">Filter field</option>{fields.map(candidate => <option key={candidate.name}>{candidate.name}</option>)}</select><select value={filter.operator} onChange={event => setFilters(filters.map((value, position) => position === index ? { ...value, operator: event.target.value as FilterOperator } : value))}>{choices.map(operator => <option key={operator} value={operator}>{operatorLabel[operator]}</option>)}</select><input value={filter.value} placeholder={field?.type === "geo" ? '{"center":[-73.99,40.78],"radiusKm":5}' : "Value or Liquid"} onChange={event => setFilters(filters.map((value, position) => position === index ? { ...value, value: event.target.value } : value))}/><button onClick={() => setFilters(filters.filter((_, position) => position !== index))}><X size={15}/></button></div>; })}<button className="catalog-link" disabled={filters.length >= 10} onClick={() => setFilters([...filters, { field: "", operator: "equals", value: "" }])}><Plus size={14}/> Add filter</button><h3>Sort type</h3><label className="catalog-checkbox"><input type="checkbox" checked={randomSort} onChange={event => setRandomSort(event.target.checked)}/> Randomize sort order</label>{!randomSort && <div className="catalog-two-columns"><label>Sort field<select value={sortField} onChange={event => setSortField(event.target.value)}><option value="">Select a field</option>{fields.map(field => <option key={field.name}>{field.name}</option>)}</select></label><label>Sort order<select value={sortDirection} onChange={event => setSortDirection(event.target.value as "ascending" | "descending")}><option value="ascending">Ascending</option><option value="descending">Descending</option></select></label></div>}<label>Results limit<input type="number" min="1" max="50" value={resultLimit} onChange={event => setResultLimit(Number(event.target.value))}/><small>You can include up to 50 catalog items.</small></label></div></Modal>;
+  return <Modal
+    title={initial ? "Edit selection" : "Create selection"}
+    subtitle="Selections personalize catalog results for each user. Type {{ to insert a dynamic value."
+    close={close}
+    footer={<><button className="secondary" onClick={close}>Cancel</button><button className="primary" disabled={!valid} onClick={finish}>{initial ? "Save changes" : "Create Selection"}</button></>}
+  >
+    <div className="catalog-form">
+      <label>Name<input value={name} disabled={Boolean(initial)} onChange={event => setName(event.target.value.replace(/[^A-Za-z0-9_-]/g, ""))}/></label>
+      <label>Description <small>Optional</small><textarea value={description} onChange={event => setDescription(event.target.value)}/></label>
+      <h3>Filter settings <small>Optional · up to 10</small></h3>
+      {filters.map((filter, index) => {
+        const field = fields.find(candidate => candidate.name === filter.field);
+        const supported = field ? operatorsFor(field.type) : ["equals"] as FilterOperator[];
+        const choices = supported.includes(filter.operator) ? supported : [filter.operator, ...supported];
+        return <div className="selection-filter-editor" key={index}>
+          <select value={filter.field} onChange={event => { const next = fields.find(candidate => candidate.name === event.target.value); setFilters(filters.map((value, position) => position === index ? { ...value, field: event.target.value, operator: next ? operatorsFor(next.type)[0] : "equals" } : value)); }}><option value="">Filter field</option>{fields.map(candidate => <option key={candidate.name}>{candidate.name}</option>)}</select>
+          <select value={filter.operator} onChange={event => setFilters(filters.map((value, position) => position === index ? { ...value, operator: event.target.value as FilterOperator } : value))}>{choices.map(operator => <option key={operator} value={operator}>{operatorLabel[operator]}</option>)}</select>
+          <LiquidValueInput value={filter.value} placeholder={field?.type === "geo" ? '{"center":[-73.99,40.78],"radiusKm":5}' : "Value or Liquid · type {{"} onChange={next => setFilters(filters.map((value, position) => position === index ? { ...value, value: next } : value))}/>
+          <button aria-label="Remove filter" onClick={() => setFilters(filters.filter((_, position) => position !== index))}><X size={15}/></button>
+        </div>;
+      })}
+      <button className="catalog-link" disabled={filters.length >= 10} onClick={() => setFilters([...filters, { field: "", operator: "equals", value: "" }])}><Plus size={14}/> Add filter</button>
+      <h3>Sort type</h3>
+      <label className="catalog-checkbox"><input type="checkbox" checked={randomSort} onChange={event => setRandomSort(event.target.checked)}/> Randomize sort order</label>
+      {!randomSort && <div className="catalog-two-columns"><label>Sort field<select value={sortField} onChange={event => setSortField(event.target.value)}><option value="">Select a field</option>{fields.map(field => <option key={field.name}>{field.name}</option>)}</select></label><label>Sort order<select value={sortDirection} onChange={event => setSortDirection(event.target.value as "ascending" | "descending")}><option value="ascending">Ascending</option><option value="descending">Descending</option></select></label></div>}
+      <label>Results limit<input type="number" min="1" max="50" value={resultLimit} onChange={event => setResultLimit(Number(event.target.value))}/><small>You can include up to 50 catalog items.</small></label>
+    </div>
+  </Modal>;
 }
 
 function CsvUpdateDialog({ fields, items, close, apply }: { fields: CatalogField[]; items: Item[]; close: () => void; apply: (mode: "merge" | "delete", items: Item[]) => void }) { const [mode, setMode] = useState<"merge" | "delete">("merge"); const [csv, setCsv] = useState<{ headers: string[]; rows: Record<string, string>[] } | null>(null); const converted = csv?.rows.map(row => ({ id: row.id, name: row.name || row.id, fields: Object.fromEntries(fields.map(field => [field.name, coerce(row[field.name] ?? "", field.type)])), updatedAt: now() })) ?? []; const valid = Boolean(csv && csv.headers[0] === "id" && converted.every(item => item.id) && new Set(converted.map(item => item.id)).size === converted.length); return <Modal title="Upload CSV" subtitle="Add, update, or delete catalog items." close={close} footer={<><button className="secondary" onClick={close}>Cancel</button><button className="primary" disabled={!valid} onClick={() => apply(mode, converted)}>Process CSV</button></>}><div className="catalog-form"><label>Import action<select value={mode} onChange={event => setMode(event.target.value as typeof mode)}><option value="merge">Add or update items</option><option value="delete">Delete matching item IDs</option></select></label><label className="catalog-dropzone"><Upload size={26}/><b>{csv ? `${converted.length} rows ready` : "Choose CSV file"}</b><span>UTF-8 CSV; first column must be id.</span><input type="file" accept=".csv,text/csv" onChange={event => { const file = event.target.files?.[0]; if (file) void file.text().then(text => setCsv(parseCsv(text))); }}/></label>{csv && <CsvPreview csv={csv}/>} {csv && !valid && <p className="catalog-error">Each row needs a unique id and id must be the first column.</p>}</div></Modal>; }

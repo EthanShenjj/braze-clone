@@ -350,6 +350,11 @@ export function searchUsers(query = "", start = 0, limit = 20) {
   return { data: rows.map(mapUser), total, start: offset, limit: pageSize };
 }
 
+export function listUserAttributeNames() {
+  const rows = db().prepare("SELECT attributes_json FROM users").all() as Array<{ attributes_json: string }>;
+  return [...new Set(rows.flatMap(row => Object.keys(parseJson<Record<string, unknown>>(row.attributes_json, {}))))].sort((left, right) => left.localeCompare(right));
+}
+
 export function setUserSubscription(id: string, subscribed: boolean) {
   const result = db().prepare("UPDATE users SET subscribed = ? WHERE id = ?").run(subscribed ? 1 : 0, id);
   if (!result.changes) return null;
@@ -1017,7 +1022,15 @@ export function previewCatalogSelection(catalogId: string, name: string, userId?
   if (!selection) return null;
   const user = userId ? getUser(userId) : randomCatalogPreviewUser();
   if (!user) return null;
-  let items = listCatalogItems(catalogId).filter(item => selectionMatches(item, selection.filters, user.attributes));
+  const profile = {
+    ...user.attributes,
+    user_id: user.id,
+    email: user.email,
+    email_address: user.email,
+    first_name: user.firstName,
+    country: user.country,
+  };
+  let items = listCatalogItems(catalogId).filter(item => selectionMatches(item, selection.filters, profile));
   if (selection.randomSort) {
     items.sort((left, right) => createHash("sha256").update(`${catalogId}:${name}:${user.id}:${left.id}`).digest("hex").localeCompare(createHash("sha256").update(`${catalogId}:${name}:${user.id}:${right.id}`).digest("hex")));
   } else if (selection.sortField) {

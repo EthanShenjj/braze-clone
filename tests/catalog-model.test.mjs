@@ -22,3 +22,8 @@ test("catalog values and geo filters are evaluated with their native types", () 
   validateCatalogItem({ id: "shop_1", fields: { price: 8, tags: ["sale"], store: [-73.99, 40.78] } }, fields);
   equal(selectionMatches({ id: "shop_1", fields: { price: 8, tags: ["sale"], store: [-73.99, 40.78] } }, [{ field: "store", operator: "geo_within", value: '{"center":[-73.99,40.78],"radiusKm":1}' }]), true);
 });
+
+test("selection Liquid resolves standard and custom user attributes", () => {
+  equal(selectionMatches({ id: "item_1", fields: { audience: "Customer 1" } }, [{ field: "audience", operator: "equals", value: "{{${first_name}}}" }], { first_name: "Customer 1" }), true);
+  equal(selectionMatches({ id: "item_1", fields: { audience: "gold" } }, [{ field: "audience", operator: "equals", value: "{{custom_attribute.${loyalty 等级}}}" }], { "loyalty 等级": "gold" }), true);
+});

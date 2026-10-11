@@ -88,7 +88,7 @@ export function validateSelection(input: CatalogSelectionInput, fields: CatalogF
   }
 }
 
-function profileValue(value: string, profile: Record<string, unknown> = {}) { return value.replace(/\{\{\s*(?:custom_attribute\.)?\$\{(\w+)\}\s*\}\}/g, (_match, key: string) => String(profile[key] ?? "")); }
+function profileValue(value: string, profile: Record<string, unknown> = {}) { return value.replace(/\{\{\s*(?:custom_attribute\.)?\$\{([^}]+)\}\s*\}\}/g, (_match, key: string) => String(profile[key] ?? "")); }
 function asTime(value: unknown) { return typeof value === "number" ? value : Date.parse(String(value)); }
 function geoFilterValue(value: string, profile: Record<string, unknown>) { try { const parsed = JSON.parse(profileValue(value, profile)) as { center?: unknown; radiusKm?: unknown }; return Array.isArray(parsed.center) && typeof parsed.radiusKm === "number" ? parsed : null; } catch { return null; } }
 export function selectionMatches(item: { id: string; fields: Record<string, unknown> }, filters: CatalogFilter[], profile: Record<string, unknown> = {}) {
