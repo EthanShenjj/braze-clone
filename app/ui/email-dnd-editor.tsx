@@ -13,6 +13,7 @@ import {
   Underline, Undo2, Upload, X, Youtube,
 } from "lucide-react";
 import styles from "./email-dnd.module.css";
+import GrapesEmailEditor from "./email-grapes-editor";
 import {
   blockText, defaultBlock, defaultStyle, downloadHtmlFile, emailFontFamilies, emailLocales, emailTemplates, escapeHtml,
   extractLinks, liquidIssues, liquidTokens, makeCell, makeRow, newId, normalizeRows, normalizeStyle,
@@ -1158,7 +1159,7 @@ export function TestModal({ locale, draft, variantIndex = 0, close }: { locale: 
   const isEmail = draft.channel === "email";
   const isWhatsapp = draft.channel === "whatsapp";
   const current = variants[variantIndex] ?? variants[0];
-  const rows = isEmail ? variantRows(draft, variantIndex) : [];
+  const rows = isEmail && draft.config?.emailEditorEngine !== "grapesjs-mjml" ? variantRows(draft, variantIndex) : [];
   const htmlBody = isEmail && !rows.length ? variantBody(draft) : "";
   const plainBody = isEmail && !rows.length && !htmlBody ? variantBody(draft) : "";
   const sendingInfo = (current?.sending ?? draft.config?.emailSending) as Record<string, unknown> | undefined;
@@ -1309,7 +1310,7 @@ export function EmailMessageEditor({ locale, mode, variantName, draft, save, onC
   onModeChange: (mode: EditorMode) => void;
   onOpenTest: () => void;
 }) {
-  if (mode === "drag") return <BrazeEmailDndEditor locale={locale} draft={draft} variantName={variantName} save={save} onClose={onClose} onSendingSettings={onSendingSettings} onOpenTest={onOpenTest} />;
+  if (mode === "drag") return <GrapesEmailEditor locale={locale} draft={draft} variantName={variantName} save={save} onClose={onClose} onSendingSettings={onSendingSettings} onOpenTest={onOpenTest} />;
   return <GeneralEmailEditor locale={locale} mode={mode} variantName={variantName} draft={draft} save={save} onClose={onClose} onSendingSettings={onSendingSettings} onModeChange={onModeChange} onOpenTest={onOpenTest} />;
 }
 

@@ -43,7 +43,7 @@ type CampaignStatus = "Draft" | "Active" | "Stopped";
 type Campaign = { id: string; name: string; channel: Channel; status: CampaignStatus; schedule: string; sent: number; edited: string; subject?: string; body?: string; audience?: string; conversion?: string; config?: Record<string, unknown> };
 export type EmailEditorMode = "operator" | "drag" | "html" | "plain" | "template";
 type EmailSending = { preheader: string; whitespace: boolean; replyTo: string; bcc: string; unsubscribe: string; fromName?: string; fromAddress?: string; ipPool?: string; openTracking?: boolean; clickTracking?: boolean; gaEnabled?: boolean; utmSource?: string; utmMedium?: string; utmCampaign?: string; utmTerm?: string; utmContent?: string; subjectTranslations?: Record<string, string>; preheaderTranslations?: Record<string, string> };
-type EmailVariant = { id: string; name: string; subject?: string; body?: string; editorMode?: EmailEditorMode; rows?: EmailRow[]; sending?: EmailSending; style?: EmailStyle };
+type EmailVariant = { id: string; name: string; subject?: string; body?: string; editorMode?: EmailEditorMode; rows?: EmailRow[]; sending?: EmailSending; style?: EmailStyle; editorEngine?: string; grapesProject?: Record<string, unknown>; mjml?: string };
 
 const verifiedIdentities = [
   { name: "Powered by Braze", address: "braze@mta-h466.bftmail.com" },
@@ -459,7 +459,10 @@ function EmailCompose({ locale, draft, update, saveEmail, variant, setVariant, o
   const savedRows = current.rows ?? (variant === 0 && Array.isArray(draft.config?.emailRows) ? draft.config.emailRows as EmailRow[] : []);
   const savedStyle = current.style ?? (variant === 0 ? draft.config?.emailStyle as EmailStyle | undefined : undefined);
   const savedSending = current.sending ?? (variant === 0 ? draft.config?.emailSending as EmailSending | undefined : undefined);
-  const variantDraft: Campaign = { ...draft, subject: currentSubject, body: currentBody, config: { ...draft.config, emailEditorMode: savedEditorMode, emailRows: savedRows, emailStyle: savedStyle, emailSending: savedSending } };
+  const savedEditorEngine = current.editorEngine ?? (variant === 0 ? draft.config?.emailEditorEngine as string | undefined : undefined);
+  const savedGrapesProject = current.grapesProject ?? (variant === 0 ? draft.config?.emailGrapesProject as Record<string, unknown> | undefined : undefined);
+  const savedMjml = current.mjml ?? (variant === 0 ? draft.config?.emailMjml as string | undefined : undefined);
+  const variantDraft: Campaign = { ...draft, subject: currentSubject, body: currentBody, config: { ...draft.config, emailEditorMode: savedEditorMode, emailRows: savedRows, emailStyle: savedStyle, emailSending: savedSending, emailEditorEngine: savedEditorEngine, emailGrapesProject: savedGrapesProject, emailMjml: savedMjml } };
   const [showSending, setShowSending] = useState(false);
   const [copied, setCopied] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
@@ -468,8 +471,8 @@ function EmailCompose({ locale, draft, update, saveEmail, variant, setVariant, o
   useEffect(() => { setEmailStart(!currentSubject && !currentBody && !savedRows.length); setEmailEditor(null); }, [variant]);
   const variantPatch = (patch: Partial<Campaign>) => {
     const next = [...variants];
-    next[variant] = { ...current, subject: patch.subject ?? currentSubject, body: patch.body ?? currentBody, editorMode: (patch.config?.emailEditorMode as EmailEditorMode | undefined) ?? savedEditorMode, rows: Array.isArray(patch.config?.emailRows) ? patch.config.emailRows as EmailRow[] : savedRows, style: patch.config?.emailStyle as EmailStyle | undefined ?? savedStyle, sending: (patch.config?.emailSending as EmailSending | undefined) ?? savedSending };
-    const config = { ...draft.config, variants: next, ...(variant === 0 ? { emailEditorMode: next[0].editorMode, emailRows: next[0].rows, emailStyle: next[0].style, emailSending: next[0].sending } : {}) };
+    next[variant] = { ...current, subject: patch.subject ?? currentSubject, body: patch.body ?? currentBody, editorMode: (patch.config?.emailEditorMode as EmailEditorMode | undefined) ?? savedEditorMode, rows: Array.isArray(patch.config?.emailRows) ? patch.config.emailRows as EmailRow[] : savedRows, style: patch.config?.emailStyle as EmailStyle | undefined ?? savedStyle, sending: (patch.config?.emailSending as EmailSending | undefined) ?? savedSending, editorEngine: (patch.config?.emailEditorEngine as string | undefined) ?? savedEditorEngine, grapesProject: (patch.config?.emailGrapesProject as Record<string, unknown> | undefined) ?? savedGrapesProject, mjml: (patch.config?.emailMjml as string | undefined) ?? savedMjml };
+    const config = { ...draft.config, ...patch.config, variants: next, ...(variant === 0 ? { emailEditorMode: next[0].editorMode, emailRows: next[0].rows, emailStyle: next[0].style, emailSending: next[0].sending, emailEditorEngine: next[0].editorEngine, emailGrapesProject: next[0].grapesProject, emailMjml: next[0].mjml } : {}) };
     return variant === 0 ? { ...patch, config } : { config };
   };
   const updateVariant = (patch: Partial<Campaign>) => update(variantPatch(patch));
@@ -481,7 +484,7 @@ function EmailCompose({ locale, draft, update, saveEmail, variant, setVariant, o
   const subject = currentSubject ?? "";
   const fromName = savedSending?.fromName ?? "Powered by Braze";
   const fromAddress = savedSending?.fromAddress ?? "braze@mta-h466.bftmail.com";
-  const hasRows = savedRows.length > 0;
+  const hasRows = savedEditorEngine !== "grapesjs-mjml" && savedRows.length > 0;
   const modeLabel = savedEditorMode === "drag" ? "Drag-and-drop Editor" : savedEditorMode === "plain" ? "Plain-text Editor" : "HTML Editor";
   return <div className="editor-body email-compose-page">
     <EmailCampaignDetails locale={locale} draft={draft} update={update} copied={copied} setCopied={setCopied}/>
