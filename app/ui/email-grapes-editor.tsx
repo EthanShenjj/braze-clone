@@ -327,7 +327,7 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
         const [{ default: grapesjs }, { default: grapesJSMJML }] = await Promise.all([import("grapesjs"), import("grapesjs-mjml")]);
         if (cancelled || !editorHostRef.current || !blocksRef.current) return;
         const pluginsOpts: Record<string, unknown> = {};
-        pluginsOpts[grapesJSMJML as unknown as string] = { resetBlocks: true, resetDevices: true, useCustomTheme: false, useXmlParser: true, columnsPadding: "0 5px" };
+        pluginsOpts[grapesJSMJML as unknown as string] = { resetBlocks: true, resetDevices: true, useCustomTheme: false, useXmlParser: false, columnsPadding: "0 5px" };
         editor = grapesjs.init({
           container: editorHostRef.current,
           height: "100%",

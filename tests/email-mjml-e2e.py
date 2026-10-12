@@ -50,18 +50,34 @@ def main() -> None:
 
             canvas = page.frame_locator("iframe").first
             assert canvas.get_by_text("This page contains the following errors:").count() == 0
+            assert canvas.locator("parsererror").count() == 0
+
+            canvas.get_by_text("Legacy line one", exact=False).dblclick()
+            editable = canvas.locator("[contenteditable='true']").first
+            editable.wait_for()
+            editable.click()
+            page.keyboard.press("End")
 
             page.get_by_role("button", name="Personalization").click()
             page.get_by_label("Personalization type").select_option(label="Catalog Items")
             page.get_by_label("Catalog name").select_option(label="Featured collection")
             catalog_items = page.locator("fieldset").filter(has_text="Catalog items")
-            catalog_items.locator('input[type="checkbox"]').first.check()
+            item_checkboxes = catalog_items.locator('input[type="checkbox"]')
+            item_checkboxes.first.wait_for()
+            assert item_checkboxes.count() >= 3
+            for index in range(3):
+                item_checkboxes.nth(index).check()
             fields = page.locator("fieldset").filter(has_text="Fields")
-            fields.locator('input[type="checkbox"]').first.check()
+            field_checkboxes = fields.locator('input[type="checkbox"]')
+            field_checkboxes.first.wait_for()
+            assert field_checkboxes.count() >= 4
+            for index in range(4):
+                field_checkboxes.nth(index).check()
             page.get_by_role("button", name="Insert into message").click()
             page.wait_for_timeout(750)
 
             assert canvas.get_by_text("This page contains the following errors:").count() == 0
+            assert canvas.locator("parsererror").count() == 0
             page.get_by_role("button", name="Done").click()
             page.get_by_role("heading", name="Email Composer").wait_for(timeout=15_000)
 
