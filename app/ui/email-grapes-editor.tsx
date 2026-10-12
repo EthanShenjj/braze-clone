@@ -14,6 +14,7 @@ import {
   blockText, defaultStyle, downloadHtmlFile, emailFontFamilies, escapeHtml, liquidTokens,
   normalizeRows, normalizeStyle, type EmailBlock, type EmailRow, type EmailStyle, type MenuItem, type SocialItem,
 } from "@/lib/email-editor-model";
+import { hasHtmlStyleVoidTags, normalizeMjmlDocument, normalizeXmlVoidTags } from "@/lib/email-mjml";
 import { translate, type Locale } from "@/lib/i18n";
 
 type CampaignLike = { id: string; name: string; subject?: string; body?: string; config?: Record<string, unknown> };
@@ -67,32 +68,12 @@ function blockToMjml(block: EmailBlock, globalStyle: EmailStyle) {
   return `<mj-text ${mjmlAttributes(common)}>${blockText(block, "en") || block.kind}</mj-text>`;
 }
 
-export function legacyRowsToMjml(rowsValue: unknown, styleValue: unknown, fallbackContent = "") {
+export function legacyRowsToMjml(rowsValue: unknown, styleValue: unknown) {
   const rows = normalizeRows(rowsValue, undefined);
   const style = normalizeStyle(styleValue);
   const body = rows.map(row => `<mj-section ${mjmlAttributes({ "background-color": row.bg || style.contentBg, padding: `${row.padding ?? 10}px` })}>${row.cells.map(cell => `<mj-column width="${cell.width}%">${cell.blocks.map(block => blockToMjml(block, style)).join("")}</mj-column>`).join("")}</mj-section>`).join("");
-  const bodyMatch = fallbackContent.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-  const fallbackHtml = bodyMatch?.[1] ?? fallbackContent;
-  const fallbackBody = fallbackHtml
-    ? /<\/?[a-z][\s\S]*>/i.test(fallbackHtml)
-      ? `<mj-raw>${fallbackHtml}</mj-raw>`
-      : `<mj-text color="${attr(style.textColor)}" font-family="${attr(style.fontFamily)}" font-size="15px" line-height="1.5" padding="10px">${escapeHtml(fallbackHtml).replaceAll("\n", "<br>")}</mj-text>`
-    : `<mj-text color="${attr(style.textColor)}" font-family="${attr(style.fontFamily)}" font-size="15px" line-height="1.5" padding="10px">Add your message here.</mj-text>`;
-  const fallback = `<mj-section background-color="${attr(style.contentBg)}"><mj-column>${fallbackBody}</mj-column></mj-section>`;
+  const fallback = `<mj-section background-color="${attr(style.contentBg)}"><mj-column><mj-text color="${attr(style.textColor)}" font-family="${attr(style.fontFamily)}" font-size="15px" line-height="1.5" padding="10px">Add your message here.</mj-text></mj-column></mj-section>`;
   return `<mjml><mj-head></mj-head><mj-body width="${style.contentWidth}px" background-color="${attr(style.canvasBg)}">${body || fallback}</mj-body></mjml>`;
-}
-
-function normalizeMjml(source: string) {
-  const normalized = source.replace(
-    /<mj-all([^>]*)><mj-text([^>]*)><mj-class([^>]*)><\/mj-class><\/mj-text><\/mj-all>/g,
-    "<mj-all$1 /><mj-text$2 /><mj-class$3 />",
-  );
-  const documentEnd = normalized.lastIndexOf("</mjml>");
-  if (documentEnd < 0 || !normalized.slice(documentEnd + 7).trim()) return normalized;
-  const document = normalized.slice(0, documentEnd + 7);
-  const trailing = normalized.slice(documentEnd + 7).trim();
-  const bodyEnd = document.lastIndexOf("</mj-body>");
-  return bodyEnd < 0 ? normalized : `${document.slice(0, bodyEnd)}${trailing}${document.slice(bodyEnd)}`;
 }
 
 function selectedState(component: Component | undefined): SelectedState {
@@ -193,12 +174,13 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
   const readyRef = useRef(false);
   const snapshotRef = useRef<EditorSnapshot>({ project: {}, mjml: "", html: draft.body ?? "" });
   const savedProject = draft.config?.emailGrapesProject as Record<string, unknown> | undefined;
-  const canLoadSavedProject = draft.config?.emailGrapesSchemaVersion === 1;
-  const initialMjml = useMemo(() => normalizeMjml(typeof draft.config?.emailMjml === "string" ? draft.config.emailMjml : legacyRowsToMjml(draft.config?.emailRows, draft.config?.emailStyle, draft.body)), [draft.body, draft.config?.emailMjml, draft.config?.emailRows, draft.config?.emailStyle]);
+  const savedMjml = typeof draft.config?.emailMjml === "string" ? draft.config.emailMjml : "";
+  const canLoadSavedProject = draft.config?.emailGrapesSchemaVersion === 1 && !hasHtmlStyleVoidTags(savedMjml);
+  const initialMjml = useMemo(() => normalizeMjmlDocument(savedMjml || legacyRowsToMjml(draft.config?.emailRows, draft.config?.emailStyle)), [draft.config?.emailRows, draft.config?.emailStyle, savedMjml]);
 
   const capture = useCallback((editor = editorRef.current) => {
     if (!editor || !readyRef.current) return snapshotRef.current;
-    const mjml = normalizeMjml(String(editor.runCommand("mjml-code") ?? editor.getHtml()));
+    const mjml = normalizeMjmlDocument(String(editor.runCommand("mjml-code") ?? editor.getHtml()));
     let html = draft.body ?? "";
     try { html = htmlFromResult(editor.runCommand("mjml-code-to-html", { mjml }), html); } catch (error) { console.error("MJML compilation failed", error); }
     let project = snapshotRef.current.project;
@@ -388,16 +370,13 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
       lines.forEach((line, index) => { if (index) fragment.append(frameWindow.document.createElement("br")); last = frameWindow.document.createTextNode(line); fragment.append(last); });
       range.insertNode(fragment);
       if (last) { range.setStartAfter(last); range.collapse(true); selection.removeAllRanges(); selection.addRange(range); }
-      const inputEvent = frameWindow.document.createEvent("Event");
-      inputEvent.initEvent("input", true, false);
-      editable.dispatchEvent(inputEvent);
       const component = editor.getSelected();
-      if (component?.get("type") === "mj-text") component.components(editable.innerHTML);
+      if (component?.get("type") === "mj-text") component.components(normalizeXmlVoidTags(editable.innerHTML));
       queueCapture();
     } else {
       const component = editor.getSelected();
-      if (component?.get("type") === "mj-text") component.append(escapeHtml(value).replaceAll("\n", "<br>"));
-      else editor.addComponents(`<mj-section><mj-column><mj-text padding="10px">${escapeHtml(value).replaceAll("\n", "<br>")}</mj-text></mj-column></mj-section>`);
+      if (component?.get("type") === "mj-text") component.append(escapeHtml(value).replaceAll("\n", "<br />"));
+      else editor.addComponents(`<mj-section><mj-column><mj-text padding="10px">${escapeHtml(value).replaceAll("\n", "<br />")}</mj-text></mj-column></mj-section>`);
       queueCapture();
     }
     setAutocomplete(false);
