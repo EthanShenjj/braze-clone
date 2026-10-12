@@ -51,14 +51,30 @@
 .personalizationHead button{position:absolute;top:2px;right:5px;display:grid;place-items:center;width:28px;height:28px;border:0;background:transparent;color:#686a72;cursor:pointer}
 .personalizationHead button svg{width:17px;height:17px}
 .personalizationHead button:hover{color:#2f3138}
-.personalizationForm{display:grid;gap:23px;padding:13px 20px 28px 21px}
-.personalizationForm>label{display:grid;gap:7px;color:#292b32;font-size:12px;font-weight:720}
-.personalizationForm select{width:100%;height:36px;padding:0 42px 0 15px;border:1px solid #8a8790;border-radius:8px;background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m5 7.5 5 5 5-5' fill='none' stroke='%235f6067' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-position:right 12px center;background-repeat:no-repeat;background-size:14px 14px;color:#2f3037;font-family:inherit;font-size:14px;font-weight:400;line-height:1.2;appearance:none}
+.personalizationForm{display:grid;gap:32px;padding:28px 20px 28px 21px}
+.personalizationForm>label{display:grid;gap:8px;color:#20222b;font-size:13px;font-weight:750}
+.personalizationForm select,.personalizationForm>label>input{width:100%;height:40px;padding:0 42px 0 15px;border:1px solid #7e7d84;border-radius:9px;background-color:#fff;color:#22232b;font-family:inherit;font-size:15px;font-weight:400;line-height:1.2;box-sizing:border-box}
+.personalizationForm select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m5 7.5 5 5 5-5' fill='none' stroke='%23727379' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-position:right 12px center;background-repeat:no-repeat;background-size:14px 14px;appearance:none}
+.personalizationForm>label>input::placeholder{color:#6e6f76;font-style:italic;opacity:1}
+.personalizationForm>label>input:focus{border-color:#6924db;outline:2px solid #6924db;outline-offset:-2px}
 .personalizationForm select.placeholderSelect{color:#707078;font-style:italic}
 .personalizationForm select:focus{border-color:#8746ef;outline:2px solid #8746ef;outline-offset:-2px;background-image:linear-gradient(#b8b6bd,#b8b6bd),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m5 7.5 5 5 5-5' fill='none' stroke='%235f6067' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-position:right 39px center,right 12px center;background-size:1px 24px,14px 14px}
 .personalizationForm select:disabled{background-color:#f4f3f5;color:#8a8890}
-.personalizationForm>label:first-child select{border:2px solid #8746ef}
-.personalizationForm>label.snippetLabel{gap:3px}
+.personalizationForm>label:first-child select:focus{border-color:#8746ef}
+.personalizationForm>label.snippetLabel{gap:7px}
+.personalizationLabel{display:flex;align-items:center;gap:4px}
+.optionalLabel{color:#66676f;font-weight:450}
+.infoIcon{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;background:#55565d;color:#fff;cursor:help}
+.infoIcon svg{width:10px;height:10px;stroke-width:3}
+.attributeCombobox{position:relative;min-width:0}
+.attributeCombobox>input{width:100%;height:40px;padding:0 42px 0 15px;border:1px solid #7e7d84;border-radius:9px;background:#fff;color:#22232b;font:400 15px/1.2 inherit;box-sizing:border-box}
+.attributeCombobox>input::placeholder{color:#6e6f76;font-style:italic;opacity:1}
+.attributeCombobox>input:focus{border-color:#6924db;outline:2px solid #6924db;outline-offset:-2px}
+.attributeCombobox>svg{position:absolute;top:13px;right:12px;width:15px;height:15px;color:#777880;pointer-events:none;stroke-width:3}
+.attributeOptions{position:absolute;z-index:25;top:44px;right:0;left:0;display:grid;max-height:224px;overflow:auto;padding:5px 0;border:1px solid #d2ced8;border-radius:8px;background:#fff;box-shadow:0 8px 22px #25202f24}
+.attributeOptions button{min-height:34px;padding:7px 14px;border:0;background:#fff;color:#303139;font:500 12px/1.25 inherit;text-align:left;cursor:pointer}
+.attributeOptions button:hover,.attributeOptions button[aria-selected=true]{background:#f2eaff;color:#5420a5}
+.attributeOptions>span{padding:10px 14px;color:#77737f;font-size:12px;font-weight:450}
 .optionFieldset{min-width:0;margin:0;padding:0;border:0}
 .optionFieldset legend{display:flex;width:100%;align-items:center;justify-content:space-between;margin-bottom:9px;color:#292b32;font-size:13px;font-weight:720}
 .optionFieldset legend span{color:#77737f;font-size:11px;font-weight:600}
@@ -75,9 +91,9 @@
 .fieldGrid>label{min-width:0;border-right:1px solid #ece9ef;font-size:11px;font-weight:600}
 .fieldGrid>label span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fieldHint{margin-top:-2px;color:#827e88;font-size:11px;font-weight:500}
-.snippetField{display:flex;min-height:36px;border:1px solid #89868f;border-radius:8px;background:#fff;overflow:hidden}
-.snippetField code{flex:1;overflow:auto;padding:8px 10px 8px 13px;color:#35313f;font:11px/1.45 "SF Mono",Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
-.snippetField button{display:grid;flex:0 0 38px;place-items:center;border:0;background:#6826e1;color:#fff;cursor:pointer}
+.snippetField{display:flex;min-height:40px;border:1px solid #7e7d84;border-radius:9px;background:#fff;overflow:hidden}
+.snippetField code{flex:1;overflow:auto;padding:10px 11px 9px 13px;color:#35313f;font:11px/1.45 "SF Mono",Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+.snippetField button{display:grid;flex:0 0 45px;place-items:center;border:0;background:#6f20e5;color:#fff;cursor:pointer}
 .snippetField button svg{width:18px;height:18px}
 .snippetField button:hover{background:#6421bd}
 .insertSnippet{min-height:44px;border:0;border-radius:8px;background:#7027cf;color:#fff;font-size:13px;font-weight:750;cursor:pointer}

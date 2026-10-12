@@ -52,6 +52,7 @@ def main() -> None:
             assert canvas.get_by_text("This page contains the following errors:").count() == 0
 
             page.get_by_role("button", name="Personalization").click()
+            page.get_by_label("Personalization type").select_option(label="Catalog Items")
             page.get_by_label("Catalog name").select_option(label="Featured collection")
             catalog_items = page.locator("fieldset").filter(has_text="Catalog items")
             catalog_items.locator('input[type="checkbox"]').first.check()

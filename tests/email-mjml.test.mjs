@@ -23,3 +23,11 @@ test("repairs legacy MJML line breaks before compilation", () => {
   match(output, /one<br \/>two<br \/>three/);
   doesNotMatch(output, /<br>/);
 });
+
+test("removes browser XML parser errors accidentally persisted in legacy MJML", () => {
+  const input = '<mjml><mj-body><mj-section><mj-column><mj-text>before<parsererror style="display:block"><h3>This page contains the following errors:</h3><div>Opening and ending tag mismatch</div></parsererror>after</mj-text></mj-column></mj-section></mj-body></mjml>';
+  const output = normalizeMjmlDocument(input);
+
+  equal(output, '<mjml><mj-body><mj-section><mj-column><mj-text>beforeafter</mj-text></mj-column></mj-section></mj-body></mjml>');
+  doesNotMatch(output, /parsererror/i);
+});

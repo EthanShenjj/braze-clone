@@ -17,7 +17,9 @@ export function hasHtmlStyleVoidTags(source: string) {
 }
 
 export function normalizeMjmlDocument(source: string) {
-  const normalized = normalizeXmlVoidTags(source).replace(
+  const normalized = normalizeXmlVoidTags(source)
+    .replace(/<parsererror\b[^>]*>[\s\S]*?<\/parsererror>/gi, "")
+    .replace(
     /<mj-all([^>]*)><mj-text([^>]*)><mj-class([^>]*)><\/mj-class><\/mj-text><\/mj-all>/g,
     "<mj-all$1 /><mj-text$2 /><mj-class$3 />",
   );

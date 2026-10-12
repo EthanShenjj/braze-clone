@@ -5,13 +5,13 @@ import "grapesjs/dist/css/grapes.min.css";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import type { Component, Editor } from "grapesjs";
 import {
-  AlignCenter, AlignLeft, AlignRight, Bold, ChevronLeft, Code2, Copy, Eye, Image as ImageIcon,
-  Italic, LayoutGrid, Link2, List as ListIcon, Mail, Minus, Monitor, PanelTop, Plus, Redo2,
+  AlignCenter, AlignLeft, AlignRight, Bold, ChevronDown, ChevronLeft, Code2, Copy, Eye, Image as ImageIcon,
+  Info, Italic, LayoutGrid, Link2, List as ListIcon, Mail, Minus, Monitor, PanelTop, Plus, Redo2,
   Rows3, Smartphone, Sparkles, Strikethrough, Trash2, Type, Underline, Undo2, X,
 } from "lucide-react";
 import styles from "./email-dnd.module.css";
 import {
-  blockText, defaultStyle, downloadHtmlFile, emailFontFamilies, escapeHtml, liquidTokens,
+  blockText, defaultStyle, downloadHtmlFile, emailFontFamilies, escapeHtml,
   normalizeRows, normalizeStyle, type EmailBlock, type EmailRow, type EmailStyle, type MenuItem, type SocialItem,
 } from "@/lib/email-editor-model";
 import { hasHtmlStyleVoidTags, normalizeMjmlDocument, normalizeXmlVoidTags } from "@/lib/email-mjml";
@@ -24,6 +24,37 @@ type SelectedState = { cid: string; type: string; label: string; attributes: Rec
 type CatalogSummary = { id: string; name: string; data?: { fields?: string[] } };
 type CatalogItem = { id: string; name: string; fields?: Record<string, unknown> };
 type CatalogSelection = { name: string; description?: string };
+
+const personalizationTypes = [
+  "Default Attributes", "Custom Attributes", "Nested Custom Attributes", "Most Recent Device Attributes",
+  "Content Blocks", "Preference Center", "Landing Page", "Campaign Attributes", "Event Properties",
+  "Email Properties", "API Trigger Properties", "SMS Properties", "WhatsApp Properties", "Catalog Items",
+  "Item Recommendation", "Advanced Event Properties", "Message Extras", "Translation Tags",
+] as const;
+type PersonalizationType = (typeof personalizationTypes)[number];
+
+const defaultAttributes = [
+  "first_name", "last_name", "email_address", "language", "country", "user_id", "most_recent_location",
+  "date_of_birth", "phone_number", "gender", "city", "created_at", "last_used_app_date",
+  "most_recent_app_version", "time_zone", "most_recent_locale", "braze_id", "random_bucket_number", "line_id",
+];
+
+const personalizationAttributes: Partial<Record<PersonalizationType, string[]>> = {
+  "Most Recent Device Attributes": ["model", "os", "carrier", "device_id", "ad_tracking_enabled"],
+  "Content Blocks": ["email_header", "email_footer", "legal_disclaimer"],
+  "Preference Center": ["preference_center_url", "preference_center_name"],
+  "Landing Page": ["landing_page_url", "landing_page_name"],
+  "Campaign Attributes": ["name", "api_id", "message_name", "variation_name"],
+  "Event Properties": ["name", "category", "product_id", "price"],
+  "Email Properties": ["subject", "from_address", "reply_to"],
+  "API Trigger Properties": ["name", "value", "campaign_id"],
+  "SMS Properties": ["from_phone_number", "subscription_group_id"],
+  "WhatsApp Properties": ["phone_number", "template_name", "language"],
+  "Item Recommendation": ["recommendation_name", "item_id", "score"],
+  "Advanced Event Properties": ["name", "properties", "time"],
+  "Message Extras": ["key", "value"],
+  "Translation Tags": ["translation_key", "locale"],
+};
 
 const cx = (...values: Array<string | false | null | undefined>) => values.filter(Boolean).join(" ");
 
@@ -114,8 +145,74 @@ function useCatalogs(open: boolean) {
   return { catalogs, items, selections, catalogId, setCatalogId, loading, error };
 }
 
-function CatalogPanel({ onClose, onInsert }: { onClose: () => void; onInsert: (value: string) => void }) {
+function useUserAttributes(open: boolean) {
+  const [attributes, setAttributes] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState("");
+  useEffect(() => {
+    if (!open || loaded || loading) return;
+    setLoading(true);
+    void fetch("/api/users/attributes")
+      .then(response => response.ok ? response.json() : Promise.reject())
+      .then(payload => setAttributes(Array.isArray(payload.data) ? payload.data : []))
+      .catch(() => setError("Custom attributes could not be loaded."))
+      .finally(() => { setLoading(false); setLoaded(true); });
+  }, [loaded, loading, open]);
+  return { attributes, loading, error };
+}
+
+function AttributeCombobox({ value, options, loading, onChange }: { value: string; options: string[]; loading?: boolean; onChange: (value: string) => void }) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState(value);
+  useEffect(() => setQuery(value), [value]);
+  const visible = options.filter(option => option.toLowerCase().includes(query.trim().toLowerCase())).slice(0, 60);
+  return <div className={styles.attributeCombobox}>
+    <input
+      aria-label="Attribute"
+      role="combobox"
+      aria-expanded={open}
+      aria-controls="personalization-attribute-options"
+      autoComplete="off"
+      placeholder={loading ? "Loading attributes…" : "Search for an attribute"}
+      value={query}
+      onFocus={() => { setOpen(true); if (value) setQuery(""); }}
+      onChange={event => { setQuery(event.target.value); setOpen(true); if (value) onChange(""); }}
+      onBlur={() => window.setTimeout(() => setOpen(false), 100)}
+      onKeyDown={event => { if (event.key === "Escape") setOpen(false); }}
+    />
+    <ChevronDown aria-hidden="true" />
+    {open && <div className={styles.attributeOptions} id="personalization-attribute-options" role="listbox">
+      {visible.map(option => <button key={option} type="button" role="option" aria-selected={option === value} onMouseDown={event => event.preventDefault()} onClick={() => { onChange(option); setQuery(option); setOpen(false); }}>{option}</button>)}
+      {!visible.length && <span>No matching attributes</span>}
+    </div>}
+  </div>;
+}
+
+function liquidSnippet(type: PersonalizationType, attribute: string, fallback: string) {
+  if (!attribute) return "";
+  const namespaces: Partial<Record<PersonalizationType, string>> = {
+    "Custom Attributes": "custom_attribute", "Nested Custom Attributes": "custom_attribute",
+    "Most Recent Device Attributes": "most_recently_used_device", "Content Blocks": "content_blocks",
+    "Preference Center": "preference_center", "Landing Page": "landing_pages", "Campaign Attributes": "campaign",
+    "Event Properties": "event_properties", "Email Properties": "email_properties",
+    "API Trigger Properties": "api_trigger_properties", "SMS Properties": "sms_properties",
+    "WhatsApp Properties": "whatsapp_properties", "Item Recommendation": "recommendations",
+    "Advanced Event Properties": "event_properties", "Message Extras": "message_extras",
+  };
+  if (type === "Translation Tags") return `{% translation ${attribute} %}`;
+  const namespace = namespaces[type];
+  const base = namespace ? `{{${namespace}.\${${attribute}}}}` : `{{\${${attribute}}}}`;
+  if (!fallback) return base;
+  const safeFallback = fallback.replaceAll("\\", "\\\\").replaceAll("'", "\\'");
+  return `${base.slice(0, -2)} | default: '${safeFallback}'` + "}}";
+}
+
+function PersonalizationPanel({ onClose, onInsert, customAttributes }: { onClose: () => void; onInsert: (value: string) => void; customAttributes: ReturnType<typeof useUserAttributes> }) {
   const data = useCatalogs(true);
+  const [type, setType] = useState<PersonalizationType>("Default Attributes");
+  const [attribute, setAttribute] = useState("");
+  const [fallback, setFallback] = useState("");
   const [method, setMethod] = useState<"items" | "selection">("items");
   const [itemIds, setItemIds] = useState<string[]>([]);
   const [selectionName, setSelectionName] = useState("");
@@ -123,27 +220,49 @@ function CatalogPanel({ onClose, onInsert }: { onClose: () => void; onInsert: (v
   const [copied, setCopied] = useState(false);
   const catalog = data.catalogs.find(item => item.id === data.catalogId);
   const availableFields = useMemo(() => [...new Set(["id", ...(catalog?.data?.fields ?? []), ...data.items.flatMap(item => Object.keys(item.fields ?? {}))])], [catalog?.data?.fields, data.items]);
-  const complete = Boolean(catalog && fields.length && (method === "items" ? itemIds.length : selectionName));
+  const catalogComplete = Boolean(catalog && fields.length && (method === "items" ? itemIds.length : selectionName));
   const command = !catalog ? "{% catalog_items %}" : method === "items" ? `{% catalog_items ${catalog.name}${itemIds.length ? ` ${itemIds.join(" ")}` : ""} %}` : `{% catalog_selection_items ${catalog.name}${selectionName ? ` ${selectionName}` : ""} %}`;
   const itemExpressions = method === "items"
     ? itemIds.flatMap((_, index) => fields.map(field => `{{ items[${index}].${field} }}`)).join("\n")
     : fields.length ? `{% for item in items %}\n${fields.map(field => `{{ item.${field} }}`).join("\n")}\n{% endfor %}` : "";
-  const snippet = `${command}${itemExpressions ? `\n${itemExpressions}` : ""}`;
+  const catalogSnippet = `${command}${itemExpressions ? `\n${itemExpressions}` : ""}`;
+  const snippet = type === "Catalog Items" ? catalogSnippet : liquidSnippet(type, attribute, fallback);
+  const complete = type === "Catalog Items" ? catalogComplete : Boolean(attribute);
+  const attributeOptions = type === "Default Attributes"
+    ? defaultAttributes
+    : type === "Custom Attributes" || type === "Nested Custom Attributes"
+      ? customAttributes.attributes
+      : personalizationAttributes[type] ?? [];
   const toggle = (values: string[], value: string, limit?: number) => values.includes(value) ? values.filter(item => item !== value) : limit && values.length >= limit ? values : [...values, value];
-  return <section className={styles.personalizationPanel}>
+  const changeType = (next: PersonalizationType) => {
+    setType(next); setAttribute(""); setFallback(""); setCopied(false);
+    setItemIds([]); setSelectionName(""); setFields([]); setMethod("items");
+  };
+  const copy = () => {
+    void navigator.clipboard.writeText(snippet).then(() => {
+      setCopied(true); window.setTimeout(() => setCopied(false), 1200);
+    }).catch(() => setCopied(false));
+  };
+  return <section className={styles.personalizationPanel} role="dialog" aria-label="Add Personalization">
     <header className={styles.personalizationHead}><h2>Add Personalization</h2><button aria-label="Close" onClick={onClose}><X /></button></header>
     <div className={styles.personalizationForm}>
-      <label>Personalization type<select value="Catalog Items" disabled><option>Catalog Items</option></select></label>
-      <label>Catalog name<select className={!data.catalogId ? styles.placeholderSelect : undefined} value={data.catalogId} onChange={event => { data.setCatalogId(event.target.value); setItemIds([]); setSelectionName(""); setFields([]); }}><option value="">Select a Catalog</option>{data.catalogs.map(item => <option value={item.id} key={item.id}>{item.name}</option>)}</select></label>
+      <label>Personalization type<select aria-label="Personalization type" autoFocus value={type} onChange={event => changeType(event.target.value as PersonalizationType)}>{personalizationTypes.map(option => <option key={option}>{option}</option>)}</select></label>
+      {type !== "Catalog Items" && <>
+        <label>Attribute<AttributeCombobox value={attribute} options={attributeOptions} loading={(type === "Custom Attributes" || type === "Nested Custom Attributes") && customAttributes.loading} onChange={setAttribute}/></label>
+        {customAttributes.error && (type === "Custom Attributes" || type === "Nested Custom Attributes") && <p className={styles.personalizationError}>{customAttributes.error}</p>}
+        <label><span className={styles.personalizationLabel}>Default value <span className={styles.optionalLabel}>(Optional)</span><span className={styles.infoIcon} title="Used when the selected attribute is empty."><Info aria-hidden="true" /></span></span><input aria-label="Default value" placeholder="Enter default value" value={fallback} onChange={event => setFallback(event.target.value)}/></label>
+      </>}
+      {type === "Catalog Items" && <><label>Catalog name<select className={!data.catalogId ? styles.placeholderSelect : undefined} value={data.catalogId} onChange={event => { data.setCatalogId(event.target.value); setItemIds([]); setSelectionName(""); setFields([]); }}><option value="">Select a Catalog</option>{data.catalogs.map(item => <option value={item.id} key={item.id}>{item.name}</option>)}</select></label>
       {data.loading && <p className={styles.personalizationEmpty}>Loading catalog data…</p>}
       {data.error && <p className={styles.personalizationError}>{data.error}</p>}
       {catalog && <label>Source<select value={method} onChange={event => { setMethod(event.target.value as typeof method); setItemIds([]); setSelectionName(""); }}><option value="items">Specific catalog items</option><option value="selection">Selection</option></select></label>}
       {catalog && method === "items" && <fieldset className={styles.optionFieldset}><legend>Catalog items <span>Up to 3</span></legend><div className={styles.checkList}>{data.items.length ? data.items.map(item => <label key={item.id} className={itemIds.includes(item.id) ? styles.checkedOption : undefined}><input type="checkbox" checked={itemIds.includes(item.id)} onChange={() => setItemIds(toggle(itemIds, item.id, 3))}/><span><b>{item.name || item.id}</b><small>{item.id}</small></span></label>) : <p>This catalog has no items.</p>}</div></fieldset>}
       {catalog && method === "selection" && <label>Selection<select value={selectionName} onChange={event => setSelectionName(event.target.value)}><option value="">Select a Selection</option>{data.selections.map(item => <option key={item.name}>{item.name}</option>)}</select></label>}
       {catalog && <fieldset className={styles.optionFieldset}><legend>Fields <span>Select output fields</span></legend><div className={styles.fieldGrid}>{availableFields.map(field => <label key={field} className={fields.includes(field) ? styles.checkedOption : undefined}><input type="checkbox" checked={fields.includes(field)} onChange={() => setFields(toggle(fields, field))}/><span>{field}</span></label>)}</div></fieldset>}
-      <label className={styles.snippetLabel}>Liquid Snippet<div className={styles.snippetField}><code>{snippet}</code><button aria-label="Copy Liquid snippet" onClick={() => { void navigator.clipboard.writeText(snippet); setCopied(true); window.setTimeout(() => setCopied(false), 1200); }}><Copy /></button></div></label>
+      </>}
+      <label className={styles.snippetLabel}>Liquid Snippet<div className={styles.snippetField}><code>{snippet}</code><button type="button" aria-label="Copy Liquid snippet" onClick={copy}><Copy /></button></div></label>
       {copied && <span className={styles.copyFeedback}>Copied</span>}
-      {complete && <button className={styles.insertSnippet} onClick={() => onInsert(snippet)}>Insert into message</button>}
+      {complete && <button type="button" className={styles.insertSnippet} onClick={() => onInsert(snippet)}>Insert into message</button>}
     </div>
   </section>;
 }
@@ -165,17 +284,21 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
   const [revision, setRevision] = useState(0);
   const [saveState, setSaveState] = useState<"saved" | "saving" | "unsaved">("saved");
   const [autocomplete, setAutocomplete] = useState(false);
+  const [autocompleteQuery, setAutocompleteQuery] = useState("");
   const [editorError, setEditorError] = useState("");
   const [globalStyle, setGlobalStyle] = useState<EmailStyle>(() => normalizeStyle(draft.config?.emailStyle));
+  const customAttributes = useUserAttributes(leftMode === "personalization" || autocomplete);
   const editorHostRef = useRef<HTMLDivElement | null>(null);
   const blocksRef = useRef<HTMLDivElement | null>(null);
   const editorRef = useRef<Editor | null>(null);
   const captureTimerRef = useRef<number | null>(null);
+  const savedRangeRef = useRef<Range | null>(null);
   const readyRef = useRef(false);
   const snapshotRef = useRef<EditorSnapshot>({ project: {}, mjml: "", html: draft.body ?? "" });
   const savedProject = draft.config?.emailGrapesProject as Record<string, unknown> | undefined;
   const savedMjml = typeof draft.config?.emailMjml === "string" ? draft.config.emailMjml : "";
-  const canLoadSavedProject = draft.config?.emailGrapesSchemaVersion === 1 && !hasHtmlStyleVoidTags(savedMjml);
+  const serializedProject = savedProject ? JSON.stringify(savedProject) : "";
+  const canLoadSavedProject = draft.config?.emailGrapesSchemaVersion === 1 && !hasHtmlStyleVoidTags(savedMjml) && !hasHtmlStyleVoidTags(serializedProject) && !serializedProject.includes("<parsererror");
   const initialMjml = useMemo(() => normalizeMjmlDocument(savedMjml || legacyRowsToMjml(draft.config?.emailRows, draft.config?.emailStyle)), [draft.config?.emailRows, draft.config?.emailStyle, savedMjml]);
 
   const capture = useCallback((editor = editorRef.current) => {
@@ -256,14 +379,16 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
           const doc = editor.Canvas.getDocument();
           if (!doc) return;
           doc.addEventListener("keyup", event => {
-            if (event.key !== "{") { if (event.key === "Escape") setAutocomplete(false); return; }
+            if (event.key === "Escape") { setAutocomplete(false); return; }
             const selection = editor?.Canvas.getWindow().getSelection();
             if (!selection?.rangeCount) return;
             const range = selection.getRangeAt(0).cloneRange();
             const container = range.startContainer.nodeType === Node.TEXT_NODE ? range.startContainer.parentElement : range.startContainer as Element;
             if (!container) return;
             const before = range.cloneRange(); before.selectNodeContents(container); before.setEnd(range.startContainer, range.startOffset);
-            setAutocomplete(before.toString().endsWith("{{"));
+            const match = before.toString().match(/\{\{([^}]*)$/);
+            setAutocomplete(Boolean(match));
+            setAutocompleteQuery(match?.[1]?.trim().replace(/[${}]/g, "").toLowerCase() ?? "");
           });
         });
       } catch (error) {
@@ -353,15 +478,18 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
     if (!editor) return;
     const frameWindow = editor.Canvas.getWindow();
     const selection = frameWindow.getSelection();
-    const activeRange = selection?.rangeCount ? selection.getRangeAt(0) : null;
+    const activeRange = selection?.rangeCount ? selection.getRangeAt(0) : savedRangeRef.current;
     const activeNode = activeRange?.commonAncestorContainer;
     const activeElement = activeNode ? (activeNode.nodeType === 1 ? activeNode as Element : activeNode.parentElement) : null;
     const editable = activeElement?.closest<HTMLElement>("[contenteditable='true']");
-    if (selection?.rangeCount && editable) {
-      const range = selection.getRangeAt(0);
+    if (activeRange && editable) {
+      const range = activeRange;
       if (stripTrigger) {
         const node = range.startContainer;
-        if (node.nodeType === Node.TEXT_NODE && range.startOffset >= 2 && node.textContent?.slice(range.startOffset - 2, range.startOffset) === "{{") range.setStart(node, range.startOffset - 2);
+        if (node.nodeType === Node.TEXT_NODE) {
+          const start = node.textContent?.slice(0, range.startOffset).lastIndexOf("{{") ?? -1;
+          if (start >= 0) range.setStart(node, start);
+        }
       }
       range.deleteContents();
       const lines = value.split("\n");
@@ -369,7 +497,7 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
       let last: Node | null = null;
       lines.forEach((line, index) => { if (index) fragment.append(frameWindow.document.createElement("br")); last = frameWindow.document.createTextNode(line); fragment.append(last); });
       range.insertNode(fragment);
-      if (last) { range.setStartAfter(last); range.collapse(true); selection.removeAllRanges(); selection.addRange(range); }
+      if (last) { range.setStartAfter(last); range.collapse(true); selection?.removeAllRanges(); selection?.addRange(range); savedRangeRef.current = range.cloneRange(); }
       const component = editor.getSelected();
       if (component?.get("type") === "mj-text") component.components(normalizeXmlVoidTags(editable.innerHTML));
       queueCapture();
@@ -381,6 +509,25 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
     }
     setAutocomplete(false);
   };
+  const openPersonalization = () => {
+    const editor = editorRef.current;
+    const selection = editor?.Canvas.getWindow().getSelection();
+    if (selection?.rangeCount) {
+      const range = selection.getRangeAt(0);
+      const node = range.commonAncestorContainer;
+      const element = node.nodeType === Node.ELEMENT_NODE ? node as Element : node.parentElement;
+      savedRangeRef.current = element?.closest("[contenteditable='true']") ? range.cloneRange() : null;
+    }
+    setLeftMode("personalization");
+  };
+  const autocompleteTokens = useMemo(() => {
+    const tokens = [
+      ...defaultAttributes.map(name => ({ label: name.replaceAll("_", " "), value: `{{\${${name}}}}` })),
+      ...customAttributes.attributes.map(name => ({ label: name, value: `{{custom_attribute.\${${name}}}}` })),
+    ];
+    if (!autocompleteQuery) return tokens.slice(0, 12);
+    return tokens.filter(token => `${token.label} ${token.value}`.toLowerCase().includes(autocompleteQuery)).slice(0, 12);
+  }, [autocompleteQuery, customAttributes.attributes]);
   const richCommand = (command: string, value?: string) => {
     const doc = editorRef.current?.Canvas.getDocument();
     doc?.execCommand(command, false, value);
@@ -401,10 +548,10 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
     </header>
     {leftMode !== "personalization" && <nav className={styles.iconRail}><button onClick={onClose} aria-label="Back"><ChevronLeft size={19}/></button></nav>}
     <aside className={styles.leftRail}>
-      {leftMode === "personalization" ? <CatalogPanel onClose={() => setLeftMode("content")} onInsert={insertText}/> : <>
+      {leftMode === "personalization" ? <PersonalizationPanel onClose={() => setLeftMode("content")} onInsert={insertText} customAttributes={customAttributes}/> : <>
         <div className={styles.leftTitle}>MESSAGE</div>
         <button className={leftMode === "content" ? styles.leftActive : undefined} onClick={() => setLeftMode("content")}>Content</button>
-        <button onClick={() => setLeftMode("personalization")}>Personalization</button>
+        <button onClick={openPersonalization}>Personalization</button>
         <button className={leftMode === "languages" ? styles.leftActive : undefined} onClick={() => setLeftMode("languages")}>Languages</button>
         <small>Subject</small>
         <div className={styles.leftPanel}><input aria-label="Email subject" value={subject} onChange={event => setSubject(event.target.value)} style={{ width: "100%", border: 0, outline: 0, font: "inherit" }}/></div>
@@ -420,7 +567,7 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
         <span className={styles.sep}/><button title="Link" onMouseDown={event => event.preventDefault()} onClick={() => { const url = window.prompt("Link URL", "https://"); if (url) richCommand("createLink", url); }}><Link2 size={15}/></button><button title="Clear formatting" onMouseDown={event => event.preventDefault()} onClick={() => richCommand("removeFormat")}><Code2 size={15}/></button>
         <span className={styles.sep}/><button onClick={() => updateSelectedAttributes({ align: "left" })}><AlignLeft size={15}/></button><button onClick={() => updateSelectedAttributes({ align: "center" })}><AlignCenter size={15}/></button><button onClick={() => updateSelectedAttributes({ align: "right" })}><AlignRight size={15}/></button>
       </div>
-      {autocomplete && <div className={styles.liquidAutocomplete}><b>Dynamic variables</b>{liquidTokens.slice(0, 10).map(token => <button key={token.label} onMouseDown={event => event.preventDefault()} onClick={() => insertText(token.value, true)}><span>{token.label}</span><code>{token.value}</code></button>)}</div>}
+      {autocomplete && <div className={styles.liquidAutocomplete}><b>Dynamic variables</b>{autocompleteTokens.map(token => <button key={token.value} onMouseDown={event => event.preventDefault()} onClick={() => insertText(token.value, true)}><span>{token.label}</span><code>{token.value}</code></button>)}{!autocompleteTokens.length && <small>No matching variables</small>}</div>}
       {!ready && !editorError && <div className={styles.grapesLoading}>Loading GrapesJS email editor…</div>}
       {editorError && <div className={styles.grapesError}>{editorError}</div>}
       <div ref={editorHostRef} className={styles.grapesHost}/>
