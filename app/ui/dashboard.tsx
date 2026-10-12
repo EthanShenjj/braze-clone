@@ -14,6 +14,7 @@ import { PreferenceCenterWorkspace, SubscriptionGroupWorkspace } from "./subscri
 import InAppCampaignCompose from "./in-app-message";
 import WebhookEditor from "./webhook-editor";
 import WhatsAppEditor from "./whatsapp-editor";
+import SmsCampaignComposer from "./sms-editor";
 import { EmailMessageEditor, EmailTemplateGallery, PersonalizationMenu, TestModal, type EmailCampaignLike } from "./email-dnd-editor";
 import moduleStyles from "./module-workspaces.module.css";
 import {
@@ -416,7 +417,7 @@ function CampaignEditor({ locale, campaign, onSave, onClose, notify = () => {} }
     return () => window.removeEventListener("popstate", syncStep);
   }, [campaign.id]);
   const ChannelIcon = channelMeta[draft.channel].icon;
-  return <section className="editor-page">
+  return <section className={className("editor-page", draft.channel === "sms" && "sms-editor-page")}>
     <div className="editor-access"><LockKeyhole size={11}/> {translate(locale, "Limited access")}</div>
     <nav className="editor-steps" aria-label={translate(locale, "Campaign steps")}>{steps.map((item, i) => <button key={item} className={className("editor-step", step === i && "current", step > i && "complete")} onClick={() => goToStep(i)}><span>{step > i ? "✓" : i + 1}</span><b>{translate(locale, item)}</b></button>)}</nav>
     {step === 0 && (
@@ -447,6 +448,7 @@ function Compose({ locale, draft, update, saveEmail, variant, setVariant, openTe
 function ChannelCompose({ locale, draft, update, openTest, notify = () => {} }: { locale: Locale; draft: Campaign; update: (patch: Partial<Campaign>) => void; openTest: () => void; notify?: (message: string) => void }) {
   const [copied, setCopied] = useState(false);
   if (draft.channel === "iam") return <div className="editor-body email-compose-page"><EmailCampaignDetails locale={locale} draft={draft} update={update} copied={copied} setCopied={setCopied}/><section className="braze-section channel-workspace"><div className="card-heading"><div><h2>{translate(locale, "Compose")} {translate(locale, channelMeta[draft.channel].title)}</h2><p>{translate(locale, channelMeta[draft.channel].description)}</p></div><button className="secondary" onClick={openTest}>{translate(locale, "Preview and test")}</button></div><InAppCampaignCompose draft={draft} update={update} notify={notify}/></section></div>;
+  if (draft.channel === "sms") return <div className="editor-body email-compose-page"><EmailCampaignDetails locale={locale} draft={draft} update={update} copied={copied} setCopied={setCopied}/><SmsCampaignComposer draft={draft} update={update} openTest={openTest}/></div>;
   return <div className="editor-body email-compose-page"><EmailCampaignDetails locale={locale} draft={draft} update={update} copied={copied} setCopied={setCopied}/>{draft.channel === "push" ? <PushFields locale={locale} draft={draft} update={update} openTest={openTest}/> : <section className="braze-section channel-workspace"><div className="card-heading"><div><h2>{translate(locale, "Compose")} {translate(locale, channelMeta[draft.channel].title)}</h2><p>{translate(locale, channelMeta[draft.channel].description)}</p></div>{draft.channel !== "webhook" && <button className="secondary" onClick={openTest}>{translate(locale, "Preview and test")}</button>}</div><ChannelFields locale={locale} draft={draft} update={update} openTest={openTest} notify={notify}/></section>}</div>;
 }
 

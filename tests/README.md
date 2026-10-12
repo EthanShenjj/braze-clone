@@ -18,4 +18,13 @@ python3 /Users/ethanshen/.codex/plugins/cache/anthropic-agent-skills/example-ski
 
 它验证结构化请求编辑、四种 HTTP 方法、Liquid 与翻译预览、敏感 Header 脱敏、测试发送的安全关闭状态，以及 attempt 审计记录。
 
+SMS 编辑器专项回归：
+
+```bash
+python3 /Users/ethanshen/.codex/plugins/cache/anthropic-agent-skills/example-skills/local/skills/webapp-testing/scripts/with_server.py \
+  --server "npm run dev" --port 3000 -- python3 tests/sms_editor_e2e.py
+```
+
+它验证订阅组、Liquid 个性化参数、消息变体、联系人卡片和测试发送入口。
+
 这些截图是本项目的回归基线，不是 Braze 官方页面参考图。开始逐页视觉验收前，应从当前账号可访问页面采集对应分辨率的参考截图，并以像素差异阈值替换本地基线。
