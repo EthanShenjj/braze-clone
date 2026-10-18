@@ -1,0 +1,398 @@
+- link "Skip to main content":
+  - /url: "#main-container"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Demo – bba":
+    - generic: Demo – bba
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6ad0b98fe4b4110085216601?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6ad0b98fe4b4110085216601?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6ad0b98fe4b4110085216601?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 0%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6ad0b98fe4b4110085216601?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 13 days left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- main:
+  - navigation:
+    - tablist:
+      - tab "Sending Configuration":
+        - generic: Sending Configuration
+      - tab "Subscription Pages and Footers":
+        - generic: Subscription Pages and Footers
+      - tab "Drag-And-Drop Email Editor Settings" [selected]:
+        - text: 
+        - generic: Drag-And-Drop Email Editor Settings
+      - tab "Link Aliasing":
+        - generic: Link Aliasing
+      - tab "Bot Filtering":
+        - generic: Bot Filtering
+      - tab "Automated IP Warming":
+        - generic: Automated IP Warming
+  - generic: Basic Styling
+  - generic: Title Styling
+  - generic: Paragraph Styling
+  - generic: List Styling
+  - generic: Fallback Fonts
+  - generic: Button Styling
+  - generic: Icon Block Styling
+  - generic: Email Template Width
+  - generic: Content Block Width
+  - heading "Email Global Style Settings" [level=3]
+  - img: 
+  - generic: View only
+  - text: Global style settings allow you to add a default theme to your drag-and-drop email editor. These settings will be pre-configured for all future email campaigns, Canvases, and templates that use this editor. You can easily override these settings as needed. Learn more about
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://www.braze.com/docs/user_guide/message_building_by_channel/email/drag_and_drop/dnd_email_style_settings/
+    - text: global style settings
+    - text: ⁠
+  - text: .
+  - group "Basic Styling Section":
+    - heading "Basic Styling" [level=4]
+    - generic: Email Background Color
+    - generic "color swatch"
+    - generic "hex code": "#FFFFFF"
+    - generic: Default Link Color
+    - generic "color swatch"
+    - generic "hex code": "#1871D8"
+    - generic: Content Background Color
+    - generic "color swatch"
+    - generic "hex code": "#FFFFFF"
+    - generic: Default Font Name
+    - generic: Open Sans
+    - iframe:
+      - text: Default font and
+      - link "link color":
+        - /url: "#"
+      - strong: Bolded font
+      - text: Italicized font
+  - group "Title Styling Section":
+    - heading "Title Styling" [level=4]
+    - heading "Header 1" [level=5]
+    - generic: Font Size
+    - generic: "34"
+    - generic: Align
+    - generic: Center
+    - generic: Font Color
+    - generic "color swatch"
+    - generic "hex code": "#2E3C47"
+    - generic: Text Direction
+    - generic: Left to right
+    - generic: Header 1
+    - heading "Header 2" [level=5]
+    - generic: Font Size
+    - generic: "24"
+    - generic: Align
+    - generic: Center
+    - generic: Font Color
+    - generic "color swatch"
+    - generic "hex code": "#2E3C47"
+    - generic: Text Direction
+    - generic: Left to right
+    - generic: Header 2
+    - heading "Header 3" [level=5]
+    - generic: Font Size
+    - generic: "20"
+    - generic: Align
+    - generic: Center
+    - generic: Font Color
+    - generic "color swatch"
+    - generic "hex code": "#2E3C47"
+    - generic: Text Direction
+    - generic: Left to right
+    - generic: Header 3
+    - heading "Header 4" [level=5]
+    - generic: Font Size
+    - generic: "18"
+    - generic: Align
+    - generic: Center
+    - generic: Font Color
+    - generic "color swatch"
+    - generic "hex code": "#2E3C47"
+    - generic: Text Direction
+    - generic: Left to right
+    - generic: Header 4
+    - heading "Header 5" [level=5]
+    - generic: Font Size
+    - generic: "16"
+    - generic: Align
+    - generic: Center
+    - generic: Font Color
+    - generic "color swatch"
+    - generic "hex code": "#2E3C47"
+    - generic: Text Direction
+    - generic: Left to right
+    - generic: Header 5
+    - heading "Header 6" [level=5]
+    - generic: Font Size
+    - generic: "14"
+    - generic: Align
+    - generic: Center
+    - generic: Font Color
+    - generic "color swatch"
+    - generic "hex code": "#2E3C47"
+    - generic: Text Direction
+    - generic: Left to right
+    - generic: Header 6
+    - heading "Block Styling for Headers" [level=5]
+    - generic: Padding Top
+    - generic: "10"
+    - generic: Padding Right
+    - generic: "10"
+    - generic: Padding Bottom
+    - generic: "10"
+    - generic: Padding Left
+    - generic: "10"
+  - group "Paragraph Styling Section":
+    - heading "Paragraph Styling" [level=4]
+    - generic: Font Size
+    - generic: "14"
+    - generic: Paragraph Font Color
+    - generic "color swatch"
+    - generic "hex code": "#101B24"
+    - generic: Font Weight
+    - generic: Normal
+    - generic: Line Height
+    - generic: Normal
+    - generic: Align
+    - generic: Left
+    - generic: Text Direction
+    - generic: Left to right
+    - generic: Letter Spacing
+    - generic: "0"
+    - generic: Paragraph Spacing
+    - generic: "0"
+    - paragraph:
+      - text: Body paragraph text and
+      - link "link color":
+        - /url: "#"
+      - text: . Curabitur pretium nisl non vehicula mattis.
+    - generic: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin metus magna, elementum ac scelerisque et, aliquam sit amet mi. Sed semper diam ac tortor commodo vehicula. Phasellus mi velit, sollicitudin nec rhoncus nec, ullamcorper in risus. Quisque nec orci in neque egestas porta. Vivamus dui urna, vestibulum et erat et, luctus imperdiet dolor. Ut mollis tortor sed sem suscipit, porttitor dignissim dolor aliquam. Vivamus at mi feugiat, dapibus metus in, volutpat neque. Sed egestas condimentum orci, ac finibus urna sodales ac.
+    - generic: Nullam turpis nisi, luctus in augue at, suscipit posuere mauris. In ut efficitur nunc. Proin orci odio, pretium vitae augue a, maximus porta tellus. Sed tincidunt quam orci. Cras elementum luctus turpis, eget tincidunt arcu luctus consequat. Etiam fringilla ultrices ipsum vel placerat. Maecenas odio nibh, commodo non mi eu, vehicula vulputate orci. Curabitur pretium nisl non vehicula mattis. Fusce a dui nec ex imperdiet pretium. Sed tempor nulla ac egestas vestibulum. Praesent venenatis gravida dolor quis fermentum. Vestibulum vestibulum eu urna eget elementum. Nullam rhoncus orci a diam euismod iaculis.
+    - heading "Block Styling for Body Paragraph" [level=5]
+    - generic: Padding Top
+    - generic: "10"
+    - generic: Padding Right
+    - generic: "10"
+    - generic: Padding Bottom
+    - generic: "10"
+    - generic: Padding Left
+    - generic: "10"
+  - group "List Styling Section":
+    - heading "List Styling" [level=4]
+    - generic: Font Size
+    - generic: "14"
+    - generic: List Font Color
+    - generic "color swatch"
+    - generic "hex code": "#101B24"
+    - generic: Font Weight
+    - generic: Normal
+    - generic: Line Height
+    - generic: Normal
+    - generic: Align
+    - generic: Left
+    - generic: Text Direction
+    - generic: Left to right
+    - generic: Letter Spacing
+    - generic: "0"
+    - generic: List Item Spacing
+    - generic: "0"
+    - generic: List Item Indent
+    - generic: "40"
+    - generic: List Type
+    - generic: Bulleted List
+    - generic: List Style Type
+    - generic: Default
+    - generic: Start List From (for numbered list)
+    - generic: "1"
+    - text: Body list text and
+    - link "link color":
+      - /url: "#"
+    - text: .
+    - list:
+      - text: Item 1.
+      - list:
+        - listitem: "Sub-item A: Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      - listitem: Item 2.
+      - listitem: Item 3.
+      - listitem: Item 4.
+      - listitem: Item 5.
+    - heading "Block Styling for Body List" [level=5]
+    - generic: Padding Top
+    - generic: "10"
+    - generic: Padding Right
+    - generic: "10"
+    - generic: Padding Bottom
+    - generic: "10"
+    - generic: Padding Left
+    - generic: "10"
+  - group "Fallback Fonts Section":
+    - heading "Fallback Fonts" [level=4]
+    - text: Fallback fonts will be used for the title, header, and body text when your default font choice is not available.
+    - link "Learn more":
+      - /url: https://www.braze.com/docs/user_guide/message_building_by_channel/email/drag_and_drop/dnd_email_style_settings#fallback-font
+    - text: .
+    - generic: Fallback font 1
+    - generic: Arial
+    - generic: Font family
+    - generic: If your selected fallback fonts aren't available, the system will pick a font in this generic family
+    - group "Font family":
+      - radio "Sans-serif" [checked] [disabled]
+      - generic: Sans-serif
+      - radio "Serif" [disabled]
+      - generic: Serif
+    - generic: Fallback font 1
+  - group "Button Styling Section":
+    - heading "Button Styling" [level=4]
+    - generic: Font Size
+    - generic: "14"
+    - generic: Button Font Color
+    - generic "color swatch"
+    - generic "hex code": "#FFFFFF"
+    - generic: Border Weight
+    - generic: "1"
+    - generic: Button Background Color
+    - generic "color swatch"
+    - generic "hex code": "#1871D8"
+    - generic: Border Radius
+    - generic: "2"
+    - generic: Border Color
+    - generic "color swatch"
+    - generic "hex code": "#1871D8"
+    - generic: Padding Top
+    - generic: "5"
+    - generic: Padding Right
+    - generic: "10"
+    - generic: Padding Bottom
+    - generic: "5"
+    - generic: Padding Left
+    - generic: "10"
+    - button "Button"
+    - heading "Block Styling for Buttons" [level=5]
+    - generic: Padding Top
+    - generic: "10"
+    - generic: Padding Right
+    - generic: "10"
+    - generic: Padding Bottom
+    - generic: "10"
+    - generic: Padding Left
+    - generic: "10"
+  - group "Icon Block Styling Section":
+    - heading "Icon Block Styling" [level=4]
+    - generic: Font Size
+    - generic: "14"
+    - generic: Font Color
+    - generic "color swatch"
+    - generic "hex code": "#101B24"
+    - generic: Item Spacing
+    - generic: 10px
+    - generic: Icon Height
+    - generic: 16px
+    - generic: Align
+    - generic: Center
+    - heading "Block Padding" [level=5]
+    - generic: Padding Top
+    - generic: "10"
+    - generic: Padding Right
+    - generic: "10"
+    - generic: Padding Bottom
+    - generic: "10"
+    - generic: Padding Left
+    - generic: "10"
+    - heading "Icon Padding" [level=5]
+    - generic: Padding Top
+    - generic: "5"
+    - generic: Padding Right
+    - generic: "5"
+    - generic: Padding Bottom
+    - generic: "5"
+    - generic: Padding Left
+    - generic: "5"
+    - heading "Mobile Styling for Icon Block" [level=5]
+    - generic: Mobile Font Size
+    - generic: "14"
+    - generic: Mobile Text Align
+    - generic: Right
+    - heading "Mobile Block Padding" [level=5]
+    - generic: Padding Top
+    - generic: "10"
+    - generic: Padding Right
+    - generic: "10"
+    - generic: Padding Bottom
+    - generic: "10"
+    - generic: Padding Left
+    - generic: "10"
+  - group "Email Template Width Section":
+    - heading "Email Template Width" [level=4]
+    - generic: Email template width (px)
+    - generic: "600"
+  - group "Content Block Width Section":
+    - heading "Content Block Width" [level=4]
+    - text: These settings will be pre-configured for all future Content Blocks. Existing Content Blocks won't be updated.
+    - group "Content Block width type":
+      - radio "Full-width (100%)" [checked]
+      - generic: Full-width (100%)
+      - radio "Custom width"
+      - generic: Custom width
+- generic: © Braze 2026
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://braze.statuspage.io
+  - text: Status
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/terms
+  - text: Terms
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/privacy
+  - text: Privacy Policy
+- text:          

@@ -12,6 +12,7 @@ import {
   MessageSquare, PanelTop, Rows3, Share2, Smartphone, Sparkles, Square, Strikethrough, Grid2X2 as DividerIcon, Trash2, Type, Twitter,
   Underline, Undo2, Upload, X, Youtube,
 } from "lucide-react";
+import { workspaceContentBlockHtml } from "@/lib/email-liquid";
 import styles from "./email-dnd.module.css";
 import GrapesEmailEditor from "./email-grapes-editor";
 import {
@@ -37,15 +38,16 @@ function useWorkspaceLiquid(): WorkspaceLiquid {
   useEffect(() => {
     void Promise.all([
       fetch("/api/resources/content-blocks").then(r => r.json()).catch(() => ({ data: [] })),
+      fetch("/api/email-preferences").then(r => r.json()).catch(() => ({ data: null })),
       fetch("/api/resources/promotion-codes").then(r => r.json()).catch(() => ({ data: [] })),
-    ]).then(([blocks, codes]) => {
+    ]).then(([blocks, preferences, codes]) => {
       const contentBlocks: Record<string, string> = {};
-      for (const row of ((blocks.data ?? []) as Array<{ name: string; data?: { content?: unknown } }>)) contentBlocks[row.name] = String(row.data?.content ?? "");
+      for (const row of ((blocks.data ?? []) as Array<{ name: string; data?: { content?: unknown; width?: unknown } }>)) contentBlocks[row.name] = workspaceContentBlockHtml(String(row.data?.content ?? ""), row.data?.width);
       const promotionCodes: Record<string, string[]> = {};
       for (const row of ((codes.data ?? []) as Array<{ name: string; data?: { codes?: unknown } }>)) {
         if (Array.isArray(row.data?.codes)) promotionCodes[row.name] = (row.data.codes as unknown[]).map(code => String(code)).filter(Boolean);
       }
-      setMaps({ contentBlocks, promotionCodes });
+      setMaps({ contentBlocks, promotionCodes, footer: preferences.data?.pages?.footer?.enabled ? preferences.data.pages.footer.html : "" });
     });
   }, []);
   return maps;
@@ -1228,7 +1230,7 @@ export function TestModal({ locale, draft, variantIndex = 0, close }: { locale: 
       <button className={styles.testModalClose} onClick={close} aria-label={translate(locale, "Close")}><X size={17} /></button>
       <div className={styles.testBody}>
         <h2>{translate(locale, "Preview and test")}</h2>
-        <p>{draft.channel === "webhook" ? "Send a real request through the protected webhook delivery service and inspect the endpoint response." : isWhatsapp ? "Simulate a WhatsApp test delivery in the local activity log. No Meta API or device is contacted." : "Preview with sample user data, then write a test delivery event to the local activity log."}</p>
+        <p>{draft.channel === "webhook" ? "Send a real request through the protected webhook delivery service and inspect the endpoint response." : isWhatsapp ? "Simulate a WhatsApp test delivery in the local activity log. No Meta API or device is contacted." : isEmail ? "Preview with user data and inspect a compiled test message. Email delivery is not configured for this local workspace." : "Preview with sample user data, then write a test delivery event to the local activity log."}</p>
         <div className={styles.testGrid}>
           <label className={styles.testField}>{translate(locale, "Preview as")}
             <select value={mode} onChange={event => setMode(event.target.value as typeof mode)}>
@@ -1281,9 +1283,10 @@ export function TestModal({ locale, draft, variantIndex = 0, close }: { locale: 
           {(multichannelChannels.length ? multichannelChannels : ["Email", "Push notification"]).map(channel => <div key={channel} style={{ border: "1px solid #d9d5df", borderRadius: 8, padding: 10, marginBottom: 8 }}><small>{channel}</small><p style={{ margin: "4px 0 0", fontSize: 13 }}>{multichannelContent[channel] || messageBody || `Write the ${channel.toLowerCase()} message`}</p></div>)}
         </div>}
         <div style={{ marginTop: 16 }}>
-          <button className={styles.sendButton} disabled={state === "sending"} onClick={() => void send()}>{state === "sending" ? "Sending…" : isWhatsapp ? "Record simulated test" : "Send test"}</button>
+          <button className={styles.sendButton} disabled={state === "sending"} onClick={() => void send()}>{state === "sending" ? "Sending…" : isWhatsapp ? "Record simulated test" : isEmail ? "Prepare test" : "Send test"}</button>
         </div>
-        {state === "sent" && !webhook && <div className={styles.testSuccess}><Eye size={16} /><span>{isWhatsapp ? "Simulated WhatsApp test recorded" : "Test delivery recorded"} for {recipient}.</span></div>}
+        {state === "sent" && !webhook && <div className={styles.testSuccess}><Eye size={16} /><span>{isWhatsapp ? "Simulated WhatsApp test recorded" : isEmail ? "Test message prepared (email delivery is not configured)" : "Test delivery recorded"} for {recipient}.</span></div>}
+        {state === "sent" && isEmail && result?.message !== undefined && <details><summary>Compiled test message</summary><pre style={{ whiteSpace: "pre-wrap", fontSize: 12 }}>{JSON.stringify(result.message, null, 2)}</pre><button className={styles.sendButton} onClick={() => { const artifact = result.message as { mime?: string }; const blob = new Blob([artifact.mime ?? JSON.stringify(result.message, null, 2)], { type: artifact.mime ? "message/rfc822" : "application/json" }); const url = URL.createObjectURL(blob); const anchor = document.createElement("a"); anchor.href = url; anchor.download = artifact.mime ? "compiled-email-test.eml" : "compiled-email-test.json"; anchor.click(); URL.revokeObjectURL(url); }}>Download test message</button></details>}
         {state === "sent" && webhook && <div className={className(webhook.delivered ? styles.testSuccess : styles.testError, styles.webhookResult)}>
           <b>{attempt?.statusCode ? `${attempt.statusCode} ${attempt.outcome}` : attempt?.outcome ?? "failed"}</b>
           <span>{webhook.method} {webhook.url}</span>

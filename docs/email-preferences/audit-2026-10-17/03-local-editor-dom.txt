@@ -1,0 +1,353 @@
+- button "Open Next.js Dev Tools":
+- alert
+- complementary:
+  - generic: b
+  - button "Demo – Thinkingai":
+    - generic: Demo – Thinkingai
+  - generic: Quick links
+  - button "Canvas":
+    - generic: Canvas
+  - button "Campaigns":
+    - generic: Campaigns
+  - button "Segments":
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+  - button "Performance Overview":
+    - generic: Performance Overview
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic: braze
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour":
+  - combobox "Language":
+    - option "English" [selected]
+    - option "中文"
+    - option "한국어"
+    - option "日本語"
+  - button "Notifications":
+  - button "S"
+  - button:
+  - region "Email Preferences":
+    - tablist "Email preferences sections":
+      - tab "Sending Configuration"
+      - tab "Subscription Pages and Footers"
+      - tab "Drag-And-Drop Email Editor Settings" [selected]
+      - tab "Link Aliasing"
+      - tab "Bot Filtering"
+      - tab "Automated IP Warming"
+    - button "Edit settings":
+      - text: Edit settings
+    - tabpanel "Drag-And-Drop Email Editor Settings":
+      - navigation "Settings sections":
+        - button "Basic Styling"
+        - button "Title Styling"
+        - button "Paragraph Styling"
+        - button "List Styling"
+        - button "Fallback Fonts"
+        - button "Button Styling" [active]
+        - button "Icon Block Styling"
+        - button "Email Template Width"
+        - button "Content Block Width"
+      - heading "Email Global Style Settings" [level=2]
+      - text: View only
+      - paragraph:
+        - text: Global style settings allow you to add a default theme to your drag-and-drop email editor. These settings will be pre-configured for all future email campaigns, Canvases, and templates that use this editor. You can easily override these settings as needed. Learn more about
+        - link "global style settings":
+          - /url: https://www.braze.com/docs/user_guide/message_building_by_channel/email/drag_and_drop/dnd_email_style_settings/
+          - text: global style settings
+        - text: .
+      - separator
+      - heading "Basic Styling" [level=3]
+      - generic: Email Background Color
+      - textbox "Email Background Color" [disabled]: <redacted>
+      - generic: "#FFFFFF"
+      - generic: Default Link Color
+      - textbox "Default Link Color" [disabled]: "#1871d8"
+      - generic: "#1871D8"
+      - generic: Content Background Color
+      - textbox "Content Background Color" [disabled]: "#ffffff"
+      - generic: "#FFFFFF"
+      - generic: Default Font Name
+      - generic: Open Sans
+      - text: Default font and link color
+      - text: Bolded font
+      - text: Italicized font
+      - heading "Title Styling" [level=3]
+      - heading "Header 1" [level=4]
+      - generic: Font Size
+      - generic: "34"
+      - generic: Font Color
+      - textbox "Header 1 Font Color" [disabled]: "#2e3c47"
+      - generic: "#2E3C47"
+      - generic: Align
+      - generic: Center
+      - generic: Text Direction
+      - generic: Left to right
+      - generic: Header 1
+      - heading "Header 2" [level=4]
+      - generic: Font Size
+      - generic: "24"
+      - generic: Font Color
+      - textbox "Header 2 Font Color" [disabled]: "#2e3c47"
+      - generic: "#2E3C47"
+      - generic: Align
+      - generic: Center
+      - generic: Text Direction
+      - generic: Left to right
+      - generic: Header 2
+      - heading "Header 3" [level=4]
+      - generic: Font Size
+      - generic: "20"
+      - generic: Font Color
+      - textbox "Header 3 Font Color" [disabled]: "#2e3c47"
+      - generic: "#2E3C47"
+      - generic: Align
+      - generic: Center
+      - generic: Text Direction
+      - generic: Left to right
+      - generic: Header 3
+      - heading "Header 4" [level=4]
+      - generic: Font Size
+      - generic: "18"
+      - generic: Font Color
+      - textbox "Header 4 Font Color" [disabled]: "#2e3c47"
+      - generic: "#2E3C47"
+      - generic: Align
+      - generic: Center
+      - generic: Text Direction
+      - generic: Left to right
+      - generic: Header 4
+      - heading "Header 5" [level=4]
+      - generic: Font Size
+      - generic: "16"
+      - generic: Font Color
+      - textbox "Header 5 Font Color" [disabled]: "#2e3c47"
+      - generic: "#2E3C47"
+      - generic: Align
+      - generic: Center
+      - generic: Text Direction
+      - generic: Left to right
+      - generic: Header 5
+      - heading "Header 6" [level=4]
+      - generic: Font Size
+      - generic: "14"
+      - generic: Font Color
+      - textbox "Header 6 Font Color" [disabled]: "#2e3c47"
+      - generic: "#2E3C47"
+      - generic: Align
+      - generic: Center
+      - generic: Text Direction
+      - generic: Left to right
+      - generic: Header 6
+      - heading "Block Styling for Headers" [level=4]
+      - generic: Padding Top
+      - generic: "10"
+      - generic: Padding Right
+      - generic: "10"
+      - generic: Padding Bottom
+      - generic: "10"
+      - generic: Padding Left
+      - generic: "10"
+      - heading "Paragraph Styling" [level=3]
+      - generic: Font Size
+      - generic: "14"
+      - generic: Paragraph Font Color
+      - textbox "Body Paragraph Font Color" [disabled]: "#101b24"
+      - generic: "#101B24"
+      - generic: Align
+      - generic: Left
+      - generic: Text Direction
+      - generic: Left to right
+      - generic: Font Weight
+      - generic: Normal
+      - generic: Line Height
+      - generic: Normal
+      - generic: Letter Spacing
+      - generic: "0"
+      - generic: Spacing
+      - generic: "0"
+      - text: Body paragraph text and link color. Curabitur pretium nisl non vehicula mattis.
+      - paragraph: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin metus magna, elementum ac scelerisque et, aliquam sit amet mi. Sed semper diam ac tortor commodo vehicula.
+      - paragraph: Nullam turpis nisi, luctus in augue at, suscipit posuere mauris. In ut efficitur nunc. Proin orci odio, pretium vitae augue a, maximus porta tellus.
+      - heading "Block Styling for Body Paragraph" [level=4]
+      - generic: Padding Top
+      - generic: "10"
+      - generic: Padding Right
+      - generic: "10"
+      - generic: Padding Bottom
+      - generic: "10"
+      - generic: Padding Left
+      - generic: "10"
+      - heading "List Styling" [level=3]
+      - generic: Font Size
+      - generic: "14"
+      - generic: List Font Color
+      - textbox "Body List Font Color" [disabled]: "#101b24"
+      - generic: "#101B24"
+      - generic: Align
+      - generic: Left
+      - generic: Text Direction
+      - generic: Left to right
+      - generic: Font Weight
+      - generic: Normal
+      - generic: Line Height
+      - generic: Normal
+      - generic: Letter Spacing
+      - generic: "0"
+      - generic: Spacing
+      - generic: "0"
+      - generic: List Item Indent
+      - generic: "40"
+      - generic: List Type
+      - generic: Bulleted List
+      - generic: List Style Type
+      - generic: Default
+      - generic: Start List From (for numbered list)
+      - generic: "1"
+      - text: Body list text and link color.
+      - list:
+        - listitem: Item 1.
+        - listitem: Item 2.
+        - listitem: Item 3.
+        - listitem: Item 4.
+        - listitem: Item 5.
+      - heading "Block Styling for Body List" [level=4]
+      - generic: Padding Top
+      - generic: "10"
+      - generic: Padding Right
+      - generic: "10"
+      - generic: Padding Bottom
+      - generic: "10"
+      - generic: Padding Left
+      - generic: "10"
+      - heading "Fallback Fonts" [level=3]
+      - paragraph:
+        - text: Fallback fonts will be used for the title, header, and body text when your default font choice is not available.
+        - link "Learn more":
+          - /url: https://www.braze.com/docs/user_guide/message_building_by_channel/email/drag_and_drop/dnd_email_style_settings#fallback-font
+          - text: Learn more
+        - text: .
+      - generic: Fallback font 1
+      - generic: Arial
+      - heading "Font family" [level=4]
+      - paragraph: If your selected fallback fonts aren't available, the system will pick a font in this generic family
+      - radio "Sans-serif" [checked] [disabled]
+      - text: Sans-serif
+      - radio "Serif" [disabled]
+      - text: Serif
+      - generic: Fallback font 1
+      - heading "Button Styling" [level=3]
+      - generic: Font Size
+      - generic: "14"
+      - generic: Button Font Color
+      - textbox "Buttons Font Color" [disabled]: "#ffffff"
+      - generic: "#FFFFFF"
+      - generic: Button Background Color
+      - textbox "Button Background Color" [disabled]: "#1871d8"
+      - generic: "#1871D8"
+      - generic: Border Color
+      - textbox "Border Color" [disabled]: "#1871d8"
+      - generic: "#1871D8"
+      - generic: Border Weight
+      - generic: "1"
+      - generic: Border Radius
+      - generic: "2"
+      - heading "Button Padding" [level=4]
+      - generic: Padding Top
+      - generic: "5"
+      - generic: Padding Right
+      - generic: "10"
+      - generic: Padding Bottom
+      - generic: "5"
+      - generic: Padding Left
+      - generic: "10"
+      - button "Button"
+      - heading "Block Styling for Buttons" [level=4]
+      - generic: Padding Top
+      - generic: "10"
+      - generic: Padding Right
+      - generic: "10"
+      - generic: Padding Bottom
+      - generic: "10"
+      - generic: Padding Left
+      - generic: "10"
+      - heading "Icon Block Styling" [level=3]
+      - generic: Font Size
+      - generic: "14"
+      - generic: Font Color
+      - textbox "Icon Block Font Color" [disabled]: "#101b24"
+      - generic: "#101B24"
+      - generic: Align
+      - generic: Center
+      - generic: Item Spacing
+      - generic: "10"
+      - generic: Icon Height
+      - generic: "16"
+      - generic: Mobile Font Size
+      - generic: "14"
+      - heading "Icon Padding" [level=4]
+      - generic: Padding Top
+      - generic: "5"
+      - generic: Padding Right
+      - generic: "5"
+      - generic: Padding Bottom
+      - generic: "5"
+      - generic: Padding Left
+      - generic: "5"
+      - generic: Mobile Text Align
+      - generic: Right
+      - heading "Mobile Block Padding" [level=4]
+      - generic: Padding Top
+      - generic: "10"
+      - generic: Padding Right
+      - generic: "10"
+      - generic: Padding Bottom
+      - generic: "10"
+      - generic: Padding Left
+      - generic: "10"
+      - heading "Block Styling for Icon Block" [level=4]
+      - generic: Padding Top
+      - generic: "10"
+      - generic: Padding Right
+      - generic: "10"
+      - generic: Padding Bottom
+      - generic: "10"
+      - generic: Padding Left
+      - generic: "10"
+      - heading "Email Template Width" [level=3]
+      - generic: Email template width (px)
+      - generic: "600"
+      - heading "Content Block Width" [level=3]
+      - paragraph: These settings will be pre-configured for all future Content Blocks. Existing Content Blocks won't be updated.
+      - radio "Full-width (100%)" [checked] [disabled]
+      - text: Full-width (100%)
+      - radio "Custom width" [disabled]
+      - text: Custom width
+      - img "Content block width illustration"
+    - generic: © Braze 2026
+    - link "Status":
+      - /url: https://braze.statuspage.io/
+    - link "Terms":
+      - /url: https://www.braze.com/terms
+    - link "Privacy Policy":
+      - /url: https://www.braze.com/privacy

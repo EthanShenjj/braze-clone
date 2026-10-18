@@ -30,3 +30,11 @@ test("only action paths can fan out", () => {
   graph.edges.push(["entry", "email"]);
   ok(validateCanvasGraph(graph).some(issue => issue.includes("only one outgoing route")));
 });
+
+test("global subscription updates accept only explicit booleans", () => {
+  const graph = clone();
+  graph.nodes[1] = { id: "delay", label: "Global status", kind: "update", x: 360, y: 190, config: { attribute: "subscribed", value: "treu" } };
+  deepEqual(validateCanvasGraph(graph), ["Set subscribed to true or false on “Global status”."]);
+  graph.nodes[1].config.value = "false";
+  deepEqual(validateCanvasGraph(graph), []);
+});

@@ -111,3 +111,13 @@ export function selectionMatches(item: { id: string; fields: Record<string, unkn
     return left === normalized;
   });
 }
+
+/** The same selection evaluator is used by catalog previews and Liquid rendering. */
+export function selectCatalogRows<T extends { id: string; name?: string; fields: Record<string, unknown> }>(rows: T[], selection: { filters: CatalogFilter[]; randomSort: boolean; sortField: string; sortDirection: string; resultLimit: number }, profile: Record<string, unknown> = {}, seed = "") {
+  const hash = (text: string) => { let value = 2166136261; for (const char of text) value = Math.imul(value ^ char.charCodeAt(0), 16777619); return value >>> 0; };
+  const value = (row: T) => selection.sortField === "id" ? row.id : row.fields[selection.sortField] ?? (selection.sortField === "name" ? row.name : "");
+  const result = rows.filter(row => selectionMatches(row, selection.filters, profile));
+  if (selection.randomSort) result.sort((a,b) => hash(`${seed}:${profile.user_id ?? ""}:${a.id}`) - hash(`${seed}:${profile.user_id ?? ""}:${b.id}`) || a.id.localeCompare(b.id));
+  else if (selection.sortField) result.sort((a,b) => { const left=value(a),right=value(b); const comparison = typeof left === "number" && typeof right === "number" ? left-right : typeof left === "boolean" && typeof right === "boolean" ? Number(left)-Number(right) : String(left ?? "").localeCompare(String(right ?? "")); return comparison * (selection.sortDirection === "descending" ? -1 : 1) || a.id.localeCompare(b.id); });
+  return result.slice(0, selection.resultLimit);
+}

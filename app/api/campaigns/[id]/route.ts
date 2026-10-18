@@ -12,7 +12,7 @@ export async function PATCH(request: Request, context: RouteContext<"/api/campai
   if (!current) return Response.json({ error: "Campaign not found" }, { status: 404 });
   const input = await request.json();
   if (input.status === "Stopped") return Response.json(stopCampaign(id));
-  return Response.json(upsertCampaign({ ...current, ...input, id }));
+  try { return Response.json(upsertCampaign({ ...current, ...input, id })); } catch (error) { return Response.json({ error: error instanceof Error ? error.message : "Campaign could not be saved." }, { status: 400 }); }
 }
 
 export async function DELETE(_request: Request, context: RouteContext<"/api/campaigns/[id]">) {

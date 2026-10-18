@@ -22,6 +22,7 @@ const routes: Record<string, string> = {
   catalogs: "/dashboard/catalogs/6aa75e37db69160082adb7ae?locale=en",
   "content-calendar": "/messaging/content-calendar",
   "messaging-diagnostics": "/messaging/diagnostics",
+  "email-preferences": "/app_settings/app_settings/email_settings/sending_configuration/6ad0b98fe4b4110085216601?locale=en",
 };
 
 const pagesByPath = new Map(Object.entries(routes).map(([page, route]) => [route.split("?")[0], page]));
@@ -31,6 +32,7 @@ export function routeForPage(page: string) {
 }
 
 export function pageFromPath(pathname: string) {
+  if (/^\/app_settings\/app_settings\/email_settings(?:\/|$)/.test(pathname)) return "email-preferences";
   if (/^\/engagement\/campaigns\/cmp_[^/]+$/.test(pathname)) return "campaigns";
   if (/^\/engagement\/predictions\/[^/]+\/[^/]+$/.test(pathname)) return "catalogs";
   if (/^\/(?:content|dashboard)\/catalogs\//.test(pathname)) return "catalogs";

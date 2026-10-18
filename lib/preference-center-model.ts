@@ -48,8 +48,8 @@ export type PreferenceCenterConfig = {
 export const preferenceCenterDefaultCopy: PreferenceCenterCopy = {
   preferenceTitle: "Email preferences",
   preferenceHelp: "Select the messages you want to receive.",
-  subscribeAllLabel: "Subscribe to all email",
-  unsubscribeAllLabel: "Unsubscribe from all email",
+  subscribeAllLabel: "Select all listed groups",
+  unsubscribeAllLabel: "Clear all listed groups",
   submitLabel: "Save my preferences",
   successTitle: "Your preferences have been saved",
   successBody: "Your email subscription choices are up to date.",
@@ -80,8 +80,8 @@ export const preferenceCenterDefaultConfig: PreferenceCenterConfig = {
     "zh-CN": {
       preferenceTitle: "邮件订阅偏好",
       preferenceHelp: "选择您希望接收的邮件内容。",
-      subscribeAllLabel: "订阅全部邮件",
-      unsubscribeAllLabel: "退订全部邮件",
+      subscribeAllLabel: "选择所有列出的订阅组",
+      unsubscribeAllLabel: "取消所有列出的订阅组",
       submitLabel: "保存我的偏好",
       successTitle: "您的偏好已保存",
       successBody: "您的邮件订阅选择已经更新。",
@@ -105,14 +105,19 @@ export function normalizePreferenceCenterConfig(value: unknown): PreferenceCente
     blocks: blocks.map(block => ({ ...block, style: block.style ? { ...block.style } : undefined })),
     showDescriptions: source.showDescriptions ?? preferenceCenterDefaultConfig.showDescriptions,
     showGlobalControls: source.showGlobalControls ?? preferenceCenterDefaultConfig.showGlobalControls,
-    copy: { ...preferenceCenterDefaultCopy, ...copySource },
+    copy: { ...preferenceCenterDefaultCopy, ...copySource, subscribeAllLabel: copySource.subscribeAllLabel === "Subscribe to all email" ? preferenceCenterDefaultCopy.subscribeAllLabel : copySource.subscribeAllLabel ?? preferenceCenterDefaultCopy.subscribeAllLabel, unsubscribeAllLabel: copySource.unsubscribeAllLabel === "Unsubscribe from all email" ? preferenceCenterDefaultCopy.unsubscribeAllLabel : copySource.unsubscribeAllLabel ?? preferenceCenterDefaultCopy.unsubscribeAllLabel },
     design: {
       ...preferenceCenterDefaultConfig.design,
       ...designSource,
       contentWidth: [560, 600, 640, 700].includes(Number(designSource.contentWidth)) ? Number(designSource.contentWidth) : preferenceCenterDefaultConfig.design.contentWidth,
       fontFamily: ["Arial", "Helvetica", "Georgia"].includes(String(designSource.fontFamily)) ? String(designSource.fontFamily) as PreferenceCenterDesign["fontFamily"] : preferenceCenterDefaultConfig.design.fontFamily,
     },
-    locales: Object.fromEntries(Object.entries(localeSource).filter(([, translation]) => translation && typeof translation === "object").map(([locale, translation]) => [locale, translation as Partial<PreferenceCenterCopy>])),
+    locales: Object.fromEntries(Object.entries(localeSource).filter(([, translation]) => translation && typeof translation === "object").map(([locale, translation]) => {
+      const copy = { ...translation } as Partial<PreferenceCenterCopy>;
+      if (copy.subscribeAllLabel === "订阅全部邮件") copy.subscribeAllLabel = "选择所有列出的订阅组";
+      if (copy.unsubscribeAllLabel === "退订全部邮件") copy.unsubscribeAllLabel = "取消所有列出的订阅组";
+      return [locale, copy];
+    })),
   };
 }
 

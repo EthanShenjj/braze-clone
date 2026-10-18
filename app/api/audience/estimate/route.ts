@@ -1,4 +1,4 @@
-import { estimateAudience, listResources, type AudienceFilter } from "@/lib/braze-store";
+import { estimateAudience, listResources, type AudienceFilter, type Channel } from "@/lib/braze-store";
 
 export const runtime = "nodejs";
 
@@ -9,5 +9,7 @@ export function GET(request: Request) {
   const saved = listResources("segments").find(row => row.name.toLowerCase() === audience.toLowerCase());
   const savedData = (saved?.data ?? {}) as Record<string, unknown>;
   const filters = (Array.isArray(savedData.filters) ? savedData.filters : []) as AudienceFilter[];
-  return Response.json(estimateAudience(audience, searchParams.get("country") ?? undefined, searchParams.get("excludeCountry") ?? undefined, searchParams.get("eligibility") ?? "subscribed", searchParams.get("subscriptionGroupId") ?? undefined, filters));
+  try {
+    return Response.json(estimateAudience(audience, searchParams.get("country") ?? undefined, searchParams.get("excludeCountry") ?? undefined, searchParams.get("eligibility") ?? "subscribed", searchParams.get("subscriptionGroupId") ?? undefined, filters, (searchParams.get("channel") ?? "email") as Channel));
+  } catch (error) { return Response.json({ error: error instanceof Error ? error.message : "Unable to estimate audience." }, { status: 400 }); }
 }

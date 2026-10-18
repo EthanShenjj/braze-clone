@@ -16,6 +16,7 @@ import {
 } from "@/lib/email-editor-model";
 import { hasHtmlStyleVoidTags, normalizeMjmlDocument, normalizeXmlVoidTags } from "@/lib/email-mjml";
 import { translate, type Locale } from "@/lib/i18n";
+import { normalizeEmailPreferences, type TextTheme } from "@/lib/email-preferences";
 
 type CampaignLike = { id: string; name: string; subject?: string; body?: string; config?: Record<string, unknown> };
 type SavePatch = { subject?: string; body?: string; config?: Record<string, unknown> };
@@ -66,6 +67,10 @@ function mjmlAttributes(values: Record<string, unknown>) {
   return Object.entries(values).filter(([, value]) => value !== undefined && value !== null && value !== "").map(([key, value]) => `${key}="${attr(value)}"`).join(" ");
 }
 
+function themeAttributes(theme: TextTheme, fontFamily: string) {
+  return mjmlAttributes({ "font-family": fontFamily, "font-size": `${theme.fontSize}px`, color: theme.color, align: theme.align, "container-background-color": undefined, "font-weight": theme.weight, "line-height": theme.lineHeight, "letter-spacing": `${theme.letterSpacing}px`, padding: `${theme.paddingTop}px ${theme.paddingRight}px ${theme.paddingBottom}px ${theme.paddingLeft}px` });
+}
+
 function blockToMjml(block: EmailBlock, globalStyle: EmailStyle) {
   const s = block.style ?? {};
   const common = {
@@ -99,11 +104,12 @@ function blockToMjml(block: EmailBlock, globalStyle: EmailStyle) {
   return `<mj-text ${mjmlAttributes(common)}>${blockText(block, "en") || block.kind}</mj-text>`;
 }
 
-export function legacyRowsToMjml(rowsValue: unknown, styleValue: unknown) {
+export function legacyRowsToMjml(rowsValue: unknown, styleValue: unknown, themeValue?: unknown) {
+  const theme = themeValue ? normalizeEmailPreferences({ editor: themeValue }).editor : undefined;
   const rows = normalizeRows(rowsValue, undefined);
   const style = normalizeStyle(styleValue);
   const body = rows.map(row => `<mj-section ${mjmlAttributes({ "background-color": row.bg || style.contentBg, padding: `${row.padding ?? 10}px` })}>${row.cells.map(cell => `<mj-column width="${cell.width}%">${cell.blocks.map(block => blockToMjml(block, style)).join("")}</mj-column>`).join("")}</mj-section>`).join("");
-  const fallback = `<mj-section background-color="${attr(style.contentBg)}"><mj-column><mj-text color="${attr(style.textColor)}" font-family="${attr(style.fontFamily)}" font-size="15px" line-height="1.5" padding="10px">Add your message here.</mj-text></mj-column></mj-section>`;
+  const fallback = `<mj-section background-color="${attr(style.contentBg)}"><mj-column><mj-text ${theme ? themeAttributes(theme.paragraph, style.fontFamily) : mjmlAttributes({ color: style.textColor, "font-family": style.fontFamily, "font-size": "15px", "line-height": "1.5", padding: "10px" })}><p style="margin:0 0 ${theme?.paragraph.spacing ?? 0}px;direction:${theme?.paragraph.direction ?? "ltr"}">Add your message here.</p></mj-text></mj-column></mj-section>`;
   return `<mjml><mj-head></mj-head><mj-body width="${style.contentWidth}px" background-color="${attr(style.canvasBg)}">${body || fallback}</mj-body></mjml>`;
 }
 
@@ -275,8 +281,10 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
   locale: Locale; draft: CampaignLike; variantName: string; save: (patch: SavePatch) => Promise<boolean>;
   onClose: () => void; onSendingSettings: () => void; onOpenTest: () => void;
 }) {
+  const [linkAliases, setLinkAliases] = useState<Array<{ url: string; alias: string; tracking: boolean }>>(() => Array.isArray(draft.config?.emailLinkAliases) ? draft.config.emailLinkAliases as Array<{ url: string; alias: string; tracking: boolean }> : []);
+  const linkAliasesRef = useRef(linkAliases); linkAliasesRef.current = linkAliases;
   const [subject, setSubject] = useState(draft.subject ?? "");
-  const [leftMode, setLeftMode] = useState<"content" | "personalization" | "languages">("content");
+  const [leftMode, setLeftMode] = useState<"content" | "personalization" | "languages" | "links">("content");
   const [rightTab, setRightTab] = useState<"content" | "rows" | "settings">("content");
   const [device, setDevice] = useState<"Desktop" | "Mobile">("Desktop");
   const [selected, setSelected] = useState<SelectedState>(null);
@@ -299,7 +307,7 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
   const savedMjml = typeof draft.config?.emailMjml === "string" ? draft.config.emailMjml : "";
   const serializedProject = savedProject ? JSON.stringify(savedProject) : "";
   const canLoadSavedProject = draft.config?.emailGrapesSchemaVersion === 1 && !hasHtmlStyleVoidTags(savedMjml) && !hasHtmlStyleVoidTags(serializedProject) && !serializedProject.includes("<parsererror");
-  const initialMjml = useMemo(() => normalizeMjmlDocument(savedMjml || legacyRowsToMjml(draft.config?.emailRows, draft.config?.emailStyle)), [draft.config?.emailRows, draft.config?.emailStyle, savedMjml]);
+  const initialMjml = useMemo(() => normalizeMjmlDocument(savedMjml || legacyRowsToMjml(draft.config?.emailRows, draft.config?.emailStyle, draft.config?.emailBlockTheme)), [draft.config?.emailRows, draft.config?.emailStyle, draft.config?.emailBlockTheme, savedMjml]);
 
   const capture = useCallback((editor = editorRef.current) => {
     if (!editor || !readyRef.current) return snapshotRef.current;
@@ -308,9 +316,13 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
     try { html = htmlFromResult(editor.runCommand("mjml-code-to-html", { mjml }), html); } catch (error) { console.error("MJML compilation failed", error); }
     let project = snapshotRef.current.project;
     try { project = editor.getProjectData() as Record<string, unknown>; } catch (error) { console.error("GrapesJS project serialization failed", error); }
+    const theme = normalizeEmailPreferences({ editor: draft.config?.emailBlockTheme }).editor;
+    const css = `<style>a:not([data-custom-color]){color:${globalStyle.linkColor}}p{margin-top:0;margin-bottom:${theme.paragraph.spacing}px}li{margin-bottom:${theme.list.spacing}px}.braze-icon-mobile{font-size:${theme.icon.fontSize}px;text-align:${theme.icon.align}}@media(max-width:480px){.braze-icon-mobile{font-size:${theme.icon.mobileFontSize}px!important;text-align:${theme.icon.mobileAlign}!important;padding:${theme.icon.mobilePadding.top}px ${theme.icon.mobilePadding.right}px ${theme.icon.mobilePadding.bottom}px ${theme.icon.mobilePadding.left}px!important}}</style>`;
+    html = html.includes("</head>") ? html.replace("</head>", `${css}</head>`) : css + html;
+    html = html.replace(/<a\b[^>]*>/gi, tag => { const href = /href=["']([^"']+)["']/i.exec(tag)?.[1]; const alias = linkAliasesRef.current.find(row => row.url === href); return alias?.alias ? tag.replace(/>$/, ` data-link-alias="${attr(alias.alias)}" data-link-tracking="${alias.tracking}">`) : tag; });
     snapshotRef.current = { project, mjml, html };
     return snapshotRef.current;
-  }, [draft.body]);
+  }, [draft.body, draft.config?.emailBlockTheme, globalStyle.linkColor]);
 
   const queueCapture = useCallback(() => {
     if (!readyRef.current) return;
@@ -348,17 +360,27 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
 
         const blockManager = editor.Blocks;
         blockManager.getAll().reset();
+        const theme = draft.config?.emailBlockTheme ? normalizeEmailPreferences({ editor: draft.config.emailBlockTheme }).editor : undefined;
+        const titleAttributes = theme ? themeAttributes(theme.headers[0], globalStyle.fontFamily) : 'font-size="34px" font-weight="700" line-height="1.2" padding="10px"';
+        const paragraphAttributes = theme ? themeAttributes(theme.paragraph, globalStyle.fontFamily) : 'font-size="15px" line-height="1.55" padding="10px"';
+        const buttonAttributes = theme ? `${themeAttributes(theme.button, globalStyle.fontFamily)} ${mjmlAttributes({ "inner-padding": `${theme.button.innerPadding.top}px ${theme.button.innerPadding.right}px ${theme.button.innerPadding.bottom}px ${theme.button.innerPadding.left}px`, "background-color": theme.button.background, "border-radius": `${theme.button.radius}px`, border: `${theme.button.borderWidth}px solid ${theme.button.borderColor}` })}` : 'background-color="#6136cc" color="#ffffff" border-radius="4px" padding="12px"';
         const blocks: Array<[string, string, string, string]> = [
-          ["braze-title", "TITLE", "CONTENT", '<mj-text font-size="34px" font-weight="700" line-height="1.2" padding="10px">I\'m a new title block</mj-text>'],
-          ["braze-text", "TEXT", "CONTENT", '<mj-text font-size="15px" line-height="1.55" padding="10px">Add your message here.</mj-text>'],
+          ["braze-title", "TITLE", "CONTENT", `<mj-text ${titleAttributes}><h1 style="font:inherit;margin:0;direction:${theme?.headers[0].direction ?? "ltr"}">I'm a new title block</h1></mj-text>`],
+          ["braze-text", "TEXT", "CONTENT", `<mj-text ${paragraphAttributes}><p style="margin:0 0 ${theme?.paragraph.spacing ?? 0}px;direction:${theme?.paragraph.direction ?? "ltr"}">Add your message here.</p></mj-text>`],
           ["braze-image", "IMAGE", "CONTENT", '<mj-image src="https://placehold.co/600x260/e9e4f4/4b3a86?text=Image" alt="Image" padding="10px" />'],
-          ["braze-button", "BUTTON", "CONTENT", '<mj-button background-color="#6136cc" color="#ffffff" border-radius="4px" padding="12px" href="https://">Button</mj-button>'],
+          ["braze-button", "BUTTON", "CONTENT", `<mj-button ${buttonAttributes} href="https://">Button</mj-button>`],
           ["braze-divider", "DIVIDER", "CONTENT", '<mj-divider border-color="#dcd9e0" border-width="1px" padding="20px" />'],
           ["braze-spacer", "SPACER", "CONTENT", '<mj-spacer height="44px" />'],
           ["braze-social", "SOCIAL", "CONTENT", '<mj-social align="center"><mj-social-element name="facebook" href="https://"></mj-social-element><mj-social-element name="instagram" href="https://"></mj-social-element></mj-social>'],
           ["braze-menu", "MENU", "CONTENT", '<mj-navbar><mj-navbar-link href="https://">Menu item</mj-navbar-link></mj-navbar>'],
           ["braze-html", "HTML", "CONTENT", '<mj-raw><div style="padding:10px">Custom HTML</div></mj-raw>'],
         ];
+        if (theme) {
+          theme.headers.slice(1).forEach((header, index) => blocks.push([`braze-h${index + 2}`, `H${index + 2}`, "CONTENT", `<mj-text ${themeAttributes(header, globalStyle.fontFamily)}><h${index+2} style="font:inherit;margin:0;direction:${header.direction}">Heading ${index+2}</h${index+2}></mj-text>`]));
+          const list = theme.list; const listTag = list.listType === "ol" ? "ol" : "ul";
+          blocks.push(["braze-list", "LIST", "CONTENT", `<mj-text ${themeAttributes(list, globalStyle.fontFamily)}><${listTag} start="${list.start}" style="margin:0;padding-left:${list.indent}px;list-style-type:${list.marker};direction:${list.direction}"><li style="margin-bottom:${list.spacing}px">List item 1</li><li>List item 2</li></${listTag}></mj-text>`]);
+          blocks.push(["braze-icon", "ICONS", "CONTENT", `<mj-text ${themeAttributes(theme.icon, globalStyle.fontFamily)}><div class="braze-icon-mobile" style="direction:${theme.icon.direction}"><span style="padding:${theme.icon.padding.top}px ${theme.icon.padding.right}px ${theme.icon.padding.bottom}px ${theme.icon.padding.left}px;margin-right:${theme.icon.itemSpacing}px;font-size:${theme.icon.height}px">●</span>Icon text</div></mj-text>`]);
+        }
         blocks.forEach(([id, label, category, content]) => blockManager.add(id, { label, category, content, activate: true, select: true }));
 
         const updateSelected = (component?: Component) => setSelected(selectedState(component ?? editor?.getSelected()));
@@ -421,6 +443,7 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
         emailGrapesProject: snapshot.project,
         emailMjml: snapshot.mjml,
         emailStyle: globalStyle,
+        emailLinkAliases: linkAliasesRef.current,
       },
     });
     setSaveState(ok ? "saved" : "unsaved");
@@ -543,7 +566,7 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
       <button className={styles.headerButton} onClick={onClose}><ChevronLeft size={15}/>{translate(locale, "Back")}</button>
       <div className={styles.headerTitle}><Mail size={17}/><b>{variantName}</b><small>GrapesJS + MJML</small></div>
       <span className={styles.saveState}>{saveState === "saving" ? "Saving…" : saveState === "unsaved" ? "Unsaved changes" : "All changes saved"}</span>
-      <button className={styles.headerButton} onClick={onOpenTest}><Eye size={15}/>{translate(locale, "Preview and test")}</button>
+      <button className={styles.headerButton} onClick={() => { void persist().then(ok => { if (ok) onOpenTest(); }); }}><Eye size={15}/>{translate(locale, "Preview and test")}</button>
       <button className={styles.headerButton} onClick={() => void saveAndSending()}>{translate(locale, "Sending info")}</button>
     </header>
     {leftMode !== "personalization" && <nav className={styles.iconRail}><button onClick={onClose} aria-label="Back"><ChevronLeft size={19}/></button></nav>}
@@ -552,6 +575,8 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
         <div className={styles.leftTitle}>MESSAGE</div>
         <button className={leftMode === "content" ? styles.leftActive : undefined} onClick={() => setLeftMode("content")}>Content</button>
         <button onClick={openPersonalization}>Personalization</button>
+        <button className={leftMode === "links" ? styles.leftActive : undefined} onClick={() => setLeftMode("links")}>Link Management</button>
+        {leftMode === "links" && <div className={styles.leftPanel}><b>Link Management</b><p>Give links aliases to track clicks in user profiles and reports.</p>{[...new Set([...snapshotRef.current.html.matchAll(/<a\b[^>]*href=["'](https?:\/\/[^"']+)["']/gi)].map(match => match[1]))].map(url => { const entry = linkAliases.find(row => row.url === url); const update = (patch: Partial<{ alias: string; tracking: boolean }>) => { setLinkAliases(current => { const rows = current.some(row => row.url === url) ? current.map(row => row.url === url ? { ...row, ...patch } : row) : [...current, { url, alias: "", tracking: true, ...patch }]; linkAliasesRef.current = rows; return rows; }); setRevision(value => value + 1); }; return <div key={url} className={styles.linkRow}><small>{url}</small><label>Link alias<input aria-label={`Alias for ${url}`} value={entry?.alias ?? ""} onChange={event => update({ alias: event.target.value })}/></label><label><input type="checkbox" checked={entry?.tracking ?? true} onChange={event => update({ tracking: event.target.checked })}/> Track this alias</label></div>; })}</div>}
         <button className={leftMode === "languages" ? styles.leftActive : undefined} onClick={() => setLeftMode("languages")}>Languages</button>
         <small>Subject</small>
         <div className={styles.leftPanel}><input aria-label="Email subject" value={subject} onChange={event => setSubject(event.target.value)} style={{ width: "100%", border: 0, outline: 0, font: "inherit" }}/></div>
@@ -561,7 +586,7 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
     <main className={cx(styles.canvasArea, styles.grapesCanvasArea)} style={pageStyle}>
       <div className={styles.deviceModes}><button className={device === "Desktop" ? styles.deviceActive : undefined} onClick={() => setDeviceMode("Desktop")}><Monitor size={15}/></button><button className={device === "Mobile" ? styles.deviceActive : undefined} onClick={() => setDeviceMode("Mobile")}><Smartphone size={15}/></button></div>
       <div className={styles.textToolbar}>
-        <select value={selectedAttr("font-family", globalStyle.fontFamily)} onChange={event => updateSelectedAttributes({ "font-family": event.target.value })}>{emailFontFamilies.map(font => <option key={font}>{font}</option>)}</select>
+        <select value={selectedAttr("font-family", globalStyle.fontFamily)} onChange={event => updateSelectedAttributes({ "font-family": event.target.value })}>{[...new Set([globalStyle.fontFamily, ...emailFontFamilies])].map(font => <option key={font}>{font}</option>)}</select>
         <select value={Math.round(selectedNumber("font-size", 15))} onChange={event => updateSelectedAttributes({ "font-size": `${event.target.value}px` })}>{[10, 12, 14, 15, 16, 18, 22, 28, 34, 42].map(size => <option key={size}>{size}</option>)}</select>
         <span className={styles.sep}/><button title="Bold" onMouseDown={event => event.preventDefault()} onClick={() => richCommand("bold")}><Bold size={15}/></button><button title="Italic" onMouseDown={event => event.preventDefault()} onClick={() => richCommand("italic")}><Italic size={15}/></button><button title="Underline" onMouseDown={event => event.preventDefault()} onClick={() => richCommand("underline")}><Underline size={15}/></button><button title="Strikethrough" onMouseDown={event => event.preventDefault()} onClick={() => richCommand("strikeThrough")}><Strikethrough size={15}/></button>
         <span className={styles.sep}/><button title="Link" onMouseDown={event => event.preventDefault()} onClick={() => { const url = window.prompt("Link URL", "https://"); if (url) richCommand("createLink", url); }}><Link2 size={15}/></button><button title="Clear formatting" onMouseDown={event => event.preventDefault()} onClick={() => richCommand("removeFormat")}><Code2 size={15}/></button>
@@ -588,7 +613,7 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
       </div> : <>
         <div className={cx(styles.catalogPane, styles.grapesBlockPane, rightTab !== "content" && styles.grapesPaneHidden)}><h3>CONTENT</h3><p>Drag content into the email canvas.</p><div ref={blocksRef} className={styles.grapesBlocks}/></div>
         <div className={cx(styles.catalogPane, rightTab !== "rows" && styles.grapesPaneHidden)}><h3>ROWS</h3><p>Add an MJML row, then drag content into its columns.</p><div className={styles.rowCatalog}>{[1, 2, 3, 4].map(columns => <button key={columns} onClick={() => addRow(columns)}>{columns} column{columns > 1 ? "s" : ""}<span>{Array.from({ length: columns }, (_, index) => <i key={index}/>)}</span></button>)}</div></div>
-        <div className={cx(styles.catalogPane, rightTab !== "settings" && styles.grapesPaneHidden)}><h3>SETTINGS</h3><label className={styles.settingField}>Canvas background<input type="color" value={globalStyle.canvasBg} onChange={event => setGlobalStyle({ ...globalStyle, canvasBg: event.target.value })}/></label><label className={styles.settingField}>Content background<input type="color" value={globalStyle.contentBg} onChange={event => setGlobalStyle({ ...globalStyle, contentBg: event.target.value })}/></label><label className={styles.settingField}>Default font<select value={globalStyle.fontFamily} onChange={event => setGlobalStyle({ ...globalStyle, fontFamily: event.target.value })}>{emailFontFamilies.map(font => <option key={font}>{font}</option>)}</select></label><label className={styles.settingField}>Content width<input type="number" min="320" max="800" value={globalStyle.contentWidth} onChange={event => setGlobalStyle({ ...globalStyle, contentWidth: Number(event.target.value) || 600 })}/></label></div>
+        <div className={cx(styles.catalogPane, rightTab !== "settings" && styles.grapesPaneHidden)}><h3>SETTINGS</h3><label className={styles.settingField}>Canvas background<input type="color" value={globalStyle.canvasBg} onChange={event => setGlobalStyle({ ...globalStyle, canvasBg: event.target.value })}/></label><label className={styles.settingField}>Content background<input type="color" value={globalStyle.contentBg} onChange={event => setGlobalStyle({ ...globalStyle, contentBg: event.target.value })}/></label><label className={styles.settingField}>Default font<select value={globalStyle.fontFamily} onChange={event => setGlobalStyle({ ...globalStyle, fontFamily: event.target.value })}>{[...new Set([globalStyle.fontFamily, ...emailFontFamilies])].map(font => <option key={font}>{font}</option>)}</select></label><label className={styles.settingField}>Content width<input type="number" min="320" max="800" value={globalStyle.contentWidth} onChange={event => setGlobalStyle({ ...globalStyle, contentWidth: Number(event.target.value) || 600 })}/></label></div>
       </>}
     </aside>
     <footer className={styles.footer}><button className={styles.download} onClick={download}>Download file</button><button className={styles.done} onClick={() => void saveAndClose()}>Done</button></footer>

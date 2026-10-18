@@ -6,6 +6,7 @@ export type CanvasNode = {
   x: number;
   y: number;
   config?: {
+    [key: string]: unknown;
     durationHours?: number;
     channel?: string;
     message?: string;
@@ -20,7 +21,7 @@ export type CanvasNode = {
 };
 export type CanvasGraph = { nodes: CanvasNode[]; edges: [string, string][] };
 export type CanvasTrace = { userId: string; steps: { nodeId: string; label: string; kind: CanvasNodeKind; at: string }[] };
-export type CanvasRun = { id: string; createdAt: string; entered: number; completed: number; messages: number; traces: CanvasTrace[] };
+export type CanvasRun = { id: string; createdAt: string; entered: number; completed: number; messages: number; traces: CanvasTrace[]; nextDueAt?: string | null };
 
 export const initialCanvasGraph: CanvasGraph = {
   nodes: [
@@ -64,7 +65,10 @@ export function validateCanvasGraph(graph: CanvasGraph): string[] {
     if (node.kind !== "branch" && outgoing(node.id).length > 1) issues.push(`Step “${node.label}” supports only one outgoing route.`);
     if (node.kind === "delay" && (!Number.isFinite(node.config?.durationHours) || Number(node.config?.durationHours) <= 0)) issues.push(`Set a positive delay on “${node.label}”.`);
     if (node.kind === "message" && (!node.config?.channel || !node.config?.message?.trim())) issues.push(`Configure a channel and message on “${node.label}”.`);
+    if (node.kind === "message" && node.config?.channel === "sms" && !node.config.subscriptionGroupId) issues.push(`Select an SMS subscription group on “${node.label}”.`);
     if (node.kind === "branch" && (!node.config?.attribute || !["country", "lifecycle", "subscribed"].includes(node.config.attribute) || !node.config?.value)) issues.push(`Configure the condition on “${node.label}”.`);
+    if (node.kind === "update" && (!node.config?.attribute || typeof node.config.value !== "string")) issues.push(`Configure an attribute and value on “${node.label}”.`);
+    if (node.kind === "update" && node.config?.attribute === "subscribed" && !["true", "false"].includes(String(node.config.value))) issues.push(`Set subscribed to true or false on “${node.label}”.`);
   }
   const visited = new Set<string>();
   const visiting = new Set<string>();

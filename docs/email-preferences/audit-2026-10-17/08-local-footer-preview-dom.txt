@@ -1,0 +1,108 @@
+- button "Open Next.js Dev Tools":
+- alert
+- complementary:
+  - generic: b
+  - button "Demo – Thinkingai":
+    - generic: Demo – Thinkingai
+  - generic: Quick links
+  - button "Canvas":
+    - generic: Canvas
+  - button "Campaigns":
+    - generic: Campaigns
+  - button "Segments":
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+  - button "Performance Overview":
+    - generic: Performance Overview
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic: braze
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour":
+  - combobox "Language":
+    - option "English" [selected]
+    - option "中文"
+    - option "한국어"
+    - option "日本語"
+  - button "Notifications":
+  - button "S"
+  - button:
+  - region "Email Preferences":
+    - tablist "Email preferences sections":
+      - tab "Sending Configuration"
+      - tab "Subscription Pages and Footers" [selected]
+      - tab "Drag-And-Drop Email Editor Settings"
+      - tab "Link Aliasing"
+      - tab "Bot Filtering"
+      - tab "Automated IP Warming"
+    - generic: Unsaved changes
+    - button "Cancel"
+    - button "Save changes":
+      - text: Save changes
+    - tabpanel "Subscription Pages and Footers":
+      - navigation "Settings sections":
+        - button "Custom footer"
+        - button "Custom unsubscribe page"
+        - button "Custom opt-in page"
+      - heading "Custom footer" [level=2]
+      - paragraph:
+        - text: A custom footer is HTML that is added to the end of your email. It is referenced by using a Liquid snippet in the email message. Footers must include an unsubscribe URL and physical mailing address. Learn more about email best practices
+        - link "here":
+          - /url: https://www.braze.com/docs/user_guide/administer/global/workspace_settings/email_preferences
+          - text: here
+      - switch "Enable custom footer" [checked]
+      - generic: Enable custom footer
+      - text: HTML Editor
+      - button "Reset to default"
+      - paragraph: Custom footers must be less than 100 KB and include an unsubscribe URL and physical mailing address.
+      - button "HTML"
+      - button "Preview" [active] [pressed]
+      - button "Copy Liquid snippet":
+        - text: Copy Liquid snippet
+      - iframe:
+        - paragraph: "Hello John Doe, {{custom_attribute.${loyalty_tier}}}"
+        - link "Unsubscribe":
+          - /url: "{{${set_user_to_unsubscribed_url}}}"
+      - heading "Custom unsubscribe page" [level=2]
+      - paragraph:
+        - text: You can customize the unsubscribe page your users see by inputting your own html. Learn more about the best practices for email list management
+        - link "here":
+          - /url: https://www.braze.com/docs/user_guide/administer/global/workspace_settings/email_preferences
+          - text: here
+      - switch "Enable custom unsubscribe page"
+      - generic: Enable custom unsubscribe page
+      - heading "Custom opt-in page" [level=2]
+      - paragraph:
+        - text: You can customize the opt-in page your users see by inputting your own html. Learn more about the best practices for email list management
+        - link "here":
+          - /url: https://www.braze.com/docs/user_guide/administer/global/workspace_settings/email_preferences
+          - text: here
+      - switch "Enable custom opt-in page"
+      - generic: Enable custom opt-in page
+    - generic: © Braze 2026
+    - link "Status":
+      - /url: https://braze.statuspage.io/
+    - link "Terms":
+      - /url: https://www.braze.com/terms
+    - link "Privacy Policy":
+      - /url: https://www.braze.com/privacy

@@ -15,6 +15,11 @@
 .group input,.global input { accent-color:var(--pc-accent); height:16px; margin:2px 0 0; width:16px; }
 .group span { display:grid; gap:3px; }
 .group b { font-size:14px; }.group small { color:#6c6672; font-size:13px; line-height:1.4; }
+.notice { background:#fff7e8; border:1px solid #ecd7aa; color:#604514; font-size:13px; line-height:1.5; padding:12px; }
+.globalUnsubscribe { border-top:1px solid #e8e5ec; margin-top:30px; padding-top:18px; }
+.globalUnsubscribe p { color:#6c6672; font-size:13px; }
+.globalUnsubscribe button { background:transparent; border:1px solid #ae3b4d; color:#9a2345; cursor:pointer; font-size:13px; padding:10px 14px; }
+.globalUnsubscribe button:disabled { cursor:wait; opacity:.7; }
 .buttonWrap { margin-top:29px; }.buttonWrap button { align-items:center; background:var(--pc-accent); border:0; color:#fff; cursor:pointer; display:inline-flex; font-size:14px; font-weight:700; gap:8px; justify-content:center; min-height:42px; padding:0 20px; }.buttonWrap button:disabled { cursor:wait; opacity:.7; }
 .divider { border:0; border-top:1px solid #e2dfe6; margin:24px 0; }.spacer { height:20px; }
 .state { align-items:center; display:flex; flex-direction:column; gap:11px; min-height:190px; justify-content:center; text-align:center; }.state svg { color:var(--pc-accent); }.state h1 { font-size:22px; margin:0; }.state p { color:#686270; margin:0; }.state small { color:#827b88; }.error { align-items:center; color:#9a2345; display:flex; font-size:13px; gap:7px; margin:14px 0 0; }.spin { animation:spin 1s linear infinite; }

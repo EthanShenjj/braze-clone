@@ -1,4 +1,4 @@
-import { getPreferenceCenter, updatePreferenceCenter } from "@/lib/braze-store";
+import { archivePreferenceCenter, getPreferenceCenter, updatePreferenceCenter } from "@/lib/braze-store";
 import { normalizePreferenceCenterConfig } from "@/lib/preference-center-model";
 
 export const runtime = "nodejs";
@@ -12,6 +12,10 @@ export async function GET(_request: Request, context: RouteContext<"/api/prefere
 export async function PATCH(request: Request, context: RouteContext<"/api/preference-centers/[id]">) {
   const { id } = await context.params;
   const input = await request.json() as { name?: unknown; description?: unknown; groupIds?: unknown; status?: unknown; config?: unknown };
+  if (input.status === "Archived" && Object.keys(input).length === 1) {
+    const archived = archivePreferenceCenter(id);
+    return archived ? Response.json(archived) : Response.json({ error: "Preference center not found" }, { status: 404 });
+  }
   const result = updatePreferenceCenter(id, {
     name: typeof input.name === "string" ? input.name : undefined,
     description: typeof input.description === "string" ? input.description : undefined,

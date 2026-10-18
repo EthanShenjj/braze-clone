@@ -1,4 +1,5 @@
-import { listCampaigns, upsertCampaign } from "@/lib/braze-store";
+import { getCampaign, getEmailPreferences, listCampaigns, upsertCampaign } from "@/lib/braze-store";
+import { emailPreferenceCampaignDefaults } from "@/lib/email-preferences";
 
 export const runtime = "nodejs";
 
@@ -16,5 +17,9 @@ export function GET(request: Request) {
 export async function POST(request: Request) {
   const input = await request.json();
   if (!input.id || !input.name || !input.channel) return Response.json({ error: "id, name, and channel are required" }, { status: 400 });
-  return Response.json(upsertCampaign(input), { status: 201 });
+  if (input.channel === "email" && !getCampaign(input.id)) {
+    const defaults = emailPreferenceCampaignDefaults(getEmailPreferences().data);
+    input.config = { ...defaults, ...input.config };
+  }
+  try { return Response.json(upsertCampaign(input), { status: 201 }); } catch (error) { return Response.json({ error: error instanceof Error ? error.message : "Campaign could not be saved." }, { status: 400 }); }
 }

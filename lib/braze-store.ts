@@ -1,10 +1,14 @@
 import "server-only";
 
-import { createHash } from "node:crypto";
+import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { mkdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
+import { emailPreferenceCampaignDefaults, normalizeEmailPreferences, validateEmailPreferences, type EmailPreferences } from "./email-preferences";
+import { workspaceContentBlockHtml } from "./email-liquid";
+import { compileWorkspaceEmail, emailSendingIssues, extractEmailLinks, isBotClick } from "./email-runtime";
+import { resolveLiquidPreview, type WorkspaceLiquid } from "./email-editor-model";
 import { campaignValidationIssues } from "./campaign-validation";
 import { type CanvasGraph, type CanvasRun, type CanvasTrace, validateCanvasGraph } from "./canvas-model";
 import { sampleCatalogId, sampleCatalogRows, sampleRecommendationId } from "./sample-catalog";
@@ -12,7 +16,7 @@ import { sampleSegmentByName, sampleSegments } from "./sample-segments";
 import { deliverWebhook, webhookDeliveryCapability, type WebhookDeliveryResult } from "./webhook-delivery";
 import { normalizeWebhookVariants, redactHeaders, renderWebhookText, webhookPreviewUser, type WebhookVariant } from "./webhook-model";
 import { normalizePreferenceCenterConfig, preferenceCenterDefaultConfig, type PreferenceCenterConfig } from "./preference-center-model";
-import { CatalogValidationError, catalogFields, selectionMatches, validateCatalogItem, validateCatalogName, validateFields, validateSelection, type CatalogField, type CatalogFilter, type CatalogSelectionInput } from "./catalog-model";
+import { CatalogValidationError, catalogFields, selectionMatches, selectCatalogRows, validateCatalogItem, validateCatalogName, validateFields, validateSelection, type CatalogField, type CatalogFilter, type CatalogSelectionInput } from "./catalog-model";
 
 export type Channel = "email" | "push" | "iam" | "content" | "banner" | "sms" | "webhook" | "whatsapp" | "line" | "multichannel" | "operator" | "feature" | "api";
 export type CampaignStatus = "Draft" | "Active" | "Stopped" | "Archived";
@@ -21,7 +25,7 @@ export type CampaignRecord = {
   edited: string; subject?: string; body?: string; audience?: string; conversion?: string; config: Record<string, unknown>;
 };
 export type ResourceRecord = { id: string; type: string; name: string; status: string; description: string; updatedAt: string; data: Record<string, unknown> };
-export type UserRecord = { id: string; email: string; firstName: string; country: string; lifecycle: string; subscribed: boolean; reachable: boolean; attributes: Record<string, unknown> };
+export type UserRecord = { id: string; email: string; firstName: string; country: string; lifecycle: string; subscribed: boolean; emailSubscriptionStatus: "opted_in" | "subscribed" | "unsubscribed"; reachable: boolean; attributes: Record<string, unknown> };
 export type CatalogSelectionRecord = {
   catalogId: string; name: string; description: string; filters: CatalogFilter[];
   randomSort: boolean; sortField: string; sortDirection: string; resultLimit: number; updatedAt: string;
@@ -38,7 +42,7 @@ export type SubscriptionGroupRecord = {
 export type SubscriptionMemberRecord = UserRecord & { state: SubscriptionState; updatedAt: string };
 export type PreferenceCenterRecord = {
   id: string; name: string; description: string; groupIds: string[]; status: "Active" | "Draft" | "Archived"; updatedAt: string;
-  config: PreferenceCenterConfig; version: number;
+  config: PreferenceCenterConfig; version: number; publishedVersion: number | null;
 };
 export type PreferenceCenterEvent = { id: string; centerId: string; userId: string; eventType: "viewed" | "submitted" | "submission_failed"; createdAt: string; details: Record<string, unknown> };
 export type PreferenceCenterVersion = { version: number; createdAt: string; name: string; status: PreferenceCenterRecord["status"] };
@@ -92,11 +96,13 @@ function db() {
     );
     CREATE TABLE IF NOT EXISTS preference_centers (
       id TEXT PRIMARY KEY, name TEXT NOT NULL, description TEXT NOT NULL, group_ids_json TEXT NOT NULL,
-      status TEXT NOT NULL, updated_at TEXT NOT NULL, config_json TEXT NOT NULL DEFAULT '{}', version INTEGER NOT NULL DEFAULT 1
+      status TEXT NOT NULL, updated_at TEXT NOT NULL, config_json TEXT NOT NULL DEFAULT '{}', version INTEGER NOT NULL DEFAULT 1,
+      published_version INTEGER
     );
     CREATE TABLE IF NOT EXISTS preference_center_versions (
       center_id TEXT NOT NULL, version INTEGER NOT NULL, name TEXT NOT NULL, status TEXT NOT NULL,
-      config_json TEXT NOT NULL, created_at TEXT NOT NULL, PRIMARY KEY (center_id, version)
+      config_json TEXT NOT NULL, created_at TEXT NOT NULL, group_ids_json TEXT NOT NULL DEFAULT '[]',
+      description TEXT NOT NULL DEFAULT '', PRIMARY KEY (center_id, version)
     );
     CREATE TABLE IF NOT EXISTS preference_center_events (
       id TEXT PRIMARY KEY, center_id TEXT NOT NULL, user_id TEXT NOT NULL, event_type TEXT NOT NULL,
@@ -121,6 +127,14 @@ function db() {
       entered_count INTEGER NOT NULL, completed_count INTEGER NOT NULL, message_count INTEGER NOT NULL,
       snapshot_json TEXT NOT NULL, traces_json TEXT NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS canvas_pending_steps (
+      run_id TEXT NOT NULL, user_id TEXT NOT NULL, next_node_id TEXT NOT NULL, due_at TEXT NOT NULL,
+      PRIMARY KEY (run_id, user_id)
+    );
+    CREATE TABLE IF NOT EXISTS canvas_entry_history (
+      canvas_id TEXT NOT NULL, user_id TEXT NOT NULL, last_entered_at TEXT NOT NULL,
+      PRIMARY KEY (canvas_id, user_id)
+    );
     CREATE TABLE IF NOT EXISTS demo_state (key TEXT PRIMARY KEY, value TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS demo_receipts (delivery_id TEXT PRIMARY KEY, generated_at TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS audit_log (
@@ -131,9 +145,25 @@ function db() {
   const preferenceColumns = database.prepare("PRAGMA table_info(preference_centers)").all() as Array<{ name: string }>;
   if (!preferenceColumns.some(column => column.name === "config_json")) database.exec("ALTER TABLE preference_centers ADD COLUMN config_json TEXT NOT NULL DEFAULT '{}'");
   if (!preferenceColumns.some(column => column.name === "version")) database.exec("ALTER TABLE preference_centers ADD COLUMN version INTEGER NOT NULL DEFAULT 1");
+  if (!preferenceColumns.some(column => column.name === "published_version")) database.exec("ALTER TABLE preference_centers ADD COLUMN published_version INTEGER");
+  const versionColumns = database.prepare("PRAGMA table_info(preference_center_versions)").all() as Array<{ name: string }>;
+  if (!versionColumns.some(column => column.name === "group_ids_json")) {
+    database.exec("ALTER TABLE preference_center_versions ADD COLUMN group_ids_json TEXT NOT NULL DEFAULT '[]'");
+    database.exec("UPDATE preference_center_versions SET group_ids_json = (SELECT group_ids_json FROM preference_centers WHERE id = center_id) WHERE EXISTS (SELECT 1 FROM preference_centers WHERE id = center_id)");
+  }
+  if (!versionColumns.some(column => column.name === "description")) {
+    database.exec("ALTER TABLE preference_center_versions ADD COLUMN description TEXT NOT NULL DEFAULT ''");
+    database.exec("UPDATE preference_center_versions SET description = (SELECT description FROM preference_centers WHERE id = center_id) WHERE EXISTS (SELECT 1 FROM preference_centers WHERE id = center_id)");
+  }
+  const userColumns = database.prepare("PRAGMA table_info(users)").all() as Array<{ name: string }>;
+  if (!userColumns.some(column => column.name === "email_subscription_status")) {
+    database.exec("ALTER TABLE users ADD COLUMN email_subscription_status TEXT NOT NULL DEFAULT 'subscribed'");
+    database.exec("UPDATE users SET email_subscription_status = CASE WHEN subscribed = 1 THEN 'subscribed' ELSE 'unsubscribed' END");
+  }
   seed(database);
   database.prepare("UPDATE preference_centers SET config_json = ? WHERE config_json = '{}' OR config_json IS NULL").run(JSON.stringify(preferenceCenterDefaultConfig));
-  database.exec("INSERT OR IGNORE INTO preference_center_versions (center_id, version, name, status, config_json, created_at) SELECT id, version, name, status, config_json, updated_at FROM preference_centers");
+  database.exec("INSERT OR IGNORE INTO preference_center_versions (center_id, version, name, status, config_json, created_at, group_ids_json, description) SELECT id, version, name, status, config_json, updated_at, group_ids_json, description FROM preference_centers");
+  database.exec("UPDATE preference_centers SET published_version = version WHERE status = 'Active' AND published_version IS NULL");
   seedSampleCatalog(database);
   return database;
 }
@@ -180,11 +210,11 @@ function seed(conn: DatabaseSync) {
   const insertCampaign = conn.prepare("INSERT OR IGNORE INTO campaigns VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)");
   for (const campaign of campaigns) insertCampaign.run(campaign.id, campaign.name, campaign.channel, campaign.status, campaign.schedule, campaign.sent, campaign.edited, campaign.subject ?? null, campaign.body ?? null, campaign.audience ?? null, campaign.conversion ?? null, JSON.stringify(campaign.config));
   if (existing.count) { seedSampleSegments(conn, created); seedCatalogItems(conn); seedSubscriptionGroups(conn); return; }
-  const insertUser = conn.prepare("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+  const insertUser = conn.prepare("INSERT INTO users (id, email, first_name, country, lifecycle, subscribed, reachable, attributes_json, email_subscription_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
   const countries = ["US", "GB", "CN", "SG", "DE"];
   for (let index = 1; index <= 1000; index += 1) {
     const lifecycle = index % 5 === 0 ? "New Users" : index % 3 === 0 ? "Recent Purchasers" : "All Users";
-    insertUser.run(`user_${index}`, `user${index}@example.test`, `Customer ${index}`, countries[index % countries.length], lifecycle, index % 11 ? 1 : 0, index % 13 ? 1 : 0, JSON.stringify({ language: index % 4 === 0 ? "zh" : "en", plan: index % 2 ? "pro" : "free" }));
+    insertUser.run(`user_${index}`, `user${index}@example.test`, `Customer ${index}`, countries[index % countries.length], lifecycle, index % 11 ? 1 : 0, index % 13 ? 1 : 0, JSON.stringify({ language: index % 4 === 0 ? "zh" : "en", plan: index % 2 ? "pro" : "free" }), index % 11 ? "subscribed" : "unsubscribed");
   }
   const insertResource = conn.prepare("INSERT INTO resources VALUES (?, ?, ?, ?, ?, ?, ?)");
   const resources: Array<[string, string, string, string, string, Record<string, unknown>]> = [
@@ -237,12 +267,12 @@ function seedSubscriptionGroups(conn: DatabaseSync) {
     if (index % 4 !== 0) insertMembership.run("sg_sms_alerts", userId, index % 11 === 0 ? "unsubscribed" : "subscribed", timestamp);
     if (index % 5 !== 0) insertMembership.run("sg_whatsapp_updates", userId, "subscribed", timestamp);
   }
-  conn.prepare("INSERT INTO preference_centers (id, name, description, group_ids_json, status, updated_at, config_json, version) VALUES (?, ?, ?, ?, 'Active', ?, ?, 1)").run(
+  conn.prepare("INSERT INTO preference_centers (id, name, description, group_ids_json, status, updated_at, config_json, version, published_version) VALUES (?, ?, ?, ?, 'Active', ?, ?, 1, 1)").run(
     "pc_marketing_preferences", "Marketing preferences", "Let users choose the email updates they want to receive.",
     JSON.stringify(["sg_product_updates", "sg_promotions"]), timestamp, JSON.stringify(preferenceCenterDefaultConfig),
   );
-  conn.prepare("INSERT OR IGNORE INTO preference_center_versions VALUES (?, 1, ?, 'Active', ?, ?)").run(
-    "pc_marketing_preferences", "Marketing preferences", JSON.stringify(preferenceCenterDefaultConfig), timestamp,
+  conn.prepare("INSERT OR IGNORE INTO preference_center_versions (center_id, version, name, status, config_json, created_at, group_ids_json, description) VALUES (?, 1, ?, 'Active', ?, ?, ?, ?)").run(
+    "pc_marketing_preferences", "Marketing preferences", JSON.stringify(preferenceCenterDefaultConfig), timestamp, JSON.stringify(["sg_product_updates", "sg_promotions"]), "Let users choose the email updates they want to receive.",
   );
 }
 
@@ -273,9 +303,15 @@ export function upsertCampaign(input: Partial<CampaignRecord> & Pick<CampaignRec
   const conn = db();
   const current = getCampaign(input.id);
   const record: CampaignRecord = { id: input.id, name: input.name, channel: input.channel, status: input.status ?? current?.status ?? "Draft", schedule: input.schedule ?? current?.schedule ?? "One time", sent: input.sent ?? current?.sent ?? 0, edited: now(), subject: input.subject ?? current?.subject, body: input.body ?? current?.body, audience: input.audience ?? current?.audience ?? "All Users", conversion: input.conversion ?? current?.conversion ?? "Make Purchase", config: input.config ?? current?.config ?? {} };
+  if (record.channel === "email") {
+    const preferences = getEmailPreferences().data;
+    if (!current) record.config = { ...emailPreferenceCampaignDefaults(preferences), ...record.config };
+    const issues = emailSendingIssues(record, preferences); if (issues.length) throw new Error(issues.join(" "));
+  }
   conn.prepare(`INSERT INTO campaigns (id,name,channel,status,schedule,sent,edited_at,subject,body,audience,conversion_event,config_json)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET name=excluded.name, channel=excluded.channel, status=excluded.status, schedule=excluded.schedule, sent=excluded.sent, edited_at=excluded.edited_at, subject=excluded.subject, body=excluded.body, audience=excluded.audience, conversion_event=excluded.conversion_event, config_json=excluded.config_json`).run(record.id, record.name, record.channel, record.status, record.schedule, record.sent, record.edited, record.subject ?? null, record.body ?? null, record.audience ?? null, record.conversion ?? null, JSON.stringify(record.config));
+  if (record.channel === "email") syncEmailLinkAliases(record);
   audit("campaign", record.id, current ? "updated" : "created", { channel: record.channel });
   return record;
 }
@@ -320,7 +356,25 @@ export function savedSegmentFilters(name?: string | null): AudienceFilter[] {
   return (Array.isArray(data.filters) ? data.filters : []) as AudienceFilter[];
 }
 
-export function estimateAudience(audience = "All Users", country?: string, excludeCountry?: string, eligibility = "subscribed", subscriptionGroupId?: string, filters: AudienceFilter[] = []) {
+function subscriptionGroupForChannel(groupId: string | undefined, channel: Channel) {
+  if (!groupId) return null;
+  const group = getSubscriptionGroup(groupId);
+  const expected = channel === "email" ? "Email" : channel === "sms" ? "SMS" : channel === "whatsapp" ? "WhatsApp" : null;
+  if (!group || group.status !== "Active" || group.channel !== expected) throw new Error("Select an active subscription group for this channel.");
+  return group;
+}
+
+function subscriptionCondition(channel: Channel, eligibility: string, groupId?: string) {
+  if (channel === "email") {
+    const status = eligibility === "opted-in" ? "u.email_subscription_status = 'opted_in'" : "u.email_subscription_status != 'unsubscribed'";
+    return `${status}${groupId ? " AND m.state = 'subscribed'" : ""}`;
+  }
+  if (channel === "sms" || channel === "whatsapp") return groupId ? "m.state = 'subscribed'" : "0 = 1";
+  return "1 = 1";
+}
+
+export function estimateAudience(audience = "All Users", country?: string, excludeCountry?: string, eligibility = "subscribed", subscriptionGroupId?: string, filters: AudienceFilter[] = [], channel: Channel = "email") {
+  subscriptionGroupForChannel(subscriptionGroupId, channel);
   const audienceRule = audienceCondition(audience);
   const clauses: string[] = audienceRule.sql === "1 = 1" ? [] : [audienceRule.sql];
   const values: (string | number)[] = [...audienceRule.values];
@@ -330,7 +384,7 @@ export function estimateAudience(audience = "All Users", country?: string, exclu
   if (country && ["US", "GB", "CN", "SG", "DE"].includes(country)) { clauses.push("u.country = ?"); values.push(country); }
   if (excludeCountry && ["US", "GB", "CN", "SG", "DE"].includes(excludeCountry)) { clauses.push("u.country != ?"); values.push(excludeCountry); }
   const where = clauses.length ? `WHERE ${clauses.join(" AND ")}` : "";
-  const eligible = eligibility === "all" ? "u.reachable = 1" : subscriptionGroupId ? "u.reachable = 1 AND m.state = 'subscribed'" : "u.subscribed = 1 AND u.reachable = 1";
+  const eligible = `u.reachable = 1 AND ${subscriptionCondition(channel, eligibility, subscriptionGroupId)}`;
   const membership = subscriptionGroupId ? "LEFT JOIN subscription_group_memberships m ON m.user_id = u.id AND m.group_id = ?" : "";
   const result = db().prepare(`SELECT count(*) AS matching, sum(CASE WHEN ${eligible} THEN 1 ELSE 0 END) AS reachable FROM users u ${membership} ${where}`).get(...(subscriptionGroupId ? [subscriptionGroupId] : []), ...values) as { matching: number; reachable: number | null };
   const workspace = db().prepare("SELECT count(*) AS total FROM users").get() as { total: number };
@@ -338,7 +392,7 @@ export function estimateAudience(audience = "All Users", country?: string, exclu
 }
 
 function mapUser(row: Record<string, unknown>): UserRecord {
-  return { id: String(row.id), email: String(row.email), firstName: String(row.first_name), country: String(row.country), lifecycle: String(row.lifecycle), subscribed: Boolean(row.subscribed), reachable: Boolean(row.reachable), attributes: parseJson(String(row.attributes_json), {}) };
+  return { id: String(row.id), email: String(row.email), firstName: String(row.first_name), country: String(row.country), lifecycle: String(row.lifecycle), subscribed: Boolean(row.subscribed), emailSubscriptionStatus: String(row.email_subscription_status ?? (row.subscribed ? "subscribed" : "unsubscribed")) as UserRecord["emailSubscriptionStatus"], reachable: Boolean(row.reachable), attributes: parseJson(String(row.attributes_json), {}) };
 }
 
 export function searchUsers(query = "", start = 0, limit = 20) {
@@ -357,9 +411,13 @@ export function listUserAttributeNames() {
 }
 
 export function setUserSubscription(id: string, subscribed: boolean) {
-  const result = db().prepare("UPDATE users SET subscribed = ? WHERE id = ?").run(subscribed ? 1 : 0, id);
+  return setUserEmailSubscriptionStatus(id, subscribed ? "subscribed" : "unsubscribed");
+}
+
+export function setUserEmailSubscriptionStatus(id: string, status: UserRecord["emailSubscriptionStatus"]) {
+  const result = db().prepare("UPDATE users SET subscribed = ?, email_subscription_status = ? WHERE id = ?").run(status === "unsubscribed" ? 0 : 1, status, id);
   if (!result.changes) return null;
-  audit("user", id, "subscription_changed", { subscribed });
+  audit("user", id, "subscription_changed", { status });
   const row = db().prepare("SELECT * FROM users WHERE id = ?").get(id) as Record<string, unknown>;
   return mapUser(row);
 }
@@ -373,7 +431,7 @@ const userField = (row: Record<string, string>, ...keys: string[]) => {
 };
 
 export function importUsers(rows: Array<Record<string, string>>) {
-  const insert = db().prepare("INSERT OR IGNORE INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+  const insert = db().prepare("INSERT OR IGNORE INTO users (id, email, first_name, country, lifecycle, subscribed, reachable, attributes_json, email_subscription_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
   const now = Date.now();
   let imported = 0;
   let skipped = 0;
@@ -384,10 +442,12 @@ export function importUsers(rows: Array<Record<string, string>>) {
     const country = userField(row, "country") || "US";
     const lifecycle = userField(row, "lifecycle", "segment") || "All Users";
     const subscribed = Number(!/^(false|0|no|unsubscribed)$/i.test(userField(row, "subscribed")));
+    const importedStatus = userField(row, "email_subscription_status").replaceAll("-", "_");
+    const emailStatus = ["opted_in", "subscribed", "unsubscribed"].includes(importedStatus) ? importedStatus : subscribed ? "subscribed" : "unsubscribed";
     const reachable = Number(!/^(false|0|no|unreachable)$/i.test(userField(row, "reachable")));
     const attributes: Record<string, string> = {};
-    for (const [key, value] of Object.entries(row)) if (!["id", "user_id", "external_id", "email", "first_name", "country", "lifecycle", "segment", "subscribed", "reachable"].includes(key) && value) attributes[key] = value.trim();
-    const result = insert.run(id, email, firstName, country, lifecycle, subscribed, reachable, JSON.stringify(attributes));
+    for (const [key, value] of Object.entries(row)) if (!["id", "user_id", "external_id", "email", "first_name", "country", "lifecycle", "segment", "subscribed", "reachable", "email_subscription_status"].includes(key) && value) attributes[key] = value.trim();
+    const result = insert.run(id, email, firstName, country, lifecycle, emailStatus === "unsubscribed" ? 0 : 1, reachable, JSON.stringify(attributes), emailStatus);
     if (result.changes) { imported += 1; audit("user", id, "imported", { email }); } else skipped += 1;
   });
   return { imported, skipped };
@@ -427,7 +487,7 @@ export function createSubscriptionGroup(input: { name: string; description?: str
 
 export function updateSubscriptionGroup(id: string, patch: Partial<Pick<SubscriptionGroupRecord, "name" | "description" | "channel" | "status">>) {
   const current = getSubscriptionGroup(id); if (!current) return null;
-  const next = { ...current, ...patch, name: patch.name?.trim() || current.name, updatedAt: now() };
+  const next = { ...current, name: patch.name?.trim() || current.name, description: patch.description ?? current.description, channel: patch.channel ?? current.channel, status: patch.status ?? current.status, updatedAt: now() };
   db().prepare("UPDATE subscription_groups SET name = ?, description = ?, channel = ?, status = ?, updated_at = ? WHERE id = ?").run(next.name, next.description, next.channel, next.status, next.updatedAt, id);
   audit("subscription_group", id, next.status === "Archived" ? "archived" : "updated", { channel: next.channel });
   return getSubscriptionGroup(id);
@@ -458,6 +518,7 @@ function mapPreferenceCenter(row: Record<string, unknown>): PreferenceCenterReco
     id: String(row.id), name: String(row.name), description: String(row.description), groupIds: parseJson(String(row.group_ids_json), []),
     status: row.status as PreferenceCenterRecord["status"], updatedAt: String(row.updated_at),
     config: normalizePreferenceCenterConfig(parseJson(String(row.config_json ?? "{}"), {})), version: Number(row.version ?? 1),
+    publishedVersion: row.published_version == null ? null : Number(row.published_version),
   };
 }
 
@@ -468,9 +529,10 @@ export function getPreferenceCenter(id: string) {
 }
 export function createPreferenceCenter(input: { name: string; description?: string; groupIds?: string[]; status?: PreferenceCenterRecord["status"]; config?: PreferenceCenterConfig }) {
   const name = input.name.trim(); if (!name) throw new Error("Preference center name is required.");
-  const record: PreferenceCenterRecord = { id: uid("pc"), name, description: input.description?.trim() || "", groupIds: input.groupIds ?? [], status: input.status ?? "Draft", updatedAt: now(), config: normalizePreferenceCenterConfig(input.config), version: 1 };
-  db().prepare("INSERT INTO preference_centers (id, name, description, group_ids_json, status, updated_at, config_json, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?)").run(record.id, record.name, record.description, JSON.stringify(record.groupIds), record.status, record.updatedAt, JSON.stringify(record.config), record.version);
-  db().prepare("INSERT INTO preference_center_versions VALUES (?, ?, ?, ?, ?, ?)").run(record.id, record.version, record.name, record.status, JSON.stringify(record.config), record.updatedAt);
+  const status = input.status === "Active" ? "Active" : "Draft";
+  const record: PreferenceCenterRecord = { id: uid("pc"), name, description: input.description?.trim() || "", groupIds: input.groupIds ?? [], status, updatedAt: now(), config: normalizePreferenceCenterConfig(input.config), version: 1, publishedVersion: status === "Active" ? 1 : null };
+  db().prepare("INSERT INTO preference_centers (id, name, description, group_ids_json, status, updated_at, config_json, version, published_version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)").run(record.id, record.name, record.description, JSON.stringify(record.groupIds), record.status, record.updatedAt, JSON.stringify(record.config), record.version, record.publishedVersion);
+  db().prepare("INSERT INTO preference_center_versions (center_id, version, name, status, config_json, created_at, group_ids_json, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)").run(record.id, record.version, record.name, record.status, JSON.stringify(record.config), record.updatedAt, JSON.stringify(record.groupIds), record.description);
   audit("preference_center", record.id, "created", { groupCount: record.groupIds.length }); return record;
 }
 
@@ -479,14 +541,40 @@ export function updatePreferenceCenter(id: string, patch: Partial<Pick<Preferenc
   const name = patch.name?.trim() || current.name;
   const description = patch.description === undefined ? current.description : patch.description.trim();
   const groupIds = patch.groupIds ?? current.groupIds;
-  const status = patch.status ?? current.status;
+  const publishNow = patch.status === "Active";
+  const status = patch.status === "Archived" ? "Archived" : publishNow ? "Active" : current.publishedVersion && current.status === "Active" ? "Active" : "Draft";
   const config = patch.config ? normalizePreferenceCenterConfig(patch.config) : current.config;
   const updatedAt = now();
   const version = current.version + 1;
-  db().prepare("UPDATE preference_centers SET name = ?, description = ?, group_ids_json = ?, status = ?, updated_at = ?, config_json = ?, version = ? WHERE id = ?").run(name, description, JSON.stringify(groupIds), status, updatedAt, JSON.stringify(config), version, id);
-  db().prepare("INSERT INTO preference_center_versions VALUES (?, ?, ?, ?, ?, ?)").run(id, version, name, status, JSON.stringify(config), updatedAt);
+  const publishedVersion = publishNow ? version : current.publishedVersion;
+  db().prepare("UPDATE preference_centers SET name = ?, description = ?, group_ids_json = ?, status = ?, updated_at = ?, config_json = ?, version = ?, published_version = ? WHERE id = ?").run(name, description, JSON.stringify(groupIds), status, updatedAt, JSON.stringify(config), version, publishedVersion, id);
+  db().prepare("INSERT INTO preference_center_versions (center_id, version, name, status, config_json, created_at, group_ids_json, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)").run(id, version, name, publishNow ? "Active" : "Draft", JSON.stringify(config), updatedAt, JSON.stringify(groupIds), description);
   audit("preference_center", id, "updated", { groupCount: groupIds.length, status, version });
-  return { id, name, description, groupIds, status, updatedAt, config, version } satisfies PreferenceCenterRecord;
+  return { id, name, description, groupIds, status, updatedAt, config, version, publishedVersion } satisfies PreferenceCenterRecord;
+}
+
+export function publishPreferenceCenter(id: string) {
+  const current = getPreferenceCenter(id); if (!current) return null;
+  const updatedAt = now();
+  db().prepare("UPDATE preference_centers SET status = 'Active', published_version = ?, updated_at = ? WHERE id = ?").run(current.version, updatedAt, id);
+  db().prepare("UPDATE preference_center_versions SET status = 'Active' WHERE center_id = ? AND version = ?").run(id, current.version);
+  audit("preference_center", id, "published", { version: current.version });
+  return getPreferenceCenter(id);
+}
+
+export function archivePreferenceCenter(id: string) {
+  const current = getPreferenceCenter(id); if (!current) return null;
+  db().prepare("UPDATE preference_centers SET status = 'Archived', updated_at = ? WHERE id = ?").run(now(), id);
+  audit("preference_center", id, "archived", { publishedVersion: current.publishedVersion });
+  return getPreferenceCenter(id);
+}
+
+function getPublishedPreferenceCenter(id: string) {
+  const center = getPreferenceCenter(id);
+  if (!center || center.status !== "Active" || center.publishedVersion === null) return null;
+  const version = db().prepare("SELECT * FROM preference_center_versions WHERE center_id = ? AND version = ?").get(id, center.publishedVersion) as Record<string, unknown> | undefined;
+  if (!version) return null;
+  return { ...center, name: String(version.name), description: String(version.description), groupIds: parseJson(String(version.group_ids_json), [] as string[]), config: normalizePreferenceCenterConfig(parseJson(String(version.config_json), {})), version: center.publishedVersion };
 }
 
 export function listPreferenceCenterVersions(id: string): PreferenceCenterVersion[] {
@@ -496,35 +584,57 @@ export function listPreferenceCenterVersions(id: string): PreferenceCenterVersio
   });
 }
 
-function preferenceCenterToken(centerId: string, userId: string) { return createHash("sha256").update(`local-preference-center:${centerId}:${userId}`).digest("hex").slice(0, 28); }
+function preferenceCenterSecret() {
+  const conn = db();
+  const existing = conn.prepare("SELECT value FROM demo_state WHERE key = 'preference_center_secret'").get() as { value: string } | undefined;
+  if (existing) return existing.value;
+  const secret = randomBytes(32).toString("hex");
+  conn.prepare("INSERT OR IGNORE INTO demo_state VALUES ('preference_center_secret', ?)").run(secret);
+  return (conn.prepare("SELECT value FROM demo_state WHERE key = 'preference_center_secret'").get() as { value: string }).value;
+}
+function preferenceCenterToken(centerId: string, userId: string) {
+  const expires = Math.floor(Date.now() / 1000) + 30 * 86400;
+  const signature = createHmac("sha256", preferenceCenterSecret()).update(`${centerId}:${userId}:${expires}`).digest("hex");
+  return `${expires}.${signature}`;
+}
+function validPreferenceCenterToken(centerId: string, userId: string, token: string | null | undefined) {
+  if (!token) return false;
+  const [expiresText, signature] = token.split(".");
+  const expires = Number(expiresText);
+  if (!Number.isSafeInteger(expires) || expires <= Math.floor(Date.now() / 1000) || !signature || !/^[a-f0-9]{64}$/.test(signature)) return false;
+  const expected = createHmac("sha256", preferenceCenterSecret()).update(`${centerId}:${userId}:${expires}`).digest();
+  return timingSafeEqual(expected, Buffer.from(signature, "hex"));
+}
 export function createPreferenceCenterLink(centerId: string, userId: string) {
-  if (!getPreferenceCenter(centerId) || !getUser(userId)) return null;
+  if (!getPublishedPreferenceCenter(centerId) || !getUser(userId)) return null;
   return { centerId, userId, token: preferenceCenterToken(centerId, userId) };
 }
 export function getPublicPreferenceCenter(centerId: string, userId: string, token?: string | null) {
-  const center = getPreferenceCenter(centerId); const user = getUser(userId);
-  if (!center || !user || center.status !== "Active") return null;
-  if (token && token !== preferenceCenterToken(centerId, userId)) return null;
+  const center = getPublishedPreferenceCenter(centerId); const user = getUser(userId);
+  if (!center || !user) return null;
+  if (!validPreferenceCenterToken(centerId, userId, token)) return null;
   const groups = center.groupIds.map(id => getSubscriptionGroup(id)).filter((group): group is SubscriptionGroupRecord => group !== null).filter(group => group.channel === "Email" && group.status === "Active").map(group => {
     const membership = db().prepare("SELECT state FROM subscription_group_memberships WHERE group_id = ? AND user_id = ?").get(group.id, userId) as { state?: SubscriptionState } | undefined;
     return { ...group, state: membership?.state ?? "unsubscribed" };
   });
   const eventId = uid("pcevt");
   db().prepare("INSERT INTO preference_center_events VALUES (?, ?, ?, 'viewed', ?, ?)").run(eventId, centerId, userId, now(), JSON.stringify({ version: center.version }));
-  return { center, user, groups };
+  return { center, user: { id: user.id, email: user.email, firstName: user.firstName, emailSubscriptionStatus: user.emailSubscriptionStatus }, groups };
 }
-export function submitPublicPreferenceCenter(centerId: string, userId: string, token: string | null | undefined, states: Record<string, boolean>) {
-  const center = getPreferenceCenter(centerId); const user = getUser(userId);
-  if (!center || !user || center.status !== "Active" || token !== preferenceCenterToken(centerId, userId)) return null;
+export function submitPublicPreferenceCenter(centerId: string, userId: string, token: string | null | undefined, states: Record<string, boolean>, action: "groups" | "global_unsubscribe" = "groups") {
+  const center = getPublishedPreferenceCenter(centerId); const user = getUser(userId);
+  if (!center || !user || !validPreferenceCenterToken(centerId, userId, token)) return null;
   const groupIds = center.groupIds.filter(id => {
     const group = getSubscriptionGroup(id); return group?.channel === "Email" && group.status === "Active";
   });
+  if (action === "groups" && groupIds.some(id => typeof states[id] !== "boolean")) throw new Error("Provide a choice for every listed subscription group.");
   db().exec("BEGIN");
   try {
-    for (const groupId of groupIds) setSubscriptionMember(groupId, userId, states[groupId] ? "subscribed" : "unsubscribed");
+    if (action === "global_unsubscribe") setUserSubscription(userId, false);
+    for (const groupId of groupIds) setSubscriptionMember(groupId, userId, action === "global_unsubscribe" || !states[groupId] ? "unsubscribed" : "subscribed");
     const eventId = uid("pcevt"); const timestamp = now();
-    db().prepare("INSERT INTO preference_center_events VALUES (?, ?, ?, 'submitted', ?, ?)").run(eventId, centerId, userId, timestamp, JSON.stringify({ version: center.version, states }));
-    audit("preference_center", centerId, "submitted", { userId, subscribedGroups: groupIds.filter(id => states[id]).length });
+    db().prepare("INSERT INTO preference_center_events VALUES (?, ?, ?, 'submitted', ?, ?)").run(eventId, centerId, userId, timestamp, JSON.stringify({ version: center.version, states, action }));
+    audit("preference_center", centerId, "submitted", { userId, action, subscribedGroups: action === "groups" ? groupIds.filter(id => states[id]).length : 0 });
     db().exec("COMMIT");
     return { updatedAt: timestamp, groupIds };
   } catch (error) { db().exec("ROLLBACK"); throw error; }
@@ -579,19 +689,21 @@ export async function launchCampaign(id: string) {
     const latest = conn.prepare("SELECT id, eligible_count, delivered_count, failed_count FROM execution_runs WHERE campaign_id = ? ORDER BY created_at DESC LIMIT 1").get(id) as { id: string; eligible_count: number; delivered_count: number; failed_count: number } | undefined;
     return { campaign, run: { id: latest?.id ?? "existing", eligible: latest?.eligible_count ?? 0, delivered: latest?.delivered_count ?? 0, failed: latest?.failed_count ?? 0, alreadyLaunched: true } };
   }
-  const issues = campaignValidationIssues(campaign);
+  const issues = [...campaignValidationIssues(campaign), ...(campaign.channel === "email" ? emailSendingIssues(campaign, getEmailPreferences().data) : [])];
   if (issues.length) throw new Error(issues.join(" "));
   const audience = audienceCondition(campaign.audience ?? "All Users");
   const segmentFilters = savedSegmentFilters(campaign.audience);
   const filterClauses = audienceFilterClauses(segmentFilters);
   const country = typeof campaign.config.audienceCountry === "string" && ["US", "GB", "CN", "SG", "DE"].includes(campaign.config.audienceCountry) ? campaign.config.audienceCountry : null;
   const excludedCountry = typeof campaign.config.audienceExcludeCountry === "string" && ["US", "GB", "CN", "SG", "DE"].includes(campaign.config.audienceExcludeCountry) ? campaign.config.audienceExcludeCountry : null;
-  const subscriptionGroupId = typeof campaign.config.subscriptionGroupId === "string" ? campaign.config.subscriptionGroupId : null;
+  const subscriptionGroupId = typeof campaign.config.subscriptionGroupId === "string" && campaign.config.subscriptionGroupId ? campaign.config.subscriptionGroupId : null;
+  subscriptionGroupForChannel(subscriptionGroupId ?? undefined, campaign.channel);
+  if ((campaign.channel === "sms" || campaign.channel === "whatsapp") && !subscriptionGroupId) throw new Error("Select an active subscription group for this channel.");
   const allClauses = [audience.sql, ...filterClauses.clauses];
   if (country) allClauses.push("u.country = ?");
   if (excludedCountry) allClauses.push("u.country != ?");
   const allValues = [...audience.values, ...filterClauses.values, ...(country ? [country] : []), ...(excludedCountry ? [excludedCountry] : [])];
-  const users = conn.prepare(`SELECT u.id, u.reachable, u.subscribed, u.email${subscriptionGroupId ? ", m.state AS subscription_state" : ""} FROM users u ${subscriptionGroupId ? "LEFT JOIN subscription_group_memberships m ON m.user_id = u.id AND m.group_id = ?" : ""} WHERE ${allClauses.join(" AND ")} ORDER BY u.id`).all(...(subscriptionGroupId ? [subscriptionGroupId] : []), ...allValues) as { id: string; reachable: number; subscribed: number; email: string; subscription_state?: SubscriptionState }[];
+  const users = conn.prepare(`SELECT u.id, u.reachable, u.subscribed, u.email, u.email_subscription_status${subscriptionGroupId ? ", m.state AS subscription_state" : ""} FROM users u ${subscriptionGroupId ? "LEFT JOIN subscription_group_memberships m ON m.user_id = u.id AND m.group_id = ?" : ""} WHERE ${allClauses.join(" AND ")} ORDER BY u.id`).all(...(subscriptionGroupId ? [subscriptionGroupId] : []), ...allValues) as { id: string; reachable: number; subscribed: number; email: string; email_subscription_status: string; subscription_state?: SubscriptionState }[];
   // Suppression list entries exclude matching emails and whole domains from sends.
   const suppressionEntries = listResources("suppression-lists").map(row => row.name.toLowerCase().replace(/^@/, ""));
   const isSuppressed = (email: string) => suppressionEntries.some(entry => email.toLowerCase() === entry || email.toLowerCase().endsWith(`@${entry}`));
@@ -607,12 +719,15 @@ export async function launchCampaign(id: string) {
     const rows = conn.prepare(`SELECT user_id, count(*) AS sent FROM message_events WHERE event_type = 'delivered' AND created_at >= ?${channelClause} GROUP BY user_id`).all(cutoff, ...(rule.kind === "All channels" ? [] : [rule.kind])) as Array<{ user_id: string; sent: number }>;
     for (const row of rows) if (row.sent >= rule.limit) freqCappedUsers.add(row.user_id);
   }
-  const requireSubscription = campaign.config.subscribeEligibility !== "all";
   const controlGroup = Math.min(100, Math.max(0, Number(campaign.config.controlGroup ?? 20)));
   const configuredMaxUsers = campaign.config.limitVolume ? Math.max(1, Number(campaign.config.maxUsers ?? 100)) : Infinity;
   const maxUsers = campaign.channel === "webhook" ? Math.min(configuredMaxUsers, Math.max(1, Number(process.env.WEBHOOK_MAX_DELIVERIES_PER_RUN ?? 100))) : configuredMaxUsers;
-  const subscribed = (user: { subscribed: number; subscription_state?: SubscriptionState }) => subscriptionGroupId ? user.subscription_state === "subscribed" : Boolean(user.subscribed);
-  const eligible = users.filter(user => user.reachable && (!requireSubscription || subscribed(user)));
+  const subscribed = (user: { email_subscription_status: string; subscription_state?: SubscriptionState }) => {
+    if (campaign.channel === "email") return user.email_subscription_status !== "unsubscribed" && (campaign.config.subscribeEligibility !== "opted-in" || user.email_subscription_status === "opted_in") && (!subscriptionGroupId || user.subscription_state === "subscribed");
+    if (campaign.channel === "sms" || campaign.channel === "whatsapp") return user.subscription_state === "subscribed";
+    return true;
+  };
+  const eligible = users.filter(user => user.reachable && subscribed(user));
   // Quiet hours defer deliveries whose designated send time falls inside the window.
   const delivery = (campaign.config.delivery ?? {}) as Record<string, unknown>;
   const quietActive = delivery.quietHours === true && typeof delivery.quietStart === "string" && typeof delivery.quietEnd === "string";
@@ -627,7 +742,7 @@ export async function launchCampaign(id: string) {
   let delivered = 0; let failed = 0; let webhookProcessed = 0; let deferredCount = 0; let frequencyCapped = 0; let suppressedCount = 0;
   const webhookVariants = campaign.channel === "webhook" ? normalizeWebhookVariants(campaign) : [];
   for (const user of users) {
-    const deliverable = user.reachable && (!requireSubscription || subscribed(user));
+    const deliverable = user.reachable && subscribed(user);
     const inControl = deliverable && createHash("sha256").update(`${id}:${user.id}`).digest()[0] / 256 * 100 < controlGroup;
     let eventType = !deliverable ? subscribed(user) ? "unreachable" : "suppressed"
       : isSuppressed(user.email) ? "suppressed"
@@ -655,6 +770,10 @@ export async function launchCampaign(id: string) {
         eventData = { ...eventData, webhook: recordBlockedWebhook(id, user.id, variant, error, false, context) };
         eventType = "failed";
       }
+    }
+    if (eventType === "delivered" && campaign.channel === "email") {
+      try { eventData = { ...eventData, simulated: true, message: prepareEmailMessage(campaign, user.id, "campaign") }; }
+      catch (error) { eventType = "failed"; eventData = { ...eventData, error: error instanceof Error ? error.message : "Email compilation failed" }; }
     }
     insertEvent.run(uid("evt"), id, campaign.channel, user.id, eventType, timestamp, JSON.stringify(eventData));
     if (eventType === "delivered") {
@@ -696,9 +815,12 @@ export async function sendTestCampaign(id: string, input: { recipient?: string; 
     audit("campaign", id, "webhook_test_sent", { recipient, delivered: result.delivered, statusCode: result.attempts.at(-1)?.statusCode ?? null });
     return { recipient, campaign: campaign.name, channel: campaign.channel, createdAt: timestamp, webhook: safeResult, capability: webhookDeliveryCapability() };
   }
-  db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), id, campaign.channel, "test_user", "delivered", timestamp, JSON.stringify({ test: true, recipient }));
+  const issues = campaign.channel === "email" ? emailSendingIssues(campaign, getEmailPreferences().data) : []; if (issues.length) throw new Error(issues.join(" "));
+  const previewUser = options.mode === "random" ? randomCatalogPreviewUser() : searchUsers(recipient, 0, 1).data[0];
+  const message = campaign.channel === "email" ? prepareEmailMessage(campaign, previewUser?.id ?? "", "test", options.customUser) : undefined;
+  db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), id, campaign.channel, "test_user", "test_prepared", timestamp, JSON.stringify({ test: true, recipient, simulated: true, message }));
   audit("campaign", id, "test_sent", { recipient });
-  return { recipient, campaign: campaign.name, channel: campaign.channel, createdAt: timestamp };
+  return { recipient, campaign: campaign.name, channel: campaign.channel, createdAt: timestamp, message, capability: { mode: "simulation", delivered: false, reason: "No email provider is configured. The compiled test message is available for preview." } };
 }
 
 // API campaigns receive externally-sent message events for attribution.
@@ -710,7 +832,17 @@ export function recordExternalEvent(campaignId: string, input: { userId?: string
   if (!event) throw new Error(`event must be one of: ${allowed.join(", ")}`);
   const userId = String(input.userId ?? "").trim() || "external_user";
   const timestamp = now();
-  db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), campaignId, campaign.channel, userId, event, timestamp, JSON.stringify({ external: true, attributes: input.attributes ?? {} }));
+  const attributes = input.attributes ?? {};
+  const bot = event === "clicked" && isBotClick(attributes);
+  const filtered = bot && getEmailPreferences().data.removeBotClicks;
+  db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), campaignId, campaign.channel, userId, filtered ? "bot_clicked" : event, timestamp, JSON.stringify({ external: true, bot, filtered, attributes }));
+  if (event === "clicked" && !filtered && typeof attributes.alias === "string") {
+    const alias = listResources("link-aliases").find(row => row.name === attributes.alias && row.data.campaignId === campaignId && row.status === "Active");
+    const user = getUser(userId); if (alias && user) {
+      const clicks = Array.isArray(user.attributes.recentLinkClicks) ? user.attributes.recentLinkClicks : [];
+      db().prepare("UPDATE users SET attributes_json = ? WHERE id = ?").run(JSON.stringify({ ...user.attributes, recentLinkClicks: [{ alias: alias.name, url: alias.data.url, clickedAt: timestamp }, ...clicks].slice(0,100) }), userId);
+    }
+  }
   audit("campaign", campaignId, "external_event", { userId, event });
   return { recorded: true, campaign: campaign.name, event, userId, createdAt: timestamp };
 }
@@ -724,17 +856,17 @@ export function listWebhookAttempts(campaignId?: string, limit = 100) {
 
 export { webhookDeliveryCapability };
 
-export function listResources(type: string, q = "") {
+export function listResources(type: string, q = ""): ResourceRecord[] {
   const rows = db().prepare("SELECT * FROM resources WHERE type = ? AND lower(name) LIKE lower(?) ORDER BY updated_at DESC").all(type, `%${q}%`) as Record<string, unknown>[];
   return rows.map(row => ({ id: String(row.id), type: String(row.type), name: String(row.name), status: String(row.status), description: String(row.description), updatedAt: String(row.updated_at), data: parseJson(String(row.data_json), {}) }));
 }
 export function createResource(input: Pick<ResourceRecord, "type" | "name"> & Partial<ResourceRecord>) {
-  const record: ResourceRecord = { id: uid("res"), type: input.type, name: input.name, status: input.status ?? "Draft", description: input.description ?? "New local resource", updatedAt: now(), data: input.data ?? {} };
+  const record: ResourceRecord = { id: uid("res"), type: input.type, name: input.name, status: input.status ?? "Draft", description: input.description ?? "New local resource", updatedAt: now(), data: input.type === "email-templates" ? { ...emailPreferenceCampaignDefaults(getEmailPreferences().data), ...input.data } : input.type === "content-blocks" ? { emailBlockTheme: getEmailPreferences().data.editor, width: getEmailPreferences().data.editor.blockWidthMode === "full" ? "100%" : getEmailPreferences().data.editor.blockWidth, ...input.data } : input.data ?? {} };
   db().prepare("INSERT INTO resources VALUES (?, ?, ?, ?, ?, ?, ?)").run(record.id, record.type, record.name, record.status, record.description, record.updatedAt, JSON.stringify(record.data));
   audit("resource", record.id, "created", { type: record.type }); return record;
 }
 
-export function getResource(id: string) {
+export function getResource(id: string): ResourceRecord | null {
   const row = db().prepare("SELECT * FROM resources WHERE id = ?").get(id) as Record<string, unknown> | undefined;
   return row ? { id: String(row.id), type: String(row.type), name: String(row.name), status: String(row.status), description: String(row.description), updatedAt: String(row.updated_at), data: parseJson(String(row.data_json), {}) } : null;
 }
@@ -742,6 +874,7 @@ export function getResource(id: string) {
 export function updateResource(id: string, input: { name?: string; status?: string; description?: string; data?: Record<string, unknown> }, expectedUpdatedAt?: string) {
   const existing = getResource(id);
   if (!existing) throw new Error("Resource not found");
+  if (existing.type === "email-preferences") throw new Error("Use the versioned email-preferences endpoint to change workspace settings.");
   if (expectedUpdatedAt !== undefined && expectedUpdatedAt !== existing.updatedAt) throw new Error("Resource changed in another tab. Reload before saving.");
   const updatedAt = now();
   db().prepare("UPDATE resources SET name = ?, status = ?, description = ?, updated_at = ?, data_json = ? WHERE id = ?")
@@ -753,22 +886,61 @@ export function updateResource(id: string, input: { name?: string; status?: stri
 export function deleteResource(id: string) {
   const existing = getResource(id);
   if (!existing) throw new Error("Resource not found");
+  if (existing.type === "email-preferences") throw new Error("Use the versioned email-preferences endpoint to change workspace settings.");
   db().prepare("DELETE FROM resources WHERE id = ?").run(id);
   audit("resource", id, "archived", { type: existing.type });
   return existing;
 }
 
+export function getEmailPreferences() {
+  const existing = listResources("email-preferences")[0];
+  return { data: normalizeEmailPreferences(existing?.data), updatedAt: existing?.updatedAt ?? null };
+}
+
+export function saveEmailPreferences(data: EmailPreferences, expectedUpdatedAt: string | null) {
+  const errors = validateEmailPreferences(data);
+  if (errors.length) throw new Error(errors.join("\n"));
+  const conn = db();
+  conn.exec("BEGIN IMMEDIATE");
+  try {
+    const existing = listResources("email-preferences")[0];
+    if ((existing?.updatedAt ?? null) !== expectedUpdatedAt) throw new Error("Email preferences changed in another tab. Reload before saving.");
+    const updatedAt = now();
+    if (existing) {
+      conn.prepare("UPDATE resources SET data_json = ?, updated_at = ? WHERE id = ?").run(JSON.stringify(data), updatedAt, existing.id);
+    } else {
+      conn.prepare("INSERT INTO resources VALUES (?, ?, ?, ?, ?, ?, ?)").run("workspace_email_preferences", "email-preferences", "Email Preferences", "Active", "Workspace email preferences", updatedAt, JSON.stringify(data));
+    }
+    if (data.removeBotClicks) conn.exec("UPDATE message_events SET event_type = 'bot_clicked' WHERE event_type = 'clicked' AND (json_extract(data_json, '$.bot') = 1 OR json_extract(data_json, '$.attributes.bot') = 1 OR json_extract(data_json, '$.attributes.isBot') = 1)");
+    audit("email_preferences", "workspace_email_preferences", "updated", {});
+    conn.exec("COMMIT");
+    return { data, updatedAt };
+  } catch (error) { conn.exec("ROLLBACK"); throw error; }
+}
+
 const localCanvasId = "canvas_local_main";
+function resolveCanvasLinkedMessages(graph: CanvasGraph): CanvasGraph {
+  return { ...graph, nodes: graph.nodes.map(node => {
+    if (node.kind !== "message" || !node.config?.linkedCampaignId) return node;
+    const campaign = getCampaign(node.config.linkedCampaignId);
+    if (!campaign || campaign.channel !== node.config.channel) return node;
+    return { ...node, config: { ...node.config, ...campaign.config, subject: campaign.subject ?? node.config.subject, message: campaign.body ?? node.config.message, linkedCampaignId: campaign.id } };
+  }) };
+}
 export function getCanvasWorkspace() {
   const resource = getResource(localCanvasId);
   const rows = db().prepare("SELECT * FROM canvas_runs WHERE canvas_id = ? ORDER BY created_at DESC LIMIT 8").all(localCanvasId) as Record<string, unknown>[];
-  const runs: CanvasRun[] = rows.map(row => ({ id: String(row.id), createdAt: String(row.created_at), entered: Number(row.entered_count), completed: Number(row.completed_count), messages: Number(row.message_count), traces: parseJson(String(row.traces_json), [] as CanvasTrace[]) }));
-  return { graph: resource?.data ?? null, updatedAt: resource?.updatedAt ?? null, runs };
+  const runs: CanvasRun[] = rows.map(row => {
+    const due = db().prepare("SELECT min(due_at) AS due_at FROM canvas_pending_steps WHERE run_id = ?").get(String(row.id)) as { due_at: string | null };
+    return { id: String(row.id), createdAt: String(row.created_at), entered: Number(row.entered_count), completed: Number(row.completed_count), messages: Number(row.message_count), traces: parseJson(String(row.traces_json), [] as CanvasTrace[]), nextDueAt: due.due_at };
+  });
+  return { graph: resource?.data ? resolveCanvasLinkedMessages(resource.data as CanvasGraph) : null, updatedAt: resource?.updatedAt ?? null, runs };
 }
 
 export function saveCanvasGraph(graph: CanvasGraph, expectedUpdatedAt?: string | null) {
   const existing = getResource(localCanvasId);
   if (existing && expectedUpdatedAt !== undefined && expectedUpdatedAt !== existing.updatedAt) throw new Error("Canvas draft changed in another tab. Reload before saving.");
+  graph = resolveCanvasLinkedMessages({ ...graph, nodes: graph.nodes.map(node => node.kind === "message" && node.config?.channel === "email" ? { ...node, config: { ...emailPreferenceCampaignDefaults(getEmailPreferences().data), ...((existing?.data as unknown as CanvasGraph)?.nodes?.find(saved => saved.id === node.id)?.config ?? {}), ...node.config } } : node) });
   const updatedAt = now();
   db().prepare("INSERT INTO resources VALUES (?, 'canvas', ?, 'Draft', ?, ?, ?) ON CONFLICT(id) DO UPDATE SET updated_at=excluded.updated_at, data_json=excluded.data_json")
     .run(localCanvasId, "Local canvas draft", "Saved visual journey graph", updatedAt, JSON.stringify(graph));
@@ -776,44 +948,109 @@ export function saveCanvasGraph(graph: CanvasGraph, expectedUpdatedAt?: string |
   return { graph, updatedAt };
 }
 
+function advanceCanvasUser(graph: CanvasGraph, runId: string, userId: string, startNodeId: string, timestamp: string, steps: CanvasTrace["steps"]) {
+  let current = graph.nodes.find(node => node.id === startNodeId);
+  let messages = 0;
+  while (current) {
+    steps.push({ nodeId: current.id, label: current.label, kind: current.kind, at: timestamp });
+    const routes = graph.edges.filter(([from]) => from === current!.id);
+    if (current.kind === "delay" && routes[0]) {
+      const dueAt = new Date(new Date(timestamp).getTime() + Number(current.config?.durationHours) * 3_600_000).toISOString();
+      db().prepare("INSERT INTO canvas_pending_steps VALUES (?, ?, ?, ?) ON CONFLICT(run_id,user_id) DO UPDATE SET next_node_id=excluded.next_node_id, due_at=excluded.due_at").run(runId, userId, routes[0][1], dueAt);
+      return { completed: false, messages };
+    }
+    if (current.kind === "update" && current.config?.attribute) {
+      if (current.config.attribute === "subscribed") {
+        if (current.config.value !== "true" && current.config.value !== "false") throw new Error("Set subscribed to true or false before launching.");
+        setUserSubscription(userId, current.config.value === "true");
+      }
+      else if (current.config.attribute === "country" || current.config.attribute === "lifecycle") db().prepare(`UPDATE users SET ${current.config.attribute} = ? WHERE id = ?`).run(current.config.value ?? "", userId);
+      else {
+        const user = getUser(userId);
+        if (user) db().prepare("UPDATE users SET attributes_json = ? WHERE id = ?").run(JSON.stringify({ ...user.attributes, [current.config.attribute]: current.config.value }), userId);
+      }
+    }
+    if (current.kind === "message") {
+      const channel = (current.config?.channel ?? "email") as Channel;
+      const groupId = typeof current.config?.subscriptionGroupId === "string" ? current.config.subscriptionGroupId : undefined;
+      const group = groupId ? getSubscriptionGroup(groupId) : null;
+      const user = getUser(userId);
+      const expectedChannel = channel === "email" ? "Email" : channel === "sms" ? "SMS" : channel === "whatsapp" ? "WhatsApp" : null;
+      const member = group ? db().prepare("SELECT state FROM subscription_group_memberships WHERE group_id = ? AND user_id = ?").get(group.id, userId) as { state: SubscriptionState } | undefined : undefined;
+      const eligible = Boolean(user?.reachable) && (channel !== "email" || user?.emailSubscriptionStatus !== "unsubscribed")
+        && (channel !== "sms" && channel !== "whatsapp" || Boolean(groupId))
+        && (!groupId || group?.status === "Active" && group.channel === expectedChannel && member?.state === "subscribed");
+      const eventData = eligible && channel === "email"
+        ? { canvasRunId: runId, nodeId: current.id, simulated: true, message: prepareEmailMessage({ subject: current.config?.subject, body: current.config?.message, config: current.config }, userId, "campaign") }
+        : { canvasRunId: runId, nodeId: current.id, simulated: true, reason: eligible ? undefined : "subscription_or_reachability" };
+      db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), localCanvasId, channel, userId, eligible ? "delivered" : "suppressed", timestamp, JSON.stringify(eventData));
+      if (eligible) messages += 1;
+    }
+    const user = getUser(userId);
+    const condition = current.kind === "branch" && current.config?.attribute
+      ? String(current.config.attribute === "subscribed" ? user?.subscribed : current.config.attribute === "country" ? user?.country : user?.lifecycle) === current.config.value : true;
+    const nextId = routes[current.kind === "branch" && !condition ? 1 : 0]?.[1];
+    current = graph.nodes.find(node => node.id === nextId);
+  }
+  return { completed: true, messages };
+}
+
 export function launchCanvasGraph(): CanvasRun {
   const saved = getResource(localCanvasId);
   if (!saved) throw new Error("Save the Canvas draft before launching.");
-  const graph = saved.data as CanvasGraph;
-  const issues = validateCanvasGraph(graph);
+  const graph = resolveCanvasLinkedMessages(saved.data as CanvasGraph);
+  const issues = [...validateCanvasGraph(graph), ...graph.nodes.filter(node => node.kind === "message" && node.config?.channel === "email").flatMap(node => emailSendingIssues({ config: node.config }, getEmailPreferences().data))];
   if (issues.length) throw new Error(issues.join(" "));
-  const users = db().prepare("SELECT id, country, lifecycle, subscribed FROM users WHERE reachable = 1 AND subscribed = 1 ORDER BY id LIMIT 10").all() as { id: string; country: string; lifecycle: string; subscribed: number }[];
-  const runId = uid("canvasrun"); const timestamp = now();
-  let messages = 0;
+  const timestamp = getDemoState().simulatedTime;
+  const entry = graph.nodes.find(node => node.kind === "entry")!;
+  const reEntry = entry.config?.reEntry ?? "none";
+  const cutoff = reEntry === "after1d" ? 86_400_000 : reEntry === "after7d" ? 7 * 86_400_000 : 0;
+  const candidates = db().prepare("SELECT id FROM users WHERE reachable = 1 ORDER BY id LIMIT 100").all() as { id: string }[];
+  const users = candidates.filter(user => {
+    const history = db().prepare("SELECT last_entered_at FROM canvas_entry_history WHERE canvas_id = ? AND user_id = ?").get(localCanvasId, user.id) as { last_entered_at: string } | undefined;
+    const pending = db().prepare("SELECT 1 FROM canvas_pending_steps p JOIN canvas_runs r ON r.id = p.run_id WHERE r.canvas_id = ? AND p.user_id = ? LIMIT 1").get(localCanvasId, user.id);
+    return !pending && (!history || reEntry === "always" || cutoff > 0 && new Date(timestamp).getTime() - new Date(history.last_entered_at).getTime() >= cutoff);
+  }).slice(0, 10);
+  const runId = uid("canvasrun");
+  let messages = 0; let completed = 0;
   const traces: CanvasTrace[] = [];
-  const insertEvent = db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)");
   db().exec("BEGIN");
   try {
     for (const user of users) {
+      db().prepare("INSERT INTO canvas_entry_history VALUES (?, ?, ?) ON CONFLICT(canvas_id,user_id) DO UPDATE SET last_entered_at=excluded.last_entered_at").run(localCanvasId, user.id, timestamp);
       const steps: CanvasTrace["steps"] = [];
-      let current = graph.nodes.find(node => node.kind === "entry")!;
-      while (current) {
-        steps.push({ nodeId: current.id, label: current.label, kind: current.kind, at: timestamp });
-        if (current.kind === "message") {
-          insertEvent.run(uid("evt"), localCanvasId, current.config?.channel ?? "email", user.id, "delivered", timestamp, JSON.stringify({ canvasRunId: runId, nodeId: current.id, simulated: true }));
-          messages += 1;
-        }
-        const routes = graph.edges.filter(([from]) => from === current.id);
-        const condition = current.kind === "branch" && current.config?.attribute
-          ? String(user[current.config.attribute as keyof typeof user]) === current.config.value : true;
-        const nextId = routes[current.kind === "branch" && !condition ? 1 : 0]?.[1];
-        const next = graph.nodes.find(node => node.id === nextId);
-        if (!next) break;
-        current = next;
-      }
+      const result = advanceCanvasUser(graph, runId, user.id, entry.id, timestamp, steps);
+      messages += result.messages;
+      if (result.completed) completed += 1;
       traces.push({ userId: user.id, steps });
     }
-    const run: CanvasRun = { id: runId, createdAt: timestamp, entered: users.length, completed: traces.length, messages, traces };
+    const run: CanvasRun = { id: runId, createdAt: timestamp, entered: users.length, completed, messages, traces };
     db().prepare("INSERT INTO canvas_runs VALUES (?, ?, ?, ?, ?, ?, ?, ?)").run(run.id, localCanvasId, timestamp, run.entered, run.completed, run.messages, JSON.stringify(graph), JSON.stringify(traces));
-    audit("canvas", localCanvasId, "launched", { runId, entered: run.entered, messages });
+    audit("canvas", localCanvasId, "launched", { runId, entered: run.entered, completed, messages });
     db().exec("COMMIT");
     return run;
   } catch (error) { db().exec("ROLLBACK"); throw error; }
+}
+
+function processDueCanvasSteps(timestamp: string) {
+  const pending = db().prepare("SELECT run_id, user_id, next_node_id FROM canvas_pending_steps WHERE due_at <= ? ORDER BY due_at, run_id, user_id").all(timestamp) as Array<{ run_id: string; user_id: string; next_node_id: string }>;
+  let resumed = 0;
+  for (const job of pending) {
+    db().exec("BEGIN");
+    try {
+      const row = db().prepare("SELECT * FROM canvas_runs WHERE id = ?").get(job.run_id) as Record<string, unknown> | undefined;
+      if (!row) { db().prepare("DELETE FROM canvas_pending_steps WHERE run_id = ? AND user_id = ?").run(job.run_id, job.user_id); db().exec("COMMIT"); continue; }
+      const graph = parseJson(String(row.snapshot_json), { nodes: [], edges: [] } as CanvasGraph);
+      const traces = parseJson(String(row.traces_json), [] as CanvasTrace[]);
+      const trace = traces.find(item => item.userId === job.user_id);
+      db().prepare("DELETE FROM canvas_pending_steps WHERE run_id = ? AND user_id = ?").run(job.run_id, job.user_id);
+      const result = advanceCanvasUser(graph, job.run_id, job.user_id, job.next_node_id, timestamp, trace?.steps ?? []);
+      db().prepare("UPDATE canvas_runs SET completed_count = completed_count + ?, message_count = message_count + ?, traces_json = ? WHERE id = ?").run(result.completed ? 1 : 0, result.messages, JSON.stringify(traces), job.run_id);
+      resumed += 1;
+      db().exec("COMMIT");
+    } catch (error) { db().exec("ROLLBACK"); throw error; }
+  }
+  return resumed;
 }
 
 export function listCatalogs() {
@@ -1031,14 +1268,9 @@ export function previewCatalogSelection(catalogId: string, name: string, userId?
     first_name: user.firstName,
     country: user.country,
   };
-  let items = listCatalogItems(catalogId).filter(item => selectionMatches(item, selection.filters, profile));
-  if (selection.randomSort) {
-    items.sort((left, right) => createHash("sha256").update(`${catalogId}:${name}:${user.id}:${left.id}`).digest("hex").localeCompare(createHash("sha256").update(`${catalogId}:${name}:${user.id}:${right.id}`).digest("hex")));
-  } else if (selection.sortField) {
-    const direction = selection.sortDirection === "descending" ? -1 : 1;
-    items.sort((left, right) => String(left.fields[selection.sortField] ?? "").localeCompare(String(right.fields[selection.sortField] ?? "")) * direction);
-  }
-  return { selection, user, items: items.slice(0, selection.resultLimit) };
+  const catalog = getResource(catalogId);
+  const items = selectCatalogRows(listCatalogItems(catalogId), selection, profile, `${catalog?.name.toLowerCase() ?? catalogId}:${name}`);
+  return { selection, user, items };
 }
 
 export function listCatalogSubscriptions(catalogId: string, limit = 10) {
@@ -1106,18 +1338,20 @@ export function activityLog(limit = 50) {
 export function getDemoState() {
   const saved = db().prepare("SELECT value FROM demo_state WHERE key = 'simulated_time'").get() as { value: string } | undefined;
   const pending = db().prepare("SELECT count(*) AS count FROM message_events e LEFT JOIN demo_receipts d ON d.delivery_id = e.id WHERE e.event_type = 'delivered' AND d.delivery_id IS NULL").get() as { count: number };
-  return { simulatedTime: saved?.value ?? now(), pendingReceipts: pending.count };
+  const canvasPending = db().prepare("SELECT count(*) AS count FROM canvas_pending_steps").get() as { count: number };
+  return { simulatedTime: saved?.value ?? now(), pendingReceipts: pending.count, pendingCanvasSteps: canvasPending.count };
 }
 
 export function demoAction(action: string) {
   const conn = db();
-  if (action === "reset") { conn.exec("DELETE FROM webhook_attempts; DELETE FROM message_events; DELETE FROM execution_runs; DELETE FROM canvas_runs; DELETE FROM demo_receipts; DELETE FROM demo_state; DELETE FROM audit_log; DELETE FROM campaigns; DELETE FROM users; DELETE FROM catalog_subscriptions; DELETE FROM catalog_selections; DELETE FROM catalog_items; DELETE FROM resources; DELETE FROM subscription_group_memberships; DELETE FROM subscription_groups; DELETE FROM preference_center_events; DELETE FROM preference_center_versions; DELETE FROM preference_centers;"); seed(conn); seedSampleCatalog(conn); return { message: "Sample data reset", state: getDemoState() }; }
+  if (action === "reset") { conn.exec("DELETE FROM webhook_attempts; DELETE FROM message_events; DELETE FROM execution_runs; DELETE FROM canvas_pending_steps; DELETE FROM canvas_entry_history; DELETE FROM canvas_runs; DELETE FROM demo_receipts; DELETE FROM demo_state; DELETE FROM audit_log; DELETE FROM campaigns; DELETE FROM users; DELETE FROM catalog_subscriptions; DELETE FROM catalog_selections; DELETE FROM catalog_items; DELETE FROM resources; DELETE FROM subscription_group_memberships; DELETE FROM subscription_groups; DELETE FROM preference_center_events; DELETE FROM preference_center_versions; DELETE FROM preference_centers;"); seed(conn); seedSampleCatalog(conn); return { message: "Sample data reset", state: getDemoState() }; }
   if (action === "advance") {
     const current = getDemoState().simulatedTime;
     const next = new Date(new Date(current).getTime() + 86_400_000).toISOString();
     conn.prepare("INSERT INTO demo_state VALUES ('simulated_time', ?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").run(next);
-    audit("demo", "simulated_time", "advanced", { from: current, to: next });
-    return { message: `Demo clock advanced to ${next}. Scheduled jobs are not implemented.`, state: getDemoState() };
+    const resumed = processDueCanvasSteps(next);
+    audit("demo", "simulated_time", "advanced", { from: current, to: next, resumedCanvasSteps: resumed });
+    return { message: `Demo clock advanced to ${next}. ${resumed} Canvas steps resumed.`, state: getDemoState() };
   }
   if (action === "failure") { const active = conn.prepare("SELECT id, channel FROM campaigns WHERE status = 'Active' LIMIT 1").get() as { id: string; channel: string } | undefined; if (!active) return { message: "No active campaign is available for failure injection.", state: getDemoState() }; conn.prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), active.id, active.channel, "user_1", "failed", getDemoState().simulatedTime, JSON.stringify({ reason: "rate_limit", simulated: true })); return { message: "Rate-limit failure recorded in Message Activity Log.", state: getDemoState() }; }
   if (action === "receipts") {
@@ -1144,3 +1378,45 @@ export function demoAction(action: string) {
 }
 
 function audit(entityType: string, entityId: string, action: string, detail: Record<string, unknown>) { db().prepare("INSERT INTO audit_log VALUES (?, ?, ?, ?, ?, ?)").run(uid("audit"), entityType, entityId, action, now(), JSON.stringify(detail)); }
+
+export function updateUserEmail(id: string, email: string) {
+  const user = getUser(id); if (!user) return null;
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error("Enter a valid email address.");
+  const suppressed = db().prepare("SELECT id FROM users WHERE lower(email) = lower(?) AND subscribed = 0 AND id != ? LIMIT 1").get(email, id);
+  const changed = user.email.toLowerCase() !== email.toLowerCase();
+  const subscribed = changed && getEmailPreferences().data.sending.resubscribe && !suppressed ? true : user.subscribed;
+  const emailStatus = subscribed ? changed && !user.subscribed ? "subscribed" : user.emailSubscriptionStatus : "unsubscribed";
+  db().prepare("UPDATE users SET email = ?, subscribed = ?, email_subscription_status = ? WHERE id = ?").run(email, subscribed ? 1 : 0, emailStatus, id);
+  audit("user", id, "email_updated", { changed, subscribed }); return getUser(id);
+}
+export function syncEmailLinkAliases(campaign: CampaignRecord) {
+  const explicit = Array.isArray(campaign.config.emailLinkAliases) ? campaign.config.emailLinkAliases as Array<{ alias: string; url: string; tracking: boolean }> : [];
+  const links = [...extractEmailLinks(campaign.body ?? ""), ...explicit];
+  for (const link of links) {
+    if (!link.alias.trim() || !/^https?:\/\//i.test(link.url)) continue;
+    const existing = listResources("link-aliases").find(row => row.name === link.alias && row.data.campaignId === campaign.id);
+    const data = { campaignId: campaign.id, campaignName: campaign.name, url: link.url, editorTracking: link.tracking };
+    if (existing) updateResource(existing.id, { data, ...(link.tracking === false ? { status: "Inactive" } : existing.data.editorTracking === false ? { status: "Active" } : {}) });
+    else createResource({ type: "link-aliases", name: link.alias, status: link.tracking === false ? "Inactive" : "Active", data });
+  }
+}
+export function emailWorkspaceLiquid(): WorkspaceLiquid {
+  const catalogs = listResources("catalogs");
+  return { footer: getEmailPreferences().data.pages.footer.enabled ? getEmailPreferences().data.pages.footer.html : "", contentBlocks: Object.fromEntries(listResources("content-blocks").map(row => [row.name,workspaceContentBlockHtml(String(row.data.content ?? ""), row.data.width)])), catalogItems: Object.fromEntries(catalogs.map(catalog => [catalog.name.toLowerCase(), listCatalogItems(catalog.id)])), catalogSelections: Object.fromEntries(catalogs.map(catalog => [catalog.name.toLowerCase(), listCatalogSelections(catalog.id)])) };
+}
+export function prepareEmailMessage(message: { id?: string; subject?: string; body?: string; config?: Record<string, unknown> }, userId: string, kind: "campaign" | "test" | "seed", custom?: Record<string, unknown>) {
+  const user = getUser(userId); const profile = { ...user?.attributes, user_id: user?.id, subscribed: user?.subscribed, first_name: user?.firstName, email: user?.email, country: user?.country, ...custom };
+  const deploymentHost = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+  const base = (process.env.BRAZE_PUBLIC_URL ?? (deploymentHost ? `https://${deploymentHost}` : "http://localhost:3100")).replace(/\/$/, "");
+  const unsubscribe = createResource({ type: "email-subscription-token", name: "Email subscription link", data: { userId, campaignId: message.id, action: "unsubscribe", expiresAt: Date.now() + 30 * 86400000 } });
+  const optIn = createResource({ type: "email-subscription-token", name: "Email opt-in link", data: { userId, action: "optIn", expiresAt: Date.now() + 30 * 86400000 } });
+  const unsubscribeUrl = `${base}/email/subscription/${unsubscribe.id}`, optInUrl = `${base}/email/subscription/${optIn.id}`;
+  const preferences = getEmailPreferences().data;
+  const workspace = emailWorkspaceLiquid();
+  return compileWorkspaceEmail(message, preferences, { profile, kind, unsubscribeUrl, optInUrl, pixelUrl: `${base}/api/email-tracking/${unsubscribe.id}?event=opened`, render: source => resolveLiquidPreview(source, { ...profile, unsubscribe_url: unsubscribeUrl, unsubscribe_link: unsubscribeUrl, optin_url: optInUrl, opt_in_url: optInUrl }, "en", workspace, true), trackLink: (url, alias) => {
+    const existing = listResources("link-aliases").find(row => row.name === alias && row.status === "Active" && row.data.campaignId === message.id);
+    if (!existing) return url;
+    const token = createResource({ type: "email-tracking-token", name: alias, data: { userId, campaignId: existing.data.campaignId, alias, url, expiresAt: Date.now() + 30 * 86400000 } });
+    return `${base}/api/email-tracking/${token.id}?event=clicked`;
+  } });
+}

@@ -1,4 +1,4 @@
-import { importUsers, searchUsers, setUserSubscription } from "@/lib/braze-store";
+import { importUsers, searchUsers, updateUserEmail, setUserSubscription, setUserEmailSubscriptionStatus } from "@/lib/braze-store";
 
 export const runtime = "nodejs";
 
@@ -16,6 +16,11 @@ export async function POST(request: Request) {
 
 export async function PATCH(request: Request) {
   const input = await request.json().catch(() => null);
+  if (typeof input?.id === "string" && typeof input.email === "string") { try { const user = updateUserEmail(input.id, input.email); return user ? Response.json(user) : Response.json({ error: "User not found." }, { status: 404 }); } catch (error) { return Response.json({ error: error instanceof Error ? error.message : "Invalid email." }, { status: 400 }); } }
+  if (typeof input?.id === "string" && ["opted_in", "subscribed", "unsubscribed"].includes(input.emailSubscriptionStatus)) {
+    const user = setUserEmailSubscriptionStatus(input.id, input.emailSubscriptionStatus);
+    return user ? Response.json(user) : Response.json({ error: "User not found." }, { status: 404 });
+  }
   if (!input || typeof input.id !== "string" || typeof input.subscribed !== "boolean") return Response.json({ error: "Provide a user ID and subscription state." }, { status: 400 });
   const user = setUserSubscription(input.id, input.subscribed);
   return user ? Response.json(user) : Response.json({ error: "User not found." }, { status: 404 });
