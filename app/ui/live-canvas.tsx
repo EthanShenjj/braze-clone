@@ -2,15 +2,32 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Activity, CalendarDays, ExternalLink, Mail, MousePointerClick, Plus, Users } from "lucide-react";
+import { Activity, Bot, ChevronDown, ChevronLeft, ChevronUp, Clock3, ExternalLink, Flag, Gauge, GitBranch, Mail, MousePointerClick, Plus, Send, Settings2, Shuffle, Sparkles, Users, WandSparkles, X } from "lucide-react";
 import { type CanvasGraph, type CanvasNode, type CanvasNodeKind, type CanvasRun, initialCanvasGraph, isCanvasGraph, validateCanvasGraph } from "@/lib/canvas-model";
-import { formatDate, formatNumber, normalizeLocale, translate, type Locale } from "@/lib/i18n";
+import { defaultCanvasWizard, type CanvasWizardConfig } from "@/lib/canvas-wizard-model";
+import { formatDate, formatNumber, normalizeLocale, type Locale } from "@/lib/i18n";
 import { registerUnsavedNavigation } from "@/lib/unsaved-navigation";
 import { browserCanvasMode, getBrowserCanvas, saveBrowserGraph } from "@/lib/canvas-browser-store";
+import styles from "./flow-canvas.module.css";
 
 type Drag = { id: string; startX: number; startY: number; x: number; y: number; moved: boolean };
+type ComponentDrag = { kind: CanvasNodeKind; startX: number; startY: number };
+type ComponentItem = { kind: CanvasNodeKind; label: string; tone: string; icon: typeof Mail };
+const componentGroups: Array<{ title: string; items: ComponentItem[] }> = [
+  { title: "Message Controls", items: [{ kind: "message", label: "Message", tone: "green", icon: Send }, { kind: "delay", label: "Delay", tone: "purple", icon: Clock3 }] },
+  { title: "AI Actions", items: [{ kind: "agent", label: "Agent Step", tone: "gray", icon: Bot }, { kind: "optimizer", label: "Content Optimizer", tone: "pink", icon: Sparkles }] },
+  { title: "Flow Controls", items: [{ kind: "branch", label: "Decision Split", tone: "red", icon: GitBranch }, { kind: "audience_paths", label: "Audience Paths", tone: "red", icon: Users }, { kind: "action_paths", label: "Action Paths", tone: "red", icon: MousePointerClick }, { kind: "experiment_paths", label: "Experiment Paths", tone: "red", icon: Shuffle }, { kind: "destination", label: "Send to Destination", tone: "blue", icon: Send }] },
+  { title: "Audience Updates", items: [{ kind: "context", label: "Context", tone: "blue", icon: Activity }, { kind: "update", label: "User Update", tone: "blue", icon: Users }, { kind: "feature_flag", label: "Feature Flag", tone: "blue", icon: Flag }, { kind: "audience_sync", label: "Audience Sync", tone: "blue", icon: Users }] },
+];
+const componentByKind = new Map(componentGroups.flatMap(group => group.items).map(item => [item.kind, item]));
 
-export default function LiveCanvas({ canvasId, canvasName, onBack, locale: localeValue = "en", notify, embedded = false, saveRef, onSaved }: { canvasId: string; canvasName: string; onBack: () => void; locale?: Locale; notify: (message: string) => void; embedded?: boolean; saveRef?: React.MutableRefObject<(() => Promise<boolean>) | null>; onSaved?: (graph: CanvasGraph, updatedAt: string) => void }) {
+function arrangeLegacyGraph(graph: CanvasGraph): CanvasGraph {
+  const steps = graph.nodes.filter(node => node.kind !== "entry");
+  if (!steps.length || !steps.every(node => node.y < 600)) return graph;
+  return { ...graph, nodes: graph.nodes.map(node => node.kind === "entry" ? node : { ...node, x: 610, y: 725 + steps.indexOf(node) * 170 }) };
+}
+
+export default function LiveCanvas({ canvasId, canvasName, onBack, locale: localeValue = "en", notify, embedded = false, wizard = defaultCanvasWizard, saveRef, onSaved }: { canvasId: string; canvasName: string; onBack: () => void; locale?: Locale; notify: (message: string) => void; embedded?: boolean; wizard?: CanvasWizardConfig; saveRef?: React.MutableRefObject<(() => Promise<boolean>) | null>; onSaved?: (graph: CanvasGraph, updatedAt: string) => void }) {
   const locale = normalizeLocale(localeValue);
   const [history, setHistory] = useState<CanvasGraph[]>([initialCanvasGraph]);
   const [cursor, setCursor] = useState(0);
@@ -21,6 +38,10 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
   const [linkFrom, setLinkFrom] = useState<string | null>(null);
   const [drag, setDrag] = useState<Drag | null>(null);
   const dragRef = useRef<Drag | null>(null);
+  const componentDragRef = useRef<ComponentDrag | null>(null);
+  const suppressComponentClick = useRef(false);
+  const editorRef = useRef<HTMLElement | null>(null);
+  const stageScrollRef = useRef<HTMLDivElement | null>(null);
   const suppressClick = useRef(false);
   const [runs, setRuns] = useState<CanvasRun[]>([]);
   const [subscriptionGroups, setSubscriptionGroups] = useState<Array<{ id: string; name: string; channel: string }>>([]);
@@ -29,6 +50,12 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
   const [working, setWorking] = useState(false);
   const [error, setError] = useState("");
   const [browserDraft, setBrowserDraft] = useState(false);
+  const [adding, setAdding] = useState(false);
+  const [componentsOpen, setComponentsOpen] = useState(true);
+  const [entryOpen, setEntryOpen] = useState(true);
+  const [expanded, setExpanded] = useState(false);
+  const [variantMenu, setVariantMenu] = useState<string | null>(null);
+  const [inspectorOpen, setInspectorOpen] = useState(false);
   const graph = history[cursor];
   const hasUnsavedChanges = JSON.stringify(graph) !== savedGraph;
   const router = useRouter();
@@ -46,15 +73,17 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
     const local = browserCanvasMode ? getBrowserCanvas(canvasId) : null;
     if (local) {
       setBrowserDraft(true);
-      setHistory([local.graph]); setCursor(0); setSavedGraph(JSON.stringify(local.graph));
+      const arranged = arrangeLegacyGraph(local.graph);
+      setHistory([arranged]); setCursor(0); setSavedGraph(JSON.stringify(arranged)); setAdding(arranged.nodes.length === 1);
       setSelected(local.graph.nodes[0]?.id ?? ""); setUpdatedAt(local.canvas.updatedAt);
       return () => controller.abort();
     }
     void fetch(`/api/canvases/${encodeURIComponent(canvasId)}`, { signal: controller.signal }).then(response => { if (!response.ok) throw new Error("Canvas not found."); return response.json(); }).then(result => {
       if (controller.signal.aborted) return;
       if (isCanvasGraph(result.graph)) {
-        setHistory([result.graph]); setCursor(0);
-        setSavedGraph(JSON.stringify(result.graph));
+        const arranged = arrangeLegacyGraph(result.graph);
+        setHistory([arranged]); setCursor(0);
+        setSavedGraph(JSON.stringify(arranged)); setAdding(arranged.nodes.length === 1);
         setSelected(result.graph.nodes[0]?.id ?? "");
       }
       setUpdatedAt(result.updatedAt ?? null);
@@ -70,6 +99,24 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
     return () => controller.abort();
   }, []);
 
+  useEffect(() => {
+    if (!adding) return;
+    const cancel = (event: KeyboardEvent) => { if (event.key === "Escape") { setAdding(false); setLinkFrom(null); } };
+    window.addEventListener("keydown", cancel);
+    return () => window.removeEventListener("keydown", cancel);
+  }, [adding]);
+
+  useEffect(() => {
+    const stage = stageScrollRef.current;
+    if (!stage) return;
+    stage.scrollLeft = Math.max(0, (1500 * zoom - stage.clientWidth) / 2);
+  }, [zoom, componentsOpen, inspectorOpen, expanded]);
+
+  useEffect(() => {
+    if (!embedded) return;
+    requestAnimationFrame(() => editorRef.current?.scrollIntoView({ block: "start" }));
+  }, [embedded]);
+
   const refreshRuns = async () => {
     if (browserDraft) return;
     const response = await fetch(`/api/canvases/${encodeURIComponent(canvasId)}`);
@@ -84,12 +131,29 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
     const node = graph.nodes.find(item => item.id === id);
     if (node) changeNode(id, { config: { ...node.config, ...patch } });
   };
-  const add = (kind: CanvasNodeKind) => {
-    const names: Record<CanvasNodeKind, string> = { entry: "Audience entry", delay: "Delay · 1 day", message: "Email message", branch: "Decision split", update: "Update user" };
-    const configs: Partial<Record<CanvasNodeKind, CanvasNode["config"]>> = { delay: { durationHours: 24 }, message: { channel: "email", message: "Write a message for this step." }, branch: { attribute: "country", value: "US" }, update: { attribute: "plan", value: "pro" } };
+  const add = (kind: CanvasNodeKind, position?: { x: number; y: number }) => {
+    const names: Record<CanvasNodeKind, string> = { entry: "Audience entry", delay: "Delay", message: "Message", branch: "Decision Split", update: "User Update", agent: "Agent Step", optimizer: "Content Optimizer", audience_paths: "Audience Paths", action_paths: "Action Paths", experiment_paths: "Experiment Paths", destination: "Send to Destination", context: "Context", feature_flag: "Feature Flag", audience_sync: "Audience Sync" };
+    const configs: Partial<Record<CanvasNodeKind, CanvasNode["config"]>> = { delay: { durationHours: 24 }, message: { channel: "email", message: "" }, branch: { attribute: "country", value: "" }, update: { attribute: "plan", value: "" } };
     const id = `${kind}_${crypto.randomUUID().slice(0, 8)}`;
-    commit({ ...graph, nodes: [...graph.nodes, { id, label: names[kind], kind, x: 160 + graph.nodes.length * 45, y: 320, config: configs[kind] }] });
-    setSelected(id);
+    const previous = graph.nodes.find(node => node.id === linkFrom) ?? graph.nodes.at(-1);
+    const nextY = Math.max(725, ...graph.nodes.filter(node => node.kind !== "entry").map(node => node.y + 170));
+    const nextNode: CanvasNode = { id, label: names[kind], kind, x: position?.x ?? 610, y: position ? Math.max(position.y, nextY) : nextY, config: configs[kind] };
+    const canConnect = previous && !graph.edges.some(([from]) => from === previous.id) || previous?.kind === "branch" && graph.edges.filter(([from]) => from === previous.id).length < 2;
+    commit({ ...graph, nodes: [...graph.nodes, nextNode], edges: canConnect && previous ? [...graph.edges, [previous.id, id]] : graph.edges });
+    setSelected(id); setInspectorOpen(true); setAdding(false); setLinkFrom(null);
+    requestAnimationFrame(() => { stageScrollRef.current?.scrollTo({ top: Math.max(0, nextNode.y * zoom - 240), behavior: "smooth" }); });
+  };
+  const componentPointerUp = (event: React.PointerEvent<HTMLButtonElement>) => {
+    const current = componentDragRef.current;
+    componentDragRef.current = null;
+    if (!current || Math.hypot(event.clientX - current.startX, event.clientY - current.startY) < 12) return;
+    suppressComponentClick.current = true;
+    requestAnimationFrame(() => { suppressComponentClick.current = false; });
+    const stage = stageScrollRef.current;
+    if (!stage) return;
+    const bounds = stage.getBoundingClientRect();
+    if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) return;
+    add(current.kind, { x: Math.max(20, Math.round((event.clientX - bounds.left + stage.scrollLeft) / zoom - 140)), y: Math.max(725, Math.round((event.clientY - bounds.top + stage.scrollTop) / zoom - 50)) });
   };
   const copy = () => { const node = graph.nodes.find(item => item.id === selected); if (!node || node.kind === "entry") return; const id = `${node.kind}_${crypto.randomUUID().slice(0, 8)}`; commit({ ...graph, nodes: [...graph.nodes, { ...node, id, label: `${node.label} copy`, x: node.x + 40, y: node.y + 45, config: { ...node.config, linkedCampaignId: undefined } }] }); setSelected(id); };
   const swapBranchRoutes = (id: string) => { const positions = graph.edges.flatMap((edge, index) => edge[0] === id ? [index] : []); if (positions.length !== 2) return; const edges = [...graph.edges]; [edges[positions[0]], edges[positions[1]]] = [edges[positions[1]], edges[positions[0]]]; commit({ ...graph, edges }); };
@@ -101,6 +165,7 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
       setLinkFrom(null);
     }
     setSelected(id);
+    setInspectorOpen(true);
   };
   const pointerDown = (id: string, event: React.PointerEvent<HTMLButtonElement>) => {
     if (event.button !== 0) return;
@@ -195,18 +260,89 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
   const branchRoutes = selectedNode?.kind === "branch" ? graph.edges.filter(([from]) => from === selectedNode.id) : [];
   const run = runs.find(item => item.id === runId);
   const trace = run?.traces.find(item => item.userId === traceUser) ?? run?.traces[0];
-  const icon = (kind: CanvasNodeKind) => kind === "entry" ? <Users size={18}/> : kind === "delay" ? <CalendarDays size={18}/> : kind === "branch" ? <MousePointerClick size={18}/> : kind === "update" ? <Activity size={18}/> : <Mail size={18}/>;
+  const variants = graph.variants?.length ? graph.variants : [{ id: "variant_1", name: "Variant 1", weight: 100 }];
+  const stepNodes = visible.nodes.filter(node => node.kind !== "entry");
+  const worldHeight = Math.max(1120, ...stepNodes.map(node => node.y + 260));
+  const addVariant = () => {
+    const next = [...variants, { id: crypto.randomUUID(), name: `Variant ${variants.length + 1}`, weight: 0 }];
+    const share = Math.floor(100 / next.length);
+    commit({ ...graph, variants: next.map((variant, index) => ({ ...variant, weight: share + (index === 0 ? 100 - share * next.length : 0) })) });
+  };
+  const changeVariant = (id: string, patch: Partial<(typeof variants)[number]>) => commit({ ...graph, variants: variants.map(variant => variant.id === id ? { ...variant, ...patch } : variant) });
+  const removeVariant = (id: string) => {
+    if (variants.length === 1) return;
+    const remaining = variants.filter(variant => variant.id !== id);
+    const share = Math.floor(100 / remaining.length);
+    commit({ ...graph, variants: remaining.map((variant, index) => ({ ...variant, weight: share + (index === 0 ? 100 - share * remaining.length : 0) })) });
+    setVariantMenu(null);
+  };
+  const cleanUp = () => {
+    const ordered = graph.nodes.filter(node => node.kind !== "entry");
+    commit({ ...graph, nodes: graph.nodes.map(node => node.kind === "entry" ? node : { ...node, x: 610, y: 725 + ordered.indexOf(node) * 170 }) });
+    notify("Canvas steps arranged.");
+  };
+  const scheduleSummary = wizard.entry.type === "scheduled" ? wizard.entry.timing === "immediate" ? "As soon as Canvas is launched" : wizard.entry.frequency ? `${wizard.entry.frequency} · ${wizard.entry.startDate || "date not set"}` : "No schedule selected." : wizard.entry.type === "action" ? `${wizard.entry.triggers.length} action trigger${wizard.entry.triggers.length === 1 ? "" : "s"}` : "API-triggered entry";
+  const audienceSummary = wizard.audience.segmentIds.length || wizard.audience.filters.length ? `${wizard.audience.segmentIds.length} segment${wizard.audience.segmentIds.length === 1 ? "" : "s"}, ${wizard.audience.filters.length} filter${wizard.audience.filters.length === 1 ? "" : "s"}` : "All eligible users";
+  const exitSummary = wizard.audience.exceptions.length || wizard.audience.exitSegmentIds.length || wizard.audience.exitFilters.length ? `${wizard.audience.exceptions.length} exception${wizard.audience.exceptions.length === 1 ? "" : "s"}, ${wizard.audience.exitSegmentIds.length} segment${wizard.audience.exitSegmentIds.length === 1 ? "" : "s"}` : "No exit criteria selected.";
 
-  return <section className="canvas-page"><div className="page-heading"><div>{!embedded && <button className="text-button" onClick={onBack}>← All Canvases</button>}<h1>{embedded ? "Build Canvas" : canvasName}</h1><p>{translate(locale, "Build, validate, save, and simulate a local customer journey.")}</p></div><div className="heading-actions"><button className="secondary" disabled={cursor === 0 || working} onClick={() => setCursor(cursor - 1)}>{translate(locale, "Undo")}</button><button className="secondary" disabled={cursor === history.length - 1 || working} onClick={() => setCursor(cursor + 1)}>{translate(locale, "Redo")}</button><button className="secondary" disabled={working} onClick={() => void save()}>{translate(locale, "Save Draft")}</button>{!embedded && <button className="primary" disabled={working} onClick={() => void launch()}>{translate(locale, "Launch Canvas")}</button>}</div></div>
-    {error && <div className="canvas-error" role="alert">{error}</div>}
-    <div className="canvas-shell live-canvas-shell"><aside><h3>{translate(locale, "Steps")}</h3>{(["entry", "message", "delay", "branch", "update"] as CanvasNodeKind[]).map(kind => <button key={kind} disabled={kind === "entry" && graph.nodes.some(node => node.kind === "entry")} onClick={() => add(kind)}><Plus size={14}/>{translate(locale, kind === "entry" ? "Audience entry" : kind === "message" ? "Message" : kind === "delay" ? "Delay" : kind === "branch" ? "Decision split" : "Update User")}</button>)}
-      <hr/><h3>{translate(locale, "Inspector")}</h3>{selectedNode ? <><label>{translate(locale, "Step name")}<input value={selectedNode.label} onChange={event => changeNode(selected, { label: event.target.value })}/></label>
-        {selectedNode.kind === "delay" && <label>{translate(locale, "Delay (hours)")}<input type="number" min="1" value={selectedNode.config?.durationHours ?? 24} onChange={event => changeConfig(selected, { durationHours: Number(event.target.value) })}/></label>}
-        {selectedNode.kind === "entry" && !embedded && <><label>Re-entry<select value={selectedNode.config?.reEntry ?? "none"} onChange={event => changeConfig(selected, { reEntry: event.target.value as "none" | "after1d" | "after7d" | "always" })}><option value="none">Users can only enter once</option><option value="after1d">Re-enter after 1 day</option><option value="after7d">Re-enter after 7 days</option><option value="always">Re-enter every time</option></select></label><label>Conversion event<select value={selectedNode.config?.conversionEvent ?? "Start Session"} onChange={event => changeConfig(selected, { conversionEvent: event.target.value })}><option>Start Session</option><option>Makes Purchase</option><option>Performs Custom Event</option><option>Opens Email</option></select></label><label>Conversion deadline (days)<input type="number" min="1" value={selectedNode.config?.conversionDeadlineDays ?? 3} onChange={event => changeConfig(selected, { conversionDeadlineDays: Number(event.target.value) || 3 })}/></label></>}
-        {selectedNode.kind === "message" && <><label>{translate(locale, "Channel")}<select disabled={Boolean(selectedNode.config?.linkedCampaignId)} value={selectedNode.config?.channel ?? "email"} onChange={event => changeConfig(selected, { channel: event.target.value, subscriptionGroupId: undefined })}><option value="email">{translate(locale, "Email")}</option><option value="push">{translate(locale, "Push notification")}</option><option value="sms">SMS</option><option value="iam">{translate(locale, "In-app message")}</option></select></label>{["email", "sms"].includes(selectedNode.config?.channel ?? "email") && <label>Subscription group<select disabled={Boolean(selectedNode.config?.linkedCampaignId)} value={String(selectedNode.config?.subscriptionGroupId ?? "")} onChange={event => changeConfig(selected, { subscriptionGroupId: event.target.value || undefined })}><option value="">{selectedNode.config?.channel === "sms" ? "Select a group" : "No group filter"}</option>{subscriptionGroups.filter(group => group.channel === (selectedNode.config?.channel === "sms" ? "SMS" : "Email")).map(group => <option value={group.id} key={group.id}>{group.name}</option>)}</select></label>}<label>Subject<input disabled={Boolean(selectedNode.config?.linkedCampaignId)} value={selectedNode.config?.subject ?? ""} onChange={event => changeConfig(selected, { subject: event.target.value })}/></label><label>{translate(locale, "Message")}<textarea disabled={Boolean(selectedNode.config?.linkedCampaignId)} value={selectedNode.config?.message ?? ""} onChange={event => changeConfig(selected, { message: event.target.value })}/></label><button className="secondary small" onClick={() => void openFullEditor(selectedNode!)}><ExternalLink size={13}/> Open in full editor</button>{selectedNode.config?.linkedCampaignId && <><small>Linked campaign: {selectedNode.config.linkedCampaignId}. Content is edited in the full editor.</small><button className="secondary small" onClick={() => changeConfig(selected, { linkedCampaignId: undefined })}>Unlink campaign</button></>}</>}
-        {selectedNode.kind === "update" && <><label>Attribute<input value={selectedNode.config?.attribute ?? ""} onChange={event => changeConfig(selected, { attribute: event.target.value, value: event.target.value === "subscribed" ? "true" : selectedNode.config?.value ?? "" })}/></label><label>New value{selectedNode.config?.attribute === "subscribed" ? <select value={selectedNode.config?.value === "false" ? "false" : "true"} onChange={event => changeConfig(selected, { value: event.target.value })}><option value="true">Subscribed</option><option value="false">Unsubscribed</option></select> : <input value={selectedNode.config?.value ?? ""} onChange={event => changeConfig(selected, { value: event.target.value })}/>}</label><small>Global email status accepts only true or false.</small></>}
-        {selectedNode.kind === "branch" && <><label>{translate(locale, "Attribute")}<select value={selectedNode.config?.attribute ?? "country"} onChange={event => changeConfig(selected, { attribute: event.target.value })}><option value="country">{translate(locale, "Country")}</option><option value="lifecycle">{translate(locale, "Lifecycle")}</option><option value="subscribed">{translate(locale, "Subscribed")}</option></select></label><label>{translate(locale, "Equals")}<input value={selectedNode.config?.value ?? ""} onChange={event => changeConfig(selected, { value: event.target.value })}/></label><small>Yes → {graph.nodes.find(node => node.id === branchRoutes[0]?.[1])?.label ?? "Connect a step"}</small><small>No → {graph.nodes.find(node => node.id === branchRoutes[1]?.[1])?.label ?? "Connect a step"}</small><button className="secondary small" disabled={branchRoutes.length !== 2} onClick={() => swapBranchRoutes(selectedNode.id)}>Swap Yes / No routes</button></>}
-        <button className="secondary small" onClick={() => setLinkFrom(selected)}>{translate(locale, "Connect from this step")}</button><button className="secondary small" disabled={selectedNode.kind === "entry"} onClick={copy}>{translate(locale, "Copy step")}</button><button className="text-button danger" onClick={remove}>{translate(locale, "Delete step")}</button></> : <p>{translate(locale, "Select a node")}</p>}
-      <hr/><h3>{translate(locale, "Execution")}</h3><button className="secondary small" onClick={() => void refreshRuns()}>Refresh execution</button>{runs.length ? <><label>{translate(locale, "Run")}<select value={run?.id ?? ""} onChange={event => { const next = runs.find(item => item.id === event.target.value); setRunId(next?.id ?? null); setTraceUser(next?.traces[0]?.userId ?? null); }}>{runs.map(item => <option key={item.id} value={item.id}>{formatDate(locale, item.createdAt, { dateStyle: "medium", timeStyle: "short" })}</option>)}</select></label><small>{formatNumber(locale, run?.entered ?? 0)} {translate(locale, "entered")} · {formatNumber(locale, run?.completed ?? 0)} {translate(locale, "completed")} · {formatNumber(locale, run?.messages ?? 0)} {translate(locale, "messages")} · {formatNumber(locale, Math.max(0, (run?.entered ?? 0) - (run?.completed ?? 0)))} waiting</small>{run?.nextDueAt && <small>Next due: {formatDate(locale, run.nextDueAt, { dateStyle: "medium", timeStyle: "short" })}</small>}<button className="secondary small" disabled={working || !run?.nextDueAt} onClick={() => void advanceDemo()}>Advance demo by one day</button><label>{translate(locale, "User path")}<select value={trace?.userId ?? ""} onChange={event => setTraceUser(event.target.value)}>{run?.traces.map(item => <option key={item.userId}>{item.userId}</option>)}</select></label>{trace?.steps.map((step, index) => <small className="execution-item" key={`${step.nodeId}-${index}`}>✓ {step.label}</small>)}</> : <small>{translate(locale, "Launch to inspect the local path.")}</small>}</aside>
-      <div className="journey-canvas live-journey-canvas"><div className="zoom-control"><button onClick={() => setZoom(value => Math.max(.6, value - .1))}>−</button><span>{Math.round(zoom * 100)}%</span><button onClick={() => setZoom(value => Math.min(1.5, value + .1))}>+</button></div><div className="canvas-world" style={{ transform: `scale(${zoom})` }}>{visible.edges.map(([from, to]) => { const start = visible.nodes.find(node => node.id === from); const end = visible.nodes.find(node => node.id === to); const branchIndex = start?.kind === "branch" ? visible.edges.filter(edge => edge[0] === from).findIndex(edge => edge[1] === to) : -1; return start && end ? <svg className="canvas-edge" key={`${from}-${to}`}><line x1={start.x + 160} y1={start.y + 36} x2={end.x} y2={end.y + 36}/>{branchIndex >= 0 && <text x={(start.x + 160 + end.x) / 2} y={(start.y + end.y + 72) / 2 - 8}>{branchIndex === 0 ? "Yes" : "No"}</text>}</svg> : null; })}{visible.nodes.map(node => <button key={node.id} className={["journey-node", selected === node.id ? "selected" : "", linkFrom === node.id ? "link-source" : ""].filter(Boolean).join(" ")} style={{ left: node.x, top: node.y }} onPointerDown={event => pointerDown(node.id, event)} onPointerMove={pointerMove} onPointerUp={pointerUp} onPointerCancel={pointerUp} onClick={() => selectNode(node.id)}>{icon(node.kind)}<span>{node.label}</span></button>)}</div>{linkFrom && <div className="connect-hint">{translate(locale, "Select a destination step to create a connection.")}</div>}</div></div></section>;
+  return <section ref={editorRef} className={`${styles.editor} ${embedded ? styles.embedded : ""} ${expanded ? styles.expanded : ""}`} aria-label="Canvas flow builder">
+    <div className={styles.toolbar}>
+      <div><strong>{embedded ? "Build Canvas" : canvasName}</strong><span>Drag, drop, and connect components to build your user journey.</span></div>
+      <div className={styles.toolbarActions}>
+        {!embedded && <button onClick={onBack}>All Canvases</button>}
+        <button disabled={cursor === 0 || working} onClick={() => setCursor(cursor - 1)}>Undo</button>
+        <button disabled={cursor === history.length - 1 || working} onClick={() => setCursor(cursor + 1)}>Redo</button>
+        <button disabled={working} onClick={() => void save()}>{working ? "Saving…" : "Save Draft"}</button>
+        {!embedded && <button disabled={browserDraft || working} onClick={() => void launch()}>Launch Canvas</button>}
+      </div>
+    </div>
+    {error && <div className={styles.error} role="alert">{error}</div>}
+    <div className={styles.surface}>
+      {componentsOpen ? <aside className={styles.components} aria-label="Components">
+        <div className={styles.componentsHead}><div><strong>Components</strong><p>Select components to build your user journey.</p></div><button aria-label="Collapse components" onClick={() => setComponentsOpen(false)}><ChevronLeft size={21}/></button></div>
+        <div className={styles.componentScroll}>{componentGroups.map(group => <div className={styles.group} key={group.title}><h3>{group.title}</h3>{group.items.map(item => { const Icon = item.icon; return <button className={styles.component} key={item.kind} onPointerDown={event => { if (event.button !== 0) return; componentDragRef.current = { kind: item.kind, startX: event.clientX, startY: event.clientY }; event.currentTarget.setPointerCapture(event.pointerId); }} onPointerUp={componentPointerUp} onPointerCancel={() => { componentDragRef.current = null; }} onClick={() => { if (suppressComponentClick.current) { suppressComponentClick.current = false; return; } add(item.kind); }}><span className={`${styles.componentIcon} ${styles[item.tone]}`}><Icon size={19}/></span><span>{item.label}</span></button>; })}</div>)}</div>
+        <button className={styles.cleanUp} onClick={cleanUp}><WandSparkles size={21}/> Clean Up Canvas</button>
+      </aside> : <button className={styles.openComponents} onClick={() => setComponentsOpen(true)}>Components <ChevronDown size={16}/></button>}
+      <div className={styles.stage}>
+        <div className={styles.stageTools}><button onClick={() => setExpanded(value => !value)}>{expanded ? "Collapse" : "Expand"} <ChevronDown size={17}/></button></div>
+        <div className={styles.zoom}><button aria-label="Zoom out" onClick={() => setZoom(value => Math.max(.6, Math.round((value - .1) * 10) / 10))}>−</button><span>{Math.round(zoom * 100)}%</span><button aria-label="Zoom in" onClick={() => setZoom(value => Math.min(1.5, Math.round((value + .1) * 10) / 10))}>+</button></div>
+        <div className={styles.stageScroll} ref={stageScrollRef}><div className={styles.world} style={{ height: worldHeight, transform: `scale(${zoom})` }}>
+          <div className={`${styles.entryCard} ${entryOpen ? "" : styles.entryCollapsed}`}>
+            <button className={styles.entryHeader} onClick={() => setEntryOpen(value => !value)}>Entry Rules {entryOpen ? <ChevronUp size={20}/> : <ChevronDown size={20}/>}</button>
+            {entryOpen && <div className={styles.entryBody}>
+              <div className={styles.entryRule}><Clock3 size={22}/><div><strong>Schedule</strong><p>{scheduleSummary}</p></div></div>
+              <div className={styles.entryRule}><Users size={22}/><div><strong>Audience</strong><p>{audienceSummary}</p></div></div>
+              <div className={styles.entryRule}><X size={22}/><div><strong>Exit Criteria</strong><p>{exitSummary}</p></div></div>
+              <div className={styles.entryRule}><Gauge size={22}/><div><strong>Controls</strong><p>{wizard.audience.reentryEnabled ? "Users can re-enter this Canvas." : "Users are not eligible to re-enter this Canvas."}</p></div></div>
+            </div>}
+          </div>
+          <div className={styles.entryConnector} style={{ top: entryOpen ? 434 : 106 }}/>
+          <button className={styles.addVariant} style={{ top: entryOpen ? 477 : 150 }} disabled={adding} onClick={addVariant}><Plus size={22}/> Add Variant</button>
+          <div className={styles.variantRail} style={{ top: entryOpen ? 574 : 246 }}>
+            {variants.map(variant => <div className={styles.variantWrap} key={variant.id}><div className={styles.variant}><span className={styles.variantWeight}>{variant.weight}%</span><strong>{variant.name}</strong><button aria-label={`Settings for ${variant.name}`} onClick={() => setVariantMenu(current => current === variant.id ? null : variant.id)}><Settings2 size={21}/></button></div>
+              {variantMenu === variant.id && <div className={styles.variantMenu}><label>Variant name<input value={variant.name} onChange={event => changeVariant(variant.id, { name: event.target.value })}/></label><label>Distribution %<input type="number" min="0" max="100" value={variant.weight} onChange={event => changeVariant(variant.id, { weight: Math.min(100, Math.max(0, Number(event.target.value))) })}/></label><button disabled={variants.length === 1} onClick={() => removeVariant(variant.id)}>Delete variant</button></div>}
+            </div>)}
+          </div>
+          {stepNodes.length === 0 && <button className={styles.firstAddStep} onClick={() => { setLinkFrom(graph.nodes.find(node => node.kind === "entry")?.id ?? null); setAdding(true); }}><Plus size={19}/> Add Step</button>}
+          <svg className={styles.edges} width="1500" height={worldHeight} aria-hidden="true"><line x1="750" y1={entryOpen ? 625 : 297} x2="750" y2={stepNodes[0]?.y ?? 700}/>{visible.edges.filter(([from]) => from !== "entry").map(([from, to]) => { const start = visible.nodes.find(node => node.id === from); const end = visible.nodes.find(node => node.id === to); const index = start?.kind === "branch" ? visible.edges.filter(edge => edge[0] === from).findIndex(edge => edge[1] === to) : -1; return start && end ? <g key={`${from}-${to}`}><line x1={start.x + 140} y1={start.y + 100} x2={end.x + 140} y2={end.y}/>{index >= 0 && <text x={(start.x + end.x) / 2 + 140} y={(start.y + end.y + 100) / 2 - 8}>{index === 0 ? "Yes" : "No"}</text>}</g> : null; })}</svg>
+          {stepNodes.map(node => { const component = componentByKind.get(node.kind); const Icon = component?.icon ?? Mail; const outgoing = graph.edges.filter(([from]) => from === node.id).length; return <div className={styles.nodeWrap} style={{ left: node.x, top: node.y }} key={node.id}><button className={`${styles.flowNode} ${selected === node.id && inspectorOpen ? styles.nodeSelected : ""} ${linkFrom === node.id ? styles.nodeLinkSource : ""}`} onPointerDown={event => pointerDown(node.id, event)} onPointerMove={pointerMove} onPointerUp={pointerUp} onPointerCancel={pointerUp} onClick={() => selectNode(node.id)}><span className={`${styles.nodeIcon} ${styles[component?.tone ?? "green"]}`}><Icon size={20}/></span><span><small>{component?.label ?? node.kind}</small><strong>{node.label}</strong></span><Settings2 size={17}/></button>{outgoing < (node.kind === "branch" ? 2 : 1) && <button className={styles.nodeAddStep} aria-label={`Add step after ${node.label}`} onClick={() => { setSelected(node.id); setLinkFrom(node.id); setAdding(true); setInspectorOpen(false); }}><Plus size={17}/></button>}</div>; })}
+        </div></div>
+        {linkFrom && <div className={styles.connectHint}>Select a destination step or choose a component to add.</div>}
+      </div>
+      {inspectorOpen && selectedNode && selectedNode.kind !== "entry" && <aside className={styles.inspector} aria-label="Step inspector">
+        <div className={styles.inspectorHead}><strong>{componentByKind.get(selectedNode.kind)?.label ?? selectedNode.kind}</strong><button aria-label="Close step inspector" onClick={() => setInspectorOpen(false)}><X size={18}/></button></div>
+        <div className={styles.inspectorBody}>
+          <label>Step name<input value={selectedNode.label} onChange={event => changeNode(selected, { label: event.target.value })}/></label>
+          {selectedNode.kind === "delay" && <label>Delay (hours)<input type="number" min="1" value={selectedNode.config?.durationHours ?? 24} onChange={event => changeConfig(selected, { durationHours: Number(event.target.value) })}/></label>}
+          {selectedNode.kind === "message" && <><label>Channel<select disabled={Boolean(selectedNode.config?.linkedCampaignId)} value={selectedNode.config?.channel ?? "email"} onChange={event => changeConfig(selected, { channel: event.target.value, subscriptionGroupId: undefined })}><option value="email">Email</option><option value="push">Push notification</option><option value="sms">SMS</option><option value="iam">In-app message</option></select></label>{["email", "sms"].includes(selectedNode.config?.channel ?? "email") && <label>Subscription group<select disabled={Boolean(selectedNode.config?.linkedCampaignId)} value={String(selectedNode.config?.subscriptionGroupId ?? "")} onChange={event => changeConfig(selected, { subscriptionGroupId: event.target.value || undefined })}><option value="">{selectedNode.config?.channel === "sms" ? "Select a group" : "No group filter"}</option>{subscriptionGroups.filter(group => group.channel === (selectedNode.config?.channel === "sms" ? "SMS" : "Email")).map(group => <option value={group.id} key={group.id}>{group.name}</option>)}</select></label>}<label>Subject<input disabled={Boolean(selectedNode.config?.linkedCampaignId)} value={selectedNode.config?.subject ?? ""} onChange={event => changeConfig(selected, { subject: event.target.value })}/></label><label>Message<textarea disabled={Boolean(selectedNode.config?.linkedCampaignId)} value={selectedNode.config?.message ?? ""} onChange={event => changeConfig(selected, { message: event.target.value })}/></label><button onClick={() => void openFullEditor(selectedNode)}><ExternalLink size={15}/> Open in full editor</button>{selectedNode.config?.linkedCampaignId && <button onClick={() => changeConfig(selected, { linkedCampaignId: undefined })}>Unlink campaign</button>}</>}
+          {selectedNode.kind === "branch" && <><label>Attribute<select value={selectedNode.config?.attribute ?? "country"} onChange={event => changeConfig(selected, { attribute: event.target.value })}><option value="country">Country</option><option value="lifecycle">Lifecycle</option><option value="subscribed">Subscribed</option></select></label><label>Equals<input value={selectedNode.config?.value ?? ""} onChange={event => changeConfig(selected, { value: event.target.value })}/></label><small>Yes → {graph.nodes.find(node => node.id === branchRoutes[0]?.[1])?.label ?? "Connect a step"}</small><small>No → {graph.nodes.find(node => node.id === branchRoutes[1]?.[1])?.label ?? "Connect a step"}</small><button disabled={branchRoutes.length !== 2} onClick={() => swapBranchRoutes(selectedNode.id)}>Swap Yes / No routes</button></>}
+          {selectedNode.kind === "update" && <><label>Attribute<input value={selectedNode.config?.attribute ?? ""} onChange={event => changeConfig(selected, { attribute: event.target.value })}/></label><label>New value<input value={selectedNode.config?.value ?? ""} onChange={event => changeConfig(selected, { value: event.target.value })}/></label></>}
+          {!["message", "delay", "branch", "update"].includes(selectedNode.kind) && <><p>This component can be configured as a draft. Local simulation is not available for this component.</p><label>Notes<textarea value={String(selectedNode.config?.notes ?? "")} onChange={event => changeConfig(selected, { notes: event.target.value })}/></label></>}
+          <div className={styles.inspectorActions}><button onClick={() => { setLinkFrom(selected); setAdding(true); setInspectorOpen(false); }}>Connect from this step</button><button onClick={copy}>Copy step</button><button className={styles.danger} onClick={() => { remove(); setInspectorOpen(false); }}>Delete step</button></div>
+          <div className={styles.execution}><strong>Execution</strong><button disabled={browserDraft} onClick={() => void refreshRuns()}>Refresh execution</button>{runs.length ? <><label>Run<select value={run?.id ?? ""} onChange={event => { const next = runs.find(item => item.id === event.target.value); setRunId(next?.id ?? null); setTraceUser(next?.traces[0]?.userId ?? null); }}>{runs.map(item => <option key={item.id} value={item.id}>{formatDate(locale, item.createdAt, { dateStyle: "medium", timeStyle: "short" })}</option>)}</select></label><small>{formatNumber(locale, run?.entered ?? 0)} entered · {formatNumber(locale, run?.completed ?? 0)} completed · {formatNumber(locale, run?.messages ?? 0)} messages</small>{run?.nextDueAt && <button disabled={working} onClick={() => void advanceDemo()}>Advance demo by one day</button>}{trace?.steps.map((step, index) => <small key={`${step.nodeId}-${index}`}>✓ {step.label}</small>)}</> : <small>{browserDraft ? "Browser-only drafts have no execution history." : "Launch to inspect the local path."}</small>}</div>
+        </div>
+      </aside>}
+    </div>
+    {adding && <div className={styles.addBar}><button onClick={() => { setAdding(false); setLinkFrom(null); }}>Cancel Add Step</button><span>or Press <kbd>Esc</kbd></span></div>}
+  </section>;
 }

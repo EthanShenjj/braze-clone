@@ -1,4 +1,4 @@
-export type CanvasNodeKind = "entry" | "delay" | "message" | "branch" | "update";
+export type CanvasNodeKind = "entry" | "delay" | "message" | "branch" | "update" | "agent" | "optimizer" | "audience_paths" | "action_paths" | "experiment_paths" | "destination" | "context" | "feature_flag" | "audience_sync";
 export type CanvasNode = {
   id: string;
   label: string;
@@ -19,7 +19,8 @@ export type CanvasNode = {
     linkedCampaignId?: string;
   };
 };
-export type CanvasGraph = { nodes: CanvasNode[]; edges: [string, string][] };
+export type CanvasVariant = { id: string; name: string; weight: number };
+export type CanvasGraph = { nodes: CanvasNode[]; edges: [string, string][]; variants?: CanvasVariant[] };
 export type CanvasTrace = { userId: string; steps: { nodeId: string; label: string; kind: CanvasNodeKind; at: string }[] };
 export type CanvasRun = { id: string; createdAt: string; entered: number; completed: number; messages: number; traces: CanvasTrace[]; nextDueAt?: string | null };
 
@@ -37,10 +38,11 @@ export function isCanvasGraph(value: unknown): value is CanvasGraph {
   const graph = value as Partial<CanvasGraph>;
   return Array.isArray(graph.nodes) && Array.isArray(graph.edges)
     && graph.nodes.every(node => node && typeof node.id === "string" && typeof node.label === "string"
-      && ["entry", "delay", "message", "branch", "update"].includes(node.kind)
+      && ["entry", "delay", "message", "branch", "update", "agent", "optimizer", "audience_paths", "action_paths", "experiment_paths", "destination", "context", "feature_flag", "audience_sync"].includes(node.kind)
       && Number.isFinite(node.x) && Number.isFinite(node.y)
       && (!node.config || typeof node.config === "object"))
-    && graph.edges.every(edge => Array.isArray(edge) && edge.length === 2 && edge.every(id => typeof id === "string"));
+    && graph.edges.every(edge => Array.isArray(edge) && edge.length === 2 && edge.every(id => typeof id === "string"))
+    && (graph.variants === undefined || Array.isArray(graph.variants) && graph.variants.every(variant => variant && typeof variant.id === "string" && typeof variant.name === "string" && Number.isFinite(variant.weight)));
 }
 
 export function validateCanvasGraph(graph: CanvasGraph): string[] {
@@ -50,6 +52,8 @@ export function validateCanvasGraph(graph: CanvasGraph): string[] {
   if (entries.length !== 1) issues.push("Add exactly one Audience entry step.");
   if (graph.nodes.length < 2) issues.push("Add at least one step after Audience entry.");
   if (ids.size !== graph.nodes.length) issues.push("Each step must have a unique ID.");
+  if (graph.variants && (graph.variants.length === 0 || graph.variants.reduce((total, variant) => total + variant.weight, 0) !== 100)) issues.push("Canvas variant percentages must total 100%.");
+  if (graph.variants && graph.variants.length > 1) issues.push("Multiple variants are not supported by the local simulation.");
   const edges = new Set<string>();
   for (const [from, to] of graph.edges) {
     if (!ids.has(from) || !ids.has(to) || from === to) issues.push("Remove invalid or self-referencing connections.");
@@ -61,6 +65,7 @@ export function validateCanvasGraph(graph: CanvasGraph): string[] {
 
   const outgoing = (id: string) => graph.edges.filter(edge => edge[0] === id).map(edge => edge[1]);
   for (const node of graph.nodes) {
+    if (!["entry", "delay", "message", "branch", "update"].includes(node.kind)) issues.push(`The ${node.label} component is not supported by the local simulation.`);
     if (node.kind === "branch" && outgoing(node.id).length !== 2) issues.push(`Action path “${node.label}” needs exactly two routes.`);
     if (node.kind !== "branch" && outgoing(node.id).length > 1) issues.push(`Step “${node.label}” supports only one outgoing route.`);
     if (node.kind === "delay" && (!Number.isFinite(node.config?.durationHours) || Number(node.config?.durationHours) <= 0)) issues.push(`Set a positive delay on “${node.label}”.`);
