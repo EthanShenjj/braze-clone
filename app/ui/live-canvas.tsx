@@ -9,7 +9,7 @@ import { registerUnsavedNavigation } from "@/lib/unsaved-navigation";
 
 type Drag = { id: string; startX: number; startY: number; x: number; y: number; moved: boolean };
 
-export default function LiveCanvas({ locale: localeValue = "en", notify }: { locale?: Locale; notify: (message: string) => void }) {
+export default function LiveCanvas({ canvasId, canvasName, onBack, locale: localeValue = "en", notify, embedded = false, saveRef, onSaved }: { canvasId: string; canvasName: string; onBack: () => void; locale?: Locale; notify: (message: string) => void; embedded?: boolean; saveRef?: React.MutableRefObject<(() => Promise<boolean>) | null>; onSaved?: (graph: CanvasGraph, updatedAt: string) => void }) {
   const locale = normalizeLocale(localeValue);
   const [history, setHistory] = useState<CanvasGraph[]>([initialCanvasGraph]);
   const [cursor, setCursor] = useState(0);
@@ -41,7 +41,7 @@ export default function LiveCanvas({ locale: localeValue = "en", notify }: { loc
 
   useEffect(() => {
     const controller = new AbortController();
-    void fetch("/api/canvas", { signal: controller.signal }).then(response => response.json()).then(result => {
+    void fetch(`/api/canvases/${encodeURIComponent(canvasId)}`, { signal: controller.signal }).then(response => { if (!response.ok) throw new Error("Canvas not found."); return response.json(); }).then(result => {
       if (controller.signal.aborted) return;
       if (isCanvasGraph(result.graph)) {
         setHistory([result.graph]); setCursor(0);
@@ -54,7 +54,7 @@ export default function LiveCanvas({ locale: localeValue = "en", notify }: { loc
       setTraceUser(result.runs?.[0]?.traces?.[0]?.userId ?? null);
     }).catch(() => { if (!controller.signal.aborted) setError("Could not load the saved Canvas draft."); });
     return () => controller.abort();
-  }, []);
+  }, [canvasId]);
   useEffect(() => {
     const controller = new AbortController();
     void fetch("/api/subscription-groups?status=Active", { signal: controller.signal }).then(response => response.json()).then(result => setSubscriptionGroups(result.data ?? [])).catch(() => {});
@@ -62,7 +62,7 @@ export default function LiveCanvas({ locale: localeValue = "en", notify }: { loc
   }, []);
 
   const refreshRuns = async () => {
-    const response = await fetch("/api/canvas");
+    const response = await fetch(`/api/canvases/${encodeURIComponent(canvasId)}`);
     if (!response.ok) return;
     const result = await response.json();
     setRuns(Array.isArray(result.runs) ? result.runs : []);
@@ -118,21 +118,22 @@ export default function LiveCanvas({ locale: localeValue = "en", notify }: { loc
   const save = async (graphToSave: CanvasGraph = graph) => {
     setWorking(true); setError("");
     try {
-      const response = await fetch("/api/canvas", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ graph: graphToSave, updatedAt }) });
+      const response = await fetch(`/api/canvases/${encodeURIComponent(canvasId)}/graph`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ graph: graphToSave, updatedAt }) });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error ?? "Canvas save failed.");
-      setUpdatedAt(result.updatedAt); setSavedGraph(JSON.stringify(graphToSave)); notify("Canvas draft saved to local SQLite.");
+      setUpdatedAt(result.updatedAt); setSavedGraph(JSON.stringify(graphToSave)); onSaved?.(graphToSave, result.updatedAt); notify("Canvas draft saved to local SQLite.");
       return true;
     } catch (cause) { setError(cause instanceof Error ? cause.message : "Canvas save failed."); return false; }
     finally { setWorking(false); }
   };
+  if (saveRef) saveRef.current = () => save();
   const launch = async () => {
     const issues = validateCanvasGraph(graph);
     if (issues.length) { setError(issues.join(" ")); return; }
     if (!await save()) return;
     setWorking(true);
     try {
-      const response = await fetch("/api/canvas", { method: "POST" });
+      const response = await fetch(`/api/canvases/${encodeURIComponent(canvasId)}/launch`, { method: "POST" });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error ?? "Canvas run failed.");
       const run = result as CanvasRun;
@@ -144,7 +145,7 @@ export default function LiveCanvas({ locale: localeValue = "en", notify }: { loc
   };
 
   const openFullEditor = async (node: CanvasNode) => {
-    const campaignId = node.config?.linkedCampaignId ?? `cmp_canvas_${node.id.replace(/[^a-z0-9]/gi, "").slice(-6)}`;
+    const campaignId = node.config?.linkedCampaignId ?? `cmp_canvas_${canvasId.replace(/[^a-z0-9]/gi, "").slice(-6)}_${node.id.replace(/[^a-z0-9]/gi, "").slice(-6)}`;
     if (!node.config?.linkedCampaignId) {
       const response = await fetch("/api/campaigns", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
         id: campaignId,
@@ -179,12 +180,12 @@ export default function LiveCanvas({ locale: localeValue = "en", notify }: { loc
   const trace = run?.traces.find(item => item.userId === traceUser) ?? run?.traces[0];
   const icon = (kind: CanvasNodeKind) => kind === "entry" ? <Users size={18}/> : kind === "delay" ? <CalendarDays size={18}/> : kind === "branch" ? <MousePointerClick size={18}/> : kind === "update" ? <Activity size={18}/> : <Mail size={18}/>;
 
-  return <section className="canvas-page"><div className="page-heading"><div><h1>{translate(locale, "Canvas")}</h1><p>{translate(locale, "Build, validate, save, and simulate a local customer journey.")}</p></div><div className="heading-actions"><button className="secondary" disabled={cursor === 0 || working} onClick={() => setCursor(cursor - 1)}>{translate(locale, "Undo")}</button><button className="secondary" disabled={cursor === history.length - 1 || working} onClick={() => setCursor(cursor + 1)}>{translate(locale, "Redo")}</button><button className="secondary" disabled={working} onClick={() => void save()}>{translate(locale, "Save Draft")}</button><button className="primary" disabled={working} onClick={() => void launch()}>{translate(locale, "Launch Canvas")}</button></div></div>
+  return <section className="canvas-page"><div className="page-heading"><div>{!embedded && <button className="text-button" onClick={onBack}>← All Canvases</button>}<h1>{embedded ? "Build Canvas" : canvasName}</h1><p>{translate(locale, "Build, validate, save, and simulate a local customer journey.")}</p></div><div className="heading-actions"><button className="secondary" disabled={cursor === 0 || working} onClick={() => setCursor(cursor - 1)}>{translate(locale, "Undo")}</button><button className="secondary" disabled={cursor === history.length - 1 || working} onClick={() => setCursor(cursor + 1)}>{translate(locale, "Redo")}</button><button className="secondary" disabled={working} onClick={() => void save()}>{translate(locale, "Save Draft")}</button>{!embedded && <button className="primary" disabled={working} onClick={() => void launch()}>{translate(locale, "Launch Canvas")}</button>}</div></div>
     {error && <div className="canvas-error" role="alert">{error}</div>}
     <div className="canvas-shell live-canvas-shell"><aside><h3>{translate(locale, "Steps")}</h3>{(["entry", "message", "delay", "branch", "update"] as CanvasNodeKind[]).map(kind => <button key={kind} disabled={kind === "entry" && graph.nodes.some(node => node.kind === "entry")} onClick={() => add(kind)}><Plus size={14}/>{translate(locale, kind === "entry" ? "Audience entry" : kind === "message" ? "Message" : kind === "delay" ? "Delay" : kind === "branch" ? "Decision split" : "Update User")}</button>)}
       <hr/><h3>{translate(locale, "Inspector")}</h3>{selectedNode ? <><label>{translate(locale, "Step name")}<input value={selectedNode.label} onChange={event => changeNode(selected, { label: event.target.value })}/></label>
         {selectedNode.kind === "delay" && <label>{translate(locale, "Delay (hours)")}<input type="number" min="1" value={selectedNode.config?.durationHours ?? 24} onChange={event => changeConfig(selected, { durationHours: Number(event.target.value) })}/></label>}
-        {selectedNode.kind === "entry" && <><label>Re-entry<select value={selectedNode.config?.reEntry ?? "none"} onChange={event => changeConfig(selected, { reEntry: event.target.value as "none" | "after1d" | "after7d" | "always" })}><option value="none">Users can only enter once</option><option value="after1d">Re-enter after 1 day</option><option value="after7d">Re-enter after 7 days</option><option value="always">Re-enter every time</option></select></label><label>Conversion event<select value={selectedNode.config?.conversionEvent ?? "Start Session"} onChange={event => changeConfig(selected, { conversionEvent: event.target.value })}><option>Start Session</option><option>Makes Purchase</option><option>Performs Custom Event</option><option>Opens Email</option></select></label><label>Conversion deadline (days)<input type="number" min="1" value={selectedNode.config?.conversionDeadlineDays ?? 3} onChange={event => changeConfig(selected, { conversionDeadlineDays: Number(event.target.value) || 3 })}/></label></>}
+        {selectedNode.kind === "entry" && !embedded && <><label>Re-entry<select value={selectedNode.config?.reEntry ?? "none"} onChange={event => changeConfig(selected, { reEntry: event.target.value as "none" | "after1d" | "after7d" | "always" })}><option value="none">Users can only enter once</option><option value="after1d">Re-enter after 1 day</option><option value="after7d">Re-enter after 7 days</option><option value="always">Re-enter every time</option></select></label><label>Conversion event<select value={selectedNode.config?.conversionEvent ?? "Start Session"} onChange={event => changeConfig(selected, { conversionEvent: event.target.value })}><option>Start Session</option><option>Makes Purchase</option><option>Performs Custom Event</option><option>Opens Email</option></select></label><label>Conversion deadline (days)<input type="number" min="1" value={selectedNode.config?.conversionDeadlineDays ?? 3} onChange={event => changeConfig(selected, { conversionDeadlineDays: Number(event.target.value) || 3 })}/></label></>}
         {selectedNode.kind === "message" && <><label>{translate(locale, "Channel")}<select disabled={Boolean(selectedNode.config?.linkedCampaignId)} value={selectedNode.config?.channel ?? "email"} onChange={event => changeConfig(selected, { channel: event.target.value, subscriptionGroupId: undefined })}><option value="email">{translate(locale, "Email")}</option><option value="push">{translate(locale, "Push notification")}</option><option value="sms">SMS</option><option value="iam">{translate(locale, "In-app message")}</option></select></label>{["email", "sms"].includes(selectedNode.config?.channel ?? "email") && <label>Subscription group<select disabled={Boolean(selectedNode.config?.linkedCampaignId)} value={String(selectedNode.config?.subscriptionGroupId ?? "")} onChange={event => changeConfig(selected, { subscriptionGroupId: event.target.value || undefined })}><option value="">{selectedNode.config?.channel === "sms" ? "Select a group" : "No group filter"}</option>{subscriptionGroups.filter(group => group.channel === (selectedNode.config?.channel === "sms" ? "SMS" : "Email")).map(group => <option value={group.id} key={group.id}>{group.name}</option>)}</select></label>}<label>Subject<input disabled={Boolean(selectedNode.config?.linkedCampaignId)} value={selectedNode.config?.subject ?? ""} onChange={event => changeConfig(selected, { subject: event.target.value })}/></label><label>{translate(locale, "Message")}<textarea disabled={Boolean(selectedNode.config?.linkedCampaignId)} value={selectedNode.config?.message ?? ""} onChange={event => changeConfig(selected, { message: event.target.value })}/></label><button className="secondary small" onClick={() => void openFullEditor(selectedNode!)}><ExternalLink size={13}/> Open in full editor</button>{selectedNode.config?.linkedCampaignId && <><small>Linked campaign: {selectedNode.config.linkedCampaignId}. Content is edited in the full editor.</small><button className="secondary small" onClick={() => changeConfig(selected, { linkedCampaignId: undefined })}>Unlink campaign</button></>}</>}
         {selectedNode.kind === "update" && <><label>Attribute<input value={selectedNode.config?.attribute ?? ""} onChange={event => changeConfig(selected, { attribute: event.target.value, value: event.target.value === "subscribed" ? "true" : selectedNode.config?.value ?? "" })}/></label><label>New value{selectedNode.config?.attribute === "subscribed" ? <select value={selectedNode.config?.value === "false" ? "false" : "true"} onChange={event => changeConfig(selected, { value: event.target.value })}><option value="true">Subscribed</option><option value="false">Unsubscribed</option></select> : <input value={selectedNode.config?.value ?? ""} onChange={event => changeConfig(selected, { value: event.target.value })}/>}</label><small>Global email status accepts only true or false.</small></>}
         {selectedNode.kind === "branch" && <><label>{translate(locale, "Attribute")}<select value={selectedNode.config?.attribute ?? "country"} onChange={event => changeConfig(selected, { attribute: event.target.value })}><option value="country">{translate(locale, "Country")}</option><option value="lifecycle">{translate(locale, "Lifecycle")}</option><option value="subscribed">{translate(locale, "Subscribed")}</option></select></label><label>{translate(locale, "Equals")}<input value={selectedNode.config?.value ?? ""} onChange={event => changeConfig(selected, { value: event.target.value })}/></label><small>Yes → {graph.nodes.find(node => node.id === branchRoutes[0]?.[1])?.label ?? "Connect a step"}</small><small>No → {graph.nodes.find(node => node.id === branchRoutes[1]?.[1])?.label ?? "Connect a step"}</small><button className="secondary small" disabled={branchRoutes.length !== 2} onClick={() => swapBranchRoutes(selectedNode.id)}>Swap Yes / No routes</button></>}

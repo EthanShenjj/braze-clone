@@ -34,6 +34,7 @@ export function routeForPage(page: string) {
 export function pageFromPath(pathname: string) {
   if (/^\/app_settings\/app_settings\/email_settings(?:\/|$)/.test(pathname)) return "email-preferences";
   if (/^\/engagement\/campaigns\/cmp_[^/]+$/.test(pathname)) return "campaigns";
+  if (/^\/engagement\/canvas\/[^/]+$/.test(pathname)) return "canvas";
   if (/^\/engagement\/predictions\/[^/]+\/[^/]+$/.test(pathname)) return "catalogs";
   if (/^\/(?:content|dashboard)\/catalogs\//.test(pathname)) return "catalogs";
   if (/^\/users\/subscription_groups\/preference_centers\//.test(pathname)) return "email-preference-centers";

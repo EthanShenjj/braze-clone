@@ -8,6 +8,20 @@
 
 本节记录方案完成后的第一批代码优化；下文的“本轮实测问题”保留原始审计时点的证据，不再代表这些项目仍未修复。
 
+### Canvas 管理页补齐（2026-10-18）
+
+本轮针对截图中的 Canvas 列表完成了多实例路由与本地管理能力：`/engagement/canvas` 展示列表，`/engagement/canvas/:id` 打开相应画布；每个 Canvas 的图、运行、重入历史和消息事件均按 ID 隔离。列表支持草稿/活跃/停止/归档状态、标签和搜索、创建者/编辑者/日期/体验/目标分群筛选、列显隐、排序、分页、行选择、批量归档、编辑名称说明及标签、复制、归档，以及三种带不同初始图内容的模板。旧 `/api/canvas` 保留兼容。验证见 `tests/canvas-management-api.py`，并在隔离数据库的浏览器中确认列表与详情往返。
+
+**尚未等同 Braze 生产功能**：本地只有一个 workspace，因而“Copy to workspace”在菜单中明确禁用；当前 Alerts Configured 仅是本地标记，没有阈值评估或通知发送。Canvas 的事件入口、完整 Audience/Action/Experiment Paths、版本发布和专属分析仍按本方案后续阶段实施。下文原始审计表中的“Canvas 入口直接打开固定画布”是修复前状态，不应再作为当前现状引用。
+
+### 六步创建向导实测与实现（2026-10-18）
+
+在已登录的 Braze 草稿中逐页检查了 Basics、Entry Schedule、Target Audience、Send Settings、Build Canvas、Summary，核对字段、默认值、条件显示和 Summary 错误。原版受 Limited access / free trial 约束，无法验证正式发布和消息投递；检查后将原版草稿的探索性设置恢复到原状态并保存。本地浏览器使用隔离 SQLite 验证了“新建 → 六步 → Summary → 刷新恢复”，并确认空画布被 Summary 阻断。
+
+本地已将 `/engagement/canvas/:id?step=...` 接入六步向导：从列表直接创建带 UUID 的草稿、上/下步与步骤器、保存和跨页恢复、转换事件、定时/行为/API 入口配置、分群/过滤/重入/入口量、发送规则、内嵌图编辑和 Summary 错误定位。服务端在本地模拟启动前重新校验向导；入口受众、部分排除与退出过滤、重入窗口、入口量以及邮件订阅目标模式参与本地模拟；旧 `/api/canvas` 保持兼容。验证：`npm run build`、`tests/canvas-management-api.py` 与浏览器手动验收。
+
+**不能宣称 1:1 完成**：原版动作/API 触发、按日期自动调度、真实分群预估、频控、静默时段、抑制名单、转化归因、正式发布权限与版本、全套高级节点/分支、Canvas 分析在本地仍未具备等效执行。对应向导选项可保存，但本地 Summary 对尚不能安全模拟的动作/API 入口、频控与静默时段明确阻断启动；API-Triggered 页展示的是待实现的本地端点示意，不是已上线 API。菜单可见不等于功能已复刻。
+
 | 工作项 | 当前进度 | 验证 |
 | --- | --- | --- |
 | S01/S02/S03 | Campaign 与预估均组合全局状态和订阅组状态；归档/跨渠道组拒绝；仅 PATCH 状态可用 | `tests/subscription-safety-api.py` |
@@ -16,7 +30,7 @@
 | C02/C03/C04 | Canvas 延迟步骤持久化，Demo Advance 到期恢复；按用户检查重入；Update User 先更新后发信 | `tests/canvas-runtime-api.py` |
 | C07（部分） | Canvas 消息节点在执行时复查可达、Email 全局状态和所选组状态 | API 回归；频控及抑制名单尚未接通 |
 
-仍需按后续阶段实施：Canvas 多实例列表和发布版本、完整 Entry Rules 与真实事件驱动、更多分支节点、偏好中心草稿/线上版本隔离、订阅组时间序列和列表对齐、跨模块完整验收。签名链接的生成入口仍依赖当前演示项目的整体访问控制，尚无生产级后台身份与权限校验。当前仍为**本地模拟执行**，不能用于真实渠道投递或生产订阅合规系统。
+仍需按后续阶段实施：Canvas 发布版本、完整 Entry Rules 与真实事件驱动、更多分支节点、偏好中心草稿/线上版本隔离、订阅组时间序列和列表对齐、跨模块完整验收。签名链接的生成入口仍依赖当前演示项目的整体访问控制，尚无生产级后台身份与权限校验。当前仍为**本地模拟执行**，不能用于真实渠道投递或生产订阅合规系统。
 
 ## 一、结论与建议顺序
 
@@ -46,7 +60,7 @@
 
 本地服务使用 Node 22.22.3、Next.js 16.3.5，绑定 `127.0.0.1:3100`；数据库独立设置为 `/private/tmp/braze-gap-audit-20261018.sqlite`。探测只修改该隔离库，邮件和 Push 均为本地模拟事件。
 
-原版 Canvas 为 View Only，Subscription Pages and Footers 的三个开关不可编辑。只查看了订阅组创建弹窗和偏好中心新建页，没有提交原版新增、保存、归档或发布操作。不能把这些页面的可访问性解释为拥有全部编辑权限。
+原始差距审计时 Canvas 为 View Only；本次六步核对获得一个可编辑草稿，但账号仍为 Limited access/free trial，不能发布。Subscription Pages and Footers 的三个开关不可编辑。只查看了订阅组创建弹窗和偏好中心新建页，没有提交原版新增、归档或发布操作。不能把页面可访问性解释为拥有全部编辑权限。
 
 本轮没有进行统一视口的截图差异测量，也没有验证原版真实投递及转化归因，因此不输出视觉完成百分比或“已达到 1:1”的结论。完整复现记录见[检查证据与复现步骤](</Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/docs/braze-gap-audit-evidence-2026-10-18.md>)。
 
@@ -95,11 +109,26 @@
 建议采用四层结构，保留已完成的图编辑操作：
 
 1. **Canvas 列表**：默认状态筛选、标签、搜索、排序、列设置、分页、行菜单；筛选与页码写入 URL。列表显示真实资源状态。
-2. **Canvas 配置**：Details → Entry Schedule → Target Audience → Send Settings / Conversion / Exit → Build → Review。布局和具体入口以原版可访问状态继续核对。
+2. **Canvas 创建向导**：严格按原版可见顺序展示 Basics → Entry Schedule → Target Audience → Send Settings → Build Canvas → Summary；下表明确每步的本地交付和待核对项。
 3. **Canvas 编辑器**：上方摘要、Entry Rules、节点工具区、画布、右侧配置抽屉、固定底栏。区分入口、节点和路径；节点配置错误可定位。
 4. **Canvas 分析**：进入、等待、退出、完成、发送、抑制及转化；可按版本、时间、节点、路径筛选，查看单用户轨迹。
 
 建议本地路由：`/engagement/canvas`、`/engagement/canvas/:id`、`/engagement/canvas/:id/analytics`。原版 URL 中的 workspace 与本地 Canvas ID 应明确区分，避免旧链接全部映射到同一画布。
+
+#### 六步创建向导：Braze 实测对照
+
+下表为 2026-10-18 在原版登录页面逐页观察的配置，不再仅根据截图推断。当前本地实现覆盖了主要表单与保存交互，但“UI 字段可编辑”与“执行语义等效”分开判断。
+
+| 步骤 | Braze 实测配置 | 本地状态与差距 |
+| --- | --- | --- |
+| 1 Basics | Name、可展开 Description、Tags、只读 Canvas ID/Copy；最多 4 个 Conversion Events，每项有事件类型、App 范围和转换期限；上线后不可修改 | 字段与草稿保存已接入；本地转换事件仅存配置，尚无真实归因 |
+| 2 Entry Schedule | Scheduled / Action-Based / API-Triggered；Scheduled 有立即或指定时间、Once/Daily/Weekly/Monthly、本地时区；Action-Based 有 22 种触发器和 Entry Window；API 展示 ID 与调用示例 | 主体表单已接入；定时自动调度和事件/API 触发运行未接通，Summary 禁止将其误作手动模拟 |
+| 3 Target Audience | 多 Segment、附加 Filter/Exclusion Group、Audience Summary/User Lookup、重入控制、入口量上限、Exit Criteria、Suppression Lists、Total Population | 主体控件、持久化、基础受众匹配与入口量参与本地模拟；精确预估、抑制名单与全部事件退出仍缺 |
+| 4 Send Settings | 三种订阅目标模式；共享/分渠道 Rate Limit；工作区 Frequency Capping；Quiet hours 与 Abort/延后发送 | 表单与订阅模式判断已接入；频控、静默时段、工作区规则需要异步调度器，暂阻断本地模拟 |
+| 5 Build Canvas | 编辑摘要、Entry Rules、画布、节点面板、保存、测试、最大时长；可见 Message、Delay、Agent Step、Content Optimizer、Decision Split、Audience Paths、Action Paths、Experiment Paths、Send to Destination、Context、User Update、Feature Flag、Audience Sync | 内嵌现有图编辑器，可保存与校验；大部分高级节点和变体流程尚未实现，不能把现有五种节点称为完整复刻 |
+| 6 Summary | 分节复核前五步、View Details/Edit、错误详情及上线限制；本账号 free trial 无法正式上线 | 本地 Summary 展示摘要、定位错误并阻断不安全的模拟启动；缺真实用户数、发布版本与 Braze 权限模型 |
+
+**后续验收**：新增定时/事件/API 入口的端到端执行测试；统一实时受众预估与运行过滤；频控和静默时段调度；转换归因与发布版本快照；补齐节点配置/分支语义、专属分析；最后按相同视口逐项比对布局、文案、空态、错误态与键盘交互。
 
 ### 4.3 节点能力分批交付
 

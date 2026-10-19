@@ -7,7 +7,7 @@ import { createPortal } from "react-dom";
 import emailStarterStyles from "./email-starter.module.css";
 import brazeSendingStyles from "./braze-sending.module.css";
 import pushStyles from "./push-editor.module.css";
-import LiveCanvas from "./live-canvas";
+import CanvasWorkspace from "./canvas-workspace";
 import LiveUserSearch from "./live-user-search";
 import CatalogWorkspace from "./catalog-workspace";
 import GlobalControlGroup from "./global-control-group";
@@ -278,7 +278,7 @@ function Operator({ locale, close, start }: { locale: Locale; close: () => void;
 
 function PageContent({ locale, page, campaigns, openPage, onEdit, onCreate, onStop, onArchive, onDuplicate, notify, onTour }: { locale: Locale; page: string; campaigns: Campaign[]; openPage: (p: string) => void; onEdit: (c: Campaign) => void; onCreate: (event: ReactMouseEvent<HTMLButtonElement>) => void; onStop: (id: string) => void; onArchive: (id: string) => Promise<boolean>; onDuplicate: (campaign: Campaign) => Promise<void>; notify: (m: string) => void; onTour: () => void }) {
   if (page === "campaigns") return <CampaignList locale={locale} campaigns={campaigns} onEdit={onEdit} onCreate={onCreate} onStop={onStop} onArchive={onArchive} onDuplicate={onDuplicate} onTour={onTour} notify={notify}/>;
-  if (page === "canvas") return <LiveCanvas locale={locale} notify={notify}/>;
+  if (page === "canvas") return <CanvasWorkspace locale={locale} notify={notify}/>;
   if (page === "getting-started") return <GettingStarted locale={locale} openPage={openPage}/>;
   if (page === "performance") return <Performance locale={locale} campaigns={campaigns}/>;
   if (page === "demo-lab") return <LiveDemoLab locale={locale} notify={notify}/>;

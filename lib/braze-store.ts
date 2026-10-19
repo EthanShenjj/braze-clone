@@ -10,7 +10,8 @@ import { workspaceContentBlockHtml } from "./email-liquid";
 import { compileWorkspaceEmail, emailSendingIssues, extractEmailLinks, isBotClick } from "./email-runtime";
 import { resolveLiquidPreview, type WorkspaceLiquid } from "./email-editor-model";
 import { campaignValidationIssues } from "./campaign-validation";
-import { type CanvasGraph, type CanvasRun, type CanvasTrace, validateCanvasGraph } from "./canvas-model";
+import { initialCanvasGraph, isCanvasGraph, type CanvasGraph, type CanvasRun, type CanvasTrace, validateCanvasGraph } from "./canvas-model";
+import { canvasWizardIssues, defaultCanvasWizard, normalizeCanvasWizard, type CanvasFilter, type CanvasWizardConfig } from "./canvas-wizard-model";
 import { sampleCatalogId, sampleCatalogRows, sampleRecommendationId } from "./sample-catalog";
 import { sampleSegmentByName, sampleSegments } from "./sample-segments";
 import { deliverWebhook, webhookDeliveryCapability, type WebhookDeliveryResult } from "./webhook-delivery";
@@ -919,6 +920,60 @@ export function saveEmailPreferences(data: EmailPreferences, expectedUpdatedAt: 
 }
 
 const localCanvasId = "canvas_local_main";
+export type CanvasRecord = { id: string; name: string; status: string; description: string; updatedAt: string; createdAt: string; createdBy: string; lastEditedBy: string; tags: string[]; team: string; experience: string; targetSegment: string; alertsConfigured: boolean; wizard: CanvasWizardConfig };
+function canvasResource(id: string) {
+  const resource = getResource(id);
+  return resource?.type === "canvas" ? resource : null;
+}
+function canvasGraph(resource: ResourceRecord): CanvasGraph {
+  return isCanvasGraph(resource.data) && resource.data.nodes.length ? resource.data as CanvasGraph : structuredClone(initialCanvasGraph);
+}
+function canvasRecord(resource: ResourceRecord): CanvasRecord {
+  const metadata = resource.data;
+  return { id: resource.id, name: resource.name, status: resource.status, description: resource.description,
+    updatedAt: resource.updatedAt, createdAt: typeof metadata.createdAt === "string" ? metadata.createdAt : resource.updatedAt,
+    createdBy: typeof metadata.createdBy === "string" ? metadata.createdBy : "Local workspace",
+    lastEditedBy: typeof metadata.lastEditedBy === "string" ? metadata.lastEditedBy : "Local workspace",
+    tags: Array.isArray(metadata.tags) ? metadata.tags.filter((tag): tag is string => typeof tag === "string") : [],
+    team: typeof metadata.team === "string" ? metadata.team : "", experience: typeof metadata.experience === "string" ? metadata.experience : "Canvas Flow",
+    targetSegment: typeof metadata.targetSegment === "string" ? metadata.targetSegment : "All Users", alertsConfigured: metadata.alertsConfigured === true,
+    wizard: normalizeCanvasWizard(metadata.wizard) };
+}
+export function listCanvases() { return listResources("canvas").map(canvasRecord); }
+export function getCanvas(id: string) { const resource = canvasResource(id); return resource ? canvasRecord(resource) : null; }
+export function createCanvas(input: { name: string; description?: string; tags?: string[]; graph?: CanvasGraph; wizard?: CanvasWizardConfig }) {
+  const name = input.name.trim();
+  if (!name || name.length > 120) throw new Error("Canvas name must be 1–120 characters.");
+  if (listCanvases().some(item => item.name.toLowerCase() === name.toLowerCase() && item.status !== "Archived")) throw new Error("A Canvas with this name already exists.");
+  const timestamp = now();
+  const resource: ResourceRecord = { id: crypto.randomUUID(), type: "canvas", name, status: "Draft", description: input.description?.trim() ?? "", updatedAt: timestamp,
+    data: { ...(input.graph ?? structuredClone(initialCanvasGraph)), createdAt: timestamp, createdBy: "Local workspace", lastEditedBy: "Local workspace", tags: input.tags ?? [], experience: "Canvas Flow", targetSegment: "All Users", alertsConfigured: false, wizard: input.wizard ?? structuredClone(defaultCanvasWizard) } };
+  db().prepare("INSERT INTO resources VALUES (?, ?, ?, ?, ?, ?, ?)").run(resource.id, resource.type, resource.name, resource.status, resource.description, resource.updatedAt, JSON.stringify(resource.data));
+  audit("canvas", resource.id, "created", {});
+  return canvasRecord(resource);
+}
+export function updateCanvas(id: string, input: { name?: string; description?: string; tags?: string[]; status?: string; alertsConfigured?: boolean; wizard?: CanvasWizardConfig }, expectedUpdatedAt?: string) {
+  const existing = canvasResource(id);
+  if (!existing) throw new Error("Canvas not found.");
+  const name = input.name?.trim() ?? existing.name;
+  if (!name || name.length > 120) throw new Error("Canvas name must be 1–120 characters.");
+  if (input.status && !["Draft", "Active", "Stopped", "Archived"].includes(input.status)) throw new Error("Invalid Canvas status.");
+  if (input.tags && (!Array.isArray(input.tags) || input.tags.some(tag => typeof tag !== "string"))) throw new Error("Invalid tags.");
+  if (existing.status === "Active" && input.wizard && JSON.stringify(normalizeCanvasWizard(input.wizard).conversionEvents) !== JSON.stringify(normalizeCanvasWizard(existing.data.wizard).conversionEvents)) throw new Error("Conversion events cannot be changed after a Canvas has launched.");
+  if (listCanvases().some(item => item.id !== id && item.name.toLowerCase() === name.toLowerCase() && item.status !== "Archived")) throw new Error("A Canvas with this name already exists.");
+  return canvasRecord(updateResource(id, { name, description: input.description ?? existing.description, status: input.status ?? existing.status,
+    data: { ...existing.data, tags: input.tags ?? existing.data.tags ?? [], alertsConfigured: input.alertsConfigured ?? existing.data.alertsConfigured ?? false,
+      wizard: input.wizard ? normalizeCanvasWizard(input.wizard) : existing.data.wizard ?? structuredClone(defaultCanvasWizard), lastEditedBy: "Local workspace" } }, expectedUpdatedAt));
+}
+export function duplicateCanvas(id: string) {
+  const source = canvasResource(id);
+  if (!source) throw new Error("Canvas not found.");
+  let name = `${source.name} copy`; let suffix = 2;
+  while (listCanvases().some(item => item.name.toLowerCase() === name.toLowerCase() && item.status !== "Archived")) name = `${source.name} copy ${suffix++}`;
+  const graph = canvasGraph(source);
+  return createCanvas({ name, description: source.description, tags: canvasRecord(source).tags, wizard: canvasRecord(source).wizard,
+    graph: { ...graph, nodes: graph.nodes.map(node => node.config?.linkedCampaignId ? { ...node, config: { ...node.config, linkedCampaignId: undefined } } : node) } });
+}
 function resolveCanvasLinkedMessages(graph: CanvasGraph): CanvasGraph {
   return { ...graph, nodes: graph.nodes.map(node => {
     if (node.kind !== "message" || !node.config?.linkedCampaignId) return node;
@@ -927,28 +982,29 @@ function resolveCanvasLinkedMessages(graph: CanvasGraph): CanvasGraph {
     return { ...node, config: { ...node.config, ...campaign.config, subject: campaign.subject ?? node.config.subject, message: campaign.body ?? node.config.message, linkedCampaignId: campaign.id } };
   }) };
 }
-export function getCanvasWorkspace() {
-  const resource = getResource(localCanvasId);
-  const rows = db().prepare("SELECT * FROM canvas_runs WHERE canvas_id = ? ORDER BY created_at DESC LIMIT 8").all(localCanvasId) as Record<string, unknown>[];
+export function getCanvasWorkspace(canvasId = localCanvasId) {
+  const resource = canvasResource(canvasId);
+  const rows = db().prepare("SELECT * FROM canvas_runs WHERE canvas_id = ? ORDER BY created_at DESC LIMIT 8").all(canvasId) as Record<string, unknown>[];
   const runs: CanvasRun[] = rows.map(row => {
     const due = db().prepare("SELECT min(due_at) AS due_at FROM canvas_pending_steps WHERE run_id = ?").get(String(row.id)) as { due_at: string | null };
     return { id: String(row.id), createdAt: String(row.created_at), entered: Number(row.entered_count), completed: Number(row.completed_count), messages: Number(row.message_count), traces: parseJson(String(row.traces_json), [] as CanvasTrace[]), nextDueAt: due.due_at };
   });
-  return { graph: resource?.data ? resolveCanvasLinkedMessages(resource.data as CanvasGraph) : null, updatedAt: resource?.updatedAt ?? null, runs };
+  return { graph: resource ? resolveCanvasLinkedMessages(canvasGraph(resource)) : null, updatedAt: resource?.updatedAt ?? null, runs, canvas: resource ? canvasRecord(resource) : null };
 }
 
-export function saveCanvasGraph(graph: CanvasGraph, expectedUpdatedAt?: string | null) {
-  const existing = getResource(localCanvasId);
+export function saveCanvasGraph(graph: CanvasGraph, expectedUpdatedAt?: string | null, canvasId = localCanvasId) {
+  const existing = canvasResource(canvasId);
   if (existing && expectedUpdatedAt !== undefined && expectedUpdatedAt !== existing.updatedAt) throw new Error("Canvas draft changed in another tab. Reload before saving.");
   graph = resolveCanvasLinkedMessages({ ...graph, nodes: graph.nodes.map(node => node.kind === "message" && node.config?.channel === "email" ? { ...node, config: { ...emailPreferenceCampaignDefaults(getEmailPreferences().data), ...((existing?.data as unknown as CanvasGraph)?.nodes?.find(saved => saved.id === node.id)?.config ?? {}), ...node.config } } : node) });
   const updatedAt = now();
+  if (!existing && canvasId !== localCanvasId) throw new Error("Canvas not found.");
   db().prepare("INSERT INTO resources VALUES (?, 'canvas', ?, 'Draft', ?, ?, ?) ON CONFLICT(id) DO UPDATE SET updated_at=excluded.updated_at, data_json=excluded.data_json")
-    .run(localCanvasId, "Local canvas draft", "Saved visual journey graph", updatedAt, JSON.stringify(graph));
-  audit("canvas", localCanvasId, existing ? "updated" : "created", { nodeCount: graph.nodes.length, edgeCount: graph.edges.length });
+    .run(canvasId, existing?.name ?? "Local canvas draft", existing?.description ?? "Saved visual journey graph", updatedAt, JSON.stringify({ ...existing?.data, ...graph, lastEditedBy: "Local workspace" }));
+  audit("canvas", canvasId, existing ? "updated" : "created", { nodeCount: graph.nodes.length, edgeCount: graph.edges.length });
   return { graph, updatedAt };
 }
 
-function advanceCanvasUser(graph: CanvasGraph, runId: string, userId: string, startNodeId: string, timestamp: string, steps: CanvasTrace["steps"]) {
+function advanceCanvasUser(graph: CanvasGraph, canvasId: string, runId: string, userId: string, startNodeId: string, timestamp: string, steps: CanvasTrace["steps"]) {
   let current = graph.nodes.find(node => node.id === startNodeId);
   let messages = 0;
   while (current) {
@@ -977,13 +1033,15 @@ function advanceCanvasUser(graph: CanvasGraph, runId: string, userId: string, st
       const user = getUser(userId);
       const expectedChannel = channel === "email" ? "Email" : channel === "sms" ? "SMS" : channel === "whatsapp" ? "WhatsApp" : null;
       const member = group ? db().prepare("SELECT state FROM subscription_group_memberships WHERE group_id = ? AND user_id = ?").get(group.id, userId) as { state: SubscriptionState } | undefined : undefined;
-      const eligible = Boolean(user?.reachable) && (channel !== "email" || user?.emailSubscriptionStatus !== "unsubscribed")
+      const sendMode = normalizeCanvasWizard(canvasResource(canvasId)?.data.wizard).send.subscriptionMode;
+      const emailEligible = sendMode === "all" || (sendMode === "opted_in_only" ? user?.emailSubscriptionStatus === "opted_in" : user?.emailSubscriptionStatus !== "unsubscribed");
+      const eligible = Boolean(user?.reachable) && (channel !== "email" || emailEligible)
         && (channel !== "sms" && channel !== "whatsapp" || Boolean(groupId))
         && (!groupId || group?.status === "Active" && group.channel === expectedChannel && member?.state === "subscribed");
       const eventData = eligible && channel === "email"
         ? { canvasRunId: runId, nodeId: current.id, simulated: true, message: prepareEmailMessage({ subject: current.config?.subject, body: current.config?.message, config: current.config }, userId, "campaign") }
         : { canvasRunId: runId, nodeId: current.id, simulated: true, reason: eligible ? undefined : "subscription_or_reachability" };
-      db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), localCanvasId, channel, userId, eligible ? "delivered" : "suppressed", timestamp, JSON.stringify(eventData));
+      db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), canvasId, channel, userId, eligible ? "delivered" : "suppressed", timestamp, JSON.stringify(eventData));
       if (eligible) messages += 1;
     }
     const user = getUser(userId);
@@ -995,38 +1053,68 @@ function advanceCanvasUser(graph: CanvasGraph, runId: string, userId: string, st
   return { completed: true, messages };
 }
 
-export function launchCanvasGraph(): CanvasRun {
-  const saved = getResource(localCanvasId);
+function canvasFilterMatches(filter: CanvasFilter, user: UserRecord) {
+  const actual = filter.field === "emailSubscriptionStatus" ? user.emailSubscriptionStatus : user[filter.field];
+  const matches = String(actual).toLowerCase() === filter.value.trim().toLowerCase();
+  return filter.operator === "is_not" ? !matches : matches;
+}
+
+function canvasAudienceMatches(config: CanvasWizardConfig["audience"], user: UserRecord) {
+  const segments = listResources("segments");
+  const inSegments = config.segmentIds.every(id => {
+    const resource = segments.find(segment => segment.id === id);
+    const rule = (resource?.data.filters as Array<{ field?: string; value?: unknown; attribute?: string }> | undefined)?.[0];
+    if (!rule) return false;
+    const actual = rule.field === "attribute" && rule.attribute ? user.attributes[rule.attribute] : rule.field === "subscribed" ? Number(user.subscribed) : rule.field === "reachable" ? Number(user.reachable) : rule.field === "country" ? user.country : rule.field === "lifecycle" ? user.lifecycle : undefined;
+    return String(actual) === String(rule.value);
+  });
+  const filtersMatch = config.filters.length === 0 || (config.filterOperator === "AND" ? config.filters.every(filter => canvasFilterMatches(filter, user)) : config.filters.some(filter => canvasFilterMatches(filter, user)));
+  return inSegments && filtersMatch && !config.exclusionFilters.some(filter => canvasFilterMatches(filter, user)) && !config.exitSegmentIds.some(id => {
+    const segment = segments.find(item => item.id === id);
+    const rule = (segment?.data.filters as Array<{ field?: string; value?: unknown; attribute?: string }> | undefined)?.[0];
+    if (!rule) return false;
+    const actual = rule.field === "attribute" && rule.attribute ? user.attributes[rule.attribute] : rule.field === "subscribed" ? Number(user.subscribed) : rule.field === "reachable" ? Number(user.reachable) : rule.field === "country" ? user.country : rule.field === "lifecycle" ? user.lifecycle : undefined;
+    return String(actual) === String(rule.value);
+  }) && !config.exitFilters.some(filter => canvasFilterMatches(filter, user));
+}
+
+export function launchCanvasGraph(canvasId = localCanvasId): CanvasRun {
+  const saved = canvasResource(canvasId);
   if (!saved) throw new Error("Save the Canvas draft before launching.");
-  const graph = resolveCanvasLinkedMessages(saved.data as CanvasGraph);
-  const issues = [...validateCanvasGraph(graph), ...graph.nodes.filter(node => node.kind === "message" && node.config?.channel === "email").flatMap(node => emailSendingIssues({ config: node.config }, getEmailPreferences().data))];
+  if (saved.status === "Archived") throw new Error("Archived Canvases cannot be launched.");
+  const graph = resolveCanvasLinkedMessages(canvasGraph(saved));
+  const wizard = saved.data.wizard ? normalizeCanvasWizard(saved.data.wizard) : null;
+  const issues = [...(wizard ? canvasWizardIssues(wizard, graph).map(issue => issue.detail) : validateCanvasGraph(graph)), ...graph.nodes.filter(node => node.kind === "message" && node.config?.channel === "email").flatMap(node => emailSendingIssues({ config: node.config }, getEmailPreferences().data))];
   if (issues.length) throw new Error(issues.join(" "));
   const timestamp = getDemoState().simulatedTime;
   const entry = graph.nodes.find(node => node.kind === "entry")!;
-  const reEntry = entry.config?.reEntry ?? "none";
-  const cutoff = reEntry === "after1d" ? 86_400_000 : reEntry === "after7d" ? 7 * 86_400_000 : 0;
+  const reEntry = wizard ? wizard.audience.reentryEnabled ? "window" : "none" : entry.config?.reEntry ?? "none";
+  const cutoff = wizard && reEntry === "window" ? wizard.audience.reentryValue * (wizard.audience.reentryUnit === "Hours" ? 3_600_000 : 86_400_000) : reEntry === "after1d" ? 86_400_000 : reEntry === "after7d" ? 7 * 86_400_000 : 0;
   const candidates = db().prepare("SELECT id FROM users WHERE reachable = 1 ORDER BY id LIMIT 100").all() as { id: string }[];
   const users = candidates.filter(user => {
-    const history = db().prepare("SELECT last_entered_at FROM canvas_entry_history WHERE canvas_id = ? AND user_id = ?").get(localCanvasId, user.id) as { last_entered_at: string } | undefined;
-    const pending = db().prepare("SELECT 1 FROM canvas_pending_steps p JOIN canvas_runs r ON r.id = p.run_id WHERE r.canvas_id = ? AND p.user_id = ? LIMIT 1").get(localCanvasId, user.id);
+    const profile = wizard ? getUser(user.id) : null;
+    if (wizard && (!profile || !canvasAudienceMatches(wizard.audience, profile))) return false;
+    const history = db().prepare("SELECT last_entered_at FROM canvas_entry_history WHERE canvas_id = ? AND user_id = ?").get(canvasId, user.id) as { last_entered_at: string } | undefined;
+    const pending = db().prepare("SELECT 1 FROM canvas_pending_steps p JOIN canvas_runs r ON r.id = p.run_id WHERE r.canvas_id = ? AND p.user_id = ? LIMIT 1").get(canvasId, user.id);
     return !pending && (!history || reEntry === "always" || cutoff > 0 && new Date(timestamp).getTime() - new Date(history.last_entered_at).getTime() >= cutoff);
-  }).slice(0, 10);
+  }).slice(0, wizard?.audience.volumeEnabled ? Math.min(10, wizard.audience.maxEntries) : 10);
   const runId = uid("canvasrun");
   let messages = 0; let completed = 0;
   const traces: CanvasTrace[] = [];
   db().exec("BEGIN");
   try {
     for (const user of users) {
-      db().prepare("INSERT INTO canvas_entry_history VALUES (?, ?, ?) ON CONFLICT(canvas_id,user_id) DO UPDATE SET last_entered_at=excluded.last_entered_at").run(localCanvasId, user.id, timestamp);
+      db().prepare("INSERT INTO canvas_entry_history VALUES (?, ?, ?) ON CONFLICT(canvas_id,user_id) DO UPDATE SET last_entered_at=excluded.last_entered_at").run(canvasId, user.id, timestamp);
       const steps: CanvasTrace["steps"] = [];
-      const result = advanceCanvasUser(graph, runId, user.id, entry.id, timestamp, steps);
+      const result = advanceCanvasUser(graph, canvasId, runId, user.id, entry.id, timestamp, steps);
       messages += result.messages;
       if (result.completed) completed += 1;
       traces.push({ userId: user.id, steps });
     }
     const run: CanvasRun = { id: runId, createdAt: timestamp, entered: users.length, completed, messages, traces };
-    db().prepare("INSERT INTO canvas_runs VALUES (?, ?, ?, ?, ?, ?, ?, ?)").run(run.id, localCanvasId, timestamp, run.entered, run.completed, run.messages, JSON.stringify(graph), JSON.stringify(traces));
-    audit("canvas", localCanvasId, "launched", { runId, entered: run.entered, completed, messages });
+    db().prepare("INSERT INTO canvas_runs VALUES (?, ?, ?, ?, ?, ?, ?, ?)").run(run.id, canvasId, timestamp, run.entered, run.completed, run.messages, JSON.stringify(graph), JSON.stringify(traces));
+    db().prepare("UPDATE resources SET status = 'Active' WHERE id = ?").run(canvasId);
+    audit("canvas", canvasId, "launched", { runId, entered: run.entered, completed, messages });
     db().exec("COMMIT");
     return run;
   } catch (error) { db().exec("ROLLBACK"); throw error; }
@@ -1044,7 +1132,7 @@ function processDueCanvasSteps(timestamp: string) {
       const traces = parseJson(String(row.traces_json), [] as CanvasTrace[]);
       const trace = traces.find(item => item.userId === job.user_id);
       db().prepare("DELETE FROM canvas_pending_steps WHERE run_id = ? AND user_id = ?").run(job.run_id, job.user_id);
-      const result = advanceCanvasUser(graph, job.run_id, job.user_id, job.next_node_id, timestamp, trace?.steps ?? []);
+      const result = advanceCanvasUser(graph, String(row.canvas_id), job.run_id, job.user_id, job.next_node_id, timestamp, trace?.steps ?? []);
       db().prepare("UPDATE canvas_runs SET completed_count = completed_count + ?, message_count = message_count + ?, traces_json = ? WHERE id = ?").run(result.completed ? 1 : 0, result.messages, JSON.stringify(traces), job.run_id);
       resumed += 1;
       db().exec("COMMIT");

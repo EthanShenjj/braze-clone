@@ -12,6 +12,7 @@ test("every Messaging drawer item resolves to its own route and page", () => {
 
 test("Canvas templates do not resolve to the Canvas editor", () => {
   equal(pageFromPath(routeForPage("canvas-templates")), "canvas-templates");
+  equal(pageFromPath("/engagement/canvas/canvas_example"), "canvas");
 });
 
 test("known deep links restore their intended page", () => {
