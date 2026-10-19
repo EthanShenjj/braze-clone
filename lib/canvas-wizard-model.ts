@@ -1,4 +1,4 @@
-import { type CanvasGraph, validateCanvasGraph } from "./canvas-model";
+import { type CanvasGraph, validateCanvasGraph } from "./canvas-model.ts";
 
 export const canvasSteps = ["basics", "entrySchedule", "audience", "sendSettings", "build", "summary"] as const;
 export type CanvasStep = typeof canvasSteps[number];

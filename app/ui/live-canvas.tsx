@@ -6,6 +6,7 @@ import { Activity, CalendarDays, ExternalLink, Mail, MousePointerClick, Plus, Us
 import { type CanvasGraph, type CanvasNode, type CanvasNodeKind, type CanvasRun, initialCanvasGraph, isCanvasGraph, validateCanvasGraph } from "@/lib/canvas-model";
 import { formatDate, formatNumber, normalizeLocale, translate, type Locale } from "@/lib/i18n";
 import { registerUnsavedNavigation } from "@/lib/unsaved-navigation";
+import { browserCanvasMode, getBrowserCanvas, saveBrowserGraph } from "@/lib/canvas-browser-store";
 
 type Drag = { id: string; startX: number; startY: number; x: number; y: number; moved: boolean };
 
@@ -27,6 +28,7 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
   const [traceUser, setTraceUser] = useState<string | null>(null);
   const [working, setWorking] = useState(false);
   const [error, setError] = useState("");
+  const [browserDraft, setBrowserDraft] = useState(false);
   const graph = history[cursor];
   const hasUnsavedChanges = JSON.stringify(graph) !== savedGraph;
   const router = useRouter();
@@ -41,6 +43,13 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
 
   useEffect(() => {
     const controller = new AbortController();
+    const local = browserCanvasMode ? getBrowserCanvas(canvasId) : null;
+    if (local) {
+      setBrowserDraft(true);
+      setHistory([local.graph]); setCursor(0); setSavedGraph(JSON.stringify(local.graph));
+      setSelected(local.graph.nodes[0]?.id ?? ""); setUpdatedAt(local.canvas.updatedAt);
+      return () => controller.abort();
+    }
     void fetch(`/api/canvases/${encodeURIComponent(canvasId)}`, { signal: controller.signal }).then(response => { if (!response.ok) throw new Error("Canvas not found."); return response.json(); }).then(result => {
       if (controller.signal.aborted) return;
       if (isCanvasGraph(result.graph)) {
@@ -62,6 +71,7 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
   }, []);
 
   const refreshRuns = async () => {
+    if (browserDraft) return;
     const response = await fetch(`/api/canvases/${encodeURIComponent(canvasId)}`);
     if (!response.ok) return;
     const result = await response.json();
@@ -118,6 +128,11 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
   const save = async (graphToSave: CanvasGraph = graph) => {
     setWorking(true); setError("");
     try {
+      if (browserDraft) {
+        const timestamp = saveBrowserGraph(canvasId, graphToSave);
+        setUpdatedAt(timestamp); setSavedGraph(JSON.stringify(graphToSave)); onSaved?.(graphToSave, timestamp); notify("Canvas draft saved in this browser.");
+        return true;
+      }
       const response = await fetch(`/api/canvases/${encodeURIComponent(canvasId)}/graph`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ graph: graphToSave, updatedAt }) });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error ?? "Canvas save failed.");
@@ -128,6 +143,7 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
   };
   if (saveRef) saveRef.current = () => save();
   const launch = async () => {
+    if (browserDraft) { setError("Browser-only drafts cannot launch a simulation."); return; }
     const issues = validateCanvasGraph(graph);
     if (issues.length) { setError(issues.join(" ")); return; }
     if (!await save()) return;
@@ -145,6 +161,7 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
   };
 
   const openFullEditor = async (node: CanvasNode) => {
+    if (browserDraft) { setError("Linked campaign editing is unavailable for browser-only drafts."); return; }
     const campaignId = node.config?.linkedCampaignId ?? `cmp_canvas_${canvasId.replace(/[^a-z0-9]/gi, "").slice(-6)}_${node.id.replace(/[^a-z0-9]/gi, "").slice(-6)}`;
     if (!node.config?.linkedCampaignId) {
       const response = await fetch("/api/campaigns", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({

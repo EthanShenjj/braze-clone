@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { ChevronDown, ChevronLeft, ChevronRight, Copy, Filter, LayoutPanelLeft, MoreHorizontal, Plus, Search, X } from "lucide-react";
 import type { CanvasRecord } from "@/lib/braze-store";
+import { browserCanvasMode, createBrowserCanvas, duplicateBrowserCanvas, getBrowserCanvas, listBrowserCanvases, patchBrowserCanvas } from "@/lib/canvas-browser-store";
 import type { Locale } from "@/lib/i18n";
 import { withLocale } from "@/lib/i18n";
 import { requestAppNavigation } from "@/lib/unsaved-navigation";
@@ -48,12 +49,14 @@ export default function CanvasWorkspace({ locale, notify }: { locale: Locale; no
 
   const refresh = useCallback(async () => {
     try {
+      const browserItems = browserCanvasMode ? listBrowserCanvases() : [];
       const response = await fetch("/api/canvases", { cache: "no-store" });
       if (!response.ok) throw new Error("Could not load Canvases.");
       const result = await response.json();
-      setItems(Array.isArray(result.data) ? result.data : []);
+      const serverItems: CanvasRecord[] = Array.isArray(result.data) ? result.data : [];
+      setItems([...browserItems, ...serverItems.filter(item => !browserItems.some(browserItem => browserItem.id === item.id))]);
       setError("");
-    } catch (cause) { setError(cause instanceof Error ? cause.message : "Could not load Canvases."); }
+    } catch (cause) { if (browserCanvasMode) setItems(listBrowserCanvases()); setError(cause instanceof Error ? cause.message : "Could not load Canvases."); }
     finally { setLoading(false); }
   }, []);
   useEffect(() => { void refresh(); }, [refresh]);
@@ -108,7 +111,7 @@ export default function CanvasWorkspace({ locale, notify }: { locale: Locale; no
     let title = baseTitle;
     let suffix = 2;
     while (items.some(item => item.name.toLowerCase() === title.toLowerCase() && item.status !== "Archived")) title = `${baseTitle} ${suffix++}`;
-    const result = await request("/api/canvases", "POST", { name: title, description: templateItem?.description ?? "", template: selectedTemplate });
+    const result = browserCanvasMode ? createBrowserCanvas({ name: title, description: templateItem?.description ?? "", template: selectedTemplate }) : await request("/api/canvases", "POST", { name: title, description: templateItem?.description ?? "", template: selectedTemplate });
     setModal(null);
     notify("Canvas draft created.");
     navigate(result.id);
@@ -116,16 +119,16 @@ export default function CanvasWorkspace({ locale, notify }: { locale: Locale; no
   const openEdit = (item: CanvasRecord) => { setName(item.name); setDescription(item.description); setTagsText(item.tags.join(", ")); setEditingId(item.id); setModal("edit"); setMenu(null); };
   const saveDetails = () => void runAction(async () => {
     const body = { name, description, tags: tagsText.split(",").map(value => value.trim()).filter(Boolean) };
-    const result = editingId ? await request(`/api/canvases/${editingId}`, "PATCH", { ...body, updatedAt: items.find(item => item.id === editingId)?.updatedAt }) : await request("/api/canvases", "POST", { ...body, template: template ?? undefined });
+    const result = editingId ? getBrowserCanvas(editingId) ? patchBrowserCanvas(editingId, body) : await request(`/api/canvases/${editingId}`, "PATCH", { ...body, updatedAt: items.find(item => item.id === editingId)?.updatedAt }) : browserCanvasMode ? createBrowserCanvas({ ...body, template: template ?? undefined }) : await request("/api/canvases", "POST", { ...body, template: template ?? undefined });
     setModal(null); notify(editingId ? "Canvas details saved." : "Canvas created.");
     if (!editingId) navigate(result.id);
   });
-  const duplicate = (item: CanvasRecord) => void runAction(async () => { await request(`/api/canvases/${item.id}`, "POST", { action: "duplicate" }); notify("Canvas duplicated as a draft."); });
+  const duplicate = (item: CanvasRecord) => void runAction(async () => { if (getBrowserCanvas(item.id)) duplicateBrowserCanvas(item.id); else await request(`/api/canvases/${item.id}`, "POST", { action: "duplicate" }); notify("Canvas duplicated as a draft."); });
   const archive = (ids: string[]) => {
     if (!window.confirm(`Archive ${ids.length} Canvas${ids.length === 1 ? "" : "es"}? They will be hidden from the Draft view.`)) return;
-    void runAction(async () => { for (const id of ids) await request(`/api/canvases/${id}`, "PATCH", { status: "Archived" }); setSelected([]); notify("Canvas archived."); });
+    void runAction(async () => { for (const id of ids) { if (getBrowserCanvas(id)) patchBrowserCanvas(id, { status: "Archived" }); else await request(`/api/canvases/${id}`, "PATCH", { status: "Archived" }); } setSelected([]); notify("Canvas archived."); });
   };
-  const toggleAlerts = (item: CanvasRecord) => void runAction(async () => { await request(`/api/canvases/${item.id}`, "PATCH", { alertsConfigured: !item.alertsConfigured }); notify(item.alertsConfigured ? "Canvas alert flag removed." : "Canvas alert flag configured."); });
+  const toggleAlerts = (item: CanvasRecord) => void runAction(async () => { if (getBrowserCanvas(item.id)) patchBrowserCanvas(item.id, { alertsConfigured: !item.alertsConfigured }); else await request(`/api/canvases/${item.id}`, "PATCH", { alertsConfigured: !item.alertsConfigured }); notify(item.alertsConfigured ? "Canvas alert flag removed." : "Canvas alert flag configured."); });
 
   if (canvasId) {
     const current = items.find(item => item.id === canvasId);
@@ -135,7 +138,7 @@ export default function CanvasWorkspace({ locale, notify }: { locale: Locale; no
   }
 
   return <section className={styles.page}>
-    <div className={styles.heading}><div><h1>Canvas <span className={styles.access}>♙ Limited access</span></h1><p>Design and launch customer journeys with Canvas. Drag, drop, and connect<br/> messaging across channels to create seamless, automated experiences.</p></div><div className={styles.headingActions}><button className={styles.outline} onClick={() => setModal("tour")}>Take a tour</button><div className={styles.anchor}><button className={styles.primary} onClick={() => setMenu(menu === "create" ? null : "create")}>Create Canvas <ChevronDown size={16}/></button>{menu === "create" && <div className={styles.popover}><button disabled={busy} onClick={() => createCanvas()}><Plus size={16}/> Start a New Canvas</button><button onClick={() => { setModal("templates"); setMenu(null); }}><LayoutPanelLeft size={16}/> Use a Canvas Template</button></div>}</div></div></div>
+    <div className={styles.heading}><div><h1>Canvas <span className={styles.access}>♙ Limited access</span></h1><p>Design and launch customer journeys with Canvas. Drag, drop, and connect<br/> messaging across channels to create seamless, automated experiences.</p>{browserCanvasMode && <p className={styles.storageNotice}>Demo drafts are saved in this browser only; they are not shared across devices.</p>}</div><div className={styles.headingActions}><button className={styles.outline} onClick={() => setModal("tour")}>Take a tour</button><div className={styles.anchor}><button className={styles.primary} onClick={() => setMenu(menu === "create" ? null : "create")}>Create Canvas <ChevronDown size={16}/></button>{menu === "create" && <div className={styles.popover}><button disabled={busy} onClick={() => createCanvas()}><Plus size={16}/> Start a New Canvas</button><button onClick={() => { setModal("templates"); setMenu(null); }}><LayoutPanelLeft size={16}/> Use a Canvas Template</button></div>}</div></div></div>
     <div className={styles.toolbar}><label>Status<select value={status} onChange={event => setStatus(event.target.value)}>{["Draft", "Active", "Stopped", "Archived", "All"].map(value => <option key={value}>{value}</option>)}</select></label><label>Tags<select value={tag} onChange={event => setTag(event.target.value)}><option value="">All Tags</option>{tags.map(value => <option key={value}>{value}</option>)}</select></label><div className={styles.anchor}><button className={styles.outline} aria-expanded={menu === "filters"} onClick={() => setMenu(menu === "filters" ? null : "filters")}><Filter size={17}/> Filters {activeFilterCount || ""}</button>{menu === "filters" && <div className={`${styles.popover} ${styles.filterPopover}`}><h3>More filters</h3><label>Canvas experience<select value={filters.experience} onChange={event => changeFilters({ experience: event.target.value })}><option value="">Any experience</option>{unique("experience").map(value => <option key={value}>{value}</option>)}</select></label><label>Created by<select value={filters.createdBy} onChange={event => changeFilters({ createdBy: event.target.value })}><option value="">Anyone</option>{unique("createdBy").map(value => <option key={value}>{value}</option>)}</select></label><label>Last edited by<select value={filters.lastEditedBy} onChange={event => changeFilters({ lastEditedBy: event.target.value })}><option value="">Anyone</option>{unique("lastEditedBy").map(value => <option key={value}>{value}</option>)}</select></label><label>Search by date<select value={filters.dateField} onChange={event => changeFilters({ dateField: event.target.value, from: "", to: "" })}><option value="">None</option><option value="createdAt">Date created</option><option value="updatedAt">Date last edited</option></select></label>{filters.dateField && <div className={styles.dateRange}><label>From<input type="date" value={filters.from} onChange={event => changeFilters({ from: event.target.value })}/></label><label>To<input type="date" value={filters.to} onChange={event => changeFilters({ to: event.target.value })}/></label></div>}<label>Target segment<select value={filters.targetSegment} onChange={event => changeFilters({ targetSegment: event.target.value })}><option value="">All segments</option>{unique("targetSegment").map(value => <option key={value}>{value}</option>)}</select></label><label className={styles.checkRow}><input type="checkbox" checked={filters.alertsOnly} onChange={event => changeFilters({ alertsOnly: event.target.checked })}/> Alerts configured</label><button className={styles.outline} onClick={() => setMenu(null)}>Apply filters</button></div>}</div><div className={styles.anchor}><button className={styles.outline} aria-expanded={menu === "columns"} onClick={() => setMenu(menu === "columns" ? null : "columns")}><LayoutPanelLeft size={17}/> Columns</button>{menu === "columns" && <div className={styles.popover}><h3>Visible columns</h3>{(Object.keys(columnLabels) as Column[]).map(column => <label className={styles.checkRow} key={column}><input type="checkbox" checked={columns.includes(column)} onChange={() => toggleColumn(column)}/>{columnLabels[column]}</label>)}</div>}</div><button className={styles.reset} onClick={() => { setStatus("All"); setTag(""); setQuery(""); setFilters(defaultFilters); }}>Reset filters</button><label className={styles.search}><Search size={17}/><input aria-label="Search Canvases" placeholder="Search Canvases" value={query} onChange={event => setQuery(event.target.value)}/></label></div>
     <div className={styles.chips}>{status !== "All" && <button onClick={() => setStatus("All")}>Status: {status} <X size={14}/></button>}{tag && <button onClick={() => setTag("")}>Tag: {tag} <X size={14}/></button>}{activeFilterCount > 0 && <button onClick={() => setFilters(defaultFilters)}>{activeFilterCount} more filter{activeFilterCount === 1 ? "" : "s"} <X size={14}/></button>}</div>
     <div className={styles.results}><strong>{visible.length} Results</strong>{selected.length > 0 && <div className={styles.bulk}><span>{selected.length} selected</span><button onClick={() => archive(selected)} disabled={busy}>Archive selected</button><button onClick={() => setSelected([])}>Clear selection</button></div>}</div>
