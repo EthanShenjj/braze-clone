@@ -1,3 +1,5 @@
+import { validateWhatsAppCampaign } from "./whatsapp-model.ts";
+
 export type CanvasNodeKind = "entry" | "delay" | "message" | "branch" | "update" | "agent" | "optimizer" | "audience_paths" | "action_paths" | "experiment_paths" | "destination" | "context" | "feature_flag" | "audience_sync";
 export type CanvasNode = {
   id: string;
@@ -71,6 +73,10 @@ export function validateCanvasGraph(graph: CanvasGraph): string[] {
     if (node.kind === "delay" && (!Number.isFinite(node.config?.durationHours) || Number(node.config?.durationHours) <= 0)) issues.push(`Set a positive delay on “${node.label}”.`);
     if (node.kind === "message" && (!node.config?.channel || !node.config?.message?.trim())) issues.push(`Configure a channel and message on “${node.label}”.`);
     if (node.kind === "message" && node.config?.channel === "sms" && !node.config.subscriptionGroupId) issues.push(`Select an SMS subscription group on “${node.label}”.`);
+    if (node.kind === "message" && node.config?.channel === "whatsapp") {
+      if (!node.config.subscriptionGroupId) issues.push(`Select a WhatsApp subscription group on “${node.label}”.`);
+      issues.push(...validateWhatsAppCampaign({ body: node.config.message, config: node.config }));
+    }
     if (node.kind === "branch" && (!node.config?.attribute || !["country", "lifecycle", "subscribed"].includes(node.config.attribute) || !node.config?.value)) issues.push(`Configure the condition on “${node.label}”.`);
     if (node.kind === "update" && (!node.config?.attribute || typeof node.config.value !== "string")) issues.push(`Configure an attribute and value on “${node.label}”.`);
     if (node.kind === "update" && node.config?.attribute === "subscribed" && !["true", "false"].includes(String(node.config.value))) issues.push(`Set subscribed to true or false on “${node.label}”.`);

@@ -7,6 +7,8 @@ import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { emailPreferenceCampaignDefaults, normalizeEmailPreferences, validateEmailPreferences, type EmailPreferences } from "./email-preferences";
 import { workspaceContentBlockHtml } from "./email-liquid";
+import { smsIssues, smsMetrics, smsPreview } from "./sms-model";
+import { normalizeWhatsAppVariants, customWhatsAppTemplates, prepareWhatsAppMessage, validateWhatsAppCampaign } from "./whatsapp-model";
 import { compileWorkspaceEmail, emailSendingIssues, extractEmailLinks, isBotClick } from "./email-runtime";
 import { resolveLiquidPreview, type WorkspaceLiquid } from "./email-editor-model";
 import { campaignValidationIssues } from "./campaign-validation";
@@ -776,6 +778,10 @@ export async function launchCampaign(id: string) {
       try { eventData = { ...eventData, simulated: true, message: prepareEmailMessage(campaign, user.id, "campaign") }; }
       catch (error) { eventType = "failed"; eventData = { ...eventData, error: error instanceof Error ? error.message : "Email compilation failed" }; }
     }
+    if (eventType === "delivered" && campaign.channel === "whatsapp") {
+      try { const profile = getUser(user.id); const variants = normalizeWhatsAppVariants(campaign); const index = createHash("sha256").update(`${id}:${user.id}:variant`).digest()[0] % variants.length; eventData = { ...eventData, simulated: true, variantId: variants[index].id, message: prepareWhatsAppMessage(variants[index], customWhatsAppTemplates(campaign), { ...profile?.attributes, first_name: profile?.firstName, country: profile?.country, user_id: user.id }) }; }
+      catch (cause) { eventType = "failed"; eventData = { ...eventData, simulated: true, error: cause instanceof Error ? cause.message : "WhatsApp rendering failed." }; }
+    }
     insertEvent.run(uid("evt"), id, campaign.channel, user.id, eventType, timestamp, JSON.stringify(eventData));
     if (eventType === "delivered") {
       delivered += 1;
@@ -816,12 +822,72 @@ export async function sendTestCampaign(id: string, input: { recipient?: string; 
     audit("campaign", id, "webhook_test_sent", { recipient, delivered: result.delivered, statusCode: result.attempts.at(-1)?.statusCode ?? null });
     return { recipient, campaign: campaign.name, channel: campaign.channel, createdAt: timestamp, webhook: safeResult, capability: webhookDeliveryCapability() };
   }
+  if (campaign.channel === "whatsapp") return prepareWhatsAppTest({ campaignId: id, config: campaign.config, recipients: [recipient], variantId: options.variantId, profile: options.customUser ?? {}, override: options.mode === "custom" });
   const issues = campaign.channel === "email" ? emailSendingIssues(campaign, getEmailPreferences().data) : []; if (issues.length) throw new Error(issues.join(" "));
   const previewUser = options.mode === "random" ? randomCatalogPreviewUser() : searchUsers(recipient, 0, 1).data[0];
   const message = campaign.channel === "email" ? prepareEmailMessage(campaign, previewUser?.id ?? "", "test", options.customUser) : undefined;
   db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), id, campaign.channel, "test_user", "test_prepared", timestamp, JSON.stringify({ test: true, recipient, simulated: true, message }));
   audit("campaign", id, "test_sent", { recipient });
   return { recipient, campaign: campaign.name, channel: campaign.channel, createdAt: timestamp, message, capability: { mode: "simulation", delivered: false, reason: "No email provider is configured. The compiled test message is available for preview." } };
+}
+
+// SMS tests use the unsaved editor snapshot and never dispatch to a provider.
+export function prepareCanvasSmsTest(canvasId: string, input: unknown) {
+  if (!getCanvas(canvasId)) throw new Error("Canvas not found.");
+  if (!input || typeof input !== "object") throw new Error("Invalid SMS test.");
+  const value = input as Record<string, unknown>;
+  if (typeof value.message !== "string" || typeof value.subscriptionGroupId !== "string" || typeof value.nodeId !== "string") throw new Error("Invalid SMS test configuration.");
+  const issues = smsIssues(value.message, value.subscriptionGroupId);
+  if (issues.length) throw new Error(issues.join(" "));
+  subscriptionGroupForChannel(value.subscriptionGroupId, "sms");
+  if (!Array.isArray(value.recipients) || !value.recipients.length || value.recipients.length > 20 || value.recipients.some(recipient => typeof recipient !== "string" || !recipient.trim() || recipient.length > 254)) throw new Error("Provide between 1 and 20 test recipients.");
+  if (value.profile !== undefined && (!value.profile || typeof value.profile !== "object" || Array.isArray(value.profile) || JSON.stringify(value.profile).length > 20000)) throw new Error("Invalid preview user attributes.");
+  const recipients = [...new Set(value.recipients as string[])];
+  // Render all recipients before writing any records so invalid Liquid is atomic.
+  const tests = recipients.map(recipient => {
+    const user = getUser(recipient) ?? searchUsers(recipient, 0, 1).data.find(item => item.email.toLowerCase() === recipient.toLowerCase());
+    const profile = value.override ? value.profile as Record<string, unknown> : user ? { ...user.attributes, first_name: user.firstName, email_address: user.email, country: user.country, user_id: user.id } : {};
+    const message = smsPreview(value.message as string, profile ?? {}, value.linkShortening !== false);
+    if (!message.trim()) throw new Error("The rendered SMS message is empty.");
+    return { recipient, message, ...smsMetrics(message) };
+  });
+  const timestamp = now();
+  const record = createResource({ type: "sms-tests", name: `SMS test · ${value.nodeId}`, data: { canvasId, nodeId: value.nodeId, subscriptionGroupId: value.subscriptionGroupId, tests, simulated: true } });
+  for (const test of tests) db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), canvasId, "sms", test.recipient, "test_prepared", timestamp, JSON.stringify({ test: true, simulated: true, nodeId: value.nodeId, testId: record.id, ...test }));
+  audit("canvas", canvasId, "sms_test_prepared", { testId: record.id, nodeId: value.nodeId, recipients: tests.length });
+  return { id: record.id, tests, capability: { mode: "simulation", delivered: false } };
+}
+
+export function prepareWhatsAppTest(input: unknown) {
+  if (!input || typeof input !== "object") throw new Error("Invalid WhatsApp test.");
+  const value = input as Record<string, unknown>;
+  const canvasId = typeof value.canvasId === "string" ? value.canvasId : undefined;
+  const campaignId = typeof value.campaignId === "string" ? value.campaignId : undefined;
+  if (Boolean(canvasId) === Boolean(campaignId)) throw new Error("Select exactly one Canvas or campaign.");
+  if (canvasId && (!getCanvas(canvasId) || typeof value.nodeId !== "string")) throw new Error("Canvas or message step not found.");
+  if (campaignId && getCampaign(campaignId)?.channel !== "whatsapp") throw new Error("WhatsApp campaign not found.");
+  if (!value.config || typeof value.config !== "object" || Array.isArray(value.config) || JSON.stringify(value.config).length > 200000) throw new Error("Invalid WhatsApp configuration.");
+  const config = value.config as Record<string, unknown>;
+  if (typeof config.subscriptionGroupId !== "string" || !config.subscriptionGroupId) throw new Error("Select an active WhatsApp subscription group.");
+  subscriptionGroupForChannel(config.subscriptionGroupId, "whatsapp");
+  if (!Array.isArray(config.whatsappVariants) || !config.whatsappVariants.length) throw new Error("Configure a WhatsApp message variant.");
+  const variant = normalizeWhatsAppVariants({ config }).find(item => item.id === value.variantId) ?? (value.variantId === undefined ? normalizeWhatsAppVariants({ config })[0] : undefined);
+  if (!variant) throw new Error("Message variant not found.");
+  const issues = validateWhatsAppCampaign({ config: { ...config, whatsappVariants: [variant] } });
+  if (issues.length) throw new Error(issues.join(" "));
+  if (!Array.isArray(value.recipients) || !value.recipients.length || value.recipients.length > 20 || value.recipients.some(recipient => typeof recipient !== "string" || !recipient.trim() || recipient.length > 254)) throw new Error("Provide between 1 and 20 test recipients.");
+  if (value.profile !== undefined && (!value.profile || typeof value.profile !== "object" || Array.isArray(value.profile) || JSON.stringify(value.profile).length > 20000)) throw new Error("Invalid preview user attributes.");
+  const tests = [...new Set(value.recipients as string[])].map(recipient => {
+    const user = getUser(recipient) ?? searchUsers(recipient, 0, 1).data.find(item => item.email.toLowerCase() === recipient.toLowerCase());
+    const profile = value.override ? value.profile as Record<string, unknown> : user ? { ...user.attributes, first_name: user.firstName, email_address: user.email, country: user.country, user_id: user.id } : {};
+    return { recipient, ...prepareWhatsAppMessage(variant, customWhatsAppTemplates({ config }), profile ?? {}) };
+  });
+  const timestamp = now();
+  const scopeId = (canvasId ?? campaignId)!;
+  const record = createResource({ type: "whatsapp-tests", name: `WhatsApp test · ${variant.name}`, data: { canvasId, campaignId, nodeId: value.nodeId, variantId: variant.id, tests, simulated: true } });
+  for (const test of tests) db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), scopeId, "whatsapp", test.recipient, "test_prepared", timestamp, JSON.stringify({ test: true, simulated: true, nodeId: value.nodeId, testId: record.id, ...test }));
+  audit(canvasId ? "canvas" : "campaign", scopeId, "whatsapp_test_prepared", { testId: record.id, recipients: tests.length });
+  return { id: record.id, tests, capability: { mode: "simulation", delivered: false } };
 }
 
 // API campaigns receive externally-sent message events for attribution.
@@ -1038,11 +1104,16 @@ function advanceCanvasUser(graph: CanvasGraph, canvasId: string, runId: string, 
       const eligible = Boolean(user?.reachable) && (channel !== "email" || emailEligible)
         && (channel !== "sms" && channel !== "whatsapp" || Boolean(groupId))
         && (!groupId || group?.status === "Active" && group.channel === expectedChannel && member?.state === "subscribed");
-      const eventData = eligible && channel === "email"
+      let eventData: Record<string, unknown> = eligible && channel === "email"
         ? { canvasRunId: runId, nodeId: current.id, simulated: true, message: prepareEmailMessage({ subject: current.config?.subject, body: current.config?.message, config: current.config }, userId, "campaign") }
         : { canvasRunId: runId, nodeId: current.id, simulated: true, reason: eligible ? undefined : "subscription_or_reachability" };
-      db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), canvasId, channel, userId, eligible ? "delivered" : "suppressed", timestamp, JSON.stringify(eventData));
-      if (eligible) messages += 1;
+      let eventType = eligible ? "delivered" : "suppressed";
+      if (eligible && channel === "whatsapp") {
+        try { const config = current.config ?? {}; const variants = normalizeWhatsAppVariants({ config }); const index = createHash("sha256").update(`${canvasId}:${current.id}:${userId}`).digest()[0] % variants.length; eventData = { ...eventData, variantId: variants[index].id, message: prepareWhatsAppMessage(variants[index], customWhatsAppTemplates({ config }), { ...user?.attributes, first_name: user?.firstName, country: user?.country, user_id: userId }) }; }
+        catch (cause) { eventType = "failed"; eventData = { ...eventData, error: cause instanceof Error ? cause.message : "WhatsApp rendering failed." }; }
+      }
+      db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), canvasId, channel, userId, eventType, timestamp, JSON.stringify(eventData));
+      if (eventType === "delivered") messages += 1;
     }
     const user = getUser(userId);
     const condition = current.kind === "branch" && current.config?.attribute

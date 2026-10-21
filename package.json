@@ -11,6 +11,8 @@
     "test:canvas": "node --experimental-strip-types --test tests/canvas-model.test.mjs tests/canvas-browser-store.test.mjs",
     "test:i18n": "node --experimental-strip-types --test tests/i18n.test.mjs",
     "test:navigation": "node --experimental-strip-types --test tests/navigation.test.mjs",
+    "test:whatsapp": "node --experimental-strip-types --test tests/whatsapp-model.test.mjs",
+    "test:sms": "node --experimental-strip-types --test tests/sms-model.test.mjs",
     "test:webhook": "node --experimental-strip-types --test tests/webhook-model.test.mjs",
     "start": "next start",
     "lint": "next lint"

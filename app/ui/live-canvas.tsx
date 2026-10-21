@@ -9,6 +9,8 @@ import { formatDate, formatNumber, normalizeLocale, type Locale } from "@/lib/i1
 import { registerUnsavedNavigation } from "@/lib/unsaved-navigation";
 import { browserCanvasMode, getBrowserCanvas, saveBrowserGraph } from "@/lib/canvas-browser-store";
 import styles from "./flow-canvas.module.css";
+import CanvasSmsEditor from "./canvas-sms-editor";
+import CanvasWhatsAppEditor from "./canvas-whatsapp-editor";
 
 type Drag = { id: string; startX: number; startY: number; x: number; y: number; moved: boolean };
 type ComponentDrag = { kind: CanvasNodeKind; startX: number; startY: number };
@@ -56,6 +58,7 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
   const [expanded, setExpanded] = useState(false);
   const [variantMenu, setVariantMenu] = useState<string | null>(null);
   const [inspectorOpen, setInspectorOpen] = useState(false);
+  const [messageEditorId, setMessageEditorId] = useState<string | null>(null);
   const graph = history[cursor];
   const hasUnsavedChanges = JSON.stringify(graph) !== savedGraph;
   const router = useRouter();
@@ -133,14 +136,14 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
   };
   const add = (kind: CanvasNodeKind, position?: { x: number; y: number }) => {
     const names: Record<CanvasNodeKind, string> = { entry: "Audience entry", delay: "Delay", message: "Message", branch: "Decision Split", update: "User Update", agent: "Agent Step", optimizer: "Content Optimizer", audience_paths: "Audience Paths", action_paths: "Action Paths", experiment_paths: "Experiment Paths", destination: "Send to Destination", context: "Context", feature_flag: "Feature Flag", audience_sync: "Audience Sync" };
-    const configs: Partial<Record<CanvasNodeKind, CanvasNode["config"]>> = { delay: { durationHours: 24 }, message: { channel: "email", message: "" }, branch: { attribute: "country", value: "" }, update: { attribute: "plan", value: "" } };
+    const configs: Partial<Record<CanvasNodeKind, CanvasNode["config"]>> = { delay: { durationHours: 24 }, message: { channel: "", message: "" }, branch: { attribute: "country", value: "" }, update: { attribute: "plan", value: "" } };
     const id = `${kind}_${crypto.randomUUID().slice(0, 8)}`;
     const previous = graph.nodes.find(node => node.id === linkFrom) ?? graph.nodes.at(-1);
     const nextY = Math.max(725, ...graph.nodes.filter(node => node.kind !== "entry").map(node => node.y + 170));
     const nextNode: CanvasNode = { id, label: names[kind], kind, x: position?.x ?? 610, y: position ? Math.max(position.y, nextY) : nextY, config: configs[kind] };
     const canConnect = previous && !graph.edges.some(([from]) => from === previous.id) || previous?.kind === "branch" && graph.edges.filter(([from]) => from === previous.id).length < 2;
     commit({ ...graph, nodes: [...graph.nodes, nextNode], edges: canConnect && previous ? [...graph.edges, [previous.id, id]] : graph.edges });
-    setSelected(id); setInspectorOpen(true); setAdding(false); setLinkFrom(null);
+    setSelected(id); setInspectorOpen(kind !== "message"); if (kind === "message") setMessageEditorId(id); setAdding(false); setLinkFrom(null);
     requestAnimationFrame(() => { stageScrollRef.current?.scrollTo({ top: Math.max(0, nextNode.y * zoom - 240), behavior: "smooth" }); });
   };
   const componentPointerUp = (event: React.PointerEvent<HTMLButtonElement>) => {
@@ -165,7 +168,9 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
       setLinkFrom(null);
     }
     setSelected(id);
-    setInspectorOpen(true);
+    const node = graph.nodes.find(item => item.id === id);
+    if (node?.kind === "message" && !node.config?.linkedCampaignId && (!node.config?.channel || ["sms", "whatsapp"].includes(node.config.channel))) { setMessageEditorId(id); setInspectorOpen(false); }
+    else setInspectorOpen(true);
   };
   const pointerDown = (id: string, event: React.PointerEvent<HTMLButtonElement>) => {
     if (event.button !== 0) return;
@@ -232,9 +237,9 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
       const response = await fetch("/api/campaigns", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
         id: campaignId,
         name: `Canvas · ${node.label}`,
-        channel: node.config?.channel === "push" ? "push" : node.config?.channel === "sms" ? "sms" : node.config?.channel === "iam" ? "iam" : "email",
+        channel: node.config?.channel === "push" ? "push" : node.config?.channel === "sms" ? "sms" : node.config?.channel === "iam" ? "iam" : node.config?.channel === "whatsapp" ? "whatsapp" : "email",
         status: "Draft", schedule: "One time", audience: "All Users", conversion: "Start Session",
-        subject: node.config?.subject ?? node.label, body: node.config?.message ?? "",
+        subject: node.config?.subject ?? node.label, body: node.config?.message ?? "", config: { ...node.config },
       }) });
       if (!response.ok) { setError("Could not create the linked campaign draft."); return; }
     }
@@ -257,6 +262,11 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
 
   const visible: CanvasGraph = drag?.moved ? { ...graph, nodes: graph.nodes.map(node => node.id === drag.id ? { ...node, x: drag.x, y: drag.y } : node) } : graph;
   const selectedNode = graph.nodes.find(node => node.id === selected);
+  const messageEditorNode = graph.nodes.find(node => node.id === messageEditorId);
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("smsNode");
+    if (id && graph.nodes.some(node => node.id === id && node.config?.channel === "sms")) setMessageEditorId(id);
+  }, [canvasId, savedGraph]);
   const branchRoutes = selectedNode?.kind === "branch" ? graph.edges.filter(([from]) => from === selectedNode.id) : [];
   const run = runs.find(item => item.id === runId);
   const trace = run?.traces.find(item => item.userId === traceUser) ?? run?.traces[0];
@@ -325,7 +335,7 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
           </div>
           {stepNodes.length === 0 && <button className={styles.firstAddStep} onClick={() => { setLinkFrom(graph.nodes.find(node => node.kind === "entry")?.id ?? null); setAdding(true); }}><Plus size={19}/> Add Step</button>}
           <svg className={styles.edges} width="1500" height={worldHeight} aria-hidden="true"><line x1="750" y1={entryOpen ? 625 : 297} x2="750" y2={stepNodes[0]?.y ?? 700}/>{visible.edges.filter(([from]) => from !== "entry").map(([from, to]) => { const start = visible.nodes.find(node => node.id === from); const end = visible.nodes.find(node => node.id === to); const index = start?.kind === "branch" ? visible.edges.filter(edge => edge[0] === from).findIndex(edge => edge[1] === to) : -1; return start && end ? <g key={`${from}-${to}`}><line x1={start.x + 140} y1={start.y + 100} x2={end.x + 140} y2={end.y}/>{index >= 0 && <text x={(start.x + end.x) / 2 + 140} y={(start.y + end.y + 100) / 2 - 8}>{index === 0 ? "Yes" : "No"}</text>}</g> : null; })}</svg>
-          {stepNodes.map(node => { const component = componentByKind.get(node.kind); const Icon = component?.icon ?? Mail; const outgoing = graph.edges.filter(([from]) => from === node.id).length; return <div className={styles.nodeWrap} style={{ left: node.x, top: node.y }} key={node.id}><button className={`${styles.flowNode} ${selected === node.id && inspectorOpen ? styles.nodeSelected : ""} ${linkFrom === node.id ? styles.nodeLinkSource : ""}`} onPointerDown={event => pointerDown(node.id, event)} onPointerMove={pointerMove} onPointerUp={pointerUp} onPointerCancel={pointerUp} onClick={() => selectNode(node.id)}><span className={`${styles.nodeIcon} ${styles[component?.tone ?? "green"]}`}><Icon size={20}/></span><span><small>{component?.label ?? node.kind}</small><strong>{node.label}</strong></span><Settings2 size={17}/></button>{outgoing < (node.kind === "branch" ? 2 : 1) && <button className={styles.nodeAddStep} aria-label={`Add step after ${node.label}`} onClick={() => { setSelected(node.id); setLinkFrom(node.id); setAdding(true); setInspectorOpen(false); }}><Plus size={17}/></button>}</div>; })}
+          {stepNodes.map(node => { const component = componentByKind.get(node.kind); const Icon = component?.icon ?? Mail; const outgoing = graph.edges.filter(([from]) => from === node.id).length; return <div className={styles.nodeWrap} style={{ left: node.x, top: node.y }} key={node.id}><button className={`${styles.flowNode} ${selected === node.id && inspectorOpen ? styles.nodeSelected : ""} ${linkFrom === node.id ? styles.nodeLinkSource : ""}`} onPointerDown={event => pointerDown(node.id, event)} onPointerMove={pointerMove} onPointerUp={pointerUp} onPointerCancel={pointerUp} onClick={() => selectNode(node.id)}><span className={`${styles.nodeIcon} ${styles[component?.tone ?? "green"]}`}><Icon size={20}/></span><span><small>{component?.label ?? node.kind}</small><strong>{node.label}</strong></span><Settings2 size={17}/></button><button className={styles.nodeSettings} aria-label={`Step actions for ${node.label}`} onClick={() => { setSelected(node.id); setInspectorOpen(true); setMessageEditorId(null); }}><Settings2 size={17}/></button>{outgoing < (node.kind === "branch" ? 2 : 1) && <button className={styles.nodeAddStep} aria-label={`Add step after ${node.label}`} onClick={() => { setSelected(node.id); setLinkFrom(node.id); setAdding(true); setInspectorOpen(false); }}><Plus size={17}/></button>}</div>; })}
         </div></div>
         {linkFrom && <div className={styles.connectHint}>Select a destination step or choose a component to add.</div>}
       </div>
@@ -334,7 +344,7 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
         <div className={styles.inspectorBody}>
           <label>Step name<input value={selectedNode.label} onChange={event => changeNode(selected, { label: event.target.value })}/></label>
           {selectedNode.kind === "delay" && <label>Delay (hours)<input type="number" min="1" value={selectedNode.config?.durationHours ?? 24} onChange={event => changeConfig(selected, { durationHours: Number(event.target.value) })}/></label>}
-          {selectedNode.kind === "message" && <><label>Channel<select disabled={Boolean(selectedNode.config?.linkedCampaignId)} value={selectedNode.config?.channel ?? "email"} onChange={event => changeConfig(selected, { channel: event.target.value, subscriptionGroupId: undefined })}><option value="email">Email</option><option value="push">Push notification</option><option value="sms">SMS</option><option value="iam">In-app message</option></select></label>{["email", "sms"].includes(selectedNode.config?.channel ?? "email") && <label>Subscription group<select disabled={Boolean(selectedNode.config?.linkedCampaignId)} value={String(selectedNode.config?.subscriptionGroupId ?? "")} onChange={event => changeConfig(selected, { subscriptionGroupId: event.target.value || undefined })}><option value="">{selectedNode.config?.channel === "sms" ? "Select a group" : "No group filter"}</option>{subscriptionGroups.filter(group => group.channel === (selectedNode.config?.channel === "sms" ? "SMS" : "Email")).map(group => <option value={group.id} key={group.id}>{group.name}</option>)}</select></label>}<label>Subject<input disabled={Boolean(selectedNode.config?.linkedCampaignId)} value={selectedNode.config?.subject ?? ""} onChange={event => changeConfig(selected, { subject: event.target.value })}/></label><label>Message<textarea disabled={Boolean(selectedNode.config?.linkedCampaignId)} value={selectedNode.config?.message ?? ""} onChange={event => changeConfig(selected, { message: event.target.value })}/></label><button onClick={() => void openFullEditor(selectedNode)}><ExternalLink size={15}/> Open in full editor</button>{selectedNode.config?.linkedCampaignId && <button onClick={() => changeConfig(selected, { linkedCampaignId: undefined })}>Unlink campaign</button>}</>}
+          {selectedNode.kind === "message" && <><label>Channel<select disabled={Boolean(selectedNode.config?.linkedCampaignId)} value={selectedNode.config?.channel ?? "email"} onChange={event => { changeConfig(selected, { channel: event.target.value, subscriptionGroupId: undefined }); if (["sms", "whatsapp"].includes(event.target.value)) { setMessageEditorId(selected); setInspectorOpen(false); } }}><option value="email">Email</option><option value="push">Push notification</option><option value="sms">SMS</option><option value="whatsapp">WhatsApp</option><option value="iam">In-app message</option></select></label>{["email", "sms", "whatsapp"].includes(selectedNode.config?.channel ?? "email") && <label>Subscription group<select disabled={Boolean(selectedNode.config?.linkedCampaignId)} value={String(selectedNode.config?.subscriptionGroupId ?? "")} onChange={event => changeConfig(selected, { subscriptionGroupId: event.target.value || undefined })}><option value="">{selectedNode.config?.channel === "sms" ? "Select a group" : "No group filter"}</option>{subscriptionGroups.filter(group => group.channel === (selectedNode.config?.channel === "sms" ? "SMS" : selectedNode.config?.channel === "whatsapp" ? "WhatsApp" : "Email")).map(group => <option value={group.id} key={group.id}>{group.name}</option>)}</select></label>}<label>Subject<input disabled={Boolean(selectedNode.config?.linkedCampaignId)} value={selectedNode.config?.subject ?? ""} onChange={event => changeConfig(selected, { subject: event.target.value })}/></label><label>Message<textarea disabled={Boolean(selectedNode.config?.linkedCampaignId)} value={selectedNode.config?.message ?? ""} onChange={event => changeConfig(selected, { message: event.target.value })}/></label>{["sms", "whatsapp"].includes(selectedNode.config?.channel ?? "") && !selectedNode.config?.linkedCampaignId && <button onClick={() => { setMessageEditorId(selected); setInspectorOpen(false); }}>Edit {selectedNode.config?.channel === "whatsapp" ? "WhatsApp" : "SMS"} message</button>}<button onClick={() => void openFullEditor(selectedNode)}><ExternalLink size={15}/> Open in full editor</button>{selectedNode.config?.linkedCampaignId && <button onClick={() => changeConfig(selected, { linkedCampaignId: undefined })}>Unlink campaign</button>}</>}
           {selectedNode.kind === "branch" && <><label>Attribute<select value={selectedNode.config?.attribute ?? "country"} onChange={event => changeConfig(selected, { attribute: event.target.value })}><option value="country">Country</option><option value="lifecycle">Lifecycle</option><option value="subscribed">Subscribed</option></select></label><label>Equals<input value={selectedNode.config?.value ?? ""} onChange={event => changeConfig(selected, { value: event.target.value })}/></label><small>Yes → {graph.nodes.find(node => node.id === branchRoutes[0]?.[1])?.label ?? "Connect a step"}</small><small>No → {graph.nodes.find(node => node.id === branchRoutes[1]?.[1])?.label ?? "Connect a step"}</small><button disabled={branchRoutes.length !== 2} onClick={() => swapBranchRoutes(selectedNode.id)}>Swap Yes / No routes</button></>}
           {selectedNode.kind === "update" && <><label>Attribute<input value={selectedNode.config?.attribute ?? ""} onChange={event => changeConfig(selected, { attribute: event.target.value })}/></label><label>New value<input value={selectedNode.config?.value ?? ""} onChange={event => changeConfig(selected, { value: event.target.value })}/></label></>}
           {!["message", "delay", "branch", "update"].includes(selectedNode.kind) && <><p>This component can be configured as a draft. Local simulation is not available for this component.</p><label>Notes<textarea value={String(selectedNode.config?.notes ?? "")} onChange={event => changeConfig(selected, { notes: event.target.value })}/></label></>}
@@ -343,6 +353,7 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
         </div>
       </aside>}
     </div>
+    {messageEditorNode?.config?.channel === "whatsapp" ? <CanvasWhatsAppEditor key={messageEditorNode.id} node={messageEditorNode} canvasId={canvasId} testAvailable={!browserDraft} onOtherChannel={(channel, config) => { changeConfig(messageEditorNode.id, { ...config, channel, subscriptionGroupId: undefined }); }} connected={graph.edges.some(([, to]) => to === messageEditorNode.id)} onDone={config => { changeConfig(messageEditorNode.id, config); setMessageEditorId(null); }}/> : messageEditorNode && <CanvasSmsEditor key={messageEditorNode.id} node={messageEditorNode} canvasId={canvasId} groups={subscriptionGroups} testAvailable={!browserDraft} connected={graph.edges.some(([, to]) => to === messageEditorNode.id)} onDone={config => { changeConfig(messageEditorNode.id, config); setMessageEditorId(null); }} onOtherChannel={channel => { changeConfig(messageEditorNode.id, { channel, subscriptionGroupId: undefined }); if (channel !== "whatsapp") { setMessageEditorId(null); setInspectorOpen(true); } }}/> }
     {adding && <div className={styles.addBar}><button onClick={() => { setAdding(false); setLinkFrom(null); }}>Cancel Add Step</button><span>or Press <kbd>Esc</kbd></span></div>}
   </section>;
 }

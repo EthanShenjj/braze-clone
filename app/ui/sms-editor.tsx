@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ExternalLink, Info, Plus, Send, Sparkles, UserRound, X } from "lucide-react";
 import styles from "./sms-editor.module.css";
+import { smsMetrics } from "@/lib/sms-model";
 
 type SmsCampaign = {
   id: string;
@@ -25,13 +26,6 @@ const liquidTokens = [
 function channelValues(draft: SmsCampaign) {
   const stored = draft.config?.channelValues;
   return stored && typeof stored === "object" ? stored as Record<string, unknown> : {};
-}
-
-function messageSegments(message: string) {
-  const unicode = /[^\x00-\x7F]/.test(message);
-  const single = unicode ? 70 : 160;
-  const multipart = unicode ? 67 : 153;
-  return Math.max(1, Math.ceil(message.length / (message.length <= single ? single : multipart)));
 }
 
 function shortenedPreview(message: string, enabled: boolean) {
@@ -67,7 +61,7 @@ export default function SmsCampaignComposer({
   const message = current?.body ?? "";
   const linkShortening = values.linkShortening !== false;
   const appendStop = values.appendStop !== false;
-  const segments = messageSegments(message);
+  const segments = smsMetrics(message).segments;
   const preview = useMemo(() => {
     const rendered = shortenedPreview(message || "Your message preview will appear here.", linkShortening);
     return appendStop && !/reply stop/i.test(rendered) ? `${rendered}\n\nReply STOP to opt-out.` : rendered;
