@@ -1,0 +1,24 @@
+{
+  "environment": "isolated localhost database",
+  "checks": [
+    "event selection",
+    "property metadata",
+    "numeric property filter",
+    "condition duplicate and removal",
+    "filter group add and removal",
+    "trigger add and removal",
+    "second-based delay",
+    "end date input",
+    "re-eligibility interval",
+    "read-only priority dialog",
+    "priority status filter",
+    "save and reopen"
+  ],
+  "savedState": {
+    "filterValue": "500",
+    "delayMinutes": 0.5,
+    "endTime": "2026-10-29T03:45",
+    "reentryDays": 0.08333333333333333
+  },
+  "passed": true
+}

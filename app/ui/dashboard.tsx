@@ -402,6 +402,7 @@ function CampaignRowActions({ locale, campaign, onEdit, onStop, onArchive, onDup
 
 function CampaignEditor({ locale, campaign, onSave, onClose, notify = () => {} }: { locale: Locale; campaign: Campaign; onSave: (c: Campaign, publish?: boolean, silent?: boolean) => Promise<boolean>; onClose: () => void; notify?: (message: string) => void }) {
   const [draft, setDraft] = useState(campaign); const [step, setStep] = useState(0); const [variant, setVariant] = useState(0); const [testOpen, setTestOpen] = useState(false);
+  const editorText = (text: string) => locale === "zh-CN" && campaign.channel === "iam" ? ({ "Schedule Delivery": "安排交付", "Assign Conversions": "分配转换", "Review Summary": "审查摘要", "Limited access": "访问受限", "Schedule": "日程", "Review": "审查" } as Record<string, string>)[text] ?? translate(locale, text) : translate(locale, text);
   const steps = ["Compose Messages", "Schedule Delivery", "Target Audiences", "Assign Conversions", "Review Summary"];
   // config is shallow-merged so concurrent editors (e.g. a template submission
   // followed by a variant patch) never drop each other's keys.
@@ -438,9 +439,9 @@ function CampaignEditor({ locale, campaign, onSave, onClose, notify = () => {} }
     return () => window.removeEventListener("popstate", syncStep);
   }, [campaign.id]);
   const ChannelIcon = channelMeta[draft.channel].icon;
-  return <section className={className("editor-page", draft.channel === "sms" && "sms-editor-page")}>
-    <div className="editor-access"><LockKeyhole size={11}/> {translate(locale, "Limited access")}</div>
-    <nav className="editor-steps" aria-label={translate(locale, "Campaign steps")}>{steps.map((item, i) => <button key={item} className={className("editor-step", step === i && "current", step > i && "complete")} onClick={() => goToStep(i)}><span>{step > i ? "✓" : i + 1}</span><b>{translate(locale, item)}</b></button>)}</nav>
+  return <section className={className("editor-page", draft.channel === "sms" && "sms-editor-page", draft.channel === "iam" && step === 1 && "iam-delivery-editor")}>
+    <div className="editor-access"><LockKeyhole size={11}/> {editorText("Limited access")}</div>
+    <nav className="editor-steps" aria-label={translate(locale, "Campaign steps")}>{steps.map((item, i) => <button key={item} className={className("editor-step", step === i && "current", step > i && "complete")} onClick={() => goToStep(i)}><span>{step > i ? "✓" : i + 1}</span><b>{editorText(item)}</b></button>)}</nav>
     {step === 0 && (
       <Compose locale={locale} draft={draft} update={update} saveEmail={saveMessage} variant={variant} setVariant={setVariant} openTest={() => { void saveMessage({}).then(ok => { if (ok) setTestOpen(true); }); }}/>
     )}
@@ -450,7 +451,7 @@ function CampaignEditor({ locale, campaign, onSave, onClose, notify = () => {} }
     {step === 4 && <Review locale={locale} draft={draft} go={goToStep} issues={launchIssues}/>}
     <footer className="editor-footer">
       <button className="footer-arrow" aria-label={translate(locale, "Back")} disabled={step === 0} onClick={() => goToStep(step - 1)}><ChevronLeft size={17}/></button>
-      <div className="editor-footer-steps">{["Compose", "Schedule", "Target", "Assign", "Review"].map((name, i) => <button key={name} className={className("footer-step", step === i && "current", step > i && "complete")} onClick={() => goToStep(i)}><span>{step > i ? "✓" : i + 1}</span>{translate(locale, name)}</button>)}</div>
+      <div className="editor-footer-steps">{["Compose", "Schedule", "Target", "Assign", "Review"].map((name, i) => <button key={name} className={className("footer-step", step === i && "current", step > i && "complete")} onClick={() => goToStep(i)}><span>{step > i ? "✓" : i + 1}</span>{editorText(name)}</button>)}</div>
       <button className="footer-arrow" aria-label={translate(locale, "Forward")} disabled={step === steps.length - 1} onClick={() => goToStep(step + 1)}><ChevronRight size={17}/></button>
       <button className="footer-save" onClick={() => void onSave(draft)}>{translate(locale, "Save Draft")}</button>
       {step === 4 && <button className="primary footer-launch" disabled={Boolean(launchIssues.length) || draft.status === "Active"} onClick={() => void onSave(draft, true)}>{translate(locale, draft.status === "Active" ? "Campaign Active" : "Launch Campaign")}</button>}
@@ -847,7 +848,7 @@ function ChannelPanel({ title, help, children }: { title: string; help: string; 
 
 function Field({ label, children }: { label: string; children: ReactNode }) { return <label className="field"><span>{label}</span>{children}</label>; }
 function Schedule({ locale, draft, update }: { locale: Locale; draft: Campaign; update: (p: Partial<Campaign>) => void }) {
-  if (draft.channel === "iam") return <InAppSchedule draft={draft} update={update}/>;
+  if (draft.channel === "iam") return <InAppSchedule locale={locale} draft={draft} update={update}/>;
   const delivery = (draft.config?.delivery ?? {}) as Record<string, unknown>;
   const changeDelivery = (patch: Record<string, unknown>) => update({ config: { ...draft.config, delivery: { ...delivery, ...patch } } });
   const mode = draft.schedule === "Action-based" || draft.schedule === "API-triggered" ? draft.schedule : "One time";

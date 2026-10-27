@@ -1,0 +1,45 @@
+TAP version 13
+# (node:73853) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:73853) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/in-app-schedule.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: legacy session settings migrate per trigger without reviving an explicitly empty list
+ok 1 - legacy session settings migrate per trigger without reviving an explicitly empty list
+  ---
+  duration_ms: 1.202833
+  type: 'test'
+  ...
+# Subtest: delay units retain seconds precision and migrate old minutes
+ok 2 - delay units retain seconds precision and migrate old minutes
+  ---
+  duration_ms: 0.218792
+  type: 'test'
+  ...
+# Subtest: incomplete triggers and property groups cannot pass launch validation
+ok 3 - incomplete triggers and property groups cannot pass launch validation
+  ---
+  duration_ms: 0.689042
+  type: 'test'
+  ...
+# Subtest: disabled filters preserve draft conditions without affecting validation
+ok 4 - disabled filters preserve draft conditions without affecting validation
+  ---
+  duration_ms: 0.197834
+  type: 'test'
+  ...
+# Subtest: duration and delay reject invalid execution intervals
+ok 5 - duration and delay reject invalid execution intervals
+  ---
+  duration_ms: 9.712583
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 147.207708

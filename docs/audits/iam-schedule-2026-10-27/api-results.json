@@ -1,0 +1,10 @@
+{
+  "passed": 4,
+  "checks": [
+    "event options aggregate names and types without exposing profile property values",
+    "multiple triggers, property groups, second precision and re-entry interval persist unchanged",
+    "server prevents launching a draft with no triggers",
+    "server prevents launching an invalid campaign interval"
+  ],
+  "campaignId": "cmp_schedule_api_e243a563"
+}

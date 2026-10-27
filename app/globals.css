@@ -127,3 +127,51 @@
 html:has(.global-control-shell){scrollbar-width:none}
 @media(max-width:560px){.global-control-shell .topbar{padding:0 12px;gap:8px}.global-control-shell .search-button{width:36px;max-width:36px;flex:0 0 36px;height:36px;justify-content:center;padding:0;font-size:0}.global-control-shell .search-button kbd{display:none}.global-control-shell .top-actions{gap:8px;margin-left:auto}.global-control-shell .top-actions .profile{width:28px;height:28px}.global-control-shell .operator-trigger{width:28px;height:28px}}
 .iam-trigger-card{max-width:700px;margin:16px 0;padding:18px;border:1px solid #dedbe3;border-radius:6px;background:#faf9fc}.iam-trigger-card>div{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}.iam-trigger-add{display:flex;gap:16px;max-width:700px;margin:16px 0}.iam-trigger-add select{flex:1;min-width:0;height:40px;border:1px solid #aaa4af;border-radius:6px;padding:0 12px;background:white}.iam-schedule-field{display:flex;flex-wrap:wrap;align-items:center;gap:16px;max-width:800px;margin:20px 0;font-size:13px;font-weight:700}.iam-schedule-field input,.iam-schedule-field select,.iam-trigger-card label>input:not([type=radio]){padding:10px 12px;border:1px solid #aaa4af;border-radius:6px;min-height:40px;background:white;font-weight:400}
+
+/* Campaign IAM Schedule: dimensions measured on the original Braze screen. */
+.app-shell:has(.iam-delivery-editor):not(.compact){--rail:260px}
+.app-shell:has(.iam-delivery-editor){font-family:Aribau,Arial,sans-serif}
+.app-shell:has(.iam-delivery-editor) .main-area{padding-top:28px;padding-right:11px;background:#f4f4f7}
+.app-shell:has(.iam-delivery-editor) .trial{height:28px;padding-top:5px;font-size:12px}
+.app-shell:has(.iam-delivery-editor) .topbar{height:62px;top:28px;padding:0 48px;margin-right:-11px}
+.app-shell:has(.iam-delivery-editor) .search-button{height:40px;border-radius:24px;width:600px;font-size:14px;background:#f0f0ff}
+.app-shell:has(.iam-delivery-editor) .page-tabs{height:42px;padding-left:20px;background:#f4f4f7;gap:16px;margin:0 20px}
+.app-shell:has(.iam-delivery-editor) .page-tab{font-size:14px;font-weight:700}
+.app-shell:has(.iam-delivery-editor) .page-tab.selected:after{height:6px;border-radius:8px 8px 0 0;background:#29154b;left:3px;right:3px}
+.iam-delivery-editor{width:calc(100% - 40px);max-width:1012px;padding:20px 0 100px}
+.iam-delivery-editor .editor-access{margin:0 12px 12px;background:#e7e2ff;color:#29154b;font-size:12px;height:24px;padding:3px 8px;border-radius:4px}
+.iam-delivery-editor .editor-steps{padding:0 12px 11px;min-height:67px;gap:16px;overflow:visible}
+.iam-delivery-editor .editor-step{font-size:14px;line-height:18px;gap:20px;min-height:56px;padding:0;justify-content:center;color:#66666c}
+.iam-delivery-editor .editor-step>span{width:32px;height:32px;flex:0 0 32px;background:#e7e2ff;color:#6059b9;font-size:16px}
+.iam-delivery-editor .editor-step.current{color:#29154b}.iam-delivery-editor .editor-step.current>span{background:#1e0b40;color:#fff}
+.iam-delivery-editor .editor-step.complete{color:#007d5d}.iam-delivery-editor .editor-step.complete>span{background:#ccf1e3;color:#009d77}
+.iam-delivery-editor .editor-footer{height:72px;padding:0 12px 0 18px;background:#fff}
+.iam-delivery-editor .editor-footer-steps{gap:36px}.iam-delivery-editor .editor-footer .footer-step{font-size:14px;gap:6px}
+.iam-delivery-editor .editor-footer .footer-step span{width:24px;height:24px;flex-basis:24px;font-size:14px}
+.iam-delivery-editor .editor-footer .footer-save{height:40px;min-width:120px;border-color:#9359ff;font-size:14px}
+@media(max-width:1100px){.app-shell:has(.iam-delivery-editor):not(.compact){--rail:194px}.iam-delivery-editor{width:92%}.iam-delivery-editor .editor-step{gap:8px;font-size:12px}.iam-delivery-editor .editor-footer-steps{gap:16px}.app-shell:has(.iam-delivery-editor) .topbar{padding:0 24px}}
+@media(max-width:800px){.app-shell:has(.iam-delivery-editor):not(.compact){--rail:58px}.iam-delivery-editor{width:94%}.iam-delivery-editor .editor-steps{gap:8px}.iam-delivery-editor .editor-step{flex-direction:column;gap:6px;font-size:10px;text-align:center}.iam-delivery-editor .editor-footer-steps{gap:10px}.iam-delivery-editor .editor-footer .footer-step{font-size:0}.iam-delivery-editor .editor-footer .footer-step span{font-size:12px}.iam-delivery-editor .editor-footer .footer-save{min-width:90px;font-size:12px}.app-shell:has(.iam-delivery-editor) .topbar{padding:0 12px}}
+
+.iam-delivery-editor>.iam-schedule{width:calc(100% + 3px)}
+
+.app-shell:has(.iam-delivery-editor) .top-actions{gap:8px}
+.app-shell:has(.iam-delivery-editor) .top-actions>.icon-ghost,.app-shell:has(.iam-delivery-editor) .top-actions .language-menu>.icon-ghost,.app-shell:has(.iam-delivery-editor) .top-actions .anchor>.icon-ghost{width:40px;height:40px;border-radius:50%;background:#f6f6f7;display:grid;place-items:center;padding:9px}
+.app-shell:has(.iam-delivery-editor) .top-actions>svg{width:40px;height:40px;border-radius:50%;background:#f6f6f7;padding:10px}
+.app-shell:has(.iam-delivery-editor) .top-actions>.anchor:has(.profile){display:flex;align-items:center;gap:6px;background:#f6f6f7;border-radius:24px;padding-right:8px}
+.app-shell:has(.iam-delivery-editor) .profile{width:40px;height:40px;font-size:0;background:#f6f6f7 url('/braze-iam/profile-button.svg') center/40px no-repeat}
+.app-shell:has(.iam-delivery-editor) .operator-trigger{width:40px;height:40px}
+.app-shell:has(.iam-delivery-editor) .top-actions>.icon-ghost{background-image:url('/braze-iam/support-button.svg');background-position:center;background-size:20px;background-repeat:no-repeat}
+.app-shell:has(.iam-delivery-editor) .top-actions>.icon-ghost>svg{visibility:hidden}
+.app-shell:has(.iam-delivery-editor) .top-actions>svg{background-image:url('/braze-iam/community-button.svg');background-position:center;background-size:22px;background-repeat:no-repeat;stroke:transparent}
+.app-shell:has(.iam-delivery-editor) .language-menu>.icon-ghost{background-image:url('/braze-iam/language-selector-button.svg');background-position:center;background-size:22px;background-repeat:no-repeat}
+.app-shell:has(.iam-delivery-editor) .language-menu>.icon-ghost>svg{visibility:hidden}
+@media(max-width:800px){.app-shell:has(.iam-delivery-editor) .top-actions>.icon-ghost,.app-shell:has(.iam-delivery-editor) .top-actions>svg,.app-shell:has(.iam-delivery-editor) .top-actions>.anchor:has(.profile),.app-shell:has(.iam-delivery-editor) .top-actions>.operator-trigger{display:none}.app-shell:has(.iam-delivery-editor) .topbar{gap:12px}.app-shell:has(.iam-delivery-editor) .search-button{min-width:0;flex:1;width:auto;max-width:none}.app-shell:has(.iam-delivery-editor) .search-button kbd{display:none}}
+@media(max-width:600px){.iam-delivery-editor .editor-footer{padding:0 6px;gap:5px}.iam-delivery-editor .editor-footer-steps{gap:4px}.iam-delivery-editor .editor-footer .footer-step span{width:20px;height:20px;flex-basis:20px}.iam-delivery-editor .editor-footer .footer-save{min-width:78px;padding:0 10px}.iam-delivery-editor .footer-arrow{width:20px;padding:0}}
+html:has(.iam-delivery-editor){scrollbar-gutter:stable}
+html:has(.iam-delivery-editor)::-webkit-scrollbar{width:11px}
+html:has(.iam-delivery-editor)::-webkit-scrollbar-track{background:#f4f4f7}
+html:has(.iam-delivery-editor)::-webkit-scrollbar-thumb{background:#8c8c92;border:2px solid #f4f4f7;border-radius:8px}
+.app-shell:has(.iam-delivery-editor) .main-area{padding-right:0}
+.app-shell:has(.iam-delivery-editor) .topbar{margin-right:0}
+.app-shell:has(.iam-delivery-editor) .top-actions .language-menu>.icon-ghost{background-image:url('/braze-iam/language-selector-button.svg');background-position:center;background-size:22px;background-repeat:no-repeat}
+.app-shell:has(.iam-delivery-editor) .profile{background-size:30px 45px}

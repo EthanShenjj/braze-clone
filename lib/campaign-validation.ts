@@ -2,6 +2,7 @@ import { variantsFor as inAppVariants, validateInAppVariant } from "./in-app-mod
 import { normalizeWebhookVariants, validateWebhookVariant } from "./webhook-model";
 import { validateWhatsAppCampaign } from "./whatsapp-model";
 import { validateLineCampaign } from "./line-model";
+import { scheduleValidationIssues } from "./in-app-schedule";
 
 export type CampaignForValidation = {
   name: string;
@@ -39,6 +40,8 @@ export function campaignValidationIssues(campaign: CampaignForValidation): strin
     issues.push(...validateLineCampaign(campaign));
   } else if (campaign.channel === "iam") {
     try { issues.push(...inAppVariants(campaign).flatMap(validateInAppVariant)); } catch { issues.push("Invalid in-app message configuration."); }
+    const delivery = campaign.config?.delivery as Record<string, unknown> | undefined;
+    if (delivery?.schemaVersion === 2) issues.push(...scheduleValidationIssues(delivery));
   } else if (campaign.channel === "whatsapp") {
     issues.push(...validateWhatsAppCampaign(campaign));
   } else if (campaign.channel === "webhook") {

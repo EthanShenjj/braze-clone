@@ -5,6 +5,17 @@ import { evaluateFlag, objectValue, transformPayload, WorkspaceValidationError }
 import { issueIntegrationKey, listIntegrationKeys, revokeIntegrationKey } from "./integration-auth";
 
 export function workspaceSnapshot(module: string, params: URLSearchParams) {
+  if (module === "delivery-metadata") {
+    const blocked = new Set(listResources("event-blocklist").filter(row => row.status === "Blocked").map(row => row.name));
+    const events = new Map<string, Record<string, string>>();
+    for (const row of listResources("user-events")) {
+      if (blocked.has(row.name) || row.data.productId) continue;
+      const properties = events.get(row.name) ?? {};
+      for (const [key, value] of Object.entries(objectValue(row.data.properties))) if (value !== null && ["string", "number", "boolean"].includes(typeof value)) properties[key] = typeof value;
+      events.set(row.name, properties);
+    }
+    return { events: [...events].sort(([a], [b]) => a.localeCompare(b)).map(([name, properties]) => ({ name, properties })), apps: listResources("app-settings").map(row => ({ id: row.id, name: row.name })), campaigns: listCampaigns({ limit: 1000, status: "All" }).data.map(row => ({ id: row.id, name: row.name, status: row.status, channel: row.channel, priority: String(objectValue(row.config?.delivery).iamPriority ?? "Medium") })) };
+  }
   if (module === "api-keys") return { data: listIntegrationKeys(), apps: listResources("app-settings") };
   if (module === "calendar") return { campaigns: listCampaigns({ limit: 1000, status: "All" }).data, canvases: listCanvases() };
   if (module === "events") return { data: workspaceEventRows().filter(row => !params.get("user") || String(row.user_id).includes(params.get("user")!)), userEvents: listResources("user-events"), audit: workspaceAudit(500) };
