@@ -1,0 +1,325 @@
+[
+  {
+    "id": "source_0",
+    "name": "Welcome",
+    "title": "Get started today",
+    "body": "Explore the services that our experts provide to help you build that financial foundation.",
+    "buttonText": "Maybe later",
+    "imageUrl": "/braze-iam/onboarding-4.png",
+    "columns": 1,
+    "extraBlocks": [],
+    "buttons": [
+      {
+        "id": "button_0",
+        "text": "Maybe later",
+        "behavior": "dismiss",
+        "href": "",
+        "style": "secondary"
+      },
+      {
+        "id": "button_1",
+        "text": "Let's go",
+        "behavior": "page",
+        "href": "source_1",
+        "style": "primary"
+      }
+    ],
+    "styleOverrides": {
+      "backgroundColor": "#101828",
+      "textColor": "#E4D6A2",
+      "buttonColor": "#E4D6A2",
+      "buttonTextColor": "#101828",
+      "borderWidth": 0,
+      "borderRadius": 8,
+      "fontFamily": "system-ui"
+    },
+    "contentStyle": {
+      "titleSize": 28,
+      "titleLineHeight": 1.5,
+      "bodySize": 18,
+      "topPadding": 40,
+      "copyInset": 14
+    }
+  },
+  {
+    "id": "source_1",
+    "name": "Feature or Benefit 1",
+    "title": "Fill out our application",
+    "body": "Get an auto loan, home loan, or personal loan today with the best rates available.",
+    "buttonText": "Back",
+    "imageUrl": "/braze-iam/onboarding-1.png",
+    "columns": 1,
+    "extraBlocks": [],
+    "buttons": [
+      {
+        "id": "button_0",
+        "text": "Back",
+        "behavior": "page",
+        "href": "source_0",
+        "style": "secondary"
+      },
+      {
+        "id": "button_1",
+        "text": "Continue",
+        "behavior": "page",
+        "href": "source_2",
+        "style": "primary"
+      }
+    ],
+    "styleOverrides": {
+      "backgroundColor": "#101828",
+      "textColor": "#E4D6A2",
+      "buttonColor": "#E4D6A2",
+      "buttonTextColor": "#101828",
+      "borderWidth": 0,
+      "borderRadius": 8,
+      "fontFamily": "system-ui"
+    },
+    "contentStyle": {
+      "titleSize": 28,
+      "titleLineHeight": 1.5,
+      "bodySize": 18,
+      "topPadding": 40,
+      "copyInset": 14
+    }
+  },
+  {
+    "id": "source_2",
+    "name": "Feature or Benefit 2",
+    "title": "Apply Now for the Pyrite Credit Card",
+    "body": "Earn rewards and travel points with each purchase with other benefits.",
+    "buttonText": "Back",
+    "imageUrl": "/braze-iam/onboarding-5.png",
+    "columns": 1,
+    "extraBlocks": [],
+    "buttons": [
+      {
+        "id": "button_0",
+        "text": "Back",
+        "behavior": "page",
+        "href": "source_1",
+        "style": "secondary"
+      },
+      {
+        "id": "button_1",
+        "text": "Continue",
+        "behavior": "page",
+        "href": "source_3",
+        "style": "primary"
+      }
+    ],
+    "styleOverrides": {
+      "backgroundColor": "#101828",
+      "textColor": "#E4D6A2",
+      "buttonColor": "#E4D6A2",
+      "buttonTextColor": "#101828",
+      "borderWidth": 0,
+      "borderRadius": 8,
+      "fontFamily": "system-ui"
+    },
+    "contentStyle": {
+      "titleSize": 28,
+      "titleLineHeight": 1.5,
+      "bodySize": 18,
+      "topPadding": 40,
+      "copyInset": 14
+    }
+  },
+  {
+    "id": "source_3",
+    "name": "Feature or Benefit 3",
+    "title": "Make an Appointment Today",
+    "body": "Speak to an expert advisor to help you build your portfolio and meet your goals.",
+    "buttonText": "Back",
+    "imageUrl": "/braze-iam/onboarding-6.png",
+    "columns": 1,
+    "extraBlocks": [],
+    "buttons": [
+      {
+        "id": "button_0",
+        "text": "Back",
+        "behavior": "page",
+        "href": "source_2",
+        "style": "secondary"
+      },
+      {
+        "id": "button_1",
+        "text": "Continue",
+        "behavior": "page",
+        "href": "source_4",
+        "style": "primary"
+      }
+    ],
+    "styleOverrides": {
+      "backgroundColor": "#101828",
+      "textColor": "#E4D6A2",
+      "buttonColor": "#E4D6A2",
+      "buttonTextColor": "#101828",
+      "borderWidth": 0,
+      "borderRadius": 8,
+      "fontFamily": "system-ui"
+    },
+    "contentStyle": {
+      "titleSize": 28,
+      "titleLineHeight": 1.5,
+      "bodySize": 18,
+      "topPadding": 40,
+      "copyInset": 14
+    }
+  },
+  {
+    "id": "source_4",
+    "name": "Get Started",
+    "title": "Questions?",
+    "body": "We're here to help.",
+    "buttonText": "Contact Us",
+    "imageUrl": "/braze-iam/onboarding-3.png",
+    "columns": 1,
+    "extraBlocks": [
+      {
+        "id": "image_0",
+        "kind": "Image",
+        "text": "",
+        "src": "/braze-iam/onboarding-2.png"
+      }
+    ],
+    "buttons": [
+      {
+        "id": "button_0",
+        "text": "Contact Us",
+        "behavior": "dismiss",
+        "href": "",
+        "style": "primary"
+      }
+    ],
+    "styleOverrides": {
+      "backgroundColor": "#101828",
+      "textColor": "#E4D6A2",
+      "buttonColor": "#E4D6A2",
+      "buttonTextColor": "#101828",
+      "borderWidth": 0,
+      "borderRadius": 8,
+      "fontFamily": "system-ui"
+    },
+    "contentStyle": {
+      "titleSize": 28,
+      "titleLineHeight": 1.5,
+      "bodySize": 18,
+      "topPadding": 40,
+      "copyInset": 14
+    }
+  },
+  {
+    "id": "source_5",
+    "name": "Basic",
+    "title": "Welcome! Drag and drop a row or block to get started",
+    "body": "Set the global font family and content styling using the panel on the right.",
+    "buttonText": "Primary Action",
+    "imageUrl": "",
+    "columns": 1,
+    "extraBlocks": [],
+    "buttons": [
+      {
+        "id": "button_0",
+        "text": "Primary Action",
+        "behavior": "dismiss",
+        "href": "",
+        "style": "secondary"
+      },
+      {
+        "id": "button_1",
+        "text": "Secondary Action",
+        "behavior": "dismiss",
+        "href": "",
+        "style": "primary"
+      }
+    ],
+    "contentStyle": {
+      "titleSize": 17,
+      "titleLineHeight": 1.5,
+      "bodySize": 14,
+      "topPadding": 30,
+      "copyInset": 14
+    }
+  },
+  {
+    "id": "source_6",
+    "name": "Email sign-up",
+    "title": "15% OFF",
+    "body": "SIGN UP FOR OUR EMAILS & ENJOY\nYOUR FIRST ORDER​\n*15% off is valid for new subscribers & on first purchase only.​",
+    "buttonText": "SIGN UP",
+    "imageUrl": "",
+    "columns": 1,
+    "extraBlocks": [
+      {
+        "id": "email_6",
+        "kind": "Email Capture",
+        "text": "YOUR EMAIL",
+        "mapTo": "email"
+      }
+    ],
+    "buttons": [
+      {
+        "id": "button_0",
+        "text": "SIGN UP",
+        "behavior": "dismiss",
+        "href": "",
+        "style": "primary"
+      }
+    ],
+    "styleOverrides": {
+      "backgroundColor": "#101828",
+      "textColor": "#FFFFFF",
+      "buttonColor": "#7ED321",
+      "buttonTextColor": "#FFFFFF",
+      "fontFamily": "Didot"
+    }
+  },
+  {
+    "id": "source_7",
+    "name": "Email sign-up",
+    "title": "Don't miss out!",
+    "body": "Sign up to learn more and become a member of our community. Enjoy access to exclusive offers and be the first to know about new & trending collections.\nBy signing up for our newsletter, you agree to our Terms of Service.​",
+    "buttonText": "SUBSCRIBE",
+    "imageUrl": "/braze-iam/companify-logo.png",
+    "columns": 1,
+    "extraBlocks": [
+      {
+        "id": "email_7",
+        "kind": "Email Capture",
+        "text": "Enter your email",
+        "mapTo": "email"
+      }
+    ],
+    "buttons": [
+      {
+        "id": "button_0",
+        "text": "SUBSCRIBE",
+        "behavior": "page",
+        "href": "source_8",
+        "style": "primary"
+      }
+    ],
+    "styleOverrides": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#000000",
+      "buttonColor": "#1AA19C",
+      "buttonTextColor": "#FFFFFF"
+    }
+  },
+  {
+    "id": "source_8",
+    "name": "Confirmation",
+    "title": "Thanks for subscribing!",
+    "body": "We sent a link to your inbox to verify your email.",
+    "buttonText": "",
+    "imageUrl": "/braze-iam/companify-logo.png",
+    "columns": 1,
+    "extraBlocks": [],
+    "buttons": [],
+    "styleOverrides": {
+      "backgroundColor": "#C7F6F4",
+      "textColor": "#000000"
+    }
+  }
+]

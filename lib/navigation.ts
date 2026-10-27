@@ -32,6 +32,7 @@ export function routeForPage(page: string) {
 }
 
 export function pageFromPath(pathname: string) {
+  if (/^\/engagement\/global_message_settings\/global-control-settings(?:\/[^/]+)?\/?$/.test(pathname)) return "global-control-group";
   if (/^\/app_settings\/app_settings\/email_settings(?:\/|$)/.test(pathname)) return "email-preferences";
   if (/^\/engagement\/campaigns\/cmp_[^/]+$/.test(pathname)) return "campaigns";
   if (/^\/engagement\/canvas\/[^/]+$/.test(pathname)) return "canvas";

@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { workspaceContentBlockHtml } from "@/lib/email-liquid";
 import styles from "./email-dnd.module.css";
+import BeefreeEmailEditor from "./email-beefree-editor";
 import GrapesEmailEditor from "./email-grapes-editor";
 import {
   blockText, defaultBlock, defaultStyle, downloadHtmlFile, emailFontFamilies, emailLocales, emailTemplates, escapeHtml,
@@ -1083,10 +1084,11 @@ export function EmailTemplateGallery({ locale, onApply, onClose }: { locale: Loc
   const [editorFilter, setEditorFilter] = useState<"All" | "Drag-and-Drop Editor" | "HTML Editor" | "Plain-text Editor">("All");
   const [selectedId, setSelectedId] = useState(emailTemplates[0]?.id ?? "");
   useEffect(() => {
-    void fetch("/api/resources/email-templates").then(r => r.json()).then(d => setWorkspaceTemplates(((d.data ?? []) as Array<{ id: string; name: string; description: string; data: { subject?: string; body?: string } }>).map(row => ({
-      id: row.id, name: `${row.name} (workspace)`, editor: "HTML Editor" as const, category: "Workspace",
-      subject: String(row.data.subject ?? ""), preheader: "", description: row.description || "Saved in Templates", html: String(row.data.body ?? ""),
-    })))).catch(() => {});
+    void fetch("/api/resources/email-templates").then(r => r.json()).then(d => setWorkspaceTemplates(((d.data ?? []) as Array<{ id: string; name: string; status: string; description: string; data: Record<string, unknown> }>).filter(row => row.status !== "Archived").map(row => {
+      const config = row.data.config && typeof row.data.config === "object" ? row.data.config as Record<string, unknown> : row.data;
+      const mode = String(row.data.emailEditorMode ?? config.emailEditorMode ?? "html");
+      return { id: row.id, name: `${row.name} (workspace)`, editor: mode === "drag" ? "Drag-and-Drop Editor" as const : mode === "plain" ? "Plain-text Editor" as const : "HTML Editor" as const, category: String(row.data.category ?? "Workspace"), subject: String(row.data.subject ?? ""), preheader: "", description: row.description || "Saved in Templates", config, ...(mode === "plain" ? { plain: String(row.data.body ?? "") } : { html: String(row.data.body ?? "") }), ...(Array.isArray(config.emailRows) ? { rows: config.emailRows as EmailRow[] } : {}) };
+    }))).catch(() => {});
   }, []);
   const templates = [...workspaceTemplates, ...emailTemplates];
   const filtered = templates.filter(template =>
@@ -1313,7 +1315,15 @@ export function EmailMessageEditor({ locale, mode, variantName, draft, save, onC
   onModeChange: (mode: EditorMode) => void;
   onOpenTest: () => void;
 }) {
-  if (mode === "drag") return <GrapesEmailEditor locale={locale} draft={draft} variantName={variantName} save={save} onClose={onClose} onSendingSettings={onSendingSettings} onOpenTest={onOpenTest} />;
+  if (mode === "drag") {
+    if (draft.config?.emailEditorEngine === "beefree") return <BeefreeEmailEditor locale={locale} draft={draft} variantName={variantName} save={save} onClose={onClose} onSendingSettings={onSendingSettings} onOpenTest={onOpenTest} />;
+    const legacyGrapesDesign = draft.config?.emailEditorEngine === "grapesjs-mjml"
+      || Boolean(draft.config?.emailGrapesProject)
+      || typeof draft.config?.emailMjml === "string"
+      || (Array.isArray(draft.config?.emailRows) && draft.config.emailRows.length > 0);
+    if (legacyGrapesDesign) return <GrapesEmailEditor locale={locale} draft={draft} variantName={variantName} save={save} onClose={onClose} onSendingSettings={onSendingSettings} onOpenTest={onOpenTest} />;
+    return <BeefreeEmailEditor locale={locale} draft={draft} variantName={variantName} save={save} onClose={onClose} onSendingSettings={onSendingSettings} onOpenTest={onOpenTest} />;
+  }
   return <GeneralEmailEditor locale={locale} mode={mode} variantName={variantName} draft={draft} save={save} onClose={onClose} onSendingSettings={onSendingSettings} onModeChange={onModeChange} onOpenTest={onOpenTest} />;
 }
 
@@ -1351,7 +1361,7 @@ function GeneralEmailEditor({ locale, mode, variantName, draft, save, onClose, o
 
   const applyTemplate = (template: (typeof emailTemplates)[number]) => {
     if (template.rows) {
-      void save({ subject: template.subject, body: rowsToPlainText(template.rows), config: { ...draft.config, emailEditorMode: "drag", emailRows: template.rows, emailStyle: normalizeStyle(draft.config?.emailStyle), emailSending: { ...sending, preheader: template.preheader } } });
+      void save({ subject: template.subject, body: rowsToPlainText(template.rows), config: { ...draft.config, emailEditorMode: "drag", emailEditorEngine: "grapesjs-mjml", emailRows: template.rows, emailStyle: normalizeStyle(draft.config?.emailStyle), emailSending: { ...sending, preheader: template.preheader } } });
       onModeChange("drag");
     } else if (template.html) {
       void save({ subject: template.subject, body: template.html, config: { ...draft.config, emailEditorMode: "html", emailSending: { ...sending, preheader: template.preheader } } });
@@ -1370,7 +1380,7 @@ function GeneralEmailEditor({ locale, mode, variantName, draft, save, onClose, o
       { ...defaultBlock("Paragraph"), text: "Welcome! Use code WELCOME10 for 10% off your first purchase. This offer is ready whenever you are." },
       { ...defaultBlock("Button"), text: "Start shopping", href: "https://example.com/start" },
     ]);
-    void save({ subject: "Your first order offer", body: rowsToPlainText([row]), config: { ...draft.config, emailEditorMode: "drag", emailRows: [row], emailStyle: normalizeStyle(draft.config?.emailStyle) } });
+    void save({ subject: "Your first order offer", body: rowsToPlainText([row]), config: { ...draft.config, emailEditorMode: "drag", emailEditorEngine: "grapesjs-mjml", emailRows: [row], emailStyle: normalizeStyle(draft.config?.emailStyle) } });
     onModeChange("drag");
   };
 

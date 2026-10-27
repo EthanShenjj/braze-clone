@@ -1,0 +1,72 @@
+[
+  {
+    "id": "braze_0",
+    "name": "Email sign-up with background image",
+    "description": "Build your email list and show off your brand style with one simple message."
+  },
+  {
+    "id": "braze_1",
+    "name": "Email sign-up with confirmation page",
+    "description": "Generate high quality email leads by introducing a confirmation flow."
+  },
+  {
+    "id": "braze_2",
+    "name": "Email sign-up with special offer",
+    "description": "Build your email list by offering a special discount on sign-up."
+  },
+  {
+    "id": "braze_3",
+    "name": "Email sign-up with welcome discount",
+    "description": "Build your email list by offering a discount for new subscribers."
+  },
+  {
+    "id": "braze_4",
+    "name": "Onboarding flow",
+    "description": "Welcome new users, guide them through benefits, and drive action with a compelling CTA."
+  },
+  {
+    "id": "braze_5",
+    "name": "Product announcement",
+    "description": "Boost awareness of new product launches."
+  },
+  {
+    "id": "braze_6",
+    "name": "Push primer",
+    "description": "Help increase push opt-ins by explaining the types of messages users can expect before displaying the native push prompt."
+  },
+  {
+    "id": "braze_7",
+    "name": "Seasonal promo with background image",
+    "description": "Promote a seasonal offer or deal to drive user engagement."
+  },
+  {
+    "id": "braze_8",
+    "name": "Background image",
+    "description": "Background image with buttons"
+  },
+  {
+    "id": "braze_9",
+    "name": "Basic",
+    "description": "Simple layout with image, text, and buttons"
+  },
+  {
+    "id": "braze_10",
+    "name": "Email sign-up",
+    "description": "Collect email addresses to grow your subscriber list"
+  },
+  {
+    "id": "braze_11",
+    "name": "SMS sign-up",
+    "description": "Collect phone numbers with ease"
+  },
+  {
+    "id": "braze_12",
+    "name": "WhatsApp sign-up",
+    "description": "Collect phone numbers to grow your WhatsApp subscribers"
+  },
+  {
+    "id": "braze_13",
+    "name": "Blank",
+    "description": "Blank canvas ready for your creations"
+  }
+]

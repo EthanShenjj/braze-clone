@@ -1,0 +1,2666 @@
+{
+  "generatedAt": "2026-10-27",
+  "baseUrl": "http://127.0.0.1:3100",
+  "pages": [
+    {
+      "group": "top",
+      "label": "Canvas",
+      "key": "canvas",
+      "path": "/engagement/canvas",
+      "status": 200,
+      "elapsedMs": 1114,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Canvas ♙ Limited access"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCanvas\nCanvas\n♙ Limited access\n\nDesign and launch customer journeys with Canvas. Drag, drop, and connect\nmessaging across channels to create seamless, automated experiences.\n\nTake a tour\nCreate Canvas\nStatus\nDraft\nActive\nStopped\nArchived\nAll\nTags\nAll Tags\nFilters\nColumns\nReset filters\nStatus: Draft\n1 Results\n\tName ↕\tStatus\tDescription\tLast edited by\tLast edited ↓\tAlerts\nConfigured\t\nActions\n\n\tWelcome journey\tDr",
+      "buttons": 35,
+      "inputs": 6,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "top",
+      "label": "Campaigns",
+      "key": "campaigns",
+      "path": "/engagement/campaigns/campaigns?start=0&limit=12&sortby=last_edited&sortdir=-1&display=list",
+      "status": 200,
+      "elapsedMs": 789,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Campaigns"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCampaigns\nCampaigns\nLimited access\n\nCampaigns let you send a single, targeted message through email, push, SMS, and more, ensuring timely communication with your audience\n\nSend feedback\nTake a tour\nCreate campaign\nStatus\nAll\nDraft\nActive\nStopped\nTag\nSelect...\nFilters\nColumns\nReset filters\n18 Results\nAll campaigns\n\tName\tStatus\tStop date\tCampaign type\tEntry schedule\tSent\tLast edited\t\n\tUI push a65414c8 Campaign\n\t",
+      "buttons": 55,
+      "inputs": 17,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        1150
+      ]
+    },
+    {
+      "group": "top",
+      "label": "Segments",
+      "key": "segments",
+      "path": "/audience/segments",
+      "status": 200,
+      "elapsedMs": 556,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Segments"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nSegments\nSegments\nLimited access\n\nSplit your audience into targeted groups saved to local SQLite and selectable in campaign targeting.\n\nCreate segment\nQ\nQA promo audience c096b24a\n\nNew local resource\n\nActive · Oct 27, 2026, 3:04 PM\nEdit\nQ\nQA exact user c096b24a\n\nNew local resource\n\nActive · Oct 27, 2026, 3:04 PM\nEdit\nN\nNew Users\n\nUsers in the new-user lifecycle stage\n\nActive · Oct 27, 2026, 3:04 PM\nEdit\nR\nRece",
+      "buttons": 54,
+      "inputs": 0,
+      "genericResource": false,
+      "moduleWorkspace": true,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        1559
+      ]
+    },
+    {
+      "group": "top",
+      "label": "Getting Started",
+      "key": "getting-started",
+      "path": "/home",
+      "status": 200,
+      "elapsedMs": 556,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Your getting started checklist",
+        "0 of 6 milestones completed"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nGetting Started\nYour getting started checklist\n\nSet up your workspace and explore the tools used to engage your audience.\n\n0 of 6 milestones completed\nConnect your app or website\n\nRegister an application and configure the SDK.\n\nBegin\nBring your audience to Braze\n\nImport user profiles and inspect their attributes.\n\nBegin\nBuild a targeted segment\n\nDefine your first audience using profile filters.\n\nBegin\nCreate y",
+      "buttons": 29,
+      "inputs": 6,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        984
+      ]
+    },
+    {
+      "group": "top",
+      "label": "Performance Overview",
+      "key": "performance",
+      "path": "/analytics/performance-overview",
+      "status": 200,
+      "elapsedMs": 555,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Performance overview",
+        "Performance Over Time"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nPerformance Overview\nPerformance overview\n\nUser and session metrics calculated from recorded profile activity.\n\nUsers 1,007\nLifetime sessions 1\nDate range\nLast 7 days\nLast 30 days\nLast 90 days\nApp\nAll apps\nQA Web app c096b24a\nMonthly Active Users\n1\nDaily Active Users (AVERAGE)\n0.03\nNew Users (TOTAL)\n7\nStickiness (AVERAGE)\n3.33%\nDaily Sessions (AVERAGE)\n0.03\nDaily Sessions Per MAU (AVERAGE)\n0.03\nPerformance Ove",
+      "buttons": 23,
+      "inputs": 3,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        951
+      ]
+    },
+    {
+      "group": "top",
+      "label": "AI Decisioning",
+      "key": "ai-decisioning",
+      "path": "/ai-decisioning",
+      "status": 200,
+      "elapsedMs": 541,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "AI Decisioning"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nAi Decisioning\nAI Decisioning\n\nCompare eligible message options against a measurable optimization objective.\n\nCreate decisioning experiment\nAll\nLast edited\nName A–Z\nExport\n0 Results\nName\tStatus\tOptimization objective\tAudience\tDecision options\tLast edited\tActions\nNo ai decisioning yet.\n0–0 of 0\n12\n24\n48",
+      "buttons": 28,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "top",
+      "label": "Agent Console",
+      "key": "agents",
+      "path": "/agent-console",
+      "status": 200,
+      "elapsedMs": 540,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Agent Console"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nAgent Console\nAgent Console\n\nConfigure Canvas, data and catalog agents, and review their execution results.\n\nCanvas Step Agents\n\nDefine instructions and allowed actions for a Canvas message or decision step.\n\nOpen workspace →\nData Agents\n\nConfigure a data analysis objective and the datasets the agent may inspect.\n\nOpen workspace →\nCatalog Agents\n\nDefine catalog enrichment and recommendation tasks with explicit",
+      "buttons": 27,
+      "inputs": 0,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "top",
+      "label": "Messaging",
+      "key": "messaging",
+      "path": "/messaging",
+      "status": 200,
+      "elapsedMs": 541,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Messaging"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nMessaging\nMessaging\n\nCreate messages, coordinate customer journeys and manage reusable experiences.\n\nCanvas\n\nOpen canvas to view and manage your workspace.\n\nOpen workspace →\nCampaigns\n\nOpen campaigns to view and manage your workspace.\n\nOpen workspace →\nFeature Flags\n\nRelease features to specific audiences with ordered rules and a percentage rollout.\n\nOpen workspace →\nLanding Pages\n\nBuild, preview and publish p",
+      "buttons": 31,
+      "inputs": 0,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "top",
+      "label": "Audience",
+      "key": "audience",
+      "path": "/audience",
+      "status": 200,
+      "elapsedMs": 575,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Audience"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nAudience\nAudience\n\nBuild audiences and manage user profiles, subscriptions and eligibility.\n\nSegments\n\nOpen segments to view and manage your workspace.\n\nOpen workspace →\nSegment Extensions\n\nOpen segment extensions to view and manage your workspace.\n\nOpen workspace →\nGlobal Control Group\n\nOpen global control group to view and manage your workspace.\n\nOpen workspace →\nSuppression Lists\n\nOpen suppression lists to ",
+      "buttons": 33,
+      "inputs": 0,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        949
+      ]
+    },
+    {
+      "group": "top",
+      "label": "Content",
+      "key": "content",
+      "path": "/content",
+      "status": 200,
+      "elapsedMs": 533,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Content"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nContent\nContent\n\nCreate reusable templates, content blocks and catalog data for personalized messages.\n\nMedia Library\n\nOpen media library to view and manage your workspace.\n\nOpen workspace →\nBanner Templates\n\nOpen banner templates to view and manage your workspace.\n\nOpen workspace →\nCanvas Templates\n\nOpen canvas templates to view and manage your workspace.\n\nOpen workspace →\nContent Blocks\n\nOpen content blocks ",
+      "buttons": 34,
+      "inputs": 0,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        949
+      ]
+    },
+    {
+      "group": "top",
+      "label": "Analytics",
+      "key": "analytics",
+      "path": "/analytics",
+      "status": 200,
+      "elapsedMs": 547,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Analytics"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nAnalytics\nAnalytics\n\nMeasure engagement, custom events, revenue and conversion outcomes.\n\nReport Builder\n\nOpen report builder to view and manage your workspace.\n\nOpen workspace →\nCustom Events Report\n\nOpen custom events report to view and manage your workspace.\n\nOpen workspace →\nGlobal Control Group Report\n\nOpen global control group report to view and manage your workspace.\n\nOpen workspace →\nQuery Builder\n\nOpe",
+      "buttons": 35,
+      "inputs": 0,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        949
+      ]
+    },
+    {
+      "group": "top",
+      "label": "Partner Integrations",
+      "key": "partners",
+      "path": "/partner-integrations",
+      "status": 200,
+      "elapsedMs": 568,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Partner Integrations"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nPartner Integrations\nPartner Integrations\n\nConnect technology partners, export events with Currents and configure data sharing.\n\nTechnology Partners\n\nConfigure partner connection details and review setup requirements.\n\nOpen workspace →\nCurrents\n\nSelect message and customer events for export to your analytics destination.\n\nOpen workspace →\nData Sharing\n\nDefine which datasets are included in a data share and ins",
+      "buttons": 27,
+      "inputs": 0,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "top",
+      "label": "Data Settings",
+      "key": "data",
+      "path": "/data-settings",
+      "status": 200,
+      "elapsedMs": 564,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Data Settings"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nData Settings\nData Settings\n\nManage data collection, import sources and user profile transformations.\n\nCustom Attributes\n\nOpen custom attributes to view and manage your workspace.\n\nOpen workspace →\nCustom Events\n\nOpen custom events to view and manage your workspace.\n\nOpen workspace →\nCatalogs\n\nOpen catalogs to view and manage your workspace.\n\nOpen workspace →\nImport Users\n\nOpen import users to view and manage ",
+      "buttons": 31,
+      "inputs": 0,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "top",
+      "label": "Settings",
+      "key": "settings",
+      "path": "/settings",
+      "status": 200,
+      "elapsedMs": 554,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Settings"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nSettings\nSettings\n\nManage applications, channels, governance and workspace access.\n\nApp Settings\n\nRegister the apps and websites in this workspace and manage their platform settings.\n\nOpen workspace →\nAPIs and Identifiers\n\nOpen apis and identifiers to view and manage your workspace.\n\nOpen workspace →\nMessage Activity Log\n\nOpen message activity log to view and manage your workspace.\n\nOpen workspace →\nEvent User",
+      "buttons": 40,
+      "inputs": 0,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        1284
+      ]
+    },
+    {
+      "group": "messaging",
+      "label": "Feature Flags",
+      "key": "feature-flags",
+      "path": "/feature-flags",
+      "status": 200,
+      "elapsedMs": 577,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Feature Flags",
+        "Check user eligibility"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nFeature Flags\nFeature Flags\n\nRelease features to specific audiences with ordered rules and a percentage rollout.\n\nCreate feature flag\nAll\nActive\nInactive\nLast edited\nName A–Z\nExport\n3 Results\nName\tStatus\tID\tEveryone else rollout (%)\tEnable feature flag\tLast edited\tActions\nUI feature a65414c8\tActive\tui_a65414c8\t25\tOn\t10/27/2026, 3:06:19 PM\t\nEdit\nArchive\n\nQA experiment flag c096b24a\nNew local resource\n\tInactive\t",
+      "buttons": 41,
+      "inputs": 5,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "messaging",
+      "label": "Landing Pages",
+      "key": "landing-pages",
+      "path": "/messaging/landing-pages",
+      "status": 200,
+      "elapsedMs": 552,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Landing Pages"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nLanding Pages\nLanding Pages\n\nBuild, preview and publish pages to grow your subscriber list.\n\nCreate landing page\nAll\nPublished\nLast edited\nName A–Z\nExport\n2 Results\nName\tStatus\tURL slug\tPage title\tPublished at\tLast edited\tActions\nUI signup a65414c8\tPublished\tui-signup-a65414c8\tUI signup page\t2026-10-27T07:06:21.182Z\t10/27/2026, 3:06:21 PM\t\nEdit\nPublish\nView page\nArchive\n\nQA signup c096b24a\nNew local resource\n\t",
+      "buttons": 38,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "messaging",
+      "label": "Surveys",
+      "key": "surveys",
+      "path": "/surveys",
+      "status": 200,
+      "elapsedMs": 562,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Surveys"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nSurveys\nSurveys\n\nCreate survey questions and collect responses from a published landing page.\n\nResponses\nCreate survey\nAll\nActive\nLast edited\nName A–Z\nExport\n1 Results\nName\tStatus\tQuestions\tResponses\tLast edited\tActions\nQA survey c096b24a\nNew local resource\n\tActive\t1 items\t—\t10/27/2026, 3:04:53 PM\t\nEdit\nArchive\n1–1 of 1\n12\n24\n48",
+      "buttons": 33,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "messaging",
+      "label": "Banners",
+      "key": "banners",
+      "path": "/banners",
+      "status": 200,
+      "elapsedMs": 572,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Banners"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nBanners\nBanners\n\nManage persistent message content for registered app and web placements.\n\nCreate banner\nAll\nLast edited\nName A–Z\nExport\n0 Results\nName\tStatus\tPlacement ID\tPriority\tExpires at (ISO date, optional)\tLast edited\tActions\nNo banners yet.\n0–0 of 0\n12\n24\n48",
+      "buttons": 28,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "messaging",
+      "label": "Content Calendar",
+      "key": "content-calendar",
+      "path": "/messaging/content-calendar",
+      "status": 200,
+      "elapsedMs": 538,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Content Calendar",
+        "October 2026"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nContent Calendar\nContent Calendar\n\nView scheduled campaigns by send date and channel.\n\nOctober 2026\nToday\nAll\nemail\npush\niam\nsms\nwhatsapp\nwebhook\ncanvas\nMonth\nList\nExport\nSun\nMon\nTue\nWed\nThu\nFri\nSat\n27\n28\n29\n30\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31\n1\n2\n3\n4\n5\n6\n7",
+      "buttons": 29,
+      "inputs": 1,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        1185
+      ]
+    },
+    {
+      "group": "messaging",
+      "label": "Messaging Diagnostics",
+      "key": "messaging-diagnostics",
+      "path": "/messaging/diagnostics",
+      "status": 200,
+      "elapsedMs": 564,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Messaging Observability"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nMessaging Diagnostics\nMessaging Observability\n\nTrace delivery, failure and suppression events across Campaigns and Canvases.\n\nRefresh\ndelivered\n12\nfailed\n0\ndeferred\n1\nsuppressed\n0\nunreachable\n76\nfrequency capped\n1\nAll\ndelivered\ndeferred\nfrequency_capped\nheld_back\nunreachable\nExport\nEvent time\tEvent type\tUser ID\tCampaign / Canvas\tChannel\t\n10/27/2026, 3:04:55 PM\tdelivered\tpromo_a_c096b24a\tQA code assignment\temai",
+      "buttons": 82,
+      "inputs": 2,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        3334
+      ]
+    },
+    {
+      "group": "audience",
+      "label": "Segment Extensions",
+      "key": "segment-extensions",
+      "path": "/segment-extensions",
+      "status": 200,
+      "elapsedMs": 542,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Segment Extensions"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nSegment Extensions\nSegment Extensions\nLimited access\n\nBuild a one-time filtered extension of your audience using the same filter engine as Segments.\n\nCreate segment\nNo custom segments yet. Create one — it will appear in the campaign targeting dropdown alongside the sample segments.",
+      "buttons": 24,
+      "inputs": 0,
+      "genericResource": false,
+      "moduleWorkspace": true,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "audience",
+      "label": "Global Control Group",
+      "key": "global-control-group",
+      "path": "/engagement/global_message_settings/global-control-settings/6aa75e37db69160082adb7ae",
+      "status": 200,
+      "elapsedMs": 607,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Global Control Group Settings",
+        "Audience settings",
+        "Exclusion settings",
+        "You are making changes to Global Messaging Settings"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nUsers with the 'Edit Global Control Group' permission can edit, enable, and disable the Global Control Group.\nGlobal Control Group Settings\nAudience settings\n\nSpecify the percentage of users to randomly assign to the Global Control Group.\n\nAssign\n%\nof all users to the Global Control Group\nAll users\n1,007\nGlobal Control Group\n--\nTreatment group\n--\nTreatment sample\n--\nAudience counts are estimates.\nCancel\nSave\nExclusi",
+      "buttons": 29,
+      "inputs": 2,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        958
+      ]
+    },
+    {
+      "group": "audience",
+      "label": "Suppression Lists",
+      "key": "suppression-lists",
+      "path": "/suppression-lists",
+      "status": 200,
+      "elapsedMs": 569,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Suppression Lists"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nSuppression Lists\nSuppression Lists\nLimited access\n\nBlocklist individual emails or whole domains. Suppressed addresses are excluded from simulated sends.\n\nEmail or domain\nReason\nManual suppression\nHard bounce\nSpam complaint\nLegal requirement\nAdd entry\nNo suppressed addresses. Add an email or domain above.",
+      "buttons": 24,
+      "inputs": 2,
+      "genericResource": false,
+      "moduleWorkspace": true,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "audience",
+      "label": "Subscription Group Management",
+      "key": "subscription-group-management",
+      "path": "/users/subscription_groups/6aa75e37db69160082adb7ae?locale=en",
+      "status": 200,
+      "elapsedMs": 727,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Subscription Group Management"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nSubscription Group Management\nSubscription Group Management\n\nCreate subscription groups to collect and manage user subscriptions for email, SMS, and WhatsApp.\n\nLearn more about subscription groups\nCreate subscription group\nSubscription status is stored per user and per group. Email eligibility also requires global subscription.\nChannel\nAll channels\nEmail\nSMS\nWhatsApp\nStatus\nAll statuses\nActive\nArchived\nReset\n4",
+      "buttons": 33,
+      "inputs": 3,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "audience",
+      "label": "Email Preference Centers",
+      "key": "email-preference-centers",
+      "path": "/users/subscription_groups/preference_centers/6aa75e37db69160082adb7ae?locale=en",
+      "status": 200,
+      "elapsedMs": 581,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Email Preference Centers"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nEmail Preference Centers\nEmail Preference Centers\n\nBuild a preference center where users can control their email subscription groups.\n\nLearn more about preference centers\nCreate preference center\nDrag-and-drop preference centers\nBuild a branded page that lets users update each Email subscription independently.\nOpen builder\n1 preference center\nManage the pages linked from email campaigns and Canvas.\nName\tSubscr",
+      "buttons": 27,
+      "inputs": 0,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "audience",
+      "label": "Search Users",
+      "key": "search-users",
+      "path": "/audience/search-users",
+      "status": 200,
+      "elapsedMs": 564,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Search Users",
+        "User profile"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nSearch Users\nSearch Users\n\nInspect synthetic user profiles and update their local subscription state.\n\n847\nReachable subscribers\nSearch\n1,007 users\nExternal ID\tEmail\tCountry\tLifecycle\tReachable\tSubscription\nqa_sync_c096b24a\tqa-c096b24a@example.test\tSG\tNew\tYes\tSubscribed\nqa_cap_c096b24a\tcap-c096b24a@example.test\t\tNew\tYes\tSubscribed\npromo_a_c096b24a\tpromo-c096b24a-a@example.test\t\tNew\tYes\tSubscribed\npromo_b_c096b",
+      "buttons": 66,
+      "inputs": 1,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        1435
+      ]
+    },
+    {
+      "group": "audience",
+      "label": "Manage Audience",
+      "key": "manage-audience",
+      "path": "/manage-audience",
+      "status": 200,
+      "elapsedMs": 552,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Manage Audience"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nManage Audience\nManage Audience\n\nInspect user profiles, update attributes and export the current audience.\n\nSearch users\nAll\nNew\nAll Users\nRecent Purchasers\nNew Users\nLast edited\nName A–Z\nExport\n1000 Results\nName\tStatus\tFirst name\tCountry\tLast edited\tActions\nqa-c096b24a@example.test\nqa_sync_c096b24a\n\tNew\tAPI update\tSG\t—\t\n\ncap-c096b24a@example.test\nqa_cap_c096b24a\n\tNew\t—\t—\t—\t\n\npromo-c096b24a-a@example.test\nprom",
+      "buttons": 38,
+      "inputs": 5,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        1360
+      ]
+    },
+    {
+      "group": "audience",
+      "label": "Import Users",
+      "key": "import-users",
+      "path": "/import-users",
+      "status": 200,
+      "elapsedMs": 619,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Import Users",
+        "Upload user data"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nImport Users\nImport Users\n\nUpload a CSV, validate its columns and preview the rows before creating or updating profiles.\n\nUpload user data\nChoose CSV\nCSV content\nValidate & preview\nImport 0 users\nExisting external IDs are updated. New external IDs create profiles. CSV quoting and embedded newlines are supported. Subscription changes must use email_subscription_status.\nAll\nCompleted\nLast edited\nName A–Z\nExport\n",
+      "buttons": 29,
+      "inputs": 6,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        1099
+      ]
+    },
+    {
+      "group": "audience",
+      "label": "Locations",
+      "key": "locations",
+      "path": "/locations",
+      "status": 200,
+      "elapsedMs": 582,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Locations"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nLocations\nLocations\n\nRegister geographic boundaries used by location-based audience targeting.\n\nCreate geofence\nAll\nLast edited\nName A–Z\nExport\n0 Results\nName\tStatus\tLatitude\tLongitude\tRadius (meters)\tTrigger\tLast edited\tActions\nNo locations yet.\n0–0 of 0\n12\n24\n48",
+      "buttons": 28,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "content",
+      "label": "Media Library",
+      "key": "media-library",
+      "path": "/media-library",
+      "status": 200,
+      "elapsedMs": 547,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Media Library"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nMedia Library\nMedia Library\nLimited access\n\nUpload images once and reuse them in the email drag-and-drop editor.\n\nUpload image\nDisplay name (optional)\nDrop or choose an image (PNG/JPG, max 400KB)\nThe library is empty. Upload an image — it becomes selectable inside the email editor's media picker.",
+      "buttons": 24,
+      "inputs": 2,
+      "genericResource": false,
+      "moduleWorkspace": true,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "content",
+      "label": "Banner Templates",
+      "key": "banner-templates",
+      "path": "/banner-templates",
+      "status": 200,
+      "elapsedMs": 587,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Banner Templates"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nBanner Templates\nBanner Templates\n\nCreate reusable banner designs and apply them to new campaign drafts.\n\nCreate template\nAll\nLast edited\nName A–Z\nExport\n0 Results\nName\tStatus\tCategory\tEditor\tLast edited\tActions\nNo templates yet.\n0–0 of 0\n12\n24\n48",
+      "buttons": 28,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "content",
+      "label": "Canvas Templates",
+      "key": "canvas-templates",
+      "path": "/canvas-templates",
+      "status": 200,
+      "elapsedMs": 575,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Canvas Templates"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCanvas Templates\nCanvas Templates\n\nSave and reuse complete journey graphs.\n\nCreate template\nAll\nLast edited\nName A–Z\nExport\n0 Results\nName\tStatus\tCategory\tEditor\tLast edited\tActions\nNo templates yet.\n0–0 of 0\n12\n24\n48",
+      "buttons": 28,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "content",
+      "label": "Content Blocks",
+      "key": "content-blocks",
+      "path": "/content-blocks",
+      "status": 200,
+      "elapsedMs": 554,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Content Blocks"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nContent Blocks\nContent Blocks\n\nCreate reusable HTML and Liquid content, then reference it from messages.\n\nCreate content block\nAll\nActive\nLast edited\nName A–Z\nExport\n1 Results\nName\tStatus\tContent\tLast edited\tActions\nui_footer_a65414c8\tActive\t<p>Updated reusable content</p>\t10/27/2026, 3:06:24 PM\t\nEdit\nCopy reference\nArchive\n1–1 of 1\n12\n24\n48",
+      "buttons": 31,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "content",
+      "label": "Email Link Templates",
+      "key": "email-link-templates",
+      "path": "/email-link-templates",
+      "status": 200,
+      "elapsedMs": 549,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Email Link Templates"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nEmail Link Templates\nEmail Link Templates\n\nManage reusable link destinations and tracking parameters.\n\nCreate template\nAll\nLast edited\nName A–Z\nExport\n0 Results\nName\tStatus\tCategory\tEditor\tLast edited\tActions\nNo templates yet.\n0–0 of 0\n12\n24\n48",
+      "buttons": 28,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "content",
+      "label": "Email Templates",
+      "key": "email-templates",
+      "path": "/email-templates",
+      "status": 200,
+      "elapsedMs": 539,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Email Templates"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nEmail Templates\nEmail Templates\n\nCreate reusable email designs and apply them to new campaign drafts.\n\nCreate template\nAll\nActive\nLast edited\nName A–Z\nExport\n1 Results\nName\tStatus\tCategory\tEditor\tLast edited\tActions\nSeptember offer\nReusable email template with Liquid localization\n\tActive\t—\thtml\t10/27/2026, 3:04:53 PM\t\nEdit\nUse template\nExport\nArchive\n1–1 of 1\n12\n24\n48",
+      "buttons": 33,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "content",
+      "label": "In-App Message Templates",
+      "key": "in-app-message-templates",
+      "path": "/in-app-message-templates",
+      "status": 200,
+      "elapsedMs": 543,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "In App Message Templates"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nIn App Message Templates\nIn App Message Templates\n\nCreate reusable iam designs and apply them to new campaign drafts.\n\nCreate template\nAll\nLast edited\nName A–Z\nExport\n0 Results\nName\tStatus\tCategory\tEditor\tLast edited\tActions\nNo templates yet.\n0–0 of 0\n12\n24\n48",
+      "buttons": 28,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "content",
+      "label": "Webhook Templates",
+      "key": "webhook-templates",
+      "path": "/webhook-templates",
+      "status": 200,
+      "elapsedMs": 546,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Webhook Templates"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nWebhook Templates\nWebhook Templates\n\nCreate reusable webhook designs and apply them to new campaign drafts.\n\nCreate template\nAll\nLast edited\nName A–Z\nExport\n0 Results\nName\tStatus\tCategory\tEditor\tLast edited\tActions\nNo templates yet.\n0–0 of 0\n12\n24\n48",
+      "buttons": 28,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "content",
+      "label": "Promotion Codes",
+      "key": "promotion-codes",
+      "path": "/promotion-codes",
+      "status": 200,
+      "elapsedMs": 539,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Promotion Codes"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nPromotion Codes\nPromotion Codes\nLimited access\n\nGenerate and track single-use promotion code lists for use with {% promotion_code %}.\n\nCode list name\nPrefix\nHow many codes\nGenerate codes\nCODE LIST\tCODES\tCREATED\t\nQA promotion c096b24a\t2\tOct 27, 2026\t\nView",
+      "buttons": 26,
+      "inputs": 3,
+      "genericResource": false,
+      "moduleWorkspace": true,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "content",
+      "label": "Catalogs",
+      "key": "catalogs",
+      "path": "/dashboard/catalogs/6aa75e37db69160082adb7ae?locale=en",
+      "status": 200,
+      "elapsedMs": 543,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Catalogs"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCatalogs\nCatalogs\n\nManage non-user data for personalized messages.\n\nExport\nCreate New Catalog\nSearch\n\n1 Results\n\nName\tDescription\tSource\t\nItems\n\tTotal size\t\nLast updated\n\t\nSample_Catalog\tSample catalog items for Decorumsoft\tBraze\t31\t4KB\tSep 14, 2026, 6:38 AM\t\nShowing rows 1-1 of 1\nRows per page \n12\n24\n48\n1\nPackage\nFree\n\n4KB of 500MB space used\n\nCatalogs\t4KB\n© Braze 2026\nPrivacy preferences\nStatus\nTerms\nPrivacy",
+      "buttons": 31,
+      "inputs": 2,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "content",
+      "label": "Brand Guidelines",
+      "key": "brand-guidelines",
+      "path": "/brand-guidelines",
+      "status": 200,
+      "elapsedMs": 548,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Brand Guidelines"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nBrand Guidelines\nBrand Guidelines\nLimited access\n\nWorkspace defaults applied to new emails created in the drag-and-drop editor.\n\nDefault font\nHelvetica\nGeorgia\nCourier New\nTahoma\nLogo URL\nLink color\nText color\nSave guidelines",
+      "buttons": 24,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": true,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "analytics",
+      "label": "Report Builder",
+      "key": "report-builder",
+      "path": "/report-builder",
+      "status": 200,
+      "elapsedMs": 556,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Report Builder",
+        "Performance over time",
+        "Engagement breakdown"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nReport Builder\nReport Builder\n\nAnalyze recorded message engagement by channel, campaign and day.\n\nExport CSV\nSave report\nStart date\nEnd date\nChannel\nAll\nemail\npush\nsms\nwhatsapp\niam\ncontent\nbanner\nwebhook\nline\nCampaign / Canvas\nAll messages\nQA code assignment\nQA LINE image\nQA multichannel · Push notification\nQA multichannel · Email\nQA Feature experiment\nQA cap limited\nQA cap other\nQA cap second\nQA cap first\nQA ",
+      "buttons": 25,
+      "inputs": 7,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        1668
+      ]
+    },
+    {
+      "group": "analytics",
+      "label": "Custom Events Report",
+      "key": "custom-events-report",
+      "path": "/custom-events-report",
+      "status": 200,
+      "elapsedMs": 553,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Custom Events Report",
+        "Custom event breakdown"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCustom Events Report\nCustom Events Report\n\nAnalyze custom events by event name, total occurrences and unique users.\n\nExport CSV\nSave report\nStart date\nEnd date\nCustom event\nAll custom events\nsession_start\nSaved reports\nSelect report\nUI email report a65414c8\nTotal events\n1\nEvent types\n1\nCustom event breakdown\nName\tCount\tUnique Users\tLast Seen\nsession_start\t1\t1\t2026-10-27T07:04:53.779Z",
+      "buttons": 25,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "analytics",
+      "label": "Global Control Group Report",
+      "key": "global-control-group-report",
+      "path": "/global-control-group-report",
+      "status": 200,
+      "elapsedMs": 576,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Global Control Group Report",
+        "Treatment vs. control"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nGlobal Control Group Report\nGlobal Control Group Report\n\nCompare group membership and recorded treatment deliveries.\n\nLast 7 days\nLast 30 days\nLast 90 days\nGlobal Control Group is disabled.\nTreatment vs. control\nGroup\tUsers\tDeliveries\nTreatment\t1,007\t0\nControl\t0\t0\nSample\t0\t0",
+      "buttons": 23,
+      "inputs": 1,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "analytics",
+      "label": "Query Builder",
+      "key": "query-builder",
+      "path": "/query-builder",
+      "status": 200,
+      "elapsedMs": 556,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Query Builder"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nQuery Builder\nQuery Builder\nLimited access\n\nFilter the local message event stream without writing SQL. Saved queries can be re-run.\n\nEvent type\nAll events\nDelivered\nOpened\nClicked\nFailed\nTest\nSuppressed\nChannel\nAll channels\nEmail\nPush\nIn-app message\nWebhook\nWhatsApp\nSMS\nCampaign contains\nRow limit\nRun query\nSave query\nQuery name",
+      "buttons": 25,
+      "inputs": 5,
+      "genericResource": false,
+      "moduleWorkspace": true,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "analytics",
+      "label": "Engagement Reports",
+      "key": "engagement-reports",
+      "path": "/engagement-reports",
+      "status": 200,
+      "elapsedMs": 583,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Engagement Reports",
+        "Performance over time",
+        "Engagement breakdown"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nEngagement Reports\nEngagement Reports\n\nAnalyze recorded message engagement by channel, campaign and day.\n\nExport CSV\nSave report\nStart date\nEnd date\nChannel\nAll\nemail\npush\nsms\nwhatsapp\niam\ncontent\nbanner\nwebhook\nline\nCampaign / Canvas\nAll messages\nQA code assignment\nQA LINE image\nQA multichannel · Push notification\nQA multichannel · Email\nQA Feature experiment\nQA cap limited\nQA cap other\nQA cap second\nQA cap f",
+      "buttons": 25,
+      "inputs": 7,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        1597
+      ]
+    },
+    {
+      "group": "analytics",
+      "label": "Revenue Report",
+      "key": "revenue-report",
+      "path": "/revenue-report",
+      "status": 200,
+      "elapsedMs": 541,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Revenue Report",
+        "Revenue by product"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nRevenue Report\nRevenue Report\n\nAnalyze tracked purchase revenue by product and currency.\n\nExport CSV\nSave report\nStart date\nEnd date\nCurrency\nUSD\nEUR\nGBP\nCNY\nJPY\nSaved reports\nSelect report\nUI email report a65414c8\nRevenue\nUSD 0.00\nPurchases\n0\nUnique purchasers\n0\nAverage purchase\nUSD 0.00\nRevenue by product\nProduct\tPurchases\tUnits\tRevenue\nNo recorded data matches these filters.\nRevenue includes only recorded p",
+      "buttons": 25,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        1021
+      ]
+    },
+    {
+      "group": "analytics",
+      "label": "Segment Insights",
+      "key": "segment-insights",
+      "path": "/segment-insights",
+      "status": 200,
+      "elapsedMs": 590,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Segment Insights",
+        "Segment reach"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nSegment Insights\nSegment Insights\n\nCompare saved segment population and message reachability.\n\nSegment reach\nName\tMatching\tReachable\tTotal\nAll Users\t1,007\t847\t1,007\nQA promo audience c096b24a\t2\t2\t1,007\nQA exact user c096b24a\t1\t1\t1,007\nNew Users\t200\t168\t1,007\nRecent Purchasers\t267\t225\t1,007\nActive Subscribers\t0\t0\t1,007\nReachable Users\t931\t847\t1,007\nPro Plan Customers\t501\t421\t1,007\nFree Plan Customers\t500\t420\t1,",
+      "buttons": 23,
+      "inputs": 0,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        1101
+      ]
+    },
+    {
+      "group": "analytics",
+      "label": "Dashboard Builder",
+      "key": "dashboard-builder",
+      "path": "/dashboard-builder",
+      "status": 200,
+      "elapsedMs": 589,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Dashboard Builder"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nDashboard Builder\nDashboard Builder\n\nBuild dashboards from saved report definitions.\n\nCreate dashboard\nSelect a dashboard\nSelect saved report\nUI email report a65414c8\nAdd widget\nCreate a dashboard to get started.",
+      "buttons": 25,
+      "inputs": 2,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "analytics",
+      "label": "Email Performance",
+      "key": "email-performance",
+      "path": "/email-performance",
+      "status": 200,
+      "elapsedMs": 581,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Email Performance",
+        "Performance over time",
+        "Engagement breakdown"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nEmail Performance\nEmail Performance\n\nAnalyze recorded message engagement by channel, campaign and day.\n\nExport CSV\nSave report\nStart date\nEnd date\nChannel\nAll\nemail\npush\nsms\nwhatsapp\niam\ncontent\nbanner\nwebhook\nline\nCampaign / Canvas\nAll messages\nQA code assignment\nQA multichannel · Email\nSaved reports\nSelect report\nUI email report a65414c8\nDelivered\n5\nOpened\n0\nClicked\n0\nFailed\n0\nOpen Rate\n0.00%\nClick Rate\n0.00",
+      "buttons": 25,
+      "inputs": 7,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        1261
+      ]
+    },
+    {
+      "group": "analytics",
+      "label": "Push Performance",
+      "key": "push-performance",
+      "path": "/push-performance",
+      "status": 200,
+      "elapsedMs": 564,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Push Performance",
+        "Performance over time",
+        "Engagement breakdown"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nPush Performance\nPush Performance\n\nAnalyze recorded message engagement by channel, campaign and day.\n\nExport CSV\nSave report\nStart date\nEnd date\nChannel\nAll\nemail\npush\nsms\nwhatsapp\niam\ncontent\nbanner\nwebhook\nline\nCampaign / Canvas\nAll messages\nQA multichannel · Push notification\nQA cap limited\nQA cap second\nQA cap first\nQA review c096b24a\nSaved reports\nSelect report\nUI email report a65414c8\nSent\n4\nDelivered\n4\n",
+      "buttons": 25,
+      "inputs": 7,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        1387
+      ]
+    },
+    {
+      "group": "analytics",
+      "label": "SMS/MMS/RCS Performance",
+      "key": "sms-mms-rcs-performance",
+      "path": "/sms-mms-rcs-performance",
+      "status": 200,
+      "elapsedMs": 544,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "SMS/MMS/RCS Performance",
+        "Performance over time",
+        "Engagement breakdown"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nSms Mms Rcs Performance\nSMS/MMS/RCS Performance\n\nAnalyze recorded message engagement by channel, campaign and day.\n\nExport CSV\nSave report\nStart date\nEnd date\nChannel\nAll\nemail\npush\nsms\nwhatsapp\niam\ncontent\nbanner\nwebhook\nline\nCampaign / Canvas\nAll messages\nSaved reports\nSelect report\nUI email report a65414c8\nSent\n0\nDelivered\n0\nClicked\n0\nFailed\n0\nClick Rate\n0.00%\nPerformance over time\nDelivered\nOpened\nClicked\n",
+      "buttons": 25,
+      "inputs": 7,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        1208
+      ]
+    },
+    {
+      "group": "analytics",
+      "label": "Conversions",
+      "key": "conversions",
+      "path": "/conversions",
+      "status": 200,
+      "elapsedMs": 550,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Conversions",
+        "Performance over time",
+        "Conversion breakdown"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nConversions\nConversions\n\nMeasure recorded conversion events and unique user conversion rates.\n\nExport CSV\nSave report\nStart date\nEnd date\nChannel\nAll\nemail\npush\nsms\nwhatsapp\niam\ncontent\nbanner\nwebhook\nline\nCampaign / Canvas\nAll messages\nQA code assignment\nQA LINE image\nQA multichannel · Push notification\nQA multichannel · Email\nQA Feature experiment\nQA cap limited\nQA cap other\nQA cap second\nQA cap first\nQA rev",
+      "buttons": 25,
+      "inputs": 7,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        1597
+      ]
+    },
+    {
+      "group": "partners",
+      "label": "Technology Partners",
+      "key": "technology-partners",
+      "path": "/technology-partners",
+      "status": 200,
+      "elapsedMs": 573,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Technology Partners"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nTechnology Partners\nTechnology Partners\n\nConfigure partner connection details and review setup requirements.\n\nCreate integration\nPartner Directory\nIntegrations\nAll\nEmail delivery\nData and analytics\nAudience sync\nEmail delivery\nAWS SES\n\nRegion-based email delivery with IAM credentials.\n\nConfigure\nEmail delivery\nSendGrid\n\nSend email with a scoped API key and a verified sender.\n\nConfigure\nEmail delivery\nInfobip\n\n",
+      "buttons": 34,
+      "inputs": 2,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        1243
+      ]
+    },
+    {
+      "group": "partners",
+      "label": "Currents",
+      "key": "currents",
+      "path": "/currents",
+      "status": 200,
+      "elapsedMs": 570,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Currents"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCurrents\nCurrents\n\nSelect message and customer events for export to your analytics destination.\n\nCreate Current\nAll\nActive\nLast edited\nName A–Z\nExport\n1 Results\nName\tStatus\tDestination\tEvent types\tLast export\tLast edited\tActions\nQA Current c096b24a\nNew local resource\n\tActive\tJSON download\tdelivered, clicked\t2026-10-27T07:04:53.472Z\t10/27/2026, 3:04:53 PM\t\nEdit\nExport events\nPause\n1–1 of 1\n12\n24\n48",
+      "buttons": 33,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "partners",
+      "label": "Data Sharing",
+      "key": "data-sharing",
+      "path": "/data-sharing",
+      "status": 200,
+      "elapsedMs": 542,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Data Sharing"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nData Sharing\nData Sharing\n\nDefine which datasets are included in a data share and inspect the exported rows.\n\nCreate data share\nAll\nLast edited\nName A–Z\nExport\n0 Results\nName\tStatus\tProvider\tRecipient account identifier\tDatasets\tLast edited\tActions\nNo data sharing yet.\n0–0 of 0\n12\n24\n48",
+      "buttons": 28,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "partners",
+      "label": "Solutions Partners",
+      "key": "solutions-partners",
+      "path": "/solutions-partners",
+      "status": 200,
+      "elapsedMs": 537,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Solutions Partners",
+        "Braze partner directory"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nSolutions Partners\nSolutions Partners\n\nFind implementation and strategy partners in the Braze partner ecosystem.\n\nBraze partner directory\n\nExplore certified agencies and service partners by region and specialty.\n\nBrowse official partners",
+      "buttons": 23,
+      "inputs": 0,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "data",
+      "label": "Custom Attributes",
+      "key": "custom-attributes",
+      "path": "/custom-attributes",
+      "status": 200,
+      "elapsedMs": 577,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Custom Attributes"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCustom Attributes\nCustom Attributes\nLimited access\n\nLive attribute schema aggregated from the synthetic user workspace — these fields are selectable in segment filters.\n\nSearch attribute\nATTRIBUTE\tTYPE\tCOVERAGE\tSAMPLE VALUES\nplan\tstring\t100%\tpro, free\nlanguage\tstring\t100%\ten, zh\nsource_landing_page\tstring\t0%\tres_9b1a538390814e4c",
+      "buttons": 23,
+      "inputs": 1,
+      "genericResource": false,
+      "moduleWorkspace": true,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "data",
+      "label": "Custom Events",
+      "key": "custom-events",
+      "path": "/custom-events",
+      "status": 200,
+      "elapsedMs": 539,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Custom Events"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCustom Events\nCustom Events\n\nManage collected custom events and control future tracking.\n\nRecord event\nSearch events\nEvent name\tOccurrences\tUnique users\tLast seen\tTracking\nsession_start\t1\t1\t2026-10-27T07:04:53.779Z\tBlock tracking",
+      "buttons": 25,
+      "inputs": 1,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "data",
+      "label": "Products",
+      "key": "products",
+      "path": "/products",
+      "status": 200,
+      "elapsedMs": 561,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Products",
+        "Record a purchase"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nProducts\nProducts\n\nView tracked purchase products and control whether future purchases are recorded.\n\nCreate product\nAll\nLast edited\nName A–Z\nExport\n0 Results\nName\tStatus\tProduct ID\tCurrency\tPrice\tTrack purchases\tLast edited\tActions\nNo products yet.\n0–0 of 0\n12\n24\n48\nRecord a purchase\nExternal user ID\nProduct ID\nUnit price\nQuantity\nCurrency\nUSD\nEUR\nGBP\nCNY\nJPY\nProperties (JSON)\nRecord purchase",
+      "buttons": 29,
+      "inputs": 10,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        1203
+      ]
+    },
+    {
+      "group": "data",
+      "label": "Cloud Data Ingestion",
+      "key": "cloud-data-ingestion",
+      "path": "/cloud-data-ingestion",
+      "status": 200,
+      "elapsedMs": 559,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Cloud Data Ingestion"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCloud Data Ingestion\nCloud Data Ingestion\n\nMap source rows to user profiles, validate data and inspect sync history.\n\nSync history\nCreate integration\nAll\nActive\nLast edited\nName A–Z\nExport\n1 Results\nName\tStatus\tData source\tData type\tSync frequency\tLast sync\tLast edited\tActions\nQA profiles c096b24a\nNew local resource\n\tActive\tSnowflake\tUser attributes\tOn demand\t2026-10-27T07:04:53.314Z\t10/27/2026, 3:04:53 PM\t\nEd",
+      "buttons": 35,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "data",
+      "label": "Data Transformation",
+      "key": "data-transformation",
+      "path": "/data-transformation",
+      "status": 200,
+      "elapsedMs": 557,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Data Transformation"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nData Transformation\nData Transformation\n\nMap an incoming payload to profile attributes and test the resulting updates before applying them.\n\nSync history\nCreate transformation\nAll\nActive\nLast edited\nName A–Z\nExport\n1 Results\nName\tStatus\tDestination\tLast run\tLast edited\tActions\nQA mapping c096b24a\nNew local resource\n\tActive\tUser attributes\t2026-10-27T07:04:53.330Z\t10/27/2026, 3:04:53 PM\t\nEdit\nTest\nApply payload",
+      "buttons": 35,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "settings",
+      "label": "App Settings",
+      "key": "app-settings",
+      "path": "/app-settings",
+      "status": 200,
+      "elapsedMs": 547,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "App Settings"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nApp Settings\nApp Settings\n\nRegister the apps and websites in this workspace and manage their platform settings.\n\nCreate app\nAll\nActive\nLast edited\nName A–Z\nExport\n1 Results\nName\tStatus\tPlatform\tBundle ID / package / website\tAPI identifier\tLast edited\tActions\nQA Web app c096b24a\nNew local resource\n\tActive\tWeb\thttps://example.test\tqa_app_c096b24a\t10/27/2026, 3:04:53 PM\t\nEdit\nArchive\n1–1 of 1\n12\n24\n48",
+      "buttons": 32,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "settings",
+      "label": "APIs and Identifiers",
+      "key": "apis-and-identifiers",
+      "path": "/apis-and-identifiers",
+      "status": 200,
+      "elapsedMs": 548,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "APIs and Identifiers"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nApis And Identifiers\nAPIs and Identifiers\n\nCreate scoped API keys and find the application identifiers used by your integrations.\n\nCreate API key\nAPI Keys\nApp Identifiers\nAPI Documentation\nAll\nRevoked\nLast edited\nName A–Z\nExport\n1 Results\nName\tStatus\tKey\tPermissions\tLast edited\tActions\nQA API c096b24a\nNew local resource\n\tRevoked\tbrz_fdbc6341…\tusers.track, feature_flags.read\t10/27/2026, 3:04:53 PM\t\nRevoke\n1–1 o",
+      "buttons": 32,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "settings",
+      "label": "Message Activity Log",
+      "key": "message-activity-log",
+      "path": "/message-activity-log",
+      "status": 200,
+      "elapsedMs": 571,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Message Activity Log"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nMessage Activity Log\nMessage Activity Log\n\nTrace delivery, failure and suppression events across Campaigns and Canvases.\n\nRefresh\ndelivered\n12\nfailed\n0\ndeferred\n1\nsuppressed\n0\nunreachable\n76\nfrequency capped\n1\nAll\ndelivered\ndeferred\nfrequency_capped\nheld_back\nunreachable\nExport\nEvent time\tEvent type\tUser ID\tCampaign / Canvas\tChannel\t\n10/27/2026, 3:04:55 PM\tdelivered\tpromo_a_c096b24a\tQA code assignment\temail\tDe",
+      "buttons": 82,
+      "inputs": 2,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        3334
+      ]
+    },
+    {
+      "group": "settings",
+      "label": "Event User Log",
+      "key": "event-user-log",
+      "path": "/event-user-log",
+      "status": 200,
+      "elapsedMs": 540,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Event User Log"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nEvent User Log\nEvent User Log\n\nInspect the events associated with an external user ID.\n\nSearch\nMessage Events\nCustom Events & Purchases\nEvent time\tEvent type\tUser ID\tCampaign / Canvas\tChannel\t\n10/27/2026, 3:04:55 PM\tdelivered\tpromo_a_c096b24a\tQA code assignment\temail\tDetails\n10/27/2026, 3:04:55 PM\tdelivered\tpromo_b_c096b24a\tQA code assignment\temail\tDetails\n10/27/2026, 3:04:54 PM\tdelivered\tpromo_a_c096b24a\tQA c",
+      "buttons": 77,
+      "inputs": 1,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        3127
+      ]
+    },
+    {
+      "group": "settings",
+      "label": "Internal Groups",
+      "key": "internal-groups",
+      "path": "/internal-groups",
+      "status": 200,
+      "elapsedMs": 543,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Internal Groups"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nInternal Groups\nInternal Groups\n\nOrganize internal testers used by message preview and test sends.\n\nCreate internal group\nAll\nLast edited\nName A–Z\nExport\n0 Results\nName\tStatus\tChannel\tTester emails (one per line)\tLast edited\tActions\nNo internal groups yet.\n0–0 of 0\n12\n24\n48",
+      "buttons": 28,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "settings",
+      "label": "Exports Log",
+      "key": "exports-log",
+      "path": "/exports-log",
+      "status": 200,
+      "elapsedMs": 554,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Exports Log"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nExports Log\nExports Log\n\nReview completed workspace exports and download their recorded snapshots.\n\nmessage_events\ncampaigns\nuser_events\nCreate export\nAll\nCompleted\nLast edited\nName A–Z\nExport\n1 Results\nName\tStatus\tRows\tDataset\tExported at\tLast edited\tActions\nQA Current c096b24a export\nNew local resource\n\tCompleted\t0\t—\t2026-10-27T07:04:53.472Z\t10/27/2026, 3:04:53 PM\t\nDownload\n1–1 of 1\n12\n24\n48",
+      "buttons": 29,
+      "inputs": 5,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "settings",
+      "label": "Tag Management",
+      "key": "tag-management",
+      "path": "/tag-management",
+      "status": 200,
+      "elapsedMs": 545,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Tag Management"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nTag Management\nTag Management\n\nCreate and manage workspace tags to organize Campaigns, Canvases, and Segments.\n\nCreate Tag\n0 Tags\nTag Name\tNested Under\tUsage\tActions\nNo matching tags.",
+      "buttons": 24,
+      "inputs": 1,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "settings",
+      "label": "Email Preferences",
+      "key": "email-preferences",
+      "path": "/app_settings/app_settings/email_settings/sending_configuration/6ad0b98fe4b4110085216601?locale=en",
+      "status": 200,
+      "elapsedMs": 555,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Outbound Email Settings",
+        "Open Tracking Pixel",
+        "Email Unsubscribe Header",
+        "Test and Seed Email Subject Lines",
+        "CSS Inlining",
+        "Resubscribe Users"
+      ],
+      "bodyText": "Demo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nHome\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nSending Configuration\nSubscription Pages and Footers\nDrag-And-Drop Email Editor Settings\nLink Aliasing\nBot Filtering\nAutomated IP Warming\nEdit settings\nOutbound Email Settings\nViewing\n\nSet a default name and email address used when Braze sends emails to your users\n\nDisplay Name Address\n\nEmails to your users can be delivered with the display names and addresses added here\n\nFrom Display Name\nPowered by Braze\nLocal Part\nbraze\n@\nDomain |",
+      "buttons": 31,
+      "inputs": 9,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        2277
+      ]
+    },
+    {
+      "group": "settings",
+      "label": "Frequency Capping Rules",
+      "key": "frequency-capping-rules",
+      "path": "/frequency-capping-rules",
+      "status": 200,
+      "elapsedMs": 543,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Frequency Capping Rules"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nFrequency Capping Rules\nFrequency Capping Rules\nLimited access\n\nLimit how often a user can receive messages across campaigns and Canvases.\n\nFrequency capping enabled",
+      "buttons": 23,
+      "inputs": 1,
+      "genericResource": false,
+      "moduleWorkspace": true,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "settings",
+      "label": "Push Settings",
+      "key": "push-settings",
+      "path": "/push-settings",
+      "status": 200,
+      "elapsedMs": 553,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Push Settings",
+        "Server credentials"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nPush Settings\nPush Settings\n\nConfigure platform delivery options and inspect server credential availability.\n\nCreate push configuration\nAll\nLast edited\nName A–Z\nExport\n0 Results\nName\tStatus\tPlatform\tApp ID\tEnvironment\tLast edited\tActions\nNo push settings yet.\n0–0 of 0\n12\n24\n48\nServer credentials\nAPNs\nCredential missing\nFCM\nCredential missing\nWeb Push\nCredential missing\n\nSet APNS_KEY, FCM_SERVICE_ACCOUNT or WEB",
+      "buttons": 28,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "settings",
+      "label": "Approval Workflow",
+      "key": "approval-workflow",
+      "path": "/approval-workflow",
+      "status": 200,
+      "elapsedMs": 542,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Approval Workflow",
+        "Request review"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nApproval Workflow\nApproval Workflow\n\nRequire a review of the current message snapshot before launching a Campaign or Canvas.\n\nUse approval workflow for all campaigns\nDisabled\nUse approval workflow for all Canvases\nDisabled\nSave changes\nAlways-On Approvals\nReview Requests\nRequest review\nMessage type\nCampaign\nCanvas\nMessage\nSelect a message\nUI push a65414c8 Campaign\nQA code assignment\nQA LINE image\nQA multichann",
+      "buttons": 32,
+      "inputs": 9,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        1177
+      ]
+    },
+    {
+      "group": "settings",
+      "label": "Localization Settings",
+      "key": "localization-settings",
+      "path": "/localization-settings",
+      "status": 200,
+      "elapsedMs": 548,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Localization Settings"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nLocalization Settings\nLocalization Settings\n\nManage the locales available when creating multilingual messages.\n\nCreate locale\nAll\nLast edited\nName A–Z\nExport\n0 Results\nName\tStatus\tLocale code\tFallback locale\tDefault locale\tLast edited\tActions\nNo localization settings yet.\n0–0 of 0\n12\n24\n48",
+      "buttons": 28,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "settings",
+      "label": "Banner Placements",
+      "key": "banner-placements",
+      "path": "/banner-placements",
+      "status": 200,
+      "elapsedMs": 569,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Banner Placements"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nBanner Placements\nBanner Placements\n\nRegister placements used by banner messages in your apps and websites.\n\nCreate placement\nAll\nLast edited\nName A–Z\nExport\n0 Results\nName\tStatus\tPlacement ID\tPlatform\tMaximum width (px)\tLast edited\tActions\nNo banner placements yet.\n0–0 of 0\n12\n24\n48",
+      "buttons": 28,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "settings",
+      "label": "Messaging Rate Limits",
+      "key": "messaging-rate-limits",
+      "path": "/messaging-rate-limits",
+      "status": 200,
+      "elapsedMs": 539,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Messaging Rate Limits"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nMessaging Rate Limits\nMessaging Rate Limits\n\nApply workspace-wide delivery ceilings across Campaign and Canvas messages.\n\nEnable workspace messaging rate limits\nDisabled\nMessages per minute\nMessages per day\nSave changes",
+      "buttons": 24,
+      "inputs": 3,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "settings",
+      "label": "Billing",
+      "key": "billing",
+      "path": "/billing",
+      "status": 200,
+      "elapsedMs": 536,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Subscriptions and Billing"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nBilling\nSubscriptions and Billing\n\nReview the usage recorded in this workspace.\n\nUsage\nSubscriptions\nInvoices\nusers\n1,007\ncampaigns\n18\nevents\n1,014\nresources\n61\ncanvas Runs\n0\ncustom Events\n1",
+      "buttons": 26,
+      "inputs": 0,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "settings",
+      "label": "User Management",
+      "key": "user-management",
+      "path": "/user-management",
+      "status": 200,
+      "elapsedMs": 542,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "User Management"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nUser Management\nUser Management\n\nManage dashboard user records, roles, teams and workspace permission assignments.\n\nAdd new user\nAll\nLast edited\nName A–Z\nExport\n0 Results\nName\tStatus\tEmail\tRole\tDepartment\tTeam\tLast edited\tActions\nNo user management yet.\n0–0 of 0\n12\n24\n48\nThese dashboard user and permission records are stored in this workspace. Sign-in and invitations require an identity provider; saving a user",
+      "buttons": 28,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "agents",
+      "label": "Canvas Step Agents",
+      "key": "canvas-step-agents",
+      "path": "/canvas-step-agents",
+      "status": 200,
+      "elapsedMs": 639,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Canvas Step Agents"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCanvas Step Agents\nCanvas Step Agents\n\nDefine instructions and allowed actions for a Canvas message or decision step.\n\nCreate step agent\nAll\nLast edited\nName A–Z\nExport\n0 Results\nName\tStatus\tObjective\tModel\tAllowed actions\tLast edited\tActions\nNo canvas step agents yet.\n0–0 of 0\n12\n24\n48",
+      "buttons": 28,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "agents",
+      "label": "Data Agents",
+      "key": "data-agents",
+      "path": "/data-agents",
+      "status": 200,
+      "elapsedMs": 592,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Data Agents"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nData Agents\nData Agents\n\nConfigure a data analysis objective and the datasets the agent may inspect.\n\nCreate data agent\nAll\nLast edited\nName A–Z\nExport\n0 Results\nName\tStatus\tObjective\tAllowed datasets\tLast edited\tActions\nNo data agents yet.\n0–0 of 0\n12\n24\n48",
+      "buttons": 28,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    },
+    {
+      "group": "agents",
+      "label": "Catalog Agents",
+      "key": "catalog-agents",
+      "path": "/catalog-agents",
+      "status": 200,
+      "elapsedMs": 571,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "title": "Braze Demo — Thinkingai",
+      "headings": [
+        "Catalog Agents"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCatalog Agents\nCatalog Agents\n\nDefine catalog enrichment and recommendation tasks with explicit output fields.\n\nCreate catalog agent\nAll\nLast edited\nName A–Z\nExport\n0 Results\nName\tStatus\tCatalog ID\tObjective\tOutput fields\tLast edited\tActions\nNo catalog agents yet.\n0–0 of 0\n12\n24\n48",
+      "buttons": 28,
+      "inputs": 4,
+      "genericResource": false,
+      "moduleWorkspace": false,
+      "notFound": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ],
+      "scroll": [
+        1440,
+        900
+      ]
+    }
+  ],
+  "campaignChannels": [
+    {
+      "channel": "email",
+      "created": 201,
+      "status": 200,
+      "elapsedMs": 572,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "headings": [
+        "Campaign Details",
+        "Email Composer"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCampaigns\nEdit 'Audit email'\nLimited access\n1\nCompose Messages\n2\nSchedule Delivery\n3\nTarget Audiences\n4\nAssign Conversions\n5\nReview Summary\nCampaign Details\nCampaign Name\nTeams\nSelect...\nLifecycle Marketing\nGrowth\nRetention\nAdd description\nTags\nCampaign ID\nCopy\nEmail Composer\nVariants\nVariant 1\nCreate new email\n\nHow would you like to start?\n\nCreate with Operator\nGenerate a custom email\nDrag-and-drop editor\nStart from scratch\nHTML code editor\nStart from scratch\nPlain-text editor\nStart from scratch\nTemplates\nChoose a template\nUpload file\n1\nCompose\n2\nSchedule\n3\nTarget\n4\nAssign\n5\nReview\nSave Draft",
+      "buttons": 48,
+      "inputs": 4,
+      "horizontalOverflow": false
+    },
+    {
+      "channel": "push",
+      "created": 201,
+      "status": 200,
+      "elapsedMs": 606,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "headings": [
+        "Campaign Details",
+        "Compose push notification"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCampaigns\nEdit 'Audit push'\nLimited access\n1\nCompose Messages\n2\nSchedule Delivery\n3\nTarget Audiences\n4\nAssign Conversions\n5\nReview Summary\nCampaign Details\nCampaign Name\nTeams\nSelect...\nLifecycle Marketing\nGrowth\nRetention\nAdd description\nTags\nCampaign ID\nCopy\nCompose push notification\nPreview and test\nPush credentials: iOS Missing · Android Missing\nMore Info\niOS\nDevice\nPhone\nTablet\nNotification State\nLock screen\nNotification center\nBanner\nTitle\n\nYour message will appear here.\n\nnow\nAndroid\nTitle\n· 9m\n\nYour message will appear here.\n\nAlways test your message on a real device, as actual rendering may vary.\n\nCompose\nSettings\nTest\nNotification type\nStandard push\nRich push\nLanguage\nEnglish\n Add language\nConte",
+      "buttons": 51,
+      "inputs": 21,
+      "horizontalOverflow": false
+    },
+    {
+      "channel": "iam",
+      "created": 201,
+      "status": 200,
+      "elapsedMs": 597,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "headings": [
+        "Campaign Details",
+        "Message Composer",
+        "WELCOME",
+        "WELCOME"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCampaigns\nEdit 'Audit iam'\nLimited access\n1\nCompose Messages\n2\nSchedule Delivery\n3\nTarget Audiences\n4\nAssign Conversions\n5\nReview Summary\nCampaign Details\nCampaign Name\nAdd description\nTags\nCampaign ID\nCopy\nMessage Composer\nVariants\nVariant 1\nSend To\nBoth Mobile Apps & Web Browsers\nMobile Apps\nWeb Browsers\nEditing Experience\nDrag-And-Drop Editor\nTraditional Editor\nCompose In-App Message\n✎\nEdit Message\nPage Preview\nWELCOME\n\nThanks for signing up! Use this offer code for 10% off your next order. WELCOME10\n\nShop Now\nBasic Modal\n1\nWELCOME\n\nThanks for signing up! Use this offer code for 10% off your next order. WELCOME10\n\nShop Now\n\nAlways test your messages on a real device, as actual rendering may vary.\n\nSwi",
+      "buttons": 55,
+      "inputs": 4,
+      "horizontalOverflow": false
+    },
+    {
+      "channel": "content",
+      "created": 201,
+      "status": 200,
+      "elapsedMs": 577,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "headings": [
+        "Campaign Details",
+        "Compose Content Card"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCampaigns\nEdit 'Audit content'\nLimited access\n1\nCompose Messages\n2\nSchedule Delivery\n3\nTarget Audiences\n4\nAssign Conversions\n5\nReview Summary\nCampaign Details\nCampaign Name\nTeams\nSelect...\nLifecycle Marketing\nGrowth\nRetention\nAdd description\nTags\nCampaign ID\nCopy\nCompose Content Card\n\nDeliver durable content in an app feed.\n\nPreview and test\nContent Card\n\nBuild a durable card synchronized to the SDK feed.\n\nCard type\nImage only\nCaptioned image\nClassic\nCategory\nTitle\nDescription\nImage URL\nClick action\nDeep link\nURI\nNone\nDestination\nPin this card\nKeep the card above standard feed content.\nSet expiration\nRemove the card after a specific date.\n1\nCompose\n2\nSchedule\n3\nTarget\n4\nAssign\n5\nReview\nSave Draft",
+      "buttons": 44,
+      "inputs": 10,
+      "horizontalOverflow": false
+    },
+    {
+      "channel": "banner",
+      "created": 201,
+      "status": 200,
+      "elapsedMs": 550,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "headings": [
+        "Campaign Details",
+        "Compose Banner"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCampaigns\nEdit 'Audit banner'\nLimited access\n1\nCompose Messages\n2\nSchedule Delivery\n3\nTarget Audiences\n4\nAssign Conversions\n5\nReview Summary\nCampaign Details\nCampaign Name\nTeams\nSelect...\nLifecycle Marketing\nGrowth\nRetention\nAdd description\nTags\nCampaign ID\nCopy\nCompose Banner\n\nPlace persistent messages on your property.\n\nPreview and test\nBanner setup\n\nMatch a registered SDK placement and render its responsive content.\n\nPlacement\nhome_top\ncheckout_promo\nPriority\nHigh\nNormal\nLow\nBanner title\nBody\nButton label\nDestination URL\nBanner titleBanner messageLearn more\n1\nCompose\n2\nSchedule\n3\nTarget\n4\nAssign\n5\nReview\nSave Draft",
+      "buttons": 43,
+      "inputs": 9,
+      "horizontalOverflow": false
+    },
+    {
+      "channel": "sms",
+      "created": 201,
+      "status": 200,
+      "elapsedMs": 545,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "headings": [
+        "Campaign Details",
+        "SMS/MMS/RCS Composer"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCampaigns\nEdit 'Audit sms'\nLimited access\n1\nCompose Messages\n2\nSchedule Delivery\n3\nTarget Audiences\n4\nAssign Conversions\n5\nReview Summary\nCampaign Details\nCampaign Name\nTeams\nSelect...\nLifecycle Marketing\nGrowth\nRetention\nAdd description\nTags\nCampaign ID\nCopy\nSMS/MMS/RCS Composer\nVariants\nAudit sms\nSubscription Group\nWorkspace subscription status\nSMS alerts\nPreview\nYour message preview will appear here.\n\nReply STOP to opt-out.\n\nActual rendering may not be identical to this preview depending on the user's environment.\n\nCompose\nContact Card Generator\nTest\nLanguage\nAdd languages\nContent\nMessage\n0 | 0 Billable Segments\nLink shortening\n\nShorten the URL\n contained in your message and better understand message ",
+      "buttons": 50,
+      "inputs": 6,
+      "horizontalOverflow": false
+    },
+    {
+      "channel": "webhook",
+      "created": 201,
+      "status": 200,
+      "elapsedMs": 573,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "headings": [
+        "Campaign Details",
+        "Compose Webhook"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCampaigns\nEdit 'Audit webhook'\nLimited access\n1\nCompose Messages\n2\nSchedule Delivery\n3\nTarget Audiences\n4\nAssign Conversions\n5\nReview Summary\nCampaign Details\nCampaign Name\nTeams\nSelect...\nLifecycle Marketing\nGrowth\nRetention\nAdd description\nTags\nCampaign ID\nCopy\nCompose Webhook\n\nCall an external service with campaign data.\n\nVariants\nVariant 1\nTemplates\nRemove\nLive webhook delivery disabled\nPreview works locally. Set WEBHOOK_DELIVERY_ENABLED and WEBHOOK_ALLOWED_HOSTS to send tests or launches.\nVariant name\nHTTP method\nPOST\nGET\nPUT\nDELETE\nWebhook URL\nSupports Liquid and translation tags. Only ports 80 and 443 are accepted.\nLanguages\nen\n Add language\nRequest headers\nQuick authentication:\nBearer token\nBasic",
+      "buttons": 60,
+      "inputs": 10,
+      "horizontalOverflow": false
+    },
+    {
+      "channel": "whatsapp",
+      "created": 201,
+      "status": 200,
+      "elapsedMs": 569,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "headings": [
+        "Campaign Details",
+        "Compose WhatsApp"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCampaigns\nEdit 'Audit whatsapp'\nLimited access\n1\nCompose Messages\n2\nSchedule Delivery\n3\nTarget Audiences\n4\nAssign Conversions\n5\nReview Summary\nCampaign Details\nCampaign Name\nTeams\nSelect...\nLifecycle Marketing\nGrowth\nRetention\nAdd description\nTags\nCampaign ID\nCopy\nCompose WhatsApp\n\nSend an approved WhatsApp template.\n\nPreview and test\nWhatsApp demo mode\nComposer behavior and validation are local. No message is sent to Meta or WhatsApp.\nDemo account connected\nMessage variants\n\nTest different WhatsApp content while keeping the same audience and schedule.\n\nVariant 1\nTemplate\nCompose\nTest\nSending configuration\n\nChoose the demo business identity and subscription group.\n\nIncomplete\nWhatsApp Business Account\nTh",
+      "buttons": 54,
+      "inputs": 13,
+      "horizontalOverflow": false
+    },
+    {
+      "channel": "line",
+      "created": 201,
+      "status": 200,
+      "elapsedMs": 561,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "headings": [
+        "Campaign Details",
+        "Compose LINE"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCampaigns\nEdit 'Audit line'\nLimited access\n1\nCompose Messages\n2\nSchedule Delivery\n3\nTarget Audiences\n4\nAssign Conversions\n5\nReview Summary\nCampaign Details\nCampaign Name\nTeams\nSelect...\nLifecycle Marketing\nGrowth\nRetention\nAdd description\nTags\nCampaign ID\nCopy\nCompose LINE\n\nSend a message through LINE Official Account.\n\nPreview and test\nLINE message\n\nSend a stack of up to 5 messages through a LINE Official Account.\n\nOfficial Account\nDemo – Thinkingai\nAction URL\n1 message in this stack (max 5)\nMessage 1\nMessage type\nText\nImage\nFlex message\nCarousel\nText\nText\nImage\nFlex\nCarousel\nStack preview\n1\nCompose\n2\nSchedule\n3\nTarget\n4\nAssign\n5\nReview\nSave Draft",
+      "buttons": 49,
+      "inputs": 7,
+      "horizontalOverflow": false
+    },
+    {
+      "channel": "multichannel",
+      "created": 201,
+      "status": 200,
+      "elapsedMs": 553,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "headings": [
+        "Campaign Details",
+        "Compose Multichannel"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCampaigns\nEdit 'Audit multichannel'\nLimited access\n1\nCompose Messages\n2\nSchedule Delivery\n3\nTarget Audiences\n4\nAssign Conversions\n5\nReview Summary\nCampaign Details\nCampaign Name\nTeams\nSelect...\nLifecycle Marketing\nGrowth\nRetention\nAdd description\nTags\nCampaign ID\nCopy\nCompose Multichannel\n\nCoordinate messages across one or more channels.\n\nPreview and test\nChannel orchestration\n\nLaunch a dedicated message draft for each selected channel and review delivery results by channel.\n\nEmailPush notificationIn-app messageSMSWhatsApp\nOrchestration rule\nSend all channels at once\nSend Push, then Email if not opened\n\nEngagement-based fallback can be configured as a scheduled Canvas journey.\n\n1\nCompose\n2\nSchedule\n3\nTar",
+      "buttons": 42,
+      "inputs": 9,
+      "horizontalOverflow": false
+    },
+    {
+      "channel": "operator",
+      "created": 201,
+      "status": 200,
+      "elapsedMs": 577,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "headings": [
+        "Campaign Details",
+        "Compose Create with Operator"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCampaigns\nEdit 'Audit operator'\nLimited access\n1\nCompose Messages\n2\nSchedule Delivery\n3\nTarget Audiences\n4\nAssign Conversions\n5\nReview Summary\nCampaign Details\nCampaign Name\nTeams\nSelect...\nLifecycle Marketing\nGrowth\nRetention\nAdd description\nTags\nCampaign ID\nCopy\nCompose Create with Operator\n\nDescribe a goal and create a coordinated draft.\n\nPreview and test\nCreate with Operator\n\nThe local Operator reads your goal, detects channels, discounts and codes, and drafts per-channel copy.\n\nCampaign goal\nGenerate local plan\n1\nCompose\n2\nSchedule\n3\nTarget\n4\nAssign\n5\nReview\nSave Draft",
+      "buttons": 43,
+      "inputs": 4,
+      "horizontalOverflow": false
+    },
+    {
+      "channel": "feature",
+      "created": 201,
+      "status": 200,
+      "elapsedMs": 562,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "headings": [
+        "Campaign Details",
+        "Compose Feature flag experiment"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCampaigns\nEdit 'Audit feature'\nLimited access\n1\nCompose Messages\n2\nSchedule Delivery\n3\nTarget Audiences\n4\nAssign Conversions\n5\nReview Summary\nCampaign Details\nCampaign Name\nTeams\nSelect...\nLifecycle Marketing\nGrowth\nRetention\nAdd description\nTags\nCampaign ID\nCopy\nCompose Feature flag experiment\n\nRoll out a remote feature setting.\n\nPreview and test\nFeature flag experiment\n\nSelect a saved flag with 0% global rollout. Experiment assignments are returned by the workspace SDK while the Campaign is active.\n\nFeature Flag\nSelect a Feature Flag\nUI feature a65414c8 · ui_a65414c8\nQA experiment flag c096b24a · experiment_c096b24a\nQA rollout c096b24a · qa_c096b24a\nRollout\nVariant properties (JSON)\nPrimary conversion\n",
+      "buttons": 42,
+      "inputs": 7,
+      "horizontalOverflow": false
+    },
+    {
+      "channel": "api",
+      "created": 201,
+      "status": 200,
+      "elapsedMs": 553,
+      "navError": "",
+      "console": [],
+      "pageErrors": [],
+      "headings": [
+        "Campaign Details",
+        "Compose API campaign"
+      ],
+      "bodyText": "b\nDemo – Thinkingai\nQuick links\nCanvas\nCampaigns\nSegments\nGetting Started\nPerformance Overview\nAI Decisioning\nAgent Console\nMessaging\nAudience\nContent\nAnalytics\nPartner Integrations\nData Settings\nSettings\nbraze\n◷  8 days left in your free trial. Connect with sales\nSearch workspace\n⌘K\nS\nCampaigns\nEdit 'Audit api'\nLimited access\n1\nCompose Messages\n2\nSchedule Delivery\n3\nTarget Audiences\n4\nAssign Conversions\n5\nReview Summary\nCampaign Details\nCampaign Name\nTeams\nSelect...\nLifecycle Marketing\nGrowth\nRetention\nAdd description\nTags\nCampaign ID\nCopy\nCompose API campaign\n\nTrack messages sent from an API.\n\nPreview and test\nAPI campaign\n\nCreate an identifier used to associate external sends with campaign analytics, then record events sent from your systems.\n\nCampaign name\nAPI campaign ID\nEvent mapping\nUser ID\nEvent\nsent\ndelivered\nopened\nclicked\nconversion\nfailed\nRecord event\nAllow external attribution\nAccept locally simulated message and conversion events.\n1\nCompose\n2\nSchedule\n3\nTarget\n4\nAssign\n5\n",
+      "buttons": 44,
+      "inputs": 8,
+      "horizontalOverflow": false
+    }
+  ],
+  "notFoundCheck": "HTTP 404 or exact error-page headings; numeric IDs and user_404 are not error indicators."
+}

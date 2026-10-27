@@ -280,7 +280,7 @@ export function resolveLiquidPreview(source: string, user: PreviewUser = default
     }
   });
   engine.registerTag("renderblock", { parse(token) { this.name = token.args.replace(/^['"]|['"]$/g, ""); }, render() { return workspace?.contentBlocks?.[String(this.name)] ?? ""; } });
-  engine.registerTag("promotion_code", { parse(token) { this.name = token.args.replace(/^['"]|['"]$/g, ""); }, render() { return (workspace?.promotionCodes?.[String(this.name)] ?? Object.values(workspace?.promotionCodes ?? {})[0] ?? ["SEPTEMBER20"])[0] ?? ""; } });
+  engine.registerTag("promotion_code", { parse(token) { this.name = token.args.replace(/^['"]|['"]$/g, ""); }, render() { return (workspace?.promotionCodes?.[String(this.name)] ?? [])[0] ?? ""; } });
   const prepared = source.replace(/\{\{\s*\$\{email_footer\}\s*\}\}/g, () => workspace?.footer ?? "");
   try { return String(engine.parseAndRenderSync(brazeLiquidSource(prepared), { ...profile, braze: { ...profile, email_address: profile.email }, custom_attribute: profile, content_blocks: workspace?.contentBlocks ?? {}, items: [] })); }
   catch (error) { if (strict) throw error; return `Liquid preview error: ${error instanceof Error ? error.message.replace(/[<>]/g, "") : "Check your template syntax."}`; }
@@ -315,6 +315,7 @@ export type EmailTemplate = {
   rows?: EmailRow[];
   html?: string;
   plain?: string;
+  config?: Record<string, unknown>;
 };
 
 function sampleRows(kind: "welcome" | "offer" | "newsletter" | "reengagement" | "transactional" | "event"): EmailRow[] {

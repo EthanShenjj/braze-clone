@@ -1,3 +1,4 @@
+import { tagNames } from "./tag-model.ts";
 import type { CanvasRecord } from "./braze-store";
 import { initialCanvasGraph, type CanvasGraph } from "./canvas-model.ts";
 import { defaultCanvasWizard } from "./canvas-wizard-model.ts";
@@ -29,7 +30,7 @@ export function createBrowserCanvas(input: { name: string; description?: string;
   if (!name || name.length > 120) throw new Error("Canvas name must be 1–120 characters.");
   if (items.some(item => item.canvas.name.toLowerCase() === name.toLowerCase() && item.canvas.status !== "Archived")) throw new Error("A Canvas with this name already exists.");
   const timestamp = new Date().toISOString();
-  const canvas: CanvasRecord = { id: crypto.randomUUID(), name, description: input.description?.trim() ?? "", status: "Draft", createdAt: timestamp, updatedAt: timestamp, createdBy: "Browser workspace", lastEditedBy: "Browser workspace", tags: input.tags ?? [], team: "", experience: "Canvas Flow", targetSegment: "All Users", alertsConfigured: false, wizard: input.wizard ?? structuredClone(defaultCanvasWizard) };
+  const canvas: CanvasRecord = { id: crypto.randomUUID(), name, description: input.description?.trim() ?? "", status: "Draft", createdAt: timestamp, updatedAt: timestamp, createdBy: "Browser workspace", lastEditedBy: "Browser workspace", tags: tagNames(input.tags, true), team: "", experience: "Canvas Flow", targetSegment: "All Users", alertsConfigured: false, wizard: input.wizard ?? structuredClone(defaultCanvasWizard) };
   const graph = input.graph ?? (input.template ? structuredClone(initialCanvasGraph) : { nodes: [structuredClone(initialCanvasGraph.nodes[0])], edges: [] as [string, string][] });
   if (input.template === "payment") { graph.nodes[1].label = "Wait until reminder"; graph.nodes[2].label = "Payment reminder email"; graph.nodes[2].config = { channel: "email", subject: "Your payment is coming up", message: "Your payment is coming up soon. Please review your account." }; }
   if (input.template === "abandoned") { graph.nodes[1].label = "Wait 2 hours"; graph.nodes[1].config = { durationHours: 2 }; graph.nodes[2].label = "Abandoned intent email"; graph.nodes[2].config = { channel: "email", subject: "Pick up where you left off", message: "Your items are waiting. Continue where you left off." }; }
@@ -45,7 +46,7 @@ export function patchBrowserCanvas(id: string, patch: Partial<CanvasRecord>) {
   const name = (patch.name ?? item.canvas.name).trim();
   if (!name || name.length > 120) throw new Error("Canvas name must be 1–120 characters.");
   if (items.some(entry => entry.canvas.id !== id && entry.canvas.name.toLowerCase() === name.toLowerCase() && entry.canvas.status !== "Archived")) throw new Error("A Canvas with this name already exists.");
-  item.canvas = { ...item.canvas, ...patch, name, updatedAt: new Date().toISOString(), lastEditedBy: "Browser workspace" };
+  item.canvas = { ...item.canvas, ...patch, tags: tagNames(patch.tags ?? item.canvas.tags, true), name, updatedAt: new Date().toISOString(), lastEditedBy: "Browser workspace" };
   write(items);
   return item.canvas;
 }

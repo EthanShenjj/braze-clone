@@ -10,6 +10,7 @@ export function GET(request: Request) {
   const savedData = (saved?.data ?? {}) as Record<string, unknown>;
   const filters = (Array.isArray(savedData.filters) ? savedData.filters : []) as AudienceFilter[];
   try {
-    return Response.json(estimateAudience(audience, searchParams.get("country") ?? undefined, searchParams.get("excludeCountry") ?? undefined, searchParams.get("eligibility") ?? "subscribed", searchParams.get("subscriptionGroupId") ?? undefined, filters, (searchParams.get("channel") ?? "email") as Channel));
+    const engagement = searchParams.get("engagement") === "campaign" ? { tags: searchParams.getAll("tag") } : undefined;
+    return Response.json(estimateAudience(audience, searchParams.get("country") ?? undefined, searchParams.get("excludeCountry") ?? undefined, searchParams.get("eligibility") ?? "subscribed", searchParams.get("subscriptionGroupId") ?? undefined, filters, (searchParams.get("channel") ?? "email") as Channel, engagement));
   } catch (error) { return Response.json({ error: error instanceof Error ? error.message : "Unable to estimate audience." }, { status: 400 }); }
 }

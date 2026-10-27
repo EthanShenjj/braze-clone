@@ -1,0 +1,30 @@
+[
+  {
+    "name": "ui-feature-flag",
+    "passed": true
+  },
+  {
+    "name": "ui-landing-publish-submit",
+    "passed": true
+  },
+  {
+    "name": "ui-template-campaign",
+    "passed": true
+  },
+  {
+    "name": "ui-csv-import",
+    "passed": true
+  },
+  {
+    "name": "ui-content-block-edit",
+    "passed": true
+  },
+  {
+    "name": "ui-report-persistence",
+    "passed": true
+  },
+  {
+    "name": "ui-settings-persistence",
+    "passed": true
+  }
+]

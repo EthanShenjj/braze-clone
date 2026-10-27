@@ -11,6 +11,8 @@ import {
 import { emailTemplates, liquidTokens } from "@/lib/email-editor-model";
 import { formatDate, formatNumber, translate, type Locale } from "@/lib/i18n";
 import styles from "./module-workspaces.module.css";
+import TagManagement from "./tag-management";
+import TagPicker from "./tag-picker";
 
 const className = (...values: (string | false | undefined)[]) => values.filter(Boolean).join(" ");
 export const field = (label: string, control: ReactNode) => <label className={styles.field}><span>{label}</span>{control}</label>;
@@ -63,7 +65,7 @@ function ResourceCard({ row, onEdit, onDelete }: { row: ResourceRow; onEdit?: ()
 export type SegmentFilter = { field: string; operator: "equals" | "not_equals" | "contains"; value: string };
 const segmentFields = [
   { value: "country", label: "Country", options: ["US", "GB", "CN", "SG", "DE"] },
-  { value: "lifecycle", label: "Lifecycle", options: ["New", "Active", "Dormant", "Churned"] },
+  { value: "lifecycle", label: "Lifecycle", options: ["New Users", "All Users", "Recent Purchasers", "Loyal Customers"] },
   { value: "subscribed", label: "Subscribed", options: ["true", "false"] },
   { value: "email", label: "Email contains", options: [] },
 ];
@@ -72,8 +74,8 @@ export function SegmentBuilderForm({ value, onChange, attributeFields = [] }: { 
   const setRow = (index: number, patch: Partial<SegmentFilter>) => onChange(value.map((row, i) => i === index ? { ...row, ...patch } : row));
   return <div className={styles.rowGrid}>
     {value.map((row, index) => {
-      const meta = segmentFields.find(item => item.value === row.field) ?? segmentFields[0];
-      const attributeMeta = attributeFields.find(item => item.key === row.field);
+      const meta = segmentFields.find(item => item.value === row.field);
+      const attributeMeta = attributeFields.find(item => `attr:${item.key}` === row.field);
       return <div className={styles.builderRow} key={index}>
         <select value={row.field} onChange={event => setRow(index, { field: event.target.value, value: "" })}>
           {segmentFields.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
@@ -82,7 +84,7 @@ export function SegmentBuilderForm({ value, onChange, attributeFields = [] }: { 
         <select value={row.operator} onChange={event => setRow(index, { operator: event.target.value as SegmentFilter["operator"] })}>
           <option value="equals">equals</option><option value="not_equals">not equal to</option><option value="contains">contains</option>
         </select>
-        {meta.options.length
+        {meta?.options.length
           ? <select value={row.value} onChange={event => setRow(index, { value: event.target.value })}><option value="">Select…</option>{meta.options.map(option => <option key={option} value={option}>{option}</option>)}</select>
           : attributeMeta
             ? <><input value={row.value} onChange={event => setRow(index, { value: event.target.value })} list={`attr-values-${attributeMeta.key}`} placeholder={attributeMeta.values[0] ?? "Value"} /><datalist id={`attr-values-${attributeMeta.key}`}>{attributeMeta.values.map(option => <option key={option} value={option} />)}</datalist></>
@@ -113,7 +115,7 @@ function useSyntheticUsers() {
 }
 
 export function SegmentsWorkspace({ locale, notify, title = translate("en", "Segments"), type = "segments", subtitle }: { locale: Locale; notify: (m: string) => void; title?: string; type?: string; subtitle?: string }) {
-  const { rows, create, update, remove } = useResourceList(type);
+  const { rows, reload, remove } = useResourceList(type);
   const users = useSyntheticUsers();
   const attributeFields = useMemo(() => {
     const counts = new Map<string, Map<string, number>>();
@@ -131,32 +133,42 @@ export function SegmentsWorkspace({ locale, notify, title = translate("en", "Seg
   const [editId, setEditId] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
+  const [saveError, setSaveError] = useState("");
+  const [saving, setSaving] = useState(false);
   const [filters, setFilters] = useState<SegmentFilter[]>([{ field: "country", operator: "equals", value: "US" }]);
   const estimate = useMemo(() => estimateFromFilters(filters, users), [filters, users]);
-  const reset = () => { setCreating(false); setEditId(null); setName(""); setDescription(""); setFilters([{ field: "country", operator: "equals", value: "US" }]); };
-  const beginEdit = (row: ResourceRow) => { setEditId(row.id); setCreating(true); setName(row.name); setDescription(row.description); setFilters((row.data.filters as SegmentFilter[] | undefined) ?? [{ field: "country", operator: "equals", value: "US" }]); };
+  const reset = () => { setCreating(false); setEditId(null); setName(""); setDescription(""); setTags([]); setSaveError(""); setFilters([{ field: "country", operator: "equals", value: "US" }]); };
+  const beginEdit = (row: ResourceRow) => { setEditId(row.id); setCreating(true); setName(row.name); setDescription(row.description); setTags(Array.isArray(row.data.tags) ? row.data.tags as string[] : []); setFilters((row.data.filters as SegmentFilter[] | undefined) ?? [{ field: "country", operator: "equals", value: "US" }]); };
   const save = async () => {
     if (!name.trim()) return;
-    const payload = { name: name.trim(), description, data: { filters } };
-    if (editId) await update(editId, payload); else await create(payload);
+    const payload = { name: name.trim(), description, data: { ...rows.find(row => row.id === editId)?.data, filters, tags } };
+    setSaving(true); setSaveError("");
+    try {
+    const response = await fetch(`/api/resources/${type}`, { method: editId ? "PATCH" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...payload, ...(editId ? { id: editId, expectedUpdatedAt: rows.find(row => row.id === editId)?.updatedAt } : {}) }) });
+    const result = await response.json(); if (!response.ok) throw new Error(result.error);
+    await reload();
     notify(editId ? "Segment updated." : "Segment created and available in campaign targeting.");
     reset();
+    } catch (error) { setSaveError(error instanceof Error ? error.message : "Unable to save Segment."); } finally { setSaving(false); }
   };
   return <section className="page-content module-workspace">
-    <WorkspaceHeading title={title} subtitle={subtitle ?? "Split your audience into targeted groups saved to local SQLite and selectable in campaign targeting."} actions={<button className="primary" onClick={() => { setCreating(true); setEditId(null); }}><Plus size={16} /> Create segment</button>} />
+    <WorkspaceHeading title={title} subtitle={subtitle ?? "Split your audience into targeted groups saved to local SQLite and selectable in campaign targeting."} actions={<button className="primary" onClick={() => { reset(); setCreating(true); }}><Plus size={16} /> Create segment</button>} />
     {creating && <div className={styles.card}>
       <div className={styles.cardHead}><h3>{editId ? "Edit segment" : "Create segment"}</h3><button className={styles.iconBtn} onClick={reset} aria-label="Close builder"><X size={15} /></button></div>
       <div className={styles.grid2}>
         {field("Segment name", <input value={name} onChange={event => setName(event.target.value)} placeholder="e.g. Active US purchasers" autoFocus />)}
         {field("Description", <input value={description} onChange={event => setDescription(event.target.value)} placeholder="Who is this segment for?" />)}
       </div>
+      {type === "segments" && <TagPicker value={tags} onChange={setTags} locale={locale}/>}
+      {saveError && <p role="alert">{saveError}</p>}
       <div><h3 style={{ marginBottom: 10 }}>Filters</h3><SegmentBuilderForm value={filters} onChange={setFilters} attributeFields={attributeFields} /></div>
       <div className={styles.grid3}>
         <div className={styles.stat}><b>{formatNumber(locale, estimate.matching)}</b><small>Matching users</small></div>
         <div className={styles.stat}><b>{formatNumber(locale, estimate.reachable)}</b><small>Reachable users</small></div>
         <div className={styles.stat}><b>{users.length ? Math.round(estimate.matching / users.length * 100) : 0}%</b><small>Of workspace</small></div>
       </div>
-      <div className={styles.toolbar}><button className="primary" disabled={!name.trim()} onClick={() => void save()}><Check size={15} /> {editId ? "Save changes" : "Create segment"}</button><button className="secondary" onClick={reset}>Cancel</button></div>
+      <div className={styles.toolbar}><button className="primary" disabled={saving || !name.trim()} onClick={() => void save()}><Check size={15} /> {editId ? "Save changes" : "Create segment"}</button><button className="secondary" onClick={reset}>Cancel</button></div>
     </div>}
     <div className="resource-cards">
       {rows.length ? rows.map(row => <ResourceCard key={row.id} row={row} onEdit={() => beginEdit(row)} onDelete={() => { void remove(row.id).then(() => notify("Segment archived.")); }} />)
@@ -280,39 +292,6 @@ export function MediaLibraryWorkspace({ locale, notify }: { locale: Locale; noti
           <button onClick={() => { void remove(row.id).then(() => notify("Image deleted.")); }}><Trash2 size={12} /> Delete</button>
         </div>
       </div>)}</div> : <div className={styles.empty}>The library is empty. Upload an image — it becomes selectable inside the email editor's media picker.</div>}
-    </div>
-  </section>;
-}
-
-export function TemplatesWorkspace({ locale, notify, page, title }: { locale: Locale; notify: (m: string) => void; page: string; title: string }) {
-  const { rows, create, remove } = useResourceList(page);
-  const [creating, setCreating] = useState(false);
-  const [name, setName] = useState("");
-  const [subject, setSubject] = useState("");
-  const [body, setBody] = useState("");
-  const [description, setDescription] = useState("");
-  const save = async () => {
-    if (!name.trim()) return;
-    await create({ name: name.trim(), description, data: { subject, body, channel: title.startsWith("Email") ? "email" : title.split(" ")[0].toLowerCase() } });
-    setCreating(false); setName(""); setSubject(""); setBody(""); setDescription(""); notify("Template saved. It appears in the email editor template gallery.");
-  };
-  return <section className="page-content module-workspace">
-    <WorkspaceHeading title={title} subtitle="Reusable message templates stored in local SQLite. Email templates appear in the editor's template gallery." actions={<button className="primary" onClick={() => setCreating(!creating)}><Plus size={16} /> Create template</button>} />
-    {creating && <div className={styles.card}>
-      <div className={styles.grid2}>
-        {field("Template name", <input value={name} onChange={event => setName(event.target.value)} autoFocus placeholder="e.g. Back-in-stock alert" />)}
-        {field("Description", <input value={description} onChange={event => setDescription(event.target.value)} placeholder="When should this template be used?" />)}
-      </div>
-      {field("Subject", <input value={subject} onChange={event => setSubject(event.target.value)} placeholder="Supports Liquid, e.g. Hi {{${first_name} | default: 'there'}}" />)}
-      {field("Body", <textarea value={body} onChange={event => setBody(event.target.value)} placeholder="Message body…" />)}
-      <div className={styles.toolbar}>
-        <button className="primary" disabled={!name.trim()} onClick={() => void save()}><Check size={15} /> Save template</button>
-        <button className="secondary" onClick={() => setCreating(false)}>Cancel</button>
-      </div>
-    </div>}
-    <div className="resource-cards">
-      {rows.length ? rows.map(row => <ResourceCard key={row.id} row={row} onDelete={() => { void remove(row.id).then(() => notify("Template deleted.")); }} />)
-        : !creating && <div className={styles.empty}>No saved templates yet.</div>}
     </div>
   </section>;
 }
@@ -474,43 +453,6 @@ export function CustomEventsWorkspace({ locale, notify }: { locale: Locale; noti
 const reportMetrics = ["Delivered", "Opened", "Clicked", "Suppressed", "Unreachable"] as const;
 type ReportMetric = (typeof reportMetrics)[number];
 type Overview = { delivered: number; opened: number; clicked: number; suppressed: number; unreachable: number; series: { date: string; delivered: number }[] };
-
-export function ReportBuilderWorkspace({ locale, notify }: { locale: Locale; notify: (m: string) => void }) {
-  const { rows, create, remove } = useResourceList("report-builder");
-  const [range, setRange] = useState("30");
-  const [metrics, setMetrics] = useState<ReportMetric[]>(["Delivered", "Opened", "Clicked"]);
-  const [name, setName] = useState("");
-  const [overview, setOverview] = useState<Overview | null>(null);
-  useEffect(() => { void fetch(`/api/reports/overview?days=${range}`).then(r => r.json()).then(setOverview).catch(() => {}); }, [range]);
-  const values: Record<ReportMetric, number> = { Delivered: overview?.delivered ?? 0, Opened: overview?.opened ?? 0, Clicked: overview?.clicked ?? 0, Suppressed: overview?.suppressed ?? 0, Unreachable: overview?.unreachable ?? 0 };
-  const toggle = (metric: ReportMetric) => setMetrics(current => current.includes(metric) ? current.filter(item => item !== metric) : [...current, metric]);
-  const save = async () => {
-    if (!name.trim() || !metrics.length) return;
-    await create({ name: name.trim(), description: `${metrics.join(", ")} · last ${range} days`, data: { metrics, range } });
-    setName(""); notify("Report definition saved.");
-  };
-  return <section className="page-content module-workspace">
-    <WorkspaceHeading title="Report Builder" subtitle="Compose a custom report from local delivery metrics, then reopen it any time." />
-    <div className={styles.card}>
-      <div className={styles.grid2}>
-        {field("Report name", <input value={name} onChange={event => setName(event.target.value)} placeholder="Weekly engagement digest" />)}
-        {field("Date range", <select value={range} onChange={event => setRange(event.target.value)}><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option></select>)}
-      </div>
-      <div><h3 style={{ marginBottom: 10 }}>Metrics</h3><div className={styles.metricPicker}>{reportMetrics.map(metric => <label key={metric} className={metrics.includes(metric) ? styles.on : ""}><input type="checkbox" hidden checked={metrics.includes(metric)} onChange={() => toggle(metric)} />{metric}</label>)}</div></div>
-      <div className={styles.grid3}>{metrics.map(metric => <div className={styles.stat} key={metric}><b>{formatNumber(locale, values[metric])}</b><small>{metric}</small></div>)}</div>
-      <div><button className="primary" disabled={!name.trim() || !metrics.length} onClick={() => void save()}><Check size={15} /> Save report</button></div>
-    </div>
-    <div className={styles.card}>
-      <h3>Saved reports</h3>
-      {rows.length ? <table className={styles.table}><thead><tr><th>Report</th><th>Metrics</th><th>Range</th><th>Preview</th><th /></tr></thead><tbody>
-        {rows.map(row => <tr key={row.id}><td>{row.name}</td><td>{(row.data.metrics as string[] | undefined)?.join(", ")}</td><td>{String(row.data.range ?? "30")}d</td>
-          <td>{(row.data.metrics as string[] | undefined)?.map(metric => `${metric}: ${formatNumber(locale, values[metric as ReportMetric] ?? 0)}`).join(" · ") || "—"}</td>
-          <td><button className={styles.iconBtn} onClick={() => { void remove(row.id).then(() => notify("Report deleted.")); }}><Trash2 size={13} /></button></td></tr>)}
-      </tbody></table> : <div className={styles.empty}>No saved reports yet.</div>}
-    </div>
-  </section>;
-}
-
 type ActivityEvent = { id: string; event_type: string; channel: string; campaign_name: string; user_id: string; created_at: string };
 
 export function QueryBuilderWorkspace({ locale, notify }: { locale: Locale; notify: (m: string) => void }) {
@@ -525,7 +467,7 @@ export function QueryBuilderWorkspace({ locale, notify }: { locale: Locale; noti
   const run = async () => {
     setRunning(true);
     try {
-      const response = await fetch("/api/activity");
+      const response = await fetch("/api/activity?limit=10000");
       const payload = await response.json();
       const events = (payload.data ?? []) as ActivityEvent[];
       setResult(events.filter(event => (eventType === "all" || event.event_type === eventType) && (channel === "all" || event.channel === channel) && (!campaign || (event.campaign_name ?? "").toLowerCase().includes(campaign.toLowerCase()))).slice(0, limit));
@@ -555,7 +497,7 @@ export function QueryBuilderWorkspace({ locale, notify }: { locale: Locale; noti
         {!result.length && <tr><td colSpan={5}>No events match this query.</td></tr>}
       </tbody></table>}
     </div>
-    {rows.length ? <div className={styles.card}><h3>Saved queries</h3><table className={styles.table}><tbody>{rows.map(row => <tr key={row.id}><td>{row.name}</td><td>{row.description}</td><td><button className="secondary small" onClick={() => { setEventType(String(row.data.eventType ?? "all")); setChannel(String(row.data.channel ?? "all")); setCampaign(String(row.data.campaign ?? "")); notify("Query loaded — press Run."); }}>Load</button></td></tr>)}</tbody></table></div> : null}
+    {rows.length ? <div className={styles.card}><h3>Saved queries</h3><table className={styles.table}><tbody>{rows.map(row => <tr key={row.id}><td>{row.name}</td><td>{row.description}</td><td><button className="secondary small" onClick={() => { setEventType(String(row.data.eventType ?? "all")); setChannel(String(row.data.channel ?? "all")); setCampaign(String(row.data.campaign ?? "")); setLimit(Number(row.data.limit ?? 50)); notify("Query loaded — press Run."); }}>Load</button></td></tr>)}</tbody></table></div> : null}
   </section>;
 }
 
@@ -610,7 +552,7 @@ export function FrequencyCappingWorkspace({ locale, notify }: { locale: Locale; 
       <label className={styles.metricPicker}><label className={enabled ? styles.on : ""}><input type="checkbox" hidden checked={enabled} onChange={event => { setEnabled(event.target.checked); void persist(rules, event.target.checked); }} />Frequency capping enabled</label></label>
       {enabled && <>
         <table className={styles.table}><thead><tr><th>Applies to</th><th>Max messages</th><th>Window</th><th /></tr></thead><tbody>
-          {rules.map((rule, index) => <tr key={rule.id}>
+          {rules.map((rule, index) => <tr key={rule.id ?? index}>
             <td><select value={rule.kind} onChange={event => void setRule(index, { kind: event.target.value })}><option>All channels</option><option>Email</option><option>Push</option><option>In-app message</option><option>SMS</option></select></td>
             <td><input type="number" min={1} value={rule.limit} onChange={event => void setRule(index, { limit: Math.max(1, Number(event.target.value) || 1) })} style={{ width: 90, minHeight: 32, border: "1px solid #d9d5df", borderRadius: 6, padding: "0 8px" }} /></td>
             <td><select value={rule.window} onChange={event => void setRule(index, { window: event.target.value })}><option>per day</option><option>per week</option><option>per month</option></select></td>
@@ -624,63 +566,8 @@ export function FrequencyCappingWorkspace({ locale, notify }: { locale: Locale; 
   </section>;
 }
 
-export function TagManagementWorkspace({ locale, notify }: { locale: Locale; notify: (m: string) => void }) {
-  const { rows, create, remove } = useResourceList("tag-management");
-  const [tag, setTag] = useState("");
-  const add = async () => { if (!tag.trim()) return; await create({ name: tag.trim(), description: "Workspace tag" }); setTag(""); notify("Tag created."); };
-  return <section className="page-content module-workspace">
-    <WorkspaceHeading title="Tag Management" subtitle="Workspace tags usable when organizing campaigns and Canvases." />
-    <div className={styles.card}>
-      <div className={styles.toolbar}>
-        {field("New tag", <input value={tag} onChange={event => setTag(event.target.value)} onKeyDown={event => event.key === "Enter" && void add()} placeholder="Lifecycle" />)}
-        <button className="primary" style={{ alignSelf: "end" }} disabled={!tag.trim()} onClick={() => void add()}><Tag size={14} /> Create tag</button>
-      </div>
-      <div className={styles.toolbar}>{rows.length ? rows.map(row => <span key={row.id} className={styles.chip}>{row.name}<X size={12} style={{ cursor: "pointer" }} onClick={() => { void remove(row.id).then(() => notify("Tag deleted.")); }} /></span>) : <small>No tags yet — campaigns can reference them from the tag menu.</small>}</div>
-    </div>
-  </section>;
-}
-
-type SettingField = { key: string; label: string; type: "toggle" | "text" | "number" | "select"; options?: string[]; help?: string };
-export const settingsForms: Record<string, { title: string; subtitle: string; fields: SettingField[] }> = {
-  "app-settings": { title: "App Settings", subtitle: "Workspace defaults applied to new campaigns and resources.", fields: [
-    { key: "workspaceName", label: "Workspace name", type: "text" }, { key: "timezone", label: "Company time zone", type: "select", options: ["UTC+08:00", "UTC", "UTC-05:00"] }, { key: "quietHoursDefault", label: "Quiet hours by default", type: "toggle", help: "Applies to scheduled campaigns without explicit quiet hours" }] },
-  "push-settings": { title: "Push Settings", subtitle: "Credential and delivery defaults for push campaigns.", fields: [
-    { key: "iosCredentials", label: "iOS credential status", type: "select", options: ["Missing", "Configured"] }, { key: "androidCredentials", label: "Android credential status", type: "select", options: ["Configured", "Missing"] }, { key: "defaultTtl", label: "Default time-to-live (seconds)", type: "number" }, { key: "collapseKey", label: "Collapse notifications", type: "toggle" }] },
-  "localization-settings": { title: "Localization Settings", subtitle: "Languages offered for multilingual campaigns.", fields: [
-    { key: "defaultLanguage", label: "Default language", type: "select", options: ["English", "中文（简体）", "한국어", "日本語"] }, { key: "autoTranslate", label: "Suggest translations with BrazeAI", type: "toggle" }] },
-  "banner-placements": { title: "Banner Placements", subtitle: "Registered placements the SDK can render.", fields: [
-    { key: "placementName", label: "New placement name", type: "text", help: "Save to register the placement" }] },
-  "messaging-rate-limits": { title: "Messaging Rate Limits", subtitle: "Workspace ceilings applied during simulated sends.", fields: [
-    { key: "maxPerMinute", label: "Max messages per minute", type: "number" }, { key: "maxPerDay", label: "Max messages per day", type: "number" }, { key: "enforce", label: "Enforce limits on launch", type: "toggle" }] },
-  "billing": { title: "Billing", subtitle: "Plan usage summary for this demo workspace.", fields: [
-    { key: "plan", label: "Plan", type: "select", options: ["Free", "Growth", "Enterprise"] }, { key: "monthlyUsers", label: "Tracked users (MTU)", type: "number" }] },
-};
-
-export function PersistedSettingsPage({ locale, notify, page }: { locale: Locale; notify: (m: string) => void; page: string }) {
-  const config = settingsForms[page] ?? { title: page, subtitle: "Workspace settings persisted locally.", fields: [] };
-  const { rows, create, update } = useResourceList(page);
-  const record = rows[0];
-  const [values, setValues] = useState<Record<string, unknown>>({});
-  useEffect(() => { if (record) setValues(record.data ?? {}); }, [record?.id]);
-  const set = (key: string, value: unknown) => setValues(current => ({ ...current, [key]: value }));
-  const save = async () => {
-    if (record) await update(record.id, { data: values }); else await create({ name: config.title, description: "Workspace settings", data: values });
-    notify(`${config.title} saved to local SQLite.`);
-  };
-  return <section className="page-content module-workspace">
-    <WorkspaceHeading title={config.title} subtitle={config.subtitle} />
-    <div className={styles.card}>
-      {config.fields.map(setting => {
-        const active = values[setting.key];
-        return setting.type === "toggle"
-          ? <label key={setting.key} className={styles.metricPicker}><label className={active ? styles.on : ""}><input type="checkbox" hidden checked={Boolean(active)} onChange={event => set(setting.key, event.target.checked)} />{setting.label}</label>{setting.help && <small style={{ color: "#827d8c" }}>{setting.help}</small>}</label>
-          : field(setting.label, setting.type === "select"
-            ? <select value={String(active ?? setting.options?.[0] ?? "")} onChange={event => set(setting.key, event.target.value)}>{setting.options?.map(option => <option key={option}>{option}</option>)}</select>
-            : <input type={setting.type === "number" ? "number" : "text"} value={String(active ?? "")} onChange={event => set(setting.key, setting.type === "number" ? Number(event.target.value) : event.target.value)} />);
-      })}
-      <div><button className="primary" onClick={() => void save()}><Check size={15} /> Save changes</button></div>
-    </div>
-  </section>;
+export function TagManagementWorkspace(props: { locale: Locale; notify: (message: string) => void }) {
+  return <TagManagement {...props}/>;
 }
 
 // --- Global chrome -------------------------------------------------------------

@@ -332,5 +332,26 @@
 .webhookResult pre{max-height:120px;overflow:auto;margin:8px 0 0;padding:8px;border-radius:5px;background:#2b2533;color:#d9d2ec;font-size:11px}
 .sendButton{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 16px;border:0;border-radius:6px;background:#6736d8;color:#fff;font-size:13px;font-weight:700;cursor:pointer}
 .sendButton:disabled{opacity:.55;cursor:default}
+/* Beefree SDK editor shell */
+.beefreePage{position:fixed;z-index:92;inset:0;display:grid;grid-template-rows:58px minmax(0,1fr);background:#f3f1f6;color:#34363e;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.beefreeHeader{display:flex;align-items:center;gap:10px;padding:0 12px;background:#303035;color:#fff}
+.beefreeBack,.beefreeAction,.beefreeSave{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:34px;padding:0 12px;border:1px solid #4b4a56;border-radius:6px;background:transparent;color:#efeafd;font:650 12px/1 inherit;white-space:nowrap;cursor:pointer}
+.beefreeBack{border-color:transparent;color:#e6d8ff}
+.beefreeSave{border-color:#6736d8;background:#6736d8}
+.beefreeBack:disabled,.beefreeAction:disabled,.beefreeSave:disabled{opacity:.45;cursor:default}
+.beefreeIdentity{display:grid;min-width:130px;line-height:1.15}
+.beefreeIdentity b{font-size:14px}
+.beefreeIdentity span{max-width:210px;overflow:hidden;color:#b6aede;font-size:10px;text-overflow:ellipsis;white-space:nowrap}
+.beefreeSubject{display:flex;flex:1;align-items:center;gap:8px;min-width:180px;max-width:520px;color:#c8c4ce;font-size:11px;font-weight:700}
+.beefreeSubject input{flex:1;min-width:90px;height:34px;padding:0 10px;border:1px solid #55535e;border-radius:6px;background:#242429;color:#fff;font:12px/1 inherit;outline:none}
+.beefreeSubject input:focus{border-color:#9b75ed;box-shadow:0 0 0 2px #7c46df40}
+.beefreeSaveState{min-width:105px;color:#b6aede;font-size:10px;text-align:right}
+.beefreeHost{min-height:0;width:100%;height:100%;overflow:hidden;background:#fff}
+.beefreeStatus{position:absolute;inset:58px 0 0;display:grid;place-items:center;align-content:center;gap:10px;padding:30px;background:#f6f4f9;color:#4b4655;text-align:center}
+.beefreeStatus strong{font-size:18px}
+.beefreeStatus p{max-width:620px;margin:0;color:#777582;font-size:13px;line-height:1.5}
+.beefreeStatus button{display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 15px;border:0;border-radius:6px;background:#6736d8;color:#fff;font-size:12px;font-weight:700;cursor:pointer}
+.beefreeSpinner{width:24px;height:24px;border:3px solid #d9d2e8;border-top-color:#6736d8;border-radius:50%;animation:beefreeSpin .8s linear infinite}
+@keyframes beefreeSpin{to{transform:rotate(360deg)}}
 @media(max-width:1180px){.page{grid-template-columns:48px 150px minmax(0,1fr) 300px}.personalizationPage{grid-template-columns:300px minmax(0,1fr) 330px}}
-@media(max-width:900px){.page{grid-template-columns:44px 130px minmax(0,1fr)}.rightPanel{display:none}.personalizationPage{grid-template-columns:300px minmax(0,1fr)}.personalizationPage .rightPanel{display:none}.genBody{grid-template-columns:minmax(0,1fr)}.genSide{display:none}.galleryBody{grid-template-columns:minmax(0,1fr)}.galleryPreview{display:none}}
+@media(max-width:900px){.page{grid-template-columns:44px 130px minmax(0,1fr)}.rightPanel{display:none}.personalizationPage{grid-template-columns:300px minmax(0,1fr)}.personalizationPage .rightPanel{display:none}.genBody{grid-template-columns:minmax(0,1fr)}.genSide{display:none}.galleryBody{grid-template-columns:minmax(0,1fr)}.galleryPreview{display:none}.beefreeIdentity,.beefreeSaveState,.beefreeAction{display:none}.beefreeSubject span{display:none}}

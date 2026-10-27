@@ -10,6 +10,8 @@ import { canvasStepLabels, canvasSteps, canvasWizardIssues, defaultCanvasWizard,
 import { withLocale, type Locale } from "@/lib/i18n";
 import { registerUnsavedNavigation } from "@/lib/unsaved-navigation";
 import LiveCanvas from "./live-canvas";
+import TagPicker from "./tag-picker";
+import { resolveBrowserTags } from "@/lib/tag-client";
 import styles from "./canvas-wizard.module.css";
 
 type Segment = { id: string; name: string };
@@ -26,12 +28,10 @@ export default function CanvasWizard({ canvasId, locale, notify, onBack, onUpdat
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [tags, setTags] = useState<string[]>([]);
-  const [tagInput, setTagInput] = useState("");
   const [tagOpen, setTagOpen] = useState(false);
   const [wizard, setWizard] = useState<CanvasWizardConfig>(structuredClone(defaultCanvasWizard));
   const [graph, setGraph] = useState<CanvasGraph>(structuredClone(initialCanvasGraph));
   const [segments, setSegments] = useState<Segment[]>([]);
-  const [existingTags, setExistingTags] = useState<string[]>([]);
   const [updatedAt, setUpdatedAt] = useState<string | null>(null);
   const updatedAtRef = useRef<string | null>(null);
   const graphSaveRef = useRef<(() => Promise<boolean>) | null>(null);
@@ -49,8 +49,7 @@ export default function CanvasWizard({ canvasId, locale, notify, onBack, onUpdat
     void Promise.all([
       local ? Promise.resolve({ canvas: local.canvas, graph: local.graph, updatedAt: local.canvas.updatedAt }) : fetch(`/api/canvases/${encodeURIComponent(canvasId)}`, { signal: controller.signal }).then(response => { if (!response.ok) throw new Error("Canvas not found."); return response.json(); }),
       fetch("/api/resources/segments", { signal: controller.signal }).then(response => response.json()),
-      fetch("/api/canvases", { signal: controller.signal }).then(response => response.json()),
-    ]).then(([result, segmentResult, canvasResult]) => {
+    ]).then(([result, segmentResult]) => {
       if (controller.signal.aborted) return;
       const record = result.canvas as CanvasRecord;
       const config = normalizeCanvasWizard(record.wizard);
@@ -60,7 +59,6 @@ export default function CanvasWizard({ canvasId, locale, notify, onBack, onUpdat
       setUpdatedAt(result.updatedAt); updatedAtRef.current = result.updatedAt;
       setBaseline(JSON.stringify({ name: record.name, description: record.description, tags: record.tags, wizard: config }));
       setSegments(Array.isArray(segmentResult.data) ? segmentResult.data : []);
-      setExistingTags([...new Set((canvasResult.data as CanvasRecord[] ?? []).flatMap(item => item.tags))]);
       setLoading(false);
     }).catch(cause => { if (!controller.signal.aborted) { setError(cause instanceof Error ? cause.message : "Could not load Canvas."); setLoading(false); } });
     return () => controller.abort();
@@ -85,14 +83,14 @@ export default function CanvasWizard({ canvasId, locale, notify, onBack, onUpdat
     try {
       if (saveGraph && graphSaveRef.current && !await graphSaveRef.current()) return false;
       let record: CanvasRecord;
-      if (browserDraft) record = patchBrowserCanvas(canvasId, { name, description, tags, wizard });
+      if (browserDraft) record = patchBrowserCanvas(canvasId, { name, description, tags: await resolveBrowserTags(tags), wizard });
       else {
         const response = await fetch(`/api/canvases/${encodeURIComponent(canvasId)}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, description, tags, wizard, updatedAt: updatedAtRef.current }) });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error ?? "Canvas save failed.");
         record = result as CanvasRecord;
       }
-      setCanvas(record); setUpdatedAt(record.updatedAt); updatedAtRef.current = record.updatedAt;
+      setCanvas(record); setTags(record.tags); setUpdatedAt(record.updatedAt); updatedAtRef.current = record.updatedAt;
       setBaseline(JSON.stringify({ name: record.name, description: record.description, tags: record.tags, wizard: record.wizard }));
       onUpdated(); notify("Canvas draft saved."); return true;
     } catch (cause) { setError(cause instanceof Error ? cause.message : "Canvas save failed."); return false; }
@@ -121,7 +119,6 @@ export default function CanvasWizard({ canvasId, locale, notify, onBack, onUpdat
     finally { setLaunching(false); }
   };
   const copyId = async () => { await navigator.clipboard.writeText(canvasId); notify("Canvas ID copied."); };
-  const addTag = (value: string) => { const clean = value.trim(); if (clean && !tags.includes(clean)) setTags(current => [...current, clean]); setTagInput(""); };
   const stepper = <nav className={styles.stepper} aria-label="Canvas creation steps">{canvasSteps.map((item, index) => <button key={item} className={`${styles.step} ${item === step ? styles.current : ""}`} onClick={() => void go(item)} aria-current={item === step ? "step" : undefined}><span>{index + 1}</span>{canvasStepLabels[item]}</button>)}</nav>;
 
   if (loading) return <div className={styles.message}>Loading Canvas…</div>;
@@ -132,7 +129,7 @@ export default function CanvasWizard({ canvasId, locale, notify, onBack, onUpdat
     {browserDraft && <p className={styles.browserNotice}>This Canvas draft is saved in this browser only. Simulation requires a persistent server database.</p>}
     {step !== "build" && stepper}
     {error && <div className={styles.error} role="alert">{error}</div>}
-    {step === "basics" && <div className={styles.card}><h2>Set Up Canvas Details</h2><label className={styles.field}>Canvas Name<input value={name} maxLength={120} onChange={event => setName(event.target.value)} aria-label="Canvas Name"/></label>{description || tagOpen ? <label className={styles.field}>Description<textarea value={description} onChange={event => setDescription(event.target.value)}/></label> : <button className={styles.addLink} onClick={() => setTagOpen(true)}><Plus size={18}/> Add description</button>}<div className={styles.tagArea}><button className={styles.outline} onClick={() => setTagOpen(value => !value)}>◆ Tags <ChevronDown size={16}/></button>{tagOpen && <div className={styles.tagPicker}><input aria-label="Add tag" placeholder="Search or create a tag" value={tagInput} onChange={event => setTagInput(event.target.value)} onKeyDown={event => { if (event.key === "Enter") { event.preventDefault(); addTag(tagInput); } }}/>{existingTags.filter(value => value.toLowerCase().includes(tagInput.toLowerCase()) && !tags.includes(value)).map(value => <button key={value} onClick={() => addTag(value)}>{value}</button>)}{tagInput.trim() && <button onClick={() => addTag(tagInput)}>+ Create &quot;{tagInput.trim()}&quot;</button>}</div>}{tags.length > 0 && <div className={styles.chips}>{tags.map(value => <button key={value} onClick={() => setTags(current => current.filter(tag => tag !== value))}>{value} <X size={13}/></button>)}</div>}</div><hr/><label className={styles.field}>Canvas ID<div className={styles.copyField}><input readOnly value={canvasId}/><button onClick={() => void copyId()}><Copy size={17}/> Copy</button></div></label><p className={styles.hint}>This is the unique key for this Canvas. Use it to identify which Canvas to send in a request to the Canvas Trigger API.</p><hr/><h2>Assign Conversion Events</h2><p>Define up to 4 conversion events to track for this Canvas. The conversion events must be assigned during Canvas creation, and cannot be changed once a Canvas has launched.</p>{wizard.conversionEvents.map((item, index) => <div className={styles.conversion} key={item.id}><div className={styles.sectionTop}><h3>{index === 0 ? "Primary" : "Secondary"} Conversion Event - {"ABCD"[index]}</h3><button disabled={canvas.status === "Active"} onClick={() => { if (window.confirm("Remove this conversion event?")) patchWizard({ conversionEvents: wizard.conversionEvents.filter(event => event.id !== item.id) }); }} aria-label="Remove Conversion Event"><X size={18}/></button></div><label className={styles.field}>Conversion event type<select disabled={canvas.status === "Active"} value={item.type} onChange={event => patchWizard({ conversionEvents: wizard.conversionEvents.map(entry => entry.id === item.id ? { ...entry, type: event.target.value } : entry) })}>{conversionTypes.map(value => <option key={value}>{value}</option>)}</select></label><label className={styles.field}>Apps and websites targeted<select disabled={canvas.status === "Active"} value={item.appScope} onChange={event => patchWizard({ conversionEvents: wizard.conversionEvents.map(entry => entry.id === item.id ? { ...entry, appScope: event.target.value } : entry) })}><option>Users from all apps</option><option>Web users</option><option>App users</option></select></label><label className={styles.field}>Conversion deadline<div className={styles.inline}><input disabled={canvas.status === "Active"} type="number" min="1" value={item.deadline} onChange={event => patchWizard({ conversionEvents: wizard.conversionEvents.map(entry => entry.id === item.id ? { ...entry, deadline: Number(event.target.value) } : entry) })}/><select disabled={canvas.status === "Active"} value={item.unit} onChange={event => patchWizard({ conversionEvents: wizard.conversionEvents.map(entry => entry.id === item.id ? { ...entry, unit: event.target.value as typeof item.unit } : entry) })}><option>Minutes</option><option>Hours</option><option>Days</option></select></div></label><small>Longest path inside Canvas: 0 seconds · Final conversion deadline: {item.deadline} {item.unit.toLowerCase()}</small></div>)}<button className={styles.outline} disabled={wizard.conversionEvents.length >= 4 || canvas.status === "Active"} onClick={() => patchWizard({ conversionEvents: [...wizard.conversionEvents, { id: crypto.randomUUID(), type: "Starts Session", appScope: "Users from all apps", deadline: 3, unit: "Days" }] })}><Plus size={17}/> Add Conversion Event</button></div>}
+    {step === "basics" && <div className={styles.card}><h2>Set Up Canvas Details</h2><label className={styles.field}>Canvas Name<input value={name} maxLength={120} onChange={event => setName(event.target.value)} aria-label="Canvas Name"/></label>{description || tagOpen ? <label className={styles.field}>Description<textarea value={description} onChange={event => setDescription(event.target.value)}/></label> : <button className={styles.addLink} onClick={() => setTagOpen(true)}><Plus size={18}/> Add description</button>}<TagPicker value={tags} onChange={setTags} locale={locale}/><hr/><label className={styles.field}>Canvas ID<div className={styles.copyField}><input readOnly value={canvasId}/><button onClick={() => void copyId()}><Copy size={17}/> Copy</button></div></label><p className={styles.hint}>This is the unique key for this Canvas. Use it to identify which Canvas to send in a request to the Canvas Trigger API.</p><hr/><h2>Assign Conversion Events</h2><p>Define up to 4 conversion events to track for this Canvas. The conversion events must be assigned during Canvas creation, and cannot be changed once a Canvas has launched.</p>{wizard.conversionEvents.map((item, index) => <div className={styles.conversion} key={item.id}><div className={styles.sectionTop}><h3>{index === 0 ? "Primary" : "Secondary"} Conversion Event - {"ABCD"[index]}</h3><button disabled={canvas.status === "Active"} onClick={() => { if (window.confirm("Remove this conversion event?")) patchWizard({ conversionEvents: wizard.conversionEvents.filter(event => event.id !== item.id) }); }} aria-label="Remove Conversion Event"><X size={18}/></button></div><label className={styles.field}>Conversion event type<select disabled={canvas.status === "Active"} value={item.type} onChange={event => patchWizard({ conversionEvents: wizard.conversionEvents.map(entry => entry.id === item.id ? { ...entry, type: event.target.value } : entry) })}>{conversionTypes.map(value => <option key={value}>{value}</option>)}</select></label><label className={styles.field}>Apps and websites targeted<select disabled={canvas.status === "Active"} value={item.appScope} onChange={event => patchWizard({ conversionEvents: wizard.conversionEvents.map(entry => entry.id === item.id ? { ...entry, appScope: event.target.value } : entry) })}><option>Users from all apps</option><option>Web users</option><option>App users</option></select></label><label className={styles.field}>Conversion deadline<div className={styles.inline}><input disabled={canvas.status === "Active"} type="number" min="1" value={item.deadline} onChange={event => patchWizard({ conversionEvents: wizard.conversionEvents.map(entry => entry.id === item.id ? { ...entry, deadline: Number(event.target.value) } : entry) })}/><select disabled={canvas.status === "Active"} value={item.unit} onChange={event => patchWizard({ conversionEvents: wizard.conversionEvents.map(entry => entry.id === item.id ? { ...entry, unit: event.target.value as typeof item.unit } : entry) })}><option>Minutes</option><option>Hours</option><option>Days</option></select></div></label><small>Longest path inside Canvas: 0 seconds · Final conversion deadline: {item.deadline} {item.unit.toLowerCase()}</small></div>)}<button className={styles.outline} disabled={wizard.conversionEvents.length >= 4 || canvas.status === "Active"} onClick={() => patchWizard({ conversionEvents: [...wizard.conversionEvents, { id: crypto.randomUUID(), type: "Starts Session", appScope: "Users from all apps", deadline: 3, unit: "Days" }] })}><Plus size={17}/> Add Conversion Event</button></div>}
     {step === "entrySchedule" && <EntryScheduleStep canvasId={canvasId} config={wizard.entry} onChange={patchEntry} onCopy={() => void copyId()}/>}
     {step === "audience" && <AudienceStep config={wizard.audience} onChange={patchAudience} segments={segments}/>}
     {step === "sendSettings" && <SendSettingsStep config={wizard.send} onChange={patchSend}/>}

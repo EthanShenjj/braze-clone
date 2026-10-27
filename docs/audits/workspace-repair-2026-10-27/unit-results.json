@@ -1,0 +1,6 @@
+{
+  "tests": 112,
+  "pass": 112,
+  "fail": 0,
+  "command": "node --experimental-transform-types --test tests/*.test.mjs"
+}

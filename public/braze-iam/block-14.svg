@@ -1,0 +1,6 @@
+<svg class="block-icon" width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#929296" d="M49 20H22C21.4477 20 21 20.4477 21 21V25C21 25.5523 21.4477 26 22 26H49C49.5523 26 50 25.5523 50 25V21C50 20.4477 49.5523 20 49 20Z"></path>
+            <rect fill="#929296" x="10" y="19" width="8" height="8" rx="1" stroke-width="2"></rect>
+            <path fill="#929296" d="M49 35H22C21.4477 35 21 35.4477 21 36V40C21 40.5523 21.4477 41 22 41H49C49.5523 41 50 40.5523 50 40V36C50 35.4477 49.5523 35 49 35Z"></path>
+            <rect fill="#929296" x="10" y="34" width="8" height="8" rx="1" stroke-width="2"></rect>
+          </svg>

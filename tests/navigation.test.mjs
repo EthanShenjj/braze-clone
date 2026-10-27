@@ -26,6 +26,7 @@ test("known deep links restore their intended page", () => {
   equal(pageFromPath("/users/subscription_groups/6aa75e37db69160082adb7ae"), "subscription-group-management");
   equal(pageFromPath("/users/subscription_groups/preference_centers/6aa75e37db69160082adb7ae"), "email-preference-centers");
   equal(pageFromPath("/engagement/global_message_settings/global-control-settings/6aa75e37db69160082adb7ae"), "global-control-group");
+  equal(pageFromPath("/engagement/global_message_settings/global-control-settings/6ad0b98fe4b4110085216601"), "global-control-group");
   equal(pageFromPath("/email-preferences"), "email-preferences");
   equal(pageFromPath(routeForPage("email-preferences").split("?")[0]), "email-preferences");
   for (const tab of ["sending_configuration", "subscription_pages_and_footers", "drag_and_drop_email", "link_aliasing", "bot_filtering", "ip_warming"]) {

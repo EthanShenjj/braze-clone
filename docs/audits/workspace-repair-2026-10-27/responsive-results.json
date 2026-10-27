@@ -1,0 +1,114 @@
+[
+  {
+    "viewport": [
+      1280,
+      800
+    ],
+    "path": "/feature-flags",
+    "overflow": false
+  },
+  {
+    "viewport": [
+      1280,
+      800
+    ],
+    "path": "/technology-partners",
+    "overflow": false
+  },
+  {
+    "viewport": [
+      1280,
+      800
+    ],
+    "path": "/cloud-data-ingestion",
+    "overflow": false
+  },
+  {
+    "viewport": [
+      1280,
+      800
+    ],
+    "path": "/email-performance",
+    "overflow": false
+  },
+  {
+    "viewport": [
+      1280,
+      800
+    ],
+    "path": "/content-calendar",
+    "overflow": false
+  },
+  {
+    "viewport": [
+      1280,
+      800
+    ],
+    "path": "/approval-workflow",
+    "overflow": false
+  },
+  {
+    "viewport": [
+      1280,
+      800
+    ],
+    "path": "/app-settings",
+    "overflow": false
+  },
+  {
+    "viewport": [
+      1920,
+      1080
+    ],
+    "path": "/feature-flags",
+    "overflow": false
+  },
+  {
+    "viewport": [
+      1920,
+      1080
+    ],
+    "path": "/technology-partners",
+    "overflow": false
+  },
+  {
+    "viewport": [
+      1920,
+      1080
+    ],
+    "path": "/cloud-data-ingestion",
+    "overflow": false
+  },
+  {
+    "viewport": [
+      1920,
+      1080
+    ],
+    "path": "/email-performance",
+    "overflow": false
+  },
+  {
+    "viewport": [
+      1920,
+      1080
+    ],
+    "path": "/content-calendar",
+    "overflow": false
+  },
+  {
+    "viewport": [
+      1920,
+      1080
+    ],
+    "path": "/approval-workflow",
+    "overflow": false
+  },
+  {
+    "viewport": [
+      1920,
+      1080
+    ],
+    "path": "/app-settings",
+    "overflow": false
+  }
+]

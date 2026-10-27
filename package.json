@@ -6,8 +6,11 @@
     "node": "22.x"
   },
   "scripts": {
+    "test:workspace": "node --experimental-transform-types --test tests/workspace-model.test.mjs",
     "dev": "next dev",
     "build": "next build",
+    "test:iam": "node --experimental-strip-types --test tests/in-app-model.test.mjs tests/in-app-runtime.test.mjs tests/in-app-traditional.test.mjs",
+    "test:tags": "node --experimental-strip-types --test tests/tag-system.test.mjs",
     "test:canvas": "node --experimental-strip-types --test tests/canvas-model.test.mjs tests/canvas-browser-store.test.mjs",
     "test:i18n": "node --experimental-strip-types --test tests/i18n.test.mjs",
     "test:navigation": "node --experimental-strip-types --test tests/navigation.test.mjs",
@@ -18,6 +21,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@beefree.io/sdk": "^11.7.1",
     "@types/node": "^22.10.2",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",

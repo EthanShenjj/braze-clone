@@ -1,0 +1,86 @@
+[
+  {
+    "description": "Build your email list and show off your brand style with one simple message.",
+    "name": "Email sign-up with background image",
+    "src": "blob:https://us09.bz-rndr.com/1a6ed54b-5a9d-42f4-943f-a8b5e16772e0",
+    "htmls": []
+  },
+  {
+    "description": "Generate high quality email leads by introducing a confirmation flow.",
+    "name": "Email sign-up with confirmation page",
+    "src": "blob:https://us09.bz-rndr.com/9bfcecd6-6716-4806-88d5-8287f2c46346",
+    "htmls": []
+  },
+  {
+    "description": "Build your email list by offering a special discount on sign-up.",
+    "name": "Email sign-up with special offer",
+    "src": "blob:https://us09.bz-rndr.com/1a1f197e-3537-412d-b12f-382c4cc669c1",
+    "htmls": []
+  },
+  {
+    "description": "Build your email list by offering a discount for new subscribers.",
+    "name": "Email sign-up with welcome discount",
+    "src": "blob:https://us09.bz-rndr.com/59c0bc08-4f67-4520-8df9-32b7ec48bce6",
+    "htmls": []
+  },
+  {
+    "description": "Welcome new users, guide them through benefits, and drive action with a compelling CTA.",
+    "name": "Onboarding flow",
+    "src": "blob:https://us09.bz-rndr.com/49905164-4720-4cf9-898d-dd55c4aca33e",
+    "htmls": []
+  },
+  {
+    "description": "Boost awareness of new product launches.",
+    "name": "Product announcement",
+    "src": "blob:https://us09.bz-rndr.com/86c0e998-c284-4dc7-a1e2-52e4ae18a682",
+    "htmls": []
+  },
+  {
+    "description": "Help increase push opt-ins by explaining the types of messages users can expect before displaying the native push prompt.",
+    "name": "Push primer",
+    "src": "blob:https://us09.bz-rndr.com/4dff3a99-a189-455d-8991-0e403403ad9b",
+    "htmls": []
+  },
+  {
+    "description": "Promote a seasonal offer or deal to drive user engagement.",
+    "name": "Seasonal promo with background image",
+    "src": "blob:https://us09.bz-rndr.com/d4180a47-311e-4e72-97ba-186375cc8711",
+    "htmls": []
+  },
+  {
+    "description": "Background image with buttons",
+    "name": "Background image",
+    "src": "blob:https://us09.bz-rndr.com/74bb850d-06dc-4c7c-953b-9ec8797c33fc",
+    "htmls": []
+  },
+  {
+    "description": "Simple layout with image, text, and buttons",
+    "name": "Basic",
+    "src": "blob:https://us09.bz-rndr.com/96c8d318-6848-42af-9467-9d13dfb32dac",
+    "htmls": []
+  },
+  {
+    "description": "Collect email addresses to grow your subscriber list",
+    "name": "Email sign-up",
+    "src": "blob:https://us09.bz-rndr.com/cda74b5c-2634-4f5d-b1fc-b9df4a66c173",
+    "htmls": []
+  },
+  {
+    "description": "Collect phone numbers with ease",
+    "name": "SMS sign-up",
+    "src": "blob:https://us09.bz-rndr.com/55515989-69ba-47b0-9708-94eb7af80fe0",
+    "htmls": []
+  },
+  {
+    "description": "Collect phone numbers to grow your WhatsApp subscribers",
+    "name": "WhatsApp sign-up",
+    "src": "blob:https://us09.bz-rndr.com/e9123629-333a-4b55-a355-6aa8428a9427",
+    "htmls": []
+  },
+  {
+    "description": "Blank canvas ready for your creations",
+    "name": "Blank",
+    "src": "blob:https://us09.bz-rndr.com/ed00f6de-2cb7-4bd8-92f4-4caa4bc5b829",
+    "htmls": []
+  }
+]

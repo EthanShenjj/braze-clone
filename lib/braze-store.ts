@@ -1,6 +1,11 @@
 import "server-only";
+import { validateModule, workspaceModules, objectValue, evaluateFlag, stableBucket } from "./workspace-modules";
+import { prepareInAppPreview, validateInAppSnapshot } from "./in-app-runtime";
+import { variantsFor as inAppVariants } from "./in-app-model";
+import { initializeTags, assignTags, listTags, listTagAliases, createTag, changeTag, tagCampaigns } from "./tag-store";
 
 import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
+import { globalControlCohort, hasGlobalControlExemption, normalizeGlobalControl, validateGlobalControlCommand, type GlobalControlSettings, type GlobalControlSnapshot } from "./global-control-model";
 import { mkdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -12,6 +17,7 @@ import { normalizeWhatsAppVariants, customWhatsAppTemplates, prepareWhatsAppMess
 import { compileWorkspaceEmail, emailSendingIssues, extractEmailLinks, isBotClick } from "./email-runtime";
 import { resolveLiquidPreview, type WorkspaceLiquid } from "./email-editor-model";
 import { campaignValidationIssues } from "./campaign-validation";
+import { compileLineMessages } from "./line-model";
 import { initialCanvasGraph, isCanvasGraph, type CanvasGraph, type CanvasRun, type CanvasTrace, validateCanvasGraph } from "./canvas-model";
 import { canvasWizardIssues, defaultCanvasWizard, normalizeCanvasWizard, type CanvasFilter, type CanvasWizardConfig } from "./canvas-wizard-model";
 import { sampleCatalogId, sampleCatalogRows, sampleRecommendationId } from "./sample-catalog";
@@ -28,7 +34,7 @@ export type CampaignRecord = {
   edited: string; subject?: string; body?: string; audience?: string; conversion?: string; config: Record<string, unknown>;
 };
 export type ResourceRecord = { id: string; type: string; name: string; status: string; description: string; updatedAt: string; data: Record<string, unknown> };
-export type UserRecord = { id: string; email: string; firstName: string; country: string; lifecycle: string; subscribed: boolean; emailSubscriptionStatus: "opted_in" | "subscribed" | "unsubscribed"; reachable: boolean; attributes: Record<string, unknown> };
+export type UserRecord = { id: string; email: string; firstName: string; country: string; lifecycle: string; subscribed: boolean; emailSubscriptionStatus: "opted_in" | "subscribed" | "unsubscribed"; reachable: boolean; attributes: Record<string, unknown>; globalControlGroup?: boolean };
 export type CatalogSelectionRecord = {
   catalogId: string; name: string; description: string; filters: CatalogFilter[];
   randomSort: boolean; sortField: string; sortDirection: string; resultLimit: number; updatedAt: string;
@@ -168,6 +174,7 @@ function db() {
   database.exec("INSERT OR IGNORE INTO preference_center_versions (center_id, version, name, status, config_json, created_at, group_ids_json, description) SELECT id, version, name, status, config_json, updated_at, group_ids_json, description FROM preference_centers");
   database.exec("UPDATE preference_centers SET published_version = version WHERE status = 'Active' AND published_version IS NULL");
   seedSampleCatalog(database);
+  initializeTags(database);
   return database;
 }
 
@@ -311,6 +318,7 @@ export function upsertCampaign(input: Partial<CampaignRecord> & Pick<CampaignRec
     if (!current) record.config = { ...emailPreferenceCampaignDefaults(preferences), ...record.config };
     const issues = emailSendingIssues(record, preferences); if (issues.length) throw new Error(issues.join(" "));
   }
+  record.config = { ...record.config, tags: assignTags(conn, record.config.tags, "campaign") };
   conn.prepare(`INSERT INTO campaigns (id,name,channel,status,schedule,sent,edited_at,subject,body,audience,conversion_event,config_json)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET name=excluded.name, channel=excluded.channel, status=excluded.status, schedule=excluded.schedule, sent=excluded.sent, edited_at=excluded.edited_at, subject=excluded.subject, body=excluded.body, audience=excluded.audience, conversion_event=excluded.conversion_event, config_json=excluded.config_json`).run(record.id, record.name, record.channel, record.status, record.schedule, record.sent, record.edited, record.subject ?? null, record.body ?? null, record.audience ?? null, record.conversion ?? null, JSON.stringify(record.config));
@@ -343,11 +351,14 @@ function audienceFilterClauses(filters: AudienceFilter[]) {
   for (const filter of filters) {
     if (!filter.value) continue;
     const operator = filter.operator;
-    if (filter.field === "country") { clauses.push(operator === "not_equals" ? "u.country != ?" : "u.country = ?"); values.push(filter.value); }
-    else if (filter.field === "lifecycle") { clauses.push(operator === "not_equals" ? "u.lifecycle != ?" : "u.lifecycle = ?"); values.push(filter.value); }
-    else if (filter.field === "subscribed") { clauses.push("u.subscribed = ?"); values.push(String(filter.value) === "true" ? 1 : 0); }
-    else if (filter.field === "email") { clauses.push("instr(lower(u.email), lower(?)) > 0"); values.push(filter.value); }
-    else if (filter.field.startsWith("attr:")) { const key = filter.field.slice(5).replace(/'/g, ""); clauses.push(`json_extract(u.attributes_json, '$.${key}') = ?`); values.push(filter.value); }
+    const columns: Record<string, string> = { country: "u.country", lifecycle: "u.lifecycle", email: "u.email" };
+    if (filter.field === "subscribed") { clauses.push(operator === "not_equals" ? "u.subscribed != ?" : "u.subscribed = ?"); values.push(String(filter.value) === "true" ? 1 : 0); }
+    else if (columns[filter.field] || filter.field.startsWith("attr:")) {
+      const expression = columns[filter.field] ?? "CAST(json_extract(u.attributes_json, ?) AS TEXT)";
+      if (!columns[filter.field]) values.push(`$.${JSON.stringify(filter.field.slice(5))}`);
+      clauses.push(operator === "contains" ? `instr(lower(COALESCE(${expression}, '')), lower(?)) > 0` : `lower(COALESCE(${expression}, '')) ${operator === "not_equals" ? "!=" : "="} lower(?)`);
+      values.push(filter.value);
+    }
   }
   return { clauses, values };
 }
@@ -376,7 +387,98 @@ function subscriptionCondition(channel: Channel, eligibility: string, groupId?: 
   return "1 = 1";
 }
 
-export function estimateAudience(audience = "All Users", country?: string, excludeCountry?: string, eligibility = "subscribed", subscriptionGroupId?: string, filters: AudienceFilter[] = [], channel: Channel = "email") {
+function globalControlRecord() {
+  const records = listResources("global-control-group");
+  return records.find(record => record.id === "workspace_global_control") ?? records[0];
+}
+
+function globalControlSettings() {
+  const record = globalControlRecord();
+  return normalizeGlobalControl(record?.data, record ? `legacy:${record.id}` : undefined);
+}
+
+function userGlobalCohort(userId: string, settings: GlobalControlSettings) {
+  const bucket = createHash("sha256").update(`${settings.seed}:${userId}`).digest().readUInt32BE(0) / 0x100000000;
+  return globalControlCohort(settings, bucket);
+}
+
+function heldByGlobalControl(userId: string, settings: GlobalControlSettings, tags: unknown, channel?: string) {
+  return !hasGlobalControlExemption(settings, tags, channel) && userGlobalCohort(userId, settings) === "control";
+}
+
+function activeEngagementTags() {
+  const campaigns = (db().prepare("SELECT * FROM campaigns WHERE status = 'Active' AND archived_at IS NULL").all() as Record<string, unknown>[]).map(mapCampaign);
+  const tags = campaigns.flatMap(campaign => Array.isArray(campaign.config.tags) ? campaign.config.tags.filter((tag): tag is string => typeof tag === "string") : []);
+  tags.push(...listResources("canvas").filter(canvas => canvas.status === "Active").flatMap(canvas => Array.isArray(canvas.data.tags) ? canvas.data.tags.filter((tag): tag is string => typeof tag === "string") : []));
+  return [...new Set(tags)].sort((a, b) => a.localeCompare(b));
+}
+
+export function getGlobalControlSnapshot(): GlobalControlSnapshot {
+  const record = globalControlRecord();
+  const settings = normalizeGlobalControl(record?.data, record ? `legacy:${record.id}` : undefined);
+  const users = db().prepare("SELECT id FROM users").all() as { id: string }[];
+  let control = 0; let sample = 0;
+  for (const user of users) {
+    const cohort = userGlobalCohort(user.id, settings);
+    if (cohort === "control") control++;
+    if (cohort === "sample") sample++;
+  }
+  const { seed: _seed, ...publicSettings } = settings;
+  return { settings: publicSettings, counts: { total: users.length, control, treatment: users.length - control, sample }, availableTags: activeEngagementTags(), updatedAt: record?.updatedAt ?? null };
+}
+
+export function saveGlobalControl(command: unknown, expectedUpdatedAt: unknown) {
+  validateGlobalControlCommand(command);
+  const conn = db();
+  conn.exec("BEGIN IMMEDIATE");
+  try {
+    const record = globalControlRecord();
+    if ((record?.updatedAt ?? null) !== expectedUpdatedAt) throw new Error("Global Control Group changed in another tab. Reload before saving.");
+    const current = normalizeGlobalControl(record?.data, record ? `legacy:${record.id}` : undefined);
+    let settings = { ...current };
+    if (command.action === "enable") {
+      if (current.enabled) throw new Error("Disable the current Global Control Group before changing its percentage.");
+      settings = { ...current, enabled: true, percentage: command.percentage, seed: randomBytes(24).toString("hex"), enabledAt: now() };
+    } else if (command.action === "disable") {
+      settings = { ...current, enabled: false, percentage: null, seed: null, enabledAt: null };
+    } else {
+      const available = new Set([...activeEngagementTags(), ...current.exclusionTags]);
+      const tags = [...new Set(command.exclusionTags.map(tag => tag.trim()))];
+      if (tags.some(tag => !available.has(tag))) throw new Error("Exclusion tags must be applied to an active campaign or Canvas first.");
+      settings.exclusionTags = tags;
+    }
+    // A monotonic revision prevents two same-millisecond updates sharing a token.
+    const updatedAt = new Date(Math.max(Date.now(), new Date(record?.updatedAt ?? 0).getTime() + 1)).toISOString();
+    conn.prepare("INSERT INTO resources VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET status=excluded.status, updated_at=excluded.updated_at, data_json=excluded.data_json")
+      .run("workspace_global_control", "global-control-group", "Global Control Group", settings.enabled ? "Active" : "Draft", "Workspace Global Control Group", updatedAt, JSON.stringify(settings));
+    audit("global_control_group", "workspace_global_control", command.action, { percentage: settings.percentage, exclusionTags: settings.exclusionTags });
+    conn.exec("COMMIT");
+    return getGlobalControlSnapshot();
+  } catch (error) { conn.exec("ROLLBACK"); throw error; }
+}
+
+export function exportGlobalControlMembers() {
+  const settings = globalControlSettings();
+  if (!settings.enabled) throw new Error("Enable a Global Control Group before exporting members.");
+  return (db().prepare("SELECT id FROM users ORDER BY id").all() as { id: string }[]).filter(user => userGlobalCohort(user.id, settings) === "control").map(user => user.id);
+}
+
+export function globalControlReport(days = 30) {
+  const snapshot = getGlobalControlSnapshot();
+  const settings = globalControlSettings();
+  const deliveries = { control: 0, treatment: 0, sample: 0 };
+  if (settings.enabled) {
+    const since = new Date(Date.now() - Math.max(1, Math.min(365, Number.isFinite(days) ? days : 30)) * 86400000).toISOString();
+    const rows = db().prepare("SELECT json_extract(data_json, '$.globalControlCohort') AS cohort, count(*) AS count FROM message_events WHERE event_type = 'delivered' AND created_at >= ? AND json_extract(data_json, '$.globalControlGeneration') = ? GROUP BY cohort").all(since, settings.seed) as Array<{ cohort: string; count: number }>;
+    for (const row of rows) {
+      if (row.cohort === "control") deliveries.control = row.count;
+      else { deliveries.treatment += row.count; if (row.cohort === "sample") deliveries.sample = row.count; }
+    }
+  }
+  return { ...snapshot, deliveries };
+}
+
+export function estimateAudience(audience = "All Users", country?: string, excludeCountry?: string, eligibility = "subscribed", subscriptionGroupId?: string, filters: AudienceFilter[] = [], channel: Channel = "email", engagement?: { tags?: unknown }) {
   subscriptionGroupForChannel(subscriptionGroupId, channel);
   const audienceRule = audienceCondition(audience);
   const clauses: string[] = audienceRule.sql === "1 = 1" ? [] : [audienceRule.sql];
@@ -391,7 +493,9 @@ export function estimateAudience(audience = "All Users", country?: string, exclu
   const membership = subscriptionGroupId ? "LEFT JOIN subscription_group_memberships m ON m.user_id = u.id AND m.group_id = ?" : "";
   const result = db().prepare(`SELECT count(*) AS matching, sum(CASE WHEN ${eligible} THEN 1 ELSE 0 END) AS reachable FROM users u ${membership} ${where}`).get(...(subscriptionGroupId ? [subscriptionGroupId] : []), ...values) as { matching: number; reachable: number | null };
   const workspace = db().prepare("SELECT count(*) AS total FROM users").get() as { total: number };
-  return { matching: result.matching, reachable: result.reachable ?? 0, total: workspace.total };
+  const settings = globalControlSettings();
+  const excluded = engagement && settings.enabled ? (db().prepare(`SELECT u.id FROM users u ${membership} ${where}${where ? " AND" : "WHERE"} ${eligible}`).all(...(subscriptionGroupId ? [subscriptionGroupId] : []), ...values) as { id: string }[]).filter(user => heldByGlobalControl(user.id, settings, engagement.tags, channel)).length : 0;
+  return { matching: result.matching, reachable: (result.reachable ?? 0) - excluded, total: workspace.total, globalControlExcluded: excluded };
 }
 
 function mapUser(row: Record<string, unknown>): UserRecord {
@@ -400,12 +504,13 @@ function mapUser(row: Record<string, unknown>): UserRecord {
 
 export function searchUsers(query = "", start = 0, limit = 20) {
   const offset = Number.isFinite(start) ? Math.max(0, Math.floor(start)) : 0;
-  const pageSize = Number.isFinite(limit) ? Math.min(100, Math.max(1, Math.floor(limit))) : 20;
+  const pageSize = Number.isFinite(limit) ? Math.min(1000, Math.max(1, Math.floor(limit))) : 20;
   const term = query.trim().toLowerCase();
   const condition = "instr(lower(id), ?) > 0 OR instr(lower(email), ?) > 0 OR instr(lower(first_name), ?) > 0";
   const total = (db().prepare(`SELECT count(*) AS count FROM users WHERE ${condition}`).get(term, term, term) as { count: number }).count;
   const rows = db().prepare(`SELECT * FROM users WHERE ${condition} ORDER BY CAST(SUBSTR(id, 6) AS INTEGER) LIMIT ? OFFSET ?`).all(term, term, term, pageSize, offset) as Record<string, unknown>[];
-  return { data: rows.map(mapUser), total, start: offset, limit: pageSize };
+  const settings = globalControlSettings();
+  return { data: rows.map(row => ({ ...mapUser(row), globalControlGroup: userGlobalCohort(String(row.id), settings) === "control" })), total, start: offset, limit: pageSize };
 }
 
 export function listUserAttributeNames() {
@@ -685,7 +790,9 @@ function recordBlockedWebhook(campaignId: string, userId: string, variant: Webho
   return { url, method: variant.method, requestHeaders: redactHeaders(variant.headers), requestBody: variant.body, attempts: [{ attempt: 1, statusCode: null, outcome: "blocked" as const, responseBody: "", error, durationMs: 0 }], delivered: false };
 }
 
-export async function launchCampaign(id: string) {
+type LaunchRun = { id: string; eligible: number; delivered: number; failed: number; deferred?: number; frequencyCapped?: number; suppressionListHits?: number; quietHoursDeferred?: boolean; alreadyLaunched?: boolean; children?: Array<{ campaignId: string; channel: string; run: LaunchRun }> };
+type CampaignLaunchResult = { campaign: CampaignRecord | null; run: LaunchRun };
+export async function launchCampaign(id: string, approvedParentId?: string): Promise<CampaignLaunchResult> {
   const conn = db(); const campaign = getCampaign(id);
   if (!campaign) throw new Error("Campaign not found");
   if (campaign.status === "Active") {
@@ -693,7 +800,13 @@ export async function launchCampaign(id: string) {
     return { campaign, run: { id: latest?.id ?? "existing", eligible: latest?.eligible_count ?? 0, delivered: latest?.delivered_count ?? 0, failed: latest?.failed_count ?? 0, alreadyLaunched: true } };
   }
   const issues = [...campaignValidationIssues(campaign), ...(campaign.channel === "email" ? emailSendingIssues(campaign, getEmailPreferences().data) : [])];
+  assertWorkspaceApproval("campaign", approvedParentId ?? id);
   if (issues.length) throw new Error(issues.join(" "));
+  if (["multichannel", "operator"].includes(campaign.channel)) return launchMultichannelCampaign(campaign);
+  if (campaign.channel === "iam") inAppVariants(campaign).forEach(validateInAppSnapshot);
+  const experimentFlag = campaign.channel === "feature" ? listResources("feature-flags").find(r => r.data.flagId === campaign.subject && r.status !== "Archived") : undefined;
+  if (campaign.channel === "feature" && !experimentFlag) throw new Error("Select a saved Feature Flag before launching an experiment.");
+  if (experimentFlag && Number(experimentFlag.data.rollout ?? 0) > 0) throw new Error("Set the Feature Flag's Everyone else rollout to 0 before starting an experiment.");
   const audience = audienceCondition(campaign.audience ?? "All Users");
   const segmentFilters = savedSegmentFilters(campaign.audience);
   const filterClauses = audienceFilterClauses(segmentFilters);
@@ -716,10 +829,13 @@ export async function launchCampaign(id: string) {
   const freqRules = freqData.enabled === true ? (freqData.rules ?? []).filter(rule => rule.limit > 0) : [];
   const freqCappedUsers = new Set<string>();
   for (const rule of freqRules) {
+    const ruleChannel = rule.kind === "In-app message" ? "iam" : rule.kind.toLowerCase();
+    if (rule.kind !== "All channels" && ruleChannel !== campaign.channel) continue;
     const windowMs = rule.window === "per week" ? 7 * 86400000 : rule.window === "per month" ? 30 * 86400000 : 86400000;
     const cutoff = new Date(Date.now() - windowMs).toISOString();
     const channelClause = rule.kind === "All channels" ? "" : " AND channel = ?";
-    const rows = conn.prepare(`SELECT user_id, count(*) AS sent FROM message_events WHERE event_type = 'delivered' AND created_at >= ?${channelClause} GROUP BY user_id`).all(cutoff, ...(rule.kind === "All channels" ? [] : [rule.kind])) as Array<{ user_id: string; sent: number }>;
+    const channel = rule.kind === "In-app message" ? "iam" : rule.kind.toLowerCase();
+    const rows = conn.prepare(`SELECT user_id, count(*) AS sent FROM message_events WHERE event_type = 'delivered' AND created_at >= ?${channelClause} GROUP BY user_id`).all(cutoff, ...(rule.kind === "All channels" ? [] : [channel])) as Array<{ user_id: string; sent: number }>;
     for (const row of rows) if (row.sent >= rule.limit) freqCappedUsers.add(row.user_id);
   }
   const controlGroup = Math.min(100, Math.max(0, Number(campaign.config.controlGroup ?? 20)));
@@ -730,7 +846,8 @@ export async function launchCampaign(id: string) {
     if (campaign.channel === "sms" || campaign.channel === "whatsapp") return user.subscription_state === "subscribed";
     return true;
   };
-  const eligible = users.filter(user => user.reachable && subscribed(user));
+  const globalSettings = globalControlSettings();
+  const eligible = users.filter(user => user.reachable && subscribed(user) && !heldByGlobalControl(user.id, globalSettings, campaign.config.tags, campaign.channel));
   // Quiet hours defer deliveries whose designated send time falls inside the window.
   const delivery = (campaign.config.delivery ?? {}) as Record<string, unknown>;
   const quietActive = delivery.quietHours === true && typeof delivery.quietStart === "string" && typeof delivery.quietEnd === "string";
@@ -746,18 +863,29 @@ export async function launchCampaign(id: string) {
   const webhookVariants = campaign.channel === "webhook" ? normalizeWebhookVariants(campaign) : [];
   for (const user of users) {
     const deliverable = user.reachable && subscribed(user);
-    const inControl = deliverable && createHash("sha256").update(`${id}:${user.id}`).digest()[0] / 256 * 100 < controlGroup;
+    const globalHeld = heldByGlobalControl(user.id, globalSettings, campaign.config.tags, campaign.channel);
+    const inControl = deliverable && !globalHeld && createHash("sha256").update(`${campaign.config.holdoutSeed ?? id}:${user.id}`).digest()[0] / 256 * 100 < controlGroup;
     let eventType = !deliverable ? subscribed(user) ? "unreachable" : "suppressed"
+      : globalHeld ? "global_control"
       : isSuppressed(user.email) ? "suppressed"
       : freqCappedUsers.has(user.id) ? "frequency_capped"
       : inControl ? "control"
       : (campaign.channel === "webhook" ? webhookProcessed : delivered) >= maxUsers ? "held_back"
-      : quietDeferred ? "deferred"
+      : quietDeferred || workspaceRateLimited(timestamp) ? "deferred"
       : "delivered";
     if (eventType === "suppressed" && deliverable) suppressedCount += 1;
     if (eventType === "frequency_capped") frequencyCapped += 1;
     if (eventType === "deferred") deferredCount += 1;
-    let eventData: Record<string, unknown> = { runId };
+    let eventData: Record<string, unknown> = { runId, globalControlGeneration: globalSettings.enabled ? globalSettings.seed : null, globalControlCohort: userGlobalCohort(user.id, globalSettings) };
+    if (experimentFlag && ["delivered", "control"].includes(eventType)) {
+      const rollout = Number((campaign.config.channelValues as Record<string, unknown> | undefined)?.rollout ?? 50);
+      const enabled = eventType === "delivered" && stableBucket(`${id}:${user.id}:feature`) < rollout;
+      const properties = objectValue(JSON.parse(campaign.body || "{}"));
+      const existing = listResources("feature-assignments").find(r => r.data.flagId === experimentFlag.data.flagId && r.data.userId === user.id && r.data.campaignId === id);
+      const data = { flagId: experimentFlag.data.flagId, userId: user.id, campaignId: id, enabled, properties: { ...objectValue(experimentFlag.data.properties), ...properties }, assignedAt: timestamp };
+      if (existing) updateResource(existing.id, { data }); else createResource({ type: "feature-assignments", name: String(experimentFlag.data.flagId), status: "Active", data });
+      eventData = { ...eventData, featureFlag: data.flagId, featureEnabled: enabled };
+    }
     if (eventType === "delivered" && campaign.channel === "webhook") {
       webhookProcessed += 1;
       const hash = createHash("sha256").update(`${id}:${user.id}:variant`).digest()[0];
@@ -782,6 +910,10 @@ export async function launchCampaign(id: string) {
       try { const profile = getUser(user.id); const variants = normalizeWhatsAppVariants(campaign); const index = createHash("sha256").update(`${id}:${user.id}:variant`).digest()[0] % variants.length; eventData = { ...eventData, simulated: true, variantId: variants[index].id, message: prepareWhatsAppMessage(variants[index], customWhatsAppTemplates(campaign), { ...profile?.attributes, first_name: profile?.firstName, country: profile?.country, user_id: user.id }) }; }
       catch (cause) { eventType = "failed"; eventData = { ...eventData, simulated: true, error: cause instanceof Error ? cause.message : "WhatsApp rendering failed." }; }
     }
+    if (eventType === "delivered" && campaign.channel === "line") {
+      try { const profile = getUser(user.id); eventData = { ...eventData, simulated: true, messages: compileLineMessages(campaign, { ...profile?.attributes, first_name: profile?.firstName, email: profile?.email, user_id: user.id }) }; }
+      catch (cause) { eventType = "failed"; eventData = { ...eventData, error: cause instanceof Error ? cause.message : "LINE compilation failed." }; }
+    }
     insertEvent.run(uid("evt"), id, campaign.channel, user.id, eventType, timestamp, JSON.stringify(eventData));
     if (eventType === "delivered") {
       delivered += 1;
@@ -795,6 +927,35 @@ export async function launchCampaign(id: string) {
   conn.prepare("UPDATE campaigns SET status = 'Active', sent = sent + ?, edited_at = ? WHERE id = ?").run(delivered, timestamp, id);
   audit("campaign", id, "launched", { runId, eligible: eligible.length, delivered, failed, deferred: deferredCount, frequencyCapped, suppressionListHits: suppressedCount });
   return { campaign: getCampaign(id), run: { id: runId, eligible: eligible.length, delivered, failed, deferred: deferredCount, frequencyCapped, suppressionListHits: suppressedCount, quietHoursDeferred: quietDeferred } };
+}
+
+async function launchMultichannelCampaign(parent: CampaignRecord): Promise<CampaignLaunchResult> {
+  const values = objectValue(parent.config.channelValues); const labels = values.channels as string[];
+  const content = objectValue(values.channelContent); const links = objectValue(values.childCampaignIds);
+  const channels: Record<string, Channel> = { Email: "email", "Push notification": "push", "In-app message": "iam", SMS: "sms", WhatsApp: "whatsapp" };
+  const children = labels.map(label => {
+    const channel = channels[label]; if (!channel) throw new Error(`Unsupported delivery channel: ${label}.`);
+    const source = links[label] ? getCampaign(String(links[label])) : null;
+    if (links[label] && (!source || source.channel !== channel)) throw new Error(`Select an existing ${label} Campaign.`);
+    const config = { ...(channel === "email" ? emailPreferenceCampaignDefaults(getEmailPreferences().data) : {}), ...source?.config, delivery: parent.config.delivery ?? source?.config.delivery, controlGroup: parent.config.controlGroup ?? 0, holdoutSeed: parent.id, audienceCountry: parent.config.audienceCountry, audienceExcludeCountry: parent.config.audienceExcludeCountry, limitVolume: parent.config.limitVolume, maxUsers: parent.config.maxUsers, tags: parent.config.tags };
+    const child: CampaignRecord = { id: `cmp_multi_${createHash("sha256").update(`${parent.id}:${channel}`).digest("hex").slice(0, 16)}`, name: `${parent.name} · ${label}`, channel, status: "Draft", schedule: parent.schedule, audience: parent.audience, subject: source?.subject ?? parent.subject ?? parent.name, body: source?.body ?? String(content[label] ?? ""), conversion: parent.conversion, sent: 0, edited: now(), config };
+    const issues = [...campaignValidationIssues(child), ...(channel === "email" ? emailSendingIssues(child, getEmailPreferences().data) : [])];
+    if (["sms", "whatsapp"].includes(channel)) subscriptionGroupForChannel(String(child.config.subscriptionGroupId ?? ""), channel);
+    if (["sms", "whatsapp"].includes(channel) && !child.config.subscriptionGroupId) issues.push(`Select a configured ${label} Campaign with a subscription group.`);
+    if (issues.length) throw new Error(`${label}: ${issues.join(" ")}`);
+    return child;
+  });
+  let eligible = 0, delivered = 0, failed = 0, deferred = 0; const childRuns = [];
+  for (const child of children) {
+    upsertCampaign(child); const result = await launchCampaign(child.id, parent.id);
+    eligible += result.run.eligible; delivered += result.run.delivered; failed += result.run.failed; deferred += "deferred" in result.run ? Number(result.run.deferred) : 0; childRuns.push({ campaignId: child.id, channel: child.channel, run: result.run });
+  }
+  const id = uid("run"); const timestamp = now();
+  db().prepare("INSERT INTO execution_runs VALUES (?, ?, ?, ?, ?, ?, ?, ?)").run(id, parent.id, "completed", eligible, delivered, failed, timestamp, JSON.stringify({ parent, children: childRuns }));
+  db().prepare("UPDATE campaigns SET status = 'Active', sent = sent + ?, edited_at = ? WHERE id = ?").run(delivered, timestamp, parent.id);
+  createResource({ type: "multichannel-runs", name: parent.name, status: "Completed", data: { campaignId: parent.id, children: childRuns, delivered, failed, deferred } });
+  audit("campaign", parent.id, "multichannel_launched", { children: children.map(c => c.id), delivered, failed });
+  return { campaign: getCampaign(parent.id), run: { id, eligible, delivered, failed, deferred, children: childRuns } };
 }
 
 export async function sendTestCampaign(id: string, input: { recipient?: string; mode?: "random" | "existing" | "custom"; customUser?: Record<string, unknown>; variantId?: string; locale?: string } | string = {}) {
@@ -822,13 +983,33 @@ export async function sendTestCampaign(id: string, input: { recipient?: string; 
     audit("campaign", id, "webhook_test_sent", { recipient, delivered: result.delivered, statusCode: result.attempts.at(-1)?.statusCode ?? null });
     return { recipient, campaign: campaign.name, channel: campaign.channel, createdAt: timestamp, webhook: safeResult, capability: webhookDeliveryCapability() };
   }
+  if (campaign.channel === "iam") return prepareInAppTest({ campaignId: id, variant: inAppVariants(campaign).find(item => item.id === options.variantId) ?? inAppVariants(campaign)[0], recipients: [recipient], profile: options.customUser ?? {}, override: options.mode === "custom" });
   if (campaign.channel === "whatsapp") return prepareWhatsAppTest({ campaignId: id, config: campaign.config, recipients: [recipient], variantId: options.variantId, profile: options.customUser ?? {}, override: options.mode === "custom" });
-  const issues = campaign.channel === "email" ? emailSendingIssues(campaign, getEmailPreferences().data) : []; if (issues.length) throw new Error(issues.join(" "));
+  const issues = campaign.channel === "email" ? emailSendingIssues(campaign, getEmailPreferences().data) : campaign.channel === "line" ? campaignValidationIssues(campaign) : []; if (issues.length) throw new Error(issues.join(" "));
   const previewUser = options.mode === "random" ? randomCatalogPreviewUser() : searchUsers(recipient, 0, 1).data[0];
-  const message = campaign.channel === "email" ? prepareEmailMessage(campaign, previewUser?.id ?? "", "test", options.customUser) : undefined;
+  const message = campaign.channel === "email" ? prepareEmailMessage(campaign, previewUser?.id ?? "", "test", options.customUser) : campaign.channel === "line" ? { messages: compileLineMessages(campaign, { ...previewUser?.attributes, first_name: previewUser?.firstName, user_id: previewUser?.id, ...options.customUser }) } : undefined;
   db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), id, campaign.channel, "test_user", "test_prepared", timestamp, JSON.stringify({ test: true, recipient, simulated: true, message }));
   audit("campaign", id, "test_sent", { recipient });
   return { recipient, campaign: campaign.name, channel: campaign.channel, createdAt: timestamp, message, capability: { mode: "simulation", delivered: false, reason: "No email provider is configured. The compiled test message is available for preview." } };
+}
+
+// IAM tests prepare an unsaved snapshot and record evidence; no Braze SDK dispatch is attempted.
+export function prepareInAppTest(input: unknown) {
+  if (!input || typeof input !== "object" || Array.isArray(input)) throw new Error("Invalid in-app test.");
+  const value = input as Record<string, unknown>;
+  const campaign = typeof value.campaignId === "string" ? getCampaign(value.campaignId) : null;
+  if (!campaign || campaign.channel !== "iam") throw new Error("In-app message campaign not found.");
+  if (!Array.isArray(value.recipients) || !value.recipients.length || value.recipients.length > 20 || value.recipients.some(item => typeof item !== "string" || !item.trim() || item.length > 254)) throw new Error("Provide between 1 and 20 test recipients.");
+  if (value.profile !== undefined && (!value.profile || typeof value.profile !== "object" || Array.isArray(value.profile) || JSON.stringify(value.profile).length > 20000)) throw new Error("Invalid preview profile.");
+  const tests = [...new Set(value.recipients as string[])].map(recipient => {
+    const user = getUser(recipient) ?? searchUsers(recipient, 0, 20).data.find(item => item.email.toLowerCase() === recipient.toLowerCase());
+    const profile = value.override ? value.profile as Record<string, unknown> ?? {} : user ? { ...user.attributes, user_id: user.id, first_name: user.firstName, email: user.email, country: user.country } : {};
+    return { recipient, userId: user?.id ?? "custom_test_user", variant: prepareInAppPreview(value.variant, profile) };
+  });
+  const timestamp = now();
+  const record = createResource({ type: "in-app-message-tests", name: `${campaign.name} test`, description: `${tests.length} recipient(s)`, data: { campaignId: campaign.id, tests, simulated: true, delivered: false, createdAt: timestamp } });
+  for (const test of tests) db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), campaign.id, "iam", test.userId, "test_prepared", timestamp, JSON.stringify({ test: true, testId: record.id, recipient: test.recipient, simulated: true, variant: test.variant }));
+  return { id: record.id, tests, createdAt: timestamp, capability: { mode: "simulation", delivered: false, reason: "Test prepared locally. Device delivery requires a connected Braze SDK." } };
 }
 
 // SMS tests use the unsaved editor snapshot and never dispatch to a provider.
@@ -923,12 +1104,28 @@ export function listWebhookAttempts(campaignId?: string, limit = 100) {
 
 export { webhookDeliveryCapability };
 
+export function listWorkspaceTags() { return listTags(db()); }
+export function workspaceTagAliases() { return listTagAliases(db()); }
+export function resolveWorkspaceTags(names: unknown) { return assignTags(db(), names, "canvas"); }
+export function createWorkspaceTag(input: { name: unknown; parentId?: unknown }) { return createTag(db(), input); }
+export function updateWorkspaceTag(id: string, input: { name?: unknown; parentId?: unknown; expectedUpdatedAt?: unknown }) { return changeTag(db(), id, input); }
+export function deleteWorkspaceTag(id: string, expectedUpdatedAt: unknown) { return changeTag(db(), id, { expectedUpdatedAt }, true); }
+export function bulkTagCampaigns(ids: unknown, tags: unknown) { return tagCampaigns(db(), ids, tags); }
+
 export function listResources(type: string, q = ""): ResourceRecord[] {
   const rows = db().prepare("SELECT * FROM resources WHERE type = ? AND lower(name) LIKE lower(?) ORDER BY updated_at DESC").all(type, `%${q}%`) as Record<string, unknown>[];
   return rows.map(row => ({ id: String(row.id), type: String(row.type), name: String(row.name), status: String(row.status), description: String(row.description), updatedAt: String(row.updated_at), data: parseJson(String(row.data_json), {}) }));
 }
 export function createResource(input: Pick<ResourceRecord, "type" | "name"> & Partial<ResourceRecord>) {
+  if (input.type === "tag-management") { const tag = createWorkspaceTag({ name: input.name, parentId: input.data?.parentId }); return getResource(tag.id)!; }
+  if (input.type === "global-control-group") throw new Error("Use the versioned Global Control Group endpoint.");
+  if (workspaceModules[input.type]) {
+    validateModule(input.type, input);
+    if (workspaceModules[input.type].singleton && listResources(input.type).length) throw new Error("Settings already exist. Reload before saving.");
+    assertModuleUnique(input.type, input.data ?? {});
+  }
   const record: ResourceRecord = { id: uid("res"), type: input.type, name: input.name, status: input.status ?? "Draft", description: input.description ?? "New local resource", updatedAt: now(), data: input.type === "email-templates" ? { ...emailPreferenceCampaignDefaults(getEmailPreferences().data), ...input.data } : input.type === "content-blocks" ? { emailBlockTheme: getEmailPreferences().data.editor, width: getEmailPreferences().data.editor.blockWidthMode === "full" ? "100%" : getEmailPreferences().data.editor.blockWidth, ...input.data } : input.data ?? {} };
+  if (record.data.tags !== undefined) record.data = { ...record.data, tags: assignTags(db(), record.data.tags, record.type) };
   db().prepare("INSERT INTO resources VALUES (?, ?, ?, ?, ?, ?, ?)").run(record.id, record.type, record.name, record.status, record.description, record.updatedAt, JSON.stringify(record.data));
   audit("resource", record.id, "created", { type: record.type }); return record;
 }
@@ -941,8 +1138,15 @@ export function getResource(id: string): ResourceRecord | null {
 export function updateResource(id: string, input: { name?: string; status?: string; description?: string; data?: Record<string, unknown> }, expectedUpdatedAt?: string) {
   const existing = getResource(id);
   if (!existing) throw new Error("Resource not found");
+  if (existing.type === "tag-management") { updateWorkspaceTag(id, { name: input.name, parentId: input.data?.parentId, expectedUpdatedAt }); return getResource(id)!; }
+  if (existing.type === "global-control-group") throw new Error("Use the versioned Global Control Group endpoint.");
   if (existing.type === "email-preferences") throw new Error("Use the versioned email-preferences endpoint to change workspace settings.");
   if (expectedUpdatedAt !== undefined && expectedUpdatedAt !== existing.updatedAt) throw new Error("Resource changed in another tab. Reload before saving.");
+  if (workspaceModules[existing.type]) {
+    validateModule(existing.type, { name: input.name ?? existing.name, status: input.status ?? existing.status, data: input.data ?? existing.data }, existing);
+    assertModuleUnique(existing.type, input.data ?? existing.data, id);
+  }
+  if (input.data?.tags !== undefined) input = { ...input, data: { ...input.data, tags: assignTags(db(), input.data.tags, existing.type) } };
   const updatedAt = now();
   db().prepare("UPDATE resources SET name = ?, status = ?, description = ?, updated_at = ?, data_json = ? WHERE id = ?")
     .run(input.name ?? existing.name, input.status ?? existing.status, input.description ?? existing.description, updatedAt, JSON.stringify(input.data ?? existing.data), id);
@@ -950,9 +1154,12 @@ export function updateResource(id: string, input: { name?: string; status?: stri
   return getResource(id)!;
 }
 
-export function deleteResource(id: string) {
+export function deleteResource(id: string, expectedUpdatedAt?: string) {
   const existing = getResource(id);
   if (!existing) throw new Error("Resource not found");
+  if (expectedUpdatedAt !== undefined && existing.updatedAt !== expectedUpdatedAt) throw new Error("Resource changed in another tab. Reload before deleting.");
+  if (existing.type === "tag-management") { deleteWorkspaceTag(id, expectedUpdatedAt); return existing; }
+  if (existing.type === "global-control-group") throw new Error("Disable the Global Control Group using its settings endpoint.");
   if (existing.type === "email-preferences") throw new Error("Use the versioned email-preferences endpoint to change workspace settings.");
   db().prepare("DELETE FROM resources WHERE id = ?").run(id);
   audit("resource", id, "archived", { type: existing.type });
@@ -1013,7 +1220,7 @@ export function createCanvas(input: { name: string; description?: string; tags?:
   if (listCanvases().some(item => item.name.toLowerCase() === name.toLowerCase() && item.status !== "Archived")) throw new Error("A Canvas with this name already exists.");
   const timestamp = now();
   const resource: ResourceRecord = { id: crypto.randomUUID(), type: "canvas", name, status: "Draft", description: input.description?.trim() ?? "", updatedAt: timestamp,
-    data: { ...(input.graph ?? structuredClone(initialCanvasGraph)), createdAt: timestamp, createdBy: "Local workspace", lastEditedBy: "Local workspace", tags: input.tags ?? [], experience: "Canvas Flow", targetSegment: "All Users", alertsConfigured: false, wizard: input.wizard ?? structuredClone(defaultCanvasWizard) } };
+    data: { ...(input.graph ?? structuredClone(initialCanvasGraph)), createdAt: timestamp, createdBy: "Local workspace", lastEditedBy: "Local workspace", tags: assignTags(db(), input.tags, "canvas"), experience: "Canvas Flow", targetSegment: "All Users", alertsConfigured: false, wizard: input.wizard ?? structuredClone(defaultCanvasWizard) } };
   db().prepare("INSERT INTO resources VALUES (?, ?, ?, ?, ?, ?, ?)").run(resource.id, resource.type, resource.name, resource.status, resource.description, resource.updatedAt, JSON.stringify(resource.data));
   audit("canvas", resource.id, "created", {});
   return canvasRecord(resource);
@@ -1071,6 +1278,10 @@ export function saveCanvasGraph(graph: CanvasGraph, expectedUpdatedAt?: string |
 }
 
 function advanceCanvasUser(graph: CanvasGraph, canvasId: string, runId: string, userId: string, startNodeId: string, timestamp: string, steps: CanvasTrace["steps"]) {
+  const globalSettings = globalControlSettings();
+  const canvasTags = canvasResource(canvasId)?.data.tags;
+  // Also recheck resumed users: enabling holdout must stop pending sends.
+  if (heldByGlobalControl(userId, globalSettings, canvasTags)) return { completed: true, messages: 0 };
   let current = graph.nodes.find(node => node.id === startNodeId);
   let messages = 0;
   while (current) {
@@ -1104,10 +1315,18 @@ function advanceCanvasUser(graph: CanvasGraph, canvasId: string, runId: string, 
       const eligible = Boolean(user?.reachable) && (channel !== "email" || emailEligible)
         && (channel !== "sms" && channel !== "whatsapp" || Boolean(groupId))
         && (!groupId || group?.status === "Active" && group.channel === expectedChannel && member?.state === "subscribed");
-      let eventData: Record<string, unknown> = eligible && channel === "email"
+      if (eligible && workspaceRateLimited(timestamp)) {
+        const dueAt = new Date(new Date(timestamp).getTime() + 60000).toISOString();
+        db().prepare("INSERT INTO canvas_pending_steps VALUES (?, ?, ?, ?) ON CONFLICT(run_id,user_id) DO UPDATE SET next_node_id=excluded.next_node_id, due_at=excluded.due_at").run(runId, userId, current.id, dueAt);
+        db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), canvasId, channel, userId, "deferred", timestamp, JSON.stringify({ canvasRunId: runId, nodeId: current.id, reason: "workspace_rate_limit", dueAt }));
+        return { completed: false, messages };
+      }
+      const frequencyHeld = eligible && workspaceFrequencyCapped(userId, channel, timestamp);
+      let eventData: Record<string, unknown> = eligible && !frequencyHeld && channel === "email"
         ? { canvasRunId: runId, nodeId: current.id, simulated: true, message: prepareEmailMessage({ subject: current.config?.subject, body: current.config?.message, config: current.config }, userId, "campaign") }
         : { canvasRunId: runId, nodeId: current.id, simulated: true, reason: eligible ? undefined : "subscription_or_reachability" };
-      let eventType = eligible ? "delivered" : "suppressed";
+      let eventType = eligible ? frequencyHeld ? "frequency_capped" : "delivered" : "suppressed";
+      eventData = { ...eventData, globalControlGeneration: globalSettings.enabled ? globalSettings.seed : null, globalControlCohort: userGlobalCohort(userId, globalSettings) };
       if (eligible && channel === "whatsapp") {
         try { const config = current.config ?? {}; const variants = normalizeWhatsAppVariants({ config }); const index = createHash("sha256").update(`${canvasId}:${current.id}:${userId}`).digest()[0] % variants.length; eventData = { ...eventData, variantId: variants[index].id, message: prepareWhatsAppMessage(variants[index], customWhatsAppTemplates({ config }), { ...user?.attributes, first_name: user?.firstName, country: user?.country, user_id: userId }) }; }
         catch (cause) { eventType = "failed"; eventData = { ...eventData, error: cause instanceof Error ? cause.message : "WhatsApp rendering failed." }; }
@@ -1153,6 +1372,7 @@ export function launchCanvasGraph(canvasId = localCanvasId): CanvasRun {
   const saved = canvasResource(canvasId);
   if (!saved) throw new Error("Save the Canvas draft before launching.");
   if (saved.status === "Archived") throw new Error("Archived Canvases cannot be launched.");
+  assertWorkspaceApproval("canvas", canvasId);
   const graph = resolveCanvasLinkedMessages(canvasGraph(saved));
   const wizard = saved.data.wizard ? normalizeCanvasWizard(saved.data.wizard) : null;
   const issues = [...(wizard ? canvasWizardIssues(wizard, graph).map(issue => issue.detail) : validateCanvasGraph(graph)), ...graph.nodes.filter(node => node.kind === "message" && node.config?.channel === "email").flatMap(node => emailSendingIssues({ config: node.config }, getEmailPreferences().data))];
@@ -1162,7 +1382,9 @@ export function launchCanvasGraph(canvasId = localCanvasId): CanvasRun {
   const reEntry = wizard ? wizard.audience.reentryEnabled ? "window" : "none" : entry.config?.reEntry ?? "none";
   const cutoff = wizard && reEntry === "window" ? wizard.audience.reentryValue * (wizard.audience.reentryUnit === "Hours" ? 3_600_000 : 86_400_000) : reEntry === "after1d" ? 86_400_000 : reEntry === "after7d" ? 7 * 86_400_000 : 0;
   const candidates = db().prepare("SELECT id FROM users WHERE reachable = 1 ORDER BY id LIMIT 100").all() as { id: string }[];
+  const globalSettings = globalControlSettings();
   const users = candidates.filter(user => {
+    if (heldByGlobalControl(user.id, globalSettings, saved.data.tags)) return false;
     const profile = wizard ? getUser(user.id) : null;
     if (wizard && (!profile || !canvasAudienceMatches(wizard.audience, profile))) return false;
     const history = db().prepare("SELECT last_entered_at FROM canvas_entry_history WHERE canvas_id = ? AND user_id = ?").get(canvasId, user.id) as { last_entered_at: string } | undefined;
@@ -1406,7 +1628,7 @@ export function removeCatalogSelection(catalogId: string, name: string) {
 
 export function getUser(id: string) {
   const row = db().prepare("SELECT * FROM users WHERE id = ?").get(id) as Record<string, unknown> | undefined;
-  return row ? mapUser(row) : null;
+  return row ? { ...mapUser(row), globalControlGroup: userGlobalCohort(id, globalControlSettings()) === "control" } : null;
 }
 
 export function randomCatalogPreviewUser() {
@@ -1561,7 +1783,98 @@ export function syncEmailLinkAliases(campaign: CampaignRecord) {
 }
 export function emailWorkspaceLiquid(): WorkspaceLiquid {
   const catalogs = listResources("catalogs");
-  return { footer: getEmailPreferences().data.pages.footer.enabled ? getEmailPreferences().data.pages.footer.html : "", contentBlocks: Object.fromEntries(listResources("content-blocks").map(row => [row.name,workspaceContentBlockHtml(String(row.data.content ?? ""), row.data.width)])), catalogItems: Object.fromEntries(catalogs.map(catalog => [catalog.name.toLowerCase(), listCatalogItems(catalog.id)])), catalogSelections: Object.fromEntries(catalogs.map(catalog => [catalog.name.toLowerCase(), listCatalogSelections(catalog.id)])) };
+  return { footer: getEmailPreferences().data.pages.footer.enabled ? getEmailPreferences().data.pages.footer.html : "", contentBlocks: Object.fromEntries(listResources("content-blocks").filter(row => row.status !== "Archived").map(row => [row.name,workspaceContentBlockHtml(String(row.data.content ?? ""), row.data.width)])), promotionCodes: Object.fromEntries(listResources("promotion-codes").filter(row => row.status !== "Archived").map(row => [row.name, Array.isArray(row.data.codes) ? row.data.codes as string[] : []])), catalogItems: Object.fromEntries(catalogs.map(catalog => [catalog.name.toLowerCase(), listCatalogItems(catalog.id)])), catalogSelections: Object.fromEntries(catalogs.map(catalog => [catalog.name.toLowerCase(), listCatalogSelections(catalog.id)])) };
+}
+
+function assertModuleUnique(type: string, data: Record<string, unknown>, id?: string) {
+  const key = ({ "feature-flags": "flagId", "landing-pages": "slug", "localization-settings": "code", "banner-placements": "placementId", "user-management": "email", products: "productId" } as Record<string, string>)[type];
+  if (key && listResources(type).some(row => row.id !== id && String(row.data[key]).toLowerCase() === String(data[key]).toLowerCase())) throw new Error(`${key} must be unique in this workspace.`);
+}
+
+/** User-data operations used by ingestion, transformations and public forms. */
+export function applyProfileRows(rows: Array<Record<string, unknown>>) {
+  if (!Array.isArray(rows) || !rows.length || rows.length > 1000) throw new Error("Provide between 1 and 1,000 rows.");
+  for (const row of rows) {
+    const id = row.external_id ?? row.id;
+    if (typeof id !== "string" || !id.trim() || id.length > 200) throw new Error("Every row needs a valid external_id.");
+    if (row.email !== undefined && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(row.email))) throw new Error(`Invalid email for ${id}.`);
+    if (row.email_subscription_status !== undefined && !["opted_in", "subscribed", "unsubscribed"].includes(String(row.email_subscription_status))) throw new Error("Invalid email subscription status.");
+  }
+  const conn = db(); let created = 0; let updated = 0;
+  conn.exec("SAVEPOINT profile_sync");
+  try {
+    for (const row of rows) {
+      const id = String(row.external_id ?? row.id); const existing = getUser(id);
+      const { external_id: _external, id: _id, email, first_name, country, lifecycle, email_subscription_status, attributes, ...custom } = row;
+      const status = String(email_subscription_status ?? existing?.emailSubscriptionStatus ?? "subscribed");
+      conn.prepare(`INSERT INTO users (id,email,first_name,country,lifecycle,subscribed,reachable,attributes_json,email_subscription_status) VALUES (?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET email=excluded.email,first_name=excluded.first_name,country=excluded.country,lifecycle=excluded.lifecycle,subscribed=excluded.subscribed,attributes_json=excluded.attributes_json,email_subscription_status=excluded.email_subscription_status`).run(id, String(email ?? existing?.email ?? `${id}@example.test`), String(first_name ?? existing?.firstName ?? ""), String(country ?? existing?.country ?? ""), String(lifecycle ?? existing?.lifecycle ?? "New"), status === "unsubscribed" ? 0 : 1, existing?.reachable === false ? 0 : 1, JSON.stringify({ ...existing?.attributes, ...custom, ...objectValue(attributes) }), status);
+      existing ? updated++ : created++;
+      audit("user", id, existing ? "profile_updated" : "created", { fields: Object.keys(row) });
+    }
+    conn.exec("RELEASE profile_sync"); return { created, updated, processed: rows.length };
+  } catch (error) { conn.exec("ROLLBACK TO profile_sync; RELEASE profile_sync"); throw error; }
+}
+
+export function trackProfileEvent(input: { userId: string; name: string; properties?: Record<string, unknown>; productId?: string; price?: number; quantity?: number; currency?: string; createdAt?: string }) {
+  if (!getUser(input.userId)) throw new Error("User not found.");
+  if (!input.name.trim()) throw new Error("Event name is required.");
+  if (!input.productId && listResources("event-blocklist").some(row => row.name === input.name && row.status === "Blocked")) throw new Error("Tracking is blocked for this custom event.");
+  if (input.productId && (!Number.isFinite(input.price) || Number(input.price) < 0 || !Number.isFinite(input.quantity ?? 1) || Number(input.quantity ?? 1) <= 0 || !/^[A-Z]{3}$/.test(input.currency ?? "USD"))) throw new Error("Purchases require a nonnegative price, a positive quantity and a three-letter currency.");
+  if (input.productId) {
+    const product = listResources("products").find(row => row.data.productId === input.productId);
+    if (product?.data.trackingEnabled === false) throw new Error("Purchase tracking is disabled for this product.");
+  }
+  const event = createResource({ type: "user-events", name: input.name, status: "Recorded", data: { ...input, createdAt: input.createdAt ?? now() } });
+  audit("user", input.userId, input.productId ? "purchase" : "custom_event", { eventId: event.id, name: input.name });
+  return event;
+}
+
+export function workspaceTransaction<T>(action: () => T): T { const conn = db(); conn.exec("SAVEPOINT workspace_action"); try { const result = action(); conn.exec("RELEASE workspace_action"); return result; } catch (error) { conn.exec("ROLLBACK TO workspace_action; RELEASE workspace_action"); throw error; } }
+
+export function workspaceAudit(limit = 100) { return db().prepare("SELECT * FROM audit_log ORDER BY created_at DESC LIMIT ?").all(Math.min(10000, Math.max(1, limit))) as Array<{ id: string; entity_type: string; entity_id: string; action: string; created_at: string; detail_json: string }>; }
+export function workspaceEventRows(limit = 10000) { return activityLog(Math.min(10000, limit)); }
+export function workspaceUsage() { const conn = db(); const count = (table: string) => (conn.prepare(`SELECT count(*) AS count FROM ${table}`).get() as { count: number }).count; return { users: count("users"), campaigns: count("campaigns"), events: count("message_events"), resources: count("resources"), canvasRuns: count("canvas_runs"), customEvents: listResources("user-events").length }; }
+export function userFeatureFlags(userId: string) {
+  const user = getUser(userId); if (!user) throw new Error("User not found.");
+  const assignments = listResources("feature-assignments").filter(r => r.data.userId === userId && getCampaign(String(r.data.campaignId))?.status === "Active");
+  return listResources("feature-flags").filter(r => r.status !== "Archived").map(r => { const assignment = assignments.find(a => a.data.flagId === r.data.flagId); return { name: r.name, ...evaluateFlag(r.data, user), ...(assignment ? { enabled: Boolean(assignment.data.enabled), properties: objectValue(assignment.data.properties), matchedRule: "Campaign experiment", campaignId: assignment.data.campaignId } : {}) }; });
+}
+
+function canonical(value: unknown): unknown { if (Array.isArray(value)) return value.map(canonical); if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).sort(([a], [b]) => a.localeCompare(b)).map(([key, v]) => [key, canonical(v)])); return value; }
+export function approvalFingerprint(entity: "campaign" | "canvas", id: string) {
+  const record = entity === "campaign" ? getCampaign(id) : canvasResource(id);
+  if (!record) throw new Error("Message not found.");
+  const snapshot = entity === "campaign" ? (() => { const c = record as CampaignRecord; return { name: c.name, subject: c.subject, body: c.body, audience: c.audience, conversion: c.conversion, schedule: c.schedule, channel: c.channel, config: c.config }; })() : { name: record.name, data: (record as ResourceRecord).data };
+  return createHash("sha256").update(JSON.stringify(canonical(snapshot))).digest("hex");
+}
+function assertWorkspaceApproval(entity: "campaign" | "canvas", id: string) {
+  const settings = listResources("approval-workflow")[0]?.data;
+  if (!settings?.[entity === "campaign" ? "campaignApproval" : "canvasApproval"]) return;
+  if (entity === "campaign" && getCampaign(id)?.channel === "api") return;
+  const fingerprint = approvalFingerprint(entity, id);
+  const approved = listResources("approval-requests").some(row => row.status === "Approved" && row.data.entity === entity && row.data.entityId === id && row.data.fingerprint === fingerprint);
+  if (!approved) throw new Error("Approval is required for the current version. Request review from Approval Workflow before launching.");
+}
+
+function workspaceRateLimited(timestamp: string, pending = 0) {
+  const limits = listResources("messaging-rate-limits")[0]?.data;
+  if (limits?.enforce !== true) return false;
+  const at = new Date(timestamp).getTime();
+  const counts = (since: number) => Number((db().prepare("SELECT count(*) AS count FROM message_events WHERE event_type = 'delivered' AND created_at >= ? AND created_at <= ?").get(new Date(since).toISOString(), timestamp) as { count: number }).count);
+  return counts(at - 60000) + pending >= Number(limits.maxPerMinute) || counts(at - 86400000) + pending >= Number(limits.maxPerDay);
+}
+
+function workspaceFrequencyCapped(userId: string, channel: string, timestamp: string) {
+  const config = listResources("frequency-capping-rules")[0]?.data;
+  if (config?.enabled !== true || !Array.isArray(config.rules)) return false;
+  return (config.rules as Array<{ kind: string; limit: number; window: string }>).some(rule => {
+    const target = rule.kind === "In-app message" ? "iam" : rule.kind.toLowerCase();
+    if (rule.kind !== "All channels" && target !== channel) return false;
+    const window = rule.window === "per week" ? 7 * 86400000 : rule.window === "per month" ? 30 * 86400000 : 86400000;
+    const cutoff = new Date(new Date(timestamp).getTime() - window).toISOString();
+    const count = db().prepare(`SELECT count(*) AS count FROM message_events WHERE user_id = ? AND event_type = 'delivered' AND created_at >= ?${rule.kind === "All channels" ? "" : " AND channel = ?"}`).get(userId, cutoff, ...(rule.kind === "All channels" ? [] : [target])) as { count: number };
+    return count.count >= Number(rule.limit);
+  });
 }
 export function prepareEmailMessage(message: { id?: string; subject?: string; body?: string; config?: Record<string, unknown> }, userId: string, kind: "campaign" | "test" | "seed", custom?: Record<string, unknown>) {
   const user = getUser(userId); const profile = { ...user?.attributes, user_id: user?.id, subscribed: user?.subscribed, first_name: user?.firstName, email: user?.email, country: user?.country, ...custom };
@@ -1572,6 +1885,19 @@ export function prepareEmailMessage(message: { id?: string; subject?: string; bo
   const unsubscribeUrl = `${base}/email/subscription/${unsubscribe.id}`, optInUrl = `${base}/email/subscription/${optIn.id}`;
   const preferences = getEmailPreferences().data;
   const workspace = emailWorkspaceLiquid();
+  if (kind === "campaign") {
+    const names = [...new Set([...JSON.stringify(message).matchAll(/\{%\s*promotion_code\s+['"]([^'"]+)['"]/g)].map(match => match[1]))];
+    for (const name of names) {
+      const list = listResources("promotion-codes").find(r => r.name === name && r.status !== "Archived");
+      if (!list) throw new Error(`Promotion code list ${name} was not found.`);
+      const allocations = listResources("promotion-code-allocations").filter(r => r.data.listId === list.id);
+      const existing = allocations.find(r => r.data.userId === userId);
+      const code = existing?.data.code ?? (list.data.codes as string[] ?? []).find(code => !allocations.some(r => r.data.code === code));
+      if (!code) throw new Error(`Promotion code list ${name} is exhausted.`);
+      if (!existing) createResource({ type: "promotion-code-allocations", name, status: "Assigned", data: { listId: list.id, userId, code, campaignId: message.id } });
+      workspace.promotionCodes = { ...workspace.promotionCodes, [name]: [String(code)] };
+    }
+  }
   return compileWorkspaceEmail(message, preferences, { profile, kind, unsubscribeUrl, optInUrl, pixelUrl: `${base}/api/email-tracking/${unsubscribe.id}?event=opened`, render: source => resolveLiquidPreview(source, { ...profile, unsubscribe_url: unsubscribeUrl, unsubscribe_link: unsubscribeUrl, optin_url: optInUrl, opt_in_url: optInUrl }, "en", workspace, true), trackLink: (url, alias) => {
     const existing = listResources("link-aliases").find(row => row.name === alias && row.status === "Active" && row.data.campaignId === message.id);
     if (!existing) return url;
