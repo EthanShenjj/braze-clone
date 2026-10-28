@@ -15,7 +15,7 @@ npm run dev
 
 ### Unlayer 邮件编辑器
 
-新建邮件和邮件模板的 **Drag-and-drop editor** 使用官方 `react-email-editor` 接入 [Unlayer Email Builder](https://docs.unlayer.com/builder/email-builder/quickstart)。基础编辑可不填 Project ID；如需账户配置与付费功能，在 [Unlayer Console](https://console.unlayer.com/) 中获取 Project ID，并在该项目的 Allowed Domains 加入本地和生产域名。
+新建邮件和邮件模板的 **Drag-and-drop editor** 使用官方 `embed.js` SDK 接入 [Unlayer Email Builder](https://docs.unlayer.com/builder/email-builder/quickstart)。基础编辑可不填 Project ID；如需账户配置与付费功能，在 [Unlayer Console](https://console.unlayer.com/) 中获取 Project ID，并在该项目的 Allowed Domains 加入本地和生产域名。
 
 ```dotenv
 NEXT_PUBLIC_UNLAYER_PROJECT_ID=

@@ -2,7 +2,7 @@
 
 ## 接入范围
 
-- 使用官方 `react-email-editor@2.1.3` 和 `https://editor.unlayer.com/embed.js`，固定 Builder `1.489.0`。
+- 使用官方 `https://editor.unlayer.com/embed.js`，固定 Builder `1.489.0`，由客户端直接创建和销毁实例，类型来自官方 `@unlayer/types`。
 - Campaign 新建拖拽邮件、已有 Beefree 邮件、邮件模板均进入 Unlayer；已有 GrapesJS/MJML 草稿保留原编辑器。
 - 保存 `emailUnlayerJson`、`emailUnlayerVersion` 和完整 HTML；变体保存对应 `unlayerJson` 等字段。
 - 可选公开 Project ID，基础编辑不需要 Cloud API Key。服务端 `@unlayer/sdk` 与浏览器 Builder 不同，本次不调用 Cloud API。
@@ -26,7 +26,7 @@
 
 发现并修复编辑容器只有 150px 高的问题；补上外层容器的明确高度。模板验收还修复了来自 Campaign 的模板内首个变体镜像未同步的问题，防止应用后恢复旧主题或旧设计。
 
-首次远程 iframe 曾加载超时；用官方原生 JavaScript 示例也复现自动启动未就绪，而点击创建后可用。最终在 Campaign 和模板入口提前加载 SDK，再由编辑入口点击创建实例，已验证无需等待超时或点击重试即可打开。若用户在脚本尚未就绪时进入，先显示加载状态，脚本完成后提供“Open email editor”按钮。最终加载失败或超过 60 秒时有明确错误和重试入口；保存按钮在设计加载完成前禁用。导出超时和服务端保存失败保留编辑器内容并显示错误；保存期间出现新编辑时继续提示未保存，阻止保存后直接离开。
+首次远程 iframe 曾加载超时；用官方原生 JavaScript 示例也复现自动启动未就绪，而点击创建后可用。最终在 Campaign 和模板入口提前加载 SDK，并直接调用官方 JS SDK，在 DOM 提交时同步创建实例；移除异步 React 包装层。首开与导出保存复测通过，无需等待超时或点击重试。若用户在脚本尚未就绪时进入，先显示加载状态，脚本完成后提供“Open email editor”按钮。最终加载失败或超过 60 秒时有明确错误和重试入口；保存按钮在设计加载完成前禁用。导出超时和服务端保存失败保留编辑器内容并显示错误；保存期间出现新编辑时继续提示未保存，阻止保存后直接离开。
 
 ## 迁移限制
 
@@ -34,7 +34,7 @@ Beefree JSON 与 Unlayer JSON 不兼容。旧邮件以一个 HTML 内容块导�
 
 ## 官方参考
 
-- [React component](https://docs.unlayer.com/builder/react-component)
+- [Installation](https://docs.unlayer.com/builder/installation)
 - [Load and save designs](https://docs.unlayer.com/builder/load-and-save-designs)
 - [Export HTML](https://docs.unlayer.com/builder/export-html)
 - [Cloud SDK](https://docs.unlayer.com/sdk)

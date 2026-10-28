@@ -1,17 +1,15 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, Eye, Mail, RefreshCw, Save } from "lucide-react";
-import type { EditorRef, EmailEditorProps } from "react-email-editor";
+import type { UnlayerEditor, UnlayerOptions, UnlayerEmbed } from "@unlayer/types";
 import { initialUnlayerDesign, unlayerBuilderVersion, unlayerSavePatch } from "@/lib/unlayer-template";
 import { loadUnlayerScript, resetUnlayerScript, unlayerEmbedUrl, unlayerScriptLoaded } from "@/lib/unlayer-client";
 import { liquidTokens } from "@/lib/email-editor-model";
 import { translate, type Locale } from "@/lib/i18n";
 import styles from "./email-dnd.module.css";
 
-const Builder = dynamic(() => import("react-email-editor"), { ssr: false });
-type Editor = NonNullable<EditorRef["editor"]>;
+type Editor = UnlayerEditor<"email">;
 type CampaignLike = { id: string; name: string; subject?: string; body?: string; config?: Record<string, unknown> };
 type SavePatch = { subject?: string; body?: string; config?: Record<string, unknown> };
 type SaveState = "saved" | "saving" | "unsaved";
@@ -26,27 +24,39 @@ export default function UnlayerEmailEditor({ locale, draft, variantName, save, o
   const [subject, setSubject] = useState(draft.subject ?? ""), [ready, setReady] = useState(false), [saveState, setSaveState] = useState<SaveState>("saved");
   const [scriptReady, setScriptReady] = useState(unlayerScriptLoaded), [started, setStarted] = useState(unlayerScriptLoaded);
   const [loadError, setLoadError] = useState(""), [saveError, setSaveError] = useState(""), [attempt, setAttempt] = useState(0);
-  const sdkRef = useRef<Editor | null>(null), editorRef = useRef<EditorRef>(null), active = useRef(false), loaded = useRef(false), revision = useRef(0), pendingSave = useRef<Promise<boolean> | null>(null);
+  const sdkRef = useRef<Editor | null>(null), hostRef = useRef<HTMLDivElement>(null), active = useRef(false), loaded = useRef(false), revision = useRef(0), pendingSave = useRef<Promise<boolean> | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const current = useRef({ subject, config: draft.config ?? {}, save }); current.current = { subject, config: draft.config ?? {}, save };
+  const editorId = `unlayer-${useId().replaceAll(":", "")}`;
   const version = process.env.NEXT_PUBLIC_UNLAYER_BUILDER_VERSION || unlayerBuilderVersion;
   const [initial] = useState(() => { try { return { ...initialUnlayerDesign(draft.config, draft.body), error: "" }; } catch (e) { return { design: null, imported: false, error: e instanceof Error ? e.message : "Unable to load the saved design." }; } });
-  const options = useMemo<EmailEditorProps["options"]>(() => {
+  const options = useMemo<UnlayerOptions<"email">>(() => {
     const project = process.env.NEXT_PUBLIC_UNLAYER_PROJECT_ID;
     const projectId = project ? Number(project) : undefined;
     const mergeTags = Object.fromEntries(liquidTokens.map((token, index) => [`token_${index}`, { name: `${token.category} · ${token.label}`, value: token.value }]));
     return { displayMode: "email", version, locale: languages[locale], ...(projectId && Number.isSafeInteger(projectId) && projectId > 0 ? { projectId } : {}), appearance: { theme: "modern_light", panels: { tools: { dock: "right" } } }, mergeTags, features: { smartMergeTags: false } };
   }, [locale, version]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     active.current = true; loaded.current = false; sdkRef.current = null; setReady(false); setLoadError(initial.error); setSaveError("");
     const project = process.env.NEXT_PUBLIC_UNLAYER_PROJECT_ID;
     if (project && (!Number.isSafeInteger(Number(project)) || Number(project) <= 0)) setLoadError("NEXT_PUBLIC_UNLAYER_PROJECT_ID must be a positive integer.");
     timeoutRef.current = setTimeout(() => { if (active.current && !loaded.current && !initial.error && (started || !unlayerScriptLoaded())) setLoadError(zh ? "Unlayer 加载超时，请检查网络后重试。" : "Unlayer did not finish loading. Check your connection and try again."); }, 60_000);
     const scriptError = (event: Event) => { const target = event.target; if (target instanceof HTMLScriptElement && target.src.startsWith(embedUrl)) { target.dataset.unlayerFailed = "true"; setLoadError(zh ? "无法加载 Unlayer，请检查网络后重试。" : "Unable to load Unlayer. Check your connection and try again."); } };
     window.addEventListener("error", scriptError, true);
-    return () => { active.current = false; loaded.current = false; sdkRef.current = null; clearTimeout(timeoutRef.current); window.removeEventListener("error", scriptError, true); };
-  }, [attempt, initial.error, locale, started, zh]);
+    let editor: Editor | undefined;
+    if (started && scriptReady && hostRef.current && !initial.error && (!project || Number.isSafeInteger(Number(project)) && Number(project) > 0)) {
+      try {
+        const sdk = (window as Window & { unlayer?: UnlayerEmbed }).unlayer;
+        if (!sdk) throw new Error("Unlayer SDK is not ready. Try opening the editor again.");
+        editor = sdk.createEditor<"email">({ ...options, id: editorId });
+        sdkRef.current = editor;
+        const instance = editor;
+        instance.addEventListener("editor:ready", () => onReady(instance));
+      } catch (error) { setLoadError(error instanceof Error ? error.message : "Unable to start Unlayer."); }
+    }
+    return () => { active.current = false; loaded.current = false; sdkRef.current = null; clearTimeout(timeoutRef.current); window.removeEventListener("error", scriptError, true); editor?.destroy(); };
+  }, [attempt, editorId, initial.error, options, scriptReady, started, zh]);
   useEffect(() => {
     let cancelled = false;
     void loadUnlayerScript().then(() => { if (!cancelled) setScriptReady(true); }).catch(error => { if (!cancelled) setLoadError(error instanceof Error ? error.message : "Unable to load Unlayer."); });
@@ -55,8 +65,8 @@ export default function UnlayerEmailEditor({ locale, draft, variantName, save, o
   useEffect(() => { if (saveState === "saved") return; const guard = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ""; }; window.addEventListener("beforeunload", guard); return () => window.removeEventListener("beforeunload", guard); }, [saveState]);
 
   const markDirty = () => { if (!loaded.current || !active.current) return; revision.current++; setSaveState(previous => previous === "saving" ? previous : "unsaved"); };
-  const onReady: NonNullable<EmailEditorProps["onReady"]> = editor => {
-    if (!active.current || editorRef.current?.editor !== editor || !initial.design) return;
+  const onReady = (editor: Editor) => {
+    if (!active.current || sdkRef.current !== editor || !initial.design) return;
     sdkRef.current = editor;
     editor.setSpecialLinks([{ name: "Unsubscribe", href: "{{${unsubscribe_url}}}", target: "_blank" }, { name: "Preference center", href: "{{${preference_center_url}}}", target: "_blank" }]);
     editor.addEventListener("design:loaded", () => { if (!active.current || sdkRef.current !== editor) return; clearTimeout(timeoutRef.current); loaded.current = true; setReady(true); setLoadError(""); editor.removeEventListener("design:loaded"); });
@@ -104,7 +114,7 @@ export default function UnlayerEmailEditor({ locale, draft, variantName, save, o
       <button type="button" className={styles.unlayerAction} disabled={!ready || saveState === "saving"} onClick={() => void saveThen(onSendingSettings)}><Mail size={14}/>{translate(locale, "Sending settings")}</button>
       <button type="button" className={styles.unlayerSave} disabled={!ready || saveState === "saving"} onClick={() => void persist()}><Save size={14}/>{translate(locale, "Save")}</button>
     </header>
-    <div className={styles.unlayerHost}>{started && scriptReady && !initial.error && <Builder key={`${attempt}-${locale}`} ref={editorRef} minHeight="100%" style={{ height: "100%", width: "100%" }} options={options} onReady={onReady} scriptUrl={embedUrl}/>}</div>
+    <div className={styles.unlayerHost}><div id={editorId} ref={hostRef}/></div>
     {initial.imported && ready && <div className={styles.unlayerMigration} role="note">{zh ? "原邮件已作为 HTML 内容块导入，可编辑其代码或添加新的内容块。原始设计数据已保留。" : "Your existing email was imported as an HTML block. Edit its code or add new content blocks. The original design is preserved."}</div>}
     {saveError && <div className={styles.unlayerSaveError} role="alert">{saveError}</div>}
     {!ready && !loadError && !initial.error && <div className={styles.unlayerStatus} role="status">{scriptReady && !started ? <><strong>{zh ? "Unlayer 已准备就绪" : "Unlayer is ready"}</strong><button type="button" onClick={() => setStarted(true)}>{zh ? "启动邮件编辑器" : "Open email editor"}</button></> : <><span className={styles.unlayerSpinner}/>{zh ? "正在加载 Unlayer 编辑器…" : "Loading Unlayer editor…"}</>}</div>}
