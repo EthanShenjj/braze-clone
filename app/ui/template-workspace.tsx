@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, Plus, Save } from "lucide-react";
+import { loadUnlayerScript } from "@/lib/unlayer-client";
 import type { Locale } from "@/lib/i18n";
 import { initialCanvasGraph, isCanvasGraph, validateCanvasGraph, type CanvasGraph } from "@/lib/canvas-model";
 import { variantsFor } from "@/lib/in-app-model";
@@ -41,7 +42,9 @@ export default function TemplateWorkspace({ page, locale, notify }: { page: stri
 }
 function TemplateDetail({ page, locale, existing, save, onClose, notify }: { page: string; locale: Locale; existing?: WorkspaceRow; save: (payload: Partial<WorkspaceRow>, existing?: WorkspaceRow) => Promise<WorkspaceRow>; onClose: () => void; notify: (s: string) => void }) {
   const [record, setRecord] = useState(existing); const [name, setName] = useState(existing?.name ?? ""); const [description, setDescription] = useState(existing?.description ?? ""); const [category, setCategory] = useState(String(existing?.data.category ?? "Custom")); const [mode, setMode] = useState<EditorMode>((existing?.data.emailEditorMode as EditorMode) ?? "html");
-  const channel = channelFor[page]; const source = existing?.data ?? {};
+  const channel = channelFor[page];
+  useEffect(() => { if (channel === "email") void loadUnlayerScript().catch(() => {}); }, [channel]);
+  const source = existing?.data ?? {};
   const config: Record<string, unknown> = { ...source, ...(source.config as Record<string, unknown> ?? {}) };
   if (source.variant && channel === "iam") config.iamVariants = [source.variant];
   if (source.variant && channel === "webhook") config.webhookVariants = [source.variant];
@@ -55,6 +58,9 @@ function TemplateDetail({ page, locale, existing, save, onClose, notify }: { pag
     try {
       if (!name.trim()) throw new Error("Enter a template name first.");
       const current = { ...draft, ...patch, config: { ...draft.config, ...patch?.config } };
+      // Imported templates may contain a primary variant mirror from a Campaign.
+      // Keep it in sync with the single email design exposed by this editor.
+      if (channel === "email" && current.config.emailEditorEngine === "unlayer" && Array.isArray(current.config.variants)) current.config.variants = current.config.variants.map((variant, index) => index ? variant : { ...variant, subject: current.subject, body: current.body, editorMode: "drag", editorEngine: "unlayer", unlayerJson: current.config.emailUnlayerJson, unlayerVersion: current.config.emailUnlayerVersion, unlayerMigration: current.config.emailUnlayerMigration });
       let graph: CanvasGraph | undefined;
       if (page === "canvas-templates") { graph = JSON.parse(graphSource); if (!isCanvasGraph(graph)) throw new Error("Invalid Canvas graph."); const issues = validateCanvasGraph(graph); if (issues.length) throw new Error(issues.join(" ")); }
       if (page === "email-link-templates" && !/^https?:\/\//.test(url)) throw new Error("Enter an HTTP or HTTPS link.");
@@ -64,7 +70,7 @@ function TemplateDetail({ page, locale, existing, save, onClose, notify }: { pag
   };
   return <WorkspacePage title={record ? name : `Create ${workspaceTitle(page).replace(/s$/, "")}`} description="Configure and preview your reusable template." actions={<><button className="secondary" onClick={() => { if (!dirty || window.confirm("Discard your unsaved changes?")) onClose(); }}><ArrowLeft size={15}/> Back to templates</button><button className="primary" disabled={saving} onClick={() => void persist()}><Save size={15}/> {saving ? "Saving…" : "Save template"}</button></>}>
     {error && <Notice error>{error}</Notice>}<Card title="Template details"><div className={styles.grid}><FormField label="Template name *"><input required value={name} onChange={e => { setName(e.target.value); update({ name: e.target.value }); }}/></FormField><FormField label="Category"><select value={category} onChange={e => setCategory(e.target.value)}>{["Custom", "Onboarding", "Promotional", "Transactional", "Newsletter"].map(c => <option key={c}>{c}</option>)}</select></FormField><FormField label="Description"><input value={description} onChange={e => setDescription(e.target.value)}/></FormField></div></Card>
-    {channel === "email" ? <Card title="Email design"><div className={styles.form}><FormField label="Subject"><input value={draft.subject} onChange={e => update({ subject: e.target.value })}/></FormField><FormField label="Editor"><select value={mode} onChange={e => { setMode(e.target.value as EditorMode); update({ config: { emailEditorMode: e.target.value } }); }}><option value="html">HTML Code Editor</option><option value="plain">Plain-text Editor</option><option value="drag">Drag-and-Drop Editor (Beefree)</option></select></FormField><div className={styles.buttonRow}><button className="primary" onClick={() => { if (!name.trim()) { setError("Enter a template name first."); return; } setEditorOpen(true); }}>Edit design</button><button className="secondary" onClick={() => setPreview(true)}>Preview</button></div>{draft.body && <iframe title="Email template preview" sandbox="" className={styles.preview} srcDoc={mode === "plain" ? `<pre>${draft.body.replaceAll("<", "&lt;")}</pre>` : draft.body}/>}</div></Card>
+    {channel === "email" ? <Card title="Email design"><div className={styles.form}><FormField label="Subject"><input value={draft.subject} onChange={e => update({ subject: e.target.value })}/></FormField><FormField label="Editor"><select value={mode} onChange={e => { setMode(e.target.value as EditorMode); update({ config: { emailEditorMode: e.target.value } }); }}><option value="html">HTML Code Editor</option><option value="plain">Plain-text Editor</option><option value="drag">Drag-and-Drop Editor (Unlayer)</option></select></FormField><div className={styles.buttonRow}><button className="primary" onClick={() => { if (!name.trim()) { setError("Enter a template name first."); return; } setEditorOpen(true); }}>Edit design</button><button className="secondary" onClick={() => setPreview(true)}>Preview</button></div>{draft.body && <iframe title="Email template preview" sandbox="" className={styles.preview} srcDoc={mode === "plain" ? `<pre>${draft.body.replaceAll("<", "&lt;")}</pre>` : draft.body}/>}</div></Card>
       : channel === "iam" ? <InAppCampaignCompose draft={draft} update={update} saveCampaign={persist} notify={notify}/>
       : channel === "webhook" ? <WebhookEditor draft={draft} update={update} openTest={() => setPreview(true)}/>
       : page === "canvas-templates" ? <Card title="Canvas journey graph"><FormField label="Journey graph JSON"><textarea rows={22} className={styles.code} value={graphSource} onChange={e => setGraphSource(e.target.value)}/></FormField><p className={styles.subtle}>Contains the saved nodes, edges and message configurations. Applying a template creates a new Canvas draft.</p></Card>

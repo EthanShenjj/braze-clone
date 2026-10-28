@@ -1,6 +1,6 @@
 # Braze Local Demo
 
-一个可本地运行的 Braze 控制台交互复刻项目。界面保留英文，产品与渠道说明使用中文。它不会调用 Braze、APNs、FCM 或邮件服务商；配置 Beefree 凭证后，拖拽邮件编辑器会连接 Beefree SDK 服务。Webhook 外联默认关闭，只有显式启用并加入主机白名单后才会发送。
+一个可本地运行的 Braze 控制台交互复刻项目。界面保留英文，产品与渠道说明使用中文。它不会调用 Braze、APNs、FCM 或邮件服务商；拖拽邮件编辑器使用 Unlayer Email Builder，编辑时会连接 Unlayer 服务。Webhook 外联默认关闭，只有显式启用并加入主机白名单后才会发送。
 
 ## 启动
 
@@ -13,21 +13,22 @@ npm run dev
 
 打开 `http://localhost:3000`。本地数据存储在 `.data/braze-local.sqlite`：Campaign、资源、1,000 个合成用户、消息事件、执行快照和审计记录在重启后仍会保留。通过 Demo Lab 的 **Reset sample data** 恢复种子数据。
 
-### Beefree 邮件编辑器
+### Unlayer 邮件编辑器
 
-新建邮件的 **Drag-and-drop editor** 默认使用 Beefree SDK。先在 [Beefree Developer Console](https://developers.beefree.io/) 创建 Email Builder 应用，再复制示例环境变量并填写服务端凭证：
-
-```bash
-cp .env.example .env.local
-```
+新建邮件和邮件模板的 **Drag-and-drop editor** 使用官方 `react-email-editor` 接入 [Unlayer Email Builder](https://docs.unlayer.com/builder/email-builder/quickstart)。基础编辑可不填 Project ID；如需账户配置与付费功能，在 [Unlayer Console](https://console.unlayer.com/) 中获取 Project ID，并在该项目的 Allowed Domains 加入本地和生产域名。
 
 ```dotenv
-BEEFREE_CLIENT_ID=your-client-id
-BEEFREE_CLIENT_SECRET=your-client-secret
-BEEFREE_UID=braze-local-user
+NEXT_PUBLIC_UNLAYER_PROJECT_ID=
+NEXT_PUBLIC_UNLAYER_BUILDER_VERSION=1.489.0
 ```
 
-重启 `npm run dev` 后生效。Client Secret 只由 `/api/beefree/token` 服务端路由读取，不会进入浏览器 bundle。编辑器保存时会把 Beefree 设计 JSON 和生成的 HTML 一起写入 Campaign；预览、测试和发送继续使用生成的 HTML。已有 GrapesJS/MJML 草稿仍由原编辑器打开。
+环境变量可从 `.env.example` 复制；修改后重启开发服务，线上环境需重新构建。Project ID 是公开配置，不是 API Key。
+
+保存时同时保存 Unlayer 设计 JSON、构建器版本和 HTML。邮件各变体独立保存设计；模板可应用到 Campaign 后继续编辑。Braze Liquid 个性化变量和退订/偏好中心链接会原样进入 HTML，继续由当前邮件预览、测试和发送流程解析。
+
+旧 Beefree 邮件会用已有 HTML 导入为一个 HTML 内容块，支持编辑代码或添加 Unlayer 新内容块；原始 Beefree JSON 和迁移前 HTML 均保留。此方式不逐块转换 Beefree 的设计结构。缺少 HTML 的旧设计和损坏的 Unlayer JSON 会阻止加载并显示错误，避免被空设计覆盖。已有 GrapesJS/MJML 草稿继续使用原编辑器。无需再配置 Beefree 凭证，token 代理已移除。
+
+用户所引用的 [`@unlayer/sdk`](https://docs.unlayer.com/sdk) 是服务端 Cloud API 客户端，与浏览器 Email Builder 分工不同。本次编辑器、导出和本地模板保存不需要服务端 API Key，也不会将 API Key 放入浏览器。
 
 在 Vercel Serverless 环境中，SQLite 会写入函数的临时目录，因此数据只在同一实例存活期间保留。线上新建的 Canvas 草稿改为保存在当前浏览器的 `localStorage`，刷新后仍可编辑，但换设备、清除浏览器数据或使用无痕窗口会丢失；浏览器草稿无法运行模拟或同步到其他模块。本地运行仍使用重启后持久化的 SQLite。正式生产环境需要替换为托管数据库，才能提供跨设备共享和可靠的模拟运行。
 

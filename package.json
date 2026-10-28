@@ -21,7 +21,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@beefree.io/sdk": "^11.7.1",
     "@types/node": "^22.10.2",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
@@ -34,6 +33,7 @@
     "next": "^16.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-email-editor": "^2.1.3",
     "sanitize-html": "^2.18.1",
     "typescript": "^5.7.2"
   }
