@@ -6,13 +6,14 @@ import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties }
 import type { Component, Editor } from "grapesjs";
 import {
   AlignCenter, AlignLeft, AlignRight, Bold, ChevronDown, ChevronLeft, Code2, Copy, Eye, Image as ImageIcon,
-  Info, Italic, LayoutGrid, Link2, List as ListIcon, Mail, Minus, Monitor, PanelTop, Plus, Redo2,
-  Rows3, Smartphone, Sparkles, Strikethrough, Trash2, Type, Underline, Undo2, X,
+  Info, Italic, Link2, Mail, Monitor, Redo2, Smartphone, Strikethrough, Underline, Undo2, X,
 } from "lucide-react";
 import styles from "./email-dnd.module.css";
+import GrapesSidebar from "./email-grapes-sidebar";
+import { grapesImport, emailRowLayouts, grapesRowMarkup } from "@/lib/email-grapes-template";
 import {
-  blockText, defaultStyle, downloadHtmlFile, emailFontFamilies, escapeHtml,
-  normalizeRows, normalizeStyle, type EmailBlock, type EmailRow, type EmailStyle, type MenuItem, type SocialItem,
+  blockText, downloadHtmlFile, emailFontFamilies, escapeHtml,
+  normalizeRows, normalizeStyle, type EmailBlock, type EmailStyle, type MenuItem, type SocialItem,
 } from "@/lib/email-editor-model";
 import { hasHtmlStyleVoidTags, normalizeMjmlDocument, normalizeXmlVoidTags } from "@/lib/email-mjml";
 import { translate, type Locale } from "@/lib/i18n";
@@ -273,10 +274,6 @@ function PersonalizationPanel({ onClose, onInsert, customAttributes }: { onClose
   </section>;
 }
 
-function Stepper({ value, min = 0, max = 200, onChange }: { value: number; min?: number; max?: number; onChange: (value: number) => void }) {
-  return <span className={styles.stepper}><button onClick={() => onChange(Math.max(min, value - 1))}><Minus size={12}/></button><span>{value}</span><button onClick={() => onChange(Math.min(max, value + 1))}><Plus size={12}/></button></span>;
-}
-
 export default function GrapesEmailEditor({ locale, draft, variantName, save, onClose, onSendingSettings, onOpenTest }: {
   locale: Locale; draft: CampaignLike; variantName: string; save: (patch: SavePatch) => Promise<boolean>;
   onClose: () => void; onSendingSettings: () => void; onOpenTest: () => void;
@@ -293,31 +290,37 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
   const [saveState, setSaveState] = useState<"saved" | "saving" | "unsaved">("saved");
   const [autocomplete, setAutocomplete] = useState(false);
   const [autocompleteQuery, setAutocompleteQuery] = useState("");
-  const [editorError, setEditorError] = useState("");
+  const [migration] = useState(() => grapesImport(draft.config, draft.body));
+  const [editorError, setEditorError] = useState(migration.error);
+  const [saveError, setSaveError] = useState("");
+  const savingRef = useRef<Promise<boolean> | null>(null);
+  const changeRef = useRef(0);
+  const lastSavedChange = useRef(0);
   const [globalStyle, setGlobalStyle] = useState<EmailStyle>(() => normalizeStyle(draft.config?.emailStyle));
   const customAttributes = useUserAttributes(leftMode === "personalization" || autocomplete);
   const editorHostRef = useRef<HTMLDivElement | null>(null);
-  const blocksRef = useRef<HTMLDivElement | null>(null);
   const editorRef = useRef<Editor | null>(null);
   const captureTimerRef = useRef<number | null>(null);
   const savedRangeRef = useRef<Range | null>(null);
   const readyRef = useRef(false);
   const snapshotRef = useRef<EditorSnapshot>({ project: {}, mjml: "", html: draft.body ?? "" });
-  const savedProject = draft.config?.emailGrapesProject as Record<string, unknown> | undefined;
-  const savedMjml = typeof draft.config?.emailMjml === "string" ? draft.config.emailMjml : "";
+  const savedProject = migration.imported ? undefined : draft.config?.emailGrapesProject as Record<string, unknown> | undefined;
+  const savedMjml = migration.imported ? migration.mjml : typeof draft.config?.emailMjml === "string" ? draft.config.emailMjml : "";
   const serializedProject = savedProject ? JSON.stringify(savedProject) : "";
   const canLoadSavedProject = draft.config?.emailGrapesSchemaVersion === 1 && !hasHtmlStyleVoidTags(savedMjml) && !hasHtmlStyleVoidTags(serializedProject) && !serializedProject.includes("<parsererror");
   const initialMjml = useMemo(() => normalizeMjmlDocument(savedMjml || legacyRowsToMjml(draft.config?.emailRows, draft.config?.emailStyle, draft.config?.emailBlockTheme)), [draft.config?.emailRows, draft.config?.emailStyle, draft.config?.emailBlockTheme, savedMjml]);
 
   const capture = useCallback((editor = editorRef.current) => {
-    if (!editor || !readyRef.current) return snapshotRef.current;
+    if (!editor || !readyRef.current) throw new Error("The email editor is not ready.");
     const mjml = normalizeMjmlDocument(String(editor.runCommand("mjml-code") ?? editor.getHtml()));
     let html = draft.body ?? "";
-    try { html = htmlFromResult(editor.runCommand("mjml-code-to-html", { mjml }), html); } catch (error) { console.error("MJML compilation failed", error); }
+    const compiled = editor.runCommand("mjml-code-to-html", { mjml });
+    html = htmlFromResult(compiled, "");
+    if (!html.trim() || !mjml.includes("<mj-body")) throw new Error("The email could not be exported. Your saved design has not been changed.");
     let project = snapshotRef.current.project;
-    try { project = editor.getProjectData() as Record<string, unknown>; } catch (error) { console.error("GrapesJS project serialization failed", error); }
+    project = editor.getProjectData() as Record<string, unknown>;
     const theme = normalizeEmailPreferences({ editor: draft.config?.emailBlockTheme }).editor;
-    const css = `<style>a:not([data-custom-color]){color:${globalStyle.linkColor}}p{margin-top:0;margin-bottom:${theme.paragraph.spacing}px}li{margin-bottom:${theme.list.spacing}px}.braze-icon-mobile{font-size:${theme.icon.fontSize}px;text-align:${theme.icon.align}}@media(max-width:480px){.braze-icon-mobile{font-size:${theme.icon.mobileFontSize}px!important;text-align:${theme.icon.mobileAlign}!important;padding:${theme.icon.mobilePadding.top}px ${theme.icon.mobilePadding.right}px ${theme.icon.mobilePadding.bottom}px ${theme.icon.mobilePadding.left}px!important}}</style>`;
+    const css = `<style>.email-hide-desktop{display:none!important}@media(max-width:480px){.email-hide-mobile{display:none!important}.email-hide-desktop{display:block!important}}a:not([data-custom-color]){color:${globalStyle.linkColor}}p{margin-top:0;margin-bottom:${theme.paragraph.spacing}px}li{margin-bottom:${theme.list.spacing}px}.braze-icon-mobile{font-size:${theme.icon.fontSize}px;text-align:${theme.icon.align}}@media(max-width:480px){.braze-icon-mobile{font-size:${theme.icon.mobileFontSize}px!important;text-align:${theme.icon.mobileAlign}!important;padding:${theme.icon.mobilePadding.top}px ${theme.icon.mobilePadding.right}px ${theme.icon.mobilePadding.bottom}px ${theme.icon.mobilePadding.left}px!important}}</style>`;
     html = html.includes("</head>") ? html.replace("</head>", `${css}</head>`) : css + html;
     html = html.replace(/<a\b[^>]*>/gi, tag => { const href = /href=["']([^"']+)["']/i.exec(tag)?.[1]; const alias = linkAliasesRef.current.find(row => row.url === href); return alias?.alias ? tag.replace(/>$/, ` data-link-alias="${attr(alias.alias)}" data-link-tracking="${alias.tracking}">`) : tag; });
     snapshotRef.current = { project, mjml, html };
@@ -326,18 +329,19 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
 
   const queueCapture = useCallback(() => {
     if (!readyRef.current) return;
+    changeRef.current++; setSaveState(previous => previous === "saving" ? previous : "unsaved");
     if (captureTimerRef.current) window.clearTimeout(captureTimerRef.current);
-    captureTimerRef.current = window.setTimeout(() => { capture(); setRevision(value => value + 1); }, 180);
+    captureTimerRef.current = window.setTimeout(() => { try { capture(); setRevision(value => value + 1); } catch (error) { setSaveError(error instanceof Error ? error.message : "Unable to export email."); } }, 180);
   }, [capture]);
 
   useEffect(() => {
     let cancelled = false;
     let editor: Editor | null = null;
     async function initialize() {
-      if (!editorHostRef.current || !blocksRef.current) return;
+      if (!editorHostRef.current || migration.error) return;
       try {
         const [{ default: grapesjs }, { default: grapesJSMJML }] = await Promise.all([import("grapesjs"), import("grapesjs-mjml")]);
-        if (cancelled || !editorHostRef.current || !blocksRef.current) return;
+        if (cancelled || !editorHostRef.current) return;
         const pluginsOpts: Record<string, unknown> = {};
         pluginsOpts[grapesJSMJML as unknown as string] = { resetBlocks: true, resetDevices: true, useCustomTheme: false, useXmlParser: false, columnsPadding: "0 5px" };
         editor = grapesjs.init({
@@ -347,7 +351,8 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
           fromElement: false,
           storageManager: false,
           panels: { defaults: [] },
-          blockManager: { appendTo: blocksRef.current },
+          blockManager: { custom: true },
+          telemetry: false,
           selectorManager: { componentFirst: true },
           plugins: [grapesJSMJML],
           pluginsOpts,
@@ -370,7 +375,7 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
           ["braze-image", "IMAGE", "CONTENT", '<mj-image src="https://placehold.co/600x260/e9e4f4/4b3a86?text=Image" alt="Image" padding="10px" />'],
           ["braze-button", "BUTTON", "CONTENT", `<mj-button ${buttonAttributes} href="https://">Button</mj-button>`],
           ["braze-divider", "DIVIDER", "CONTENT", '<mj-divider border-color="#dcd9e0" border-width="1px" padding="20px" />'],
-          ["braze-spacer", "SPACER", "CONTENT", '<mj-spacer height="44px" />'],
+          ["braze-spacer", "SPACER", "CONTENT", '<mj-spacer height="60px" />'],
           ["braze-social", "SOCIAL", "CONTENT", '<mj-social align="center"><mj-social-element name="facebook" href="https://"></mj-social-element><mj-social-element name="instagram" href="https://"></mj-social-element></mj-social>'],
           ["braze-menu", "MENU", "CONTENT", '<mj-navbar><mj-navbar-link href="https://">Menu item</mj-navbar-link></mj-navbar>'],
           ["braze-html", "HTML", "CONTENT", '<mj-raw><div style="padding:10px">Custom HTML</div></mj-raw>'],
@@ -381,9 +386,19 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
           blocks.push(["braze-list", "LIST", "CONTENT", `<mj-text ${themeAttributes(list, globalStyle.fontFamily)}><${listTag} start="${list.start}" style="margin:0;padding-left:${list.indent}px;list-style-type:${list.marker};direction:${list.direction}"><li style="margin-bottom:${list.spacing}px">List item 1</li><li>List item 2</li></${listTag}></mj-text>`]);
           blocks.push(["braze-icon", "ICONS", "CONTENT", `<mj-text ${themeAttributes(theme.icon, globalStyle.fontFamily)}><div class="braze-icon-mobile" style="direction:${theme.icon.direction}"><span style="padding:${theme.icon.padding.top}px ${theme.icon.padding.right}px ${theme.icon.padding.bottom}px ${theme.icon.padding.left}px;margin-right:${theme.icon.itemSpacing}px;font-size:${theme.icon.height}px">●</span>Icon text</div></mj-text>`]);
         }
+        if (!blocks.some(([id]) => id === "braze-list")) blocks.push(["braze-list", "LIST", "BASIC BLOCKS", '<mj-text css-class="braze-list" padding="10px"><ul><li>List item 1</li><li>List item 2</li></ul></mj-text>']);
+        if (!blocks.some(([id]) => id === "braze-icon")) blocks.push(["braze-icon", "ICONS", "MEDIA", '<mj-text css-class="braze-icon" align="center" padding="10px"><span>★</span> Icon text</mj-text>']);
+        blocks.push(["braze-video", "VIDEO", "MEDIA", '<mj-image css-class="braze-video" src="https://placehold.co/600x338/e9e4f4/4b3a86?text=Video" alt="Video thumbnail" href="https://" padding="10px" />']);
+        emailRowLayouts.forEach((widths, index) => blocks.push([`braze-row-${index}`, "ROW", "ROWS", grapesRowMarkup(widths, globalStyle.contentBg)]));
         blocks.forEach(([id, label, category, content]) => blockManager.add(id, { label, category, content, activate: true, select: true }));
 
-        const updateSelected = (component?: Component) => setSelected(selectedState(component ?? editor?.getSelected()));
+        const updateSelected = (component?: Component) => {
+          let target = component ?? editor?.getSelected();
+          while (target && !String(target.get("type")).startsWith("mj-")) target = target.parent();
+          if (target?.get("type") === "mj-body" || target?.get("type") === "mj-mjml") target = undefined;
+          if (target && target !== editor?.getSelected()) { editor?.select(target); return; }
+          setSelected(selectedState(target));
+        };
         editor.on("component:selected", updateSelected);
         editor.on("component:deselected", () => setSelected(null));
         editor.on("component:update", queueCapture);
@@ -397,7 +412,7 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
           if (cancelled || !editor) return;
           readyRef.current = true;
           setReady(true);
-          capture(editor);
+          try { capture(editor); } catch (error) { setEditorError(error instanceof Error ? error.message : "Unable to export email."); setReady(false); readyRef.current = false; }
           const doc = editor.Canvas.getDocument();
           if (!doc) return;
           doc.addEventListener("keyup", event => {
@@ -429,43 +444,56 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const persist = useCallback(async () => {
-    const snapshot = capture();
-    setSaveState("saving");
-    const ok = await save({
-      subject,
-      body: snapshot.html,
-      config: {
-        ...draft.config,
-        emailEditorMode: "drag",
-        emailEditorEngine: "grapesjs-mjml",
-        emailGrapesSchemaVersion: 1,
-        emailGrapesProject: snapshot.project,
-        emailMjml: snapshot.mjml,
-        emailStyle: globalStyle,
-        emailLinkAliases: linkAliasesRef.current,
-      },
-    });
-    setSaveState(ok ? "saved" : "unsaved");
-    return ok;
-  }, [capture, draft.config, globalStyle, save, subject]);
+  const persist = useCallback((): Promise<boolean> => {
+    if (savingRef.current) return savingRef.current;
+    if (!readyRef.current || editorError) return Promise.resolve(false);
+    const task = (async () => {
+      setSaveState("saving"); setSaveError("");
+      const savingRevision = changeRef.current;
+      try {
+        const snapshot = capture();
+        const config = { ...draft.config, emailEditorMode: "drag", emailEditorEngine: "grapesjs-mjml", emailGrapesSchemaVersion: 1, emailGrapesProject: snapshot.project, emailMjml: snapshot.mjml, emailStyle: globalStyle, emailLinkAliases: linkAliasesRef.current,
+          ...(migration.imported && !draft.config?.emailGrapesMigration ? { emailGrapesMigration: { source: draft.config?.emailEditorEngine ?? "html", originalHtml: draft.body ?? "", mode: "html-block" } } : {}) };
+        const ok = await save({ subject, body: snapshot.html, config });
+        const clean = savingRevision === changeRef.current;
+        if (ok && clean) lastSavedChange.current = savingRevision;
+        setSaveState(ok && clean ? "saved" : "unsaved");
+        if (!ok) setSaveError("Unable to save email. Please try again.");
+        return ok && clean;
+      } catch (error) { setSaveState("unsaved"); setSaveError(error instanceof Error ? error.message : "Unable to save email."); return false; }
+    })();
+    savingRef.current = task;
+    void task.finally(() => { if (savingRef.current === task) savingRef.current = null; });
+    return task;
+  }, [capture, draft.config, draft.body, editorError, globalStyle, migration.imported, save, subject]);
 
   useEffect(() => {
-    if (!ready || revision === 0) return;
+    if (!ready || revision === 0 || lastSavedChange.current === changeRef.current || saveState === "saving" || saveError) return;
     setSaveState("unsaved");
     const timer = window.setTimeout(() => { void persist(); }, 1200);
     return () => window.clearTimeout(timer);
-  }, [persist, ready, revision]);
+  }, [persist, ready, revision, saveState, saveError]);
 
-  const settingsFirst = useRef(true);
   useEffect(() => {
-    if (!ready) return;
-    if (settingsFirst.current) { settingsFirst.current = false; return; }
-    const editor = editorRef.current;
-    const body = editor?.getWrapper()?.findType("mj-body")[0];
+    if (saveState === "saved") return;
+    const guard = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ""; };
+    window.addEventListener("beforeunload", guard); return () => window.removeEventListener("beforeunload", guard);
+  }, [saveState]);
+  const previousStyle = useRef(globalStyle);
+  useEffect(() => {
+    const previous = previousStyle.current; previousStyle.current = globalStyle;
+    if (!ready || previous === globalStyle) return;
+    const editor = editorRef.current, body = editor?.getWrapper()?.findType("mj-body")[0];
     body?.addAttributes({ "background-color": globalStyle.canvasBg, width: `${globalStyle.contentWidth}px` });
-    setRevision(value => value + 1);
-  }, [globalStyle, ready, subject]);
+    body?.onAll(component => {
+      const attrs = component.getAttributes(); const patch: Record<string, string> = {};
+      if (component.get("type") === "mj-section" && (!attrs["background-color"] || attrs["background-color"] === previous.contentBg)) patch["background-color"] = globalStyle.contentBg;
+      if (["mj-text", "mj-button"].includes(String(component.get("type"))) && (!attrs["font-family"] || attrs["font-family"] === previous.fontFamily)) patch["font-family"] = globalStyle.fontFamily;
+      if (component.get("type") === "mj-text" && (!attrs.color || attrs.color === previous.textColor)) patch.color = globalStyle.textColor;
+      if (Object.keys(patch).length) component.addAttributes(patch);
+    });
+    queueCapture();
+  }, [globalStyle, ready, queueCapture]);
 
   const updateSelectedAttributes = (patch: Record<string, string | number>) => {
     const component = editorRef.current?.getSelected();
@@ -476,25 +504,6 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
   };
   const selectedAttr = (key: string, fallback = "") => selected?.attributes[key] ?? fallback;
   const selectedNumber = (key: string, fallback: number) => Number.parseFloat(selectedAttr(key)) || fallback;
-  const addRow = (columns: number) => {
-    const editor = editorRef.current;
-    if (!editor) return;
-    const width = Math.floor(100 / columns);
-    const body = editor.getWrapper()?.findType("mj-body")[0];
-    body?.append(`<mj-section background-color="#ffffff" padding="10px">${Array.from({ length: columns }, (_, index) => `<mj-column width="${index === columns - 1 ? 100 - width * (columns - 1) : width}%"><mj-text padding="10px">Add your message here.</mj-text></mj-column>`).join("")}</mj-section>`);
-    queueCapture();
-  };
-  const removeSelected = () => { editorRef.current?.getSelected()?.remove(); editorRef.current?.select(); setSelected(null); queueCapture(); };
-  const duplicateSelected = () => {
-    const component = editorRef.current?.getSelected();
-    const parent = component?.parent();
-    if (!component || !parent) return;
-    const collection = parent.components();
-    const index = collection.models.indexOf(component);
-    const copy = collection.add(component.toJSON(), { at: index + 1 });
-    if (copy) editorRef.current?.select(copy);
-    queueCapture();
-  };
   const setDeviceMode = (next: "Desktop" | "Mobile") => { setDevice(next); editorRef.current?.setDevice(next); };
   const insertText = (value: string, stripTrigger = false) => {
     const editor = editorRef.current;
@@ -563,59 +572,44 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
 
   return <section className={cx(styles.page, leftMode === "personalization" && styles.personalizationPage)}>
     <header className={styles.header}>
-      <button className={styles.headerButton} onClick={onClose}><ChevronLeft size={15}/>{translate(locale, "Back")}</button>
-      <div className={styles.headerTitle}><Mail size={17}/><b>{variantName}</b><small>GrapesJS + MJML</small></div>
+      <button className={styles.headerButton} disabled={saveState === "saving"} onClick={() => ready ? void saveAndClose() : onClose()}><ChevronLeft size={15}/>{translate(locale, "Back")}</button>
+      <div className={styles.headerTitle}><Mail size={17}/><b>{variantName}</b></div>
       <span className={styles.saveState}>{saveState === "saving" ? "Saving…" : saveState === "unsaved" ? "Unsaved changes" : "All changes saved"}</span>
-      <button className={styles.headerButton} onClick={() => { void persist().then(ok => { if (ok) onOpenTest(); }); }}><Eye size={15}/>{translate(locale, "Preview and test")}</button>
-      <button className={styles.headerButton} onClick={() => void saveAndSending()}>{translate(locale, "Sending info")}</button>
+      <button className={styles.headerButton} disabled={!ready || saveState === "saving"} onClick={() => { void persist().then(ok => { if (ok) onOpenTest(); }); }}><Eye size={15}/>{translate(locale, "Preview and test")}</button>
+      <button className={styles.headerButton} disabled={!ready || saveState === "saving"} onClick={() => void saveAndSending()}>{translate(locale, "Sending info")}</button>
     </header>
-    {leftMode !== "personalization" && <nav className={styles.iconRail}><button onClick={onClose} aria-label="Back"><ChevronLeft size={19}/></button></nav>}
+    {leftMode !== "personalization" && <nav className={styles.iconRail}><button disabled={saveState === "saving"} onClick={() => ready ? void saveAndClose() : onClose()} aria-label="Back"><ChevronLeft size={19}/></button></nav>}
     <aside className={styles.leftRail}>
       {leftMode === "personalization" ? <PersonalizationPanel onClose={() => setLeftMode("content")} onInsert={insertText} customAttributes={customAttributes}/> : <>
         <div className={styles.leftTitle}>MESSAGE</div>
         <button className={leftMode === "content" ? styles.leftActive : undefined} onClick={() => setLeftMode("content")}>Content</button>
         <button onClick={openPersonalization}>Personalization</button>
         <button className={leftMode === "links" ? styles.leftActive : undefined} onClick={() => setLeftMode("links")}>Link Management</button>
-        {leftMode === "links" && <div className={styles.leftPanel}><b>Link Management</b><p>Give links aliases to track clicks in user profiles and reports.</p>{[...new Set([...snapshotRef.current.html.matchAll(/<a\b[^>]*href=["'](https?:\/\/[^"']+)["']/gi)].map(match => match[1]))].map(url => { const entry = linkAliases.find(row => row.url === url); const update = (patch: Partial<{ alias: string; tracking: boolean }>) => { setLinkAliases(current => { const rows = current.some(row => row.url === url) ? current.map(row => row.url === url ? { ...row, ...patch } : row) : [...current, { url, alias: "", tracking: true, ...patch }]; linkAliasesRef.current = rows; return rows; }); setRevision(value => value + 1); }; return <div key={url} className={styles.linkRow}><small>{url}</small><label>Link alias<input aria-label={`Alias for ${url}`} value={entry?.alias ?? ""} onChange={event => update({ alias: event.target.value })}/></label><label><input type="checkbox" checked={entry?.tracking ?? true} onChange={event => update({ tracking: event.target.checked })}/> Track this alias</label></div>; })}</div>}
+        {leftMode === "links" && <div className={styles.leftPanel}><b>Link Management</b><p>Give links aliases to track clicks in user profiles and reports.</p>{[...new Set([...snapshotRef.current.html.matchAll(/<a\b[^>]*href=["'](https?:\/\/[^"']+)["']/gi)].map(match => match[1]))].map(url => { const entry = linkAliases.find(row => row.url === url); const update = (patch: Partial<{ alias: string; tracking: boolean }>) => { setLinkAliases(current => { const rows = current.some(row => row.url === url) ? current.map(row => row.url === url ? { ...row, ...patch } : row) : [...current, { url, alias: "", tracking: true, ...patch }]; linkAliasesRef.current = rows; return rows; }); queueCapture(); }; return <div key={url} className={styles.linkRow}><small>{url}</small><label>Link alias<input aria-label={`Alias for ${url}`} value={entry?.alias ?? ""} onChange={event => update({ alias: event.target.value })}/></label><label><input type="checkbox" checked={entry?.tracking ?? true} onChange={event => update({ tracking: event.target.checked })}/> Track this alias</label></div>; })}</div>}
         <button className={leftMode === "languages" ? styles.leftActive : undefined} onClick={() => setLeftMode("languages")}>Languages</button>
         <small>Subject</small>
-        <div className={styles.leftPanel}><input aria-label="Email subject" value={subject} onChange={event => setSubject(event.target.value)} style={{ width: "100%", border: 0, outline: 0, font: "inherit" }}/></div>
+        <div className={styles.leftPanel}><input aria-label="Email subject" value={subject} onChange={event => { setSubject(event.target.value); queueCapture(); }} style={{ width: "100%", border: 0, outline: 0, font: "inherit" }}/></div>
         <button className={styles.styleLink} onClick={() => setRightTab("settings")}>Edit default styles</button>
       </>}
     </aside>
     <main className={cx(styles.canvasArea, styles.grapesCanvasArea)} style={pageStyle}>
-      <div className={styles.deviceModes}><button className={device === "Desktop" ? styles.deviceActive : undefined} onClick={() => setDeviceMode("Desktop")}><Monitor size={15}/></button><button className={device === "Mobile" ? styles.deviceActive : undefined} onClick={() => setDeviceMode("Mobile")}><Smartphone size={15}/></button></div>
+      <div className={styles.deviceModes}><button aria-label="Desktop preview" className={device === "Desktop" ? styles.deviceActive : undefined} onClick={() => setDeviceMode("Desktop")}><Monitor size={15}/></button><button aria-label="Mobile preview" className={device === "Mobile" ? styles.deviceActive : undefined} onClick={() => setDeviceMode("Mobile")}><Smartphone size={15}/></button></div>
       <div className={styles.textToolbar}>
         <select value={selectedAttr("font-family", globalStyle.fontFamily)} onChange={event => updateSelectedAttributes({ "font-family": event.target.value })}>{[...new Set([globalStyle.fontFamily, ...emailFontFamilies])].map(font => <option key={font}>{font}</option>)}</select>
-        <select value={Math.round(selectedNumber("font-size", 15))} onChange={event => updateSelectedAttributes({ "font-size": `${event.target.value}px` })}>{[10, 12, 14, 15, 16, 18, 22, 28, 34, 42].map(size => <option key={size}>{size}</option>)}</select>
+        <select value={Math.round(selectedNumber("font-size", 15))} onChange={event => updateSelectedAttributes({ "font-size": `${event.target.value}px` })}>{[10, 12, 13, 14, 15, 16, 18, 22, 28, 34, 42].map(size => <option key={size}>{size}</option>)}</select>
         <span className={styles.sep}/><button title="Bold" onMouseDown={event => event.preventDefault()} onClick={() => richCommand("bold")}><Bold size={15}/></button><button title="Italic" onMouseDown={event => event.preventDefault()} onClick={() => richCommand("italic")}><Italic size={15}/></button><button title="Underline" onMouseDown={event => event.preventDefault()} onClick={() => richCommand("underline")}><Underline size={15}/></button><button title="Strikethrough" onMouseDown={event => event.preventDefault()} onClick={() => richCommand("strikeThrough")}><Strikethrough size={15}/></button>
         <span className={styles.sep}/><button title="Link" onMouseDown={event => event.preventDefault()} onClick={() => { const url = window.prompt("Link URL", "https://"); if (url) richCommand("createLink", url); }}><Link2 size={15}/></button><button title="Clear formatting" onMouseDown={event => event.preventDefault()} onClick={() => richCommand("removeFormat")}><Code2 size={15}/></button>
         <span className={styles.sep}/><button onClick={() => updateSelectedAttributes({ align: "left" })}><AlignLeft size={15}/></button><button onClick={() => updateSelectedAttributes({ align: "center" })}><AlignCenter size={15}/></button><button onClick={() => updateSelectedAttributes({ align: "right" })}><AlignRight size={15}/></button>
       </div>
       {autocomplete && <div className={styles.liquidAutocomplete}><b>Dynamic variables</b>{autocompleteTokens.map(token => <button key={token.value} onMouseDown={event => event.preventDefault()} onClick={() => insertText(token.value, true)}><span>{token.label}</span><code>{token.value}</code></button>)}{!autocompleteTokens.length && <small>No matching variables</small>}</div>}
       {!ready && !editorError && <div className={styles.grapesLoading}>Loading GrapesJS email editor…</div>}
-      {editorError && <div className={styles.grapesError}>{editorError}</div>}
+      {editorError && <div className={styles.grapesError} role="alert">{editorError}</div>}
       <div ref={editorHostRef} className={styles.grapesHost}/>
-      <div className={styles.canvasHistory}><span><button disabled={!ready} onClick={() => editorRef.current?.UndoManager.undo()}><Undo2 size={16}/></button><button disabled={!ready} onClick={() => editorRef.current?.UndoManager.redo()}><Redo2 size={16}/></button></span></div>
+      <div className={styles.canvasHistory}><span><button aria-label="Undo" disabled={!ready} onClick={() => editorRef.current?.UndoManager.undo()}><Undo2 size={16}/></button><button aria-label="Redo" disabled={!ready} onClick={() => editorRef.current?.UndoManager.redo()}><Redo2 size={16}/></button></span></div>
     </main>
-    <aside className={styles.rightPanel}>
-      <div className={styles.rightTabs}>{(["content", "rows", "settings"] as const).map(name => { const Icon = name === "content" ? LayoutGrid : name === "rows" ? Rows3 : PanelTop; return <button key={name} className={rightTab === name ? styles.rightActive : undefined} onClick={() => { editorRef.current?.select(); setSelected(null); setRightTab(name); }}><Icon size={18}/><span>{name.toUpperCase()}</span></button>; })}</div>
-      {selected ? <div className={styles.properties}>
-        <div className={styles.propertyHead}><b>{selected.label} PROPERTIES</b><button onClick={removeSelected}><Trash2 size={15}/></button><button onClick={duplicateSelected}><Copy size={15}/></button><button onClick={() => { editorRef.current?.select(); setSelected(null); }}><X size={16}/></button></div>
-        {selected.type === "mj-image" && <><label className={styles.propertyColumn}>Image URL<input value={selectedAttr("src")} onChange={event => updateSelectedAttributes({ src: event.target.value })}/></label><label className={styles.propertyColumn}>Alt text<input value={selectedAttr("alt")} onChange={event => updateSelectedAttributes({ alt: event.target.value })}/></label><label className={styles.propertyColumn}>Link URL<input value={selectedAttr("href")} onChange={event => updateSelectedAttributes({ href: event.target.value })}/></label></>}
-        {selected.type === "mj-button" && <label className={styles.propertyColumn}>Link URL<input value={selectedAttr("href")} onChange={event => updateSelectedAttributes({ href: event.target.value })}/></label>}
-        {(selected.type === "mj-text" || selected.type === "mj-button") && <><div className={styles.propertyRow}><span>Text color</span><span className={styles.colorControl}><input type="color" value={selectedAttr("color", selected.type === "mj-button" ? "#ffffff" : globalStyle.textColor)} onChange={event => updateSelectedAttributes({ color: event.target.value })}/><code>{selectedAttr("color", globalStyle.textColor)}</code></span></div><div className={styles.propertyRow}><span>Line height</span><select value={selectedAttr("line-height", "1.2")} onChange={event => updateSelectedAttributes({ "line-height": event.target.value })}><option>1</option><option>1.2</option><option>1.5</option><option>1.8</option><option>2</option></select></div><div className={styles.propertyRow}><span>Letter spacing</span><Stepper value={selectedNumber("letter-spacing", 0)} min={-4} max={20} onChange={value => updateSelectedAttributes({ "letter-spacing": `${value}px` })}/></div></>}
-        {selected.type === "mj-button" && <div className={styles.propertyRow}><span>Background</span><input type="color" value={selectedAttr("background-color", "#6136cc")} onChange={event => updateSelectedAttributes({ "background-color": event.target.value })}/></div>}
-        {(selected.type === "mj-section" || selected.type === "mj-column") && <div className={styles.propertyRow}><span>Background</span><input type="color" value={selectedAttr("background-color", "#ffffff")} onChange={event => updateSelectedAttributes({ "background-color": event.target.value })}/></div>}
-        <div className={styles.propertySection}>BLOCK OPTIONS</div>
-        <label className={styles.propertyColumn}>Padding<input value={selectedAttr("padding", "10px")} onChange={event => updateSelectedAttributes({ padding: event.target.value })}/></label>
-        <label className={styles.propertyColumn}>CSS class<input value={selectedAttr("css-class")} onChange={event => updateSelectedAttributes({ "css-class": event.target.value })}/></label>
-      </div> : <>
-        <div className={cx(styles.catalogPane, styles.grapesBlockPane, rightTab !== "content" && styles.grapesPaneHidden)}><h3>CONTENT</h3><p>Drag content into the email canvas.</p><div ref={blocksRef} className={styles.grapesBlocks}/></div>
-        <div className={cx(styles.catalogPane, rightTab !== "rows" && styles.grapesPaneHidden)}><h3>ROWS</h3><p>Add an MJML row, then drag content into its columns.</p><div className={styles.rowCatalog}>{[1, 2, 3, 4].map(columns => <button key={columns} onClick={() => addRow(columns)}>{columns} column{columns > 1 ? "s" : ""}<span>{Array.from({ length: columns }, (_, index) => <i key={index}/>)}</span></button>)}</div></div>
-        <div className={cx(styles.catalogPane, rightTab !== "settings" && styles.grapesPaneHidden)}><h3>SETTINGS</h3><label className={styles.settingField}>Canvas background<input type="color" value={globalStyle.canvasBg} onChange={event => setGlobalStyle({ ...globalStyle, canvasBg: event.target.value })}/></label><label className={styles.settingField}>Content background<input type="color" value={globalStyle.contentBg} onChange={event => setGlobalStyle({ ...globalStyle, contentBg: event.target.value })}/></label><label className={styles.settingField}>Default font<select value={globalStyle.fontFamily} onChange={event => setGlobalStyle({ ...globalStyle, fontFamily: event.target.value })}>{[...new Set([globalStyle.fontFamily, ...emailFontFamilies])].map(font => <option key={font}>{font}</option>)}</select></label><label className={styles.settingField}>Content width<input type="number" min="320" max="800" value={globalStyle.contentWidth} onChange={event => setGlobalStyle({ ...globalStyle, contentWidth: Number(event.target.value) || 600 })}/></label></div>
-      </>}
-    </aside>
-    <footer className={styles.footer}><button className={styles.download} onClick={download}>Download file</button><button className={styles.done} onClick={() => void saveAndClose()}>Done</button></footer>
+    <GrapesSidebar editor={ready ? editorRef.current : null} selected={selected} tab={rightTab} onTab={setRightTab} globalStyle={globalStyle} setGlobalStyle={setGlobalStyle} onChange={() => { setSelected(selectedState(editorRef.current?.getSelected())); queueCapture(); }}/>
+    {saveError && <div className={styles.grapesSaveError} role="alert">{saveError}</div>}
+    {migration.imported && ready && <div className={styles.grapesMigration} role="note">Existing email imported as an HTML block. Original design data is preserved.</div>}
+    <footer className={styles.footer}><button className={styles.download} disabled={!ready} onClick={download}>Download file</button><button className={styles.done} disabled={!ready || saveState === "saving"} onClick={() => void saveAndClose()}>Done</button></footer>
   </section>;
 }

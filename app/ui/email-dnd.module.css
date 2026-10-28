@@ -360,3 +360,8 @@
 .unlayerMigration{position:absolute;bottom:14px;left:14px;z-index:2;max-width:calc(100% - 430px);padding:9px 12px;border:1px solid #d8cfed;border-radius:6px;background:#faf7ff;color:#514062;box-shadow:0 2px 9px #1a10251a;font-size:11px;line-height:1.5}
 .unlayerSaveError{position:absolute;top:66px;left:50%;transform:translateX(-50%);z-index:4;max-width:650px;padding:12px 18px;border:1px solid #df9c92;border-radius:6px;background:#fff4f1;color:#962d1c;font-size:13px}
 @media(max-width:900px){.unlayerMigration{max-width:calc(100% - 28px);font-size:10px}.unlayerHost{overflow:auto}.unlayerHost>div{min-width:800px}}
+
+.personalizationPage>[aria-label="Email design tools"]{grid-column:3}
+.grapesSaveError{position:absolute;z-index:40;left:50%;top:55px;max-width:600px;padding:12px 18px;transform:translateX(-50%);border:1px solid #df9c92;border-radius:5px;background:#fff4f1;color:#962d1c;font-size:12px}
+.grapesMigration{position:absolute;z-index:20;left:255px;bottom:55px;max-width:440px;padding:8px 12px;border:1px solid #d8cfed;border-radius:5px;background:#faf7ff;color:#66547b;font-size:11px}
+@media(max-width:900px){.page:has(>[aria-label="Email design tools"]){min-width:900px}.personalizationPage:has(>[aria-label="Email design tools"]){min-width:900px}}

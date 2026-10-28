@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { workspaceContentBlockHtml } from "@/lib/email-liquid";
 import styles from "./email-dnd.module.css";
-import UnlayerEmailEditor from "./email-unlayer-editor";
 import GrapesEmailEditor from "./email-grapes-editor";
 import {
   blockText, defaultBlock, defaultStyle, downloadHtmlFile, emailFontFamilies, emailLocales, emailTemplates, escapeHtml,
@@ -1315,15 +1314,7 @@ export function EmailMessageEditor({ locale, mode, variantName, draft, save, onC
   onModeChange: (mode: EditorMode) => void;
   onOpenTest: () => void;
 }) {
-  if (mode === "drag") {
-    if (["unlayer", "beefree"].includes(String(draft.config?.emailEditorEngine)) || draft.config?.emailUnlayerJson) return <UnlayerEmailEditor locale={locale} draft={draft} variantName={variantName} save={save} onClose={onClose} onSendingSettings={onSendingSettings} onOpenTest={onOpenTest} />;
-    const legacyGrapesDesign = draft.config?.emailEditorEngine === "grapesjs-mjml"
-      || Boolean(draft.config?.emailGrapesProject)
-      || typeof draft.config?.emailMjml === "string"
-      || (Array.isArray(draft.config?.emailRows) && draft.config.emailRows.length > 0);
-    if (legacyGrapesDesign) return <GrapesEmailEditor locale={locale} draft={draft} variantName={variantName} save={save} onClose={onClose} onSendingSettings={onSendingSettings} onOpenTest={onOpenTest} />;
-    return <UnlayerEmailEditor locale={locale} draft={draft} variantName={variantName} save={save} onClose={onClose} onSendingSettings={onSendingSettings} onOpenTest={onOpenTest} />;
-  }
+  if (mode === "drag") return <GrapesEmailEditor locale={locale} draft={draft} variantName={variantName} save={save} onClose={onClose} onSendingSettings={onSendingSettings} onOpenTest={onOpenTest} />;
   return <GeneralEmailEditor locale={locale} mode={mode} variantName={variantName} draft={draft} save={save} onClose={onClose} onSendingSettings={onSendingSettings} onModeChange={onModeChange} onOpenTest={onOpenTest} />;
 }
 

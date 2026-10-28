@@ -13,22 +13,13 @@ npm run dev
 
 打开 `http://localhost:3000`。本地数据存储在 `.data/braze-local.sqlite`：Campaign、资源、1,000 个合成用户、消息事件、执行快照和审计记录在重启后仍会保留。通过 Demo Lab 的 **Reset sample data** 恢复种子数据。
 
-### Unlayer 邮件编辑器
+### GrapesJS 邮件编辑器
 
-新建邮件和邮件模板的 **Drag-and-drop editor** 使用官方 `embed.js` SDK 接入 [Unlayer Email Builder](https://docs.unlayer.com/builder/email-builder/quickstart)。基础编辑可不填 Project ID；如需账户配置与付费功能，在 [Unlayer Console](https://console.unlayer.com/) 中获取 Project ID，并在该项目的 Allowed Domains 加入本地和生产域名。
+邮件和邮件模板的 **Drag-and-drop editor** 使用项目内置的 GrapesJS 与 MJML，浏览器本地运行，不需要 Unlayer／Beefree 账户、Project ID 或 API Key。
 
-```dotenv
-NEXT_PUBLIC_UNLAYER_PROJECT_ID=
-NEXT_PUBLIC_UNLAYER_BUILDER_VERSION=1.489.0
-```
+右侧提供 CONTENT、ROWS、SETTINGS：基础／媒体／高级内容块、多列行布局、工作区 Content Blocks、内容属性和全局样式。保存时同时保存 GrapesJS 项目 JSON、MJML 和邮件 HTML；每个变体独立保存，模板应用到 Campaign 后可继续编辑。Liquid 变量和退订链接保留给当前邮件预览、测试和发送流程解析。
 
-环境变量可从 `.env.example` 复制；修改后重启开发服务，线上环境需重新构建。Project ID 是公开配置，不是 API Key。
-
-保存时同时保存 Unlayer 设计 JSON、构建器版本和 HTML。邮件各变体独立保存设计；模板可应用到 Campaign 后继续编辑。Braze Liquid 个性化变量和退订/偏好中心链接会原样进入 HTML，继续由当前邮件预览、测试和发送流程解析。
-
-旧 Beefree 邮件会用已有 HTML 导入为一个 HTML 内容块，支持编辑代码或添加 Unlayer 新内容块；原始 Beefree JSON 和迁移前 HTML 均保留。此方式不逐块转换 Beefree 的设计结构。缺少 HTML 的旧设计和损坏的 Unlayer JSON 会阻止加载并显示错误，避免被空设计覆盖。已有 GrapesJS/MJML 草稿继续使用原编辑器。无需再配置 Beefree 凭证，token 代理已移除。
-
-用户所引用的 [`@unlayer/sdk`](https://docs.unlayer.com/sdk) 是服务端 Cloud API 客户端，与浏览器 Email Builder 分工不同。本次编辑器、导出和本地模板保存不需要服务端 API Key，也不会将 API Key 放入浏览器。
+已有 GrapesJS 项目直接恢复。旧 Unlayer／Beefree 邮件使用其已导出的 HTML 作为一个 HTML 块导入，可编辑代码或添加新块；原设计 JSON 和迁移前 HTML 保留。此方式不逐块转换厂商的设计结构。只有设计 JSON、缺少 HTML 的旧邮件会阻止加载，避免覆盖成空白邮件。
 
 在 Vercel Serverless 环境中，SQLite 会写入函数的临时目录，因此数据只在同一实例存活期间保留。线上新建的 Canvas 草稿改为保存在当前浏览器的 `localStorage`，刷新后仍可编辑，但换设备、清除浏览器数据或使用无痕窗口会丢失；浏览器草稿无法运行模拟或同步到其他模块。本地运行仍使用重启后持久化的 SQLite。正式生产环境需要替换为托管数据库，才能提供跨设备共享和可靠的模拟运行。
 

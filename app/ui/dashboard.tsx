@@ -1,7 +1,6 @@
 "use client";
 
 import TagPicker from "./tag-picker";
-import { loadUnlayerScript } from "@/lib/unlayer-client";
 import { preservePrimaryEmailDesign } from "@/lib/unlayer-template";
 import { SupplementaryWorkspace } from "./workspace-pages";
 import AnalyticsWorkspace from "./analytics-workspace";
@@ -55,7 +54,7 @@ type CampaignStatus = "Draft" | "Active" | "Stopped";
 type Campaign = { id: string; name: string; channel: Channel; status: CampaignStatus; schedule: string; sent: number; edited: string; subject?: string; body?: string; audience?: string; conversion?: string; config?: Record<string, unknown> };
 export type EmailEditorMode = "operator" | "drag" | "html" | "plain" | "template";
 type EmailSending = { preheader: string; whitespace: boolean; replyTo: string; bcc: string; unsubscribe: string; fromName?: string; fromAddress?: string; ipPool?: string; openTracking?: boolean; clickTracking?: boolean; gaEnabled?: boolean; utmSource?: string; utmMedium?: string; utmCampaign?: string; utmTerm?: string; utmContent?: string; subjectTranslations?: Record<string, string>; preheaderTranslations?: Record<string, string> };
-type EmailVariant = { id: string; name: string; subject?: string; body?: string; editorMode?: EmailEditorMode; rows?: EmailRow[]; sending?: EmailSending; style?: EmailStyle; editorEngine?: string; grapesProject?: Record<string, unknown>; mjml?: string; beefreeJson?: Record<string, unknown>; beefreeVersion?: number; unlayerJson?: Record<string, unknown>; unlayerVersion?: string; unlayerMigration?: Record<string, unknown> };
+type EmailVariant = { id: string; name: string; subject?: string; body?: string; editorMode?: EmailEditorMode; rows?: EmailRow[]; sending?: EmailSending; style?: EmailStyle; editorEngine?: string; grapesProject?: Record<string, unknown>; grapesSchemaVersion?: number; grapesMigration?: Record<string, unknown>; mjml?: string; beefreeJson?: Record<string, unknown>; beefreeVersion?: number; unlayerJson?: Record<string, unknown>; unlayerVersion?: string; unlayerMigration?: Record<string, unknown> };
 
 const verifiedIdentities = [
   { name: "Powered by Braze", address: "braze@mta-h466.bftmail.com" },
@@ -477,7 +476,6 @@ function ChannelCompose({ locale, draft, update, openTest, saveCampaign, notify 
 }
 
 function EmailCompose({ locale, draft, update, saveEmail, variant, setVariant, openTest }: { locale: Locale; draft: Campaign; update: (p: Partial<Campaign>) => void; saveEmail: (p: Partial<Campaign>) => Promise<boolean>; variant: number; setVariant: (x: number) => void; openTest: () => void }) {
-  useEffect(() => { void loadUnlayerScript().catch(() => {}); }, []);
   const variants = emailVariants(draft);
   const current = variants[variant] ?? variants[0];
   const currentSubject = current.subject ?? (variant === 0 ? draft.subject : undefined);
@@ -488,13 +486,15 @@ function EmailCompose({ locale, draft, update, saveEmail, variant, setVariant, o
   const savedSending = current.sending ?? (variant === 0 ? draft.config?.emailSending as EmailSending | undefined : undefined);
   const savedEditorEngine = current.editorEngine ?? (variant === 0 ? draft.config?.emailEditorEngine as string | undefined : undefined);
   const savedGrapesProject = current.grapesProject ?? (variant === 0 ? draft.config?.emailGrapesProject as Record<string, unknown> | undefined : undefined);
+  const savedGrapesSchemaVersion = current.grapesSchemaVersion ?? (variant === 0 ? draft.config?.emailGrapesSchemaVersion as number | undefined : undefined);
+  const savedGrapesMigration = current.grapesMigration ?? (variant === 0 ? draft.config?.emailGrapesMigration as Record<string, unknown> | undefined : undefined);
   const savedMjml = current.mjml ?? (variant === 0 ? draft.config?.emailMjml as string | undefined : undefined);
   const savedBeefreeJson = current.beefreeJson ?? (variant === 0 ? draft.config?.emailBeefreeJson as Record<string, unknown> | undefined : undefined);
   const savedBeefreeVersion = current.beefreeVersion ?? (variant === 0 && typeof draft.config?.emailBeefreeVersion === "number" ? draft.config.emailBeefreeVersion : undefined);
   const savedUnlayerJson = current.unlayerJson ?? (variant === 0 ? draft.config?.emailUnlayerJson as Record<string, unknown> | undefined : undefined);
   const savedUnlayerVersion = current.unlayerVersion ?? (variant === 0 ? draft.config?.emailUnlayerVersion as string | undefined : undefined);
   const savedUnlayerMigration = current.unlayerMigration ?? (variant === 0 ? draft.config?.emailUnlayerMigration as Record<string, unknown> | undefined : undefined);
-  const variantDraft: Campaign = { ...draft, subject: currentSubject, body: currentBody, config: { ...draft.config, emailEditorMode: savedEditorMode, emailRows: savedRows, emailStyle: savedStyle, emailSending: savedSending, emailEditorEngine: savedEditorEngine, emailGrapesProject: savedGrapesProject, emailMjml: savedMjml, emailBeefreeJson: savedBeefreeJson, emailBeefreeVersion: savedBeefreeVersion, emailUnlayerJson: savedUnlayerJson, emailUnlayerVersion: savedUnlayerVersion, emailUnlayerMigration: savedUnlayerMigration } };
+  const variantDraft: Campaign = { ...draft, subject: currentSubject, body: currentBody, config: { ...draft.config, emailEditorMode: savedEditorMode, emailRows: savedRows, emailStyle: savedStyle, emailSending: savedSending, emailEditorEngine: savedEditorEngine, emailGrapesProject: savedGrapesProject, emailGrapesSchemaVersion: savedGrapesSchemaVersion, emailGrapesMigration: savedGrapesMigration, emailMjml: savedMjml, emailBeefreeJson: savedBeefreeJson, emailBeefreeVersion: savedBeefreeVersion, emailUnlayerJson: savedUnlayerJson, emailUnlayerVersion: savedUnlayerVersion, emailUnlayerMigration: savedUnlayerMigration } };
   const [showSending, setShowSending] = useState(false);
   const [copied, setCopied] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
@@ -503,8 +503,8 @@ function EmailCompose({ locale, draft, update, saveEmail, variant, setVariant, o
   useEffect(() => { setEmailStart(!currentSubject && !currentBody && !savedRows.length); setEmailEditor(null); }, [variant]);
   const variantPatch = (patch: Partial<Campaign>) => {
     const next = [...variants];
-    next[variant] = { ...current, subject: patch.subject ?? currentSubject, body: patch.body ?? currentBody, editorMode: (patch.config?.emailEditorMode as EmailEditorMode | undefined) ?? savedEditorMode, rows: Array.isArray(patch.config?.emailRows) ? patch.config.emailRows as EmailRow[] : savedRows, style: patch.config?.emailStyle as EmailStyle | undefined ?? savedStyle, sending: (patch.config?.emailSending as EmailSending | undefined) ?? savedSending, editorEngine: (patch.config?.emailEditorEngine as string | undefined) ?? savedEditorEngine, grapesProject: (patch.config?.emailGrapesProject as Record<string, unknown> | undefined) ?? savedGrapesProject, mjml: (patch.config?.emailMjml as string | undefined) ?? savedMjml, beefreeJson: (patch.config?.emailBeefreeJson as Record<string, unknown> | undefined) ?? savedBeefreeJson, beefreeVersion: (patch.config?.emailBeefreeVersion as number | undefined) ?? savedBeefreeVersion, unlayerJson: (patch.config?.emailUnlayerJson as Record<string, unknown> | undefined) ?? savedUnlayerJson, unlayerVersion: (patch.config?.emailUnlayerVersion as string | undefined) ?? savedUnlayerVersion, unlayerMigration: (patch.config?.emailUnlayerMigration as Record<string, unknown> | undefined) ?? savedUnlayerMigration };
-    const config = { ...preservePrimaryEmailDesign(draft.config ?? {}, patch.config ?? {}, variant), variants: next, ...(variant === 0 ? { emailEditorMode: next[0].editorMode, emailRows: next[0].rows, emailStyle: next[0].style, emailSending: next[0].sending, emailEditorEngine: next[0].editorEngine, emailGrapesProject: next[0].grapesProject, emailMjml: next[0].mjml, emailBeefreeJson: next[0].beefreeJson, emailBeefreeVersion: next[0].beefreeVersion, emailUnlayerJson: next[0].unlayerJson, emailUnlayerVersion: next[0].unlayerVersion, emailUnlayerMigration: next[0].unlayerMigration } : {}) };
+    next[variant] = { ...current, subject: patch.subject ?? currentSubject, body: patch.body ?? currentBody, editorMode: (patch.config?.emailEditorMode as EmailEditorMode | undefined) ?? savedEditorMode, rows: Array.isArray(patch.config?.emailRows) ? patch.config.emailRows as EmailRow[] : savedRows, style: patch.config?.emailStyle as EmailStyle | undefined ?? savedStyle, sending: (patch.config?.emailSending as EmailSending | undefined) ?? savedSending, editorEngine: (patch.config?.emailEditorEngine as string | undefined) ?? savedEditorEngine, grapesProject: (patch.config?.emailGrapesProject as Record<string, unknown> | undefined) ?? savedGrapesProject, grapesSchemaVersion: patch.config?.emailGrapesSchemaVersion as number | undefined ?? savedGrapesSchemaVersion, grapesMigration: patch.config?.emailGrapesMigration as Record<string, unknown> | undefined ?? savedGrapesMigration, mjml: (patch.config?.emailMjml as string | undefined) ?? savedMjml, beefreeJson: (patch.config?.emailBeefreeJson as Record<string, unknown> | undefined) ?? savedBeefreeJson, beefreeVersion: (patch.config?.emailBeefreeVersion as number | undefined) ?? savedBeefreeVersion, unlayerJson: (patch.config?.emailUnlayerJson as Record<string, unknown> | undefined) ?? savedUnlayerJson, unlayerVersion: (patch.config?.emailUnlayerVersion as string | undefined) ?? savedUnlayerVersion, unlayerMigration: (patch.config?.emailUnlayerMigration as Record<string, unknown> | undefined) ?? savedUnlayerMigration };
+    const config = { ...preservePrimaryEmailDesign(draft.config ?? {}, patch.config ?? {}, variant), variants: next, ...(variant === 0 ? { emailEditorMode: next[0].editorMode, emailRows: next[0].rows, emailStyle: next[0].style, emailSending: next[0].sending, emailEditorEngine: next[0].editorEngine, emailGrapesProject: next[0].grapesProject, emailGrapesSchemaVersion: next[0].grapesSchemaVersion, emailGrapesMigration: next[0].grapesMigration, emailMjml: next[0].mjml, emailBeefreeJson: next[0].beefreeJson, emailBeefreeVersion: next[0].beefreeVersion, emailUnlayerJson: next[0].unlayerJson, emailUnlayerVersion: next[0].unlayerVersion, emailUnlayerMigration: next[0].unlayerMigration } : {}) };
     return variant === 0 ? { ...patch, config } : { config };
   };
   const updateVariant = (patch: Partial<Campaign>) => update(variantPatch(patch));

@@ -46,6 +46,6 @@ export function unlayerSavePatch(config: Record<string, unknown>, subject: strin
 // A non-primary variant must not overwrite the primary design mirrored in config.
 export function preservePrimaryEmailDesign(base: Record<string, unknown>, patch: Record<string, unknown>, variant: number) {
   const result = { ...base, ...patch };
-  if (variant !== 0) for (const key of ["emailEditorMode", "emailRows", "emailStyle", "emailSending", "emailEditorEngine", "emailGrapesProject", "emailMjml", "emailBeefreeJson", "emailBeefreeVersion", "emailUnlayerJson", "emailUnlayerVersion", "emailUnlayerMigration"]) { if (key in base) result[key] = base[key]; else delete result[key]; }
+  if (variant !== 0) for (const key of ["emailEditorMode", "emailRows", "emailStyle", "emailSending", "emailEditorEngine", "emailGrapesProject", "emailGrapesSchemaVersion", "emailGrapesMigration", "emailMjml", "emailBeefreeJson", "emailBeefreeVersion", "emailUnlayerJson", "emailUnlayerVersion", "emailUnlayerMigration"]) { if (key in base) result[key] = base[key]; else delete result[key]; }
   return result;
 }
