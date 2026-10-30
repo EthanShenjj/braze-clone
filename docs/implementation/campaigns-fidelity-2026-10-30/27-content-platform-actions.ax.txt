@@ -1,0 +1,249 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_content?locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_content?locale=en
+	2 container
+		3 image Download
+		4 image
+	5 container
+		6 text b
+		7 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			8 image
+			9 text Local workspace
+		10 text Quick links
+		11 button Canvas
+			12 image
+			13 text Canvas
+		14 button Campaigns
+			15 image
+			16 text Campaigns
+		17 button Segments
+			18 image
+			19 text Segments
+		20 button Getting Started
+			21 image
+			22 text Getting Started
+		23 button Performance Overview
+			24 image
+			25 text Performance Overview
+		26 button AI Decisioning
+			27 image
+			28 text AI Decisioning
+		29 button Agent Console
+			30 image
+			31 text Agent Console
+		32 button Messaging
+			33 image
+			34 text Messaging
+		35 button Audience
+			36 image
+			37 text Audience
+		38 button Content
+			39 image
+			40 text Content
+		41 button Analytics
+			42 image
+			43 text Analytics
+		44 button Partner Integrations
+			45 image
+			46 text Partner Integrations
+		47 button Data Settings
+			48 image
+			49 text Data Settings
+		50 button Settings
+			51 image
+			52 text Settings
+		53 text braze
+		54 container
+			55 text ◷   8 days left in your free trial.
+			56 button Connect with sales
+		57 container
+			58 button Search workspace ⌘K
+				59 image
+				60 text Search workspace
+				61 text ⌘K
+			62 button Take a tour
+				63 image
+			64 image
+			65 button (collapsed) Description: Language, Secondary Actions: Expand
+				66 image
+			67 button Notifications
+				68 image
+			69 button S
+			70 image
+			71 button
+				72 image
+		73 button Campaigns
+		74 button Edit 'Audit 2026-10-29 content'
+			75 text Edit
+			76 text  '
+			77 text Audit 2026-10-29 content
+			78 text '
+			79 image
+		80 container
+			81 image
+			82 text Limited access
+			83 container Campaign steps
+				84 button ✓ Compose Messages
+					85 text ✓
+					86 text Compose Messages
+				87 button ✓ Schedule Delivery
+					88 text ✓
+					89 text Schedule Delivery
+				90 button ✓ Target Audiences
+					91 text ✓
+					92 text Target Audiences
+				93 button ✓ Assign Conversions
+					94 text ✓
+					95 text Assign Conversions
+				96 button 5 Review Summary
+					97 text 5
+					98 text Review Summary
+			99 heading Campaign Details, Value: 2
+				100 text Campaign Details
+			101 container
+				102 text Campaign Name
+				103 text field (settable) Campaign Name, Value: Audit 2026-10-29 content
+			104 container
+				105 text Teams
+				106 pop up button (collapsed, settable) Teams, Value: Select…, Secondary Actions: Expand
+					107 menu
+						108 (selected) Select…
+			109 button Add description
+				110 image
+				111 text Add description
+			112 button (collapsed) Tags, Secondary Actions: Expand
+				113 image
+				114 text Tags
+				115 image
+			116 container Campaign brief
+				117 heading Campaign brief, Value: 3
+					118 text Campaign brief
+				119 text Attach a brief so BrazeAI Operator can build your campaign and your Standards can review it against your goals
+				120 text Attach a campaign brief (optional)
+				121 text PDF, TXT, MD, CSV, DOCX up to 15MB
+				122 button Upload file
+					123 image
+					124 text Upload file
+			125 container
+				126 text Campaign ID
+				127 text field Campaign ID, Help: 85c0fcf7-49b5-5257-a2e6-09f25c9f5eb4
+			128 button Copy
+				129 image
+				130 text Copy
+			131 heading Compose Content Card, Value: 2
+				132 text Compose Content Card
+			133 text Deliver durable content in an app feed.
+			134 button Preview and test
+			135 container
+				136 heading Variants, Value: 3
+					137 text Variants
+				138 tab group Message variants
+					139 tab (selected, settable, boolean) Variant 1 Message configured, Description: Message configured, Value: 1
+Variant 1
+✓
+					140 button Add message variant
+				141 button (collapsed) Description: Variant actions, Secondary Actions: Expand
+				142 container
+					143 heading Preview, Value: 3
+						144 text Preview
+					145 text Device
+					146 pop up button (collapsed, settable) Device, Value: Mobile App, Secondary Actions: Expand
+						147 menu
+							148 (selected) Mobile App
+							149 Web
+					150 heading Audit title, Value: 3
+						151 text Audit title
+					152 text Hello Sofia
+					153 text Always test your message on a real device, as actual rendering may vary.
+				154 container
+					155 checkbox Compose, Value: 1
+					156 checkbox Settings, Value: 0
+					157 checkbox Test, Value: 0
+					158 heading Language, Value: 3
+						159 text Language
+					160 button (collapsed) Manage languages, Secondary Actions: Expand
+					161 pop up button (collapsed, settable) Description: Message language, Value: English, Secondary Actions: Expand
+						162 menu
+							163 (selected) English
+					164 heading Content, Value: 3
+						165 text Content
+					166 text Card type
+					167 pop up button (collapsed, settable) Card type, Value: Classic, Secondary Actions: Expand
+						168 menu
+							169 (selected) Classic
+							170 Captioned image
+							171 Image only
+					172 text Title
+					173 button (collapsed) Title Audit title, Secondary Actions: Expand
+					174 text field (settable) Audit title
+					175 text Message
+					176 button (collapsed) Message Hello {{${first_name}}}, Secondary Actions: Expand
+					177 text entry area (settable) Hello {{${first_name}}}
+					178 heading Action, Value: 3
+						179 text Action
+					180 text Choose what happens when a user clicks the link on this content card.
+					181 checkbox (settable, integer) Description: Set separate behaviors for each platform, Value: 1
+					225 container Android
+						226 text Android
+						227 container
+							228 text Android behavior
+							229 pop up button (collapsed, settable) Android behavior, Value: None, Secondary Actions: Expand
+								230 menu
+									231 (selected) None
+									232 Open web URL
+									233 Deep link into app
+									234 No action
+					235 container iOS
+						236 text iOS
+						237 container
+							238 text iOS behavior
+							239 pop up button (collapsed, settable) iOS behavior, Value: None, Secondary Actions: Expand
+								240 menu
+									241 (selected) None
+									242 Open web URL
+									243 Deep link into app
+									244 No action
+					245 container Web
+						246 text Web
+						247 container
+							248 text Web behavior
+							249 pop up button (collapsed, settable) Web behavior, Value: None, Secondary Actions: Expand
+								250 menu
+									251 (selected) None
+									252 Open web URL
+									253 Deep link into app
+									254 No action
+					192 checkbox (settable, integer) Description: Pin card to top, Value: 0
+					193 heading Assets, Value: 3
+						194 text Assets
+					195 text Card image
+					196 text field (settable) Card image
+					197 text Upload file
+					198 button Media library
+					199 text Image alternative text
+					200 text field (settable) Image alternative text
+					201 text Link text
+					202 text field (settable) Link text
+			203 button (disabled) Back
+				204 image
+			205 button ✓ Compose
+				206 text ✓
+				207 text Compose
+			208 button ✓ Schedule
+				209 text ✓
+				210 text Schedule
+			211 button ✓ Target
+				212 text ✓
+				213 text Target
+			214 button ✓ Assign
+				215 text ✓
+				216 text Assign
+			217 button 5 Review
+				218 text 5
+				219 text Review
+			220 button Forward
+				221 image
+			222 button Save Draft
+		223 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			224 image
+
+The focused UI element is 181 checkbox (settable, integer) Description: Set separate behaviors for each platform, Value: 1

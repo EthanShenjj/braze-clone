@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {registerHooks} from 'node:module';
+registerHooks({resolve(specifier,context,next){if(specifier==='server-only')return{url:'data:text/javascript,export {}',shortCircuit:true};return next(specifier,context);}});
+const {dispatchPreparedMessage}=await import('../lib/message-delivery.ts');
+const draft={channel:'email',config:{}};
+process.env.RESEND_API_KEY='test-only';process.env.MESSAGE_DELIVERY_ENABLED='true';
+test('native delivery rejects unsupported IP pools instead of silently dropping routing',async()=>{await assert.rejects(dispatchPreparedMessage(draft,'test@example.com',{ipPool:'dedicated-pool'}),/supports IP-pool routing/);});
+test('native delivery rejects unsupported extras and unverified URL attachments',async()=>{await assert.rejects(dispatchPreparedMessage(draft,'test@example.com',{extras:{segment:'A'}}),/supports email metadata/);await assert.rejects(dispatchPreparedMessage(draft,'test@example.com',{attachmentResolutionRequired:true}),/size has not been verified/);});
+test('verified native message forwards display name, headers and attachment bytes',async()=>{const original=globalThis.fetch;let payload;globalThis.fetch=async(url,options)=>{assert.equal(url,'https://api.resend.com/emails');payload=JSON.parse(options.body);return new Response(JSON.stringify({id:'accepted-test'}),{status:200});};try{const result=await dispatchPreparedMessage(draft,'test@example.com',{from:'qa@example.com',fromName:'QA, Team',subject:'Subject',html:'<p>Hello</p>',headers:{'X-Example':'test'},attachments:[{name:'brief.txt',content:'SGVsbG8='}]});assert.equal(result.status,'accepted');assert.equal(result.delivered,false);assert.equal(payload.from,'"QA, Team" <qa@example.com>');assert.deepEqual(payload.attachments,[{filename:'brief.txt',content:'SGVsbG8='}]);assert.deepEqual(payload.headers,{'X-Example':'test'});}finally{globalThis.fetch=original;}});

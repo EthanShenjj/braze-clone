@@ -8,9 +8,9 @@ export function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const input = await request.json() as { name?: unknown; description?: unknown; channel?: unknown };
-  if (typeof input.name !== "string" || !["Email", "SMS", "WhatsApp"].includes(String(input.channel))) return Response.json({ error: "name and a supported channel are required" }, { status: 400 });
+  const input = await request.json() as { name?: unknown; description?: unknown; channel?: unknown; capabilities?:unknown };
+  if (typeof input.name !== "string" || !["Email", "SMS", "WhatsApp", "LINE"].includes(String(input.channel))) return Response.json({ error: "name and a supported channel are required" }, { status: 400 });
   try {
-    return Response.json(createSubscriptionGroup({ name: input.name, description: typeof input.description === "string" ? input.description : "", channel: input.channel as SubscriptionChannel }), { status: 201 });
+    return Response.json(createSubscriptionGroup({ name: input.name, description: typeof input.description === "string" ? input.description : "", channel: input.channel as SubscriptionChannel,capabilities:input.capabilities }), { status: 201 });
   } catch (error) { return Response.json({ error: error instanceof Error ? error.message : "Unable to create subscription group" }, { status: 400 }); }
 }

@@ -1,0 +1,14 @@
+{
+  "line": {
+    "campaignIssues": [],
+    "selectedVariantIssues": [
+      "LINE message 1: enter 1–5,000 text characters."
+    ]
+  },
+  "pushEmptySecondVariant": {
+    "issues": []
+  },
+  "bannerInvalidBlockLink": {
+    "issues": []
+  }
+}

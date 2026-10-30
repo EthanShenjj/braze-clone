@@ -1,0 +1,232 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_webhook?locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_webhook?locale=en
+	2 container
+		3 image Download
+		4 image
+	5 container
+		6 text b
+		7 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			8 image
+			9 text Local workspace
+		10 text Quick links
+		11 button Canvas
+			12 image
+			13 text Canvas
+		14 button Campaigns
+			15 image
+			16 text Campaigns
+		17 button Segments
+			18 image
+			19 text Segments
+		20 button Getting Started
+			21 image
+			22 text Getting Started
+		23 button Performance Overview
+			24 image
+			25 text Performance Overview
+		26 button AI Decisioning
+			27 image
+			28 text AI Decisioning
+		29 button Agent Console
+			30 image
+			31 text Agent Console
+		32 button Messaging
+			33 image
+			34 text Messaging
+		35 button Audience
+			36 image
+			37 text Audience
+		38 button Content
+			39 image
+			40 text Content
+		41 button Analytics
+			42 image
+			43 text Analytics
+		44 button Partner Integrations
+			45 image
+			46 text Partner Integrations
+		47 button Data Settings
+			48 image
+			49 text Data Settings
+		50 button Settings
+			51 image
+			52 text Settings
+		53 text braze
+		54 container
+			55 text ◷   8 days left in your free trial.
+			56 button Connect with sales
+		57 container
+			58 button Search workspace ⌘K
+				59 image
+				60 text Search workspace
+				61 text ⌘K
+			62 button Take a tour
+				63 image
+			64 image
+			65 button (collapsed) Description: Language, Secondary Actions: Expand
+				66 image
+			67 button Notifications
+				68 image
+			69 button S
+			70 image
+			71 button
+				72 image
+		73 button Campaigns
+		74 button Edit 'Audit 2026-10-29 webhook'
+			75 text Edit
+			76 text  '
+			77 text Audit 2026-10-29 webhook
+			78 text '
+			79 image
+		80 container
+			81 image
+			82 text Limited access
+			83 container Campaign steps
+				84 button 1 Compose Messages
+					85 text 1
+					86 text Compose Messages
+				87 button ✓ Schedule Delivery
+					88 text ✓
+					89 text Schedule Delivery
+				90 button ✓ Target Audiences
+					91 text ✓
+					92 text Target Audiences
+				93 button ✓ Assign Conversions
+					94 text ✓
+					95 text Assign Conversions
+				96 button 5 Review Summary
+					97 text 5
+					98 text Review Summary
+			99 heading Campaign Details, Value: 2
+				100 text Campaign Details
+			101 container
+				102 text Campaign Name
+				103 text field (settable) Campaign Name, Value: Audit 2026-10-29 webhook
+			104 container
+				105 text Teams
+				106 pop up button (collapsed, settable) Teams, Value: Select…, Secondary Actions: Expand
+					107 menu
+						108 (selected) Select…
+			109 button Add description
+				110 image
+				111 text Add description
+			112 button (collapsed) Tags, Secondary Actions: Expand
+				113 image
+				114 text Tags
+				115 image
+			116 container Campaign brief
+				117 heading Campaign brief, Value: 3
+					118 text Campaign brief
+				119 text Attach a brief so BrazeAI Operator can build your campaign and your Standards can review it against your goals
+				120 text Attach a campaign brief (optional)
+				121 text PDF, TXT, MD, CSV, DOCX up to 15MB
+				122 button Upload file
+					123 image
+					124 text Upload file
+			125 container
+				126 text Campaign ID
+				127 text field Campaign ID, Help: bd3fbc39-703f-5500-bd6d-7bbc436c4a35
+			128 button Copy
+				129 image
+				130 text Copy
+			131 heading Compose Webhook, Value: 2
+				132 text Compose Webhook
+			133 text Call an external service with campaign data.
+			134 text Variants
+			135 button Variant 1
+			136 button Add webhook variant
+				137 image
+			138 button Choose New Template
+			139 button (disabled) Remove
+				140 image
+				141 text Remove
+			176 container
+				177 heading Preview, Value: 3
+					178 text Preview
+				179 text POST [missing URL] Content-Type: application/json {}
+				180 button Copy
+				181 text Adding a webhook allows you to send data to third-party systems or your own servers.
+			182 container
+				183 checkbox Compose, Value: 1
+				184 checkbox Test, Value: 0
+				185 button Manage languages
+				186 heading Compose Webhook, Value: 3
+					187 text Compose Webhook
+				188 text Variant name
+				189 text field (settable) Variant name, Value: Variant 1
+				190 text HTTP method
+				191 pop up button (collapsed, settable) HTTP method, Value: POST, Secondary Actions: Expand
+					192 menu
+						193 (selected) POST
+						194 GET
+						195 PUT
+						196 DELETE
+				197 button (collapsed) Add Liquid, Secondary Actions: Expand
+				198 text Webhook URL
+				199 text field (settable) Webhook URL
+				200 text Supports Liquid and translation tags. Only ports 80 and 443 are accepted.
+				201 image
+				202 text Languages
+				203 button en
+				204 button  Add language
+					205 image
+					206 text  Add language
+				207 text Credential (Optional)
+				208 pop up button (disabled, collapsed, settable) Description: Credential, Value: No credentials available, Secondary Actions: Expand
+					209 menu
+						210 (disabled) No credentials available
+				211 heading Request headers, Value: 3
+					212 text Request headers
+				213 text Quick authentication:
+				214 button Bearer token
+				215 button Basic
+				216 text field (settable) Description: Header name, Value: Content-Type
+				217 text field (settable) Description: Content-Type value, Value: application/json
+				218 button Remove Content-Type
+					219 image
+				220 button  Add header
+					221 image
+					222 text  Add header
+				223 heading Request body, Value: 3
+					224 text Request body
+				225 button JSON key/value
+				226 button Raw text
+				227 button  Add key/value pair
+					228 image
+					229 text  Add key/value pair
+				230 text {} Insert personalization:
+				231 button First name
+				232 button Email
+				233 button External ID
+				234 button Translation
+				235 text Complete before launch
+				236 text Variant 1: Enter a webhook URL.
+				237 text field (settable) Webhook template name
+				238 button Save as template
+					239 image
+					240 text Save as template
+				241 button Test webhook
+			154 button (disabled) Back
+				155 image
+			156 button 1 Compose
+				157 text 1
+				158 text Compose
+			159 button ✓ Schedule
+				160 text ✓
+				161 text Schedule
+			162 button ✓ Target
+				163 text ✓
+				164 text Target
+			165 button ✓ Assign
+				166 text ✓
+				167 text Assign
+			168 button 5 Review
+				169 text 5
+				170 text Review
+			171 button Forward
+				172 image
+			173 button Save Draft
+		174 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			175 image
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_webhook?locale=en

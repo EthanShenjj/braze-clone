@@ -1,0 +1,334 @@
+- link "Skip to main content":
+  - /url: "#main-col"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Demo – bba":
+    - generic: Demo – bba
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6ad0b98fe4b4110085216601?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6ad0b98fe4b4110085216601?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6ad0b98fe4b4110085216601?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6ad0b98fe4b4110085216601?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 1 day left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- navigation:
+  - tablist "Open page tabs":
+    - tab "Campaigns":
+      - generic: Campaigns
+    - tab "Details for 'Referral Offer IAM' Close tab":
+      - generic: Details for 'Referral Offer IAM'
+      - button "Close tab":
+    - tab "Edit 'New Campaign - October 29, 2026' Close tab" [selected]:
+      - text: 
+      - generic: Edit 'New Campaign - October 29, 2026'
+      - button "Close tab":
+- img: 
+- generic: Limited access
+- navigation:
+  - generic "progress":
+    - generic: "Progress Tracker with 5 steps: Compose Messages, Schedule Delivery, Target Audiences, Assign Conversions, Review Summary"
+  - button "Step Compose Messages":
+    - generic: "1"
+    - generic: Compose Messages
+  - button "Step Schedule Delivery":
+    - generic: "2"
+    - generic: Schedule Delivery
+  - button "Step Target Audiences":
+    - generic: "3"
+    - generic: Target Audiences
+  - button "Step Assign Conversions":
+    - img: 
+    - generic: Assign Conversions
+  - button "Step Review Summary":
+    - generic: "5"
+    - generic: Review Summary
+- heading "Targeting Options" [level=3]
+- generic: Target users by choosing multiple segments they must fall into. Further refine your audience by adding additional filters.
+- text: Target Users By Segment
+- button "Help text available. Tab to view help text, click to open popover":
+- log
+- generic: Search Segments...
+- combobox "Target Users By Segment"
+- heading "Additional Filters" [level=3]
+- group "Filter group":
+  - button:
+  - generic: Filter group
+  - button "or":
+    - generic: or
+    - img: 
+  - log: ", 1 of 22.22 results available.Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu."
+  - generic: Search filter...
+  - combobox "Select filter" [expanded] [active]
+  - generic: All Categories
+  - option "Segment or CSV membership User membership in other segments, Segment Extension, or imported CSV":
+    - img: 
+    - generic: Segment or CSV membership
+    - generic: User membership in other segments, Segment Extension, or imported CSV
+    - img: 
+  - option "Custom attributes User characteristics that your company has set up":
+    - img: 
+    - generic: Custom attributes
+    - generic: User characteristics that your company has set up
+    - img: 
+  - option "Custom events User actions that your company has set up":
+    - img: 
+    - generic: Custom events
+    - generic: User actions that your company has set up
+    - img: 
+  - option "Sessions Session count, first and last session, and median session duration":
+    - img: 
+    - generic: Sessions
+    - generic: Session count, first and last session, and median session duration
+    - img: 
+  - option "Retargeting Past interactions with messages and channels":
+    - img: 
+    - generic: Retargeting
+    - generic: Past interactions with messages and channels
+    - img: 
+  - option "Channel subscription behavior User subscription behavior for specific messaging channels":
+    - img: 
+    - generic: Channel subscription behavior
+    - generic: User subscription behavior for specific messaging channels
+    - img: 
+  - option "Demographic attributes User demographic information including country, city, language, birthday, and more":
+    - img: 
+    - generic: Demographic attributes
+    - generic: User demographic information including country, city, language, birthday, and more
+    - img: 
+  - option "App Usage behavior for specific apps and app versions":
+    - img: 
+    - generic: App
+    - generic: Usage behavior for specific apps and app versions
+    - img: 
+  - option "Uninstall App uninstall behavior and date":
+    - generic: Uninstall
+    - generic: App uninstall behavior and date
+    - img: 
+  - option "Devices User device information, including model, OS, ad tracking, and more":
+    - generic: Devices
+    - generic: User device information, including model, OS, ad tracking, and more
+    - img: 
+  - option "Location User location data":
+    - img: 
+    - generic: Location
+    - generic: User location data
+    - img: 
+  - option "Cohort membership User membership in cohorts from Alloys integrations":
+    - img: 
+    - generic: Cohort membership
+    - generic: User membership in cohorts from Alloys integrations
+    - img: 
+  - option "Install attribution App uninstall behavior and date":
+    - img: 
+    - generic: Install attribution
+    - generic: App uninstall behavior and date
+    - img: 
+  - option "Intelligence and Predictive App uninstall behavior and date":
+    - generic: Intelligence and Predictive
+    - generic: App uninstall behavior and date
+    - img: 
+  - option "Social activity Connection to Facebook and Twitter":
+    - img: 
+    - generic: Social activity
+    - generic: Connection to Facebook and Twitter
+    - img: 
+  - option "eCommerce eCommerce behavioral data":
+    - generic: eCommerce
+    - generic: eCommerce behavioral data
+    - img: 
+  - generic: Other Filters
+  - option "Email Address Individual email addresses for testing":
+    - generic: Email Address
+    - generic: Individual email addresses for testing
+  - option "External User ID Campaign recipients by user ids for testing":
+    - generic: External User ID
+    - generic: Campaign recipients by user ids for testing
+  - 'option "Random Bucket # Users within a range of random bucket numbers"':
+    - generic: "Random Bucket #"
+    - generic: Users within a range of random bucket numbers
+  - option "Created At When the user record was created in Braze":
+    - generic: Created At
+    - generic: When the user record was created in Braze
+  - option "Created From Source of the user record created in Braze":
+    - generic: Created From
+    - generic: Source of the user record created in Braze
+  - option "Pending Deletion Users that are marked for deletion":
+    - generic: Pending Deletion
+    - generic: Users that are marked for deletion
+  - button "Remove" [disabled]:
+- button "Add filter group":
+  - img: 
+  - generic: Add filter group
+- button "Add exclusion group":
+  - img: 
+  - generic: Add exclusion group
+- heading "Audience Summary" [level=4]
+- generic: No segments or filters selected
+- heading "User Lookup" [level=4]
+- generic: Check if a user matches the segment, filter, and app criteria
+- button "Lookup User":
+  - generic: Lookup User
+- checkbox "Limit the number of people who will receive this in-app message" [checked] [disabled]
+- generic: Limit the number of people who will receive this in-app message
+- text: Maximum impressions (estimate)
+- spinbutton [disabled]: "100"
+- generic: Your trial only allows for a limit of 100 messages.
+- checkbox "Re-evaluate campaign eligibility before displaying"
+- text: Re-evaluate campaign eligibility before displaying
+- heading "A/B Testing Optimize with BrazeAI™" [level=3]:
+  - generic: A/B Testing
+  - checkbox "Optimize with BrazeAI™" [disabled]
+  - generic: Optimize with BrazeAI™
+- img: 
+- text: To use Optimize with BrazeAI™, add at least two variants.
+- button "Compose messages"
+- paragraph: Set your own variant split and control group. All variants send at the date and time you set in Schedule delivery.
+- spinbutton: "20"
+- text: "%"
+- generic "Control Group"
+- spinbutton: "80"
+- text: "%"
+- generic "Variant 1"
+- text: Remove Control Group
+- generic: Distribute Variants Evenly
+- heading "Suppression Lists" [level=3]
+- generic: There are no suppression lists applied
+- text: To apply a suppression list to this Campaign, visit
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: /engagement/suppression_lists/6ad0b98fe4b4110085216601
+  - text: Suppression Lists
+- heading "Total Population" [level=3]
+- table:
+  - rowgroup:
+    - 'row "Exact users 1,949 100% of total users Last calculated: 5 hours ago Refresh exact statistics View calculation queue Channel breakdown In-App Messages Reachable Users Information 1,949 % of Workspace 100% LTV Information -- Show Additional Statistics"':
+      - 'cell "Exact users 1,949 100% of total users Last calculated: 5 hours ago Refresh exact statistics View calculation queue"':
+        - heading "Exact users" [level=5]
+        - generic: 1,949
+        - strong: 100%
+        - text: of total users
+        - navigation:
+          - progressbar
+        - generic: "Last calculated: 5 hours ago"
+        - button "Refresh exact statistics":
+          - generic: Refresh exact statistics
+        - button "View calculation queue":
+          - img: 
+          - generic: View calculation queue
+      - cell "Channel breakdown In-App Messages Reachable Users Information 1,949 % of Workspace 100% LTV Information -- Show Additional Statistics":
+        - heading "Channel breakdown" [level=6]
+        - table:
+          - rowgroup:
+            - row "In-App Messages":
+              - columnheader
+              - columnheader "In-App Messages"
+          - rowgroup:
+            - row "Reachable Users Information 1,949":
+              - cell "Reachable Users Information":
+                - text: Reachable Users
+                - img "Information":
+              - cell "1,949"
+            - row "% of Workspace 100%":
+              - cell "% of Workspace"
+              - cell "100%"
+            - row "LTV Information --":
+              - cell "LTV Information":
+                - text: LTV
+                - img "Information":
+              - cell "--"
+        - button "Show Additional Statistics":
+          - generic: Show Additional Statistics
+- button "Back":
+  - img: 
+- navigation:
+  - generic "progress":
+    - generic: "Progress Tracker with 5 steps: Compose, Schedule, Target, Assign, Review"
+  - button "Step Compose":
+    - generic: "1"
+    - generic: Compose
+  - button "Step Schedule":
+    - generic: "2"
+    - generic: Schedule
+  - button "Step Target":
+    - generic: "3"
+    - generic: Target
+  - button "Step Assign":
+    - img: 
+    - generic: Assign
+  - button "Step Review":
+    - generic: "5"
+    - generic: Review
+- button "Forward":
+  - img: 
+- button "Save Draft":
+  - generic: Save Draft
+- text: 
+- contentinfo:
+  - generic: © Braze 2026
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://01.emailinboundprocessing.com/preference_center/v1/eyJhbGciOiJSUzI1NiJ9/eyJzdWIiOiJwY3YxIiwiaWF0IjoxNzkzMjY0MzQzLCJleHAiOjE4MjQ4MDAzNDMsImQiOiIkMCQvMUtkSWpMM3lhQ3B5aG1IV0VvWHBRPT0keUhHWTM4Y0RnV1g2TFlqR0NYY0VzMlVURmIvanhyU1g1M1prOU5uRnV3MC9SRGFUS1lzVGh3OHVWanJ6XG5odXVZIiwiaCI6IjAxLmVtYWlsaW5ib3VuZHByb2Nlc3NpbmcuY29tIn0/d18E2xz5xX29GDeu1PsQ5yQ20YO06BaVfx08WCWEIV_XtazuQu6iSIYw16Fq77H3HpuoHWA3Sqe9wX7JqP9RSnKDO6mtO5ZjD8Ao_NikxD16mMutq1gsctPQXAEzXkDNEmBVhd70eAXHIlatCU9rxwWpsv08YJ1JWvc0AzoKS0j2_v-XPlQipxKgeRJBAdsGkwED1YIjGF-t9_yI0_8Xv065Fgz6MYPb7YNGLP27b4QPZ2I91S3SDweNS4sasQif8egjRasnvMzjCpbKO6NghLrhWlFW_JljRbLvjKFqUibLznHY-MLftaag1I7E0Ln2QiFIcKmhialV9VRmydxSVw
+    - text: Privacy Preferences
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://braze.statuspage.io
+    - text: Status
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://www.braze.com/terms
+    - text: Terms
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://www.braze.com/privacy
+    - text: Privacy Policy
+- alert
+- alert

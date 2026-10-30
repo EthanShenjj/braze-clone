@@ -1,0 +1,21 @@
+{
+  "findings": 79,
+  "priorities": {
+    "P2": 30,
+    "P1": 49
+  },
+  "screenshots": 101,
+  "dom_snapshots": 101,
+  "source_counts": {
+    "Braze": 62,
+    "Local": 39
+  },
+  "capture_states": {
+    "loading-record": 3,
+    "captured-viewport": 97,
+    "account-gate": 1
+  },
+  "all_jpeg_verified_and_decoded": true,
+  "all_evidence_links_exist": true,
+  "gallery_browser_preview": "Blocked by browser file:// protocol policy; static links and script syntax checked separately."
+}

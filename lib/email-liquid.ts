@@ -2,10 +2,18 @@ import { Liquid } from "liquidjs";
 
 // Braze names (${first_name}, custom_attribute.${key}) become ordinary Liquid lookups.
 export function brazeLiquidSource(source: string) {
-  return source.replace(/custom_attribute\.\$\{([^}]+)\}/g, (_m, key) => `custom_attribute[${JSON.stringify(key)}]`).replace(/\$\{([^}]+)\}/g, (_m, key) => `braze[${JSON.stringify(key)}]`);
+  return source.replace(/(custom_attribute|event_properties|api_trigger_properties|campaign|context)\.\$\{([^}]+)\}/g, (_m, scope,key) => `${scope}[${JSON.stringify(key)}]`).replace(/\$\{([^}]+)\}/g, (_m, key) => `braze[${JSON.stringify(key)}]`);
+}
+export class AbortMessageError extends Error {constructor(reason="Message aborted."){super(`Message aborted: ${reason}`);this.name="AbortMessageError";}}
+export function registerBrazeRuntimeTags(engine:Liquid){
+ engine.registerTag("abort_message",{parse(token){this.reason=token.args.replace(/^\(|\)$/g,"");},render(ctx){throw new AbortMessageError(String(engine.evalValueSync(String(this.reason),ctx)??"Message aborted."));}});
+ engine.registerTag("connected_content",{parse(token){this.args=token.args;},render(ctx){const args=String(this.args),url=args.split(/\s/)[0].replace(/^['"]|['"]$/g,""),name=/:save\s+([a-zA-Z_]\w*)/.exec(args)?.[1]??"connected",responses=ctx.get(["__connectedContent"]) as Record<string,unknown>|undefined;if(!responses||!Object.hasOwn(responses,url))throw new Error(`Connected Content is unavailable for ${url}. Configure the allowed host and render on the server.`);ctx.bottom()[name]=responses[url];return"";}});
+  engine.registerTag("catalog_items",{parse(token){this.args=token.args;},render(ctx){const args=String(this.args).match(/"[^"]*"|'[^']*'|[^\s]+/g)?.map(s=>s.replace(/^['"]|['"]$/g,""))??[],name=args.shift()??"",catalogs=ctx.get(["__catalogs"]) as Record<string,Array<Record<string,unknown>>>|undefined;if(!catalogs?.[name])throw new Error(`Catalog ${name} is unavailable in this render context.`);ctx.bottom().items=args.map(id=>catalogs[name].find(row=>String(row.id)===id)).filter(Boolean);return"";}});
+ return engine;
 }
 export function renderBrazeLiquid(source: string, profile: Record<string, unknown> = {}, variables: Record<string, unknown> = {}) {
-  const engine = new Liquid({ strictFilters: true, strictVariables: false, ownPropertyOnly: true, outputEscape: undefined, renderLimit: 100, parseLimit: 1000000, memoryLimit: 10000000 });
+  const engine = registerBrazeRuntimeTags(new Liquid({ strictFilters: true, strictVariables: false, ownPropertyOnly: true, outputEscape: undefined, renderLimit: 100, parseLimit: 1000000, memoryLimit: 10000000 }));
+
   const attributes = { ...(profile.attributes as Record<string, unknown> ?? {}), ...profile };
   return String(engine.parseAndRenderSync(brazeLiquidSource(source), { ...attributes, braze: attributes, custom_attribute: attributes, ...variables }));
 }

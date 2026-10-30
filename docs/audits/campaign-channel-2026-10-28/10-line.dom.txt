@@ -1,0 +1,137 @@
+- complementary:
+  - generic: b
+  - button "Demo – Thinkingai":
+    - generic: Demo – Thinkingai
+  - generic: Quick links
+  - button "Canvas":
+    - generic: Canvas
+  - button "Campaigns":
+    - generic: Campaigns
+  - button "Segments":
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+  - button "Performance Overview":
+    - generic: Performance Overview
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic: braze
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour":
+  - button "Language":
+  - button "Notifications":
+  - button "S"
+  - button:
+  - button "Campaigns"
+  - button "Edit 'Audit line'":
+    - text: Edit 'Audit line'
+  - text: Limited access
+  - navigation "Campaign steps":
+    - button "1 Compose Messages":
+      - generic: "1"
+      - generic: Compose Messages
+    - button "2 Schedule Delivery":
+      - generic: "2"
+      - generic: Schedule Delivery
+    - button "3 Target Audiences":
+      - generic: "3"
+      - generic: Target Audiences
+    - button "4 Assign Conversions":
+      - generic: "4"
+      - generic: Assign Conversions
+    - button "5 Review Summary":
+      - generic: "5"
+      - generic: Review Summary
+  - heading "Campaign Details" [level=2]
+  - generic: Campaign Name
+  - textbox "Campaign Name":
+    - /placeholder: Enter Campaign Name
+    - text: Audit line
+  - generic: Teams
+  - combobox "Teams":
+    - option "Select..." [selected]
+    - option "Lifecycle Marketing"
+    - option "Growth"
+    - option "Retention"
+  - button "Add description":
+    - text: Add description
+  - button "Tags":
+    - text: Tags
+  - generic: Campaign ID
+  - textbox "Campaign ID": cmp_audit_20261028_line
+  - button "Copy":
+    - text: Copy
+  - heading "Compose LINE" [level=2]
+  - paragraph: Send a message through LINE Official Account.
+  - button "Preview and test"
+  - heading "LINE message" [level=3]
+  - paragraph: Send a stack of up to 5 messages through a LINE Official Account.
+  - generic: Official Account
+  - combobox "Official Account":
+    - option "Demo – Thinkingai" [selected]
+  - generic: Action URL
+  - textbox "Action URL":
+    - /placeholder: https://...
+  - generic: 1 message in this stack (max 5)
+  - generic: Message 1
+  - button "Move message up" [disabled]:
+  - button "Move message down" [disabled]:
+  - button "Remove message" [disabled]:
+  - generic: Message type
+  - combobox "Message type":
+    - option "Text" [selected]
+    - option "Image"
+    - option "Flex message"
+    - option "Carousel"
+  - generic: Text
+  - textbox "Text": "Hello {{${first_name} | default: \"friend\"}} — audit content."
+  - button "Text":
+    - text: Text
+  - button "Image":
+    - text: Image
+  - button "Flex":
+    - text: Flex
+  - button "Carousel":
+    - text: Carousel
+  - generic: Stack preview
+  - generic: "Hello {{${first_name} | default: \"friend\"}} — audit content."
+  - button "Back" [disabled]:
+  - button "1 Compose":
+    - generic: "1"
+    - text: Compose
+  - button "2 Schedule":
+    - generic: "2"
+    - text: Schedule
+  - button "3 Target":
+    - generic: "3"
+    - text: Target
+  - button "4 Assign":
+    - generic: "4"
+    - text: Assign
+  - button "5 Review":
+    - generic: "5"
+    - text: Review
+  - button "Forward":
+  - button "Save Draft"
+- alert

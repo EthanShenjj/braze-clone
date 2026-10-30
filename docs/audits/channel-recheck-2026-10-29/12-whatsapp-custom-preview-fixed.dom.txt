@@ -1,0 +1,220 @@
+- complementary:
+  - generic: b
+  - button "Demo – Thinkingai":
+    - generic: Demo – Thinkingai
+  - generic: Quick links
+  - button "Canvas":
+    - generic: Canvas
+  - button "Campaigns":
+    - generic: Campaigns
+  - button "Segments":
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+  - button "Performance Overview":
+    - generic: Performance Overview
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic: braze
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour":
+  - button "Language":
+  - button "Notifications":
+  - button "S"
+  - button:
+  - button "Campaigns"
+  - button "Edit 'Audit 2026-10-29 whatsapp'":
+    - text: Edit 'Audit 2026-10-29 whatsapp'
+  - text: Limited access
+  - navigation "Campaign steps":
+    - button "1 Compose Messages":
+      - generic: "1"
+      - generic: Compose Messages
+    - button "2 Schedule Delivery":
+      - generic: "2"
+      - generic: Schedule Delivery
+    - button "3 Target Audiences":
+      - generic: "3"
+      - generic: Target Audiences
+    - button "4 Assign Conversions":
+      - generic: "4"
+      - generic: Assign Conversions
+    - button "5 Review Summary":
+      - generic: "5"
+      - generic: Review Summary
+  - heading "Campaign Details" [level=2]
+  - generic: Campaign Name
+  - textbox "Campaign Name":
+    - /placeholder: Enter Campaign Name
+    - text: Audit 2026-10-29 whatsapp
+  - text: Teams
+  - combobox "Teams":
+    - option "Select…" [selected]
+  - button "Add description":
+    - text: Add description
+  - button "Tags":
+    - text: Tags
+  - generic: Campaign ID
+  - textbox "Campaign ID": cmp_recheck_1029_whatsapp
+  - button "Copy":
+    - text: Copy
+  - heading "Compose WhatsApp" [level=2]
+  - paragraph: Send an approved WhatsApp template.
+  - button "Preview and test" [active]
+  - generic: WhatsApp preview workspace
+  - generic: Connect a WhatsApp Business Account to synchronize templates and submit them for approval.
+  - generic: Preview account
+  - heading "Message variants" [level=3]
+  - paragraph: Test different WhatsApp content while keeping the same audience and schedule.
+  - button "Variant 1 Template":
+    - text: Variant 1
+    - generic: Template
+  - button "Add WhatsApp variant":
+  - button "Sync templates":
+  - button "Duplicate variant":
+  - button "Delete variant" [disabled]:
+  - navigation "WhatsApp composer sections":
+    - button "Compose" [pressed]
+    - button "Test"
+  - heading "Sending configuration" [level=3]
+  - paragraph: Choose the demo business identity and subscription group.
+  - text: Incomplete
+  - text: WhatsApp Business Account
+  - 'combobox "WhatsApp Business Account Quality rating: High · Demo data"':
+    - option "Thinkingai Demo · +1 415 555 0108" [selected]
+  - generic: "Quality rating: High · Demo data"
+  - text: Subscription group
+  - combobox "WhatsApp subscription group":
+    - option "Select a subscription group" [selected]
+    - option "WhatsApp updates"
+  - generic: Only subscribed or opted-in users are eligible.
+  - heading "Message type" [level=3]
+  - paragraph: Template messages start conversations. Response messages require an open 24-hour window.
+  - button "Template message Use approved content to start a conversation" [pressed]:
+    - generic: Template message
+    - generic: Use approved content to start a conversation
+  - button "Response message Reply to an inbound message within 24 hours":
+    - generic: Response message
+    - generic: Reply to an inbound message within 24 hours
+  - heading "Approved template" [level=3]
+  - paragraph: Each language is a separate approved template.
+  - button "Manage templates"
+  - text: Template
+  - combobox "Template":
+    - option "audit_shipping · English (US) · Utility · Approved" [selected]
+    - option "September offer · English (US) · Marketing · Approved"
+    - option "September offer · Chinese (Simplified) · Marketing · Approved"
+    - option "Order update · English (US) · Utility · Approved"
+    - option "Login verification · English (US) · Authentication · Approved"
+    - option "abandoned_onboarding · English · Marketing · Approved"
+    - option "e2e_draft_template · English · Marketing · Draft"
+  - button "+ Submit template"
+  - text: Approved
+  - generic: Utility
+  - generic: English (US)
+  - generic: Not synchronized
+  - heading "Template content" [level=3]
+  - paragraph: Approved copy is locked. Map each variable to demo profile data or a fallback.
+  - generic: 🔒
+  - text: Body
+  - generic: Approved template copy
+  - generic: "Audit custom shipping message for {{1}}. 🔒"
+  - generic: "{{1}}"
+  - generic: Name
+  - generic: "Example: Ada"
+  - text: Value
+  - textbox "Value": Ada
+  - text: Fallback
+  - textbox "Fallback": friend
+  - text: Footer
+  - generic: AUDIT CUSTOM FOOTER 🔒
+  - text: Button
+  - generic: quick reply
+  - generic: OK
+  - complementary:
+    - heading "Preview" [level=3]
+    - paragraph: Personalized for Carla Rodriguez
+    - combobox "Preview device":
+      - option "WhatsApp · iPhone" [selected]
+      - option "WhatsApp · Android"
+    - generic: 9:41
+    - generic: ● ●●
+    - generic: ‹
+    - generic: T
+    - generic: Thinkingai Demo
+    - generic: business account
+    - generic: Messages are end-to-end encrypted. This is a local preview.
+    - generic: Today
+    - article:
+      - paragraph: Audit custom shipping message for Ada.
+      - generic: AUDIT CUSTOM FOOTER
+      - time: 9:41 AM ✓✓
+      - button "OK":
+        - text: OK
+    - generic: Message
+    - heading "Message readiness" [level=4]
+    - paragraph:
+      - text: Approved template selected
+    - paragraph:
+      - text: Subscription group selected
+    - paragraph:
+      - text: Conversation can be initiated
+  - button "Back" [disabled]:
+  - button "1 Compose":
+    - generic: "1"
+    - text: Compose
+  - button "2 Schedule":
+    - generic: "2"
+    - text: Schedule
+  - button "3 Target":
+    - generic: "3"
+    - text: Target
+  - button "4 Assign":
+    - generic: "4"
+    - text: Assign
+  - button "5 Review":
+    - generic: "5"
+    - text: Review
+  - button "Forward":
+  - button "Save Draft"
+  - dialog "Preview and test":
+    - button "Close":
+    - heading "Preview and test" [level=2]
+    - paragraph: Simulate a WhatsApp test delivery in the local activity log. No Meta API or device is contacted.
+    - text: Preview as
+    - combobox "Preview as":
+      - option "Random user"
+      - option "Existing user" [selected]
+      - option "Custom user"
+    - text: External user ID
+    - textbox "External user ID"
+    - text: Locale
+    - textbox "Locale": en
+    - generic: Audit custom shipping message for Ada.
+    - text: AUDIT CUSTOM FOOTER
+    - button "Record simulated test"
+- generic: Draft saved.
+- button "Close":
+- button "Open Next.js Dev Tools":
+- alert

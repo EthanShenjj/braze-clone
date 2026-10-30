@@ -1,0 +1,118 @@
+- button "Open Next.js Dev Tools":
+- alert: Campaigns
+- complementary:
+  - generic: b
+  - button "Demo – Thinkingai":
+    - generic: Demo – Thinkingai
+  - generic: Quick links
+  - button "Canvas":
+    - generic: Canvas
+  - button "Campaigns":
+    - generic: Campaigns
+  - button "Segments":
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+  - button "Performance Overview":
+    - generic: Performance Overview
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic: braze
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour":
+  - button "Language":
+  - button "Notifications":
+  - button "S"
+  - button:
+  - button "Campaigns"
+  - button "Edit 'Untitled Feature flag experiment Campaign'":
+    - text: Edit 'Untitled Feature flag experiment Campaign'
+  - text: Limited access
+  - navigation "Campaign steps":
+    - button "1 Compose Messages":
+      - generic: "1"
+      - generic: Compose Messages
+    - button "2 Schedule Delivery":
+      - generic: "2"
+      - generic: Schedule Delivery
+    - button "3 Target Audiences":
+      - generic: "3"
+      - generic: Target Audiences
+    - button "4 Assign Conversions":
+      - generic: "4"
+      - generic: Assign Conversions
+    - button "5 Review Summary":
+      - generic: "5"
+      - generic: Review Summary
+  - heading "Campaign Details" [level=2]
+  - generic: Campaign Name
+  - textbox "Campaign Name":
+    - /placeholder: Enter Campaign Name
+    - text: Untitled Feature flag experiment Campaign
+  - text: Teams
+  - combobox "Teams":
+    - option "Select…" [selected]
+  - button "Add description":
+    - text: Add description
+  - button "Tags":
+    - text: Tags
+  - generic: Campaign ID
+  - textbox "Campaign ID": cmp_xce101j2
+  - button "Copy":
+    - text: Copy
+  - heading "Compose Feature flag experiment" [level=2]
+  - paragraph: Roll out a remote feature setting.
+  - button "Preview and test"
+  - heading "Feature flag experiment" [level=3]
+  - paragraph: Select a saved flag with 0% global rollout. Experiment assignments are returned by the workspace SDK while the Campaign is active.
+  - generic: Feature Flag
+  - combobox "Feature Flag":
+    - option "Select a Feature Flag" [selected]
+  - generic: Rollout
+  - spinbutton "Rollout": "50"
+  - generic: Variant properties (JSON)
+  - textbox "Variant properties (JSON)":
+    - /placeholder: "{ }"
+  - generic: Primary conversion
+  - combobox "Primary conversion":
+    - option "Make Purchase" [selected]
+    - option "Start Session"
+  - button "Back" [disabled]:
+  - button "1 Compose":
+    - generic: "1"
+    - text: Compose
+  - button "2 Schedule":
+    - generic: "2"
+    - text: Schedule
+  - button "3 Target":
+    - generic: "3"
+    - text: Target
+  - button "4 Assign":
+    - generic: "4"
+    - text: Assign
+  - button "5 Review":
+    - generic: "5"
+    - text: Review
+  - button "Forward":
+  - button "Save Draft"

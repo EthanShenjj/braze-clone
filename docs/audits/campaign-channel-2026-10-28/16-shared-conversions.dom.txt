@@ -1,0 +1,111 @@
+- complementary:
+  - generic: b
+  - button "Demo – Thinkingai":
+    - generic: Demo – Thinkingai
+  - generic: Quick links
+  - button "Canvas":
+    - generic: Canvas
+  - button "Campaigns":
+    - generic: Campaigns
+  - button "Segments":
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+  - button "Performance Overview":
+    - generic: Performance Overview
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic: braze
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour":
+  - button "Language":
+  - button "Notifications":
+  - button "S"
+  - button:
+  - button "Campaigns"
+  - button "Edit 'Audit banner'":
+    - text: Edit 'Audit banner'
+  - text: Limited access
+  - navigation "Campaign steps":
+    - button "✓ Compose Messages":
+      - generic: ✓
+      - generic: Compose Messages
+    - button "✓ Schedule Delivery":
+      - generic: ✓
+      - generic: Schedule Delivery
+    - button "✓ Target Audiences":
+      - generic: ✓
+      - generic: Target Audiences
+    - button "4 Assign Conversions":
+      - generic: "4"
+      - generic: Assign Conversions
+    - button "5 Review Summary":
+      - generic: "5"
+      - generic: Review Summary
+  - heading "Assign Conversion Events" [level=2]
+  - paragraph: Define up to 4 conversion events to track for this Campaign. The conversion events must be assigned during Campaign creation, and cannot be changed once a Campaign has launched.
+  - heading "Primary Conversion Event - A" [level=3]
+  - button "Remove Conversion Event" [disabled]:
+  - generic: Conversion event type
+  - combobox "Conversion event type":
+    - option "Starts Session"
+    - option "Makes Purchase" [selected]
+    - option "Performs Custom Event"
+    - option "Opens Email"
+    - option "Clicks Email"
+  - generic: Apps and websites targeted
+  - combobox "Apps and websites targeted":
+    - option "Users from all apps" [selected]
+    - option "Demo – Thinkingai"
+    - option "Web"
+  - generic: Conversion deadline
+  - generic: Define the maximum time that may pass between a user entering a Campaign and the conversion.
+  - spinbutton "Conversion deadline Define the maximum time that may pass between a user entering a Campaign and the conversion. Days": "3"
+  - combobox:
+    - option "Days" [selected]
+    - option "Hours"
+    - option "Minutes"
+  - generic: "Conversion deadline:"
+  - text: 3 days
+  - button "Add Conversion Event":
+    - text: Add Conversion Event
+  - button "Back":
+  - button "✓ Compose":
+    - generic: ✓
+    - text: Compose
+  - button "✓ Schedule":
+    - generic: ✓
+    - text: Schedule
+  - button "✓ Target":
+    - generic: ✓
+    - text: Target
+  - button "4 Assign":
+    - generic: "4"
+    - text: Assign
+  - button "5 Review":
+    - generic: "5"
+    - text: Review
+  - button "Forward":
+  - button "Save Draft"
+- alert

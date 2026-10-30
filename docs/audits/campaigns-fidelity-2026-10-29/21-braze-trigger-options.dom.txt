@@ -1,0 +1,253 @@
+- link "Skip to main content":
+  - /url: "#main-col"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Demo – bba":
+    - generic: Demo – bba
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6ad0b98fe4b4110085216601?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6ad0b98fe4b4110085216601?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6ad0b98fe4b4110085216601?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6ad0b98fe4b4110085216601?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 1 day left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- navigation:
+  - tablist "Open page tabs":
+    - tab "Campaigns":
+      - generic: Campaigns
+    - tab "Edit 'New Campaign - October 29, 2026' Close tab":
+      - generic: Edit 'New Campaign - October 29, 2026'
+      - button "Close tab":
+    - tab "Edit 'New Campaign - October 29, 2026' Close tab" [selected]:
+      - text: 
+      - generic: Edit 'New Campaign - October 29, 2026'
+      - button "Close tab":
+- img: 
+- generic: Limited access
+- navigation:
+  - generic "progress":
+    - generic: "Progress Tracker with 5 steps: Compose Messages, Schedule Delivery, Target Audiences, Assign Conversions, Review Summary"
+  - button "Step Compose Messages":
+    - generic: "1"
+    - generic: Compose Messages
+  - button "Step Schedule Delivery":
+    - generic: "2"
+    - generic: Schedule Delivery
+  - button "Step Target Audiences":
+    - generic: "3"
+    - generic: Target Audiences
+  - button "Step Assign Conversions":
+    - generic: "4"
+    - generic: Assign Conversions
+  - button "Step Review Summary":
+    - generic: "5"
+    - generic: Review Summary
+- heading "Delivery" [level=3]
+- heading "Choose a Type" [level=4]
+- radiogroup:
+  - radio "Scheduled Enter users at designated times"
+  - heading "Scheduled" [level=4]
+  - generic: Enter users at designated times
+  - radio "Action-Based Enter user when they perform actions" [checked]
+  - heading "Action-Based" [level=4]
+  - generic: Enter user when they perform actions
+  - radio "API-Triggered Enter users via API request"
+  - heading "API-Triggered" [level=4]
+  - generic: Enter users via API request
+- heading "Action-Based delivery" [level=3]:
+  - text: Action-Based delivery
+- paragraph
+- img: 
+- generic: Evaluate if user takes specified actions
+- log: Perform Custom Event, 1 of 22.22 results available.Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+- generic: Select Trigger
+- combobox "Select Trigger" [expanded] [active]
+- button "Add Trigger" [disabled]:
+  - img: 
+  - generic: Add Trigger
+- separator
+- heading "Schedule Delay" [level=5]
+- paragraph: Choose when to send the campaign after the trigger event occurs.
+- generic: Send
+- log
+- generic: Immediately
+- combobox "Send"
+- separator
+- heading "Campaign duration" [level=5]
+- paragraph
+- generic: Start Time (Required)
+- textbox "Select Date":
+  - /placeholder: yyyy/mm/dd
+  - text: 2026/10/29
+- generic: Type a date month/day/year, or use arrow keys or page up/page down to choose a date
+- textbox "h:mm am": 5:05 am
+- img: 
+- log
+- generic: Company time - Eastern Time (US & Canada)
+- combobox "Time zone"
+- checkbox "End Time (Optional)"
+- generic: End Time (Optional)
+- separator
+- heading "Quiet hours" [level=5]
+- text: Prevent messages from sending during certain hours (in user's local time)
+- checkbox "Enable quiet hours"
+- generic: Enable quiet hours
+- list:
+  - text: "Schedule delay:"
+  - strong: immediately after trigger criteria are met
+  - text: "Campaign start:"
+  - strong: October 29, 2026 at 5:05 AM
+- heading "Delivery Controls" [level=3]
+- generic: Manage the number of messages your users will receive.
+- checkbox "Allow users to become re-eligible to receive campaign"
+- generic: Allow users to become re-eligible to receive campaign
+- heading "Frequency Capping" [level=4]
+- text: You have not created any Frequency Capping rules.
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: /engagement/global_message_settings/global-message-settings/6ad0b98fe4b4110085216601?locale=en
+  - text: Manage frequency capping rules
+- button "Back":
+  - img: 
+- navigation:
+  - generic "progress":
+    - generic: "Progress Tracker with 5 steps: Compose, Schedule, Target, Assign, Review"
+  - button "Step Compose":
+    - generic: "1"
+    - generic: Compose
+  - button "Step Schedule":
+    - generic: "2"
+    - generic: Schedule
+  - button "Step Target":
+    - generic: "3"
+    - generic: Target
+  - button "Step Assign":
+    - generic: "4"
+    - generic: Assign
+  - button "Step Review":
+    - generic: "5"
+    - generic: Review
+- button "Forward":
+  - img: 
+- button "Save Draft":
+  - generic: Save Draft
+- text: 
+- contentinfo:
+  - generic: © Braze 2026
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://01.emailinboundprocessing.com/preference_center/v1/eyJhbGciOiJSUzI1NiJ9/eyJzdWIiOiJwY3YxIiwiaWF0IjoxNzkzMjY0MzQzLCJleHAiOjE4MjQ4MDAzNDMsImQiOiIkMCQvMUtkSWpMM3lhQ3B5aG1IV0VvWHBRPT0keUhHWTM4Y0RnV1g2TFlqR0NYY0VzMlVURmIvanhyU1g1M1prOU5uRnV3MC9SRGFUS1lzVGh3OHVWanJ6XG5odXVZIiwiaCI6IjAxLmVtYWlsaW5ib3VuZHByb2Nlc3NpbmcuY29tIn0/d18E2xz5xX29GDeu1PsQ5yQ20YO06BaVfx08WCWEIV_XtazuQu6iSIYw16Fq77H3HpuoHWA3Sqe9wX7JqP9RSnKDO6mtO5ZjD8Ao_NikxD16mMutq1gsctPQXAEzXkDNEmBVhd70eAXHIlatCU9rxwWpsv08YJ1JWvc0AzoKS0j2_v-XPlQipxKgeRJBAdsGkwED1YIjGF-t9_yI0_8Xv065Fgz6MYPb7YNGLP27b4QPZ2I91S3SDweNS4sasQif8egjRasnvMzjCpbKO6NghLrhWlFW_JljRbLvjKFqUibLznHY-MLftaag1I7E0Ln2QiFIcKmhialV9VRmydxSVw
+    - text: Privacy Preferences
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://braze.statuspage.io
+    - text: Status
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://www.braze.com/terms
+    - text: Terms
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://www.braze.com/privacy
+    - text: Privacy Policy
+- alert
+- alert
+- listbox:
+  - generic: General activity
+  - option "Perform Custom Event":
+    - generic: Perform Custom Event
+  - option "Start Session":
+    - generic: Start Session
+  - option "Interact With Campaign":
+    - generic: Interact With Campaign
+  - option "Interact With Step":
+    - generic: Interact With Step
+  - option "Interact with Landing Page":
+    - generic: Interact with Landing Page
+  - option "Perform Conversion Event":
+    - generic: Perform Conversion Event
+  - option "Perform Exception Event For Campaign":
+    - generic: Perform Exception Event For Campaign
+  - generic: Profile updates
+  - option "Change Custom Attribute Value":
+    - generic: Change Custom Attribute Value
+  - option "Update Subscription Status":
+    - generic: Update Subscription Status
+  - option "Update Subscription Group Status":
+    - generic: Update Subscription Group Status
+  - option "Add an Email Address":
+    - generic: Add an Email Address
+  - generic: eCommerce
+  - option "View product":
+    - generic: View product
+  - option "Update cart":
+    - generic: Update cart
+  - option "Start checkout":
+    - generic: Start checkout
+  - option "Place order":
+    - generic: Place order
+  - option "Cancel order":
+    - generic: Cancel order
+  - option "Refund order":
+    - generic: Refund order
+  - generic: Inbound messaging
+  - option "Send an SMS inbound message":
+    - generic: Send an SMS inbound message
+  - option "Send a WhatsApp inbound message":
+    - generic: Send a WhatsApp inbound message
+  - option "Send a LINE inbound message":
+    - generic: Send a LINE inbound message
+  - generic: Location
+  - option "Enter a Location":
+    - generic: Enter a Location
+  - option "Trigger a Geofence":
+    - generic: Trigger a Geofence

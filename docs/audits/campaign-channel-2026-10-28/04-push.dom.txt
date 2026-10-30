@@ -1,0 +1,200 @@
+- complementary:
+  - generic: b
+  - button "Demo – Thinkingai":
+    - generic: Demo – Thinkingai
+  - generic: Quick links
+  - button "Canvas":
+    - generic: Canvas
+  - button "Campaigns":
+    - generic: Campaigns
+  - button "Segments":
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+  - button "Performance Overview":
+    - generic: Performance Overview
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic: braze
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour":
+  - button "Language":
+  - button "Notifications":
+  - button "S"
+  - button:
+  - button "Campaigns"
+  - button "Edit 'Audit push'":
+    - text: Edit 'Audit push'
+  - text: Limited access
+  - navigation "Campaign steps":
+    - button "1 Compose Messages":
+      - generic: "1"
+      - generic: Compose Messages
+    - button "2 Schedule Delivery":
+      - generic: "2"
+      - generic: Schedule Delivery
+    - button "3 Target Audiences":
+      - generic: "3"
+      - generic: Target Audiences
+    - button "4 Assign Conversions":
+      - generic: "4"
+      - generic: Assign Conversions
+    - button "5 Review Summary":
+      - generic: "5"
+      - generic: Review Summary
+  - heading "Campaign Details" [level=2]
+  - generic: Campaign Name
+  - textbox "Campaign Name":
+    - /placeholder: Enter Campaign Name
+    - text: Audit push
+  - generic: Teams
+  - combobox "Teams":
+    - option "Select..." [selected]
+    - option "Lifecycle Marketing"
+    - option "Growth"
+    - option "Retention"
+  - button "Add description":
+    - text: Add description
+  - button "Tags":
+    - text: Tags
+  - generic: Campaign ID
+  - textbox "Campaign ID": cmp_audit_20261028_push
+  - button "Copy":
+    - text: Copy
+  - heading "Compose push notification" [level=2]
+  - button "Preview and test"
+  - text: "Push credentials: iOS Missing · Android Missing"
+  - button "More Info"
+  - heading "iOS" [level=3]
+  - generic: Device
+  - combobox "Device":
+    - option "Phone" [selected]
+    - option "Tablet"
+  - generic: Notification State
+  - combobox "Notification State":
+    - option "Lock screen" [selected]
+    - option "Notification center"
+    - option "Banner"
+  - text: Audit message
+  - paragraph: "Hello {{${first_name} | default: \"friend\"}} — audit content."
+  - generic: now
+  - heading "Android" [level=3]
+  - text: Audit message
+  - generic: · 9m
+  - paragraph: "Hello {{${first_name} | default: \"friend\"}} — audit content."
+  - paragraph: Always test your message on a real device, as actual rendering may vary.
+  - tablist:
+    - tab "Compose" [selected]
+    - tab "Settings"
+    - tab "Test"
+  - text: Notification type
+  - combobox "Notification type":
+    - option "Standard push" [selected]
+    - option "Rich push"
+  - heading "Language" [level=3]
+  - button "English"
+  - button "Add language":
+    - text: Add language
+  - heading "Content" [level=3]
+  - text: Title
+  - textbox "Title":
+    - /placeholder: Enter notification title
+    - text: Audit message
+  - text: Message
+  - textbox "Message 60 characters":
+    - /placeholder: Enter your message
+    - text: "Hello {{${first_name} | default: \"friend\"}} — audit content."
+  - generic: 60 characters
+  - text: Summary text (Android) (Optional)
+  - textbox "Summary text (Android) (Optional)"
+  - heading "Interactions" [level=3]
+  - paragraph: Set what happens when a user interacts with a push notification.
+  - text: On-click behavior
+  - combobox "On-click behavior":
+    - option "Open app/site" [selected]
+    - option "Deep link"
+    - option "Open web URL"
+    - option "None"
+  - checkbox "Same for all platforms" [checked]
+  - text: Same for all platforms
+  - heading "Action buttons" [level=4]
+  - checkbox "Allow users to take actions"
+  - text: Allow users to take actions
+  - heading "Assets" [level=3]
+  - heading "Push icon image (Android)" [level=4]
+  - generic: Drag and drop an image here
+  - generic: JPG or PNG · 1:1
+  - button "Add from media library"
+  - generic: Upload image
+  - text: Add from URL
+  - textbox "Add from URL":
+    - /placeholder: Paste URL
+  - heading "iOS notification image" [level=4]
+  - generic: Drag and drop an image here
+  - generic: GIF, JPG, JPEG, or PNG
+  - button "Add from media library"
+  - generic: Upload image
+  - text: Add from URL
+  - textbox "Add from URL":
+    - /placeholder: Paste URL
+  - heading "Android notification image" [level=4]
+  - generic: Drag and drop an image here
+  - generic: JPG or PNG · 2:1 recommended
+  - button "Add from media library"
+  - generic: Upload image
+  - text: Add from URL
+  - textbox "Add from URL":
+    - /placeholder: Paste URL
+  - heading "Sending options" [level=3]
+  - text: Push destination
+  - combobox "Push destination":
+    - option "All devices" [selected]
+    - option "Most recent device"
+  - text: iOS device destinations
+  - combobox "iOS device destinations":
+    - option "All iOS devices" [selected]
+    - option "Most recent iOS device"
+  - text: Android delivery priority
+  - combobox "Android delivery priority":
+    - option "Normal" [selected]
+    - option "High"
+  - button "Back" [disabled]:
+  - button "1 Compose":
+    - generic: "1"
+    - text: Compose
+  - button "2 Schedule":
+    - generic: "2"
+    - text: Schedule
+  - button "3 Target":
+    - generic: "3"
+    - text: Target
+  - button "4 Assign":
+    - generic: "4"
+    - text: Assign
+  - button "5 Review":
+    - generic: "5"
+    - text: Review
+  - button "Forward":
+  - button "Save Draft"
+- alert

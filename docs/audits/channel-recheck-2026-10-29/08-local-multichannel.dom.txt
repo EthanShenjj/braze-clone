@@ -1,0 +1,215 @@
+- complementary:
+  - generic: b
+  - button "Demo – Thinkingai":
+    - generic: Demo – Thinkingai
+  - generic: Quick links
+  - button "Canvas":
+    - generic: Canvas
+  - button "Campaigns":
+    - generic: Campaigns
+  - button "Segments":
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+  - button "Performance Overview":
+    - generic: Performance Overview
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic: braze
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour":
+  - button "Language":
+  - button "Notifications":
+  - button "S"
+  - button:
+  - button "Campaigns"
+  - button "Edit 'Audit 2026-10-29 multichannel'":
+    - text: Edit 'Audit 2026-10-29 multichannel'
+  - text: Limited access
+  - navigation "Campaign steps":
+    - button "1 Compose Messages":
+      - generic: "1"
+      - generic: Compose Messages
+    - button "2 Schedule Delivery":
+      - generic: "2"
+      - generic: Schedule Delivery
+    - button "3 Target Audiences":
+      - generic: "3"
+      - generic: Target Audiences
+    - button "4 Assign Conversions":
+      - generic: "4"
+      - generic: Assign Conversions
+    - button "5 Review Summary":
+      - generic: "5"
+      - generic: Review Summary
+  - heading "Campaign Details" [level=2]
+  - generic: Campaign Name
+  - textbox "Campaign Name":
+    - /placeholder: Enter Campaign Name
+    - text: Audit 2026-10-29 multichannel
+  - text: Teams
+  - combobox "Teams":
+    - option "Select…" [selected]
+  - button "Add description":
+    - text: Add description
+  - button "Tags":
+    - text: Tags
+  - generic: Campaign ID
+  - textbox "Campaign ID": cmp_recheck_1029_multichannel
+  - button "Copy":
+    - text: Copy
+  - heading "Compose Multichannel" [level=2]
+  - paragraph: Coordinate messages across one or more channels.
+  - button "Preview and test"
+  - heading "Messaging channels" [level=3]
+  - paragraph: Add a channel to compose its message within this Campaign.
+  - checkbox "Email"
+  - text: Email
+  - checkbox "Push notification" [checked]
+  - text: Push notification
+  - checkbox "Content Card"
+  - text: Content Card
+  - checkbox "SMS/MMS/RCS"
+  - text: SMS/MMS/RCS
+  - checkbox "Webhook"
+  - text: Webhook
+  - checkbox "WhatsApp"
+  - text: WhatsApp
+  - checkbox "LINE"
+  - text: LINE
+  - button "Push notification"
+  - heading "Variants" [level=3]
+  - tablist "Message variants":
+    - tab "Variant 1" [selected]
+    - button "Add message variant": +
+  - textbox "Variant name": Variant 1
+  - button "Copy variant"
+  - button "Delete variant" [disabled]
+  - heading "Compose push notification" [level=2]
+  - generic: "Push credentials: iOS Not configured · Android Not configured · Web Not configured"
+  - checkbox "iOS" [checked]
+  - text: iOS
+  - checkbox "Android" [checked]
+  - text: Android
+  - checkbox "Web"
+  - text: Web
+  - checkbox "Kindle"
+  - text: Kindle
+  - complementary:
+    - heading "Preview" [level=3]
+    - generic: Preview platform
+    - combobox "Preview platform":
+      - option "iOS" [selected]
+      - option "Android"
+    - generic: Device
+    - combobox "Device":
+      - option "Phone" [selected]
+      - option "Tablet"
+    - generic: Notification state
+    - combobox "Notification state":
+      - option "Lock screen" [selected]
+      - option "Notification center"
+      - option "Banner"
+    - generic: iOS · Lock screen
+    - text: Retained push
+    - paragraph: Push remains
+  - main:
+    - button "Compose" [pressed]
+    - button "Settings"
+    - button "Test"
+    - generic: Notification type
+    - combobox "Notification type":
+      - option "Standard push" [selected]
+      - option "Rich push"
+      - option "Push stories"
+      - option "Inline image"
+    - generic: Title
+    - textbox "Title": Retained push
+    - generic: Message
+    - textbox "Message": Push remains
+    - checkbox "Use the same content for all platforms" [checked]
+    - text: Use the same content for all platforms
+    - heading "Languages" [level=3]
+    - button "English" [pressed]
+    - generic: Add language
+    - combobox "Add language":
+      - option "Select language" [selected]
+      - option "Arabic"
+      - option "Chinese"
+      - option "French"
+      - option "German"
+      - option "Hebrew"
+      - option "Indonesian"
+      - option "Italian"
+      - option "Japanese"
+      - option "Korean"
+      - option "Malay"
+      - option "Spanish"
+      - option "Tagalog"
+      - option "Thai"
+      - option "Vietnamese"
+    - generic: Localized title
+    - textbox "Localized title"
+    - generic: Localized message
+    - textbox "Localized message"
+    - generic: iOS rich media
+    - textbox "iOS rich media":
+      - /placeholder: https://…
+    - generic: Upload file
+    - button "Media library"
+    - generic: Android image
+    - textbox "Android image":
+      - /placeholder: https://…
+    - generic: Upload file
+    - button "Media library"
+    - generic: On-click behavior
+    - combobox "On-click behavior":
+      - option "Open app" [selected]
+      - option "Open web URL"
+      - option "Deep link into app"
+    - generic: Destination
+    - textbox "Destination"
+    - heading "Action buttons" [level=3]
+    - button "+ Add action"
+  - button "Preview and test channel"
+  - button "Back" [disabled]:
+  - button "1 Compose":
+    - generic: "1"
+    - text: Compose
+  - button "2 Schedule":
+    - generic: "2"
+    - text: Schedule
+  - button "3 Target":
+    - generic: "3"
+    - text: Target
+  - button "4 Assign":
+    - generic: "4"
+    - text: Assign
+  - button "5 Review":
+    - generic: "5"
+    - text: Review
+  - button "Forward":
+  - button "Save Draft"
+- button "Open Next.js Dev Tools":
+- alert: Braze Demo — Thinkingai

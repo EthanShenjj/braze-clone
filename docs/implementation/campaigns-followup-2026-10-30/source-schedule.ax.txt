@@ -1,0 +1,190 @@
+Browser tab: 1969334808, Title: "Engagement - Campaigns - Edit 'New Campaign - October 29, 2026'", URL: "https://dashboard-09.braze.com/engagement/campaigns/6ae2d0de5e731b00885db684/6ad0b98fe4b4110085216601?locale=en&campaignName=New%20Campaign%20-%20October%2029%2C%202026&page=0".
+0 AXWebArea Engagement - Campaigns - Edit 'New Campaign - October 29, 2026', URL: dashboard-09.braze.com/engagement/campaigns/6ae2d0de5e731b00885db684/6ad0b98fe4b4110085216601?locale=en&campaignName=New%20Campaign%20-%20October%2029%2C%202026&page=0
+	1 container
+		2 image Download
+		3 image
+	4 container
+		11 container body-wrapper
+			12 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/campaigns/6ae2d0de5e731b00885db684/6ad0b98fe4b4110085216601?locale=en&campaignName=New%20Campaign%20-%20October%2029%2C%202026&page=0#main-col
+			13 container
+				14 container Side navigation
+					15 container
+						16 button Minimize menu
+						17 pop up button (collapsed) Description: Demo – bba, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+							18 image
+							19 text Demo – bba
+						20 text Quick links
+						21 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6ad0b98fe4b4110085216601?locale=en
+						22 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6ad0b98fe4b4110085216601?locale=en
+						23 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6ad0b98fe4b4110085216601?locale=en
+						24 button Getting Started
+							25 image
+							26 container
+								27 text Getting Started
+								28 container
+									29 text 8 %
+						30 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6ad0b98fe4b4110085216601?locale=en
+						31 button AI Decisioning
+							32 image
+							33 text AI Decisioning
+						34 button Agent Console
+							35 image
+							36 text Agent Console
+						37 button Messaging
+							38 image
+							39 text Messaging
+						40 button Audience
+							41 image
+							42 text Audience
+						43 button Content
+							44 image
+							45 text Content
+						46 button Analytics
+							47 image
+							48 text Analytics
+						49 button Partner Integrations
+							50 image
+							51 text Partner Integrations
+						52 button Data Settings
+							53 image
+							54 text Data Settings
+						55 button Settings
+							56 image
+							57 text Settings
+					58 container Footer Logo
+						59 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+				60 text No days left in your free trial.
+				61 button Connect with sales
+				62 container Top navigation
+					63 container Left top navigation
+						64 button Search workspace ⌘+K
+							65 image
+							66 text Search workspace
+							67 text ⌘+K
+					68 container Right top navigation
+						69 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							70 image
+						71 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							72 image
+						73 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+							74 image
+						75 container
+							76 button Notifications
+								77 image
+						78 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							79 image
+						80 button BrazeAI Operator™
+							81 image
+			82 container main
+				83 container main-col
+					84 tab group Open page tabs
+						85 tab (selectable, settable, boolean) Campaigns, Value: 0, ID: campaigns
+						86 tab (selected, settable, boolean) Edit 'New Campaign - October 29, 2026' Close tab, Description: Close tab, ID: 6ae2d0de5e731b00885db684, Value: 1
+Edit 'New Campaign - October 29, 2026'
+					87 container
+						88 text Limited access
+						89 container progress
+							90 text Progress Tracker with 5 steps: Compose Messages, Schedule Delivery, Target Audiences, Assign Conversions, Review Summary
+						91 button Step Compose Messages
+							92 text 1
+							93 text Compose Messages
+						94 button Step Schedule Delivery
+							95 text 2
+							96 text Schedule Delivery
+						97 button Step Target Audiences
+							98 text 3
+							99 text Target Audiences
+						100 button Step Assign Conversions
+						101 button Step Review Summary
+							102 text 5
+							103 text Review Summary
+						259 container
+							260 heading Action-Based delivery, Value: 3
+								261 text Action-Based delivery
+							262 text Perform Custom Event Custom event name
+							263 container
+								264 text Choose a custom event
+								265 combo box (collapsed, settable) Description: Choose a custom event, ID: react-select-13-input, Secondary Actions: Expand
+							266 text This field is required.
+							267 button close
+							268 text Evaluate if user takes specified actions
+							269 container
+								270 text Select Trigger
+								271 combo box (collapsed, settable) Description: Select Trigger, ID: react-select-14-input, Secondary Actions: Expand
+							272 button (disabled) Add Trigger
+							273 heading Schedule Delay, Value: 5
+								274 text Schedule Delay
+							275 text Choose when to send the campaign after the trigger event occurs. Send
+							276 container
+								277 text Immediately
+								278 combo box (collapsed, settable) Description: Send, ID: react-select-15-input, Secondary Actions: Expand
+							279 heading Campaign duration, Value: 5
+								280 text Campaign duration
+							281 text Start Time (Required)
+							282 container
+								283 text field (settable) Description: Select Date, Value: 2026/10/29
+								284 text Type a date month/day/year, or use arrow keys or page up/page down to choose a date
+							285 container
+								286 text field (settable) 12:50 am
+							287 container
+								288 text Company time - Eastern Time (US & Canada)
+								289 combo box (collapsed, settable) Description: Time zone, ID: react-select-16-input, Secondary Actions: Expand
+							290 checkbox (settable, integer) Description: End Time (Optional), Value: 0, ID: bc-checkbox-4071510056
+							291 text End Time (Optional)
+							292 content list
+								293 container
+									294 AXListMarker • 
+									295 text Schedule delay:  immediately after trigger criteria are met
+								296 container
+									297 AXListMarker • 
+									298 text Campaign start:  October 29, 2026 at 12:50 AM
+						299 container
+							300 heading Delivery Controls, Value: 3
+								301 text Delivery Controls
+							302 text Manage the number of messages your users will receive.
+							303 checkbox (settable, integer) Description: Allow users to become re-eligible to receive campaign, Value: 0, ID: bc-checkbox-2868904091
+							304 text Allow users to become re-eligible to receive campaign
+							305 heading Select message priority, Value: 4
+								306 text Select message priority
+							307 text Set the priority of this campaign relative to other in-app message campaigns and Canvases.
+							308 text Message priority
+							309 container message-priority-select
+								310 container
+									311 text Medium priority
+									312 combo box (collapsed, settable) Description: Message priority, ID: react-select-17-input, Secondary Actions: Expand
+							313 button Open the priority sorter to view or set exact in-app message priority
+						230 pop up button Back
+						231 container
+							232 container progress
+								233 text Progress Tracker with 5 steps: Compose, Schedule, Target, Assign, Review
+							234 button Step Compose
+								235 text 1
+								236 text Compose
+							237 button Step Schedule
+								238 text 2
+								239 text Schedule
+							240 button Step Target
+								241 text 3
+								242 text Target
+							243 button Step Assign
+							244 button Step Review
+								245 text 5
+								246 text Review
+						247 pop up button Forward
+						248 button Save Draft
+				249 container
+					250 text © Braze 2026
+					251 text Opening in a new tab
+					252 link Description: Opening in a new tab, Value: 01.emailinboundprocessing.com/preference_center/v1/eyJhbGciOiJSUzI1NiJ9/eyJzdWIiOiJwY3YxIiwiaWF0IjoxNzkzMzM0NDI4LCJleHAiOjE4MjQ4NzA0MjgsImQiOiIkMCR0SnRqRHZzcnpGRUxaZkxqU0w4eWt3PT0kaTVQSUUwV0ZTTENOTUpCeXMyUDgySWRTcnI3bmt5ZHJMeFFiM2xzODlFUjd1ckpZRDViZk93Zm1YMllPXG45STNjIiwiaCI6IjAxLmVtYWlsaW5ib3VuZHByb2Nlc3NpbmcuY29tIn0/UTv3OWP3etSCIz4pd6Sj6D6CPO9JMnlCGfg_H87Cm8Cd_clXeAWa1Hxe4TzipTt0f7mjWJiMXbNjQb4CdvtMxuwoJY_2sMN5e_61_cDQRFDq4LmFl_AO_YzEUzW_soMk9xKpJAvWol-IJIhEMVGawE4cuUInbW5QC4c3GqHadVOo2GU15AgpBrgOgGR1Od2qzND4TX3iUz2tUz8iCewTrcCRD6rRe91oMd5tJLQ0bxwOPyTf84Eg98HDZDnZUdKTJEInOsCeZ_PNa56pmpoh6Z5hsR1Koxk3O76_1iOzWG8ZCr1WeTvuU_W1AXkZQV9NyXxNQj4Vz-ASXr0h_MQyeg
+					253 text Opening in a new tab
+					254 link Description: Opening in a new tab, Value: braze.statuspage.io/
+					255 text Opening in a new tab
+					256 link Description: Opening in a new tab, Value: braze.com/terms
+					257 text Opening in a new tab
+					258 link Description: Opening in a new tab, Value: braze.com/privacy
+		7 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+			8 container
+				9 image Download
+				10 image
+
+The focused UI element is 94 button Step Schedule Delivery

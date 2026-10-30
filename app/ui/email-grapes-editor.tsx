@@ -5,14 +5,15 @@ import "grapesjs/dist/css/grapes.min.css";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import type { Component, Editor } from "grapesjs";
 import {
-  AlignCenter, AlignLeft, AlignRight, Bold, ChevronDown, ChevronLeft, Code2, Copy, Eye, Image as ImageIcon,
+  AlignCenter, AlignLeft, AlignRight, Bold, ChevronDown, ChevronLeft, Code2, Copy, Eye, FileCode2, Image as ImageIcon,
   Info, Italic, Link2, Mail, Monitor, Redo2, Smartphone, Strikethrough, Underline, Undo2, X,
 } from "lucide-react";
 import styles from "./email-dnd.module.css";
 import GrapesSidebar from "./email-grapes-sidebar";
+import EmailContentNavigation from "./email-content-navigation";
 import { grapesImport, emailRowLayouts, grapesRowMarkup } from "@/lib/email-grapes-template";
 import {
-  blockText, downloadHtmlFile, emailFontFamilies, escapeHtml,
+  blockText, downloadHtmlFile, emailFontFamilies, emailLocales, escapeHtml,
   normalizeRows, normalizeStyle, type EmailBlock, type EmailStyle, type MenuItem, type SocialItem,
 } from "@/lib/email-editor-model";
 import { hasHtmlStyleVoidTags, normalizeMjmlDocument, normalizeXmlVoidTags } from "@/lib/email-mjml";
@@ -280,7 +281,8 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
 }) {
   const [linkAliases, setLinkAliases] = useState<Array<{ url: string; alias: string; tracking: boolean }>>(() => Array.isArray(draft.config?.emailLinkAliases) ? draft.config.emailLinkAliases as Array<{ url: string; alias: string; tracking: boolean }> : []);
   const linkAliasesRef = useRef(linkAliases); linkAliasesRef.current = linkAliases;
-  const [subject, setSubject] = useState(draft.subject ?? "");
+  const [subject] = useState(draft.subject ?? "");
+  const [localizedSending, setLocalizedSending] = useState(() => (draft.config?.emailSending ?? {}) as Record<string, unknown>);
   const [leftMode, setLeftMode] = useState<"content" | "personalization" | "languages" | "links">("content");
   const [rightTab, setRightTab] = useState<"content" | "rows" | "settings">("content");
   const [device, setDevice] = useState<"Desktop" | "Mobile">("Desktop");
@@ -390,6 +392,7 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
         if (!blocks.some(([id]) => id === "braze-icon")) blocks.push(["braze-icon", "ICONS", "MEDIA", '<mj-text css-class="braze-icon" align="center" padding="10px"><span>★</span> Icon text</mj-text>']);
         blocks.push(["braze-video", "VIDEO", "MEDIA", '<mj-image css-class="braze-video" src="https://placehold.co/600x338/e9e4f4/4b3a86?text=Video" alt="Video thumbnail" href="https://" padding="10px" />']);
         emailRowLayouts.forEach((widths, index) => blocks.push([`braze-row-${index}`, "ROW", "ROWS", grapesRowMarkup(widths, globalStyle.contentBg)]));
+        blocks.push(["braze-nps","NPS SURVEY","BASIC BLOCKS",'<mj-text align="center"><p>How likely are you to recommend us?</p>'+Array.from({length:11},(_,score)=>'<a href="{{${nps_url}}}&amp;score='+score+'" style="display:inline-block;padding:8px;background:#ede6f8;margin:2px">'+score+'</a>').join("")+'</mj-text>']);
         blocks.forEach(([id, label, category, content]) => blockManager.add(id, { label, category, content, activate: true, select: true }));
 
         const updateSelected = (component?: Component) => {
@@ -452,7 +455,7 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
       const savingRevision = changeRef.current;
       try {
         const snapshot = capture();
-        const config = { ...draft.config, emailEditorMode: "drag", emailEditorEngine: "grapesjs-mjml", emailGrapesSchemaVersion: 1, emailGrapesProject: snapshot.project, emailMjml: snapshot.mjml, emailStyle: globalStyle, emailLinkAliases: linkAliasesRef.current,
+        const config = { ...draft.config, emailEditorMode: "drag", emailEditorEngine: "grapesjs-mjml", emailGrapesSchemaVersion: 1, emailGrapesProject: snapshot.project, emailMjml: snapshot.mjml, emailStyle: globalStyle, emailLinkAliases: linkAliasesRef.current, emailSending: localizedSending,
           ...(migration.imported && !draft.config?.emailGrapesMigration ? { emailGrapesMigration: { source: draft.config?.emailEditorEngine ?? "html", originalHtml: draft.body ?? "", mode: "html-block" } } : {}) };
         const ok = await save({ subject, body: snapshot.html, config });
         const clean = savingRevision === changeRef.current;
@@ -465,7 +468,7 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
     savingRef.current = task;
     void task.finally(() => { if (savingRef.current === task) savingRef.current = null; });
     return task;
-  }, [capture, draft.config, draft.body, editorError, globalStyle, migration.imported, save, subject]);
+  }, [capture, draft.config, draft.body, editorError, globalStyle, migration.imported, save, subject, localizedSending]);
 
   useEffect(() => {
     if (!ready || revision === 0 || lastSavedChange.current === changeRef.current || saveState === "saving" || saveError) return;
@@ -573,23 +576,22 @@ export default function GrapesEmailEditor({ locale, draft, variantName, save, on
   return <section className={cx(styles.page, leftMode === "personalization" && styles.personalizationPage)}>
     <header className={styles.header}>
       <button className={styles.headerButton} disabled={saveState === "saving"} onClick={() => ready ? void saveAndClose() : onClose()}><ChevronLeft size={15}/>{translate(locale, "Back")}</button>
-      <div className={styles.headerTitle}><Mail size={17}/><b>{variantName}</b></div>
+      <div className={styles.headerTitle}><b>{draft.name}</b></div>
       <span className={styles.saveState}>{saveState === "saving" ? "Saving…" : saveState === "unsaved" ? "Unsaved changes" : "All changes saved"}</span>
       <button className={styles.headerButton} disabled={!ready || saveState === "saving"} onClick={() => { void persist().then(ok => { if (ok) onOpenTest(); }); }}><Eye size={15}/>{translate(locale, "Preview and test")}</button>
-      <button className={styles.headerButton} disabled={!ready || saveState === "saving"} onClick={() => void saveAndSending()}>{translate(locale, "Sending info")}</button>
+      <button className={styles.headerButton} disabled={!ready || saveState === "saving"} onClick={() => void saveAndSending()}>{translate(locale, "Sending settings")}</button>
     </header>
-    {leftMode !== "personalization" && <nav className={styles.iconRail}><button disabled={saveState === "saving"} onClick={() => ready ? void saveAndClose() : onClose()} aria-label="Back"><ChevronLeft size={19}/></button></nav>}
+    {leftMode !== "personalization" && <nav className={styles.iconRail} aria-label={translate(locale, "Email editor sections")}>
+      <button title={translate(locale, "Sending settings")} aria-label={translate(locale, "Sending settings")} disabled={!ready || saveState === "saving"} onClick={() => void saveAndSending()}><Mail size={21}/></button>
+      <button title={translate(locale, "Content")} aria-label={translate(locale, "Content")} className={styles.iconActive} onClick={() => setLeftMode("content")}><FileCode2 size={21}/></button>
+      <button title={translate(locale, "Preview & Test")} aria-label={translate(locale, "Preview & Test")} disabled={!ready || saveState === "saving"} onClick={() => { void persist().then(ok => { if (ok) onOpenTest(); }); }}><Eye size={21}/></button>
+    </nav>}
     <aside className={styles.leftRail}>
       {leftMode === "personalization" ? <PersonalizationPanel onClose={() => setLeftMode("content")} onInsert={insertText} customAttributes={customAttributes}/> : <>
-        <div className={styles.leftTitle}>MESSAGE</div>
-        <button className={leftMode === "content" ? styles.leftActive : undefined} onClick={() => setLeftMode("content")}>Content</button>
-        <button onClick={openPersonalization}>Personalization</button>
-        <button className={leftMode === "links" ? styles.leftActive : undefined} onClick={() => setLeftMode("links")}>Link Management</button>
-        {leftMode === "links" && <div className={styles.leftPanel}><b>Link Management</b><p>Give links aliases to track clicks in user profiles and reports.</p>{[...new Set([...snapshotRef.current.html.matchAll(/<a\b[^>]*href=["'](https?:\/\/[^"']+)["']/gi)].map(match => match[1]))].map(url => { const entry = linkAliases.find(row => row.url === url); const update = (patch: Partial<{ alias: string; tracking: boolean }>) => { setLinkAliases(current => { const rows = current.some(row => row.url === url) ? current.map(row => row.url === url ? { ...row, ...patch } : row) : [...current, { url, alias: "", tracking: true, ...patch }]; linkAliasesRef.current = rows; return rows; }); queueCapture(); }; return <div key={url} className={styles.linkRow}><small>{url}</small><label>Link alias<input aria-label={`Alias for ${url}`} value={entry?.alias ?? ""} onChange={event => update({ alias: event.target.value })}/></label><label><input type="checkbox" checked={entry?.tracking ?? true} onChange={event => update({ tracking: event.target.checked })}/> Track this alias</label></div>; })}</div>}
-        <button className={leftMode === "languages" ? styles.leftActive : undefined} onClick={() => setLeftMode("languages")}>Languages</button>
-        <small>Subject</small>
-        <div className={styles.leftPanel}><input aria-label="Email subject" value={subject} onChange={event => { setSubject(event.target.value); queueCapture(); }} style={{ width: "100%", border: 0, outline: 0, font: "inherit" }}/></div>
-        <button className={styles.styleLink} onClick={() => setRightTab("settings")}>Edit default styles</button>
+        <EmailContentNavigation locale={locale} active={leftMode} onNavigate={mode=>mode === "personalization" ? openPersonalization() : setLeftMode(mode)} onClose={()=>ready ? void saveAndClose() : onClose()} onInsert={insertText} disabled={!ready || saveState === "saving"}
+          linksPanel={<div className={styles.leftPanel}><b>Link Management</b><p>Give links aliases to track clicks in user profiles and reports.</p>{[...new Set([...snapshotRef.current.html.matchAll(/<a\b[^>]*href=["'](https?:\/\/[^"']+)["']/gi)].map(match => match[1]))].map(url => { const entry = linkAliases.find(row => row.url === url); const update = (patch: Partial<{ alias: string; tracking: boolean }>) => { setLinkAliases(current => { const rows = current.some(row => row.url === url) ? current.map(row => row.url === url ? { ...row, ...patch } : row) : [...current, { url, alias: "", tracking: true, ...patch }]; linkAliasesRef.current = rows; return rows; }); queueCapture(); }; return <div key={url} className={styles.linkRow}><small>{url}</small><label>Link alias<input aria-label={`Alias for ${url}`} value={entry?.alias ?? ""} onChange={event => update({ alias: event.target.value })}/></label><label><input type="checkbox" checked={entry?.tracking ?? true} onChange={event => update({ tracking: event.target.checked })}/> Track this alias</label></div>; })}</div>}
+          languagesPanel={<div className={styles.leftPanel}><b>Subject and preheader translations</b><p>Message content uses its default language.</p>{emailLocales.filter(item=>item.code!=="en").map(item=><div key={item.code}><b>{item.label}</b>{(["subjectTranslations","preheaderTranslations"] as const).map(key=><label key={key}>{key==="subjectTranslations"?"Subject":"Preheader"}<input aria-label={`${key==="subjectTranslations"?"Subject":"Preheader"} (${item.label})`} value={String((localizedSending[key] as Record<string,string> | undefined)?.[item.code]??"")} onChange={event=>{setLocalizedSending(current=>({...current,[key]:{...(current[key] as Record<string,string>??{}),[item.code]:event.target.value}}));queueCapture();}}/></label>)}</div>)}</div>}
+        />
       </>}
     </aside>
     <main className={cx(styles.canvasArea, styles.grapesCanvasArea)} style={pageStyle}>

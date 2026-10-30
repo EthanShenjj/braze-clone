@@ -1,0 +1,299 @@
+- complementary:
+  - generic: b
+  - button "Demo – Thinkingai":
+    - generic: Demo – Thinkingai
+  - generic: Quick links
+  - button "Canvas":
+    - generic: Canvas
+  - button "Campaigns":
+    - generic: Campaigns
+  - button "Segments":
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+  - button "Performance Overview":
+    - generic: Performance Overview
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic: braze
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour":
+  - button "Language":
+  - button "Notifications":
+  - button "S"
+  - button:
+  - button "Campaigns"
+  - heading "Campaigns" [level=1]
+  - generic: Limited access
+  - paragraph: Campaigns let you send a single, targeted message through email, push, SMS, and more, ensuring timely communication with your audience
+  - button "Send feedback"
+  - button "Take a tour":
+    - text: Take a tour
+  - button "Create campaign" [active]:
+    - text: Create campaign
+  - text: Status
+  - combobox "Status":
+    - option "All" [selected]
+    - option "Draft"
+    - option "Active"
+    - option "Stopped"
+  - text: Tag
+  - combobox "Tag":
+    - option "Select..." [selected]
+  - button "Filters":
+    - text: Filters
+  - button "Columns":
+    - text: Columns
+  - button "Reset filters"
+  - textbox "Search"
+  - generic: 19 Results
+  - generic: All campaigns
+  - table:
+    - rowgroup:
+      - row "Select visible Campaigns Name Status Stop date Campaign type Entry schedule Sent Last edited":
+        - columnheader "Select visible Campaigns":
+          - checkbox "Select visible Campaigns"
+        - columnheader "Name"
+        - columnheader "Status"
+        - columnheader "Stop date"
+        - columnheader "Campaign type"
+        - columnheader "Entry schedule"
+        - columnheader "Sent"
+        - columnheader "Last edited"
+        - columnheader
+    - rowgroup:
+      - row "Select Email settings entry verification Email settings entry verification Draft — Email One time 0 Oct 29, 2026, 1:57 PM Actions Email settings entry verification":
+        - cell "Select Email settings entry verification":
+          - checkbox "Select Email settings entry verification"
+        - cell "Email settings entry verification":
+          - button "Email settings entry verification"
+        - cell "Draft"
+        - cell "—"
+        - cell "Email":
+          - text: Email
+        - cell "One time"
+        - cell "0"
+        - cell "Oct 29, 2026, 1:57 PM"
+        - cell "Actions Email settings entry verification":
+          - button "Actions Email settings entry verification":
+      - row "Select Untitled Email Campaign Untitled Email Campaign Draft — Email One time 0 Oct 29, 2026, 1:52 PM Actions Untitled Email Campaign":
+        - cell "Select Untitled Email Campaign":
+          - checkbox "Select Untitled Email Campaign"
+        - cell "Untitled Email Campaign":
+          - button "Untitled Email Campaign"
+        - cell "Draft"
+        - cell "—"
+        - cell "Email":
+          - text: Email
+        - cell "One time"
+        - cell "0"
+        - cell "Oct 29, 2026, 1:52 PM"
+        - cell "Actions Untitled Email Campaign":
+          - button "Actions Untitled Email Campaign":
+      - row "Select Audit 2026-10-29 line Audit 2026-10-29 line Draft — LINE One time 0 Oct 29, 2026, 1:17 PM Actions Audit 2026-10-29 line":
+        - cell "Select Audit 2026-10-29 line":
+          - checkbox "Select Audit 2026-10-29 line"
+        - cell "Audit 2026-10-29 line":
+          - button "Audit 2026-10-29 line"
+        - cell "Draft"
+        - cell "—"
+        - cell "LINE":
+          - text: LINE
+        - cell "One time"
+        - cell "0"
+        - cell "Oct 29, 2026, 1:17 PM"
+        - cell "Actions Audit 2026-10-29 line":
+          - button "Actions Audit 2026-10-29 line":
+      - row "Select Audit 2026-10-29 whatsapp Audit 2026-10-29 whatsapp Draft — WhatsApp One time 0 Oct 29, 2026, 1:17 PM Actions Audit 2026-10-29 whatsapp":
+        - cell "Select Audit 2026-10-29 whatsapp":
+          - checkbox "Select Audit 2026-10-29 whatsapp"
+        - cell "Audit 2026-10-29 whatsapp":
+          - button "Audit 2026-10-29 whatsapp"
+        - cell "Draft"
+        - cell "—"
+        - cell "WhatsApp":
+          - text: WhatsApp
+        - cell "One time"
+        - cell "0"
+        - cell "Oct 29, 2026, 1:17 PM"
+        - cell "Actions Audit 2026-10-29 whatsapp":
+          - button "Actions Audit 2026-10-29 whatsapp":
+      - row "Select Audit 2026-10-29 webhook Audit 2026-10-29 webhook Draft — Webhook One time 0 Oct 29, 2026, 1:17 PM Actions Audit 2026-10-29 webhook":
+        - cell "Select Audit 2026-10-29 webhook":
+          - checkbox "Select Audit 2026-10-29 webhook"
+        - cell "Audit 2026-10-29 webhook":
+          - button "Audit 2026-10-29 webhook"
+        - cell "Draft"
+        - cell "—"
+        - cell "Webhook":
+          - text: Webhook
+        - cell "One time"
+        - cell "0"
+        - cell "Oct 29, 2026, 1:17 PM"
+        - cell "Actions Audit 2026-10-29 webhook":
+          - button "Actions Audit 2026-10-29 webhook":
+      - row "Select Audit 2026-10-29 sms Audit 2026-10-29 sms Draft — SMS/MMS/RCS One time 0 Oct 29, 2026, 1:17 PM Actions Audit 2026-10-29 sms":
+        - cell "Select Audit 2026-10-29 sms":
+          - checkbox "Select Audit 2026-10-29 sms"
+        - cell "Audit 2026-10-29 sms":
+          - button "Audit 2026-10-29 sms"
+        - cell "Draft"
+        - cell "—"
+        - cell "SMS/MMS/RCS":
+          - text: SMS/MMS/RCS
+        - cell "One time"
+        - cell "0"
+        - cell "Oct 29, 2026, 1:17 PM"
+        - cell "Actions Audit 2026-10-29 sms":
+          - button "Actions Audit 2026-10-29 sms":
+      - row "Select Audit 2026-10-29 content Audit 2026-10-29 content Draft — Content Card One time 0 Oct 29, 2026, 1:17 PM Actions Audit 2026-10-29 content":
+        - cell "Select Audit 2026-10-29 content":
+          - checkbox "Select Audit 2026-10-29 content"
+        - cell "Audit 2026-10-29 content":
+          - button "Audit 2026-10-29 content"
+        - cell "Draft"
+        - cell "—"
+        - cell "Content Card":
+          - text: Content Card
+        - cell "One time"
+        - cell "0"
+        - cell "Oct 29, 2026, 1:17 PM"
+        - cell "Actions Audit 2026-10-29 content":
+          - button "Actions Audit 2026-10-29 content":
+      - row "Select Audit 2026-10-29 banner Audit 2026-10-29 banner Draft — Banner One time 0 Oct 29, 2026, 1:17 PM Actions Audit 2026-10-29 banner":
+        - cell "Select Audit 2026-10-29 banner":
+          - checkbox "Select Audit 2026-10-29 banner"
+        - cell "Audit 2026-10-29 banner":
+          - button "Audit 2026-10-29 banner"
+        - cell "Draft"
+        - cell "—"
+        - cell "Banner":
+          - text: Banner
+        - cell "One time"
+        - cell "0"
+        - cell "Oct 29, 2026, 1:17 PM"
+        - cell "Actions Audit 2026-10-29 banner":
+          - button "Actions Audit 2026-10-29 banner":
+      - row "Select Audit 2026-10-29 push Audit 2026-10-29 push Draft — Push notification One time 0 Oct 29, 2026, 1:17 PM Actions Audit 2026-10-29 push":
+        - cell "Select Audit 2026-10-29 push":
+          - checkbox "Select Audit 2026-10-29 push"
+        - cell "Audit 2026-10-29 push":
+          - button "Audit 2026-10-29 push"
+        - cell "Draft"
+        - cell "—"
+        - cell "Push notification":
+          - text: Push notification
+        - cell "One time"
+        - cell "0"
+        - cell "Oct 29, 2026, 1:17 PM"
+        - cell "Actions Audit 2026-10-29 push":
+          - button "Actions Audit 2026-10-29 push":
+      - row "Select Audit 2026-10-29 iam Audit 2026-10-29 iam Draft — In-app message One time 0 Oct 29, 2026, 1:17 PM Actions Audit 2026-10-29 iam":
+        - cell "Select Audit 2026-10-29 iam":
+          - checkbox "Select Audit 2026-10-29 iam"
+        - cell "Audit 2026-10-29 iam":
+          - button "Audit 2026-10-29 iam"
+        - cell "Draft"
+        - cell "—"
+        - cell "In-app message":
+          - text: In-app message
+        - cell "One time"
+        - cell "0"
+        - cell "Oct 29, 2026, 1:17 PM"
+        - cell "Actions Audit 2026-10-29 iam":
+          - button "Actions Audit 2026-10-29 iam":
+      - row "Select Audit 2026-10-29 email Audit 2026-10-29 email Draft — Email One time 0 Oct 29, 2026, 1:17 PM Actions Audit 2026-10-29 email":
+        - cell "Select Audit 2026-10-29 email":
+          - checkbox "Select Audit 2026-10-29 email"
+        - cell "Audit 2026-10-29 email":
+          - button "Audit 2026-10-29 email"
+        - cell "Draft"
+        - cell "—"
+        - cell "Email":
+          - text: Email
+        - cell "One time"
+        - cell "0"
+        - cell "Oct 29, 2026, 1:17 PM"
+        - cell "Actions Audit 2026-10-29 email":
+          - button "Actions Audit 2026-10-29 email":
+      - row "Select Audit 2026-10-29 multichannel Audit 2026-10-29 multichannel Draft — Multichannel One time 0 Oct 29, 2026, 1:17 PM Actions Audit 2026-10-29 multichannel":
+        - cell "Select Audit 2026-10-29 multichannel":
+          - checkbox "Select Audit 2026-10-29 multichannel"
+        - cell "Audit 2026-10-29 multichannel":
+          - button "Audit 2026-10-29 multichannel"
+        - cell "Draft"
+        - cell "—"
+        - cell "Multichannel":
+          - text: Multichannel
+        - cell "One time"
+        - cell "0"
+        - cell "Oct 29, 2026, 1:17 PM"
+        - cell "Actions Audit 2026-10-29 multichannel":
+          - button "Actions Audit 2026-10-29 multichannel":
+  - generic: 1–12 / 19
+  - text: Rows per page
+  - combobox "Rows per page":
+    - option "12" [selected]
+    - option "24"
+    - option "48"
+  - button "Previous page" [disabled]:
+  - button "Next page":
+- button "Create with Operator Generate a coordinated campaign draft":
+  - generic: Create with Operator
+  - generic: Generate a coordinated campaign draft
+- paragraph: MESSAGE ONE OR MORE CHANNELS
+- button "Multichannel Coordinate messages across channels":
+  - generic: Multichannel
+  - generic: Coordinate messages across channels
+- paragraph: SINGLE CHANNEL
+- button "Email":
+  - generic: Email
+- button "Push notification":
+  - generic: Push notification
+- button "In-app message 1 / 200 active":
+  - generic: In-app message
+  - generic: 1 / 200 active
+- button "Content Card 0 / 500 active":
+  - generic: Content Card
+  - generic: 0 / 500 active
+- button "Banner 0 / 200 active":
+  - generic: Banner
+  - generic: 0 / 200 active
+- button "SMS/MMS/RCS":
+  - generic: SMS/MMS/RCS
+- button "Webhook":
+  - generic: Webhook
+- button "WhatsApp":
+  - generic: WhatsApp
+- button "LINE":
+  - generic: LINE
+- paragraph: FEATURE FLAGS
+- button "Feature flag experiment 0 / 1 active":
+  - generic: Feature flag experiment
+  - generic: 0 / 1 active
+- paragraph: TRACK MESSAGES SENT VIA API
+- button "API campaign":
+  - generic: API campaign
+- button "Open Next.js Dev Tools":
+- alert

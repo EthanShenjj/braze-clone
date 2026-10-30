@@ -1,0 +1,221 @@
+- link "Skip to main content":
+  - /url: "#main-col"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Demo – bba":
+    - generic: Demo – bba
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6ad0b98fe4b4110085216601?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6ad0b98fe4b4110085216601?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6ad0b98fe4b4110085216601?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6ad0b98fe4b4110085216601?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 1 day left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- navigation:
+  - tablist "Open page tabs":
+    - tab "Campaigns":
+      - generic: Campaigns
+    - tab "Edit 'New Campaign - October 29, 2026' Close tab":
+      - generic: Edit 'New Campaign - October 29, 2026'
+      - button "Close tab":
+    - tab "Edit 'New Campaign - October 29, 2026' Close tab":
+      - generic: Edit 'New Campaign - October 29, 2026'
+      - button "Close tab":
+    - tab "Edit 'New Campaign - October 29, 2026' Close tab":
+      - generic: Edit 'New Campaign - October 29, 2026'
+      - button "Close tab":
+    - button "Show other tabs":
+      - generic: More
+      - img: 
+- img: 
+- generic: Limited access
+- navigation:
+  - generic "progress":
+    - generic: "Progress Tracker with 5 steps: Compose Messages, Schedule Delivery, Target Audiences, Assign Conversions, Review Summary"
+  - button "Step Compose Messages":
+    - generic: "1"
+    - generic: Compose Messages
+  - button "Step Schedule Delivery":
+    - generic: "2"
+    - generic: Schedule Delivery
+  - button "Step Target Audiences":
+    - generic: "3"
+    - generic: Target Audiences
+  - button "Step Assign Conversions":
+    - generic: "4"
+    - generic: Assign Conversions
+  - button "Step Review Summary":
+    - generic: "5"
+    - generic: Review Summary
+- heading "Campaign Details" [level=3]
+- generic: Campaign Name
+- textbox "Enter Campaign Name": New Campaign - October 29, 2026
+- button "Add description":
+  - img: 
+  - generic: Add description
+- button "Tags":
+  - img: 
+  - generic: Tags
+  - img: 
+- heading "Campaign brief" [level=4]
+- generic: Attach a brief so BrazeAI Operator can build your campaign and your Standards can review it against your goals
+- status
+- heading "Attach a campaign brief (optional)" [level=5]
+- generic: PDF, TXT, MD, CSV, DOCX up to 15MB
+- button "Upload file":
+  - generic: Upload file
+- text: Campaign ID
+- button "Help text available. Tab to view help text, click to open popover":
+- textbox "Campaign ID Help text available. Tab to view help text, click to open popover": fd59cbe6-026f-4c8a-9d3a-b50f2a2f5cb6
+- button "Copy":
+  - img: 
+  - generic: Copy
+- heading "WhatsApp Composer" [level=3]: WhatsApp Composer
+- tabpanel:
+  - heading "Variants" [level=5]
+  - tablist:
+    - tab "Variant 1" [selected]:
+      - button "Variant 1":
+        - generic: Variant 1
+    - button "Add variant":
+      - img: 
+- text: Subscription Group
+- button "Help text available. Tab to view help text, click to open popover":
+- log
+- generic: WhatsApp Fake Messaging Service A
+- combobox "Subscription Group"
+- generic: WhatsApp business account
+- generic: Fake WhatsApp WABA
+- separator
+- heading "Message type" [level=4]
+- radiogroup:
+  - radio "WhatsApp Template Message Required to start a business-initiated conversation. Pre-selected Liquid variables and media can be added to approved templates."
+  - heading "WhatsApp Template Message" [level=4]
+  - generic: Required to start a business-initiated conversation. Pre-selected Liquid variables and media can be added to approved templates.
+  - radio "Response Message Compose responses to user messages within a 24-hour window with images, Liquid variables, and quick replies." [checked]
+  - heading "Response Message" [level=4]
+  - generic: Compose responses to user messages within a 24-hour window with images, Liquid variables, and quick replies.
+- heading "Select a Response Message layout" [level=4]
+- radiogroup:
+  - radio "Quick Reply Add up to three quick reply buttons and optional media"
+  - heading "Quick Reply" [level=4]
+  - generic: Add up to three quick reply buttons and optional media
+  - radio "Text Message Send a message with up to 4,096 characters"
+  - heading "Text Message" [level=4]
+  - generic: Send a message with up to 4,096 characters
+  - radio "Media Message Send an image, video, document, or audio file and optional caption"
+  - heading "Media Message" [level=4]
+  - generic: Send an image, video, document, or audio file and optional caption
+  - radio "Call-to-action Button Add a button that links to a website URL"
+  - heading "Call-to-action Button" [level=4]
+  - generic: Add a button that links to a website URL
+  - radio "List Message Show a list with up to 10 options for users to pick from"
+  - heading "List Message" [level=4]
+  - generic: Show a list with up to 10 options for users to pick from
+  - radio "Inline Tag 0 Carousel Message Send up to 10 cards, each with media, text, and buttons"
+  - generic "Inline Tag 0":
+    - generic: New
+  - heading "Carousel Message" [level=4]
+  - generic: Send up to 10 cards, each with media, text, and buttons
+  - radio "Flow Message Prompt users to complete a form or interactive task in WhatsApp"
+  - heading "Flow Message" [level=4]
+  - generic: Prompt users to complete a form or interactive task in WhatsApp
+  - radio "Meta Product Messages Share a single product, multiple products, or an entire Meta catalog"
+  - heading "Meta Product Messages" [level=4]
+  - generic: Share a single product, multiple products, or an entire Meta catalog
+- button "Select layout" [disabled]:
+  - generic: Select layout
+- button "Back" [disabled]:
+  - img: 
+- navigation:
+  - generic "progress":
+    - generic: "Progress Tracker with 5 steps: Compose, Schedule, Target, Assign, Review"
+  - button "Step Compose":
+    - generic: "1"
+    - generic: Compose
+  - button "Step Schedule":
+    - generic: "2"
+    - generic: Schedule
+  - button "Step Target":
+    - generic: "3"
+    - generic: Target
+  - button "Step Assign":
+    - generic: "4"
+    - generic: Assign
+  - button "Step Review":
+    - generic: "5"
+    - generic: Review
+- button "Forward":
+  - img: 
+- button "Save Draft":
+  - generic: Save Draft
+- text: 
+- contentinfo:
+  - generic: © Braze 2026
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://01.emailinboundprocessing.com/preference_center/v1/eyJhbGciOiJSUzI1NiJ9/eyJzdWIiOiJwY3YxIiwiaWF0IjoxNzkzMjY0MzQzLCJleHAiOjE4MjQ4MDAzNDMsImQiOiIkMCQvMUtkSWpMM3lhQ3B5aG1IV0VvWHBRPT0keUhHWTM4Y0RnV1g2TFlqR0NYY0VzMlVURmIvanhyU1g1M1prOU5uRnV3MC9SRGFUS1lzVGh3OHVWanJ6XG5odXVZIiwiaCI6IjAxLmVtYWlsaW5ib3VuZHByb2Nlc3NpbmcuY29tIn0/d18E2xz5xX29GDeu1PsQ5yQ20YO06BaVfx08WCWEIV_XtazuQu6iSIYw16Fq77H3HpuoHWA3Sqe9wX7JqP9RSnKDO6mtO5ZjD8Ao_NikxD16mMutq1gsctPQXAEzXkDNEmBVhd70eAXHIlatCU9rxwWpsv08YJ1JWvc0AzoKS0j2_v-XPlQipxKgeRJBAdsGkwED1YIjGF-t9_yI0_8Xv065Fgz6MYPb7YNGLP27b4QPZ2I91S3SDweNS4sasQif8egjRasnvMzjCpbKO6NghLrhWlFW_JljRbLvjKFqUibLznHY-MLftaag1I7E0Ln2QiFIcKmhialV9VRmydxSVw
+    - text: Privacy Preferences
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://braze.statuspage.io
+    - text: Status
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://www.braze.com/terms
+    - text: Terms
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://www.braze.com/privacy
+    - text: Privacy Policy
+- alert
+- alert

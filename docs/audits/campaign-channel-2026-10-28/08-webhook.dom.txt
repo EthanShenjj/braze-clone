@@ -1,0 +1,164 @@
+- complementary:
+  - generic: b
+  - button "Demo – Thinkingai":
+    - generic: Demo – Thinkingai
+  - generic: Quick links
+  - button "Canvas":
+    - generic: Canvas
+  - button "Campaigns":
+    - generic: Campaigns
+  - button "Segments":
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+  - button "Performance Overview":
+    - generic: Performance Overview
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic: braze
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour":
+  - button "Language":
+  - button "Notifications":
+  - button "S"
+  - button:
+  - button "Campaigns"
+  - button "Edit 'Audit webhook'":
+    - text: Edit 'Audit webhook'
+  - text: Limited access
+  - navigation "Campaign steps":
+    - button "1 Compose Messages":
+      - generic: "1"
+      - generic: Compose Messages
+    - button "2 Schedule Delivery":
+      - generic: "2"
+      - generic: Schedule Delivery
+    - button "3 Target Audiences":
+      - generic: "3"
+      - generic: Target Audiences
+    - button "4 Assign Conversions":
+      - generic: "4"
+      - generic: Assign Conversions
+    - button "5 Review Summary":
+      - generic: "5"
+      - generic: Review Summary
+  - heading "Campaign Details" [level=2]
+  - generic: Campaign Name
+  - textbox "Campaign Name":
+    - /placeholder: Enter Campaign Name
+    - text: Audit webhook
+  - generic: Teams
+  - combobox "Teams":
+    - option "Select..." [selected]
+    - option "Lifecycle Marketing"
+    - option "Growth"
+    - option "Retention"
+  - button "Add description":
+    - text: Add description
+  - button "Tags":
+    - text: Tags
+  - generic: Campaign ID
+  - textbox "Campaign ID": cmp_audit_20261028_webhook
+  - button "Copy":
+    - text: Copy
+  - heading "Compose Webhook" [level=2]
+  - paragraph: Call an external service with campaign data.
+  - generic: Variants
+  - button "Variant 1"
+  - button "Add webhook variant":
+  - button "Templates"
+  - button "Remove" [disabled]:
+    - text: Remove
+  - generic: Live webhook delivery disabled
+  - generic: Preview works locally. Set WEBHOOK_DELIVERY_ENABLED and WEBHOOK_ALLOWED_HOSTS to send tests or launches.
+  - generic: Variant name
+  - textbox "Variant name": Variant 1
+  - generic: HTTP method
+  - combobox "HTTP method":
+    - option "POST" [selected]
+    - option "GET"
+    - option "PUT"
+    - option "DELETE"
+  - generic: Webhook URL
+  - textbox "Webhook URL":
+    - /placeholder: https://api.example.com/events
+  - generic: Supports Liquid and translation tags. Only ports 80 and 443 are accepted.
+  - generic: Languages
+  - button "en"
+  - button "Add language":
+    - text: Add language
+  - heading "Request headers" [level=3]
+  - generic: "Quick authentication:"
+  - button "Bearer token"
+  - button "Basic"
+  - textbox "Header name": Content-Type
+  - textbox "Content-Type value":
+    - /placeholder: Value
+    - text: application/json
+  - button "Remove Content-Type":
+  - button "Add header":
+    - text: Add header
+  - heading "Request body" [level=3]
+  - button "JSON key/value"
+  - button "Raw text"
+  - button "Add key/value pair":
+    - text: Add key/value pair
+  - generic: "Hello {{${first_name} | default: \"friend\"}} — audit content."
+  - generic: "Insert personalization:"
+  - button "First name"
+  - button "Email"
+  - button "External ID"
+  - button "Translation"
+  - alert:
+    - text: Complete before launch
+    - paragraph: "Variant 1: Enter a webhook URL."
+    - paragraph: "Variant 1: Request body must be valid JSON after personalization."
+  - heading "Preview as custom user" [level=3]
+  - textbox "Webhook preview user JSON": "{ \"user_id\": \"user_1024\", \"external_id\": \"user_1024\", \"email\": \"user1024@example.test\", \"first_name\": \"Customer 1024\", \"language\": \"en\", \"country\": \"US\" }"
+  - generic: POST [missing URL]
+  - text: "Content-Type: application/json Hello Customer 1024 — audit content."
+  - textbox "Webhook template name":
+    - /placeholder: Template name
+  - button "Save as template":
+    - text: Save as template
+  - button "Test webhook"
+  - button "Back" [disabled]:
+  - button "1 Compose":
+    - generic: "1"
+    - text: Compose
+  - button "2 Schedule":
+    - generic: "2"
+    - text: Schedule
+  - button "3 Target":
+    - generic: "3"
+    - text: Target
+  - button "4 Assign":
+    - generic: "4"
+    - text: Assign
+  - button "5 Review":
+    - generic: "5"
+    - text: Review
+  - button "Forward":
+  - button "Save Draft"
+- alert

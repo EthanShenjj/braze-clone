@@ -1,0 +1,119 @@
+(node:14905) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:14905) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/email-editor-model.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+✔ catalog_items resolves requested rows and never substitutes a missing item (89.608292ms)
+✔ catalog_selection_items filters live catalog rows with preview user data (4.684583ms)
+✔ catalog output remains empty when a selection has no matches (5.636458ms)
+✔ catalog preview resolves bracket fields generated for non-identifier names (2.077167ms)
+(node:14906) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:14906) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/in-app-model.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+✔ an explicitly empty button list stays empty after legacy migration (2.442292ms)
+✔ copying a multi-page template remaps all internal links without mutating its source (0.330791ms)
+✔ page limit accepts ten pages and rejects adding eleven atomically (0.289375ms)
+✔ deleting a page repairs incoming links and preserves unrelated actions (0.146584ms)
+✔ validation checks every page, destination and metadata key (0.811667ms)
+✔ malformed snapshots and nonfinite styles are rejected (0.148542ms)
+✔ custom HTML conversion preserves all page navigation and escapes text (0.423667ms)
+✔ legacy campaign content and platform survive migration (0.12325ms)
+(node:14907) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:14907) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/in-app-runtime.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+✔ preview renders every page, accessibility, buttons and metadata with the selected profile (28.271459ms)
+✔ an invalid Liquid expression on a later page fails the whole message (2.154542ms)
+✔ Liquid syntax is handled by the actual engine including conditions and filters (1.244042ms)
+✔ duplicate keys created by Liquid fail before preparing a test (1.341625ms)
+✔ custom HTML keeps supported styles and removes active scripts, handlers and unsafe URLs (3.741083ms)
+✔ Liquid destinations are checked again after rendering (2.334875ms)
+✔ snapshot validation parses Liquid without requiring runtime attribute values (0.625167ms)
+✔ multi-page HTML conversion preserves quoted Liquid filters and renders them before HTML parsing (3.228916ms)
+(node:14908) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:14908) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/in-app-schedule.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+✔ legacy session settings migrate per trigger without reviving an explicitly empty list (0.893917ms)
+✔ delay units retain seconds precision and migrate old minutes (0.149958ms)
+✔ incomplete triggers and property groups cannot pass launch validation (0.436292ms)
+✔ disabled filters preserve draft conditions without affecting validation (0.093417ms)
+✔ duration and delay reject invalid execution intervals (2.939959ms)
+(node:14909) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:14909) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/in-app-model.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+✔ traditional variant preserves its source graph and repairs copied page navigation (1.692333ms)
+✔ all five traditional types switch with consistent native layout and custom HTML flags (0.49725ms)
+✔ traditional invariants reject multipage, three buttons, invalid close delay and missing image (0.6ms)
+✔ SDK action configuration validates required payloads and actual Liquid before test preparation (40.885125ms)
+✔ traditional terms links and body destinations are revalidated after Liquid rendering (2.203875ms)
+✔ custom HTML requires a dismiss control and preview strips active scripts (3.587458ms)
+✔ unknown on-click behaviors cannot be persisted as working actions (0.125166ms)
+✔ email capture replaces native buttons with one submit control and preserves its text mode (0.085375ms)
+✔ creating a traditional variant retains effective first-page colors without sharing mutable state (0.10725ms)
+(node:14910) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:14910) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/line-model.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+✔ LINE image-only stacks validate without a text body (96.720208ms)
+✔ LINE rejects malformed flex and renders personalized structured payloads (6.338458ms)
+(node:14911) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:14911) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/navigation.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+✔ every Messaging drawer item resolves to its own route and page (1.319584ms)
+✔ Canvas templates do not resolve to the Canvas editor (0.130333ms)
+✔ known deep links restore their intended page (0.115083ms)
+(node:14912) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:14912) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/sms-model.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+✔ GSM basic, extension, accented and empty messages use correct encoding and boundaries (2.161625ms)
+✔ Unicode counts UTF-16 units without splitting emoji across multipart segments (1.038792ms)
+✔ personalization, language branching and link shortening reflect the rendered user (60.568083ms)
+✔ required SMS fields are validated (0.246083ms)
+(node:14913) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:14913) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/webhook-model.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+✔ normalizes legacy webhook campaign values (2.528875ms)
+✔ renders personalization defaults and translations (6.095792ms)
+✔ validates URL ports, defaults, GET bodies, and rendered JSON (13.509292ms)
+✔ redacts authorization and token headers (0.3365ms)
+(node:14914) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:14914) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/whatsapp-model.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+✔ the default WhatsApp template variant is launch-ready (1.614666ms)
+✔ template variables require either a value or a fallback (0.223417ms)
+✔ response messages require an open simulated conversation window (0.633875ms)
+✔ template preview resolves mapped values and fallbacks (0.524583ms)
+✔ unknown templates cannot fall back to approved sample content for validation (0.141542ms)
+✔ all required template variables are validated even if removed from saved mappings (0.122584ms)
+✔ custom templates render their own content and respect pending status (20.084959ms)
+✔ response option labels reject blanks, duplicates and overlong labels (0.184083ms)
+✔ test payloads render Liquid values with recipient fallbacks and preserve URL variables (2.758166ms)
+✔ malformed persisted variants are normalized without crashing the composer (0.222875ms)
+✔ carousel payloads render each card and validate counts and button types (1.098542ms)
+✔ response headers, footers and labels are resolved per recipient (1.215667ms)
+✔ source templates retain both quick replies and local media URLs (0.726667ms)
+✔ unconfigured layouts and unavailable provider assets cannot launch (2.670167ms)
+ℹ tests 61
+ℹ suites 0
+ℹ pass 61
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 674.855042

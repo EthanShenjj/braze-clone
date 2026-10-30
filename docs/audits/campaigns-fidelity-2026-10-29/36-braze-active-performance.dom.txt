@@ -1,0 +1,454 @@
+- link "Skip to main content":
+  - /url: "#main-col"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Demo – bba":
+    - generic: Demo – bba
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6ad0b98fe4b4110085216601?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6ad0b98fe4b4110085216601?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6ad0b98fe4b4110085216601?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6ad0b98fe4b4110085216601?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 1 day left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- navigation:
+  - tablist "Open page tabs":
+    - tab "Campaigns":
+      - generic: Campaigns
+    - tab "Details for 'Referral Offer IAM' Close tab" [selected]:
+      - text: 
+      - generic: Details for 'Referral Offer IAM'
+      - button "Close tab":
+- img: 
+- generic: Limited access
+- navigation:
+  - tablist:
+    - tab "Campaign Analytics" [selected]:
+      - text: 
+      - generic: Campaign Analytics
+    - tab "Funnel Report":
+      - generic: Funnel Report
+    - tab "Retention Report":
+      - generic: Retention Report
+- textbox "Start Date":
+  - /placeholder: yyyy/mm/dd
+  - text: 2026/10/15
+- img: 
+- textbox "End Date":
+  - /placeholder: yyyy/mm/dd
+  - text: 2026/10/29
+- generic: Type a date month/day/year, or use arrow keys or page up/page down to choose a date
+- heading "Referral Offer IAM New Opening in a new tab Messaging Observability" [level=3]:
+  - textbox: Referral Offer IAM
+  - button:
+    - img: 
+  - generic: New
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: /dashboard/report_dashboard/send-outcomes/6ad0b98fe4b4110085216601?campaignId=6ad0b99b485c580061eb1dca&locale=en
+    - text: Messaging Observability
+- generic: Unique recipients
+- generic: "0"
+- generic: Conversion rate
+- generic: (Primary conversions)
+- generic: 0.00%
+- text: "0"
+- generic: Current audience
+- generic: 1,739
+- text: "Created:"
+- strong: Braze Demo on October 15, 2026
+- text: "Last Edited:"
+- strong: Braze Demo on October 15, 2026
+- button "0 Changes Since Last Viewed":
+  - img: 
+  - generic: 0 Changes Since Last Viewed
+- separator
+- strong: Campaign Monitoring
+- text: Be the first to know if unusual volume is detected.
+- button "Set Up Alert":
+  - generic: Set Up Alert
+- heading "Delivery Settings" [level=3]
+- text: "Type:"
+- strong: Action-based
+- text: "Time Zone:"
+- strong: Eastern Time (US & Canada)
+- text: "Re-eligibility:"
+- strong: 1 minute
+- text: "Frequency Capping:"
+- strong:
+  - text: No rules currently set
+  - link "(View Rule)":
+    - /url: /engagement/global_message_settings/global-message-settings/6ad0b98fe4b4110085216601?locale=en
+- text: "Trigger Event:"
+- strong:
+  - text: Perform Custom Event (mc_watched_m...
+  - generic: more
+- heading "Audience Settings" [level=3]
+- text: "Segments:"
+- generic: None
+- text: "Filters:"
+- generic: External user id is not blank
+- text: "Rate Limit:"
+- generic: None
+- text: "Workspace Messaging Rate Limits:"
+- text: "Off"
+- link "(View Limits)":
+  - /url: /app_settings/app_settings/global_rate_limits/6ad0b98fe4b4110085216601?locale=en
+- text: "Recipients Limit:"
+- text: In total, this Campaign should mes...
+- generic: more
+- text: "Description:"
+- generic: External user id is not blank
+- heading "Conversion Settings" [level=3]
+- text: "Primary Conversion Event - A:"
+- text: Started Session within 3 ...
+- generic: more
+- heading "In-App Performance Add/Remove Columns" [level=3]:
+  - text: In-App Performance
+  - button "Add/Remove Columns":
+    - img: 
+    - generic: Add/Remove Columns
+- table:
+  - rowgroup:
+    - row "Variation Audience % Unique Impressions Impressions Clicks Revenue Primary Conversions":
+      - columnheader
+      - columnheader
+      - columnheader "Variation":
+        - generic: Variation
+      - columnheader "Audience %":
+        - generic: Audience %
+      - columnheader "Unique Impressions":
+        - generic: Unique Impressions
+      - columnheader "Impressions":
+        - generic: Impressions
+      - columnheader "Clicks":
+        - generic: Clicks
+      - columnheader "Revenue":
+        - generic: Revenue
+      - columnheader "Primary Conversions":
+        - generic: Primary Conversions
+    - row "eye A Referral Offer 0 Show metric details — Impressions — Referral Offer 100% 0 0 Results — Show metric details — Clicks — Referral Offer $0.00 0.00% 0":
+      - cell "eye":
+        - button "eye":
+          - img: 
+      - cell "A":
+        - generic: A
+      - cell "Referral Offer 0 Show metric details — Impressions — Referral Offer":
+        - generic: Referral Offer
+        - generic: "0"
+        - button "Show metric details — Impressions — Referral Offer":
+      - cell "100%"
+      - cell "0"
+      - cell "0"
+      - cell "Results — Show metric details — Clicks — Referral Offer":
+        - button "Results — Show metric details — Clicks — Referral Offer":
+          - generic: Results
+          - img: 
+      - cell "$0.00"
+      - cell "0.00% 0":
+        - generic: 0.00%
+        - generic: "0"
+- heading "Historical Performance" [level=3]
+- generic: Filter
+- log
+- generic: Message
+- combobox "Filter"
+- generic: Variant
+- log
+- generic: Referral Offer
+- combobox "Variant"
+- generic: Statistics
+- log
+- generic: 6 items selected
+- combobox "Statistics"
+- region "Chart. Highcharts interactive chart.":
+  - heading "Chart" [level=6]
+  - generic: Line chart with 6 lines.
+  - button "View as data table, Chart"
+  - generic: The chart has 1 X axis displaying Time. Data ranges from 2026-10-15 00:00:00 to 2026-10-29 00:00:00.
+  - generic: The chart has 2 Y axes displaying values, and values.
+  - img "Interactive chart":
+    - group "Body Clicks, line 1 of 6 with 15 data points. Y axis, values.":
+      - img "Thursday, Oct 15, 2026, 0. Body Clicks."
+      - img "Friday, Oct 16, 2026, 0. Body Clicks."
+      - img "Saturday, Oct 17, 2026, 0. Body Clicks."
+      - img "Sunday, Oct 18, 2026, 0. Body Clicks."
+      - img "Monday, Oct 19, 2026, 0. Body Clicks."
+      - img "Tuesday, Oct 20, 2026, 0. Body Clicks."
+      - img "Wednesday, Oct 21, 2026, 0. Body Clicks."
+      - img "Thursday, Oct 22, 2026, 0. Body Clicks."
+      - img "Friday, Oct 23, 2026, 0. Body Clicks."
+      - img "Saturday, Oct 24, 2026, 0. Body Clicks."
+      - img "Sunday, Oct 25, 2026, 0. Body Clicks."
+      - img "Monday, Oct 26, 2026, 0. Body Clicks."
+      - img "Tuesday, Oct 27, 2026, 0. Body Clicks."
+      - img "Wednesday, Oct 28, 2026, 0. Body Clicks."
+      - img "Thursday, Oct 29, 2026, 0. Body Clicks."
+    - group "Button 1 Clicks, line 2 of 6 with 15 data points. Y axis, values.":
+      - img "Thursday, Oct 15, 2026, 0. Button 1 Clicks."
+      - img "Friday, Oct 16, 2026, 0. Button 1 Clicks."
+      - img "Saturday, Oct 17, 2026, 0. Button 1 Clicks."
+      - img "Sunday, Oct 18, 2026, 0. Button 1 Clicks."
+      - img "Monday, Oct 19, 2026, 0. Button 1 Clicks."
+      - img "Tuesday, Oct 20, 2026, 0. Button 1 Clicks."
+      - img "Wednesday, Oct 21, 2026, 0. Button 1 Clicks."
+      - img "Thursday, Oct 22, 2026, 0. Button 1 Clicks."
+      - img "Friday, Oct 23, 2026, 0. Button 1 Clicks."
+      - img "Saturday, Oct 24, 2026, 0. Button 1 Clicks."
+      - img "Sunday, Oct 25, 2026, 0. Button 1 Clicks."
+      - img "Monday, Oct 26, 2026, 0. Button 1 Clicks."
+      - img "Tuesday, Oct 27, 2026, 0. Button 1 Clicks."
+      - img "Wednesday, Oct 28, 2026, 0. Button 1 Clicks."
+      - img "Thursday, Oct 29, 2026, 0. Button 1 Clicks."
+    - group "Button 2 Clicks, line 3 of 6 with 15 data points. Y axis, values.":
+      - img "Thursday, Oct 15, 2026, 0. Button 2 Clicks."
+      - img "Friday, Oct 16, 2026, 0. Button 2 Clicks."
+      - img "Saturday, Oct 17, 2026, 0. Button 2 Clicks."
+      - img "Sunday, Oct 18, 2026, 0. Button 2 Clicks."
+      - img "Monday, Oct 19, 2026, 0. Button 2 Clicks."
+      - img "Tuesday, Oct 20, 2026, 0. Button 2 Clicks."
+      - img "Wednesday, Oct 21, 2026, 0. Button 2 Clicks."
+      - img "Thursday, Oct 22, 2026, 0. Button 2 Clicks."
+      - img "Friday, Oct 23, 2026, 0. Button 2 Clicks."
+      - img "Saturday, Oct 24, 2026, 0. Button 2 Clicks."
+      - img "Sunday, Oct 25, 2026, 0. Button 2 Clicks."
+      - img "Monday, Oct 26, 2026, 0. Button 2 Clicks."
+      - img "Tuesday, Oct 27, 2026, 0. Button 2 Clicks."
+      - img "Wednesday, Oct 28, 2026, 0. Button 2 Clicks."
+      - img "Thursday, Oct 29, 2026, 0. Button 2 Clicks."
+    - group "Impressions, line 4 of 6 with 15 data points. Y axis, values.":
+      - img "Thursday, Oct 15, 2026, 0. Impressions."
+      - img "Friday, Oct 16, 2026, 0. Impressions."
+      - img "Saturday, Oct 17, 2026, 0. Impressions."
+      - img "Sunday, Oct 18, 2026, 0. Impressions."
+      - img "Monday, Oct 19, 2026, 0. Impressions."
+      - img "Tuesday, Oct 20, 2026, 0. Impressions."
+      - img "Wednesday, Oct 21, 2026, 0. Impressions."
+      - img "Thursday, Oct 22, 2026, 0. Impressions."
+      - img "Friday, Oct 23, 2026, 0. Impressions."
+      - img "Saturday, Oct 24, 2026, 0. Impressions."
+      - img "Sunday, Oct 25, 2026, 0. Impressions."
+      - img "Monday, Oct 26, 2026, 0. Impressions."
+      - img "Tuesday, Oct 27, 2026, 0. Impressions."
+      - img "Wednesday, Oct 28, 2026, 0. Impressions."
+      - img "Thursday, Oct 29, 2026, 0. Impressions."
+    - group "Primary Conversions, line 5 of 6 with 15 data points. Y axis, values.":
+      - img "Thursday, Oct 15, 2026, 0. Primary Conversions."
+      - img "Friday, Oct 16, 2026, 0. Primary Conversions."
+      - img "Saturday, Oct 17, 2026, 0. Primary Conversions."
+      - img "Sunday, Oct 18, 2026, 0. Primary Conversions."
+      - img "Monday, Oct 19, 2026, 0. Primary Conversions."
+      - img "Tuesday, Oct 20, 2026, 0. Primary Conversions."
+      - img "Wednesday, Oct 21, 2026, 0. Primary Conversions."
+      - img "Thursday, Oct 22, 2026, 0. Primary Conversions."
+      - img "Friday, Oct 23, 2026, 0. Primary Conversions."
+      - img "Saturday, Oct 24, 2026, 0. Primary Conversions."
+      - img "Sunday, Oct 25, 2026, 0. Primary Conversions."
+      - img "Monday, Oct 26, 2026, 0. Primary Conversions."
+      - img "Tuesday, Oct 27, 2026, 0. Primary Conversions."
+      - img "Wednesday, Oct 28, 2026, 0. Primary Conversions."
+      - img "Thursday, Oct 29, 2026, 0. Primary Conversions."
+    - group "Unique Impressions, line 6 of 6 with 15 data points. Y axis, values.":
+      - img "Thursday, Oct 15, 2026, 0. Unique Impressions."
+      - img "Friday, Oct 16, 2026, 0. Unique Impressions."
+      - img "Saturday, Oct 17, 2026, 0. Unique Impressions."
+      - img "Sunday, Oct 18, 2026, 0. Unique Impressions."
+      - img "Monday, Oct 19, 2026, 0. Unique Impressions."
+      - img "Tuesday, Oct 20, 2026, 0. Unique Impressions."
+      - img "Wednesday, Oct 21, 2026, 0. Unique Impressions."
+      - img "Thursday, Oct 22, 2026, 0. Unique Impressions."
+      - img "Friday, Oct 23, 2026, 0. Unique Impressions."
+      - img "Saturday, Oct 24, 2026, 0. Unique Impressions."
+      - img "Sunday, Oct 25, 2026, 0. Unique Impressions."
+      - img "Monday, Oct 26, 2026, 0. Unique Impressions."
+      - img "Tuesday, Oct 27, 2026, 0. Unique Impressions."
+      - img "Wednesday, Oct 28, 2026, 0. Unique Impressions."
+      - img "Thursday, Oct 29, 2026, 0. Unique Impressions."
+    - generic: Body Clicks
+    - generic: Button 1 Clicks
+    - generic: Button 2 Clicks
+    - generic: Impressions
+    - generic: Primary Conversions
+    - generic: Unique Impressions
+    - generic: Oct 15
+    - generic: Oct 16
+    - generic: Oct 17
+    - generic: Oct 18
+    - generic: Oct 19
+    - generic: Oct 20
+    - generic: Oct 21
+    - generic: Oct 22
+    - generic: Oct 23
+    - generic: Oct 24
+    - generic: Oct 25
+    - generic: Oct 26
+    - generic: Oct 27
+    - generic: Oct 28
+    - generic: Oct 29
+    - generic: "0"
+  - button "View chart menu, Chart"
+  - generic: End of interactive chart
+- heading "Conversion Event Details" [level=3]
+- generic: Primary Conversion Event - A
+- generic: 0.00%
+- generic: Started Session within 3 days
+- table:
+  - rowgroup:
+    - row "Variation Primary Conversion Event - A":
+      - columnheader
+      - columnheader "Variation"
+      - columnheader "Primary Conversion Event - A"
+  - rowgroup:
+    - row "Total 0":
+      - cell
+      - cell "Total"
+      - cell "0":
+        - generic: "0"
+    - row "A Referral Offer 0.00% 0":
+      - cell "A":
+        - generic: A
+      - cell "Referral Offer"
+      - cell "0.00% 0":
+        - generic: 0.00%
+        - generic: "0"
+- heading "Audience Details Edit Audience" [level=3]:
+  - text: Audience Details
+  - button "Edit Audience":
+    - img: 
+    - generic: Edit Audience
+- table:
+  - rowgroup:
+    - row "Email iOS Push Android Push Web Push":
+      - columnheader
+      - columnheader "Email"
+      - columnheader "iOS Push"
+      - columnheader "Android Push"
+      - columnheader "Web Push"
+  - rowgroup:
+    - row "Reachable Users Information 511 0 0 0":
+      - cell "Reachable Users Information":
+        - text: Reachable Users
+        - img "Information":
+      - cell "511"
+      - cell "0"
+      - cell "0"
+      - cell "0"
+    - row "% of Workspace 25.97% 0.00% 0.00% 0.00%":
+      - cell "% of Workspace"
+      - cell "25.97%"
+      - cell "0.00%"
+      - cell "0.00%"
+      - cell "0.00%"
+    - row "LTV Information -- -- -- --":
+      - cell "LTV Information":
+        - text: LTV
+        - img "Information":
+      - cell "--"
+      - cell "--"
+      - cell "--"
+      - cell "--"
+- button "Calculated exact statistics" [disabled]:
+  - img: 
+  - generic: Calculated exact statistics
+- button "Show Additional Statistics":
+  - generic: Show Additional Statistics
+- heading "Targeted Segments:" [level=3]
+- text: No Segments
+- heading "Audience Summary:" [level=3]
+- text: External user id is not blank
+- heading "API Identifier" [level=3]
+- text: Use this identifier to access your Campaign from Braze's
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/docs/en/developer_guide/rest_api/user_data/
+  - text: external API
+  - text: ⁠
+- text: . A full list of your API identifiers is available at the
+- link "API Keys":
+  - /url: /app_settings/developer_console/apisettings/6ad0b98fe4b4110085216601?locale=en
+- text: page.
+- generic: "Campaign API Identifier:"
+- textbox "Campaign API Identifier:": 098f90ee-ee2b-4fb0-86c5-feed36ffa184
+- button:
+  - img: 
+- heading "Conversion Correlation Understand how behaviors and attributes impact how likely a user is to convert when compared to the average conversion rate for the campaign audience. Only shows statistically significant results." [level=3]:
+  - generic: Conversion Correlation
+  - generic: Understand how behaviors and attributes impact how likely a user is to convert when compared to the average conversion rate for the campaign audience. Only shows statistically significant results.
+- generic: Select a conversion event
+- log
+- generic: Select...
+- generic: This analysis will be available 24 hours after the campaign has begun sending
+- button "Edit campaign":
+  - generic: Edit campaign
+  - img: 
+- button "Open pilot checklist":
+  - heading "Demo in our app" [level=5]
+  - generic: Test Braze on your phone
+- text: 
+- contentinfo:
+  - generic: © Braze 2026
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://01.emailinboundprocessing.com/preference_center/v1/eyJhbGciOiJSUzI1NiJ9/eyJzdWIiOiJwY3YxIiwiaWF0IjoxNzkzMjY0MzQzLCJleHAiOjE4MjQ4MDAzNDMsImQiOiIkMCQvMUtkSWpMM3lhQ3B5aG1IV0VvWHBRPT0keUhHWTM4Y0RnV1g2TFlqR0NYY0VzMlVURmIvanhyU1g1M1prOU5uRnV3MC9SRGFUS1lzVGh3OHVWanJ6XG5odXVZIiwiaCI6IjAxLmVtYWlsaW5ib3VuZHByb2Nlc3NpbmcuY29tIn0/d18E2xz5xX29GDeu1PsQ5yQ20YO06BaVfx08WCWEIV_XtazuQu6iSIYw16Fq77H3HpuoHWA3Sqe9wX7JqP9RSnKDO6mtO5ZjD8Ao_NikxD16mMutq1gsctPQXAEzXkDNEmBVhd70eAXHIlatCU9rxwWpsv08YJ1JWvc0AzoKS0j2_v-XPlQipxKgeRJBAdsGkwED1YIjGF-t9_yI0_8Xv065Fgz6MYPb7YNGLP27b4QPZ2I91S3SDweNS4sasQif8egjRasnvMzjCpbKO6NghLrhWlFW_JljRbLvjKFqUibLznHY-MLftaag1I7E0Ln2QiFIcKmhialV9VRmydxSVw
+    - text: Privacy Preferences
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://braze.statuspage.io
+    - text: Status
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://www.braze.com/terms
+    - text: Terms
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://www.braze.com/privacy
+    - text: Privacy Policy

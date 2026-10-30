@@ -2,7 +2,7 @@ import { validateTraditional, validateInAppAction, type TraditionalConfig } from
 export type BlockKind = "Title" | "Paragraph" | "Button" | "Image" | "Link" | "Spacer" | "Custom Code" | "Phone Capture" | "Email Capture" | "Radio Button" | "Short Text" | "Dropdown" | "Checkbox" | "Checkbox Group";
 
 export type ExtraBlock = { id: string; kind: BlockKind; text: string; src?: string; mapTo?: string; style?: { color?: string; fontSize?: number; align?: "left" | "center" | "right" } };
-export type InAppButton = { id: string; text: string; behavior: "dismiss" | "deep_link" | "web_url" | "page" | "log_event" | "set_attribute" | "request_push"; href: string; style: "primary" | "secondary"; openInApp?: boolean; eventName?: string; attributeName?: string; attributeValue?: string };
+export type InAppButton = { id: string; text: string; behavior: "dismiss" | "deep_link" | "web_url" | "page" | "log_event" | "set_attribute" | "request_push"; href: string; style: "primary" | "secondary"; openInApp?: boolean; eventName?: string; attributeName?: string; attributeValue?: string; platformActions?: Partial<Record<"Android"|"iOS", Omit<InAppButton,"platformActions">>> };
 export type InAppPage = {
   id: string;
   name: string;
@@ -73,7 +73,7 @@ export const defaultDelivery: InAppDelivery = {
 export type InAppVariant = {
   id: string;
   name: string;
-  sendTo: "Both Mobile Apps & Web Browsers" | "Mobile Apps" | "Web Browsers";
+  sendTo: "Both Mobile Apps & Web Browsers" | "Mobile Apps" | "Web Browsers" | "Roku Devices";
   pages: InAppPage[];
   accessibilityLanguage: string;
   accessibilityLanguageLiquid?: string;
@@ -174,6 +174,7 @@ export function validateInAppVariant(value: unknown): string[] {
     for (const button of [...(Array.isArray(page.buttons) ? page.buttons : []), ...(variant.editorMode === "traditional" && variant.traditional?.bodyAction ? [variant.traditional.bodyAction] : [])]) {
       if (!button || typeof button.text !== "string" || !button.text.trim()) { issues.push("Enter button text."); continue; }
       issues.push(...validateInAppAction(button));
+      for(const action of Object.values(button.platformActions??{})) if(action) {issues.push(...validateInAppAction(action));if(action.behavior==="web_url"&&!/[{][{%]/.test(action.href)&&!/^https?:\/\//i.test(action.href))issues.push(`Enter an HTTP or HTTPS URL for ${button.text}.`);if(action.behavior==="deep_link"&&!/[{][{%]/.test(action.href)&&! /^[a-z][a-z0-9+.-]*:\/\//i.test(action.href))issues.push(`Enter a deep link for ${button.text}.`);}
       if (button.behavior === "page" && !ids.includes(button.href)) issues.push(`Choose a destination page for ${button.text}.`);
       if (button.behavior === "web_url" && !/[{][{%]/.test(button.href) && !/^https?:\/\//i.test(button.href)) issues.push(`Enter an HTTP or HTTPS URL for ${button.text}.`);
       if (button.behavior === "deep_link" && !/[{][{%]/.test(button.href) && !/^[a-z][a-z0-9+.-]*:\/\//i.test(button.href)) issues.push(`Enter a deep link for ${button.text}.`);

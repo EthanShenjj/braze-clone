@@ -30,11 +30,13 @@
     "juice": "^12.2.0",
     "liquidjs": "^10.30.0",
     "lucide-react": "^0.468.0",
+    "mammoth": "1.13.0",
     "next": "^16.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sanitize-html": "^2.18.1",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "unpdf": "1.4.0"
   },
   "devDependencies": {
     "@unlayer/types": "^1.532.0"

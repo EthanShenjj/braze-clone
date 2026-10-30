@@ -1,0 +1,226 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_email_settings_1029?locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_email_settings_1029?locale=en
+	2 container
+		3 image Download
+		4 image
+	5 container
+		6 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		7 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			8 text Local workspace
+			9 image
+		10 container Side navigation
+			11 text Quick links
+			12 button Canvas
+			13 button Campaigns
+			14 button Segments
+			15 button Getting Started
+			16 button Home
+			17 button AI Decisioning
+			18 button Agent Console
+			19 button Messaging
+			20 button Audience
+			21 button Content
+			22 button Analytics
+			23 button Partner Integrations
+			24 button Data Settings
+			25 button Settings
+		26 button Home
+			27 image Braze
+		28 container
+			29 text ◷   8 days left in your free trial.
+			30 button Connect with sales
+		31 container
+			32 button Search workspace ⌘K
+				33 image
+				34 text Search workspace
+				35 text ⌘K
+			36 button Take a tour
+			37 image Community
+			38 button (collapsed) Description: Language, Secondary Actions: Expand
+			39 button Notifications
+			40 button (collapsed) Description: Profile, Secondary Actions: Expand
+			41 image
+			42 button Open BrazeAI Operator
+		43 button Campaigns
+		44 button Edit 'Email settings entry verification'
+			45 text Edit
+			46 text  '
+			47 text Email settings entry verification
+			48 text '
+			49 image
+		50 container
+			51 image
+			52 text Limited access
+			53 container Campaign steps
+				54 button ✓ Compose Messages
+					55 text ✓
+					56 text Compose Messages
+				57 button ✓ Schedule Delivery
+					58 text ✓
+					59 text Schedule Delivery
+				60 button ✓ Target Audiences
+					61 text ✓
+					62 text Target Audiences
+				63 button ✓ Assign Conversions
+					64 text ✓
+					65 text Assign Conversions
+				66 button 5 Review Summary
+					67 text 5
+					68 text Review Summary
+			155 container
+				156 button Back
+					157 image
+					158 text Back
+				159 text Email settings entry verification All changes saved
+				160 button Preview and test
+					161 image
+					162 text Preview and test
+				163 button Sending settings
+			164 container Email editor sections
+				165 button Sending settings
+					166 image
+				167 button Content
+					168 image
+				169 button Preview & Test
+					170 image
+			171 container Content navigation
+				172 container
+					173 text CONTENT
+					174 button Back to campaign
+						175 image
+				176 button Design and Build
+				177 button Link Management
+				178 button Personalization
+					179 image
+					180 text Personalization
+				181 button Languages
+					182 image
+					183 text Languages
+				184 text Create with Operator
+				185 button Open Operator for copywriting help
+					186 image
+					187 text Copy
+				188 link Description: Style Settings, Value: 127.0.0.1:3100/app_settings/app_settings/email_settings/drag_and_drop_email/6ad0b98fe4b4110085216601?locale=en
+			189 container
+				190 button Desktop preview
+					191 image
+				192 button Mobile preview
+					193 image
+				194 pop up button (collapsed, settable) Value: Open Sans, Arial, sans-serif, Secondary Actions: Expand
+					195 menu
+						196 (selected) Open Sans, Arial, sans-serif
+						197 Helvetica, Arial, sans-serif
+						198 Georgia, 'Times New Roman', serif
+						199 'Courier New', monospace
+						200 Tahoma, Verdana, sans-serif
+						201 'Trebuchet MS', sans-serif
+				202 pop up button (collapsed, settable) Value: 15, Secondary Actions: Expand
+					203 menu
+						204 10
+						205 12
+						206 13
+						207 14
+						208 (selected) 15
+						209 16
+						210 18
+						211 22
+						212 28
+						213 34
+						214 42
+				215 button Bold
+					216 image
+				217 button Italic
+					218 image
+				219 button Underline
+					220 image
+				221 button Strikethrough
+					222 image
+				223 button Link
+					224 image
+				225 button Clear formatting
+					226 image
+				227 button
+					228 image
+				229 button
+					230 image
+				231 button
+					232 image
+				234 container
+					235 container
+						236 container
+							237 AXWebArea 127.0.0.1:3100/engagement/campaigns/cmp_email_settings_1029?locale=en
+								285 container
+									286 container ie51
+										287 text Keep this content when opening settings.
+				238 button Undo
+					239 image
+				240 button Redo
+					241 image
+			242 container Email design tools
+				243 tab group Email design panels
+					244 tab (selected, settable, boolean) CONTENT, Value: 1
+CONTENT
+					245 tab (selectable, settable, boolean) ROWS, Value: 0
+ROWS
+					246 tab (selectable, settable, boolean) SETTINGS, Value: 0
+SETTINGS
+				247 container
+					248 button (expanded) BASIC BLOCKS, Secondary Actions: Collapse
+						249 text BASIC BLOCKS
+						250 image
+					251 button Description: Add title block, Help: Drag title into your email
+						252 image
+						253 text TITLE
+					254 button Description: Add paragraph block, Help: Drag paragraph into your email
+						255 image
+						256 text PARAGRAPH
+					257 button Description: Add list block, Help: Drag list into your email
+						258 image
+						259 text LIST
+					260 button Description: Add button block, Help: Drag button into your email
+						261 image
+						262 text BUTTON
+					263 button Description: Add divider block, Help: Drag divider into your email
+						264 image
+						265 text DIVIDER
+					266 button Description: Add spacer block, Help: Drag spacer into your email
+						267 image
+						268 text SPACER
+					269 button Description: Add nps survey block, Help: Drag nps survey into your email
+						270 image
+						271 text NPS SURVEY
+				272 button (collapsed) MEDIA, Secondary Actions: Expand
+					273 text MEDIA
+					274 image
+				275 button (collapsed) ADVANCED, Secondary Actions: Expand
+					276 text ADVANCED
+					277 image
+			278 container
+				279 button Download file
+				280 button Done
+			135 button (disabled) Back
+				136 image
+			137 button ✓ Compose
+				138 text ✓
+				139 text Compose
+			140 button ✓ Schedule
+				141 text ✓
+				142 text Schedule
+			143 button ✓ Target
+				144 text ✓
+				145 text Target
+			146 button ✓ Assign
+				147 text ✓
+				148 text Assign
+			149 button 5 Review
+				150 text 5
+				151 text Review
+			152 button Forward
+				153 image
+			154 button Save Draft
+		281 image
+		282 text Draft saved.
+		283 button Close
+			284 image
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_email_settings_1029?locale=en

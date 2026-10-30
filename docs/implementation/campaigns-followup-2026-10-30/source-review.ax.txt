@@ -1,0 +1,266 @@
+Browser tab: 1969334808, Title: "Engagement - Campaigns - Edit 'New Campaign - October 29, 2026'", URL: "https://dashboard-09.braze.com/engagement/campaigns/6ae2d0de5e731b00885db684/6ad0b98fe4b4110085216601?locale=en&campaignName=New%20Campaign%20-%20October%2029%2C%202026&page=0".
+0 AXWebArea Engagement - Campaigns - Edit 'New Campaign - October 29, 2026', URL: dashboard-09.braze.com/engagement/campaigns/6ae2d0de5e731b00885db684/6ad0b98fe4b4110085216601?locale=en&campaignName=New%20Campaign%20-%20October%2029%2C%202026&page=0
+	1 container
+		2 image Download
+		3 image
+	4 container
+		11 container body-wrapper
+			12 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/campaigns/6ae2d0de5e731b00885db684/6ad0b98fe4b4110085216601?locale=en&campaignName=New%20Campaign%20-%20October%2029%2C%202026&page=0#main-col
+			13 container
+				14 container Side navigation
+					15 container
+						16 button Minimize menu
+						17 pop up button (collapsed) Description: Demo – bba, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+							18 image
+							19 text Demo – bba
+						20 text Quick links
+						21 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6ad0b98fe4b4110085216601?locale=en
+						22 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6ad0b98fe4b4110085216601?locale=en
+						23 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6ad0b98fe4b4110085216601?locale=en
+						24 button Getting Started
+							25 image
+							26 container
+								27 text Getting Started
+								28 container
+									29 text 8 %
+						30 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6ad0b98fe4b4110085216601?locale=en
+						31 button AI Decisioning
+							32 image
+							33 text AI Decisioning
+						34 button Agent Console
+							35 image
+							36 text Agent Console
+						37 button Messaging
+							38 image
+							39 text Messaging
+						40 button Audience
+							41 image
+							42 text Audience
+						43 button Content
+							44 image
+							45 text Content
+						46 button Analytics
+							47 image
+							48 text Analytics
+						49 button Partner Integrations
+							50 image
+							51 text Partner Integrations
+						52 button Data Settings
+							53 image
+							54 text Data Settings
+						55 button Settings
+							56 image
+							57 text Settings
+					58 container Footer Logo
+						59 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+				60 text No days left in your free trial.
+				61 button Connect with sales
+				62 container Top navigation
+					63 container Left top navigation
+						64 button Search workspace ⌘+K
+							65 image
+							66 text Search workspace
+							67 text ⌘+K
+					68 container Right top navigation
+						69 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							70 image
+						71 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							72 image
+						73 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+							74 image
+						75 container
+							76 button Notifications
+								77 image
+						78 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							79 image
+						80 button BrazeAI Operator™
+							81 image
+			82 container main
+				83 container main-col
+					84 tab group Open page tabs
+						85 tab (selectable, settable, boolean) Campaigns, Value: 0, ID: campaigns
+						86 tab (selected, settable, boolean) Edit 'New Campaign - October 29, 2026' Close tab, Description: Close tab, ID: 6ae2d0de5e731b00885db684, Value: 1
+Edit 'New Campaign - October 29, 2026'
+					87 container
+						88 text Limited access
+						89 container progress
+							90 text Progress Tracker with 5 steps: Compose Messages, Schedule Delivery, Target Audiences, Assign Conversions, Review Summary
+						91 button Step Compose Messages
+							92 text 1
+							93 text Compose Messages
+						94 button Step Schedule Delivery
+							95 text 2
+							96 text Schedule Delivery
+						97 button Step Target Audiences
+							98 text 3
+							99 text Target Audiences
+						100 button Step Assign Conversions
+						101 button Step Review Summary
+							102 text 5
+							103 text Review Summary
+						259 heading Review Campaign Summary, Value: 2
+							260 text Review Campaign Summary
+						261 container
+							262 text Reachable users is 1,949.
+							263 text The maximum numbers of users to potentially receive messages from this campaign is 100.
+						264 heading Agentic Standards, Value: 3
+							265 text Agentic Standards
+						266 text New
+						267 text Evaluate this campaign against your Standards before launch
+						268 container
+							269 text Select Standards...
+						270 button (disabled) Run evaluation
+							271 text Run evaluation
+						272 container
+							273 heading Attach a campaign brief (optional), Value: 5
+								274 text Attach a campaign brief (optional)
+							275 text PDF, TXT, MD, CSV, DOCX up to 15MB
+							276 button Upload file
+						277 container
+							278 image Checking for previous results...
+							279 text Checking for previous results...
+						280 heading Messages, Value: 3
+							281 text Messages
+						282 button Edit Messages
+						283 heading Variant 1, Value: 4
+							284 text Variant 1
+						285 container
+							286 heading Preview, Value: 5
+								287 text Preview
+							288 pop up button Phone portrait
+							289 pop up button Tablet portrait
+							290 container
+								291 container asd
+									292 button Close Message
+									293 text 
+									294 container
+										295 button 1uiyoiuyoi
+										296 button 123123
+						297 heading Delivery, Value: 3
+							298 text Delivery
+						299 button Edit Delivery
+						300 text Action Based Enter user when they perform actions Trigger Actions
+						301 content list
+							302 container
+								303 AXListMarker • 
+								304 text Perform Custom Event "undefined"
+						305 text Send Campaign
+						306 content list
+							307 container
+								308 AXListMarker • 
+								309 text Schedule delay:  immediately after trigger criteria are met
+							310 container
+								311 AXListMarker • 
+								312 text Campaign start:  October 29, 2026 at 12:50 AM
+							313 container
+								314 AXListMarker • 
+								315 text Quiet hours disabled
+						316 content list
+							317 container
+								318 AXListMarker • 
+								319 text Users are not eligible to re-enter this campaign
+						320 text Message Priority
+						321 content list
+							322 container
+								323 AXListMarker • 
+								324 text Medium  Priority
+						325 heading Target Audience, Value: 3
+							326 text Target Audience
+						327 button Edit Target Audience
+						328 container
+							329 heading Audience Summary, Value: 5
+								330 text Audience Summary
+							331 text No segments or filters selected
+						332 container
+							333 heading Entry Audience, Value: 4
+								334 text Entry Audience
+							335 content list
+								336 container
+									337 AXListMarker • 
+									338 text The maximum numbers of users to potentially receive messages from this campaign is 100.
+								339 container
+									340 AXListMarker • 
+									341 text No limitations on the rate at which users will receive messages.
+								342 AXListMarker • 
+						343 container
+							344 heading Suppression Lists, Value: 4
+								345 text Suppression Lists
+							346 image Loading, please wait
+						347 container
+							348 heading Total Population, Value: 4
+								349 text Total Population
+							350 table
+								351 row
+									352 cell
+										353 heading Exact users, Value: 5
+											354 text Exact users
+										355 text 1,949
+										356 container
+											357 text 100%  of total users
+										358 progress indicator 100
+										359 text Last calculated: 23 hours ago
+										360 button Refresh exact statistics
+										361 button View calculation queue
+									362 cell
+										363 heading Channel breakdown, Value: 6
+											364 text Channel breakdown
+										365 table
+											366 row
+												367 cell
+													368 text In-App Messages
+											369 row
+												370 cell
+													371 text Reachable Users
+													372 image Information
+												373 cell
+													374 text 1,949
+											375 row
+												376 cell
+													377 text % of Workspace
+												378 cell
+													379 text 100%
+											380 row
+												381 cell
+													382 text LTV
+													383 image Information
+												384 cell
+													385 text --
+										386 button (collapsed) Description: Show Additional Statistics, Secondary Actions: Expand
+						387 heading Conversion Events, Value: 3
+							388 text Conversion Events
+						389 button View Details
+						230 pop up button Back
+						231 container
+							232 container progress
+								233 text Progress Tracker with 5 steps: Compose, Schedule, Target, Assign, Review
+							234 button Step Compose
+								235 text 1
+								236 text Compose
+							237 button Step Schedule
+								238 text 2
+								239 text Schedule
+							240 button Step Target
+								241 text 3
+								242 text Target
+							243 button Step Assign
+							244 button Step Review
+								245 text 5
+								246 text Review
+						247 pop up button (disabled) Forward
+						248 button Save Draft
+				249 container
+					250 text © Braze 2026
+					251 text Opening in a new tab
+					252 link Description: Opening in a new tab, Value: 01.emailinboundprocessing.com/preference_center/v1/eyJhbGciOiJSUzI1NiJ9/eyJzdWIiOiJwY3YxIiwiaWF0IjoxNzkzMzM0NDI4LCJleHAiOjE4MjQ4NzA0MjgsImQiOiIkMCR0SnRqRHZzcnpGRUxaZkxqU0w4eWt3PT0kaTVQSUUwV0ZTTENOTUpCeXMyUDgySWRTcnI3bmt5ZHJMeFFiM2xzODlFUjd1ckpZRDViZk93Zm1YMllPXG45STNjIiwiaCI6IjAxLmVtYWlsaW5ib3VuZHByb2Nlc3NpbmcuY29tIn0/UTv3OWP3etSCIz4pd6Sj6D6CPO9JMnlCGfg_H87Cm8Cd_clXeAWa1Hxe4TzipTt0f7mjWJiMXbNjQb4CdvtMxuwoJY_2sMN5e_61_cDQRFDq4LmFl_AO_YzEUzW_soMk9xKpJAvWol-IJIhEMVGawE4cuUInbW5QC4c3GqHadVOo2GU15AgpBrgOgGR1Od2qzND4TX3iUz2tUz8iCewTrcCRD6rRe91oMd5tJLQ0bxwOPyTf84Eg98HDZDnZUdKTJEInOsCeZ_PNa56pmpoh6Z5hsR1Koxk3O76_1iOzWG8ZCr1WeTvuU_W1AXkZQV9NyXxNQj4Vz-ASXr0h_MQyeg
+					253 text Opening in a new tab
+					254 link Description: Opening in a new tab, Value: braze.statuspage.io/
+					255 text Opening in a new tab
+					256 link Description: Opening in a new tab, Value: braze.com/terms
+					257 text Opening in a new tab
+					258 link Description: Opening in a new tab, Value: braze.com/privacy
+		7 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+			8 container
+				9 image Download
+				10 image
+
+The focused UI element is 101 button Step Review Summary

@@ -1,0 +1,2 @@
+Repository-authored binary fixtures. launch.pdf contains actual compressed PDF text objects and a cross-reference table. launch.docx is an OOXML Word ZIP containing English and Japanese campaign requirements. image-only.pdf paints a shape without a text layer to exercise the no-text/OCR notice. No external user data or licensed document contents are included.
+encrypted.pdf and too-many-pages.pdf were authored with ReportLab for password-protected input and the 100-page limit; their text is synthetic campaign content.

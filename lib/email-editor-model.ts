@@ -1,5 +1,5 @@
 import { Liquid } from "liquidjs";
-import { brazeLiquidSource } from "./email-liquid.ts";
+import { brazeLiquidSource,registerBrazeRuntimeTags } from "./email-liquid.ts";
 // Row-based email editor data model mirroring the Braze drag-and-drop builder:
 // a message is a stack of rows, each row holds one or more columns (cells),
 // and every cell holds a stack of content blocks.
@@ -260,7 +260,7 @@ const defaultUser: PreviewUser = { first_name: "Sofia", last_name: "Chen", email
 // Resolves the Liquid subset used by the local editor so previews feel real.
 export function resolveLiquidPreview(source: string, user: PreviewUser = defaultUser, locale: EmailEditorLocale = "en", workspace?: WorkspaceLiquid, strict = false) {
   const profile = { ...defaultUser, ...user, language: user.language ?? locale, ...(user.attributes as Record<string, unknown> ?? {}) } as Record<string, unknown>;
-  const engine = new Liquid({ strictFilters: false, strictVariables: false, ownPropertyOnly: true, renderLimit: 100, parseLimit: 1000000, memoryLimit: 10000000 });
+  const engine = registerBrazeRuntimeTags(new Liquid({ strictFilters: false, strictVariables: false, ownPropertyOnly: true, renderLimit: 100, parseLimit: 1000000, memoryLimit: 10000000 }));
   const flattened = (item: WorkspaceCatalogItem) => ({ ...item.fields, id: item.id, name: item.fields.name ?? item.name });
   for (const tag of ["catalog_items", "catalog_selection_items"]) engine.registerTag(tag, {
     parse(token) { this.arguments = token.args; },

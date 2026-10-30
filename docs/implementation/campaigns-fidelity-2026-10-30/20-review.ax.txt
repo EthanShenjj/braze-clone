@@ -1,0 +1,193 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_email?locale=en&step=review".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_email?locale=en&step=review
+	2 container
+		3 image Download
+		4 image
+	5 container
+		6 text b
+		7 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			8 image
+			9 text Local workspace
+		10 text Quick links
+		11 button Canvas
+			12 image
+			13 text Canvas
+		14 button Campaigns
+			15 image
+			16 text Campaigns
+		17 button Segments
+			18 image
+			19 text Segments
+		20 button Getting Started
+			21 image
+			22 text Getting Started
+		23 button Performance Overview
+			24 image
+			25 text Performance Overview
+		26 button AI Decisioning
+			27 image
+			28 text AI Decisioning
+		29 button Agent Console
+			30 image
+			31 text Agent Console
+		32 button Messaging
+			33 image
+			34 text Messaging
+		35 button Audience
+			36 image
+			37 text Audience
+		38 button Content
+			39 image
+			40 text Content
+		41 button Analytics
+			42 image
+			43 text Analytics
+		44 button Partner Integrations
+			45 image
+			46 text Partner Integrations
+		47 button Data Settings
+			48 image
+			49 text Data Settings
+		50 button Settings
+			51 image
+			52 text Settings
+		53 text braze
+		54 container
+			55 text ◷   8 days left in your free trial.
+			56 button Connect with sales
+		57 container
+			58 button Search workspace ⌘K
+				59 image
+				60 text Search workspace
+				61 text ⌘K
+			62 button Take a tour
+				63 image
+			64 image
+			65 button (collapsed) Description: Language, Secondary Actions: Expand
+				66 image
+			67 button Notifications
+				68 image
+			69 button S
+			70 image
+			71 button Open BrazeAI Operator
+				72 image
+		73 button Campaigns
+		74 button Edit 'Audit 2026-10-29 email'
+			75 text Edit
+			76 text  '
+			77 text Audit 2026-10-29 email
+			78 text '
+			79 image
+		80 container
+			81 image
+			82 text Limited access
+			83 container Campaign steps
+				84 button ✓ Compose Messages
+					85 text ✓
+					86 text Compose Messages
+				87 button ✓ Schedule Delivery
+					88 text ✓
+					89 text Schedule Delivery
+				90 button ✓ Target Audiences
+					91 text ✓
+					92 text Target Audiences
+				93 button ✓ Assign Conversions
+					94 text ✓
+					95 text Assign Conversions
+				96 button 5 Review Summary
+					97 text 5
+					98 text Review Summary
+			99 heading Review Campaign Summary, Value: 2
+				100 text Review Campaign Summary
+			101 text Reachable users is  840 .
+			102 heading Agentic Standards New, Value: 2
+				103 text Agentic Standards  New
+			104 link Description: Agent Console, Value: 127.0.0.1:3100/agent-console
+			105 text Review your campaign against the goals and Standards configured for your workspace.
+			106 text No Standards are configured for this workspace
+			107 text Create Standards in Agent Console to evaluate your campaign.
+			108 heading Messages, Value: 2
+				109 text Messages
+			110 button Edit Messages
+				111 image
+			112 container
+				113 heading Variant 1 Preview, Value: 3
+					114 text Variant 1  Preview
+				115 text From: qa@example.com Subject: Audit title
+				116 container Email message preview
+					117 AXWebArea about:srcdoc
+						118 text Hello Sofia
+			119 heading Delivery, Value: 2
+				120 text Delivery
+			121 button Edit Delivery
+				122 image
+			123 heading Scheduled Entry, Value: 3
+				124 text Scheduled Entry
+			125 text Send as soon as Campaign is launched.
+			126 heading Target Audience, Value: 2
+				127 text Target Audience
+			128 button Edit Target Audience
+				129 image
+			130 heading Audience Summary, Value: 3
+				131 text Audience Summary
+			132 text No segments or filters selected
+			133 heading Entry Audience, Value: 3
+				134 text Entry Audience
+			135 content list
+				136 container
+					137 AXListMarker • 
+					138 text Workspace Messaging Rate Limits OFF
+				139 container
+					140 AXListMarker • 
+					141 text 0 workspace suppression entries apply.
+			142 container
+				143 heading Total Population, Value: 2
+					144 text Total Population
+				145 text Exact users 1,000 100.00 %  of total users
+				146 progress indicator Description: Percent of total users, Value: 100
+				147 text Last calculated:  2026/10/30 12:20:28
+				148 button ↻ Refresh exact statistics
+				149 button ☷ View calculation queue
+				150 heading Channel breakdown, Value: 4
+					151 text Channel breakdown
+				152 table
+					153 row
+						154 cell
+							155 text email
+					156 row
+						157 cell
+							158 text Reachable Users
+						159 cell
+							160 text 840
+				161 button (collapsed) ⊕ Show Additional Statistics, Secondary Actions: Expand
+					162 text ⊕ Show
+					163 text  Additional Statistics
+			164 heading Conversion Events, Value: 2
+				165 text Conversion Events
+			166 button Edit Conversion Events
+				167 image
+			168 text Primary Conversion Event - A
+			169 container
+				170 text Makes Purchase  within  3 days
+			171 button Back
+				172 image
+			173 button ✓ Compose
+				174 text ✓
+				175 text Compose
+			176 button ✓ Schedule
+				177 text ✓
+				178 text Schedule
+			179 button ✓ Target
+				180 text ✓
+				181 text Target
+			182 button ✓ Assign
+				183 text ✓
+				184 text Assign
+			185 button 5 Review
+				186 text 5
+				187 text Review
+			188 button (disabled) Forward
+				189 image
+			190 button Save Draft
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_email?locale=en&step=review

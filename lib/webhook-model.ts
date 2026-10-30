@@ -5,6 +5,7 @@ export type WebhookJsonPair = { id: string; key: string; value: string };
 export type WebhookVariant = {
   id: string;
   name: string;
+  credentialId?:string;
   url: string;
   method: WebhookMethod;
   bodyType: WebhookBodyType;
@@ -70,6 +71,7 @@ function normalizeVariant(value: Partial<WebhookVariant>, index: number, fallbac
   return {
     id: value.id || `var_${index + 1}`,
     name: value.name || `Variant ${index + 1}`,
+    credentialId:typeof value.credentialId==="string"?value.credentialId:undefined,
     url: value.url ?? "",
     method: isMethod(value.method) ? value.method : "POST",
     bodyType: value.bodyType === "text" ? "text" : "json",

@@ -1,0 +1,267 @@
+- link "跳至内容":
+  - /url: "#main-col"
+  - generic: 跳至内容
+- navigation "侧边导航":
+  - button "Minimize menu":
+  - button "演示 – bba":
+    - generic: Demo – bba
+    - img: 
+  - generic: 快速链接
+  - link "帆布":
+    - /url: /engagement/canvas/canvas/6ad0b98fe4b4110085216601?locale=en
+    - generic: Canvas
+  - link "竞选活动":
+    - /url: /engagement/campaigns/campaigns/6ad0b98fe4b4110085216601?locale=en
+    - generic: Campaigns
+  - link "细分市场":
+    - /url: /engagement/segmenter/segmenter/6ad0b98fe4b4110085216601?locale=en
+    - generic: Segments
+  - button "入门":
+    - generic: Getting Started
+    - generic: 8%
+  - link "绩效概述":
+    - /url: /dashboard/app_usage/6ad0b98fe4b4110085216601?locale=en
+    - generic: Home
+  - button "人工智能决策":
+    - generic: AI Decisioning
+  - button "代理控制台":
+    - generic: Agent Console
+  - button "消息传递":
+    - generic: Messaging
+  - button "观众":
+    - generic: Audience
+  - button "内容":
+    - generic: Content
+  - button "分析":
+    - generic: Analytics
+  - button "合作伙伴集成":
+    - generic: Partner Integrations
+  - button "数据设置":
+    - generic: Data Settings
+  - button "设置":
+    - generic: Settings
+  - generic "页脚徽标":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 免费试用期还剩1天。
+- button "联系销售":
+  - generic: 联系销售
+- navigation "顶部导航":
+  - navigation "左上导航":
+    - button "搜索工作区 ⌘+K":
+      - generic: 搜索工作区
+      - generic: ⌘+K
+  - navigation "右上角导航":
+    - button "支持。使用 Enter 键打开子菜单，使用上下箭头键选择子菜单项，按 Esc 键关闭子菜单。":
+    - button "社区。使用 Enter 键打开子菜单，使用向下或向上箭头键选择子菜单项，按 Esc 键关闭。":
+    - button "选择您的语言（当前默认语言为英语）":
+    - button "通知":
+    - button "[对象 对象]。使用 Enter 键打开子菜单，使用上下箭头键选择子菜单项，按 Esc 键关闭子菜单。":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- navigation:
+  - tablist "打开页面标签":
+    - tab "竞选活动":
+      - generic: 竞选活动
+    - tab "编辑“新活动 - 2026 年 10 月 28 日” 关闭标签页":
+      - generic: 编辑“新活动 - 2026 年 10 月 28 日”
+      - button "关闭标签页":
+    - tab "编辑“新活动 - 2026 年 10 月 29 日” 关闭标签页":
+      - generic: 编辑“新活动 - 2026 年 10 月 29 日”
+      - button "关闭标签页":
+    - tab "Edit 'New Campaign - October 29, 2026' Close tab" [selected]:
+      - text: 
+      - generic: Edit 'New Campaign - October 29, 2026'
+      - button "Close tab":
+- img: 
+- generic: 访问受限
+- navigation:
+  - generic "进步":
+    - generic: 五步进度跟踪器：撰写消息、安排发送时间、目标受众、分配转化任务、查看摘要
+  - button "步骤：撰写邮件":
+    - generic: "1"
+    - generic: 撰写消息
+  - button "步骤计划交付":
+    - img: 
+    - generic: 安排交付
+  - button "步骤 目标受众" [active]:
+    - generic: "3"
+    - generic: 目标受众
+  - button "步骤分配转换":
+    - generic: "4"
+    - generic: 分配转换
+  - button "步骤回顾总结":
+    - generic: "5"
+    - generic: 审查摘要
+- heading "目标选项" [level=3]:
+  - generic: 目标选项
+- generic: 通过选择用户必须符合的多个细分群体来锁定目标用户。添加更多筛选条件，进一步细化受众群体。
+- generic: 按细分市场定位目标用户
+- button "帮助文本已显示。点击 Tab 键查看帮助文本，点击即可打开弹出窗口。":
+- log
+- generic: 搜索细分……
+- combobox "按细分市场定位目标用户"
+- heading "附加筛选条件" [level=3]:
+  - generic: 附加筛选条件
+- group "筛选组":
+  - button:
+  - generic: 筛选组
+  - button "或者":
+    - generic: 或者
+    - img: 
+  - log
+  - generic: 搜索筛选器...
+  - combobox "选择筛选器"
+  - button "消除" [disabled]:
+- button "添加筛选组":
+  - img: 
+  - generic: 添加筛选组
+- button "添加排除组":
+  - img: 
+  - generic: 添加排除组
+- heading "受众概况" [level=4]:
+  - generic: 受众概况
+- generic: 未选择任何细分或筛选条件
+- heading "用户查找" [level=4]:
+  - generic: 用户查找
+- generic: 检查用户是否符合细分、筛选条件和应用条件
+- button "查找用户":
+  - generic: 查找用户
+- generic: 发送给以下用户：
+- log
+- generic: 已订阅或选择加入的用户
+- combobox "发送给以下用户："
+- checkbox "限制发送量"
+- generic: 限制发送量
+- img "信息":
+- checkbox "限制本次活动发送邮件的频率"
+- generic: 限制本次活动发送邮件的频率
+- heading "A/B 测试 使用 BrazeAI™ 进行优化" [level=3]:
+  - generic: A/B 测试
+  - checkbox "使用 BrazeAI™ 进行优化" [disabled]
+  - generic: 使用 BrazeAI™ 进行优化
+- img: 
+- generic: 要将 Optimize 与 BrazeAI™ 结合使用，请添加至少两个变体。
+- button "撰写消息":
+  - generic: 撰写消息
+- paragraph:
+  - generic: 您可以自行设置变体拆分和控制组。所有变体都将按照您在“定时发送”中设置的日期和时间发送。
+- spinbutton: "20"
+- generic: "%"
+- generic "对照组":
+  - generic: 对照组
+- spinbutton: "80"
+- generic: "%"
+- generic "变体 1":
+  - generic: 变体 1
+- generic: 移除控制组
+- generic: 均匀分配变体
+- heading "压制名单" [level=3]:
+  - generic: 压制名单
+- generic: There are no suppression lists applied
+- generic: 要将此活动列入屏蔽名单，请访问
+- generic: 在新标签页中打开
+- link "在新标签页中打开":
+  - /url: /engagement/suppression_lists/6ad0b98fe4b4110085216601
+  - generic: 压制名单
+- heading "总人口" [level=3]:
+  - generic: 总人口
+- table:
+  - rowgroup:
+    - row "确切用户 1,949 100%的用户 上次计算时间：4 小时前 刷新精确统计数据 查看计算队列 通道故障 全部的 电子邮件 可触达用户 信息 1,949 510 工作区百分比 100% 26.17% 终身价值 信息 -- -- 显示更多统计数据":
+      - cell "确切用户 1,949 100%的用户 上次计算时间：4 小时前 刷新精确统计数据 查看计算队列":
+        - heading "确切用户" [level=5]:
+          - generic: 确切用户
+        - generic: 1,949
+        - strong:
+          - generic: 100%
+        - generic: 的用户
+        - navigation:
+          - progressbar
+        - generic: 上次计算时间：4 小时前
+        - button "刷新精确统计数据":
+          - generic: 刷新精确统计数据
+        - button "查看计算队列":
+          - img: 
+          - generic: 查看计算队列
+      - cell "通道故障 全部的 电子邮件 可触达用户 信息 1,949 510 工作区百分比 100% 26.17% 终身价值 信息 -- -- 显示更多统计数据":
+        - heading "通道故障" [level=6]:
+          - generic: 通道故障
+        - table:
+          - rowgroup:
+            - row "全部的 电子邮件":
+              - columnheader
+              - columnheader "全部的":
+                - generic: 全部的
+              - columnheader "电子邮件":
+                - generic: 电子邮件
+          - rowgroup:
+            - row "可触达用户 信息 1,949 510":
+              - cell "可触达用户 信息":
+                - generic: 可触达用户
+                - img "信息":
+              - cell "1,949":
+                - generic: 1,949
+              - cell "510":
+                - generic: "510"
+            - row "工作区百分比 100% 26.17%":
+              - cell "工作区百分比":
+                - generic: 工作区百分比
+              - cell "100%":
+                - generic: 100%
+              - cell "26.17%":
+                - generic: 26.17%
+            - row "终身价值 信息 -- --":
+              - cell "终身价值 信息":
+                - generic: 终身价值
+                - img "信息":
+              - cell "--":
+                - generic: "--"
+              - cell "--":
+                - generic: "--"
+        - button "显示更多统计数据":
+          - generic: 显示更多统计数据
+- button "后退":
+  - img: 
+- navigation:
+  - generic "进步":
+    - generic: 五步进度跟踪器：撰写、安排、设定目标、分配任务、回顾
+  - button "步骤组成":
+    - generic: "1"
+    - generic: 撰写
+  - button "步骤安排":
+    - img: 
+    - generic: 日程
+  - button "步骤目标":
+    - generic: "3"
+    - generic: 目标
+  - button "步骤分配":
+    - generic: "4"
+    - generic: 分配
+  - button "步骤回顾":
+    - generic: "5"
+    - generic: 审查
+- button "向前":
+  - img: 
+- button "保存草稿":
+  - generic: 保存草稿
+- text: 
+- contentinfo:
+  - generic: © Braze 2026
+  - generic: 在新标签页中打开
+  - link "在新标签页中打开":
+    - /url: https://braze.statuspage.io
+    - generic: 地位
+  - generic: 在新标签页中打开
+  - link "在新标签页中打开":
+    - /url: https://www.braze.com/terms
+    - generic: 条款
+  - generic: 在新标签页中打开
+  - link "在新标签页中打开":
+    - /url: https://www.braze.com/privacy
+    - generic: 隐私政策
+- iframe
+- alert
+- alert

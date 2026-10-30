@@ -11,24 +11,33 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { emailPreferenceCampaignDefaults, normalizeEmailPreferences, validateEmailPreferences, type EmailPreferences } from "./email-preferences";
-import { workspaceContentBlockHtml } from "./email-liquid";
+import { renderBrazeLiquid,workspaceContentBlockHtml } from "./email-liquid";
 import { smsIssues, smsMetrics, smsPreview } from "./sms-model";
-import { normalizeWhatsAppVariants, customWhatsAppTemplates, prepareWhatsAppMessage, validateWhatsAppCampaign } from "./whatsapp-model";
-import { compileWorkspaceEmail, emailSendingIssues, extractEmailLinks, isBotClick } from "./email-runtime";
+import { latestWhatsAppInbound, whatsAppResponseEligibility, normalizeWhatsAppVariants, customWhatsAppTemplates, prepareWhatsAppMessage, validateWhatsAppCampaign } from "./whatsapp-model";
+import { compileWorkspaceEmail, emailSendingIssues, emailVariantSendingIssues, extractEmailLinks, isBotClick } from "./email-runtime";
 import { resolveLiquidPreview, type WorkspaceLiquid } from "./email-editor-model";
-import { campaignValidationIssues } from "./campaign-validation";
+import { analyticsDateRange, campaignMonitoringIssues, defaultCampaignMonitoring, realCampaignEvents, type CampaignMonitoring } from "./campaign-analytics-model";
+import { campaignAudienceFieldKind,intelligentTimingRequirements,type DeliveryTimePreview } from "./campaign-audience-model";
+import { conversionCatalog, resolveConversionEvents, conversionConfigurationIssues } from "./campaign-form-model";
+import { campaignValidationIssues, campaignComposeIssues, campaignAudienceIssues, subscriptionCapabilityIssues } from "./campaign-validation";
 import { compileLineMessages } from "./line-model";
+import { allocation, campaignVariants, variantDraft, variantKey, pickVariant, multichannelChannels, audienceConfigurationIssues, type MessageDraft, type AudienceGroup } from "./campaign-shared";
+import { dispatchPreparedMessage } from "./message-delivery";
+import { creativeHtml,type CreativeRow } from "./creative-model";
+import { compileSms,compilePush,compileContentCard } from "./channel-message-model";
+import { campaignTriggeredBy,nextScheduledTime,nextAllowedDeliveryTime,inQuietHours,isWithinCampaignDuration } from "./campaign-scheduling";
 import { initialCanvasGraph, isCanvasGraph, type CanvasGraph, type CanvasRun, type CanvasTrace, validateCanvasGraph } from "./canvas-model";
 import { canvasWizardIssues, defaultCanvasWizard, normalizeCanvasWizard, type CanvasFilter, type CanvasWizardConfig } from "./canvas-wizard-model";
 import { sampleCatalogId, sampleCatalogRows, sampleRecommendationId } from "./sample-catalog";
 import { sampleSegmentByName, sampleSegments } from "./sample-segments";
 import { deliverWebhook, webhookDeliveryCapability, type WebhookDeliveryResult } from "./webhook-delivery";
+import { webhookRetryDelay } from "./webhook-retry";
 import { normalizeWebhookVariants, redactHeaders, renderWebhookText, webhookPreviewUser, type WebhookVariant } from "./webhook-model";
 import { normalizePreferenceCenterConfig, preferenceCenterDefaultConfig, type PreferenceCenterConfig } from "./preference-center-model";
 import { CatalogValidationError, catalogFields, selectionMatches, selectCatalogRows, validateCatalogItem, validateCatalogName, validateFields, validateSelection, type CatalogField, type CatalogFilter, type CatalogSelectionInput } from "./catalog-model";
 
 export type Channel = "email" | "push" | "iam" | "content" | "banner" | "sms" | "webhook" | "whatsapp" | "line" | "multichannel" | "operator" | "feature" | "api";
-export type CampaignStatus = "Draft" | "Active" | "Stopped" | "Archived";
+export type CampaignStatus = "Draft" | "Active" | "Stopped" | "Archived" | "Idle";
 export type CampaignRecord = {
   id: string; name: string; channel: Channel; status: CampaignStatus; schedule: string; sent: number;
   edited: string; subject?: string; body?: string; audience?: string; conversion?: string; config: Record<string, unknown>;
@@ -42,11 +51,11 @@ export type CatalogSelectionRecord = {
 export type RecommendationRecord = ResourceRecord & {
   data: { catalogId?: string; selectionName?: string; recommendationType?: string; trackingType?: string; propertyName?: string };
 };
-export type SubscriptionChannel = "Email" | "SMS" | "WhatsApp";
+export type SubscriptionChannel = "Email" | "SMS" | "WhatsApp" | "LINE";
 export type SubscriptionState = "subscribed" | "unsubscribed";
 export type SubscriptionGroupRecord = {
   id: string; name: string; description: string; channel: SubscriptionChannel; status: "Active" | "Archived";
-  createdAt: string; updatedAt: string; subscriberCount: number;
+  createdAt: string; updatedAt: string; subscriberCount: number; capabilities?: {sms:boolean;mms:boolean;rcs:boolean};
 };
 export type SubscriptionMemberRecord = UserRecord & { state: SubscriptionState; updatedAt: string };
 export type PreferenceCenterRecord = {
@@ -60,6 +69,14 @@ const databasePath = process.env.BRAZE_DATABASE_PATH ?? (process.env.VERCEL ? jo
 let database: DatabaseSync | undefined;
 
 function now() { return new Date().toISOString(); }
+export function messagePublicOrigin(){const host=process.env.VERCEL_PROJECT_PRODUCTION_URL??process.env.VERCEL_URL;return (process.env.BRAZE_PUBLIC_URL??(host?`https://${host}`:"http://localhost:3100")).replace(/\/$/,"");}
+export function shortenMessageLink(url:string,campaignId:string,userId:string){
+  if(!/^https?:\/\//i.test(url))throw new Error("Only HTTP and HTTPS links can be shortened.");
+  const existing=listResources("message-links").find(r=>r.data.campaignId===campaignId&&r.data.userId===userId&&r.data.url===url);
+  const record=existing??createResource({type:"message-links",name:"Message link",status:"Active",data:{campaignId,userId,url}});
+  return `${messagePublicOrigin()}/api/message-links/${record.id}`;
+}
+export function followMessageLink(id:string){const resource=getResource(id);if(!resource||resource.type!=="message-links"||resource.status!=="Active")return null;const url=String(resource.data.url);if(!/^https?:\/\//i.test(url))return null;const campaign=getCampaign(String(resource.data.campaignId));if(campaign)db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"),campaign.id,campaign.channel,String(resource.data.userId),"clicked",now(),JSON.stringify({linkId:id,url}));return url;}
 function uid(prefix: string) { return `${prefix}_${crypto.randomUUID().replaceAll("-", "").slice(0, 16)}`; }
 function parseJson<T>(value: string | null | undefined, fallback: T): T { try { return value ? JSON.parse(value) as T : fallback; } catch { return fallback; } }
 
@@ -67,6 +84,12 @@ function db() {
   if (database) return database;
   mkdirSync(dirname(databasePath), { recursive: true });
   database = new DatabaseSync(databasePath);
+  database.function("campaign_random_bucket",{deterministic:true},value=>Math.floor(stableBucket(String(value))*100));
+  database.function("campaign_flag_enabled",{deterministic:true},(flag,id,country,lifecycle,attributes)=>Number(evaluateFlag(parseJson(String(flag),{}),{id:String(id),country:String(country),lifecycle:String(lifecycle),attributes:parseJson(String(attributes),{})}).enabled));
+  database.function("campaign_median",{deterministic:true},value=>{
+    const numbers=parseJson<unknown[]>(String(value),[]).filter((item):item is number=>typeof item==="number"&&Number.isFinite(item)&&item>=0).sort((a,b)=>a-b);
+    if(!numbers.length)return null;const middle=Math.floor(numbers.length/2);return numbers.length%2?numbers[middle]:(numbers[middle-1]+numbers[middle])/2;
+  });
   database.exec(`
     PRAGMA journal_mode = WAL;
     CREATE TABLE IF NOT EXISTS campaigns (
@@ -286,49 +309,43 @@ function seedSubscriptionGroups(conn: DatabaseSync) {
   );
 }
 
+function stableCampaignIdentifier(id:string){const hex=createHash("sha256").update(`braze-local-campaign:${id}`).digest("hex");return `${hex.slice(0,8)}-${hex.slice(8,12)}-5${hex.slice(13,16)}-${((parseInt(hex[16],16)&3)|8).toString(16)}${hex.slice(17,20)}-${hex.slice(20,32)}`;}
 function mapCampaign(row: Record<string, unknown>): CampaignRecord {
-  return { id: String(row.id), name: String(row.name), channel: row.channel as Channel, status: row.status as CampaignStatus, schedule: String(row.schedule), sent: Number(row.sent), edited: String(row.edited_at), subject: row.subject ? String(row.subject) : undefined, body: row.body ? String(row.body) : undefined, audience: row.audience ? String(row.audience) : undefined, conversion: row.conversion_event ? String(row.conversion_event) : undefined, config: parseJson(String(row.config_json ?? "{}"), {}) };
+  const config=parseJson<Record<string,unknown>>(String(row.config_json??"{}"),{}),first=db().prepare("SELECT min(created_at) AS created FROM audit_log WHERE entity_type='campaign' AND entity_id=? AND action='created'").get(String(row.id)) as {created:string|null};
+  return { id: String(row.id), name: String(row.name), channel: row.channel as Channel, status: row.status as CampaignStatus, schedule: String(row.schedule), sent: Number(row.sent), edited: String(row.edited_at), subject: row.subject ? String(row.subject) : undefined, body: row.body ? String(row.body) : undefined, audience: row.audience ? String(row.audience) : undefined, conversion: row.conversion_event ? String(row.conversion_event) : undefined, config:{...config,apiIdentifier:config.apiIdentifier??stableCampaignIdentifier(String(row.id)),createdAt:config.createdAt??first.created??String(row.edited_at),createdBy:config.createdBy??"Local user",lastEditedBy:config.lastEditedBy??"Local user",workspaceId:config.workspaceId??"local"} };
 }
 
-export function listCampaigns(input: { q?: string; status?: string; limit?: number; offset?: number; sort?: string } = {}) {
-  const conn = db();
-  const clauses = ["archived_at IS NULL"];
-  const values: (string | number)[] = [];
-  if (input.q) { clauses.push("lower(name) LIKE lower(?)"); values.push(`%${input.q}%`); }
-  if (input.status && input.status !== "All") { clauses.push("status = ?"); values.push(input.status); }
-  const order = input.sort === "name" ? "name COLLATE NOCASE ASC" : "edited_at DESC";
-  const count = conn.prepare(`SELECT count(*) AS count FROM campaigns WHERE ${clauses.join(" AND ")}`).get(...values) as { count: number };
-  const limit = Math.min(Math.max(input.limit ?? 12, 1), 1000);
-  const offset = Math.max(input.offset ?? 0, 0);
-  const rows = conn.prepare(`SELECT * FROM campaigns WHERE ${clauses.join(" AND ")} ORDER BY ${order} LIMIT ? OFFSET ?`).all(...values, limit, offset) as Record<string, unknown>[];
-  return { data: rows.map(mapCampaign), total: count.count, limit, offset };
+export function listCampaigns(input: { q?: string; status?: string; limit?: number; offset?: number; sort?: string; includeArchived?:boolean; workspaceId?:string } = {}) {
+  const conn=db(),clauses:string[]=["COALESCE(json_extract(config_json,'$.workspaceId'),'local') = ?"],values:(string|number)[]=[input.workspaceId??"local"];
+  if(input.status==="Archived")clauses.push("(archived_at IS NOT NULL OR status='Archived')");else if(!input.includeArchived)clauses.push("archived_at IS NULL AND status != 'Archived'");
+  if(input.q){clauses.push("lower(name) LIKE lower(?)");values.push(`%${input.q}%`);}
+  if(input.status&&!["All","Archived"].includes(input.status)){clauses.push("status = ?");values.push(input.status);}
+  const order=input.sort==="name"?"name COLLATE NOCASE ASC":"edited_at DESC",where=clauses.join(" AND ");
+  const count=conn.prepare(`SELECT count(*) AS count FROM campaigns WHERE ${where}`).get(...values) as {count:number};
+  const limit=Math.min(Math.max(input.limit??12,1),1000),offset=Math.max(input.offset??0,0);
+  const rows=conn.prepare(`SELECT * FROM campaigns WHERE ${where} ORDER BY ${order} LIMIT ? OFFSET ?`).all(...values,limit,offset) as Record<string,unknown>[];
+  return {data:rows.map(mapCampaign),total:count.count,limit,offset};
 }
-
-export function getCampaign(id: string) {
-  const row = db().prepare("SELECT * FROM campaigns WHERE id = ? AND archived_at IS NULL").get(id) as Record<string, unknown> | undefined;
-  return row ? mapCampaign(row) : null;
+export function getCampaign(id:string){const row=db().prepare("SELECT * FROM campaigns WHERE id=?").get(id) as Record<string,unknown>|undefined;return row?mapCampaign(row):null;}
+function campaignAuditSnapshot(campaign:CampaignRecord|null){
+ if(!campaign)return null;
+ const redact=(value:unknown,key=""):unknown=>{if(/authorization|password|api.?key|secret|bearer|token|base64|content$/i.test(key))return "[redacted]";if(Array.isArray(value))return value.map(v=>redact(v));if(value&&typeof value==="object"&&"key" in value&&/authorization|password|api.?key|secret|bearer|token/i.test(String((value as Record<string,unknown>).key)))return{...(value as object),value:"[redacted]"};if(value&&typeof value==="object")return Object.fromEntries(Object.entries(value).map(([k,v])=>[k,redact(v,k)]));return typeof value==="string"&&value.length>2000?`${value.slice(0,2000)}…`:value;};
+ return redact({name:campaign.name,channel:campaign.channel,status:campaign.status,schedule:campaign.schedule,audience:campaign.audience,subject:campaign.subject,body:campaign.body,conversion:campaign.conversion,config:campaign.config});
 }
-
-export function upsertCampaign(input: Partial<CampaignRecord> & Pick<CampaignRecord, "id" | "name" | "channel">) {
-  const conn = db();
-  const current = getCampaign(input.id);
-  const record: CampaignRecord = { id: input.id, name: input.name, channel: input.channel, status: input.status ?? current?.status ?? "Draft", schedule: input.schedule ?? current?.schedule ?? "One time", sent: input.sent ?? current?.sent ?? 0, edited: now(), subject: input.subject ?? current?.subject, body: input.body ?? current?.body, audience: input.audience ?? current?.audience ?? "All Users", conversion: input.conversion ?? current?.conversion ?? "Make Purchase", config: input.config ?? current?.config ?? {} };
-  if (record.channel === "email") {
-    const preferences = getEmailPreferences().data;
-    if (!current) record.config = { ...emailPreferenceCampaignDefaults(preferences), ...record.config };
-    const issues = emailSendingIssues(record, preferences); if (issues.length) throw new Error(issues.join(" "));
-  }
-  record.config = { ...record.config, tags: assignTags(conn, record.config.tags, "campaign") };
-  conn.prepare(`INSERT INTO campaigns (id,name,channel,status,schedule,sent,edited_at,subject,body,audience,conversion_event,config_json)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ON CONFLICT(id) DO UPDATE SET name=excluded.name, channel=excluded.channel, status=excluded.status, schedule=excluded.schedule, sent=excluded.sent, edited_at=excluded.edited_at, subject=excluded.subject, body=excluded.body, audience=excluded.audience, conversion_event=excluded.conversion_event, config_json=excluded.config_json`).run(record.id, record.name, record.channel, record.status, record.schedule, record.sent, record.edited, record.subject ?? null, record.body ?? null, record.audience ?? null, record.conversion ?? null, JSON.stringify(record.config));
-  if (record.channel === "email") syncEmailLinkAliases(record);
-  audit("campaign", record.id, current ? "updated" : "created", { channel: record.channel });
-  return record;
+export function upsertCampaign(input:Partial<CampaignRecord>&Pick<CampaignRecord,"id"|"name"|"channel">){
+ const conn=db(),current=getCampaign(input.id);
+ if(current?.status==="Archived"&&input.status!==undefined&&input.status!=="Archived")throw new Error("Archived Campaigns cannot be restored by saving an editor snapshot. Copy to a new Draft instead.");
+ if(input.status!==undefined&&!["Draft","Active","Stopped","Archived","Idle"].includes(input.status))throw new Error("Choose a valid Campaign status.");
+ if(current&&(current.status==="Active"||Boolean(conn.prepare("SELECT id FROM execution_runs WHERE campaign_id=? LIMIT 1").get(current.id)))&&(input.conversion!==undefined&&input.conversion!==current.conversion||input.config!==undefined&&Object.hasOwn(input.config,"conversionEvents")&&JSON.stringify(input.config.conversionEvents??[])!==JSON.stringify(current.config.conversionEvents??[])))throw new Error("Conversion events cannot be changed after a Campaign has launched.");
+ const timestamp=now(),record:CampaignRecord={id:input.id,name:input.name,channel:input.channel,status:input.status??current?.status??"Draft",schedule:input.schedule??current?.schedule??"One time",sent:input.sent??current?.sent??0,edited:timestamp,subject:input.subject??current?.subject,body:input.body??current?.body,audience:input.audience??current?.audience??"All Users",conversion:input.conversion??current?.conversion??"Start Session",config:{...current?.config,...input.config,apiIdentifier:current?.config.apiIdentifier??(typeof input.config?.apiIdentifier==="string"&&/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(input.config.apiIdentifier)?input.config.apiIdentifier:crypto.randomUUID()),createdAt:current?.config.createdAt??timestamp,createdBy:current?.config.createdBy??"Local user",lastEditedBy:"Local user",workspaceId:current?.config.workspaceId??input.config?.workspaceId??"local"}};
+ if(record.channel==="email"){const preferences=getEmailPreferences().data;if(!current)record.config={...emailPreferenceCampaignDefaults(preferences),...record.config};const issues=emailVariantSendingIssues(record,preferences);if(issues.length)throw new Error(issues.join(" "));}
+ record.config={...record.config,tags:assignTags(conn,record.config.tags,"campaign")};
+ conn.prepare(`INSERT INTO campaigns (id,name,channel,status,schedule,sent,edited_at,subject,body,audience,conversion_event,config_json,archived_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,channel=excluded.channel,status=excluded.status,schedule=excluded.schedule,sent=excluded.sent,edited_at=excluded.edited_at,subject=excluded.subject,body=excluded.body,audience=excluded.audience,conversion_event=excluded.conversion_event,config_json=excluded.config_json,archived_at=CASE WHEN excluded.status='Archived' THEN COALESCE(campaigns.archived_at,excluded.archived_at) ELSE campaigns.archived_at END`).run(record.id,record.name,record.channel,record.status,record.schedule,record.sent,record.edited,record.subject??null,record.body??null,record.audience??null,record.conversion??null,JSON.stringify(record.config),record.status==="Archived"?timestamp:null);
+ if(record.channel==="email")syncEmailLinkAliases(record);
+ audit("campaign",record.id,current?"updated":"created",{channel:record.channel,user:"Local user",category:"Campaign settings",before:campaignAuditSnapshot(current),after:campaignAuditSnapshot(record)});return record;
 }
-
-export function archiveCampaign(id: string) { db().prepare("UPDATE campaigns SET archived_at = ?, status = 'Archived', edited_at = ? WHERE id = ?").run(now(), now(), id); audit("campaign", id, "archived", {}); }
-export function stopCampaign(id: string) { db().prepare("UPDATE campaigns SET status = 'Stopped', edited_at = ? WHERE id = ?").run(now(), id); audit("campaign", id, "stopped", {}); return getCampaign(id); }
+export function archiveCampaign(id:string){const current=getCampaign(id);if(!current)throw new Error("Campaign not found.");const timestamp=now();db().prepare("UPDATE campaigns SET archived_at=?,status='Archived',edited_at=? WHERE id=?").run(timestamp,timestamp,id);audit("campaign",id,"archived",{user:"Local user",category:"Status",before:{status:current.status},after:{status:"Archived"}});return getCampaign(id);}
+export function stopCampaign(id:string){const current=getCampaign(id);if(!current)throw new Error("Campaign not found.");if(current.status==="Archived")throw new Error("Archived Campaigns cannot be stopped.");db().prepare("UPDATE campaigns SET status='Stopped',edited_at=? WHERE id=?").run(now(),id);audit("campaign",id,"stopped",{user:"Local user",category:"Status",before:{status:current.status},after:{status:"Stopped"}});return getCampaign(id);}
 
 function audienceCondition(audience: string) {
   const segment = sampleSegmentByName(audience);
@@ -373,7 +390,7 @@ export function savedSegmentFilters(name?: string | null): AudienceFilter[] {
 function subscriptionGroupForChannel(groupId: string | undefined, channel: Channel) {
   if (!groupId) return null;
   const group = getSubscriptionGroup(groupId);
-  const expected = channel === "email" ? "Email" : channel === "sms" ? "SMS" : channel === "whatsapp" ? "WhatsApp" : null;
+  const expected = channel === "email" ? "Email" : channel === "sms" ? "SMS" : channel === "whatsapp" ? "WhatsApp" : channel === "line" ? "LINE" : null;
   if (!group || group.status !== "Active" || group.channel !== expected) throw new Error("Select an active subscription group for this channel.");
   return group;
 }
@@ -383,7 +400,7 @@ function subscriptionCondition(channel: Channel, eligibility: string, groupId?: 
     const status = eligibility === "opted-in" ? "u.email_subscription_status = 'opted_in'" : "u.email_subscription_status != 'unsubscribed'";
     return `${status}${groupId ? " AND m.state = 'subscribed'" : ""}`;
   }
-  if (channel === "sms" || channel === "whatsapp") return groupId ? "m.state = 'subscribed'" : "0 = 1";
+  if (channel === "sms" || channel === "whatsapp" || channel === "line") return groupId ? "m.state = 'subscribed'" : "0 = 1";
   return "1 = 1";
 }
 
@@ -498,6 +515,155 @@ export function estimateAudience(audience = "All Users", country?: string, exclu
   return { matching: result.matching, reachable: (result.reachable ?? 0) - excluded, total: workspace.total, globalControlExcluded: excluded };
 }
 
+function configuredAudienceRuleSQL(rule:{field:string;operator:string;value:string},values:(string|number)[]){
+ const columns:Record<string,string>={id:"u.id",country:"u.country",lifecycle:"u.lifecycle",email:"u.email",first_name:"u.first_name",subscribed:"u.subscribed",reachable:"u.reachable",emailSubscriptionStatus:"u.email_subscription_status",created_at:"COALESCE(json_extract(u.attributes_json,'$.created_at'),(SELECT min(a.created_at) FROM audit_log a WHERE a.entity_type='user' AND a.entity_id=u.id AND a.action IN ('created','imported')))"};
+ let expression=columns[rule.field];
+ if(rule.field==="random_bucket")expression="campaign_random_bucket(u.id)";
+ if(rule.field==="created_from")expression="COALESCE(json_extract(u.attributes_json,'$.created_from'),CASE (SELECT action FROM audit_log a WHERE a.entity_type='user' AND a.entity_id=u.id AND a.action IN ('created','imported') ORDER BY a.created_at LIMIT 1) WHEN 'imported' THEN 'Import' WHEN 'created' THEN 'API' END)";
+ if(rule.field==="pending_deletion")expression="COALESCE(json_extract(u.attributes_json,'$.pending_deletion'),0)";
+ if(rule.field==="first_session_at"||rule.field==="last_session_at")expression=`(SELECT ${rule.field==="first_session_at"?"min":"max"}(COALESCE(json_extract(e.data_json,'$.createdAt'),e.updated_at)) FROM resources e WHERE e.type='user-events' AND json_extract(e.data_json,'$.userId')=u.id AND e.name IN ('session_start','Start Session'))`;
+ if(rule.field==="median_session_duration_seconds")expression="(SELECT campaign_median(json_group_array(COALESCE(json_extract(e.data_json,'$.properties.session_duration_seconds'),json_extract(e.data_json,'$.properties.duration_seconds'),json_extract(e.data_json,'$.properties.duration_ms')/1000.0))) FROM resources e WHERE e.type='user-events' AND json_extract(e.data_json,'$.userId')=u.id AND e.name IN ('session_start','Start Session'))";
+
+ if(rule.field==="age")expression="CAST(strftime('%Y','now')-strftime('%Y',json_extract(u.attributes_json,'$.dob'))-(strftime('%m-%d','now')<strftime('%m-%d',json_extract(u.attributes_json,'$.dob'))) AS INTEGER)";
+ if(rule.field==="phone_unformatted")expression="replace(replace(replace(replace(replace(replace(COALESCE(json_extract(u.attributes_json,'$.phone'),json_extract(u.attributes_json,'$.phone_number')),'+',''),' ',''),'-',''),'(',''),')',''),'.','')";
+ if(rule.field==="email_available")expression="CASE WHEN instr(u.email,'@')>1 AND instr(substr(u.email,instr(u.email,'@')+1),'.')>1 THEN 1 ELSE 0 END";
+ if(rule.field==="location_available")expression="CASE WHEN json_type(u.attributes_json,'$.location')='object' OR (json_extract(u.attributes_json,'$.latitude') IS NOT NULL AND json_extract(u.attributes_json,'$.longitude') IS NOT NULL) THEN 1 ELSE 0 END";
+ if(["ecommerce_order_count","ecommerce_revenue","ecommerce_refund_total"].includes(rule.field))expression=`(SELECT ${rule.field==="ecommerce_order_count"?"count(*)":"COALESCE(sum(COALESCE(json_extract(e.data_json,'$.properties.total_price'),json_extract(e.data_json,'$.properties.total'),json_extract(e.data_json,'$.properties.revenue'),json_extract(e.data_json,'$.price')*COALESCE(json_extract(e.data_json,'$.quantity'),1),0)),0)"} FROM resources e WHERE e.type='user-events' AND json_extract(e.data_json,'$.userId')=u.id AND e.name='${rule.field==="ecommerce_refund_total"?"ecommerce.order_refunded":"ecommerce.order_placed"}')`;
+ if(rule.field.startsWith("subscription_group:")){const id=rule.field.slice(19);if(!getSubscriptionGroup(id))throw new Error("Choose an available subscription group.");expression="(SELECT m.state FROM subscription_group_memberships m WHERE m.user_id=u.id AND m.group_id=?)";values.push(id);}
+ if(["last_received_message_at","last_engaged_message_at","last_control_at"].includes(rule.field))expression=`(SELECT max(e.created_at) FROM message_events e WHERE e.user_id=u.id AND e.event_type IN (${rule.field==="last_received_message_at"?"'delivered'":rule.field==="last_control_at"?"'control','global_control'":"'clicked','opened'"}) AND COALESCE(json_extract(e.data_json,'$.test'),json_extract(e.data_json,'$.attributes.test'),0)!=1 AND COALESCE(json_extract(e.data_json,'$.simulated'),json_extract(e.data_json,'$.attributes.simulated'),0)!=1)`;
+ if(rule.field.startsWith("receipt_channel_last:")){const channel=rule.field.slice(21);if(!["email","push","iam","sms","webhook","whatsapp"].includes(channel))throw new Error("Choose a supported receipt channel.");expression="(SELECT max(e.created_at) FROM message_events e WHERE e.user_id=u.id AND e.channel=? AND e.event_type='delivered' AND COALESCE(json_extract(e.data_json,'$.test'),json_extract(e.data_json,'$.attributes.test'),0)!=1 AND COALESCE(json_extract(e.data_json,'$.simulated'),json_extract(e.data_json,'$.attributes.simulated'),0)!=1)";values.push(channel);}
+ if(["receipt_count:","receipt_last:"].some(prefix=>rule.field.startsWith(prefix))){const [kind,event,...idParts]=rule.field.split(":"),id=idParts.join(":");if(!["delivered","conversion","control","engaged"].includes(event)||!getCampaign(id))throw new Error("Choose an available Campaign and receipt.");expression=`(SELECT ${kind==="receipt_last"?"max(e.created_at)":"count(*)"} FROM message_events e WHERE e.user_id=u.id AND e.campaign_id=? AND ${event==="engaged"?"e.event_type IN ('opened','clicked')":"e.event_type=?"} AND COALESCE(json_extract(e.data_json,'$.test'),json_extract(e.data_json,'$.attributes.test'),0)!=1 AND COALESCE(json_extract(e.data_json,'$.simulated'),json_extract(e.data_json,'$.attributes.simulated'),0)!=1)`;values.push(id);if(event!=="engaged")values.push(event);}
+ if(rule.field.startsWith("receipt_variant:")){const [,id,...variantParts]=rule.field.split(":"),variant=variantParts.join(":");if(!getCampaign(id)||!variant)throw new Error("Choose an available Campaign variant.");expression="(SELECT count(*) FROM message_events e WHERE e.user_id=u.id AND e.campaign_id=? AND e.event_type='delivered' AND COALESCE(json_extract(e.data_json,'$.variantId'),json_extract(e.data_json,'$.attributes.variantId'))=? AND COALESCE(json_extract(e.data_json,'$.test'),json_extract(e.data_json,'$.attributes.test'),0)!=1 AND COALESCE(json_extract(e.data_json,'$.simulated'),json_extract(e.data_json,'$.attributes.simulated'),0)!=1)";values.push(id,variant);}
+ if(rule.field==="never_received_message")expression="CASE WHEN EXISTS (SELECT 1 FROM message_events e WHERE e.user_id=u.id AND e.event_type='delivered' AND COALESCE(json_extract(e.data_json,'$.test'),json_extract(e.data_json,'$.attributes.test'),0)!=1 AND COALESCE(json_extract(e.data_json,'$.simulated'),json_extract(e.data_json,'$.attributes.simulated'),0)!=1) THEN 0 ELSE 1 END";
+ if(rule.field.startsWith("receipt_alias:")){expression="(SELECT count(*) FROM message_events e WHERE e.user_id=u.id AND e.event_type='clicked' AND COALESCE(json_extract(e.data_json,'$.alias'),json_extract(e.data_json,'$.attributes.alias'))=? AND COALESCE(json_extract(e.data_json,'$.test'),json_extract(e.data_json,'$.attributes.test'),0)!=1 AND COALESCE(json_extract(e.data_json,'$.simulated'),json_extract(e.data_json,'$.attributes.simulated'),0)!=1)";values.push(rule.field.slice(14));}
+ if(rule.field.startsWith("feature_enabled:")){const flagId=rule.field.slice(16),flag=listResources("feature-flags").find(flag=>flag.data.flagId===flagId&&flag.status!=="Archived");if(!flag)throw new Error("Choose an available feature flag.");expression="COALESCE((SELECT json_extract(e.data_json,'$.enabled') FROM resources e JOIN campaigns c ON c.id=json_extract(e.data_json,'$.campaignId') WHERE e.type='feature-assignments' AND e.status='Active' AND c.status='Active' AND c.archived_at IS NULL AND json_extract(e.data_json,'$.userId')=u.id AND json_extract(e.data_json,'$.flagId')=? ORDER BY e.updated_at DESC LIMIT 1),campaign_flag_enabled(?,u.id,u.country,u.lifecycle,u.attributes_json))";values.push(flagId,JSON.stringify(flag.data));}
+ if(rule.field.startsWith("session_app_count:")||rule.field.startsWith("session_app_first:")||rule.field.startsWith("session_app_last:")){const [kind,...parts]=rule.field.split(":"),id=parts.join(":");if(!getResource(id)||getResource(id)?.type!=="app-settings")throw new Error("Choose an available app.");expression=`(SELECT ${kind==="session_app_count"?"count(*)":kind==="session_app_first"?"min(COALESCE(json_extract(e.data_json,'$.createdAt'),e.updated_at))":"max(COALESCE(json_extract(e.data_json,'$.createdAt'),e.updated_at))"} FROM resources e WHERE e.type='user-events' AND json_extract(e.data_json,'$.userId')=u.id AND e.name IN ('session_start','Start Session') AND COALESCE(json_extract(e.data_json,'$.properties.appId'),json_extract(e.data_json,'$.properties.app_id'))=?)`;values.push(id);}
+ if(rule.field.startsWith("session_recent:")){const days=Number(rule.field.slice(15));if(!Number.isInteger(days)||days<1||days>30)throw new Error("Choose between 1 and 30 days for session history.");expression="(SELECT count(*) FROM resources e WHERE e.type='user-events' AND json_extract(e.data_json,'$.userId')=u.id AND e.name IN ('session_start','Start Session') AND julianday(COALESCE(json_extract(e.data_json,'$.createdAt'),e.updated_at)) BETWEEN julianday('now',?) AND julianday('now'))";values.push(`-${days} days`);}
+
+ if(rule.field==="session_count")expression="(SELECT count(*) FROM resources e WHERE e.type='user-events' AND json_extract(e.data_json,'$.userId')=u.id AND e.name IN ('session_start','Start Session'))";
+ else if(rule.field.startsWith("event_count:")&&rule.field.slice(12)){expression="(SELECT count(*) FROM resources e WHERE e.type='user-events' AND json_extract(e.data_json,'$.userId')=u.id AND e.name=?)";values.push(rule.field.slice(12));}
+ else if(["purchase_count","purchase_total"].includes(rule.field))expression=`(SELECT ${rule.field==="purchase_count"?"count(*)":"COALESCE(sum(COALESCE(json_extract(e.data_json,'$.price'),0)*COALESCE(json_extract(e.data_json,'$.quantity'),1)),0)"} FROM resources e WHERE e.type='user-events' AND json_extract(e.data_json,'$.userId')=u.id AND (json_extract(e.data_json,'$.productId') IS NOT NULL OR e.name='purchase'))`;
+ else if(rule.field.startsWith("campaign_interaction:")){const kind=rule.field.slice(21);if(!["opened","clicked","delivered","conversion","control"].includes(kind))throw new Error("Choose a supported Campaign interaction.");expression="(SELECT count(*) FROM message_events e WHERE e.user_id=u.id AND e.event_type=? AND COALESCE(json_extract(e.data_json,'$.test'),json_extract(e.data_json,'$.attributes.test'),0)!=1 AND COALESCE(json_extract(e.data_json,'$.simulated'),json_extract(e.data_json,'$.attributes.simulated'),0)!=1)";values.push(kind);}
+ else if(rule.field.startsWith("segment:")){const name=rule.field.slice(8);if(!sampleSegmentByName(name)&&!listResources("segments").some(r=>r.name===name))throw new Error(`Unknown audience segment: ${name}.`);const base=audienceCondition(name),extra=audienceFilterClauses(savedSegmentFilters(name));expression=`CASE WHEN ${[base.sql,...extra.clauses].join(" AND ")} THEN 1 ELSE 0 END`;values.push(...base.values,...extra.values);}
+ if(!expression){if(!rule.field.startsWith("attr:")||!rule.field.slice(5))throw new Error("Choose a supported audience filter field.");expression="json_extract(u.attributes_json, ?)";values.push(`$.${JSON.stringify(rule.field.slice(5))}`);}
+ if(rule.operator==="exists"||rule.operator==="not_exists")return `${rule.operator==="not_exists"?"NOT ":""}(COALESCE(${expression},'')!='')`;
+ if(rule.operator==="greater_than"||rule.operator==="less_than"){
+  if(campaignAudienceFieldKind(rule.field)==="date"){if(!Number.isFinite(new Date(rule.value).getTime()))throw new Error("Enter a valid date for the created-at filter.");values.push(rule.value);return `julianday(${expression}) ${rule.operator==="greater_than"?">":"<"} julianday(?)`;}
+  const n=Number(rule.value);if(!Number.isFinite(n))throw new Error("Enter a numeric audience filter value.");values.push(n);return `CAST(${expression} AS REAL) ${rule.operator==="greater_than"?">":"<"} ?`;
+ }
+ if(["equals","not_equals"].includes(rule.operator)&&campaignAudienceFieldKind(rule.field)==="date"){if(!Number.isFinite(Date.parse(rule.value)))throw new Error("Enter a valid date for the audience filter.");values.push(rule.value);return `date(${expression}) ${rule.operator==="not_equals"?"!=":"="} date(?)`;}
+ if(["equals","not_equals"].includes(rule.operator)&&campaignAudienceFieldKind(rule.field)==="number"){const number=Number(rule.value);if(!rule.value.trim()||!Number.isFinite(number))throw new Error("Enter a numeric audience filter value.");values.push(number);return `${expression} ${rule.operator==="not_equals"?"!=":"="} ?`;}
+ const boolean=campaignAudienceFieldKind(rule.field)==="boolean";if(boolean&&["equals","not_equals"].includes(rule.operator)){values.push(["true","1"].includes(rule.value.toLowerCase())?1:0);return `CASE lower(CAST(${expression} AS TEXT)) WHEN 'true' THEN 1 WHEN '1' THEN 1 WHEN '1.0' THEN 1 WHEN 'false' THEN 0 WHEN '0' THEN 0 WHEN '0.0' THEN 0 END ${rule.operator==="not_equals"?"!=":"="} ?`;}
+ const value=rule.value;values.push(value);
+ if(rule.operator==="contains"||rule.operator==="not_contains")return `instr(lower(COALESCE(${expression},'')),lower(?)) ${rule.operator==="contains"?">":"="} 0`;
+ return `lower(CAST(COALESCE(${expression},'') AS TEXT)) ${rule.operator==="not_equals"?"!=":"="} lower(?)`;
+}
+function configuredAudienceSQL(campaign: MessageDraft) {
+  const config=campaign.config??{},issues=campaignAudienceIssues(campaign);if(issues.length)throw new Error(issues.join(" "));
+  const clauses:string[]=[],values:(string|number)[]=[];
+  const names=Array.isArray(config.audienceSegments)?config.audienceSegments as string[]:[campaign.audience??"All Users"];
+  const segments=names.filter(name=>name!=="All Users").map(name=>{
+    if(!sampleSegmentByName(name)&&!listResources("segments").some(row=>row.name===name))throw new Error(`Unknown audience segment: ${name}.`);
+    const base=audienceCondition(name),extra=audienceFilterClauses(savedSegmentFilters(name));values.push(...base.values,...extra.values);return `(${[base.sql,...extra.clauses].join(" AND ")})`;
+  });
+  if(segments.length)clauses.push(`(${segments.join(config.audienceSegmentOperator==="OR"?" OR ":" AND ")})`);
+  for(const group of (config.audienceGroups??[]) as AudienceGroup[]){
+    const rules=group.rules.map(rule=>configuredAudienceRuleSQL(rule,values));
+    clauses.push(`${group.exclude?"NOT ":""}(${rules.join(group.operator==="OR"?" OR ":" AND ")})`);
+  }
+  if(!Array.isArray(config.audienceGroups)){if(config.audienceCountry){clauses.push("u.country = ?");values.push(String(config.audienceCountry));}if(config.audienceExcludeCountry){clauses.push("u.country != ?");values.push(String(config.audienceExcludeCountry));}}
+  return {sql:clauses.length?clauses.join(" AND "):"1 = 1",values};
+}
+export function estimateConfiguredAudience(campaign: MessageDraft,lookup?:string){
+  const query=configuredAudienceSQL(campaign),channel=campaign.channel as Channel,groupId=String(campaign.config?.subscriptionGroupId??"");subscriptionGroupForChannel(groupId,channel);
+  const membership=groupId?"LEFT JOIN subscription_group_memberships m ON m.user_id=u.id AND m.group_id=?":"",parameters=groupId?[groupId,...query.values]:query.values;
+  const rows=db().prepare(`SELECT u.*,${groupId?"m.state":"NULL"} AS subscription_state FROM users u ${membership} WHERE ${query.sql}`).all(...parameters) as Record<string,unknown>[];
+  const settings=globalControlSettings(),suppressions=listResources("suppression-lists").map(r=>r.name.toLowerCase().replace(/^@/,""));
+  const reasons=(row:Record<string,unknown>)=>{
+    const result:string[]=[];if(!row.reachable)result.push("No reachable channel");
+    if(channel==="email"&&(row.email_subscription_status==="unsubscribed"||campaign.config?.subscribeEligibility==="opted-in"&&row.email_subscription_status!=="opted_in"))result.push("Email subscription status");
+    if(groupId&&row.subscription_state!=="subscribed"||["sms","whatsapp","line"].includes(channel)&&!groupId)result.push("Not subscribed to the selected subscription group");
+    if(heldByGlobalControl(String(row.id),settings,campaign.config?.tags,channel))result.push("Global Control Group");
+    const email=String(row.email).toLowerCase();if(suppressions.some(s=>email===s||email.endsWith(`@${s}`)))result.push("Suppression list");return result;
+  };
+  const lookupRow=lookup?db().prepare("SELECT * FROM users WHERE id=? OR lower(email)=lower(?) OR json_extract(attributes_json,'$.external_id')=? OR json_extract(attributes_json,'$.external_user_id')=? OR json_extract(attributes_json,'$.braze_id')=? LIMIT 1").get(lookup,lookup,lookup,lookup,lookup) as Record<string,unknown>|undefined:undefined;
+  const user=lookupRow?mapUser(lookupRow):null,match=user?rows.find(r=>r.id===user.id):null;
+  const lookupReasons=user?match?reasons(match):["Does not match the current segments and filters"]:["User not found"];
+  const matchedIds=new Set(rows.map(row=>String(row.id))),purchases=listResources("user-events").filter(event=>matchedIds.has(String(event.data.userId))&&(Boolean(event.data.productId)||event.name==="purchase")),currencies=[...new Set(purchases.map(event=>String(event.data.currency??"USD")))];
+  const ltv=purchases.length&&currencies.length===1?purchases.reduce((sum,event)=>sum+Number(event.data.price??0)*Number(event.data.quantity??1),0):null;
+  return {ltv,ltvCurrency:currencies.length===1?currencies[0]:null,calculatedAt:now(),matching:rows.length,reachable:rows.filter(r=>!reasons(r).length).length,total:(db().prepare("SELECT count(*) AS n FROM users").get() as {n:number}).n,globalControlExcluded:rows.filter(r=>heldByGlobalControl(String(r.id),settings,campaign.config?.tags,channel)).length,...(lookup?{lookup:{exists:Boolean(user),matchesFilters:Boolean(match),eligible:Boolean(match&&!lookupReasons.length),reasons:lookupReasons}}:{})};
+}
+export function calculateCampaignAudienceStatistics(campaign:MessageDraft){
+ const result=estimateConfiguredAudience(campaign),values=objectValue(campaign.config?.channelValues),children=objectValue(campaign.config?.multichannelMessages),channels:Record<string,string>={...multichannelChannels,SMS:"sms"};
+ const targets=["multichannel","operator"].includes(campaign.channel)&&Array.isArray(values.channels)?values.channels.map(label=>channels[String(label)]).filter(Boolean):[campaign.channel];
+ const channelBreakdown=[...new Set(targets)].map(channel=>{const child=objectValue(children[channel]),config=objectValue(child.config),stats=channel===campaign.channel?result:estimateConfiguredAudience({...campaign,channel,config:{...campaign.config,subscriptionGroupId:config.subscriptionGroupId}});return{channel,reachable:stats.reachable,ltv:stats.ltv};});
+ return{...result,channelBreakdown};
+}
+export function campaignFormCapabilities(workspaceId="local"){return{brazeAI:{available:false,reason:"Optimize with BrazeAI™ is not available for this workspace."},attributes:listUserAttributeNames(),apps:listResources("app-settings").filter(app=>app.status!=="Archived").map(({id,name})=>({id,name})),subscriptionGroups:listSubscriptionGroups().filter(group=>group.status!=="Archived").map(({id,name})=>({id,name})),campaigns:listCampaigns({includeArchived:true,limit:1000,workspaceId}).data.map(campaign=>({id:campaign.id,name:campaign.name,channel:campaign.channel,variants:campaignVariants(campaign).map(({id,name})=>({id,name}))})),featureFlags:listResources("feature-flags").filter(flag=>flag.status!=="Archived").map(flag=>({id:String(flag.data.flagId),name:flag.name})),linkAliases:listResources("link-aliases").filter(alias=>alias.status==="Active").map(alias=>({name:alias.name})),filters:{randomBucket:true,createdFrom:true,pendingDeletion:true,sessionDates:true},intelligentTiming:{profileTimes:true,activityFallback:true,deliveryPreview:true}};}
+export function intelligentTimingFallback(campaign:MessageDraft){
+ const delivery=objectValue(campaign.config?.delivery);if(delivery.intelligentFallback==="custom")return{time:String(delivery.intelligentFallbackTime??"10:00"),source:"custom" as const};
+ const hours=new Map<number,number>(),profiles=new Map((db().prepare("SELECT id,attributes_json FROM users").all() as Array<{id:string;attributes_json:string}>).map(row=>[row.id,parseJson<Record<string,unknown>>(row.attributes_json,{})]));
+ for(const event of listResources("user-events").filter(row=>["session_start","Start Session"].includes(row.name))){const at=new Date(String(event.data.createdAt??event.updatedAt)),profile=profiles.get(String(event.data.userId))??{};if(!Number.isFinite(at.getTime()))continue;try{const hour=Number(new Intl.DateTimeFormat("en-US",{timeZone:String(profile.time_zone??profile.timezone??"UTC"),hour:"2-digit",hourCycle:"h23"}).format(at));hours.set(hour,(hours.get(hour)??0)+1);}catch{}}
+ if(hours.size){const hour=[...hours.entries()].sort((a,b)=>b[1]-a[1]||a[0]-b[0])[0][0];return{time:`${String(hour).padStart(2,"0")}:00`,source:"activity" as const};}
+ for(const profile of profiles.values()){const hour=Number(profile.best_send_hour);if(profile.best_send_hour!==undefined&&Number.isFinite(hour)&&hour>=0&&hour<=23)hours.set(Math.floor(hour),(hours.get(Math.floor(hour))??0)+1);}
+ if(hours.size){const hour=[...hours.entries()].sort((a,b)=>b[1]-a[1]||a[0]-b[0])[0][0];return{time:`${String(hour).padStart(2,"0")}:00`,source:"profile" as const};}
+ return{time:String(delivery.sendTime??"10:00"),source:"default" as const};
+}
+function withIntelligentTimingData<T extends MessageDraft>(campaign:T):T{const delivery=objectValue(campaign.config?.delivery);if(delivery.timing!=="intelligent"||delivery.intelligentFallback==="custom")return campaign;return{...campaign,config:{...campaign.config,delivery:{...delivery,intelligentPopularTime:intelligentTimingFallback(campaign).time}}};}
+export function previewCampaignDeliveryTimes(campaign:MessageDraft,channel=campaign.channel,at=new Date()):DeliveryTimePreview{
+ const actual={...campaign,channel},requirements=intelligentTimingRequirements(actual,at),fallback=intelligentTimingFallback(actual),result:DeliveryTimePreview={calculatedAt:now(),channel,timezone:"UTC",matching:0,reachable:0,withOptimalTime:0,usingFallback:0,fallbackTime:fallback.time,fallbackSource:fallback.source,bins:[],requirements};
+ if(requirements.length)return result;
+ const query=configuredAudienceSQL(actual),rows=db().prepare(`SELECT id,attributes_json FROM users u WHERE ${query.sql}`).all(...query.values) as Array<{id:string;attributes_json:string}>;result.matching=rows.length;
+ const bins=new Map<string,number>(),effective=withIntelligentTimingData(actual);
+ for(const row of rows){if(!isCampaignUserEligible(actual,row.id))continue;const profile=parseJson<Record<string,unknown>>(row.attributes_json,{}),hour=Number(profile.best_send_hour),hasOptimal=profile.best_send_hour!==undefined&&profile.best_send_hour!==null&&Number.isFinite(hour)&&hour>=0&&hour<=23;const zone=String(profile.time_zone??profile.timezone??objectValue(effective.config?.delivery).timezone??"UTC"),time=nextAllowedDeliveryTime(nextScheduledTime(effective,at,profile),objectValue(effective.config?.delivery),zone).toISOString().slice(0,13)+":00:00.000Z";bins.set(time,(bins.get(time)??0)+1);result.reachable++;hasOptimal?result.withOptimalTime++:result.usingFallback++;}
+ result.bins=[...bins.entries()].sort(([a],[b])=>a.localeCompare(b)).map(([at,users])=>({at,users}));return result;
+}
+function isCampaignUserEligible(campaign:MessageDraft,userId:string){const query=configuredAudienceSQL(campaign),group=String(campaign.config?.subscriptionGroupId??""),row=db().prepare(`SELECT u.* FROM users u ${group?"LEFT JOIN subscription_group_memberships m ON m.user_id=u.id AND m.group_id=?":""} WHERE (${query.sql}) AND u.id=? AND u.reachable=1 AND ${subscriptionCondition(campaign.channel as Channel,String(campaign.config?.subscribeEligibility??"subscribed"),group)}`).get(...(group?[group]:[]),...query.values,userId) as Record<string,unknown>|undefined;if(!row||heldByGlobalControl(userId,globalControlSettings(),campaign.config?.tags,campaign.channel as Channel))return false;const email=String(row.email).toLowerCase();return !listResources("suppression-lists").some(r=>email===r.name.toLowerCase()||email.endsWith(`@${r.name.toLowerCase().replace(/^@/,"")}`));}
+function materializeSdkMessage(message:MessageDraft,userId:string,payload:unknown,campaignId:string,variantId:string,force=false){
+  const values=objectValue(message.config?.channelValues);if(message.channel==="content"&&values.creationMode!=="launch"&&!force)return null;
+  const id=`sdk_${createHash("sha256").update(`${campaignId}:${message.channel}:${userId}`).digest("hex").slice(0,24)}`,existing=getResource(id);if(existing)return existing;
+  const run=db().prepare("SELECT created_at FROM execution_runs WHERE campaign_id=? ORDER BY created_at ASC LIMIT 1").get(campaignId) as {created_at:string}|undefined;
+  const launchedAt=run?.created_at??now(),expiresAt=message.channel==="content"?new Date(new Date(launchedAt).getTime()+Math.min(30,Math.max(.01,Number(values.expirationDays??30)))*86400000).toISOString():undefined;
+  return createResource({id,type:"sdk-messages",name:message.name??"Message",status:"Available",data:{campaignId,userId,channel:message.channel,payload,variantId,createdAt:now(),expiresAt,pinned:values.pinned===true,priority:values.priority??objectValue(message.config?.delivery).iamPriority??"Medium",order:Number(objectValue(message.config?.delivery).iamOrder??0),placement:values.placement,removalEvent:values.removalEvent,removalEventName:values.removalEventName,removalProperties:values.removalProperties??[]}});
+}
+function enqueueCampaignJob(campaign:CampaignRecord,userId:string,dueAt:string,triggerProperties:Record<string,unknown>={},key=dueAt){
+ const id=`job_${createHash("sha256").update(`${campaign.id}:${userId}:${key}`).digest("hex").slice(0,28)}`;if(getResource(id))return null;
+ return createResource({id,type:"campaign-jobs",name:campaign.name,status:"Pending",data:{campaignId:campaign.id,userId,dueAt,triggerProperties,createdAt:now(),attempts:0}});
+}
+function activateCampaignSchedule(campaign:CampaignRecord):CampaignLaunchResult{
+ const effective=withIntelligentTimingData(campaign),query=configuredAudienceSQL(campaign),users=db().prepare(`SELECT u.id FROM users u WHERE ${query.sql}`).all(...query.values) as {id:string}[];let queued=0;
+ if(campaign.schedule!=="Action-based"&&campaign.schedule!=="API-triggered")for(const {id} of users){if(!isCampaignUserEligible(campaign,id))continue;const user=getUser(id)!;if(enqueueCampaignJob(campaign,id,nextAllowedDeliveryTime(nextScheduledTime(effective,new Date(),user.attributes),objectValue(effective.config?.delivery),String(user.attributes.time_zone??user.attributes.timezone??objectValue(effective.config?.delivery).timezone??"UTC")).toISOString()))queued++;}
+ const id=uid("run"),timestamp=now();db().prepare("INSERT INTO execution_runs VALUES (?, ?, ?, ?, ?, ?, ?, ?)").run(id,campaign.id,"scheduled",users.length,0,0,timestamp,JSON.stringify({queued,schedule:campaign.schedule}));db().prepare("UPDATE campaigns SET status='Active',edited_at=? WHERE id=?").run(timestamp,campaign.id);audit("campaign",campaign.id,"schedule_activated",{queued});return{campaign:getCampaign(campaign.id),run:{id,eligible:users.length,delivered:0,failed:0,queued}};
+}
+export function triggerCampaign(id:string,userIds:string[],properties:Record<string,unknown>={}){const campaign=getCampaign(id);if(!campaign||campaign.status!=="Active"||campaign.schedule!=="API-triggered")throw new Error("Choose an active API-triggered Campaign.");if(!userIds.length||userIds.length>1000)throw new Error("Provide 1–1,000 user IDs.");let queued=0;const requestId=uid("trigger");for(const userId of [...new Set(userIds)])if(getUser(userId)&&isCampaignUserEligible(campaign,userId)&&enqueueCampaignJob(campaign,userId,now(),properties,requestId))queued++;return{queued,requestId};}
+export async function processCampaignJobs(limit=100){
+ const due=listResources("campaign-jobs").filter(r=>r.status==="Pending"&&new Date(String(r.data.dueAt)).getTime()<=Date.now()).slice(0,Math.min(100,Math.max(1,limit))),results:Array<{id:string;status:string;error?:string}>=[];
+ for(const job of due){
+  const claimed=db().prepare("UPDATE resources SET status='Processing',updated_at=? WHERE id=? AND status='Pending'").run(now(),job.id);if(!claimed.changes)continue;
+  try{const campaign=getCampaign(String(job.data.campaignId)),userId=String(job.data.userId),user=getUser(userId);if(!campaign||campaign.status!=="Active"||!user){updateResource(job.id,{status:"Cancelled"});continue;}const d=objectValue(campaign.config.delivery);if(campaign.schedule!=="API-triggered"&&d.endEnabled&&!isWithinCampaignDuration({channel:campaign.channel,config:{delivery:{endEnabled:true,endTime:d.endTime,timezone:d.timezone}}})){updateResource(job.id,{status:"Expired"});continue;}
+   const zone=String(user.attributes.time_zone??user.attributes.timezone??d.timezone??"UTC");
+   if(inQuietHours(new Date(),d,["Company time","User local time"].includes(zone)?"UTC":zone)||workspaceRateLimited(now())){updateResource(job.id,{status:"Pending",data:{...job.data,dueAt:new Date(Date.now()+15*60000).toISOString()}});results.push({id:job.id,status:"Deferred"});continue;}
+   const result=await launchCampaign(campaign.id,campaign.id,{...campaign,status:"Draft",config:{...campaign.config,triggerProperties:job.data.triggerProperties,delivery:{...d,quietHours:false}}},userId);
+   updateResource(job.id,{status:"Completed",data:{...job.data,completedAt:now(),run:result.run}});
+   if(result.run.delivered)db().prepare("UPDATE campaigns SET sent=sent+? WHERE id=?").run(result.run.delivered,campaign.id);
+   if(campaign.schedule==="One time"&&d.frequency&&d.frequency!=="One time")enqueueCampaignJob(campaign,userId,nextAllowedDeliveryTime(nextScheduledTime(withIntelligentTimingData(campaign),new Date(),user.attributes,true),d,zone).toISOString());results.push({id:job.id,status:"Completed"});
+  }catch(e){updateResource(job.id,{status:"Failed",data:{...job.data,error:e instanceof Error?e.message:"Delivery failed.",completedAt:now()}});results.push({id:job.id,status:"Failed",error:e instanceof Error?e.message:"Delivery failed."});}
+ }
+ return{processed:results.length,results,webhookRetries:await processWebhookRetries(limit)};
+}
+export function sdkCampaignMessages(userId:string){
+  const user=getUser(userId);if(!user)return{banners:[],content_cards:[],in_app_messages:[]};const profile={...user.attributes,first_name:user.firstName,email:user.email,user_id:user.id};
+  for(const campaign of runtimeActiveCampaigns().filter(c=>["content","banner","iam"].includes(c.channel))){
+    if(!isCampaignUserEligible(campaign,userId))continue;const control=Number(campaign.config.controlGroup??20),bucket=createHash("sha256").update(`${campaign.config.holdoutSeed??campaign.id}:${userId}`).digest()[0]/256*100;if(bucket<control)continue;
+    const index=pickVariant(campaign,createHash("sha256").update(`${campaign.id}:${userId}:variant`).digest().readUInt32BE(0)/0x100000000),draft=variantDraft(campaign,index),values=objectValue(draft.config.channelValues);
+    if(campaign.channel==="content"&&values.creationMode!=="launch")materializeSdkMessage(draft,userId,compileContentCard(draft,profile),campaign.id,campaignVariants(campaign)[index].id,true);
+  }
+  const priority:Record<string,number>={High:0,Medium:1,Normal:1,Low:2},rows=listResources("sdk-messages").filter(r=>r.data.userId===userId&&r.status==="Available"&&(!r.data.expiresAt||new Date(String(r.data.expiresAt)).getTime()>Date.now())&&getCampaign(String(r.data.campaignId))?.status==="Active").sort((a,b)=>(priority[String(a.data.priority)]??1)-(priority[String(b.data.priority)]??1)||Number(a.data.order)-Number(b.data.order));
+  const eligible=rows.filter(r=>{const campaign=getCampaign(String(r.data.campaignId));return campaign&&isCampaignUserEligible(campaign,userId);});
+  return{banners:eligible.filter(r=>r.data.channel==="banner"),content_cards:eligible.filter(r=>r.data.channel==="content").sort((a,b)=>Number(b.data.pinned)-Number(a.data.pinned)),in_app_messages:eligible.filter(r=>r.data.channel==="iam").slice(0,1)};
+}
+export function sdkMessageReceipt(userId:string,messageId:string,event:string){const message=getResource(messageId);if(!message||message.type!=="sdk-messages"||message.data.userId!==userId)throw new Error("Message not found for this user.");if(!["impression","read","clicked","dismissed"].includes(event))throw new Error("Unsupported message receipt.");if(event==="dismissed")updateResource(message.id,{status:"Dismissed"});const eventType=event==="impression"?"delivered":event==="read"?"opened":event;const duplicate=db().prepare("SELECT id FROM message_events WHERE campaign_id=? AND user_id=? AND event_type=? AND json_extract(data_json,'$.sdkMessageId')=?").get(String(message.data.campaignId),userId,eventType,message.id);if(!duplicate)db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"),String(message.data.campaignId),String(message.data.channel),userId,eventType,now(),JSON.stringify({sdkMessageId:message.id,variantId:message.data.variantId}));return{recorded:true,event:eventType};}
+
 function mapUser(row: Record<string, unknown>): UserRecord {
   return { id: String(row.id), email: String(row.email), firstName: String(row.first_name), country: String(row.country), lifecycle: String(row.lifecycle), subscribed: Boolean(row.subscribed), emailSubscriptionStatus: String(row.email_subscription_status ?? (row.subscribed ? "subscribed" : "unsubscribed")) as UserRecord["emailSubscriptionStatus"], reachable: Boolean(row.reachable), attributes: parseJson(String(row.attributes_json), {}) };
 }
@@ -561,10 +727,18 @@ export function importUsers(rows: Array<Record<string, string>>) {
   return { imported, skipped };
 }
 
+export function validateSubscriptionCapabilities(value:unknown):{sms:boolean;mms:boolean;rcs:boolean}{
+ if(value===undefined)return{sms:true,mms:false,rcs:false};
+ if(!value||typeof value!=="object"||Array.isArray(value)||Object.keys(value).some(key=>!["sms","mms","rcs"].includes(key))||["sms","mms","rcs"].some(key=>typeof (value as Record<string,unknown>)[key]!=="boolean"))throw new Error("Capabilities must contain boolean sms, mms and rcs values.");
+ return value as {sms:boolean;mms:boolean;rcs:boolean};
+}
+function subscriptionGroupCapabilities(id:string){const saved=getResource(`subscription-capabilities:${id}`);return saved?validateSubscriptionCapabilities(saved.data):{sms:true,mms:false,rcs:false};}
+function saveSubscriptionCapabilities(id:string,value:{sms:boolean;mms:boolean;rcs:boolean}){db().prepare("INSERT INTO resources VALUES (?, 'subscription-group-capabilities', ?, 'Active', 'Subscription channel capabilities', ?, ?) ON CONFLICT(id) DO UPDATE SET data_json=excluded.data_json,updated_at=excluded.updated_at").run(`subscription-capabilities:${id}`,id,now(),JSON.stringify(value));}
+function assertCampaignSubscriptionCapabilities(campaign:MessageDraft){if(campaign.channel!=="sms")return;const group=subscriptionGroupForChannel(String(campaign.config?.subscriptionGroupId??""),"sms");if(!group)throw new Error("Select an active subscription group for SMS.");const issues=subscriptionCapabilityIssues(campaign,group.capabilities);if(issues.length)throw new Error(issues.join(" "));}
 function mapSubscriptionGroup(row: Record<string, unknown>): SubscriptionGroupRecord {
   return {
     id: String(row.id), name: String(row.name), description: String(row.description), channel: row.channel as SubscriptionChannel,
-    status: row.status as "Active" | "Archived", createdAt: String(row.created_at), updatedAt: String(row.updated_at), subscriberCount: Number(row.subscriber_count ?? 0),
+    status: row.status as "Active" | "Archived", createdAt: String(row.created_at), updatedAt: String(row.updated_at), subscriberCount: Number(row.subscriber_count ?? 0),capabilities:subscriptionGroupCapabilities(String(row.id)),
   };
 }
 
@@ -585,18 +759,21 @@ export function getSubscriptionGroup(id: string) {
   return row ? mapSubscriptionGroup(row) : null;
 }
 
-export function createSubscriptionGroup(input: { name: string; description?: string; channel: SubscriptionChannel }) {
-  const name = input.name.trim();
+export function createSubscriptionGroup(input: { name: string; description?: string; channel: SubscriptionChannel; capabilities?:unknown }) {
+  const capabilities=validateSubscriptionCapabilities(input.capabilities),name = input.name.trim();
   if (!name) throw new Error("Subscription group name is required.");
   const record: SubscriptionGroupRecord = { id: uid("sg"), name, description: input.description?.trim() || "", channel: input.channel, status: "Active", createdAt: now(), updatedAt: now(), subscriberCount: 0 };
   db().prepare("INSERT INTO subscription_groups VALUES (?, ?, ?, ?, ?, ?, ?)").run(record.id, record.name, record.description, record.channel, record.status, record.createdAt, record.updatedAt);
+  saveSubscriptionCapabilities(record.id,capabilities);record.capabilities=capabilities;
   audit("subscription_group", record.id, "created", { channel: record.channel }); return record;
 }
 
-export function updateSubscriptionGroup(id: string, patch: Partial<Pick<SubscriptionGroupRecord, "name" | "description" | "channel" | "status">>) {
+export function updateSubscriptionGroup(id: string, patch: Partial<Pick<SubscriptionGroupRecord, "name" | "description" | "channel" | "status" | "capabilities">>) {
   const current = getSubscriptionGroup(id); if (!current) return null;
+  const capabilities=patch.capabilities===undefined?current.capabilities:validateSubscriptionCapabilities(patch.capabilities);
   const next = { ...current, name: patch.name?.trim() || current.name, description: patch.description ?? current.description, channel: patch.channel ?? current.channel, status: patch.status ?? current.status, updatedAt: now() };
   db().prepare("UPDATE subscription_groups SET name = ?, description = ?, channel = ?, status = ?, updated_at = ? WHERE id = ?").run(next.name, next.description, next.channel, next.status, next.updatedAt, id);
+  if(capabilities)saveSubscriptionCapabilities(id,capabilities);
   audit("subscription_group", id, next.status === "Archived" ? "archived" : "updated", { channel: next.channel });
   return getSubscriptionGroup(id);
 }
@@ -753,6 +930,23 @@ export function preferenceCenterAnalytics(centerId: string) {
   return { views: counts.viewed ?? 0, submissions: counts.submitted ?? 0, failures: counts.submission_failed ?? 0 };
 }
 
+function normalizeWebhookCredential(data:Record<string,unknown>){
+ const keys=Object.keys(data);if(keys.some(key=>!["credentialEnv","scheme","headerName"].includes(key)))throw new Error("Managed credentials store a server credential reference, scheme and header name only.");
+ if(typeof data.credentialEnv!=="string"||!/^[_A-Z][_A-Z0-9]{0,127}$/.test(data.credentialEnv)||!["Bearer","Basic","Header"].includes(String(data.scheme)))throw new Error("Choose a valid managed credential reference and scheme.");
+ if(data.scheme==="Header"&&(typeof data.headerName!=="string"||!/^[-!#$%&'*+.^_`|~0-9A-Za-z]+$/.test(data.headerName)||/^(host|content-length|connection|transfer-encoding)$/i.test(data.headerName)))throw new Error("Choose a valid credential header name.");
+ return {credentialEnv:data.credentialEnv,scheme:String(data.scheme),...(data.scheme==="Header"?{headerName:String(data.headerName)}:{})};
+}
+export function managedWebhookCredentialMetadata(record:ResourceRecord){return{id:record.id,type:record.type,name:record.name,status:record.status,description:record.description,updatedAt:record.updatedAt,data:{credentialEnv:typeof record.data.credentialEnv==="string"?record.data.credentialEnv:"",scheme:["Bearer","Basic","Header"].includes(String(record.data.scheme))?record.data.scheme:"Bearer",...(typeof record.data.headerName==="string"?{headerName:record.data.headerName}:{})}};}
+async function deliverManagedWebhook(variant:WebhookVariant,context:Record<string,unknown>,locale="en",attempts?:number){
+ if(!variant.credentialId){const result=await deliverWebhook(variant,context,locale,attempts),sensitive=result.requestHeaders.filter(header=>/authorization|token|secret|api[-_]?key/i.test(header.key)).map(header=>header.value).filter(Boolean);const scrub=(value:unknown):unknown=>typeof value==="string"?sensitive.reduce((text,secret)=>text.split(secret).join("[redacted]"),value):Array.isArray(value)?value.map(scrub):value&&typeof value==="object"?Object.fromEntries(Object.entries(value).map(([key,item])=>[key,scrub(item)])):value;return scrub(result) as WebhookDeliveryResult;}
+ const credential=getResource(variant.credentialId);if(!credential||credential.type!=="webhook-credentials"||credential.status!=="Active")throw new Error("The selected managed credential is unavailable.");
+ let settings:ReturnType<typeof normalizeWebhookCredential>;try{settings=normalizeWebhookCredential(credential.data);}catch{throw new Error("The selected managed credential is unavailable.");}
+ const secret=process.env[settings.credentialEnv];if(!secret||/[\r\n]/.test(secret))throw new Error("The selected managed credential is unavailable.");
+ const headerName=settings.scheme==="Header"?settings.headerName!:"Authorization",encoded=settings.scheme==="Basic"?Buffer.from(secret).toString("base64"):secret,headerValue=settings.scheme==="Basic"?`Basic ${encoded}`:settings.scheme==="Bearer"?`Bearer ${secret}`:secret;
+ const resolved={...variant,headers:[...variant.headers.filter(header=>header.key.toLowerCase()!==headerName.toLowerCase()),{id:"managed-credential",key:headerName,value:headerValue}]};
+ const redact=(value:unknown):unknown=>typeof value==="string"?[headerValue,secret,encoded].filter(Boolean).sort((a,b)=>b.length-a.length).reduce((text,sensitive)=>text.split(sensitive).join("[redacted]"),value):Array.isArray(value)?value.map(redact):value&&typeof value==="object"?Object.fromEntries(Object.entries(value).map(([key,item])=>[key,redact(item)])):value;
+ try{const result=await deliverWebhook(resolved,context,locale,attempts),safe=redact(result) as WebhookDeliveryResult;safe.requestHeaders=safe.requestHeaders.map(header=>header.key.toLowerCase()===headerName.toLowerCase()?{...header,value:"[redacted]"}:header);return safe;}catch{throw new Error("Managed Webhook delivery failed. Check the credential availability and request configuration.");}
+}
 function webhookContext(user: { id: string; email?: string; firstName?: string; country?: string; attributes?: Record<string, unknown> } | null, custom: Record<string, unknown> = {}): Record<string, unknown> {
   if (!user) return { ...webhookPreviewUser, ...custom };
   return {
@@ -771,6 +965,7 @@ function recordWebhookResult(campaignId: string, userId: string, variant: Webhoo
   const timestamp = now();
   const insert = db().prepare("INSERT INTO webhook_attempts VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
   for (const attempt of result.attempts) insert.run(uid("wha"), campaignId, userId, isTest ? 1 : 0, variant.id, attempt.attempt, attempt.statusCode, attempt.outcome, result.method, result.url, attempt.responseBody, attempt.error, attempt.durationMs, timestamp);
+  if(!isTest&&result.retryAt&&!result.delivered&&result.attempts.length<5)createResource({type:"webhook-retries",name:"Deferred Webhook",status:"Pending",data:{campaignId,userId,variant,attempts:result.attempts.length,dueAt:result.retryAt,expiresAt:new Date(Date.now()+86400000).toISOString()}});
   return {
     url: result.url,
     method: result.method,
@@ -778,7 +973,18 @@ function recordWebhookResult(campaignId: string, userId: string, variant: Webhoo
     requestBody: result.requestBody,
     attempts: result.attempts,
     delivered: result.delivered,
+    retryAt:result.retryAt,
   };
+}
+async function processWebhookRetries(limit:number){
+ const rows=listResources("webhook-retries").filter(r=>r.status==="Pending"&&new Date(String(r.data.dueAt)).getTime()<=Date.now()).slice(0,limit);let processed=0;
+ for(const row of rows){const campaign=getCampaign(String(row.data.campaignId));if(!campaign||campaign.status!=="Active"||Date.now()>=new Date(String(row.data.expiresAt)).getTime()){updateResource(row.id,{status:"Expired"});continue;}if(!db().prepare("UPDATE resources SET status='Processing' WHERE id=? AND status='Pending'").run(row.id).changes)continue;
+  try{const user=getUser(String(row.data.userId)),variant=row.data.variant as WebhookVariant,result=await deliverManagedWebhook(variant,webhookContext(user),String(user?.attributes.language??"en"),1),attempts=Number(row.data.attempts??0)+1,last=result.attempts.at(-1);for(const attempt of result.attempts)db().prepare("INSERT INTO webhook_attempts VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)").run(uid("wha"),campaign.id,String(row.data.userId),0,variant.id,attempts,attempt.statusCode,attempt.outcome,result.method,result.url,attempt.responseBody,attempt.error,attempt.durationMs,now());const retryable=last?.statusCode==null||last.statusCode===408||last.statusCode===429||last.statusCode>=500;
+   updateResource(row.id,{status:result.delivered?"Completed":attempts<5&&retryable?"Pending":"Failed",data:{...row.data,attempts,dueAt:result.retryAt??new Date(Date.now()+webhookRetryDelay(null,attempts)).toISOString(),lastStatus:last?.statusCode}});
+   if(result.delivered)db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"),campaign.id,"webhook",String(row.data.userId),"delivered",now(),JSON.stringify({variantId:variant.id,retryId:row.id}));processed++;
+  }catch(error){updateResource(row.id,{status:"Failed",data:{...row.data,error:error instanceof Error?error.message:"Webhook retry failed."}});}
+ }
+ return processed;
 }
 
 function recordBlockedWebhook(campaignId: string, userId: string, variant: WebhookVariant, error: string, isTest: boolean, suppliedContext?: Record<string, unknown>) {
@@ -790,35 +996,33 @@ function recordBlockedWebhook(campaignId: string, userId: string, variant: Webho
   return { url, method: variant.method, requestHeaders: redactHeaders(variant.headers), requestBody: variant.body, attempts: [{ attempt: 1, statusCode: null, outcome: "blocked" as const, responseBody: "", error, durationMs: 0 }], delivered: false };
 }
 
-type LaunchRun = { id: string; eligible: number; delivered: number; failed: number; deferred?: number; frequencyCapped?: number; suppressionListHits?: number; quietHoursDeferred?: boolean; alreadyLaunched?: boolean; children?: Array<{ campaignId: string; channel: string; run: LaunchRun }> };
+type LaunchRun = { prepared?:number;accepted?:number;available?:number;queued?:number; id: string; eligible: number; delivered: number; failed: number; deferred?: number; frequencyCapped?: number; suppressionListHits?: number; quietHoursDeferred?: boolean; alreadyLaunched?: boolean; children?: Array<{ campaignId: string; channel: string; run: LaunchRun }> };
 type CampaignLaunchResult = { campaign: CampaignRecord | null; run: LaunchRun };
-export async function launchCampaign(id: string, approvedParentId?: string): Promise<CampaignLaunchResult> {
-  const conn = db(); const campaign = getCampaign(id);
+export async function launchCampaign(id: string, approvedParentId?: string, messageOverride?: CampaignRecord, runtimeUserId?:string): Promise<CampaignLaunchResult> {
+  const conn = db(); const campaign = messageOverride ?? getCampaign(id);
   if (!campaign) throw new Error("Campaign not found");
   if (campaign.status === "Active") {
     const latest = conn.prepare("SELECT id, eligible_count, delivered_count, failed_count FROM execution_runs WHERE campaign_id = ? ORDER BY created_at DESC LIMIT 1").get(id) as { id: string; eligible_count: number; delivered_count: number; failed_count: number } | undefined;
     return { campaign, run: { id: latest?.id ?? "existing", eligible: latest?.eligible_count ?? 0, delivered: latest?.delivered_count ?? 0, failed: latest?.failed_count ?? 0, alreadyLaunched: true } };
   }
-  const issues = [...campaignValidationIssues(campaign), ...(campaign.channel === "email" ? emailSendingIssues(campaign, getEmailPreferences().data) : [])];
-  assertWorkspaceApproval("campaign", approvedParentId ?? id);
+  const issues = [...campaignValidationIssues(campaign), ...(campaign.channel === "email" ? emailVariantSendingIssues(campaign, getEmailPreferences().data) : [])];
+  if(!runtimeUserId)assertWorkspaceApproval("campaign", approvedParentId ?? id);
   if (issues.length) throw new Error(issues.join(" "));
-  if (["multichannel", "operator"].includes(campaign.channel)) return launchMultichannelCampaign(campaign);
+  if(campaign.status==="Archived")throw new Error("Archived Campaigns cannot be launched.");
+  assertCampaignSubscriptionCapabilities(campaign);
+  const schedule=objectValue(campaign.config.delivery);
+  if(!messageOverride&&campaign.channel!=="feature"&&campaign.channel!=="api"&&(campaign.schedule==="Action-based"||campaign.schedule==="API-triggered"||schedule.localTime===true||schedule.frequency&&schedule.frequency!=="One time"||schedule.timing&&schedule.timing!=="now"&&nextScheduledTime(campaign).getTime()>Date.now()+1000))return activateCampaignSchedule(campaign);
+  if (["multichannel", "operator"].includes(campaign.channel)) return launchMultichannelCampaign(campaign,runtimeUserId);
   if (campaign.channel === "iam") inAppVariants(campaign).forEach(validateInAppSnapshot);
   const experimentFlag = campaign.channel === "feature" ? listResources("feature-flags").find(r => r.data.flagId === campaign.subject && r.status !== "Archived") : undefined;
   if (campaign.channel === "feature" && !experimentFlag) throw new Error("Select a saved Feature Flag before launching an experiment.");
   if (experimentFlag && Number(experimentFlag.data.rollout ?? 0) > 0) throw new Error("Set the Feature Flag's Everyone else rollout to 0 before starting an experiment.");
-  const audience = audienceCondition(campaign.audience ?? "All Users");
-  const segmentFilters = savedSegmentFilters(campaign.audience);
-  const filterClauses = audienceFilterClauses(segmentFilters);
-  const country = typeof campaign.config.audienceCountry === "string" && ["US", "GB", "CN", "SG", "DE"].includes(campaign.config.audienceCountry) ? campaign.config.audienceCountry : null;
-  const excludedCountry = typeof campaign.config.audienceExcludeCountry === "string" && ["US", "GB", "CN", "SG", "DE"].includes(campaign.config.audienceExcludeCountry) ? campaign.config.audienceExcludeCountry : null;
-  const subscriptionGroupId = typeof campaign.config.subscriptionGroupId === "string" && campaign.config.subscriptionGroupId ? campaign.config.subscriptionGroupId : null;
-  subscriptionGroupForChannel(subscriptionGroupId ?? undefined, campaign.channel);
-  if ((campaign.channel === "sms" || campaign.channel === "whatsapp") && !subscriptionGroupId) throw new Error("Select an active subscription group for this channel.");
-  const allClauses = [audience.sql, ...filterClauses.clauses];
-  if (country) allClauses.push("u.country = ?");
-  if (excludedCountry) allClauses.push("u.country != ?");
-  const allValues = [...audience.values, ...filterClauses.values, ...(country ? [country] : []), ...(excludedCountry ? [excludedCountry] : [])];
+  const audienceQuery=configuredAudienceSQL(campaign);
+  const subscriptionGroupId=typeof campaign.config.subscriptionGroupId==="string"&&campaign.config.subscriptionGroupId?campaign.config.subscriptionGroupId:null;
+  subscriptionGroupForChannel(subscriptionGroupId??undefined,campaign.channel);
+  if(["sms","whatsapp","line"].includes(campaign.channel)&&!subscriptionGroupId)throw new Error("Select an active subscription group for this channel.");
+  const allClauses=[audienceQuery.sql],allValues=audienceQuery.values;
+  if(runtimeUserId){allClauses.push("u.id = ?");allValues.push(runtimeUserId);}
   const users = conn.prepare(`SELECT u.id, u.reachable, u.subscribed, u.email, u.email_subscription_status${subscriptionGroupId ? ", m.state AS subscription_state" : ""} FROM users u ${subscriptionGroupId ? "LEFT JOIN subscription_group_memberships m ON m.user_id = u.id AND m.group_id = ?" : ""} WHERE ${allClauses.join(" AND ")} ORDER BY u.id`).all(...(subscriptionGroupId ? [subscriptionGroupId] : []), ...allValues) as { id: string; reachable: number; subscribed: number; email: string; email_subscription_status: string; subscription_state?: SubscriptionState }[];
   // Suppression list entries exclude matching emails and whole domains from sends.
   const suppressionEntries = listResources("suppression-lists").map(row => row.name.toLowerCase().replace(/^@/, ""));
@@ -843,7 +1047,7 @@ export async function launchCampaign(id: string, approvedParentId?: string): Pro
   const maxUsers = campaign.channel === "webhook" ? Math.min(configuredMaxUsers, Math.max(1, Number(process.env.WEBHOOK_MAX_DELIVERIES_PER_RUN ?? 100))) : configuredMaxUsers;
   const subscribed = (user: { email_subscription_status: string; subscription_state?: SubscriptionState }) => {
     if (campaign.channel === "email") return user.email_subscription_status !== "unsubscribed" && (campaign.config.subscribeEligibility !== "opted-in" || user.email_subscription_status === "opted_in") && (!subscriptionGroupId || user.subscription_state === "subscribed");
-    if (campaign.channel === "sms" || campaign.channel === "whatsapp") return user.subscription_state === "subscribed";
+    if (campaign.channel === "sms" || campaign.channel === "whatsapp" || campaign.channel === "line") return user.subscription_state === "subscribed";
     return true;
   };
   const globalSettings = globalControlSettings();
@@ -859,7 +1063,7 @@ export async function launchCampaign(id: string, approvedParentId?: string): Pro
   }
   const runId = uid("run"); const timestamp = now();
   const insertEvent = conn.prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)");
-  let delivered = 0; let failed = 0; let webhookProcessed = 0; let deferredCount = 0; let frequencyCapped = 0; let suppressedCount = 0;
+  let delivered = 0; let prepared=0,accepted=0,available=0; let failed = 0; let webhookProcessed = 0; let deferredCount = 0; let frequencyCapped = 0; let suppressedCount = 0;
   const webhookVariants = campaign.channel === "webhook" ? normalizeWebhookVariants(campaign) : [];
   for (const user of users) {
     const deliverable = user.reachable && subscribed(user);
@@ -870,32 +1074,38 @@ export async function launchCampaign(id: string, approvedParentId?: string): Pro
       : isSuppressed(user.email) ? "suppressed"
       : freqCappedUsers.has(user.id) ? "frequency_capped"
       : inControl ? "control"
-      : (campaign.channel === "webhook" ? webhookProcessed : delivered) >= maxUsers ? "held_back"
+      : (campaign.channel === "webhook" ? webhookProcessed : delivered+prepared+accepted+available) >= maxUsers ? "held_back"
       : quietDeferred || workspaceRateLimited(timestamp) ? "deferred"
       : "delivered";
     if (eventType === "suppressed" && deliverable) suppressedCount += 1;
     if (eventType === "frequency_capped") frequencyCapped += 1;
     if (eventType === "deferred") deferredCount += 1;
     let eventData: Record<string, unknown> = { runId, globalControlGeneration: globalSettings.enabled ? globalSettings.seed : null, globalControlCohort: userGlobalCohort(user.id, globalSettings) };
+    const messageIndex=eventType==="delivered"?pickVariant(campaign,createHash("sha256").update(`${id}:${user.id}:variant`).digest().readUInt32BE(0)/0x100000000):0;
+    const messageDraft=variantDraft(campaign,messageIndex);
+    eventData.variantId=campaignVariants(campaign)[messageIndex].id;
     if (experimentFlag && ["delivered", "control"].includes(eventType)) {
       const rollout = Number((campaign.config.channelValues as Record<string, unknown> | undefined)?.rollout ?? 50);
       const enabled = eventType === "delivered" && stableBucket(`${id}:${user.id}:feature`) < rollout;
-      const properties = objectValue(JSON.parse(campaign.body || "{}"));
+      const experiment=objectValue(campaign.config.featureExperiment),definitions=Array.isArray(experiment.variants)?experiment.variants as Array<{id:string;name:string;percentage:number;properties:Record<string,unknown>}>:[];
+      let chosen:typeof definitions[number]|undefined=definitions[0];if(definitions.length){let bucket=stableBucket(`${id}:${user.id}:feature-variant`);for(const variant of definitions){bucket-=variant.percentage;if(bucket<0){chosen=variant;break;}}}
+      if(eventType==="control")chosen=undefined;
+      const properties=eventType==="control"?{}:chosen?objectValue(chosen.properties):objectValue(JSON.parse(campaign.body||"{}"));
       const existing = listResources("feature-assignments").find(r => r.data.flagId === experimentFlag.data.flagId && r.data.userId === user.id && r.data.campaignId === id);
-      const data = { flagId: experimentFlag.data.flagId, userId: user.id, campaignId: id, enabled, properties: { ...objectValue(experimentFlag.data.properties), ...properties }, assignedAt: timestamp };
+      const data = { flagId: experimentFlag.data.flagId, userId: user.id, campaignId: id, enabled, properties: { ...objectValue(experimentFlag.data.properties), ...properties }, assignedAt: timestamp,...(chosen?{variantId:chosen.id,variantName:chosen.name}:{}) };
       if (existing) updateResource(existing.id, { data }); else createResource({ type: "feature-assignments", name: String(experimentFlag.data.flagId), status: "Active", data });
-      eventData = { ...eventData, featureFlag: data.flagId, featureEnabled: enabled };
+      eventData = { ...eventData, featureFlag: data.flagId, featureEnabled: enabled,...(chosen?{variantId:chosen.id,variantName:chosen.name}:{}) };
     }
     if (eventType === "delivered" && campaign.channel === "webhook") {
       webhookProcessed += 1;
       const hash = createHash("sha256").update(`${id}:${user.id}:variant`).digest()[0];
-      const variant = webhookVariants[hash % webhookVariants.length];
+      const variant = normalizeWebhookVariants(messageDraft)[0];
       const profile = getUser(user.id);
       const context = webhookContext(profile);
       try {
-        const result = await deliverWebhook(variant, context, String(context.language ?? "en"));
+        const result = await deliverManagedWebhook(variant, context, String(context.language ?? "en"));
         eventData = { ...eventData, webhook: recordWebhookResult(id, user.id, variant, result, false) };
-        if (!result.delivered) eventType = "failed";
+        if (!result.delivered) {eventType = result.retryAt?"deferred":"failed";if(result.retryAt)deferredCount++;}
       } catch (cause) {
         const error = cause instanceof Error ? cause.message : "Webhook delivery failed.";
         eventData = { ...eventData, webhook: recordBlockedWebhook(id, user.id, variant, error, false, context) };
@@ -903,69 +1113,102 @@ export async function launchCampaign(id: string, approvedParentId?: string): Pro
       }
     }
     if (eventType === "delivered" && campaign.channel === "email") {
-      try { eventData = { ...eventData, simulated: true, message: prepareEmailMessage(campaign, user.id, "campaign") }; }
+      try { eventData = { ...eventData, simulated: true, message: prepareEmailMessage(messageDraft, user.id, "campaign") }; }
       catch (error) { eventType = "failed"; eventData = { ...eventData, error: error instanceof Error ? error.message : "Email compilation failed" }; }
     }
     if (eventType === "delivered" && campaign.channel === "whatsapp") {
-      try { const profile = getUser(user.id); const variants = normalizeWhatsAppVariants(campaign); const index = createHash("sha256").update(`${id}:${user.id}:variant`).digest()[0] % variants.length; eventData = { ...eventData, simulated: true, variantId: variants[index].id, message: prepareWhatsAppMessage(variants[index], customWhatsAppTemplates(campaign), { ...profile?.attributes, first_name: profile?.firstName, country: profile?.country, user_id: user.id }) }; }
+      try { const profile = getUser(user.id); const variants = normalizeWhatsAppVariants(messageDraft); const index = 0; const eligibility = whatsAppResponseEligibility(variants[index].mode, latestWhatsAppInbound(profile?.attributes, listResources("user-events").filter(event => event.data.userId === user.id), timestamp), timestamp); if (!eligibility.eligible) throw new Error(eligibility.reason); eventData = { ...eventData, simulated: true, conversationEligibility: eligibility, variantId: variants[index].id, message: prepareWhatsAppMessage(variants[index], customWhatsAppTemplates(messageDraft), { ...profile?.attributes, first_name: profile?.firstName, country: profile?.country, user_id: user.id }) }; }
       catch (cause) { eventType = "failed"; eventData = { ...eventData, simulated: true, error: cause instanceof Error ? cause.message : "WhatsApp rendering failed." }; }
     }
     if (eventType === "delivered" && campaign.channel === "line") {
-      try { const profile = getUser(user.id); eventData = { ...eventData, simulated: true, messages: compileLineMessages(campaign, { ...profile?.attributes, first_name: profile?.firstName, email: profile?.email, user_id: user.id }) }; }
+      try { const profile = getUser(user.id); eventData = { ...eventData, simulated: true, messages: compileLineMessages(messageDraft, { ...profile?.attributes, first_name: profile?.firstName, email: profile?.email, user_id: user.id }) }; }
       catch (cause) { eventType = "failed"; eventData = { ...eventData, error: cause instanceof Error ? cause.message : "LINE compilation failed." }; }
+    }
+    if(eventType==="delivered"&&campaign.channel==="sms"){
+      try{const profile=getUser(user.id);eventData={...eventData,simulated:true,message:compileSms(messageDraft,{...profile?.attributes,first_name:profile?.firstName,phone:profile?.attributes.phone,language:profile?.attributes.language},url=>shortenMessageLink(url,id,user.id))};}catch(error){eventType="failed";eventData={...eventData,error:error instanceof Error?error.message:"SMS rendering failed."};}
+    }
+    if(eventType==="delivered"&&["email","sms","whatsapp","push","line","banner","content","iam"].includes(campaign.channel)){
+      try{
+        const profile=getUser(user.id),attributes={event_properties:campaign.config.triggerProperties,api_trigger_properties:campaign.config.triggerProperties,...profile?.attributes,first_name:profile?.firstName,email:profile?.email,user_id:user.id};
+        if(campaign.channel==="push")eventData.message=compilePush(messageDraft,attributes);
+        if(campaign.channel==="banner"){const values=objectValue(messageDraft.config.channelValues);eventData.message={html:renderBrazeLiquid(values.editorMode==="html"?String(values.html):creativeHtml((values.rows??[]) as CreativeRow[]),attributes),placement:values.placement,priority:values.priority??"Medium"};}
+        if(campaign.channel==="content")eventData.message=compileContentCard(messageDraft,attributes);
+        if(campaign.channel==="iam")eventData.message=prepareInAppPreview(inAppVariants(messageDraft)[0],attributes);
+        if(["iam","banner","content"].includes(campaign.channel))materializeSdkMessage(messageDraft,user.id,eventData.message,campaign.id,eventData.variantId as string);
+        const recipient=campaign.channel==="sms"||campaign.channel==="whatsapp"?String(profile?.attributes.phone??profile?.attributes.phone_number??""):campaign.channel==="line"?String(profile?.attributes.native_line_id??""):campaign.channel==="email"?profile?.email??"":user.id;
+        const delivery=await dispatchPreparedMessage(messageDraft,recipient,objectValue(eventData.message));eventData={...eventData,simulated:delivery.mode==="preview",delivery};eventType=delivery.status;if(eventType==="prepared")prepared++;if(eventType==="accepted")accepted++;if(eventType==="available")available++;
+      }catch(error){eventType="failed";eventData={...eventData,error:error instanceof Error?error.message:"Message preparation failed."};}
     }
     insertEvent.run(uid("evt"), id, campaign.channel, user.id, eventType, timestamp, JSON.stringify(eventData));
     if (eventType === "delivered") {
       delivered += 1;
-      if (campaign.channel !== "webhook") {
-        if (delivered % 4 === 0) insertEvent.run(uid("evt"), id, campaign.channel, user.id, "opened", timestamp, JSON.stringify({ runId }));
-        if (delivered % 9 === 0) insertEvent.run(uid("evt"), id, campaign.channel, user.id, "clicked", timestamp, JSON.stringify({ runId }));
-      }
+
     } else if (eventType === "unreachable" || eventType === "suppressed" || eventType === "failed") { failed += 1; }
   }
-  conn.prepare("INSERT INTO execution_runs VALUES (?, ?, ?, ?, ?, ?, ?, ?)").run(runId, id, "completed", eligible.length, delivered, failed, timestamp, JSON.stringify({ campaign, quietHoursDeferred: quietDeferred, deferredCount, frequencyCapped, suppressionListHits: suppressedCount }));
-  conn.prepare("UPDATE campaigns SET status = 'Active', sent = sent + ?, edited_at = ? WHERE id = ?").run(delivered, timestamp, id);
-  audit("campaign", id, "launched", { runId, eligible: eligible.length, delivered, failed, deferred: deferredCount, frequencyCapped, suppressionListHits: suppressedCount });
-  return { campaign: getCampaign(id), run: { id: runId, eligible: eligible.length, delivered, failed, deferred: deferredCount, frequencyCapped, suppressionListHits: suppressedCount, quietHoursDeferred: quietDeferred } };
+  conn.prepare("INSERT INTO execution_runs VALUES (?, ?, ?, ?, ?, ?, ?, ?)").run(runId, id, "completed", eligible.length, delivered, failed, timestamp, JSON.stringify({ campaign, prepared,accepted,available,quietHoursDeferred: quietDeferred, deferredCount, frequencyCapped, suppressionListHits: suppressedCount }));
+  if(!messageOverride)conn.prepare("UPDATE campaigns SET status = 'Active', sent = sent + ?, edited_at = ? WHERE id = ?").run(delivered, timestamp, id);
+  audit("campaign", id, "launched", { runId, eligible: eligible.length, delivered, prepared, accepted, available, failed, deferred: deferredCount, frequencyCapped, suppressionListHits: suppressedCount });
+  return { campaign: messageOverride ?? getCampaign(id), run: { id: runId, eligible: eligible.length, delivered, prepared, accepted, available, failed, deferred: deferredCount, frequencyCapped, suppressionListHits: suppressedCount, quietHoursDeferred: quietDeferred } };
 }
 
-async function launchMultichannelCampaign(parent: CampaignRecord): Promise<CampaignLaunchResult> {
+async function launchMultichannelCampaign(parent: CampaignRecord,runtimeUserId?:string): Promise<CampaignLaunchResult> {
   const values = objectValue(parent.config.channelValues); const labels = values.channels as string[];
   const content = objectValue(values.channelContent); const links = objectValue(values.childCampaignIds);
-  const channels: Record<string, Channel> = { Email: "email", "Push notification": "push", "In-app message": "iam", SMS: "sms", WhatsApp: "whatsapp" };
+  const channels: Record<string, Channel> = {...multichannelChannels,SMS:"sms"};
+  const messages=objectValue(parent.config.multichannelMessages);
   const children = labels.map(label => {
     const channel = channels[label]; if (!channel) throw new Error(`Unsupported delivery channel: ${label}.`);
-    const source = links[label] ? getCampaign(String(links[label])) : null;
+    const source = messages[channel] ? objectValue(messages[channel]) as unknown as CampaignRecord : links[label] ? getCampaign(String(links[label])) : null;
     if (links[label] && (!source || source.channel !== channel)) throw new Error(`Select an existing ${label} Campaign.`);
-    const config = { ...(channel === "email" ? emailPreferenceCampaignDefaults(getEmailPreferences().data) : {}), ...source?.config, delivery: parent.config.delivery ?? source?.config.delivery, controlGroup: parent.config.controlGroup ?? 0, holdoutSeed: parent.id, audienceCountry: parent.config.audienceCountry, audienceExcludeCountry: parent.config.audienceExcludeCountry, limitVolume: parent.config.limitVolume, maxUsers: parent.config.maxUsers, tags: parent.config.tags };
-    const child: CampaignRecord = { id: `cmp_multi_${createHash("sha256").update(`${parent.id}:${channel}`).digest("hex").slice(0, 16)}`, name: `${parent.name} · ${label}`, channel, status: "Draft", schedule: parent.schedule, audience: parent.audience, subject: source?.subject ?? parent.subject ?? parent.name, body: source?.body ?? String(content[label] ?? ""), conversion: parent.conversion, sent: 0, edited: now(), config };
-    const issues = [...campaignValidationIssues(child), ...(channel === "email" ? emailSendingIssues(child, getEmailPreferences().data) : [])];
-    if (["sms", "whatsapp"].includes(channel)) subscriptionGroupForChannel(String(child.config.subscriptionGroupId ?? ""), channel);
-    if (["sms", "whatsapp"].includes(channel) && !child.config.subscriptionGroupId) issues.push(`Select a configured ${label} Campaign with a subscription group.`);
+    const config = { ...(channel === "email" ? emailPreferenceCampaignDefaults(getEmailPreferences().data) : {}), ...source?.config, delivery: parent.config.delivery ?? {}, conversionEvents:parent.config.conversionEvents, controlGroup: parent.config.controlGroup ?? 0, holdoutSeed: parent.id, audienceGroups:parent.config.audienceGroups,audienceSegments:parent.config.audienceSegments,audienceSegmentOperator:parent.config.audienceSegmentOperator,audienceCountry: parent.config.audienceCountry, audienceExcludeCountry: parent.config.audienceExcludeCountry, limitVolume: parent.config.limitVolume, maxUsers: parent.config.maxUsers, tags: parent.config.tags };
+    const child: CampaignRecord = { id: parent.id, name: `${parent.name} · ${label}`, channel, status: "Draft", schedule: parent.schedule, audience: parent.audience, subject: source?.subject ?? parent.subject ?? parent.name, body: source?.body ?? String(content[label] ?? ""), conversion: parent.conversion, sent: 0, edited: now(), config };
+    const count=campaignVariants(child).length,stored=source?.config?.variantSplits,weights=Array.isArray(stored)&&stored.length===count&&stored.every(weight=>Number.isFinite(Number(weight))&&Number(weight)>=0)?stored.map(Number):Array.from({length:count},()=>1),total=weights.reduce((sum,weight)=>sum+weight,0),remaining=100-Number(child.config.controlGroup??0);
+    child.config.variantSplits=weights.map(weight=>total?weight/total*remaining:remaining/count);
+    assertCampaignSubscriptionCapabilities(child);
+    const issues = [...campaignValidationIssues(child), ...(channel === "email" ? emailVariantSendingIssues(child, getEmailPreferences().data) : [])];
+    if (["sms", "whatsapp", "line"].includes(channel)) subscriptionGroupForChannel(String(child.config.subscriptionGroupId ?? ""), channel);
+    if (["sms", "whatsapp", "line"].includes(channel) && !child.config.subscriptionGroupId) issues.push(`Select a configured ${label} Campaign with a subscription group.`);
     if (issues.length) throw new Error(`${label}: ${issues.join(" ")}`);
     return child;
   });
   let eligible = 0, delivered = 0, failed = 0, deferred = 0; const childRuns = [];
   for (const child of children) {
-    upsertCampaign(child); const result = await launchCampaign(child.id, parent.id);
+    const result = await launchCampaign(parent.id, parent.id, child,runtimeUserId);
     eligible += result.run.eligible; delivered += result.run.delivered; failed += result.run.failed; deferred += "deferred" in result.run ? Number(result.run.deferred) : 0; childRuns.push({ campaignId: child.id, channel: child.channel, run: result.run });
   }
   const id = uid("run"); const timestamp = now();
   db().prepare("INSERT INTO execution_runs VALUES (?, ?, ?, ?, ?, ?, ?, ?)").run(id, parent.id, "completed", eligible, delivered, failed, timestamp, JSON.stringify({ parent, children: childRuns }));
-  db().prepare("UPDATE campaigns SET status = 'Active', sent = sent + ?, edited_at = ? WHERE id = ?").run(delivered, timestamp, parent.id);
+  if(!runtimeUserId)db().prepare("UPDATE campaigns SET status = 'Active', sent = sent + ?, edited_at = ? WHERE id = ?").run(delivered, timestamp, parent.id);
   createResource({ type: "multichannel-runs", name: parent.name, status: "Completed", data: { campaignId: parent.id, children: childRuns, delivered, failed, deferred } });
   audit("campaign", parent.id, "multichannel_launched", { children: children.map(c => c.id), delivered, failed });
   return { campaign: getCampaign(parent.id), run: { id, eligible, delivered, failed, deferred, children: childRuns } };
 }
 
-export async function sendTestCampaign(id: string, input: { recipient?: string; mode?: "random" | "existing" | "custom"; customUser?: Record<string, unknown>; variantId?: string; locale?: string } | string = {}) {
-  const campaign = getCampaign(id);
+export async function sendTestCampaign(id: string, input: { recipient?: string; mode?: "random" | "existing" | "custom"; customUser?: Record<string, unknown>; variantId?: string; locale?: string; snapshot?:MessageDraft } | string = {}) {
+  let campaign = getCampaign(id);
   if (!campaign) throw new Error("Campaign not found");
-  const options = typeof input === "string" ? { recipient: input } : input;
-  const recipient = options.recipient || "user_1";
+  const options=typeof input==="string"?{recipient:input}:input;
+  if(!options||typeof options!=="object"||Array.isArray(options))throw new Error("Provide valid test options.");
+  const parent=campaign,combined=["multichannel","operator"].includes(parent.channel);
+  if(options.snapshot){
+   const snapshot=options.snapshot;
+   if(typeof snapshot!=="object"||Array.isArray(snapshot)||typeof snapshot.channel!=="string"||snapshot.id!==id||snapshot.config!==undefined&&(!snapshot.config||typeof snapshot.config!=="object"||Array.isArray(snapshot.config)))throw new Error("The test snapshot must belong to this Campaign.");
+   if(combined){
+    const selected=objectValue(parent.config.channelValues).channels,allowed:Record<string,string>={...multichannelChannels,SMS:"sms"};
+    if(!Array.isArray(selected)||!selected.some(label=>typeof label==="string"&&allowed[label]===snapshot.channel))throw new Error("Save this channel in the parent Campaign before testing it.");
+   }else if(parent.channel!==snapshot.channel)throw new Error("This channel does not belong to the Campaign.");
+   campaign={...parent,channel:snapshot.channel as Channel,name:typeof snapshot.name==="string"?snapshot.name:parent.name,subject:snapshot.subject,body:snapshot.body,config:snapshot.config??{}};
+  }else if(combined)throw new Error("Select a configured channel snapshot to test.");
+  if(!["email","push","iam","content","banner","sms","webhook","whatsapp","line"].includes(campaign.channel))throw new Error("This Campaign has no testable delivery channel.");
+  if(options.customUser!==undefined&&(!options.customUser||typeof options.customUser!=="object"||Array.isArray(options.customUser)))throw new Error("Custom user attributes must be a JSON object.");
+  campaign={...campaign,schedule:"One time",config:{...campaign.config,delivery:{schemaVersion:3,timing:"now"}}};
+  const index=options.variantId?campaignVariants(campaign).findIndex(v=>v.id===options.variantId):0;if(index<0)throw new Error("Message variant not found.");const selectedVariant=campaignVariants(campaign)[index];campaign=variantDraft(campaign,index);campaign.config={...campaign.config,[variantKey(campaign.channel)]:[selectedVariant],variantSplits:[100],controlGroup:0};
+  const recipient = options.recipient?.trim() || "user_1";
+  if(campaign.channel==="sms"&&!/^\+\d{8,15}$/.test(recipient))throw new Error("Enter an E.164 test recipient phone number.");
+  assertCampaignSubscriptionCapabilities(campaign);
   const timestamp = now();
   if (campaign.channel === "webhook") {
-    const issues = campaignValidationIssues(campaign);
+    const issues = campaignComposeIssues(campaign);
     if (issues.length) throw new Error(issues.join(" "));
     const row = options.mode === "random"
       ? db().prepare("SELECT * FROM users WHERE reachable = 1 ORDER BY id LIMIT 1").get() as Record<string, unknown> | undefined
@@ -976,21 +1219,26 @@ export async function sendTestCampaign(id: string, input: { recipient?: string; 
     const variants = normalizeWebhookVariants(campaign);
     const variant = variants.find(item => item.id === options.variantId) ?? variants[0];
     let result: WebhookDeliveryResult;
-    try { result = await deliverWebhook(variant, context, options.locale || String(context.language ?? "en"), 1); }
+    try { result = await deliverManagedWebhook(variant, context, options.locale || String(context.language ?? "en"), 1); }
     catch (cause) { result = recordBlockedWebhook(id, userId, variant, cause instanceof Error ? cause.message : "Webhook delivery failed.", true, context); }
     const safeResult = result.attempts[0]?.outcome === "blocked" ? result : recordWebhookResult(id, userId, variant, result, true);
     db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), id, campaign.channel, userId, result.delivered ? "delivered" : "failed", timestamp, JSON.stringify({ test: true, recipient, webhook: safeResult }));
     audit("campaign", id, "webhook_test_sent", { recipient, delivered: result.delivered, statusCode: result.attempts.at(-1)?.statusCode ?? null });
     return { recipient, campaign: campaign.name, channel: campaign.channel, createdAt: timestamp, webhook: safeResult, capability: webhookDeliveryCapability() };
   }
-  if (campaign.channel === "iam") return prepareInAppTest({ campaignId: id, variant: inAppVariants(campaign).find(item => item.id === options.variantId) ?? inAppVariants(campaign)[0], recipients: [recipient], profile: options.customUser ?? {}, override: options.mode === "custom" });
-  if (campaign.channel === "whatsapp") return prepareWhatsAppTest({ campaignId: id, config: campaign.config, recipients: [recipient], variantId: options.variantId, profile: options.customUser ?? {}, override: options.mode === "custom" });
-  const issues = campaign.channel === "email" ? emailSendingIssues(campaign, getEmailPreferences().data) : campaign.channel === "line" ? campaignValidationIssues(campaign) : []; if (issues.length) throw new Error(issues.join(" "));
-  const previewUser = options.mode === "random" ? randomCatalogPreviewUser() : searchUsers(recipient, 0, 1).data[0];
-  const message = campaign.channel === "email" ? prepareEmailMessage(campaign, previewUser?.id ?? "", "test", options.customUser) : campaign.channel === "line" ? { messages: compileLineMessages(campaign, { ...previewUser?.attributes, first_name: previewUser?.firstName, user_id: previewUser?.id, ...options.customUser }) } : undefined;
-  db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), id, campaign.channel, "test_user", "test_prepared", timestamp, JSON.stringify({ test: true, recipient, simulated: true, message }));
-  audit("campaign", id, "test_sent", { recipient });
-  return { recipient, campaign: campaign.name, channel: campaign.channel, createdAt: timestamp, message, capability: { mode: "simulation", delivered: false, reason: "No email provider is configured. The compiled test message is available for preview." } };
+  if (campaign.channel === "iam") return {...prepareInAppTest({ campaignId: id, variant: inAppVariants(campaign).find(item => item.id === options.variantId) ?? inAppVariants(campaign)[0], recipients: [recipient], profile: options.customUser ?? {}, override: options.mode === "custom" }),channel:campaign.channel,campaign:campaign.name};
+  if (campaign.channel === "whatsapp") return {...prepareWhatsAppTest({ campaignId: id, config: campaign.config, recipients: [recipient], variantId: options.variantId, profile: options.customUser ?? {}, override: options.mode === "custom" }),channel:campaign.channel,campaign:campaign.name};
+  const issues=campaignComposeIssues(campaign);if(campaign.channel==="email")issues.push(...emailSendingIssues(campaign,getEmailPreferences().data));if(issues.length)throw new Error(issues.join(" "));
+  const previewUser=options.mode==="random"?randomCatalogPreviewUser():getUser(recipient)??searchUsers(recipient,0,20).data.find(u=>u.id===recipient||u.email.toLowerCase()===recipient.toLowerCase());
+  const profile={...previewUser?.attributes,first_name:previewUser?.firstName,user_id:previewUser?.id,language:options.locale??previewUser?.attributes.language,...options.customUser};
+  const values=objectValue(campaign.config.channelValues);
+  const message:Record<string,unknown>=campaign.channel==="email"?prepareEmailMessage(campaign,previewUser?.id??"","test",options.customUser):campaign.channel==="line"?{messages:compileLineMessages(campaign,profile)}:campaign.channel==="sms"?compileSms(campaign,profile,url=>shortenMessageLink(url,id,previewUser?.id??"test_user")):campaign.channel==="push"?compilePush(campaign,profile):campaign.channel==="content"?compileContentCard(campaign,profile):campaign.channel==="banner"?{html:values.editorMode==="html"?values.html:creativeHtml((values.rows??[]) as CreativeRow[])}:{title:campaign.subject,body:campaign.body,settings:values};
+  const actualRecipient=campaign.channel==="line"?String(previewUser?.attributes.native_line_id??recipient):recipient;
+  const delivery=await dispatchPreparedMessage(campaign,actualRecipient,message,true);
+  db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"),id,campaign.channel,previewUser?.id??"test_user",delivery.mode==="preview"?"test_prepared":delivery.status,timestamp,JSON.stringify({test:true,recipient,variantId:campaign.config.previewVariantId,simulated:delivery.mode==="preview",message,delivery}));
+  audit("campaign",id,"test_processed",{recipient,status:delivery.status});
+  return{recipient,campaign:campaign.name,channel:campaign.channel,variantId:campaign.config.previewVariantId,createdAt:timestamp,message,capability:delivery};
+
 }
 
 // IAM tests prepare an unsaved snapshot and record evidence; no Braze SDK dispatch is attempted.
@@ -1046,7 +1294,7 @@ export function prepareWhatsAppTest(input: unknown) {
   const campaignId = typeof value.campaignId === "string" ? value.campaignId : undefined;
   if (Boolean(canvasId) === Boolean(campaignId)) throw new Error("Select exactly one Canvas or campaign.");
   if (canvasId && (!getCanvas(canvasId) || typeof value.nodeId !== "string")) throw new Error("Canvas or message step not found.");
-  if (campaignId && getCampaign(campaignId)?.channel !== "whatsapp") throw new Error("WhatsApp campaign not found.");
+  if(campaignId){const parent=getCampaign(campaignId);if(!parent||!["whatsapp","multichannel","operator"].includes(parent.channel))throw new Error("WhatsApp campaign not found.");if(parent.channel!=="whatsapp"&&(!Array.isArray(objectValue(parent.config.channelValues).channels)||!(objectValue(parent.config.channelValues).channels as unknown[]).includes("WhatsApp")))throw new Error("Save WhatsApp in the parent Campaign before testing it.");}
   if (!value.config || typeof value.config !== "object" || Array.isArray(value.config) || JSON.stringify(value.config).length > 200000) throw new Error("Invalid WhatsApp configuration.");
   const config = value.config as Record<string, unknown>;
   if (typeof config.subscriptionGroupId !== "string" || !config.subscriptionGroupId) throw new Error("Select an active WhatsApp subscription group.");
@@ -1061,7 +1309,7 @@ export function prepareWhatsAppTest(input: unknown) {
   const tests = [...new Set(value.recipients as string[])].map(recipient => {
     const user = getUser(recipient) ?? searchUsers(recipient, 0, 1).data.find(item => item.email.toLowerCase() === recipient.toLowerCase());
     const profile = value.override ? value.profile as Record<string, unknown> : user ? { ...user.attributes, first_name: user.firstName, email_address: user.email, country: user.country, user_id: user.id } : {};
-    return { recipient, ...prepareWhatsAppMessage(variant, customWhatsAppTemplates({ config }), profile ?? {}) };
+    return { recipient, conversationEligibility: whatsAppResponseEligibility(variant.mode, user ? latestWhatsAppInbound(user.attributes, listResources("user-events").filter(event => event.data.userId === user.id)) : undefined), ...prepareWhatsAppMessage(variant, customWhatsAppTemplates({ config }), profile ?? {}) };
   });
   const timestamp = now();
   const scopeId = (canvasId ?? campaignId)!;
@@ -1091,6 +1339,8 @@ export function recordExternalEvent(campaignId: string, input: { userId?: string
       db().prepare("UPDATE users SET attributes_json = ? WHERE id = ?").run(JSON.stringify({ ...user.attributes, recentLinkClicks: [{ alias: alias.name, url: alias.data.url, clickedAt: timestamp }, ...clicks].slice(0,100) }), userId);
     }
   }
+  if(!filtered&&!["conversion","failed","sent","delivered"].includes(event))attributeCampaignConversions(userId,{name:event,properties:{...attributes,campaignId}},uid("external"),timestamp);
+  evaluateCampaignMonitoring(campaignId);
   audit("campaign", campaignId, "external_event", { userId, event });
   return { recorded: true, campaign: campaign.name, event, userId, createdAt: timestamp };
 }
@@ -1124,7 +1374,8 @@ export function createResource(input: Pick<ResourceRecord, "type" | "name"> & Pa
     if (workspaceModules[input.type].singleton && listResources(input.type).length) throw new Error("Settings already exist. Reload before saving.");
     assertModuleUnique(input.type, input.data ?? {});
   }
-  const record: ResourceRecord = { id: uid("res"), type: input.type, name: input.name, status: input.status ?? "Draft", description: input.description ?? "New local resource", updatedAt: now(), data: input.type === "email-templates" ? { ...emailPreferenceCampaignDefaults(getEmailPreferences().data), ...input.data } : input.type === "content-blocks" ? { emailBlockTheme: getEmailPreferences().data.editor, width: getEmailPreferences().data.editor.blockWidthMode === "full" ? "100%" : getEmailPreferences().data.editor.blockWidth, ...input.data } : input.data ?? {} };
+  const record: ResourceRecord = { id: input.id && ["sdk-messages","campaign-jobs","webhook-retries","webhook-hosts"].includes(input.type)?input.id:uid("res"), type: input.type, name: input.name, status: input.status ?? "Draft", description: input.description ?? "New local resource", updatedAt: now(), data: input.type === "email-templates" ? { ...emailPreferenceCampaignDefaults(getEmailPreferences().data), ...input.data } : input.type === "content-blocks" ? { emailBlockTheme: getEmailPreferences().data.editor, width: getEmailPreferences().data.editor.blockWidthMode === "full" ? "100%" : getEmailPreferences().data.editor.blockWidth, ...input.data } : input.data ?? {} };
+  if(record.type==="webhook-credentials")record.data=normalizeWebhookCredential(record.data);
   if (record.data.tags !== undefined) record.data = { ...record.data, tags: assignTags(db(), record.data.tags, record.type) };
   db().prepare("INSERT INTO resources VALUES (?, ?, ?, ?, ?, ?, ?)").run(record.id, record.type, record.name, record.status, record.description, record.updatedAt, JSON.stringify(record.data));
   audit("resource", record.id, "created", { type: record.type }); return record;
@@ -1139,6 +1390,7 @@ export function updateResource(id: string, input: { name?: string; status?: stri
   const existing = getResource(id);
   if (!existing) throw new Error("Resource not found");
   if (existing.type === "tag-management") { updateWorkspaceTag(id, { name: input.name, parentId: input.data?.parentId, expectedUpdatedAt }); return getResource(id)!; }
+  if(existing.type==="webhook-credentials"&&input.data!==undefined)input={...input,data:normalizeWebhookCredential(input.data)};
   if (existing.type === "global-control-group") throw new Error("Use the versioned Global Control Group endpoint.");
   if (existing.type === "email-preferences") throw new Error("Use the versioned email-preferences endpoint to change workspace settings.");
   if (expectedUpdatedAt !== undefined && expectedUpdatedAt !== existing.updatedAt) throw new Error("Resource changed in another tab. Reload before saving.");
@@ -1327,8 +1579,8 @@ function advanceCanvasUser(graph: CanvasGraph, canvasId: string, runId: string, 
         : { canvasRunId: runId, nodeId: current.id, simulated: true, reason: eligible ? undefined : "subscription_or_reachability" };
       let eventType = eligible ? frequencyHeld ? "frequency_capped" : "delivered" : "suppressed";
       eventData = { ...eventData, globalControlGeneration: globalSettings.enabled ? globalSettings.seed : null, globalControlCohort: userGlobalCohort(userId, globalSettings) };
-      if (eligible && channel === "whatsapp") {
-        try { const config = current.config ?? {}; const variants = normalizeWhatsAppVariants({ config }); const index = createHash("sha256").update(`${canvasId}:${current.id}:${userId}`).digest()[0] % variants.length; eventData = { ...eventData, variantId: variants[index].id, message: prepareWhatsAppMessage(variants[index], customWhatsAppTemplates({ config }), { ...user?.attributes, first_name: user?.firstName, country: user?.country, user_id: userId }) }; }
+      if (eventType === "delivered" && channel === "whatsapp") {
+        try { const config = current.config ?? {}; const variants = normalizeWhatsAppVariants({ config }); const index = createHash("sha256").update(`${canvasId}:${current.id}:${userId}`).digest()[0] % variants.length; const eligibility = whatsAppResponseEligibility(variants[index].mode, latestWhatsAppInbound(user?.attributes, listResources("user-events").filter(event => event.data.userId === userId), timestamp), timestamp); if (!eligibility.eligible) throw new Error(eligibility.reason); eventData = { ...eventData, conversationEligibility: eligibility, variantId: variants[index].id, message: prepareWhatsAppMessage(variants[index], customWhatsAppTemplates({ config }), { ...user?.attributes, first_name: user?.firstName, country: user?.country, user_id: userId }) }; }
         catch (cause) { eventType = "failed"; eventData = { ...eventData, error: cause instanceof Error ? cause.message : "WhatsApp rendering failed." }; }
       }
       db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), canvasId, channel, userId, eventType, timestamp, JSON.stringify(eventData));
@@ -1815,6 +2067,24 @@ export function applyProfileRows(rows: Array<Record<string, unknown>>) {
   } catch (error) { conn.exec("ROLLBACK TO profile_sync; RELEASE profile_sync"); throw error; }
 }
 
+function runtimeActiveCampaigns(){return (db().prepare("SELECT * FROM campaigns WHERE status='Active' AND archived_at IS NULL").all() as Record<string,unknown>[]).map(mapCampaign);}
+function attributeCampaignConversions(userId:string,event:{name:string;properties?:Record<string,unknown>;productId?:string;price?:number;quantity?:number;currency?:string},sourceEventId:string,timestamp:string){
+ const exposures=db().prepare("SELECT * FROM message_events WHERE user_id=? AND event_type IN ('delivered','sent','impression','impressed','control') AND created_at<=? AND COALESCE(json_extract(data_json,'$.test'),0)!=1 AND COALESCE(json_extract(data_json,'$.simulated'),0)!=1 ORDER BY created_at DESC,id DESC").all(userId,timestamp) as Array<{id:string;campaign_id:string;created_at:string;data_json:string}>;
+ const seen=new Set<string>(),properties=event.properties??{};
+ for(const exposure of exposures){
+  if(seen.has(exposure.campaign_id))continue;seen.add(exposure.campaign_id);const campaign=getCampaign(exposure.campaign_id);if(!campaign)continue;
+  const entries=resolveConversionEvents(campaign);
+  for(const [conversionIndex,definition] of entries.entries()){
+   const named=conversionCatalog.find(entry=>entry.type===definition.type),legacy=definition.type==="Makes Purchase"?Boolean(event.productId)||event.name==="purchase":definition.type==="Opens Email"?event.name==="opened"&&(!definition.campaignId||properties.campaignId===definition.campaignId):definition.type==="Clicks Email"?event.name==="clicked"&&(!definition.campaignId||properties.campaignId===definition.campaignId):false;
+   const matches=definition.type==="Performs Custom Event"?event.name===definition.eventName:legacy||Boolean(named&&[named.event,definition.type].includes(event.name));
+   if(!matches||definition.app&&String(properties.appId??properties.app_id??"")!==definition.app||definition.properties?.some(p=>String(properties[p.key]??"")!==p.value))continue;
+   const duration=definition.deadline*({Days:86400000,Hours:3600000,Minutes:60000} as Record<string,number>)[definition.unit];if(!Number.isFinite(duration)||new Date(timestamp).getTime()-new Date(exposure.created_at).getTime()>duration)continue;
+   if(db().prepare("SELECT id FROM message_events WHERE campaign_id=? AND user_id=? AND event_type='conversion' AND json_extract(data_json,'$.conversionIndex')=? AND json_extract(data_json,'$.entryEventId')=? LIMIT 1").get(campaign.id,userId,conversionIndex,exposure.id))continue;
+   const exposureData=parseJson<Record<string,unknown>>(exposure.data_json,{}),revenue=event.productId?Number(event.price??0)*Number(event.quantity??1):Number(properties.revenue??properties.total_price??properties.value??0);
+   db().prepare("INSERT INTO message_events VALUES (?,?,?,?,?,?,?)").run(uid("evt"),campaign.id,campaign.channel,userId,"conversion",timestamp,JSON.stringify({conversionIndex,conversionType:definition.type,sourceEventId,entryEventId:exposure.id,variantId:exposureData.variantId??objectValue(exposureData.attributes).variantId,control:exposureData.control===true,revenue:Number.isFinite(revenue)?revenue:0,currency:event.currency??properties.currency??"USD"}));
+  }
+ }
+}
 export function trackProfileEvent(input: { userId: string; name: string; properties?: Record<string, unknown>; productId?: string; price?: number; quantity?: number; currency?: string; createdAt?: string }) {
   if (!getUser(input.userId)) throw new Error("User not found.");
   if (!input.name.trim()) throw new Error("Event name is required.");
@@ -1824,7 +2094,18 @@ export function trackProfileEvent(input: { userId: string; name: string; propert
     const product = listResources("products").find(row => row.data.productId === input.productId);
     if (product?.data.trackingEnabled === false) throw new Error("Purchase tracking is disabled for this product.");
   }
-  const event = createResource({ type: "user-events", name: input.name, status: "Recorded", data: { ...input, createdAt: input.createdAt ?? now() } });
+  const timestamp=input.createdAt??now();if(!Number.isFinite(new Date(timestamp).getTime()))throw new Error("Choose a valid event timestamp.");
+  const event = createResource({ type: "user-events", name: input.name, status: "Recorded", data: { ...input, createdAt: timestamp } });
+  attributeCampaignConversions(input.userId,input,event.id,timestamp);
+  for(const card of listResources("sdk-messages").filter(r=>r.data.userId===input.userId&&r.data.channel==="content"&&r.status==="Available")){
+    const matching=card.data.removalEvent==="purchase"?Boolean(input.productId)||input.name==="purchase":card.data.removalEvent==="custom_event"&&input.name===card.data.removalEventName;
+    if(matching&&((card.data.removalProperties??[]) as Array<{key:string;value:string}>).every(p=>String(input.properties?.[p.key]??"")===p.value))updateResource(card.id,{status:"Removed",data:{...card.data,removedAt:now(),removalEventId:event.id}});
+  }
+  for(const campaign of runtimeActiveCampaigns().filter(c=>c.schedule==="Action-based")){
+    if(!campaignTriggeredBy(campaign,input)||!isCampaignUserEligible(campaign,input.userId)||!isWithinCampaignDuration(campaign))continue;const delivery=objectValue(campaign.config.delivery),previous=listResources("campaign-jobs").filter(r=>r.data.campaignId===campaign.id&&r.data.userId===input.userId).sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt));
+    if(previous.length&&(!delivery.reeligible||new Date(previous[0].updatedAt).getTime()+Number(delivery.reentryDays??1)*86400000>Date.now()))continue;
+    const due=new Date(Date.now()+Number(delivery.delayMinutes??0)*60000).toISOString();enqueueCampaignJob(campaign,input.userId,due,input.properties??{},event.id);
+  }
   audit("user", input.userId, input.productId ? "purchase" : "custom_event", { eventId: event.id, name: input.name });
   return event;
 }
@@ -1898,10 +2179,68 @@ export function prepareEmailMessage(message: { id?: string; subject?: string; bo
       workspace.promotionCodes = { ...workspace.promotionCodes, [name]: [String(code)] };
     }
   }
-  return compileWorkspaceEmail(message, preferences, { profile, kind, unsubscribeUrl, optInUrl, pixelUrl: `${base}/api/email-tracking/${unsubscribe.id}?event=opened`, render: source => resolveLiquidPreview(source, { ...profile, unsubscribe_url: unsubscribeUrl, unsubscribe_link: unsubscribeUrl, optin_url: optInUrl, opt_in_url: optInUrl }, "en", workspace, true), trackLink: (url, alias) => {
+  const attachments=((message.config?.emailAttachments??[]) as Array<{name:string;url:string;mime?:string;content?:string;size?:number}>).map(file=>{const id=/^\/api\/message-assets\/([^/?]+)$/.exec(file.url)?.[1],asset=id?getResource(id):null;return asset?.type==="message-assets"?{...file,mime:String(asset.data.mime),size:Number(asset.data.size),content:String(asset.data.base64)}:file;});
+  if(String(message.body).includes("nps_url")){const token=createResource({type:"nps-token",name:"NPS response",data:{campaignId:message.id,userId,expiresAt:Date.now()+30*86400000}});Object.assign(profile,{nps_url:`${base}/api/messages/nps?token=${token.id}`});}
+  return compileWorkspaceEmail(message, preferences, { profile, kind, attachments, unsubscribeUrl, optInUrl, pixelUrl: `${base}/api/email-tracking/${unsubscribe.id}?event=opened`, render: source => resolveLiquidPreview(source, { ...profile, unsubscribe_url: unsubscribeUrl, unsubscribe_link: unsubscribeUrl, optin_url: optInUrl, opt_in_url: optInUrl }, "en", workspace, true), trackLink: (url, alias) => {
     const existing = listResources("link-aliases").find(row => row.name === alias && row.status === "Active" && row.data.campaignId === message.id);
     if (!existing) return url;
     const token = createResource({ type: "email-tracking-token", name: alias, data: { userId, campaignId: existing.data.campaignId, alias, url, expiresAt: Date.now() + 30 * 86400000 } });
     return `${base}/api/email-tracking/${token.id}?event=clicked`;
   } });
+}
+
+
+export function listCampaignWorkspaces():Array<{id:string;name:string;current:boolean}>{
+ return [{id:"local",name:"Local workspace",current:true},...listResources("workspaces").filter(row=>row.status!=="Archived"&&row.id!=="local").map(row=>({id:row.id,name:row.name,current:false}))];
+}
+export function copyCampaignToWorkspace(id:string,targetWorkspaceId:string){
+ const campaign=getCampaign(id);if(!campaign)throw new Error("Campaign not found.");
+ const target=listCampaignWorkspaces().find(workspace=>workspace.id===targetWorkspaceId);if(!target)throw new Error("Choose an existing local workspace.");
+ const config=structuredClone(campaign.config);for(const key of ["apiIdentifier","publicId","createdAt","createdBy","lastEditedBy","conversionsLocked","monitoring","approval","approvalFingerprint"])delete config[key];
+ config.workspaceId=target.id;config.copiedFrom={campaignId:id,workspaceId:campaign.config.workspaceId??"local"};
+ const copy=upsertCampaign({...campaign,id:uid("cmp"),name:`${campaign.name} (Copy)`,status:"Draft",sent:0,config});
+ audit("campaign",copy.id,"copied_to_workspace",{user:"Local user",category:"Workspace",before:{sourceCampaignId:id},after:{workspaceId:target.id}});
+ return copy;
+}
+export function getCampaignMonitoring(id:string):CampaignMonitoring{
+ if(!getCampaign(id))throw new Error("Campaign not found.");
+ const record=getResource(`campaign-monitor:${id}`),alerts=listResources("campaign-monitor-alerts").filter(row=>row.data.campaignId===id);
+ return {...defaultCampaignMonitoring(),...record?.data,configured:Boolean(record),localOnly:true,alerts:alerts.map(row=>({id:row.id,createdAt:row.updatedAt,...row.data}))} as CampaignMonitoring;
+}
+export function saveCampaignMonitoring(id:string,input:unknown){
+ if(!getCampaign(id))throw new Error("Campaign not found.");
+ if(!input||typeof input!=="object"||Array.isArray(input))throw new Error("Provide Campaign monitoring settings.");
+ const value=input as Record<string,unknown>;
+ if(typeof value.lowerEnabled!=="boolean"||typeof value.upperEnabled!=="boolean"||!Array.isArray(value.channels)||["lowerDuration","lowerThreshold","upperDuration","upperThreshold"].some(key=>typeof value[key]!=="number"||!Number.isFinite(value[key])))throw new Error("Provide booleans, numeric durations and thresholds, and notification channels.");
+ const monitor:CampaignMonitoring={lowerEnabled:value.lowerEnabled,lowerDuration:Number(value.lowerDuration),lowerThreshold:Number(value.lowerThreshold),upperEnabled:value.upperEnabled,upperDuration:Number(value.upperDuration),upperThreshold:Number(value.upperThreshold),channels:[...new Set(value.channels)] as CampaignMonitoring["channels"]};
+ monitor.emptyFields=Array.isArray(value.emptyFields)?value.emptyFields.filter((field):field is NonNullable<CampaignMonitoring['emptyFields']>[number]=>typeof field==='string'&&['lowerDuration','lowerThreshold','upperDuration','upperThreshold'].includes(field)&&!monitor[field.startsWith('lower')?'lowerEnabled':'upperEnabled']):[];
+ const issues=campaignMonitoringIssues(monitor);if(issues.length)throw new Error(issues.join(" "));
+ const before=getCampaignMonitoring(id),timestamp=now();
+ db().prepare("INSERT INTO resources VALUES (?, 'campaign-monitoring', ?, 'Active', 'Local Campaign volume monitoring', ?, ?) ON CONFLICT(id) DO UPDATE SET data_json=excluded.data_json,updated_at=excluded.updated_at").run(`campaign-monitor:${id}`,id,timestamp,JSON.stringify({...monitor,localOnly:true}));
+ audit("campaign",id,"monitoring_updated",{user:"Local user",category:"Monitoring",before:{lowerEnabled:before.lowerEnabled,upperEnabled:before.upperEnabled,channels:before.channels},after:monitor});
+ return evaluateCampaignMonitoring(id);
+}
+export function evaluateCampaignMonitoring(id:string,at:Date|string=new Date()){
+ const campaign=getCampaign(id);if(!campaign)throw new Error("Campaign not found.");
+ const monitor=getCampaignMonitoring(id),time=at instanceof Date?at:new Date(at);if(!Number.isFinite(time.getTime()))throw new Error("Choose a valid monitoring evaluation time.");
+ if(!monitor.lowerEnabled&&!monitor.upperEnabled)return monitor;
+ for(const side of ["lower","upper"] as const){
+  if(!monitor[`${side}Enabled`])continue;const duration=monitor[`${side}Duration`],threshold=monitor[`${side}Threshold`],since=new Date(time.getTime()-duration*60000).toISOString();
+  const rows=db().prepare("SELECT id,user_id,event_type,created_at,data_json FROM message_events WHERE campaign_id=? AND created_at>=? AND created_at<=? AND event_type IN ('sent','delivered','impression','impressed')").all(id,since,time.toISOString()) as Array<{id:string;user_id:string;event_type:string;created_at:string;data_json:string}>;
+  const count=realCampaignEvents(rows.map(row=>({...row,data:parseJson<Record<string,unknown>>(row.data_json,{})}))).filter(row=>row.event_type==="delivered"||row.event_type==="impression"||row.event_type==="impressed").length;
+  const breached=side==="lower"?count<threshold:count>threshold,key=`campaign-monitor-alert:${id}:${side}:${Math.floor(time.getTime()/(duration*60000))}`;
+  if(breached&&!getResource(key))db().prepare("INSERT INTO resources VALUES (?, 'campaign-monitor-alerts', ?, 'Recorded', 'Local alert; no external notification dispatched', ?, ?)").run(key,`${campaign.name} ${side} volume`,time.toISOString(),JSON.stringify({campaignId:id,condition:side,count,threshold,duration,channels:monitor.channels,localOnly:true,notificationStatus:"recorded_locally",evaluatedAt:time.toISOString()}));
+ }
+ const record=getResource(`campaign-monitor:${id}`);if(record)db().prepare("UPDATE resources SET data_json=? WHERE id=?").run(JSON.stringify({...record.data,evaluatedAt:time.toISOString()}),record.id);
+ return getCampaignMonitoring(id);
+}
+export function getCampaignAnalytics(id:string,input:{from?:string;to?:string}={}){
+ const campaign=getCampaign(id);if(!campaign)return null;
+ const end=input.to??now().slice(0,10),start=input.from??new Date(Date.now()-29*86400000).toISOString().slice(0,10);
+ if(!analyticsDateRange(start,end).length)throw new Error("Choose a valid date range of at most 366 days.");
+ const rows=db().prepare("SELECT id,user_id,event_type,created_at,data_json FROM message_events WHERE campaign_id=? AND created_at>=? AND created_at<? ORDER BY created_at,id").all(id,`${start}T00:00:00.000Z`,new Date(new Date(`${end}T00:00:00.000Z`).getTime()+86400000).toISOString()) as Array<{id:string;user_id:string;event_type:string;created_at:string;data_json:string}>;
+ const logs=db().prepare("SELECT id,action,created_at,detail_json FROM audit_log WHERE entity_type='campaign' AND entity_id=? ORDER BY created_at DESC,id DESC").all(id) as Array<{id:string;action:string;created_at:string;detail_json:string}>;
+ const changes=logs.map(row=>{const detail=parseJson<Record<string,unknown>>(row.detail_json,{});return{id:row.id,createdAt:row.created_at,user:String(detail.user??"Local user"),category:String(detail.category??"Campaign activity"),action:row.action,before:detail.before??null,after:detail.after??(Object.keys(detail).length?detail:null)};});
+ const audience=estimateConfiguredAudience(campaign);
+ return {campaign,events:rows.map(({data_json,...row})=>({...row,data:parseJson<Record<string,unknown>>(data_json,{})})),changes,audience:{...audience,channelBreakdown:[{channel:campaign.channel,reachable:audience.reachable,ltv:audience.ltv}]},monitor:evaluateCampaignMonitoring(id)};
 }

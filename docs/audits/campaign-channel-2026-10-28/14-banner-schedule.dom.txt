@@ -1,0 +1,125 @@
+- complementary:
+  - generic: b
+  - button "Demo – Thinkingai":
+    - generic: Demo – Thinkingai
+  - generic: Quick links
+  - button "Canvas":
+    - generic: Canvas
+  - button "Campaigns":
+    - generic: Campaigns
+  - button "Segments":
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+  - button "Performance Overview":
+    - generic: Performance Overview
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic: braze
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour":
+  - button "Language":
+  - button "Notifications":
+  - button "S"
+  - button:
+  - button "Campaigns"
+  - button "Edit 'Audit banner'":
+    - text: Edit 'Audit banner'
+  - text: Limited access
+  - navigation "Campaign steps":
+    - button "✓ Compose Messages":
+      - generic: ✓
+      - generic: Compose Messages
+    - button "2 Schedule Delivery":
+      - generic: "2"
+      - generic: Schedule Delivery
+    - button "3 Target Audiences":
+      - generic: "3"
+      - generic: Target Audiences
+    - button "4 Assign Conversions":
+      - generic: "4"
+      - generic: Assign Conversions
+    - button "5 Review Summary":
+      - generic: "5"
+      - generic: Review Summary
+  - heading "Delivery" [level=2]
+  - heading "Choose a Type" [level=3]
+  - radio "Scheduled Enter users at designated times" [checked]:
+    - generic: Scheduled
+    - generic: Enter users at designated times
+  - radio "Action-Based Enter user when they perform actions":
+    - generic: Action-Based
+    - generic: Enter user when they perform actions
+  - radio "API-Triggered Enter users via API request":
+    - generic: API-Triggered
+    - generic: Enter users via API request
+  - heading "Time-Based Scheduling Options" [level=2]
+  - radio "Send as soon as Campaign is launched"
+  - generic: Send as soon as Campaign is launched
+  - radio "Send at a designated time Choose a time for users to receive this message." [checked]
+  - generic: Send at a designated time
+  - generic: Choose a time for users to receive this message.
+  - radio "Intelligent Timing Each user will receive the Campaign at the time they are most likely to engage."
+  - generic: Intelligent Timing
+  - generic: Each user will receive the Campaign at the time they are most likely to engage.
+  - generic: Entry Frequency
+  - combobox "Entry Frequency":
+    - option "One time" [selected]
+    - option "Daily"
+    - option "Weekly"
+    - option "Monthly"
+  - generic: Start date
+  - textbox "Start date": 2026-09-17
+  - generic: Send time
+  - textbox "Send time": 10:00
+  - checkbox "Enter users into this Campaign in their local time zone"
+  - text: Enter users into this Campaign in their local time zone
+  - generic: "Next Send Time: No upcoming messages scheduled."
+  - heading "Delivery Controls" [level=2]
+  - paragraph: Manage the number of messages your users will receive.
+  - checkbox "Allow users to become re-eligible to receive campaign"
+  - text: Allow users to become re-eligible to receive campaign
+  - heading "Frequency Capping" [level=3]
+  - paragraph: You have not created any Frequency Capping rules.
+  - checkbox "Apply quiet hours"
+  - text: Apply quiet hours
+  - button "Back":
+  - button "✓ Compose":
+    - generic: ✓
+    - text: Compose
+  - button "2 Schedule":
+    - generic: "2"
+    - text: Schedule
+  - button "3 Target":
+    - generic: "3"
+    - text: Target
+  - button "4 Assign":
+    - generic: "4"
+    - text: Assign
+  - button "5 Review":
+    - generic: "5"
+    - text: Review
+  - button "Forward":
+  - button "Save Draft"
+- alert

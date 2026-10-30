@@ -1,0 +1,600 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_email?step=schedule&locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_email?step=schedule&locale=en
+	2 container
+		3 image Download
+		4 image
+	5 container
+		6 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		7 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			8 text Local workspace
+			9 image
+		10 container Side navigation
+			11 text Quick links
+			12 button Canvas
+			13 button Campaigns
+			14 button Segments
+			15 button Getting Started
+			16 button Home
+			17 button AI Decisioning
+			18 button Agent Console
+			19 button Messaging
+			20 button Audience
+			21 button Content
+			22 button Analytics
+			23 button Partner Integrations
+			24 button Data Settings
+			25 button Settings
+		26 button Home
+			27 image Braze
+		28 container
+			29 text ◷   8 days left in your free trial.
+			30 button Connect with sales
+		31 container
+			32 button Search workspace ⌘K
+				33 image
+				34 text Search workspace
+				35 text ⌘K
+			36 button Take a tour
+			37 image Community
+			38 button (collapsed) Description: Language, Secondary Actions: Expand
+			39 button Notifications
+			40 button (collapsed) Description: Profile, Secondary Actions: Expand
+			41 image
+			42 button Open BrazeAI Operator
+		43 button Campaigns
+		44 button Edit 'Audit 2026-10-29 email'
+			45 text Edit
+			46 text  '
+			47 text Audit 2026-10-29 email
+			48 text '
+			49 image
+		50 container
+			51 image
+			52 text Limited access
+			53 container Campaign steps
+				54 button ✓ Compose Messages
+					55 text ✓
+					56 text Compose Messages
+				57 button ✓ Schedule Delivery
+					58 text ✓
+					59 text Schedule Delivery
+				60 button ✓ Target Audiences
+					61 text ✓
+					62 text Target Audiences
+				63 button ✓ Assign Conversions
+					64 text ✓
+					65 text Assign Conversions
+				66 button 5 Review Summary
+					67 text 5
+					68 text Review Summary
+			212 heading Delivery, Value: 2
+				213 text Delivery
+			214 heading Choose a Type, Value: 3
+				215 text Choose a Type
+			216 Delivery type
+				217 container
+					218 radio button (settable, integer) Description: Scheduled Enter users at designated times, Value: 0
+					219 text Scheduled Enter users at designated times
+				220 container
+					221 radio button (settable, integer) Description: Action-Based Enter users when they perform actions, Value: 1
+					222 text Action-Based Enter users when they perform actions
+				223 container
+					224 radio button (settable, integer) Description: API-Triggered Enter users via API request, Value: 0
+					225 text API-Triggered Enter users via API request
+			226 heading ◎ Action-Based delivery, Value: 2
+				227 text ◎ Action-Based delivery
+			1188 container
+				1189 text Trigger type
+				1190 combo box (collapsed, settable) Description: Trigger type, Value: Send a WhatsApp inbound message, Secondary Actions: Expand
+				1191 button Toggle Trigger type
+				1192 text Record 
+				1193 text inbound_whatsapp
+				1194 text  through the local user event API to evaluate this trigger. Provider, geofence, and profile changes require an integration to record that event.
+				1195 checkbox (settable, integer) Description: Filter event properties, Value: 0
+				1196 button Remove trigger
+			713 text Evaluate if user takes specified actions
+			714 container
+				715 combo box (collapsed, settable) Description: Select Trigger, Secondary Actions: Expand
+				716 button Toggle Select Trigger
+			717 button (disabled) ＋ Add Trigger
+			718 heading Schedule Delay, Value: 3
+				719 text Schedule Delay
+			720 text Choose when to send the campaign after the trigger event occurs.
+			721 container
+				722 text Send
+				723 pop up button (collapsed, settable) Send, Value: Immediately, Secondary Actions: Expand
+					724 menu
+						725 (selected) Immediately
+						726 After a delay
+			727 heading Campaign duration, Value: 3
+				728 text Campaign duration
+			729 container
+				730 text Start Time (Required)
+				731 date field (settable) Start Time (Required), Value: 2027-11-01
+					732 container
+						733 stepper
+						734 stepper
+						735 stepper
+					736 pop up button 显示日期选择器 显示日期选择器
+			737 container
+				738 text Default delivery time
+				739 time field (settable) Default delivery time, Value: 10:00
+					740 container
+						741 stepper
+						742 stepper
+					743 pop up button 显示时间选择器 显示时间选择器
+			744 container
+				745 text Time zone
+				746 pop up button (collapsed, settable) Time zone, Value: Company time — UTC, Secondary Actions: Expand
+					747 menu
+						748 (selected) Company time — UTC
+						749 Africa/Abidjan
+						750 Africa/Accra
+						751 Africa/Addis_Ababa
+						752 Africa/Algiers
+						753 Africa/Asmera
+						754 Africa/Bamako
+						755 Africa/Bangui
+						756 Africa/Banjul
+						757 Africa/Bissau
+						758 Africa/Blantyre
+						759 Africa/Brazzaville
+						760 Africa/Bujumbura
+						761 Africa/Cairo
+						762 Africa/Casablanca
+						763 Africa/Ceuta
+						764 Africa/Conakry
+						765 Africa/Dakar
+						766 Africa/Dar_es_Salaam
+						767 Africa/Djibouti
+						768 Africa/Douala
+						769 Africa/El_Aaiun
+						770 Africa/Freetown
+						771 Africa/Gaborone
+						772 Africa/Harare
+						773 Africa/Johannesburg
+						774 Africa/Juba
+						775 Africa/Kampala
+						776 Africa/Khartoum
+						777 Africa/Kigali
+						778 Africa/Kinshasa
+						779 Africa/Lagos
+						780 Africa/Libreville
+						781 Africa/Lome
+						782 Africa/Luanda
+						783 Africa/Lubumbashi
+						784 Africa/Lusaka
+						785 Africa/Malabo
+						786 Africa/Maputo
+						787 Africa/Maseru
+						788 Africa/Mbabane
+						789 Africa/Mogadishu
+						790 Africa/Monrovia
+						791 Africa/Nairobi
+						792 Africa/Ndjamena
+						793 Africa/Niamey
+						794 Africa/Nouakchott
+						795 Africa/Ouagadougou
+						796 Africa/Porto-Novo
+						797 Africa/Sao_Tome
+						798 Africa/Tripoli
+						799 Africa/Tunis
+						800 Africa/Windhoek
+						801 America/Adak
+						802 America/Anchorage
+						803 America/Anguilla
+						804 America/Antigua
+						805 America/Araguaina
+						806 America/Argentina/La_Rioja
+						807 America/Argentina/Rio_Gallegos
+						808 America/Argentina/Salta
+						809 America/Argentina/San_Juan
+						810 America/Argentina/San_Luis
+						811 America/Argentina/Tucuman
+						812 America/Argentina/Ushuaia
+						813 America/Aruba
+						814 America/Asuncion
+						815 America/Bahia
+						816 America/Bahia_Banderas
+						817 America/Barbados
+						818 America/Belem
+						819 America/Belize
+						820 America/Blanc-Sablon
+						821 America/Boa_Vista
+						822 America/Bogota
+						823 America/Boise
+						824 America/Buenos_Aires
+						825 America/Cambridge_Bay
+						826 America/Campo_Grande
+						827 America/Cancun
+						828 America/Caracas
+						829 America/Catamarca
+						830 America/Cayenne
+						831 America/Cayman
+						832 America/Chicago
+						833 America/Chihuahua
+						834 America/Ciudad_Juarez
+						835 America/Coral_Harbour
+						836 America/Cordoba
+						837 America/Costa_Rica
+						838 America/Coyhaique
+						839 America/Creston
+						840 America/Cuiaba
+						841 America/Curacao
+						842 America/Danmarkshavn
+						843 America/Dawson
+						844 America/Dawson_Creek
+						845 America/Denver
+						846 America/Detroit
+						847 America/Dominica
+						848 America/Edmonton
+						849 America/Eirunepe
+						850 America/El_Salvador
+						851 America/Fort_Nelson
+						852 America/Fortaleza
+						853 America/Glace_Bay
+						854 America/Godthab
+						855 America/Goose_Bay
+						856 America/Grand_Turk
+						857 America/Grenada
+						858 America/Guadeloupe
+						859 America/Guatemala
+						860 America/Guayaquil
+						861 America/Guyana
+						862 America/Halifax
+						863 America/Havana
+						864 America/Hermosillo
+						865 America/Indiana/Knox
+						866 America/Indiana/Marengo
+						867 America/Indiana/Petersburg
+						868 America/Indiana/Tell_City
+						869 America/Indiana/Vevay
+						870 America/Indiana/Vincennes
+						871 America/Indiana/Winamac
+						872 America/Indianapolis
+						873 America/Inuvik
+						874 America/Iqaluit
+						875 America/Jamaica
+						876 America/Jujuy
+						877 America/Juneau
+						878 America/Kentucky/Monticello
+						879 America/Kralendijk
+						880 America/La_Paz
+						881 America/Lima
+						882 America/Los_Angeles
+						883 America/Louisville
+						884 America/Lower_Princes
+						885 America/Maceio
+						886 America/Managua
+						887 America/Manaus
+						888 America/Marigot
+						889 America/Martinique
+						890 America/Matamoros
+						891 America/Mazatlan
+						892 America/Mendoza
+						893 America/Menominee
+						894 America/Merida
+						895 America/Metlakatla
+						896 America/Mexico_City
+						897 America/Miquelon
+						898 America/Moncton
+						899 America/Monterrey
+						900 America/Montevideo
+						901 America/Montserrat
+						902 America/Nassau
+						903 America/New_York
+						904 America/Nome
+						905 America/Noronha
+						906 America/North_Dakota/Beulah
+						907 America/North_Dakota/Center
+						908 America/North_Dakota/New_Salem
+						909 America/Ojinaga
+						910 America/Panama
+						911 America/Paramaribo
+						912 America/Phoenix
+						913 America/Port-au-Prince
+						914 America/Port_of_Spain
+						915 America/Porto_Velho
+						916 America/Puerto_Rico
+						917 America/Punta_Arenas
+						918 America/Rankin_Inlet
+						919 America/Recife
+						920 America/Regina
+						921 America/Resolute
+						922 America/Rio_Branco
+						923 America/Santarem
+						924 America/Santiago
+						925 America/Santo_Domingo
+						926 America/Sao_Paulo
+						927 America/Scoresbysund
+						928 America/Sitka
+						929 America/St_Barthelemy
+						930 America/St_Johns
+						931 America/St_Kitts
+						932 America/St_Lucia
+						933 America/St_Thomas
+						934 America/St_Vincent
+						935 America/Swift_Current
+						936 America/Tegucigalpa
+						937 America/Thule
+						938 America/Tijuana
+						939 America/Toronto
+						940 America/Tortola
+						941 America/Vancouver
+						942 America/Whitehorse
+						943 America/Winnipeg
+						944 America/Yakutat
+						945 Antarctica/Casey
+						946 Antarctica/Davis
+						947 Antarctica/DumontDUrville
+						948 Antarctica/Macquarie
+						949 Antarctica/Mawson
+						950 Antarctica/McMurdo
+						951 Antarctica/Palmer
+						952 Antarctica/Rothera
+						953 Antarctica/Syowa
+						954 Antarctica/Troll
+						955 Antarctica/Vostok
+						956 Arctic/Longyearbyen
+						957 Asia/Aden
+						958 Asia/Almaty
+						959 Asia/Amman
+						960 Asia/Anadyr
+						961 Asia/Aqtau
+						962 Asia/Aqtobe
+						963 Asia/Ashgabat
+						964 Asia/Atyrau
+						965 Asia/Baghdad
+						966 Asia/Bahrain
+						967 Asia/Baku
+						968 Asia/Bangkok
+						969 Asia/Barnaul
+						970 Asia/Beirut
+						971 Asia/Bishkek
+						972 Asia/Brunei
+						973 Asia/Calcutta
+						974 Asia/Chita
+						975 Asia/Colombo
+						976 Asia/Damascus
+						977 Asia/Dhaka
+						978 Asia/Dili
+						979 Asia/Dubai
+						980 Asia/Dushanbe
+						981 Asia/Famagusta
+						982 Asia/Gaza
+						983 Asia/Hebron
+						984 Asia/Hong_Kong
+						985 Asia/Hovd
+						986 Asia/Irkutsk
+						987 Asia/Jakarta
+						988 Asia/Jayapura
+						989 Asia/Jerusalem
+						990 Asia/Kabul
+						991 Asia/Kamchatka
+						992 Asia/Karachi
+						993 Asia/Katmandu
+						994 Asia/Khandyga
+						995 Asia/Krasnoyarsk
+						996 Asia/Kuala_Lumpur
+						997 Asia/Kuching
+						998 Asia/Kuwait
+						999 Asia/Macau
+						1000 Asia/Magadan
+						1001 Asia/Makassar
+						1002 Asia/Manila
+						1003 Asia/Muscat
+						1004 Asia/Nicosia
+						1005 Asia/Novokuznetsk
+						1006 Asia/Novosibirsk
+						1007 Asia/Omsk
+						1008 Asia/Oral
+						1009 Asia/Phnom_Penh
+						1010 Asia/Pontianak
+						1011 Asia/Pyongyang
+						1012 Asia/Qatar
+						1013 Asia/Qostanay
+						1014 Asia/Qyzylorda
+						1015 Asia/Rangoon
+						1016 Asia/Riyadh
+						1017 Asia/Saigon
+						1018 Asia/Sakhalin
+						1019 Asia/Samarkand
+						1020 Asia/Seoul
+						1021 Asia/Shanghai
+						1022 Asia/Singapore
+						1023 Asia/Srednekolymsk
+						1024 Asia/Taipei
+						1025 Asia/Tashkent
+						1026 Asia/Tbilisi
+						1027 Asia/Tehran
+						1028 Asia/Thimphu
+						1029 Asia/Tokyo
+						1030 Asia/Tomsk
+						1031 Asia/Ulaanbaatar
+						1032 Asia/Urumqi
+						1033 Asia/Ust-Nera
+						1034 Asia/Vientiane
+						1035 Asia/Vladivostok
+						1036 Asia/Yakutsk
+						1037 Asia/Yekaterinburg
+						1038 Asia/Yerevan
+						1039 Atlantic/Azores
+						1040 Atlantic/Bermuda
+						1041 Atlantic/Canary
+						1042 Atlantic/Cape_Verde
+						1043 Atlantic/Faeroe
+						1044 Atlantic/Madeira
+						1045 Atlantic/Reykjavik
+						1046 Atlantic/South_Georgia
+						1047 Atlantic/St_Helena
+						1048 Atlantic/Stanley
+						1049 Australia/Adelaide
+						1050 Australia/Brisbane
+						1051 Australia/Broken_Hill
+						1052 Australia/Darwin
+						1053 Australia/Eucla
+						1054 Australia/Hobart
+						1055 Australia/Lindeman
+						1056 Australia/Lord_Howe
+						1057 Australia/Melbourne
+						1058 Australia/Perth
+						1059 Australia/Sydney
+						1060 Europe/Amsterdam
+						1061 Europe/Andorra
+						1062 Europe/Astrakhan
+						1063 Europe/Athens
+						1064 Europe/Belgrade
+						1065 Europe/Berlin
+						1066 Europe/Bratislava
+						1067 Europe/Brussels
+						1068 Europe/Bucharest
+						1069 Europe/Budapest
+						1070 Europe/Busingen
+						1071 Europe/Chisinau
+						1072 Europe/Copenhagen
+						1073 Europe/Dublin
+						1074 Europe/Gibraltar
+						1075 Europe/Guernsey
+						1076 Europe/Helsinki
+						1077 Europe/Isle_of_Man
+						1078 Europe/Istanbul
+						1079 Europe/Jersey
+						1080 Europe/Kaliningrad
+						1081 Europe/Kiev
+						1082 Europe/Kirov
+						1083 Europe/Lisbon
+						1084 Europe/Ljubljana
+						1085 Europe/London
+						1086 Europe/Luxembourg
+						1087 Europe/Madrid
+						1088 Europe/Malta
+						1089 Europe/Mariehamn
+						1090 Europe/Minsk
+						1091 Europe/Monaco
+						1092 Europe/Moscow
+						1093 Europe/Oslo
+						1094 Europe/Paris
+						1095 Europe/Podgorica
+						1096 Europe/Prague
+						1097 Europe/Riga
+						1098 Europe/Rome
+						1099 Europe/Samara
+						1100 Europe/San_Marino
+						1101 Europe/Sarajevo
+						1102 Europe/Saratov
+						1103 Europe/Simferopol
+						1104 Europe/Skopje
+						1105 Europe/Sofia
+						1106 Europe/Stockholm
+						1107 Europe/Tallinn
+						1108 Europe/Tirane
+						1109 Europe/Ulyanovsk
+						1110 Europe/Vaduz
+						1111 Europe/Vatican
+						1112 Europe/Vienna
+						1113 Europe/Vilnius
+						1114 Europe/Volgograd
+						1115 Europe/Warsaw
+						1116 Europe/Zagreb
+						1117 Europe/Zurich
+						1118 Indian/Antananarivo
+						1119 Indian/Chagos
+						1120 Indian/Christmas
+						1121 Indian/Cocos
+						1122 Indian/Comoro
+						1123 Indian/Kerguelen
+						1124 Indian/Mahe
+						1125 Indian/Maldives
+						1126 Indian/Mauritius
+						1127 Indian/Mayotte
+						1128 Indian/Reunion
+						1129 Pacific/Apia
+						1130 Pacific/Auckland
+						1131 Pacific/Bougainville
+						1132 Pacific/Chatham
+						1133 Pacific/Easter
+						1134 Pacific/Efate
+						1135 Pacific/Enderbury
+						1136 Pacific/Fakaofo
+						1137 Pacific/Fiji
+						1138 Pacific/Funafuti
+						1139 Pacific/Galapagos
+						1140 Pacific/Gambier
+						1141 Pacific/Guadalcanal
+						1142 Pacific/Guam
+						1143 Pacific/Honolulu
+						1144 Pacific/Kiritimati
+						1145 Pacific/Kosrae
+						1146 Pacific/Kwajalein
+						1147 Pacific/Majuro
+						1148 Pacific/Marquesas
+						1149 Pacific/Midway
+						1150 Pacific/Nauru
+						1151 Pacific/Niue
+						1152 Pacific/Norfolk
+						1153 Pacific/Noumea
+						1154 Pacific/Pago_Pago
+						1155 Pacific/Palau
+						1156 Pacific/Pitcairn
+						1157 Pacific/Ponape
+						1158 Pacific/Port_Moresby
+						1159 Pacific/Rarotonga
+						1160 Pacific/Saipan
+						1161 Pacific/Tahiti
+						1162 Pacific/Tarawa
+						1163 Pacific/Tongatapu
+						1164 Pacific/Truk
+						1165 Pacific/Wake
+						1166 Pacific/Wallis
+			1167 checkbox (settable, integer) Description: End Time (Optional), Value: 0
+			1168 heading Quiet hours, Value: 3
+				1169 text Quiet hours
+			1170 container
+				1171 checkbox (settable, integer) Description: Enable quiet hours Prevent messages from sending during these hours., Value: 1
+				1172 text Enable quiet hours Prevent messages from sending during these hours.
+			1173 container
+				1174 text Quiet hours start
+				1175 time field (settable) Quiet hours start, Value: 22:00
+					1176 container
+						1177 stepper
+						1178 stepper
+					1179 pop up button 显示时间选择器 显示时间选择器
+			1180 container
+				1181 text Quiet hours end
+				1182 time field (settable) Quiet hours end, Value: 08:00
+					1183 container
+						1184 stepper
+						1185 stepper
+					1186 pop up button 显示时间选择器 显示时间选择器
+			1187 text Send immediately after trigger criteria are met. Campaign starts 2027-11-01 at 10:00 (UTC).
+			704 heading Delivery Controls, Value: 2
+				705 text Delivery Controls
+			706 text Manage the number of messages your users will receive.
+			707 checkbox (settable, integer) Description: Allow users to become re-eligible to receive campaign, Value: 0
+			708 heading Frequency Capping, Value: 3
+				709 text Frequency Capping
+			710 text You have not created any Frequency Capping rules.
+			711 link Description: Manage frequency capping rules, Value: 127.0.0.1:3100/frequency-capping-rules?locale=en
+			192 button Back
+				193 image
+			194 button ✓ Compose
+				195 text ✓
+				196 text Compose
+			197 button ✓ Schedule
+				198 text ✓
+				199 text Schedule
+			200 button ✓ Target
+				201 text ✓
+				202 text Target
+			203 button ✓ Assign
+				204 text ✓
+				205 text Assign
+			206 button 5 Review
+				207 text 5
+				208 text Review
+			209 button Forward
+				210 image
+			211 button Save Draft
+		712 text Braze Demo — Thinkingai
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_email?step=schedule&locale=en

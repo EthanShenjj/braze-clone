@@ -1,0 +1,192 @@
+- complementary:
+  - generic: b
+  - button "Demo – Thinkingai":
+    - generic: Demo – Thinkingai
+  - generic: Quick links
+  - button "Canvas":
+    - generic: Canvas
+  - button "Campaigns":
+    - generic: Campaigns
+  - button "Segments":
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+  - button "Performance Overview":
+    - generic: Performance Overview
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic: braze
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour":
+  - button "Language":
+  - button "Notifications":
+  - button "S"
+  - button:
+  - button "Campaigns"
+  - button "Edit 'Audit whatsapp'":
+    - text: Edit 'Audit whatsapp'
+  - text: Limited access
+  - navigation "Campaign steps":
+    - button "1 Compose Messages":
+      - generic: "1"
+      - generic: Compose Messages
+    - button "2 Schedule Delivery":
+      - generic: "2"
+      - generic: Schedule Delivery
+    - button "3 Target Audiences":
+      - generic: "3"
+      - generic: Target Audiences
+    - button "4 Assign Conversions":
+      - generic: "4"
+      - generic: Assign Conversions
+    - button "5 Review Summary":
+      - generic: "5"
+      - generic: Review Summary
+  - heading "Campaign Details" [level=2]
+  - generic: Campaign Name
+  - textbox "Campaign Name":
+    - /placeholder: Enter Campaign Name
+    - text: Audit whatsapp
+  - generic: Teams
+  - combobox "Teams":
+    - option "Select..." [selected]
+    - option "Lifecycle Marketing"
+    - option "Growth"
+    - option "Retention"
+  - button "Add description":
+    - text: Add description
+  - button "Tags":
+    - text: Tags
+  - generic: Campaign ID
+  - textbox "Campaign ID": cmp_audit_20261028_whatsapp
+  - button "Copy":
+    - text: Copy
+  - heading "Compose WhatsApp" [level=2]
+  - paragraph: Send an approved WhatsApp template.
+  - button "Preview and test"
+  - generic: WhatsApp demo mode
+  - generic: Composer behavior and validation are local. No message is sent to Meta or WhatsApp.
+  - generic: Demo account connected
+  - heading "Message variants" [level=3]
+  - paragraph: Test different WhatsApp content while keeping the same audience and schedule.
+  - button "Variant 1 Response":
+    - text: Variant 1
+    - generic: Response
+  - button "Add WhatsApp variant":
+  - button "Sync templates":
+  - button "Duplicate variant":
+  - button "Delete variant" [disabled]:
+  - navigation "WhatsApp composer sections":
+    - button "Compose" [pressed]
+    - button "Test"
+  - heading "Sending configuration" [level=3]
+  - paragraph: Choose the demo business identity and subscription group.
+  - text: Incomplete
+  - text: WhatsApp Business Account
+  - 'combobox "WhatsApp Business Account Quality rating: High · Demo data"':
+    - option "Thinkingai Demo · +1 415 555 0108" [selected]
+  - generic: "Quality rating: High · Demo data"
+  - text: Subscription group
+  - combobox "WhatsApp subscription group":
+    - option "Select a subscription group" [selected]
+    - option "WhatsApp updates"
+  - generic: Only subscribed or opted-in users are eligible.
+  - heading "Message type" [level=3]
+  - paragraph: Template messages start conversations. Response messages require an open 24-hour window.
+  - button "Template message Use approved content to start a conversation":
+    - generic: Template message
+    - generic: Use approved content to start a conversation
+  - button "Response message Reply to an inbound message within 24 hours" [pressed]:
+    - generic: Response message
+    - generic: Reply to an inbound message within 24 hours
+  - generic: 24-hour conversation window
+  - generic: Response messages are only eligible after an inbound WhatsApp message.
+  - checkbox "Simulate open window"
+  - text: Simulate open window
+  - heading "Response layout" [level=3]
+  - paragraph: Choose the interaction that best fits the inbound conversation.
+  - button "Text message A simple reply inside the conversation window" [pressed]:
+    - generic: Text message
+    - generic: A simple reply inside the conversation window
+  - button "Quick reply Offer up to three tap-to-reply options":
+    - generic: Quick reply
+    - generic: Offer up to three tap-to-reply options
+  - button "Media message Reply with an image, video, or document":
+    - generic: Media message
+    - generic: Reply with an image, video, or document
+  - button "Call-to-action Send one website action":
+    - generic: Call-to-action
+    - generic: Send one website action
+  - button "List message Present up to ten selectable options":
+    - generic: List message
+    - generic: Present up to ten selectable options
+  - text: Message
+  - textbox "Message 49 characters":
+    - /placeholder: Write a response message
+    - text: Thanks for messaging Thinkingai. How can we help?
+  - generic: 49 characters
+  - complementary:
+    - heading "Preview" [level=3]
+    - paragraph: Personalized for Carla Rodriguez
+    - combobox "Preview device":
+      - option "WhatsApp · iPhone" [selected]
+      - option "WhatsApp · Android"
+    - generic: 9:41
+    - generic: ● ●●
+    - generic: ‹
+    - generic: T
+    - generic: Thinkingai Demo
+    - generic: business account
+    - generic: Messages are end-to-end encrypted. This is a local preview.
+    - generic: Today
+    - article:
+      - paragraph: Thanks for messaging Thinkingai. How can we help?
+      - time: 9:41 AM ✓✓
+    - generic: Message
+    - heading "Message readiness" [level=4]
+    - paragraph:
+      - text: Response layout configured
+    - paragraph:
+      - text: Subscription group selected
+    - paragraph:
+      - text: Open a simulated conversation window
+  - button "Back" [disabled]:
+  - button "1 Compose":
+    - generic: "1"
+    - text: Compose
+  - button "2 Schedule":
+    - generic: "2"
+    - text: Schedule
+  - button "3 Target":
+    - generic: "3"
+    - text: Target
+  - button "4 Assign":
+    - generic: "4"
+    - text: Assign
+  - button "5 Review":
+    - generic: "5"
+    - text: Review
+  - button "Forward":
+  - button "Save Draft"
+- alert

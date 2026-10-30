@@ -1,0 +1,47 @@
+{
+  "passed": 11,
+  "checks": [
+    "isolated WA staged fixture persisted",
+    "audience exact calculation enqueued",
+    "persisted audience exact calculation completed",
+    "actual queue lifecycle recorded",
+    "calculation remains in server history",
+    "generic queue read forbidden",
+    "generic queue mutation forbidden",
+    "AI optimization capability explicitly absent",
+    "real delivery preview endpoint",
+    "monitoring preserves explicit zero and disabled blanks",
+    "monitoring empty field metadata survives GET"
+  ],
+  "calculationId": "res_96062424a2d841fa",
+  "previewKeys": [
+    "calculatedAt",
+    "channel",
+    "timezone",
+    "matching",
+    "reachable",
+    "withOptimalTime",
+    "usingFallback",
+    "fallbackTime",
+    "fallbackSource",
+    "bins",
+    "requirements"
+  ],
+  "capabilities": {
+    "brazeAI": {
+      "available": false,
+      "reason": "Optimize with BrazeAI™ is not available for this workspace."
+    },
+    "filters": {
+      "randomBucket": true,
+      "createdFrom": true,
+      "pendingDeletion": true,
+      "sessionDates": true
+    },
+    "intelligentTiming": {
+      "profileTimes": true,
+      "activityFallback": true,
+      "deliveryPreview": true
+    }
+  }
+}

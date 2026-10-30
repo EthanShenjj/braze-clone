@@ -1,0 +1,237 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_sms?locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_sms?locale=en
+	2 container
+		3 image Download
+		4 image
+	5 container
+		6 text b
+		7 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			8 image
+			9 text Local workspace
+		10 text Quick links
+		11 button Canvas
+			12 image
+			13 text Canvas
+		14 button Campaigns
+			15 image
+			16 text Campaigns
+		17 button Segments
+			18 image
+			19 text Segments
+		20 button Getting Started
+			21 image
+			22 text Getting Started
+		23 button Performance Overview
+			24 image
+			25 text Performance Overview
+		26 button AI Decisioning
+			27 image
+			28 text AI Decisioning
+		29 button Agent Console
+			30 image
+			31 text Agent Console
+		32 button Messaging
+			33 image
+			34 text Messaging
+		35 button Audience
+			36 image
+			37 text Audience
+		38 button Content
+			39 image
+			40 text Content
+		41 button Analytics
+			42 image
+			43 text Analytics
+		44 button Partner Integrations
+			45 image
+			46 text Partner Integrations
+		47 button Data Settings
+			48 image
+			49 text Data Settings
+		50 button Settings
+			51 image
+			52 text Settings
+		53 text braze
+		54 container
+			55 text ◷   8 days left in your free trial.
+			56 button Connect with sales
+		57 container
+			58 button Search workspace ⌘K
+				59 image
+				60 text Search workspace
+				61 text ⌘K
+			62 button Take a tour
+				63 image
+			64 image
+			65 button (collapsed) Description: Language, Secondary Actions: Expand
+				66 image
+			67 button Notifications
+				68 image
+			69 button S
+			70 image
+			71 button
+				72 image
+		73 button Campaigns
+		74 button Edit 'Audit 2026-10-29 sms'
+			75 text Edit
+			76 text  '
+			77 text Audit 2026-10-29 sms
+			78 text '
+			79 image
+		80 container
+			81 image
+			82 text Limited access
+			83 container Campaign steps
+				84 button ✓ Compose Messages
+					85 text ✓
+					86 text Compose Messages
+				87 button ✓ Schedule Delivery
+					88 text ✓
+					89 text Schedule Delivery
+				90 button ✓ Target Audiences
+					91 text ✓
+					92 text Target Audiences
+				93 button ✓ Assign Conversions
+					94 text ✓
+					95 text Assign Conversions
+				96 button 5 Review Summary
+					97 text 5
+					98 text Review Summary
+			99 heading Campaign Details, Value: 2
+				100 text Campaign Details
+			101 container
+				102 text Campaign Name
+				103 text field (settable) Campaign Name, Value: Audit 2026-10-29 sms
+			104 container
+				105 text Teams
+				106 pop up button (collapsed, settable) Teams, Value: Select…, Secondary Actions: Expand
+					107 menu
+						108 (selected) Select…
+			109 button Add description
+				110 image
+				111 text Add description
+			112 button (collapsed) Tags, Secondary Actions: Expand
+				113 image
+				114 text Tags
+				115 image
+			116 container Campaign brief
+				117 heading Campaign brief, Value: 3
+					118 text Campaign brief
+				119 text Attach a brief so BrazeAI Operator can build your campaign and your Standards can review it against your goals
+				120 text Attach a campaign brief (optional)
+				121 text PDF, TXT, MD, CSV, DOCX up to 15MB
+				122 button Upload file
+					123 image
+					124 text Upload file
+			125 container
+				126 text Campaign ID
+				127 text field Campaign ID, Help: 2c2182d9-df5e-592d-bc16-2cc3d02988b4
+			128 button Copy
+				129 image
+				130 text Copy
+			131 container SMS/MMS/RCS Composer
+				132 heading SMS/MMS/RCS Composer, Value: 2
+					133 text SMS/MMS/RCS Composer
+				134 heading Variants, Value: 3
+					135 text Variants
+				136 tab group SMS variants
+					137 tab (selected, settable, boolean) Audit 2026-10-29 sms, Value: 1
+					138 button Add variant
+						139 image
+				140 container
+					141 text Subscription Group
+					142 image
+					143 pop up button (collapsed, settable) Subscription Group, Value: SMS alerts, Secondary Actions: Expand
+						144 menu
+							145 Workspace subscription status
+							146 (selected) SMS alerts
+				147 container
+					148 heading Preview, Value: 3
+						149 text Preview
+					150 text Hello Sofia Actual rendering may not be identical to this preview depending on the user's environment.
+				151 container SMS composer sections
+					152 button Compose
+					153 button Contact Card Generator
+					154 button Test
+				155 container
+					156 text Variant name
+					157 text field (settable) Variant name, Value: Audit 2026-10-29 sms
+				158 button Copy variant
+				159 button (disabled) Delete variant
+				160 container
+					161 text Message type
+					162 pop up button (collapsed, settable) Message type, Value: SMS, Secondary Actions: Expand
+						163 menu
+							164 (selected) SMS
+							165 (disabled) MMS
+							166 (disabled) RCS
+				167 button (collapsed) Sending configuration, Secondary Actions: Expand
+					168 text Sending configuration
+				169 heading Language, Value: 3
+					170 text Language
+				171 button Add languages
+					172 image
+					173 text Add languages
+				174 container
+					175 text Preview language
+					176 pop up button (collapsed, settable) Preview language, Value: English, Secondary Actions: Expand
+						177 menu
+							178 Arabic
+							179 Chinese
+							180 (selected) English
+							181 French
+							182 German
+							183 Hebrew
+							184 Indonesian
+							185 Italian
+							186 Japanese
+							187 Korean
+							188 Malay
+							189 Spanish
+							190 Tagalog
+							191 Thai
+							192 Vietnamese
+				193 heading Content, Value: 3
+					194 text Content
+				195 button  Copywriter
+					196 image
+					197 text  Copywriter
+				198 text Message
+				199 text 11  |  1  Billable Segment
+				200 image
+				201 container
+					202 text entry area (settable) Description: Message, Value: Hello {{${first_name}}}
+					203 button Add Liquid
+						204 image
+				205 container
+					206 checkbox (settable, integer) Description: Append opt-out message, Value: 0
+					207 checkbox (settable, integer) Description: Link shortening, Value: 1
+					208 text Link shortening
+					209 button Shorten the URL
+						210 text Shorten the URL
+						211 image
+					212 text  contained in your message and better understand message engagement.
+			213 button (disabled) Back
+				214 image
+			215 button ✓ Compose
+				216 text ✓
+				217 text Compose
+			218 button ✓ Schedule
+				219 text ✓
+				220 text Schedule
+			221 button ✓ Target
+				222 text ✓
+				223 text Target
+			224 button ✓ Assign
+				225 text ✓
+				226 text Assign
+			227 button 5 Review
+				228 text 5
+				229 text Review
+			230 button Forward
+				231 image
+			232 button Save Draft
+		233 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			234 image
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_sms?locale=en

@@ -1,0 +1,190 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_386e066c?step=compose&workspace=local&locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_386e066c?step=compose&workspace=local&locale=en
+	2 container
+		3 image Download
+		4 image
+	5 container
+		6 text Campaigns
+		7 text b
+		8 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			9 image
+			10 text Local workspace
+		11 text Quick links
+		12 button Canvas
+			13 image
+			14 text Canvas
+		15 button Campaigns
+			16 image
+			17 text Campaigns
+		18 button Segments
+			19 image
+			20 text Segments
+		21 button Getting Started
+			22 image
+			23 text Getting Started
+		24 button Performance Overview
+			25 image
+			26 text Performance Overview
+		27 button AI Decisioning
+			28 image
+			29 text AI Decisioning
+		30 button Agent Console
+			31 image
+			32 text Agent Console
+		33 button Messaging
+			34 image
+			35 text Messaging
+		36 button Audience
+			37 image
+			38 text Audience
+		39 button Content
+			40 image
+			41 text Content
+		42 button Analytics
+			43 image
+			44 text Analytics
+		45 button Partner Integrations
+			46 image
+			47 text Partner Integrations
+		48 button Data Settings
+			49 image
+			50 text Data Settings
+		51 button Settings
+			52 image
+			53 text Settings
+		54 text braze
+		55 container
+			56 text ◷   8 days left in your free trial.
+			57 button Connect with sales
+		58 container
+			59 button Search workspace ⌘K
+				60 image
+				61 text Search workspace
+				62 text ⌘K
+			63 button Take a tour
+				64 image
+			65 image
+			66 button (collapsed) Description: Language, Secondary Actions: Expand
+				67 image
+			68 button Notifications
+				69 image
+			70 button S
+			71 image
+			72 button Open BrazeAI Operator
+				73 image
+		74 button Campaigns
+		75 button Edit 'New Campaign - October 30, 2026'
+			76 text Edit
+			77 text  '
+			78 text New Campaign - October 30, 2026
+			79 text '
+			80 image
+		81 container
+			82 image
+			83 text Limited access
+			84 container Campaign steps
+				85 button 1 Compose Messages
+					86 text 1
+					87 text Compose Messages
+				88 button ✓ Schedule Delivery
+					89 text ✓
+					90 text Schedule Delivery
+				91 button ✓ Target Audiences
+					92 text ✓
+					93 text Target Audiences
+				94 button ✓ Assign Conversions
+					95 text ✓
+					96 text Assign Conversions
+				97 button 5 Review Summary
+					98 text 5
+					99 text Review Summary
+			100 heading Campaign Details, Value: 2
+				101 text Campaign Details
+			102 container
+				103 text Campaign Name
+				104 text field (settable) Campaign Name, Value: New Campaign - October 30, 2026
+			105 container
+				106 text Teams
+				107 pop up button (collapsed, settable) Teams, Value: Select…, Secondary Actions: Expand
+					108 menu
+						109 (selected) Select…
+			110 button Add description
+				111 image
+				112 text Add description
+			113 button (collapsed) Tags, Secondary Actions: Expand
+				114 image
+				115 text Tags
+				116 image
+			117 container Campaign brief
+				118 heading Campaign brief, Value: 3
+					119 text Campaign brief
+				120 text Attach a brief so BrazeAI Operator can build your campaign and your Standards can review it against your goals
+				121 text Attach a campaign brief (optional)
+				122 text PDF, TXT, MD, CSV, DOCX up to 15MB
+				123 button Upload file
+					124 image
+					125 text Upload file
+			126 container
+				127 text Campaign ID
+				128 text field Campaign ID, Help: cmp_386e066c
+			129 button Copy
+				130 image
+				131 text Copy
+			132 heading Compose Multichannel, Value: 2
+				133 text Compose Multichannel
+			134 text Coordinate messages across one or more channels.
+			135 button (disabled) Preview and test
+			136 container
+				137 heading Messaging channels, Value: 2
+					138 text Messaging channels
+				139 text Select a messaging channel to start composing your Campaign.
+				140 button Email Design a personalized email message.
+					141 image
+					142 text Email
+					143 text Design a personalized email message.
+				144 button Push notification Send mobile and web notifications.
+					145 image
+					146 text Push notification
+					147 text Send mobile and web notifications.
+				148 button Content Card Deliver durable content in an app feed.
+					149 image
+					150 text Content Card
+					151 text Deliver durable content in an app feed.
+				152 button SMS/MMS/RCS Send messaging through a subscriber group.
+					153 image
+					154 text SMS/MMS/RCS
+					155 text Send messaging through a subscriber group.
+				156 button Webhook Call an external service with campaign data.
+					157 image
+					158 text Webhook
+					159 text Call an external service with campaign data.
+				160 button WhatsApp Send an approved WhatsApp template.
+					161 image
+					162 text WhatsApp
+					163 text Send an approved WhatsApp template.
+				164 button LINE Send a message through LINE Official Account.
+					165 image
+					166 text LINE
+					167 text Send a message through LINE Official Account.
+			168 button (disabled) Back
+				169 image
+			170 button 1 Compose
+				171 text 1
+				172 text Compose
+			173 button ✓ Schedule
+				174 text ✓
+				175 text Schedule
+			176 button ✓ Target
+				177 text ✓
+				178 text Target
+			179 button ✓ Assign
+				180 text ✓
+				181 text Assign
+			182 button 5 Review
+				183 text 5
+				184 text Review
+			185 button Forward
+				186 image
+			187 button Save Draft
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_386e066c?step=compose&workspace=local&locale=en

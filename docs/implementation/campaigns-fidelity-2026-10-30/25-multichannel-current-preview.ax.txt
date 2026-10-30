@@ -1,0 +1,277 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_multichannel?locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_multichannel?locale=en
+	2 container
+		3 image Download
+		4 image
+	5 container
+		6 text b
+		7 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			8 image
+			9 text Local workspace
+		10 text Quick links
+		11 button Canvas
+			12 image
+			13 text Canvas
+		14 button Campaigns
+			15 image
+			16 text Campaigns
+		17 button Segments
+			18 image
+			19 text Segments
+		20 button Getting Started
+			21 image
+			22 text Getting Started
+		23 button Performance Overview
+			24 image
+			25 text Performance Overview
+		26 button AI Decisioning
+			27 image
+			28 text AI Decisioning
+		29 button Agent Console
+			30 image
+			31 text Agent Console
+		32 button Messaging
+			33 image
+			34 text Messaging
+		35 button Audience
+			36 image
+			37 text Audience
+		38 button Content
+			39 image
+			40 text Content
+		41 button Analytics
+			42 image
+			43 text Analytics
+		44 button Partner Integrations
+			45 image
+			46 text Partner Integrations
+		47 button Data Settings
+			48 image
+			49 text Data Settings
+		50 button Settings
+			51 image
+			52 text Settings
+		53 text braze
+		54 container
+			55 text ◷   8 days left in your free trial.
+			56 button Connect with sales
+		57 container
+			58 button Search workspace ⌘K
+				59 image
+				60 text Search workspace
+				61 text ⌘K
+			62 button Take a tour
+				63 image
+			64 image
+			65 button (collapsed) Description: Language, Secondary Actions: Expand
+				66 image
+			67 button Notifications
+				68 image
+			69 button S
+			70 image
+			71 button
+				72 image
+		73 button Campaigns
+		74 button Edit 'Audit 2026-10-29 multichannel'
+			75 text Edit
+			76 text  '
+			77 text Audit 2026-10-29 multichannel
+			78 text '
+			79 image
+		80 container
+			81 image
+			82 text Limited access
+			83 container Campaign steps
+				84 button ✓ Compose Messages
+					85 text ✓
+					86 text Compose Messages
+				87 button ✓ Schedule Delivery
+					88 text ✓
+					89 text Schedule Delivery
+				90 button ✓ Target Audiences
+					91 text ✓
+					92 text Target Audiences
+				93 button ✓ Assign Conversions
+					94 text ✓
+					95 text Assign Conversions
+				96 button 5 Review Summary
+					97 text 5
+					98 text Review Summary
+			99 heading Campaign Details, Value: 2
+				100 text Campaign Details
+			101 container
+				102 text Campaign Name
+				103 text field (settable) Campaign Name, Value: Audit 2026-10-29 multichannel
+			104 container
+				105 text Teams
+				106 pop up button (collapsed, settable) Teams, Value: Select…, Secondary Actions: Expand
+					107 menu
+						108 (selected) Select…
+			109 button Add description
+				110 image
+				111 text Add description
+			112 button (collapsed) Tags, Secondary Actions: Expand
+				113 image
+				114 text Tags
+				115 image
+			116 container Campaign brief
+				117 heading Campaign brief, Value: 3
+					118 text Campaign brief
+				119 text Attach a brief so BrazeAI Operator can build your campaign and your Standards can review it against your goals
+				120 text Attach a campaign brief (optional)
+				121 text PDF, TXT, MD, CSV, DOCX up to 15MB
+				122 button Upload file
+					123 image
+					124 text Upload file
+			125 container
+				126 text Campaign ID
+				127 text field Campaign ID, Help: 55583aeb-aa49-52d0-b58d-79e1adf3479a
+			128 button Copy
+				129 image
+				130 text Copy
+			131 heading Compose Multichannel, Value: 2
+				132 text Compose Multichannel
+			133 text Coordinate messages across one or more channels.
+			134 button Preview and test
+			135 container
+				136 heading Channels, Value: 2
+					137 text Channels
+				138 tab group Campaign channels
+					139 tab (selected, settable, boolean) Push notification, Value: 1
+				140 button (collapsed) Add channel, Secondary Actions: Expand
+					141 image
+					142 text Add channel
+				143 heading Push notification, Value: 3
+					144 text Push notification
+				145 button Remove channel
+				146 heading Variants, Value: 3
+					147 text Variants
+				148 tab group Message variants
+					149 tab (selected, settable, boolean) Variant 1 Message configured, Description: Message configured, Value: 1
+Variant 1
+✓
+					150 button Add message variant
+				151 button (collapsed) Description: Variant actions, Secondary Actions: Expand
+				152 container
+					153 heading Compose push notification, Value: 2
+						154 text Compose push notification
+					155 text Push credentials: iOS  Not configured  · Android  Not configured  · Web  Not configured
+					156 checkbox (settable, integer) Description: iOS, Value: 1
+					157 checkbox (settable, integer) Description: Android, Value: 1
+					158 checkbox (settable, integer) Description: Web, Value: 0
+					159 checkbox (settable, integer) Description: Kindle, Value: 0
+					160 heading Preview, Value: 3
+						161 text Preview
+					162 container
+						163 text Device
+						164 pop up button (collapsed, settable) Device, Value: Phone, Secondary Actions: Expand
+							165 menu
+								166 (selected) Phone
+								167 Tablet
+					168 container
+						169 text Notification state
+						170 pop up button (collapsed, settable) Notification state, Value: Lock screen, Secondary Actions: Expand
+							171 menu
+								172 (selected) Lock screen
+								173 Notification center
+								174 Banner
+					175 container
+						176 heading iOS, Value: 3
+							177 text iOS
+						178 text iOS  ·  Lock screen Retained push Push remains
+					179 container
+						180 heading Android, Value: 3
+							181 text Android
+						182 text Android  ·  Lock screen Retained push Push remains
+					183 checkbox Compose, Value: 1
+					184 checkbox Settings, Value: 0
+					185 checkbox Test, Value: 0
+					186 button Manage languages
+					187 container
+						188 text Notification type
+						189 pop up button (collapsed, settable) Notification type, Value: Standard push, Secondary Actions: Expand
+							190 menu
+								191 (selected) Standard push
+								192 Rich push
+								193 Push stories
+								194 Inline image
+					195 container
+						196 text Title
+						197 button (collapsed) Title Retained push, Secondary Actions: Expand
+						198 text field (settable) Retained push
+					199 container
+						200 text Message
+						201 button (collapsed) Message Push remains, Secondary Actions: Expand
+						202 text entry area (settable) Push remains
+					203 checkbox (settable, integer) Description: Use the same content for all platforms, Value: 1
+					204 button Manage languages
+					205 container
+						206 text iOS rich media
+						207 text field (settable) iOS rich media
+					208 text Upload file
+					209 button Media library
+					210 container
+						211 text Android image
+						212 text field (settable) Android image
+					213 text Upload file
+					214 button Media library
+					215 container
+						216 text On-click behavior
+						217 pop up button (collapsed, settable) On-click behavior, Value: Open app, Secondary Actions: Expand
+							218 menu
+								219 (selected) Open app
+								220 Open web URL
+								221 Deep link into app
+					222 container
+						223 text Destination
+						224 text field (settable) Destination
+					225 heading Action buttons, Value: 3
+						226 text Action buttons
+					227 button + Add action
+				228 button Preview and test channel
+				251 container Preview and test
+					252 button Close
+						253 image
+					254 container
+						255 heading Preview and test, Value: 2
+							256 text Preview and test
+						257 text Preview with sample user data, then write a test delivery event to the local activity log. Preview as
+						258 pop up button (collapsed, settable) Preview as, Value: Existing user, Secondary Actions: Expand
+							259 menu
+								260 Random user
+								261 (selected) Existing user
+								262 Custom user
+						263 text External user ID
+						264 text field (settable) External user ID, Value: user_1
+						265 text Locale
+						266 text field (settable) Locale, Value: en
+						267 text iOS  ·  Lock screen Retained push Push remains
+						268 button Send test
+			229 button (disabled) Back
+				230 image
+			231 button ✓ Compose
+				232 text ✓
+				233 text Compose
+			234 button ✓ Schedule
+				235 text ✓
+				236 text Schedule
+			237 button ✓ Target
+				238 text ✓
+				239 text Target
+			240 button ✓ Assign
+				241 text ✓
+				242 text Assign
+			243 button 5 Review
+				244 text 5
+				245 text Review
+			246 button Forward
+				247 image
+			248 button Save Draft
+		269 image
+		270 text Draft saved.
+		271 button Close
+			272 image
+		249 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			250 image
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_multichannel?locale=en

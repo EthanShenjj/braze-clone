@@ -1,0 +1,23 @@
+{
+  "checks": [
+    "LINE group API creation",
+    "Workspace API creation",
+    "Workspace copy persists Draft with new identifiers",
+    "Workspace-scoped list includes copy",
+    "Copy is excluded from original workspace list",
+    "Brief upload returns actual metadata",
+    "Brief download returns original bytes",
+    "Active analytics returns actual events, changes and audience",
+    "Invalid analytics range rejected",
+    "Monitoring threshold and local alert persisted",
+    "Monitoring survives reload",
+    "Mismatched child snapshot rejected before sending",
+    "Priority list respects selected workspace",
+    "Priority writes reject another workspace record"
+  ],
+  "passed": 14,
+  "testGroupId": "sg_1ed28a5bc2104cfe",
+  "testWorkspaceId": "res_7f6ba1c5de374b3a",
+  "copiedCampaignId": "cmp_139518bffaa342f6",
+  "briefId": "res_7eb895a4efcf4b6d"
+}

@@ -1,0 +1,192 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_followup_whatsapp_1030?locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_followup_whatsapp_1030?locale=en
+	2 container
+		3 image Download
+		4 image
+	5 container
+		6 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		7 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			8 text Local workspace
+			9 image
+		10 container Side navigation
+			11 text Quick links
+			12 button Canvas
+			13 button Campaigns
+			14 button Segments
+			15 button Getting Started
+			16 button Home
+			17 button AI Decisioning
+			18 button Agent Console
+			19 button Messaging
+			20 button Audience
+			21 button Content
+			22 button Analytics
+			23 button Partner Integrations
+			24 button Data Settings
+			25 button Settings
+		26 button Home
+			27 image Braze
+		28 container
+			29 text ◷   8 days left in your free trial.
+			30 button Connect with sales
+		31 container
+			32 button Search workspace ⌘K
+				33 image
+				34 text Search workspace
+				35 text ⌘K
+			36 button Take a tour
+			37 image Community
+			38 button (collapsed) Description: Language, Secondary Actions: Expand
+			39 button Notifications
+			40 button (collapsed) Description: Profile, Secondary Actions: Expand
+			41 image
+			42 button Open BrazeAI Operator
+		43 button Campaigns
+		44 button Edit 'WhatsApp follow-up verification'
+			45 text Edit
+			46 text  '
+			47 text WhatsApp follow-up verification
+			48 text '
+			49 image
+		50 container
+			51 image
+			52 text Limited access
+			53 container Campaign steps
+				54 button 1 Compose Messages
+					55 text 1
+					56 text Compose Messages
+				57 button ✓ Schedule Delivery
+					58 text ✓
+					59 text Schedule Delivery
+				60 button ✓ Target Audiences
+					61 text ✓
+					62 text Target Audiences
+				63 button ✓ Assign Conversions
+					64 text ✓
+					65 text Assign Conversions
+				66 button 5 Review Summary
+					67 text 5
+					68 text Review Summary
+			69 heading Campaign Details, Value: 2
+				70 text Campaign Details
+			71 container
+				72 text Campaign Name
+				73 text field (settable) Campaign Name, Value: WhatsApp follow-up verification
+			74 container
+				75 text Teams
+				76 pop up button (collapsed, settable) Teams, Value: Select…, Secondary Actions: Expand
+					77 menu
+						78 (selected) Select…
+			79 button Add description
+				80 image
+				81 text Add description
+			82 button (collapsed) Tags, Secondary Actions: Expand
+				83 image
+				84 text Tags
+				85 image
+			86 container Campaign brief
+				87 heading Campaign brief, Value: 3
+					88 text Campaign brief
+				89 text Attach a brief so BrazeAI Operator can build your campaign and your Standards can review it against your goals
+				90 text Attach a campaign brief (optional)
+				91 text PDF, TXT, MD, CSV, DOCX up to 15MB
+				92 button Upload file
+					93 image
+					94 text Upload file
+			95 container
+				96 text Campaign ID
+				97 text field Campaign ID, Help: c61bc897-c955-4a7b-bd99-90a8cbc575ab
+			98 button Copy
+				99 image
+				100 text Copy
+			101 heading Compose WhatsApp, Value: 2
+				102 text Compose WhatsApp
+			103 button Preview and test
+			104 text Compose a response to a user message within a 24-hour window.
+			105 heading Variants, Value: 3
+				106 text Variants
+			107 tab group WhatsApp variants
+				108 tab (selected, settable, boolean) Variant 1, Value: 1
+				109 button Add variant
+					110 image
+			111 button Duplicate variant
+				112 image
+			113 button (disabled) Delete variant
+				114 image
+			115 container
+				116 text Subscription Group
+				117 pop up button (collapsed, settable) Description: WhatsApp subscription group, Value: WhatsApp updates, Secondary Actions: Expand
+					118 menu
+						119 Select a subscription group
+						120 (selected) WhatsApp updates
+				121 text WhatsApp business account Not specified
+			122 container
+				123 heading Message type, Value: 3
+					124 text Message type
+				125 Message type
+					126 radio button Value: 0, WhatsApp Template Message Required to start a business-initiated conversation. Pre-selected Liquid variables and media can be added to approved templates.
+						127 text WhatsApp Template Message
+						128 text Required to start a business-initiated conversation. Pre-selected Liquid variables and media can be added to approved templates.
+					129 radio button Value: 1, Response Message Compose responses to user messages within a 24-hour window with images, Liquid variables, and quick replies.
+						130 text Response Message
+						131 text Compose responses to user messages within a 24-hour window with images, Liquid variables, and quick replies.
+			152 container
+				153 heading Select a Response Message layout, Value: 3
+					154 text Select a Response Message layout
+				155 Response Message layout
+					156 radio button Quick Reply Add up to three quick reply buttons and optional media, Value: 0
+						157 image
+						158 text Quick Reply
+						159 text Add up to three quick reply buttons and optional media
+					160 radio button Text Message Send a message with up to 4,096 characters, Value: 0
+						161 image
+						162 text Text Message
+						163 text Send a message with up to 4,096 characters
+					164 radio button Media Message Send an image, video, document, or audio file and optional caption, Value: 0
+						165 image
+						166 text Media Message
+						167 text Send an image, video, document, or audio file and optional caption
+					168 radio button Call-to-action Button Add a button that links to a website URL, Value: 0
+						169 image
+						170 text Call-to-action Button
+						171 text Add a button that links to a website URL
+					172 radio button List Message Show a list with up to 10 options for users to pick from, Value: 0
+						173 image
+						174 text List Message
+						175 text Show a list with up to 10 options for users to pick from
+					176 radio button New Carousel Message Send up to 10 cards, each with media, text, and buttons, Value: 0
+						177 image
+						178 container
+							179 text New Carousel Message
+						180 text Send up to 10 cards, each with media, text, and buttons
+					181 radio button Flow Message Prompt users to complete a form or interactive task in WhatsApp, Value: 0
+						182 image
+						183 text Flow Message
+						184 text Prompt users to complete a form or interactive task in WhatsApp
+					185 radio button Meta Product Messages Share a single product, multiple products, or an entire Meta catalog, Value: 0
+						186 image
+						187 text Meta Product Messages
+						188 text Share a single product, multiple products, or an entire Meta catalog
+				189 button (disabled) Select layout
+			132 button (disabled) Back
+				133 image
+			134 button 1 Compose
+				135 text 1
+				136 text Compose
+			137 button ✓ Schedule
+				138 text ✓
+				139 text Schedule
+			140 button ✓ Target
+				141 text ✓
+				142 text Target
+			143 button ✓ Assign
+				144 text ✓
+				145 text Assign
+			146 button 5 Review
+				147 text 5
+				148 text Review
+			149 button Forward
+				150 image
+			151 button Save Draft
+
+The focused UI element is 129 radio button Value: 1, Response Message Compose responses to user messages within a 24-hour window with images, Liquid variables, and quick replies.

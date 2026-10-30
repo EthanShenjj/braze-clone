@@ -1,0 +1,146 @@
+- complementary:
+  - generic: b
+  - button "Demo – Thinkingai":
+    - generic: Demo – Thinkingai
+  - generic: Quick links
+  - button "Canvas":
+    - generic: Canvas
+  - button "Campaigns":
+    - generic: Campaigns
+  - button "Segments":
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+  - button "Performance Overview":
+    - generic: Performance Overview
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic: braze
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour":
+  - button "Language":
+  - button "Notifications":
+  - button "S"
+  - button:
+  - button "Campaigns"
+  - button "Edit 'Audit 2026-10-29 iam'":
+    - text: Edit 'Audit 2026-10-29 iam'
+  - text: Limited access
+  - navigation "Campaign steps":
+    - button "1 Compose Messages":
+      - generic: "1"
+      - generic: Compose Messages
+    - button "2 Schedule Delivery":
+      - generic: "2"
+      - generic: Schedule Delivery
+    - button "3 Target Audiences":
+      - generic: "3"
+      - generic: Target Audiences
+    - button "4 Assign Conversions":
+      - generic: "4"
+      - generic: Assign Conversions
+    - button "5 Review Summary":
+      - generic: "5"
+      - generic: Review Summary
+  - heading "Campaign Details" [level=2]
+  - text: Campaign Name
+  - textbox "Campaign Name":
+    - /placeholder: Enter Campaign Name
+    - text: Audit 2026-10-29 iam
+  - button "Add description":
+    - text: Add description
+  - text: Teams
+  - combobox "Teams":
+    - option "Select…" [selected]
+  - button "Tags":
+    - text: Tags
+  - text: Campaign ID
+  - textbox "Campaign ID": cmp_recheck_1029_iam
+  - button "Copy":
+    - text: Copy
+  - region "In-app message composer":
+    - heading "Message Composer" [level=2]
+    - heading "Variants" [level=3]
+    - button "Variant 1"
+    - button "Add variant":
+    - text: Send To
+    - combobox "Send To":
+      - option "Both Mobile Apps & Web Browsers" [selected]
+      - option "Mobile Apps"
+      - option "Web Browsers"
+      - option "Roku Devices"
+    - text: Editing Experience
+    - combobox "Editing experience":
+      - option "Drag-And-Drop Editor" [selected]
+      - option "Traditional Editor"
+    - heading "Compose In-App Message" [level=3]
+    - button "✎ Edit Message":
+      - generic: ✎
+      - text: Edit Message
+    - complementary:
+      - heading "Page Preview" [level=4]
+      - button "Phone portrait"
+      - button "Phone landscape"
+      - button "Tablet portrait"
+      - button "Tablet landscape"
+      - button "Desktop"
+      - button "Basic Modal 1":
+        - article:
+          - button
+          - heading [level=2]: Audit title
+          - paragraph: "Hello {{${first_name}}}"
+          - button: Shop Now
+        - generic: Basic Modal
+        - generic: "1"
+    - main:
+      - article:
+        - button "Close Message"
+        - heading "Audit title" [level=2]
+        - paragraph: "Hello {{${first_name}}}"
+        - button "Shop Now"
+    - paragraph: Always test your messages on a real device, as actual rendering may vary.
+    - button "Switch/convert to custom code"
+    - link "Docs":
+      - /url: https://www.braze.com/docs/user_guide/message_building_by_channel/in-app_messages/drag_and_drop/
+    - button "Save as template"
+  - button "Back" [disabled]:
+  - button "1 Compose":
+    - generic: "1"
+    - text: Compose
+  - button "2 Schedule":
+    - generic: "2"
+    - text: Schedule
+  - button "3 Target":
+    - generic: "3"
+    - text: Target
+  - button "4 Assign":
+    - generic: "4"
+    - text: Assign
+  - button "5 Review":
+    - generic: "5"
+    - text: Review
+  - button "Forward":
+  - button "Save Draft"
+- button "Open Next.js Dev Tools":
+- alert

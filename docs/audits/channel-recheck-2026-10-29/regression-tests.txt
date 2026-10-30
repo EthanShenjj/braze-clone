@@ -1,0 +1,305 @@
+TAP version 13
+# (node:82028) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:82028) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/campaign-validation.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: the seven audit validation probes are rejected by the shared validator
+ok 1 - the seven audit validation probes are rejected by the shared validator
+  ---
+  duration_ms: 1.555375
+  type: 'test'
+  ...
+# Subtest: weighted variants preserve content and per-channel configuration
+ok 2 - weighted variants preserve content and per-channel configuration
+  ---
+  duration_ms: 0.5245
+  type: 'test'
+  ...
+# Subtest: LINE launch validation checks edited message variants instead of legacy root content
+ok 3 - LINE launch validation checks edited message variants instead of legacy root content
+  ---
+  duration_ms: 0.553292
+  type: 'test'
+  ...
+# Subtest: push validation rejects an empty secondary variant and permits a silent notification
+ok 4 - push validation rejects an empty secondary variant and permits a silent notification
+  ---
+  duration_ms: 0.140583
+  type: 'test'
+  ...
+# Subtest: Banner launch validation checks destinations and event names inside edited blocks
+ok 5 - Banner launch validation checks destinations and event names inside edited blocks
+  ---
+  duration_ms: 0.285792
+  type: 'test'
+  ...
+# Subtest: AND, OR and exclusion groups evaluate actual conditions
+ok 6 - AND, OR and exclusion groups evaluate actual conditions
+  ---
+  duration_ms: 0.150625
+  type: 'test'
+  ...
+# Subtest: all fourteen IAM catalog entries contain valid usable page definitions
+ok 7 - all fourteen IAM catalog entries contain valid usable page definitions
+  ---
+  duration_ms: 0.874333
+  type: 'test'
+  ...
+# Subtest: SMS metrics and maximum length apply after personalization and opt-out text
+ok 8 - SMS metrics and maximum length apply after personalization and opt-out text
+  ---
+  duration_ms: 16.57225
+  type: 'test'
+  ...
+# Subtest: vCard output escapes field separators and cannot inject a new property
+ok 9 - vCard output escapes field separators and cannot inject a new property
+  ---
+  duration_ms: 0.485166
+  type: 'test'
+  ...
+# Subtest: push rendering resolves language and independent platform content
+ok 10 - push rendering resolves language and independent platform content
+  ---
+  duration_ms: 1.591792
+  type: 'test'
+  ...
+# Subtest: LINE supports ten cards, three actions and bounded rich-message click areas
+ok 11 - LINE supports ten cards, three actions and bounded rich-message click areas
+  ---
+  duration_ms: 14.010833
+  type: 'test'
+  ...
+# Subtest: email MIME includes independent plaintext, AMP and binary attachments
+ok 12 - email MIME includes independent plaintext, AMP and binary attachments
+  ---
+  duration_ms: 4.923584
+  type: 'test'
+  ...
+# Subtest: time-zone scheduling handles UTC, user local time and recurring dates
+ok 13 - time-zone scheduling handles UTC, user local time and recurring dates
+  ---
+  duration_ms: 1.015958
+  type: 'test'
+  ...
+# Subtest: action triggers honor custom event names and property filter groups
+ok 14 - action triggers honor custom event names and property filter groups
+  ---
+  duration_ms: 0.12625
+  type: 'test'
+  ...
+# (node:82029) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:82029) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/in-app-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: traditional variant preserves its source graph and repairs copied page navigation
+ok 15 - traditional variant preserves its source graph and repairs copied page navigation
+  ---
+  duration_ms: 1.450958
+  type: 'test'
+  ...
+# Subtest: all five traditional types switch with consistent native layout and custom HTML flags
+ok 16 - all five traditional types switch with consistent native layout and custom HTML flags
+  ---
+  duration_ms: 0.868417
+  type: 'test'
+  ...
+# Subtest: traditional invariants reject multipage, three buttons, invalid close delay and missing image
+ok 17 - traditional invariants reject multipage, three buttons, invalid close delay and missing image
+  ---
+  duration_ms: 0.3395
+  type: 'test'
+  ...
+# Subtest: SDK action configuration validates required payloads and actual Liquid before test preparation
+ok 18 - SDK action configuration validates required payloads and actual Liquid before test preparation
+  ---
+  duration_ms: 20.223875
+  type: 'test'
+  ...
+# Subtest: traditional terms links and body destinations are revalidated after Liquid rendering
+ok 19 - traditional terms links and body destinations are revalidated after Liquid rendering
+  ---
+  duration_ms: 2.689667
+  type: 'test'
+  ...
+# Subtest: custom HTML requires a dismiss control and preview strips active scripts
+ok 20 - custom HTML requires a dismiss control and preview strips active scripts
+  ---
+  duration_ms: 3.094833
+  type: 'test'
+  ...
+# Subtest: unknown on-click behaviors cannot be persisted as working actions
+ok 21 - unknown on-click behaviors cannot be persisted as working actions
+  ---
+  duration_ms: 0.2145
+  type: 'test'
+  ...
+# Subtest: email capture replaces native buttons with one submit control and preserves its text mode
+ok 22 - email capture replaces native buttons with one submit control and preserves its text mode
+  ---
+  duration_ms: 0.11025
+  type: 'test'
+  ...
+# Subtest: creating a traditional variant retains effective first-page colors without sharing mutable state
+ok 23 - creating a traditional variant retains effective first-page colors without sharing mutable state
+  ---
+  duration_ms: 0.294625
+  type: 'test'
+  ...
+# (node:82030) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:82030) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/sms-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: GSM basic, extension, accented and empty messages use correct encoding and boundaries
+ok 24 - GSM basic, extension, accented and empty messages use correct encoding and boundaries
+  ---
+  duration_ms: 1.893333
+  type: 'test'
+  ...
+# Subtest: Unicode counts UTF-16 units without splitting emoji across multipart segments
+ok 25 - Unicode counts UTF-16 units without splitting emoji across multipart segments
+  ---
+  duration_ms: 0.323
+  type: 'test'
+  ...
+# Subtest: personalization, language branching and link shortening reflect the rendered user
+ok 26 - personalization, language branching and link shortening reflect the rendered user
+  ---
+  duration_ms: 57.27875
+  type: 'test'
+  ...
+# Subtest: required SMS fields are validated
+ok 27 - required SMS fields are validated
+  ---
+  duration_ms: 0.094
+  type: 'test'
+  ...
+# (node:82031) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:82031) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/webhook-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: normalizes legacy webhook campaign values
+ok 28 - normalizes legacy webhook campaign values
+  ---
+  duration_ms: 0.655292
+  type: 'test'
+  ...
+# Subtest: renders personalization defaults and translations
+ok 29 - renders personalization defaults and translations
+  ---
+  duration_ms: 0.365084
+  type: 'test'
+  ...
+# Subtest: validates URL ports, defaults, GET bodies, and rendered JSON
+ok 30 - validates URL ports, defaults, GET bodies, and rendered JSON
+  ---
+  duration_ms: 0.644625
+  type: 'test'
+  ...
+# Subtest: redacts authorization and token headers
+ok 31 - redacts authorization and token headers
+  ---
+  duration_ms: 0.158875
+  type: 'test'
+  ...
+# (node:82032) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:82032) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/whatsapp-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: the default WhatsApp template variant is launch-ready
+ok 32 - the default WhatsApp template variant is launch-ready
+  ---
+  duration_ms: 8.471542
+  type: 'test'
+  ...
+# Subtest: template variables require either a value or a fallback
+ok 33 - template variables require either a value or a fallback
+  ---
+  duration_ms: 0.247041
+  type: 'test'
+  ...
+# Subtest: response messages require an open simulated conversation window
+ok 34 - response messages require an open simulated conversation window
+  ---
+  duration_ms: 0.112458
+  type: 'test'
+  ...
+# Subtest: template preview resolves mapped values and fallbacks
+ok 35 - template preview resolves mapped values and fallbacks
+  ---
+  duration_ms: 0.563209
+  type: 'test'
+  ...
+# Subtest: unknown templates cannot fall back to approved sample content for validation
+ok 36 - unknown templates cannot fall back to approved sample content for validation
+  ---
+  duration_ms: 0.317792
+  type: 'test'
+  ...
+# Subtest: all required template variables are validated even if removed from saved mappings
+ok 37 - all required template variables are validated even if removed from saved mappings
+  ---
+  duration_ms: 0.105167
+  type: 'test'
+  ...
+# Subtest: custom templates render their own content and respect pending status
+ok 38 - custom templates render their own content and respect pending status
+  ---
+  duration_ms: 22.91475
+  type: 'test'
+  ...
+# Subtest: response option labels reject blanks, duplicates and overlong labels
+ok 39 - response option labels reject blanks, duplicates and overlong labels
+  ---
+  duration_ms: 0.184083
+  type: 'test'
+  ...
+# Subtest: test payloads render Liquid values with recipient fallbacks and preserve URL variables
+ok 40 - test payloads render Liquid values with recipient fallbacks and preserve URL variables
+  ---
+  duration_ms: 4.779708
+  type: 'test'
+  ...
+# Subtest: malformed persisted variants are normalized without crashing the composer
+ok 41 - malformed persisted variants are normalized without crashing the composer
+  ---
+  duration_ms: 0.545417
+  type: 'test'
+  ...
+# Subtest: carousel payloads render each card and validate counts and button types
+ok 42 - carousel payloads render each card and validate counts and button types
+  ---
+  duration_ms: 2.543166
+  type: 'test'
+  ...
+# Subtest: response headers, footers and labels are resolved per recipient
+ok 43 - response headers, footers and labels are resolved per recipient
+  ---
+  duration_ms: 5.679083
+  type: 'test'
+  ...
+# Subtest: source templates retain both quick replies and local media URLs
+ok 44 - source templates retain both quick replies and local media URLs
+  ---
+  duration_ms: 2.129083
+  type: 'test'
+  ...
+# Subtest: unconfigured layouts and unavailable provider assets cannot launch
+ok 45 - unconfigured layouts and unavailable provider assets cannot launch
+  ---
+  duration_ms: 4.318416
+  type: 'test'
+  ...
+1..45
+# tests 45
+# suites 0
+# pass 45
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 624.897542

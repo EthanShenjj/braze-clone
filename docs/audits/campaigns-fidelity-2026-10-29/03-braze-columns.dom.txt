@@ -1,0 +1,445 @@
+- link "Skip to main content":
+  - /url: "#main-col"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Demo – bba":
+    - generic: Demo – bba
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6ad0b98fe4b4110085216601?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6ad0b98fe4b4110085216601?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6ad0b98fe4b4110085216601?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6ad0b98fe4b4110085216601?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 1 day left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- navigation:
+  - tablist "Open page tabs":
+    - tab "Campaigns" [selected]:
+      - text: 
+      - generic: Campaigns
+    - tab "Edit 'New Campaign - October 29, 2026' Close tab":
+      - generic: Edit 'New Campaign - October 29, 2026'
+      - button "Close tab":
+- heading "Campaigns" [level=2]
+- img: 
+- generic: Limited access
+- generic: Campaigns let you send a single, targeted message through email, push, SMS, and more, ensuring timely communication with your audience
+- button "Send feedback":
+  - img: 
+- button "Take a tour":
+  - generic: Take a tour
+- button "More options":
+  - img: 
+- button "Create campaign":
+  - generic: Create campaign
+  - img: 
+- heading "15 Results" [level=4]:
+  - generic: 15 Results
+- textbox "Search"
+- button "Search" [disabled]:
+- text: Status
+- button "Help text available. Tab to view help text, click to open popover":
+- log
+- generic: Draft
+- combobox "Status"
+- generic: Tag
+- log
+- generic: Select...
+- combobox "Tag"
+- button "Filters":
+  - generic: Filters
+- button "Columns" [expanded] [active]:
+  - generic: Columns
+- button "Reset filters":
+  - generic: Reset filters
+- generic "Inline Tag 0":
+  - generic: "Status: Draft"
+  - button "close":
+- grid:
+  - rowgroup:
+    - row "Select all rows Name column, unsorted. Select to sort ascending Status Stop date column, unsorted. Select to sort descending Campaign type Entry schedule Sent column, unsorted. Select to sort descending Teams column, unsorted. Select to sort descending Last edited by Last edited column, sorted descending. Select to sort ascending Created by":
+      - columnheader "Select all rows":
+        - checkbox "Select all rows"
+      - columnheader "Name column, unsorted. Select to sort ascending":
+        - button "Name column, unsorted. Select to sort ascending": Name
+      - columnheader
+      - columnheader "Status"
+      - columnheader "Stop date column, unsorted. Select to sort descending":
+        - button "Stop date column, unsorted. Select to sort descending":
+          - text: Stop date
+          - img "Information":
+      - columnheader "Campaign type"
+      - columnheader "Entry schedule"
+      - columnheader "Sent column, unsorted. Select to sort descending":
+        - button "Sent column, unsorted. Select to sort descending": Sent
+      - columnheader "Teams column, unsorted. Select to sort descending":
+        - button "Teams column, unsorted. Select to sort descending": Teams
+      - columnheader "Last edited by"
+      - columnheader "Last edited column, sorted descending. Select to sort ascending":
+        - button "Last edited column, sorted descending. Select to sort ascending":
+          - text: Last edited
+          - img "Information":
+      - columnheader "Created by"
+      - columnheader
+  - rowgroup:
+    - row "Select row New Campaign - October 29, 2026 Draft In-App Message Action-Based 0 金君 沈 Oct 29, 2026 金君 沈 More Actions":
+      - gridcell "Select row":
+        - checkbox "Select row"
+      - gridcell "New Campaign - October 29, 2026":
+        - link "New Campaign - October 29, 2026":
+          - /url: /engagement/campaigns/6ae2d0de5e731b00885db684/6ad0b98fe4b4110085216601?locale=en
+      - gridcell
+      - gridcell "Draft":
+        - generic: Draft
+      - gridcell
+      - gridcell "In-App Message":
+        - generic: In-App Message
+      - gridcell "Action-Based"
+      - gridcell "0"
+      - gridcell
+      - gridcell "金君 沈"
+      - gridcell "Oct 29, 2026"
+      - gridcell "金君 沈"
+      - gridcell "More Actions":
+        - list:
+          - button "More Actions":
+    - row "Select row New Campaign - October 29, 2026 Draft Push Notification One Time 0 金君 沈 Oct 29, 2026 金君 沈 More Actions":
+      - gridcell "Select row":
+        - checkbox "Select row"
+      - gridcell "New Campaign - October 29, 2026":
+        - link "New Campaign - October 29, 2026":
+          - /url: /engagement/campaigns/6ae2d20e0113c600889d2155/6ad0b98fe4b4110085216601?locale=en
+      - gridcell
+      - gridcell "Draft":
+        - generic: Draft
+      - gridcell
+      - gridcell "Push Notification":
+        - generic: Push Notification
+      - gridcell "One Time"
+      - gridcell "0"
+      - gridcell
+      - gridcell "金君 沈"
+      - gridcell "Oct 29, 2026"
+      - gridcell "金君 沈"
+      - gridcell "More Actions":
+        - list:
+          - button "More Actions":
+    - row "Select row New Campaign - October 28, 2026 Draft Email One Time 0 金君 沈 Oct 29, 2026 金君 沈 More Actions":
+      - gridcell "Select row":
+        - checkbox "Select row"
+      - gridcell "New Campaign - October 28, 2026":
+        - link "New Campaign - October 28, 2026":
+          - /url: /engagement/campaigns/6ae1d1eefa01b40088b7445e/6ad0b98fe4b4110085216601?locale=en
+      - gridcell
+      - gridcell "Draft":
+        - generic: Draft
+      - gridcell
+      - gridcell "Email":
+        - img: 
+        - generic: Email
+      - gridcell "One Time"
+      - gridcell "0"
+      - gridcell
+      - gridcell "金君 沈"
+      - gridcell "Oct 29, 2026"
+      - gridcell "金君 沈"
+      - gridcell "More Actions":
+        - list:
+          - button "More Actions":
+    - row "Select row New Campaign - October 27, 2026 Draft In-App Message Action-Based 0 金君 沈 Oct 27, 2026 金君 沈 More Actions":
+      - gridcell "Select row":
+        - checkbox "Select row"
+      - gridcell "New Campaign - October 27, 2026":
+        - link "New Campaign - October 27, 2026":
+          - /url: /engagement/campaigns/6ae056bff8fdcd0088347999/6ad0b98fe4b4110085216601?locale=en
+      - gridcell
+      - gridcell "Draft":
+        - generic: Draft
+      - gridcell
+      - gridcell "In-App Message":
+        - generic: In-App Message
+      - gridcell "Action-Based"
+      - gridcell "0"
+      - gridcell
+      - gridcell "金君 沈"
+      - gridcell "Oct 27, 2026"
+      - gridcell "金君 沈"
+      - gridcell "More Actions":
+        - list:
+          - button "More Actions":
+    - row "Select row New Campaign - October 27, 2026 Draft In-App Message Action-Based 0 金君 沈 Oct 26, 2026 金君 沈 More Actions":
+      - gridcell "Select row":
+        - checkbox "Select row"
+      - gridcell "New Campaign - October 27, 2026":
+        - link "New Campaign - October 27, 2026":
+          - /url: /engagement/campaigns/6ae00effca35480088606979/6ad0b98fe4b4110085216601?locale=en
+      - gridcell
+      - gridcell "Draft":
+        - generic: Draft
+      - gridcell
+      - gridcell "In-App Message":
+        - generic: In-App Message
+      - gridcell "Action-Based"
+      - gridcell "0"
+      - gridcell
+      - gridcell "金君 沈"
+      - gridcell "Oct 26, 2026"
+      - gridcell "金君 沈"
+      - gridcell "More Actions":
+        - list:
+          - button "More Actions":
+    - row "Select row New Campaign - October 22, 2026 Draft Email One Time 0 xiong yang Oct 22, 2026 xiong yang More Actions":
+      - gridcell "Select row":
+        - checkbox "Select row"
+      - gridcell "New Campaign - October 22, 2026":
+        - link "New Campaign - October 22, 2026":
+          - /url: /engagement/campaigns/6ad9d424681fb30086445022/6ad0b98fe4b4110085216601?locale=en
+      - gridcell
+      - gridcell "Draft":
+        - generic: Draft
+      - gridcell
+      - gridcell "Email":
+        - img: 
+        - generic: Email
+      - gridcell "One Time"
+      - gridcell "0"
+      - gridcell
+      - gridcell "xiong yang"
+      - gridcell "Oct 22, 2026"
+      - gridcell "xiong yang"
+      - gridcell "More Actions":
+        - list:
+          - button "More Actions":
+    - row "Select row Email Drag & Drop Tour Draft Email API-Triggered 0 xiong yang Oct 22, 2026 Braze Demo More Actions":
+      - gridcell "Select row":
+        - checkbox "Select row"
+      - gridcell "Email Drag & Drop Tour":
+        - link "Email Drag & Drop Tour":
+          - /url: /engagement/campaigns/6ad0b99a485c580061eb1da6/6ad0b98fe4b4110085216601?locale=en
+      - gridcell
+      - gridcell "Draft":
+        - generic: Draft
+      - gridcell
+      - gridcell "Email":
+        - img: 
+        - generic: Email
+      - gridcell "API-Triggered"
+      - gridcell "0"
+      - gridcell
+      - gridcell "xiong yang"
+      - gridcell "Oct 22, 2026"
+      - gridcell "Braze Demo"
+      - gridcell "More Actions":
+        - list:
+          - button "More Actions":
+    - row "Select row Referral Banner Draft Banner One Time — Braze Demo Oct 15, 2026 Braze Demo More Actions":
+      - gridcell "Select row":
+        - checkbox "Select row"
+      - gridcell "Referral Banner":
+        - link "Referral Banner":
+          - /url: /engagement/campaigns/6ad0b99d485c580061eb1e36/6ad0b98fe4b4110085216601?locale=en
+      - gridcell
+      - gridcell "Draft":
+        - generic: Draft
+      - gridcell
+      - gridcell "Banner":
+        - generic: Banner
+      - gridcell "One Time"
+      - gridcell "—"
+      - gridcell
+      - gridcell "Braze Demo"
+      - gridcell "Oct 15, 2026"
+      - gridcell "Braze Demo"
+      - gridcell "More Actions":
+        - list:
+          - button "More Actions":
+    - row "Select row Weekly Newsletter Draft Multichannel Recurring 0 Braze Demo Oct 15, 2026 Braze Demo More Actions":
+      - gridcell "Select row":
+        - checkbox "Select row"
+      - gridcell "Weekly Newsletter":
+        - link "Weekly Newsletter":
+          - /url: /engagement/campaigns/6ad0b99a485c580061eb1d83/6ad0b98fe4b4110085216601?locale=en
+      - gridcell
+      - gridcell "Draft":
+        - generic: Draft
+      - gridcell
+      - gridcell "Multichannel":
+        - generic: Multichannel
+      - gridcell "Recurring"
+      - gridcell "0"
+      - gridcell
+      - gridcell "Braze Demo"
+      - gridcell "Oct 15, 2026"
+      - gridcell "Braze Demo"
+      - gridcell "More Actions":
+        - list:
+          - button "More Actions":
+    - row "Select row Onboarding IAM Draft In-App Message Action-Based 0 Braze Demo Oct 15, 2026 Braze Demo More Actions":
+      - gridcell "Select row":
+        - checkbox "Select row"
+      - gridcell "Onboarding IAM":
+        - link "Onboarding IAM":
+          - /url: /engagement/campaigns/6ad0b99a485c580061eb1d6c/6ad0b98fe4b4110085216601?locale=en
+      - gridcell
+      - gridcell "Draft":
+        - generic: Draft
+      - gridcell
+      - gridcell "In-App Message":
+        - generic: In-App Message
+      - gridcell "Action-Based"
+      - gridcell "0"
+      - gridcell
+      - gridcell "Braze Demo"
+      - gridcell "Oct 15, 2026"
+      - gridcell "Braze Demo"
+      - gridcell "More Actions":
+        - list:
+          - button "More Actions":
+    - row "Select row Abandoned Onboarding Draft WhatsApp One Time 0 Braze Demo Oct 15, 2026 Braze Demo More Actions":
+      - gridcell "Select row":
+        - checkbox "Select row"
+      - gridcell "Abandoned Onboarding":
+        - link "Abandoned Onboarding":
+          - /url: /engagement/campaigns/6ad0b999485c580061eb1d4e/6ad0b98fe4b4110085216601?locale=en
+      - gridcell
+      - gridcell "Draft":
+        - generic: Draft
+      - gridcell
+      - gridcell "WhatsApp":
+        - img: 
+        - generic: WhatsApp
+      - gridcell "One Time"
+      - gridcell "0"
+      - gridcell
+      - gridcell "Braze Demo"
+      - gridcell "Oct 15, 2026"
+      - gridcell "Braze Demo"
+      - gridcell "More Actions":
+        - list:
+          - button "More Actions":
+    - row "Select row Welcome Offer Draft Email Action-Based 0 Braze Demo Oct 15, 2026 Braze Demo More Actions":
+      - gridcell "Select row":
+        - checkbox "Select row"
+      - gridcell "Welcome Offer":
+        - link "Welcome Offer":
+          - /url: /engagement/campaigns/6ad0b999485c580061eb1d3b/6ad0b98fe4b4110085216601?locale=en
+      - gridcell
+      - gridcell "Draft":
+        - generic: Draft
+      - gridcell
+      - gridcell "Email":
+        - img: 
+        - generic: Email
+      - gridcell "Action-Based"
+      - gridcell "0"
+      - gridcell
+      - gridcell "Braze Demo"
+      - gridcell "Oct 15, 2026"
+      - gridcell "Braze Demo"
+      - gridcell "More Actions":
+        - list:
+          - button "More Actions":
+- generic: Showing rows 1 - 12 of 15
+- generic: "Rows per page:"
+- combobox:
+  - option "12" [selected]
+  - option "24"
+  - option "48"
+  - option "96"
+- navigation:
+  - list:
+    - button "Previous page" [disabled]:
+      - img: 
+    - button "Current Page, Page 1":
+      - generic: "1"
+    - button "Go to Page 2":
+      - generic: "2"
+    - button "Next page":
+      - img: 
+- button "Priority Sorter":
+  - generic: Priority Sorter
+- text: 
+- contentinfo:
+  - generic: © Braze 2026
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://01.emailinboundprocessing.com/preference_center/v1/eyJhbGciOiJSUzI1NiJ9/eyJzdWIiOiJwY3YxIiwiaWF0IjoxNzkzMjY0MzQzLCJleHAiOjE4MjQ4MDAzNDMsImQiOiIkMCQvMUtkSWpMM3lhQ3B5aG1IV0VvWHBRPT0keUhHWTM4Y0RnV1g2TFlqR0NYY0VzMlVURmIvanhyU1g1M1prOU5uRnV3MC9SRGFUS1lzVGh3OHVWanJ6XG5odXVZIiwiaCI6IjAxLmVtYWlsaW5ib3VuZHByb2Nlc3NpbmcuY29tIn0/d18E2xz5xX29GDeu1PsQ5yQ20YO06BaVfx08WCWEIV_XtazuQu6iSIYw16Fq77H3HpuoHWA3Sqe9wX7JqP9RSnKDO6mtO5ZjD8Ao_NikxD16mMutq1gsctPQXAEzXkDNEmBVhd70eAXHIlatCU9rxwWpsv08YJ1JWvc0AzoKS0j2_v-XPlQipxKgeRJBAdsGkwED1YIjGF-t9_yI0_8Xv065Fgz6MYPb7YNGLP27b4QPZ2I91S3SDweNS4sasQif8egjRasnvMzjCpbKO6NghLrhWlFW_JljRbLvjKFqUibLznHY-MLftaag1I7E0Ln2QiFIcKmhialV9VRmydxSVw
+    - text: Privacy Preferences
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://braze.statuspage.io
+    - text: Status
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://www.braze.com/terms
+    - text: Terms
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://www.braze.com/privacy
+    - text: Privacy Policy
+- checkbox "All Columns" [checked]
+- generic: All Columns
+- checkbox "Stop date" [checked]
+- generic: Stop date
+- checkbox "Campaign type" [checked]
+- generic: Campaign type
+- checkbox "Entry schedule" [checked]
+- generic: Entry schedule
+- checkbox "Sent" [checked]
+- generic: Sent
+- checkbox "Teams" [checked]
+- generic: Teams
+- checkbox "Last edited by" [checked]
+- generic: Last edited by
+- checkbox "Last edited" [checked]
+- generic: Last edited
+- checkbox "Created by" [checked]
+- generic: Created by

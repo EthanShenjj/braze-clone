@@ -1,0 +1,300 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_push?locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_push?locale=en
+	2 container
+		3 image Download
+		4 image
+	5 container
+		6 text b
+		7 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			8 image
+			9 text Local workspace
+		10 text Quick links
+		11 button Canvas
+			12 image
+			13 text Canvas
+		14 button Campaigns
+			15 image
+			16 text Campaigns
+		17 button Segments
+			18 image
+			19 text Segments
+		20 button Getting Started
+			21 image
+			22 text Getting Started
+		23 button Performance Overview
+			24 image
+			25 text Performance Overview
+		26 button AI Decisioning
+			27 image
+			28 text AI Decisioning
+		29 button Agent Console
+			30 image
+			31 text Agent Console
+		32 button Messaging
+			33 image
+			34 text Messaging
+		35 button Audience
+			36 image
+			37 text Audience
+		38 button Content
+			39 image
+			40 text Content
+		41 button Analytics
+			42 image
+			43 text Analytics
+		44 button Partner Integrations
+			45 image
+			46 text Partner Integrations
+		47 button Data Settings
+			48 image
+			49 text Data Settings
+		50 button Settings
+			51 image
+			52 text Settings
+		53 text braze
+		54 container
+			55 text ◷   8 days left in your free trial.
+			56 button Connect with sales
+		57 container
+			58 button Search workspace ⌘K
+				59 image
+				60 text Search workspace
+				61 text ⌘K
+			62 button Take a tour
+				63 image
+			64 image
+			65 button (collapsed) Description: Language, Secondary Actions: Expand
+				66 image
+			67 button Notifications
+				68 image
+			69 button S
+			70 image
+			71 button
+				72 image
+		73 button Campaigns
+		74 button Edit 'Audit 2026-10-29 push'
+			75 text Edit
+			76 text  '
+			77 text Audit 2026-10-29 push
+			78 text '
+			79 image
+		80 container
+			81 image
+			82 text Limited access
+			83 container Campaign steps
+				84 button ✓ Compose Messages
+					85 text ✓
+					86 text Compose Messages
+				87 button ✓ Schedule Delivery
+					88 text ✓
+					89 text Schedule Delivery
+				90 button ✓ Target Audiences
+					91 text ✓
+					92 text Target Audiences
+				93 button ✓ Assign Conversions
+					94 text ✓
+					95 text Assign Conversions
+				96 button 5 Review Summary
+					97 text 5
+					98 text Review Summary
+			99 heading Campaign Details, Value: 2
+				100 text Campaign Details
+			101 container
+				102 text Campaign Name
+				103 text field (settable) Campaign Name, Value: Audit 2026-10-29 push
+			104 container
+				105 text Teams
+				106 pop up button (collapsed, settable) Teams, Value: Select…, Secondary Actions: Expand
+					107 menu
+						108 (selected) Select…
+			109 button Add description
+				110 image
+				111 text Add description
+			112 button (collapsed) Tags, Secondary Actions: Expand
+				113 image
+				114 text Tags
+				115 image
+			116 container Campaign brief
+				117 heading Campaign brief, Value: 3
+					118 text Campaign brief
+				119 text Attach a brief so BrazeAI Operator can build your campaign and your Standards can review it against your goals
+				120 text Attach a campaign brief (optional)
+				121 text PDF, TXT, MD, CSV, DOCX up to 15MB
+				122 button Upload file
+					123 image
+					124 text Upload file
+			125 container
+				126 text Campaign ID
+				127 text field Campaign ID, Help: dd3f7bf5-3dc2-5603-a9f8-cb7ef89eaee4
+			128 button Copy
+				129 image
+				130 text Copy
+			131 heading Variants, Value: 3
+				132 text Variants
+			133 tab group Message variants
+				134 tab (selected, settable, boolean) Variant 1 Message configured, Description: Message configured, Value: 1
+Variant 1
+✓
+				135 button Add message variant
+			332 container
+				333 button (expanded) Description: Variant actions, Secondary Actions: Collapse
+				334 menu
+					335 Rename
+					336 Duplicate
+					337 (disabled) Delete
+			137 container
+				138 heading Compose push notification, Value: 2
+					139 text Compose push notification
+				140 text Push credentials: iOS  Not configured  · Android  Not configured  · Web  Not configured
+				141 checkbox (settable, integer) Description: iOS, Value: 1
+				142 checkbox (settable, integer) Description: Android, Value: 1
+				143 checkbox (settable, integer) Description: Web, Value: 0
+				144 checkbox (settable, integer) Description: Kindle, Value: 0
+				145 heading Preview, Value: 3
+					146 text Preview
+				147 container
+					148 text Device
+					149 pop up button (collapsed, settable) Device, Value: Phone, Secondary Actions: Expand
+						150 menu
+							151 (selected) Phone
+							152 Tablet
+				153 container
+					154 text Notification state
+					155 pop up button (collapsed, settable) Notification state, Value: Lock screen, Secondary Actions: Expand
+						156 menu
+							157 (selected) Lock screen
+							158 Notification center
+							159 Banner
+				160 container
+					161 heading iOS, Value: 3
+						162 text iOS
+					163 text iOS  ·  Lock screen Audit title Hello Sofia
+				164 container
+					165 heading Android, Value: 3
+						166 text Android
+					167 text Android  ·  Lock screen Audit title Hello Sofia
+				168 checkbox Compose, Value: 0
+				169 checkbox Settings, Value: 1
+				170 checkbox Test, Value: 0
+				171 button Manage languages
+				235 container
+					236 heading Key value pairs, Value: 3
+						237 text Key value pairs
+					238 button + Add pair
+				239 container
+					240 button (expanded) iOS, Secondary Actions: Collapse
+						241 text iOS
+					242 heading Notification, Value: 3
+						243 text Notification
+					244 text You need permission to edit app settings to manage notification groups. Notification group
+					245 text field (settable) Notification group
+					246 checkbox (settable, integer) Description: Alert options, Value: 0
+					247 checkbox (settable, integer) Description: Update app badge count, Value: 0
+					248 checkbox (settable, integer) Description: Relevance Score, Value: 0
+					249 text Interruption level
+					250 pop up button (collapsed, settable) Interruption level, Value: Active, Secondary Actions: Expand
+						251 menu
+							252 Passive
+							253 (selected) Active
+							254 Time Sensitive
+							255 Critical
+					256 text Relevance score
+					257 stepper (settable) Relevance score
+					258 text Summary argument
+					259 text field (settable) Summary argument
+					260 text Summary argument count
+					261 stepper (settable) Summary argument count
+					262 text Category
+					263 text field (settable) Category
+					264 text Collapse ID
+					265 text field (settable) Collapse ID
+					266 text Thread ID
+					267 text field (settable) Thread ID
+					268 text Sound
+					269 text field (settable) Sound
+					270 text Badge count
+					271 stepper (settable) Badge count
+					272 checkbox (settable, integer) Description: Expiration, Value: 0
+					273 checkbox (settable, integer) Description: Content available, Value: 0
+					274 checkbox (settable, integer) Description: Mutable content, Value: 1
+					275 checkbox (settable, integer) Description: Silent push, Value: 0
+				276 container
+					277 button (expanded) Android, Secondary Actions: Collapse
+						278 text Android
+					279 heading Notification, Value: 3
+						280 text Notification
+					281 button (disabled) Manage notification channels
+					282 text You need permission to edit app settings to manage notification channels. Notification channel
+					283 text field (settable) Notification channel, Value: Braze Fallback Channel
+					284 checkbox (settable, integer) Description: Custom notification channel, Value: 0
+					285 text Category
+					286 pop up button (collapsed, settable) Category, Value: None, Secondary Actions: Expand
+						287 menu
+							288 (selected) None
+							289 Message
+							290 Alarm
+							291 Call
+							292 Email
+							293 Event
+							294 Progress
+							295 Promo
+							296 Recommendation
+							297 Reminder
+							298 Service
+							299 Social
+							300 Status
+							301 System
+							302 Transport
+					303 text Visibility
+					304 pop up button (collapsed, settable) Visibility, Value: Private, Secondary Actions: Expand
+						305 menu
+							306 (selected) Private
+							307 Public
+							308 Secret
+					309 text Time to live
+					310 stepper (settable, integer) Time to live, Value: 28
+					311 text Time unit for Time to live
+					312 pop up button (collapsed, settable) Time unit for Time to live, Value: Days, Secondary Actions: Expand
+						313 menu
+							314 Seconds
+							315 Minutes
+							316 Hours
+							317 (selected) Days
+					318 text Notification ID
+					319 button (collapsed) Notification ID, Secondary Actions: Expand
+					320 text field (settable)
+					321 checkbox (settable, integer) Description: App icon color override, Value: 0
+					322 text Notification display priority
+					323 pop up button (collapsed, settable) Notification display priority, Value: Default, Secondary Actions: Expand
+						324 menu
+							325 (selected) Default
+							326 Min
+							327 Low
+							328 High
+							329 Max
+					330 text Sound
+					331 text field (settable) Sound
+			213 button (disabled) Back
+				214 image
+			215 button ✓ Compose
+				216 text ✓
+				217 text Compose
+			218 button ✓ Schedule
+				219 text ✓
+				220 text Schedule
+			221 button ✓ Target
+				222 text ✓
+				223 text Target
+			224 button ✓ Assign
+				225 text ✓
+				226 text Assign
+			227 button 5 Review
+				228 text 5
+				229 text Review
+			230 button Forward
+				231 image
+			232 button Save Draft
+		233 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			234 image
+
+The focused UI element is 333 button (expanded) Description: Variant actions, Secondary Actions: Collapse

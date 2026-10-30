@@ -1,0 +1,239 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_whatsapp?locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_whatsapp?locale=en
+	2 container
+		3 image Download
+		4 image
+	5 container
+		6 text b
+		7 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			8 image
+			9 text Local workspace
+		10 text Quick links
+		11 button Canvas
+			12 image
+			13 text Canvas
+		14 button Campaigns
+			15 image
+			16 text Campaigns
+		17 button Segments
+			18 image
+			19 text Segments
+		20 button Getting Started
+			21 image
+			22 text Getting Started
+		23 button Performance Overview
+			24 image
+			25 text Performance Overview
+		26 button AI Decisioning
+			27 image
+			28 text AI Decisioning
+		29 button Agent Console
+			30 image
+			31 text Agent Console
+		32 button Messaging
+			33 image
+			34 text Messaging
+		35 button Audience
+			36 image
+			37 text Audience
+		38 button Content
+			39 image
+			40 text Content
+		41 button Analytics
+			42 image
+			43 text Analytics
+		44 button Partner Integrations
+			45 image
+			46 text Partner Integrations
+		47 button Data Settings
+			48 image
+			49 text Data Settings
+		50 button Settings
+			51 image
+			52 text Settings
+		53 text braze
+		54 container
+			55 text ◷   8 days left in your free trial.
+			56 button Connect with sales
+		57 container
+			58 button Search workspace ⌘K
+				59 image
+				60 text Search workspace
+				61 text ⌘K
+			62 button Take a tour
+				63 image
+			64 image
+			65 button (collapsed) Description: Language, Secondary Actions: Expand
+				66 image
+			67 button Notifications
+				68 image
+			69 button S
+			70 image
+			71 button
+				72 image
+		73 button Campaigns
+		74 button Edit 'Audit 2026-10-29 whatsapp'
+			75 text Edit
+			76 text  '
+			77 text Audit 2026-10-29 whatsapp
+			78 text '
+			79 image
+		80 container
+			81 image
+			82 text Limited access
+			83 container Campaign steps
+				84 button 1 Compose Messages
+					85 text 1
+					86 text Compose Messages
+				87 button ✓ Schedule Delivery
+					88 text ✓
+					89 text Schedule Delivery
+				90 button ✓ Target Audiences
+					91 text ✓
+					92 text Target Audiences
+				93 button ✓ Assign Conversions
+					94 text ✓
+					95 text Assign Conversions
+				96 button 5 Review Summary
+					97 text 5
+					98 text Review Summary
+			99 heading Campaign Details, Value: 2
+				100 text Campaign Details
+			101 container
+				102 text Campaign Name
+				103 text field (settable) Campaign Name, Value: Audit 2026-10-29 whatsapp
+			104 container
+				105 text Teams
+				106 pop up button (collapsed, settable) Teams, Value: Select…, Secondary Actions: Expand
+					107 menu
+						108 (selected) Select…
+			109 button Add description
+				110 image
+				111 text Add description
+			112 button (collapsed) Tags, Secondary Actions: Expand
+				113 image
+				114 text Tags
+				115 image
+			116 container Campaign brief
+				117 heading Campaign brief, Value: 3
+					118 text Campaign brief
+				119 text Attach a brief so BrazeAI Operator can build your campaign and your Standards can review it against your goals
+				120 text Attach a campaign brief (optional)
+				121 text PDF, TXT, MD, CSV, DOCX up to 15MB
+				122 button Upload file
+					123 image
+					124 text Upload file
+			125 container
+				126 text Campaign ID
+				127 text field Campaign ID, Help: 6a3a2696-8765-5dfe-8a12-3c0f9ff9d586
+			128 button Copy
+				129 image
+				130 text Copy
+			131 heading Compose WhatsApp, Value: 2
+				132 text Compose WhatsApp
+			133 text Send an approved WhatsApp template.
+			134 button Preview and test
+			165 container
+				166 text Subscription Group
+				167 pop up button (collapsed, settable) Description: WhatsApp subscription group, Value: WhatsApp updates, Secondary Actions: Expand
+					168 menu
+						169 Select a subscription group
+						170 (selected) WhatsApp updates
+			171 heading Message variants, Value: 3
+				172 text Message variants
+			173 text Test different WhatsApp content while keeping the same audience and schedule.
+			174 button Variant 1 Response
+				175 text Variant 1
+				176 text Response
+			177 button Add WhatsApp variant
+				178 image
+			179 button Description: Sync templates, Help: Synchronize templates from Meta
+				180 image
+			181 button Duplicate variant
+				182 image
+			183 button (disabled) Delete variant
+				184 image
+			185 container WhatsApp composer sections
+				186 checkbox Compose, Value: 1
+				187 checkbox Test, Value: 0
+			188 container
+				189 heading Sending configuration, Value: 3
+					190 text Sending configuration
+				191 text Choose the WhatsApp Business Account for this message.
+				192 image
+				193 text Incomplete WhatsApp Business Account
+				194 pop up button (collapsed, settable) WhatsApp Business Account, Value: Thinkingai Demo · +1 415 555 0108, Secondary Actions: Expand
+					195 menu
+						196 (selected) Thinkingai Demo · +1 415 555 0108
+			197 container
+				198 heading Message type, Value: 3
+					199 text Message type
+				200 text Template messages start conversations. Response messages require an open 24-hour window.
+				201 checkbox Template message Use approved content to start a conversation, Value: 0
+					202 image
+					203 text Template message
+					204 text Use approved content to start a conversation
+				205 checkbox Response message Reply to an inbound message within 24 hours, Value: 1
+					206 image
+					207 text Response message
+					208 text Reply to an inbound message within 24 hours
+					209 image
+			210 container
+				211 button (collapsed) Conversation window eligibility, Secondary Actions: Expand
+					212 text Conversation window eligibility
+				213 button Change layout
+				214 heading Language, Value: 3
+					215 text Language
+				216 button (collapsed) Manage languages, Secondary Actions: Expand
+				217 pop up button (collapsed, settable) Description: Message language, Value: English, Secondary Actions: Expand
+					218 menu
+						219 (selected) English
+				220 button (collapsed) Add Liquid, Secondary Actions: Expand
+				221 text Message
+				222 text entry area (settable) Message 49 characters
+				223 container
+					224 text 49  characters
+				225 checkbox (settable, integer) Description: URL preview, Value: 0
+				226 checkbox (settable, integer) Description: Enable click tracking, Value: 1
+			227 container
+				228 heading Preview, Value: 3
+					229 text Preview
+				230 text Personalized for  Carla Rodriguez
+				231 pop up button (collapsed, settable) Description: Preview device, Value: WhatsApp · iPhone, Secondary Actions: Expand
+					232 menu
+						233 (selected) WhatsApp · iPhone
+						234 WhatsApp · Android
+				235 container
+					236 text Thanks for messaging Thinkingai. How can we help? 9:41 AM ✓✓
+				237 heading Message readiness, Value: 4
+					238 text Message readiness
+				239 image
+				240 text Response layout configured
+				241 image
+				242 text Subscription group selected
+				243 image
+				244 text Open a simulated conversation window
+			143 button (disabled) Back
+				144 image
+			145 button 1 Compose
+				146 text 1
+				147 text Compose
+			148 button ✓ Schedule
+				149 text ✓
+				150 text Schedule
+			151 button ✓ Target
+				152 text ✓
+				153 text Target
+			154 button ✓ Assign
+				155 text ✓
+				156 text Assign
+			157 button 5 Review
+				158 text 5
+				159 text Review
+			160 button Forward
+				161 image
+			162 button Save Draft
+		163 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			164 image
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_whatsapp?locale=en

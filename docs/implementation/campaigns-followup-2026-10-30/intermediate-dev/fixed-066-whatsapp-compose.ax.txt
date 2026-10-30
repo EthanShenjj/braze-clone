@@ -1,0 +1,188 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_whatsapp?locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_whatsapp?locale=en
+	41 container
+		42 image Download
+		43 image
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agent Console
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+		25 container
+			26 text ◷   8 days left in your free trial.
+			27 button Connect with sales
+		28 container
+			29 button Search workspace ⌘K
+				30 image
+				31 text Search workspace
+				32 text ⌘K
+			33 button Take a tour
+			34 image Community
+			35 button (collapsed) Description: Language, Secondary Actions: Expand
+			36 button Notifications
+			37 button (collapsed) Description: Profile, Secondary Actions: Expand
+			38 image
+			39 button Open BrazeAI Operator
+		40 button Campaigns
+		44 button Edit 'Audit 2026-10-29 whatsapp'
+			45 text Edit
+			46 text  '
+			47 text Audit 2026-10-29 whatsapp
+			48 text '
+			49 image
+		50 container
+			51 image
+			52 text Limited access
+			53 container Campaign steps
+				54 button ✓ Compose Messages
+					55 text ✓
+					56 text Compose Messages
+				57 button ✓ Schedule Delivery
+					58 text ✓
+					59 text Schedule Delivery
+				60 button ✓ Target Audiences
+					61 text ✓
+					62 text Target Audiences
+				63 button ✓ Assign Conversions
+					64 text ✓
+					65 text Assign Conversions
+				66 button 5 Review Summary
+					67 text 5
+					68 text Review Summary
+			69 heading Campaign Details, Value: 2
+				70 text Campaign Details
+			71 container
+				72 text Campaign Name
+				73 text field (settable) Campaign Name, Value: Audit 2026-10-29 whatsapp
+			74 container
+				75 text Teams
+				76 pop up button (collapsed, settable) Teams, Value: Select…, Secondary Actions: Expand
+					77 menu
+						78 (selected) Select…
+			79 button Add description
+				80 image
+				81 text Add description
+			82 button (collapsed) Tags, Secondary Actions: Expand
+				83 image
+				84 text Tags
+				85 image
+			86 container Campaign brief
+				87 heading Campaign brief, Value: 3
+					88 text Campaign brief
+				89 text Attach a brief so BrazeAI Operator can build your campaign and your Standards can review it against your goals
+				90 text Attach a campaign brief (optional)
+				91 text PDF, TXT, MD, CSV, DOCX up to 15MB
+				92 button Upload file
+					93 image
+					94 text Upload file
+			95 container
+				96 text Campaign ID
+				97 text field Campaign ID, Help: 6a3a2696-8765-5dfe-8a12-3c0f9ff9d586
+			98 button Copy
+				99 image
+				100 text Copy
+			101 heading Compose WhatsApp, Value: 2
+				102 text Compose WhatsApp
+			103 text Send an approved WhatsApp template.
+			104 button Preview and test
+			105 heading Variants, Value: 3
+				106 text Variants
+			107 tab group WhatsApp variants
+				108 tab (selected, settable, boolean) Variant 1, Value: 1
+				109 button Add variant
+					110 image
+			111 button Duplicate variant
+				112 image
+			113 button (disabled) Delete variant
+				114 image
+			115 container
+				116 text Subscription Group
+				117 pop up button (collapsed, settable) Description: WhatsApp subscription group, Value: WhatsApp updates, Secondary Actions: Expand
+					118 menu
+						119 Select a subscription group
+						120 (selected) WhatsApp updates
+				121 text WhatsApp business account Not specified
+			122 container
+				123 text Response Message layout
+				124 pop up button (collapsed, settable) Description: Response Message layout, Value: Text, Secondary Actions: Expand
+					125 menu
+						126 Quick Reply
+						127 (selected) Text
+						128 Media
+						129 Call-to-action Button
+						130 List
+						131 Carousel
+						132 Flow
+						133 Meta Products
+			134 button Change message type
+			135 text Response messages can only be sent in response to a user message within a 24 hour window.
+			136 container WhatsApp message preview
+				137 heading Preview, Value: 3
+					138 text Preview
+				139 container
+					140 text Thanks for messaging Thinkingai. How can we help? 8:21 AM
+			141 container WhatsApp composer sections
+				142 checkbox Compose, Value: 1
+				143 checkbox Test, Value: 0
+			144 container
+				145 heading Language, Value: 3
+					146 text Language
+				147 button (collapsed) Add languages, Secondary Actions: Expand
+					148 image
+					149 text Add languages
+				150 heading Content, Value: 3
+					151 text Content
+				152 button (collapsed) Add Liquid, Secondary Actions: Expand
+				153 text Body
+				154 text entry area (settable) Body 49/4096, Value: Thanks for messaging Thinkingai. How can we help?
+				155 container
+					156 text 49 / 4096
+				157 heading URL preview, Value: 3
+					158 text URL preview
+				159 checkbox (settable, integer) Description: Include a preview of the URL in the message, Value: 0
+				160 heading Link options, Value: 3
+					161 text Link options
+				162 checkbox (settable, integer) Description: Click Tracking, Value: 1
+				163 text Track clicks on links included in your message.
+			164 button (disabled) Back
+				165 image
+			166 button ✓ Compose
+				167 text ✓
+				168 text Compose
+			169 button ✓ Schedule
+				170 text ✓
+				171 text Schedule
+			172 button ✓ Target
+				173 text ✓
+				174 text Target
+			175 button ✓ Assign
+				176 text ✓
+				177 text Assign
+			178 button 5 Review
+				179 text 5
+				180 text Review
+			181 button Forward
+				182 image
+			183 button Save Draft
+		184 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			185 image
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_whatsapp?locale=en

@@ -1,0 +1,474 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns?locale=en".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns?locale=en
+	1 container
+		2 image Download
+		3 image
+	4 container
+		5 text b
+		6 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			7 image
+			8 text Local workspace
+		9 text Quick links
+		10 button Canvas
+			11 image
+			12 text Canvas
+		13 button Campaigns
+			14 image
+			15 text Campaigns
+		16 button Segments
+			17 image
+			18 text Segments
+		19 button Getting Started
+			20 image
+			21 text Getting Started
+		22 button Performance Overview
+			23 image
+			24 text Performance Overview
+		25 button AI Decisioning
+			26 image
+			27 text AI Decisioning
+		28 button Agent Console
+			29 image
+			30 text Agent Console
+		31 button Messaging
+			32 image
+			33 text Messaging
+		34 button Audience
+			35 image
+			36 text Audience
+		37 button Content
+			38 image
+			39 text Content
+		40 button Analytics
+			41 image
+			42 text Analytics
+		43 button Partner Integrations
+			44 image
+			45 text Partner Integrations
+		46 button Data Settings
+			47 image
+			48 text Data Settings
+		49 button Settings
+			50 image
+			51 text Settings
+		52 text braze
+		53 container
+			54 text ◷   8 days left in your free trial.
+			55 button Connect with sales
+		56 container
+			57 button Search workspace ⌘K
+				58 image
+				59 text Search workspace
+				60 text ⌘K
+			61 button Take a tour
+				62 image
+			63 image
+			64 button (collapsed) Description: Language, Secondary Actions: Expand
+				65 image
+			66 button Notifications
+				67 image
+			68 button S
+			69 image
+			70 button Open BrazeAI Operator
+				71 image
+		72 button Campaigns
+		73 container Campaigns
+			74 container
+				75 heading Campaigns, Value: 1
+					76 text Campaigns
+				77 image
+				78 text Limited access Campaigns let you send a single, targeted message through email, push, SMS, and more, ensuring timely communication with your audience
+				79 button Send feedback
+					80 image
+				81 button Take a tour
+					82 text Take a tour
+					83 image
+				84 button Create campaign
+					85 text Create campaign
+					86 image
+			87 container
+				88 text Status
+				89 pop up button (collapsed, settable) Description: Status, Value: All, Secondary Actions: Expand
+					90 menu
+						91 (selected) All
+						92 Active
+						93 Draft
+						94 Archived
+						95 Stopped
+						96 Idle
+				97 text Tag
+				98 pop up button (collapsed, settable) Description: Tag, Value: Select..., Secondary Actions: Expand
+					99 menu
+						100 (selected) Select...
+				101 button (collapsed) Filters, Secondary Actions: Expand
+					102 image
+					103 text Filters
+				104 button (collapsed) Columns, Secondary Actions: Expand
+					105 image
+					106 text Columns
+				107 button Reset filters
+				108 text field (settable) Search campaigns
+				109 button (disabled) Search
+					110 image
+			111 container
+				112 text 38 Results
+			113 table
+				114 row
+					115 cell
+						116 checkbox (settable, integer) Description: Select all rows, Value: 0
+					117 cell
+						118 button Name column, unsorted. Select to sort ascending
+					119 cell
+						120 text Status
+					121 cell
+						122 button Stop date column, unsorted. Select to sort descending
+					123 cell
+						124 text Campaign type
+					125 cell
+						126 text Entry schedule
+					127 cell
+						128 button Sent column, unsorted. Select to sort descending
+					129 cell
+						130 button Teams column, unsorted. Select to sort descending
+					131 cell
+						132 text Last edited by
+					133 cell
+						134 button Last edited column, sorted descending. Select to sort ascending
+					135 cell
+						136 text Created by
+					137 cell Actions
+				138 row
+					139 cell
+						140 checkbox (settable, integer) Description: Select Audit 2026-10-29 line, Value: 0
+					141 cell
+						142 link Description: Audit 2026-10-29 line, Value: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_line?locale=en
+					143 cell
+						144 text Draft
+					145 cell
+						146 image
+						147 text LINE
+					148 cell
+						149 text One Time
+					150 cell
+						151 text 0
+					152 cell
+						153 text Local user
+					154 cell
+						155 text Oct 30, 2026
+					156 cell
+						157 text Local user
+					158 cell
+						159 pop up button (collapsed) Description: More Actions for Audit 2026-10-29 line, Help: More Actions, Secondary Actions: Expand
+							160 image
+				161 row
+					162 cell
+						163 checkbox (settable, integer) Description: Select Audit 2026-10-29 whatsapp, Value: 0
+					164 cell
+						165 link Description: Audit 2026-10-29 whatsapp, Value: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_whatsapp?locale=en
+					166 cell
+						167 text Draft
+					168 cell
+						169 image
+						170 text WhatsApp
+					171 cell
+						172 text One Time
+					173 cell
+						174 text 0
+					175 cell
+						176 text Local user
+					177 cell
+						178 text Oct 30, 2026
+					179 cell
+						180 text Local user
+					181 cell
+						182 pop up button (collapsed) Description: More Actions for Audit 2026-10-29 whatsapp, Help: More Actions, Secondary Actions: Expand
+							183 image
+				184 row
+					185 cell
+						186 checkbox (settable, integer) Description: Select Audit 2026-10-29 iam, Value: 0
+					187 cell
+						188 link Description: Audit 2026-10-29 iam, Value: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_iam?locale=en
+					189 cell
+						190 text Draft
+					191 cell
+						192 image
+						193 text In-App Message
+					194 cell
+						195 text One Time
+					196 cell
+						197 text 0
+					198 cell
+						199 text Local user
+					200 cell
+						201 text Oct 30, 2026
+					202 cell
+						203 text Local user
+					204 cell
+						205 pop up button (collapsed) Description: More Actions for Audit 2026-10-29 iam, Help: More Actions, Secondary Actions: Expand
+							206 image
+				207 row
+					208 cell
+						209 checkbox (settable, integer) Description: Select Audit 2026-10-29 banner, Value: 0
+					210 cell
+						211 link Description: Audit 2026-10-29 banner, Value: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_banner?locale=en
+					212 cell
+						213 text Draft
+					214 cell
+						215 image
+						216 text Banner
+					217 cell
+						218 text One Time
+					219 cell
+						220 text 0
+					221 cell
+						222 text Local user
+					223 cell
+						224 text Oct 30, 2026
+					225 cell
+						226 text Local user
+					227 cell
+						228 pop up button (collapsed) Description: More Actions for Audit 2026-10-29 banner, Help: More Actions, Secondary Actions: Expand
+							229 image
+				230 row
+					231 cell
+						232 checkbox (settable, integer) Description: Select Audit 2026-10-29 content, Value: 0
+					233 cell
+						234 link Description: Audit 2026-10-29 content, Value: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_content?locale=en
+					235 cell
+						236 text Draft
+					237 cell
+						238 image
+						239 text Content Card
+					240 cell
+						241 text One Time
+					242 cell
+						243 text 0
+					244 cell
+						245 text Local user
+					246 cell
+						247 text Oct 30, 2026
+					248 cell
+						249 text Local user
+					250 cell
+						251 pop up button (collapsed) Description: More Actions for Audit 2026-10-29 content, Help: More Actions, Secondary Actions: Expand
+							252 image
+				253 row
+					254 cell
+						255 checkbox (settable, integer) Description: Select Audit 2026-10-29 multichannel, Value: 0
+					256 cell
+						257 link Description: Audit 2026-10-29 multichannel, Value: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_multichannel?locale=en
+					258 cell
+						259 text Draft
+					260 cell
+						261 image
+						262 text Multichannel
+					263 cell
+						264 text One Time
+					265 cell
+						266 text 0
+					267 cell
+						268 text Local user
+					269 cell
+						270 text Oct 30, 2026
+					271 cell
+						272 text Local user
+					273 cell
+						274 pop up button (collapsed) Description: More Actions for Audit 2026-10-29 multichannel, Help: More Actions, Secondary Actions: Expand
+							275 image
+				276 row
+					277 cell
+						278 checkbox Description: Select Audit 2026-10-29 email, Value: 0
+					279 cell
+						280 link Description: Audit 2026-10-29 email, Value: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_email?locale=en
+					281 cell
+						282 text Draft
+					283 cell
+						284 image
+						285 text Email
+					286 cell
+						287 text One Time
+					288 cell
+						289 text 0
+					290 cell
+						291 text Local user
+					292 cell
+						293 text Oct 30, 2026
+					294 cell
+						295 text Local user
+					296 cell
+						297 pop up button (collapsed) Description: More Actions for Audit 2026-10-29 email, Help: More Actions, Secondary Actions: Expand
+							298 image
+				299 row
+					300 cell
+						301 checkbox Description: Select Email settings entry verification, Value: 0
+					302 cell
+						303 link Description: Email settings entry verification, Value: 127.0.0.1:3100/engagement/campaigns/cmp_email_settings_1029?locale=en
+					304 cell
+						305 text Draft
+					306 cell
+						307 image
+						308 text Email
+					309 cell
+						310 text One Time
+					311 cell
+						312 text 0
+					313 cell
+						314 text Local user
+					315 cell
+						316 text Oct 30, 2026
+					317 cell
+						318 text Local user
+					319 cell
+						320 pop up button (collapsed) Description: More Actions for Email settings entry verification, Help: More Actions, Secondary Actions: Expand
+							321 image
+				322 row
+					323 cell
+						324 checkbox (settable, integer) Description: Select New Campaign - October 30, 2026, Value: 0
+					325 cell
+						326 link Description: New Campaign - October 30, 2026, Value: 127.0.0.1:3100/engagement/campaigns/cmp_1939a2fa?locale=en
+					327 cell
+						328 text Draft
+					329 cell
+						330 image
+						331 text API Campaign
+					332 cell
+						333 text One Time
+					334 cell
+						335 text 0
+					336 cell
+						337 text Local user
+					338 cell
+						339 text Oct 30, 2026
+					340 cell
+						341 text Local user
+					342 cell
+						343 pop up button (collapsed) Description: More Actions for New Campaign - October 30, 2026, Help: More Actions, Secondary Actions: Expand
+							344 image
+				345 row
+					346 cell
+						347 checkbox (settable, integer) Description: Select Untitled Create with Operator Campaign, Value: 0
+					348 cell
+						349 link Description: Untitled Create with Operator Campaign, Value: 127.0.0.1:3100/engagement/campaigns/cmp_lfcsatj6?locale=en
+					350 cell
+						351 text Draft
+					352 cell
+						353 image
+						354 text operator
+					355 cell
+						356 text One Time
+					357 cell
+						358 text 0
+					359 cell
+						360 text Local user
+					361 cell
+						362 text Oct 29, 2026
+					363 cell
+						364 text Local user
+					365 cell
+						366 pop up button (collapsed) Description: More Actions for Untitled Create with Operator Campaign, Help: More Actions, Secondary Actions: Expand
+							367 image
+				368 row
+					369 cell
+						370 checkbox (settable, integer) Description: Select Untitled Feature flag experiment Campaign, Value: 0
+					371 cell
+						372 link Description: Untitled Feature flag experiment Campaign, Value: 127.0.0.1:3100/engagement/campaigns/cmp_xce101j2?locale=en
+					373 cell
+						374 text Draft
+					375 cell
+						376 image
+						377 text Feature Flag Experiment
+					378 cell
+						379 text One Time
+					380 cell
+						381 text 0
+					382 cell
+						383 text Local user
+					384 cell
+						385 text Oct 29, 2026
+					386 cell
+						387 text Local user
+					388 cell
+						389 pop up button (collapsed) Description: More Actions for Untitled Feature flag experiment Campaign, Help: More Actions, Secondary Actions: Expand
+							390 image
+				391 row
+					392 cell
+						393 checkbox (settable, integer) Description: Select Untitled API campaign Campaign, Value: 0
+					394 cell
+						395 link Description: Untitled API campaign Campaign, Value: 127.0.0.1:3100/engagement/campaigns/cmp_05m5ge0c?locale=en
+					396 cell
+						397 text Draft
+					398 cell
+						399 image
+						400 text API Campaign
+					401 cell
+						402 text One Time
+					403 cell
+						404 text 0
+					405 cell
+						406 text Local user
+					407 cell
+						408 text Oct 29, 2026
+					409 cell
+						410 text Local user
+					411 cell
+						412 pop up button (collapsed) Description: More Actions for Untitled API campaign Campaign, Help: More Actions, Secondary Actions: Expand
+							413 image
+			414 container
+				415 text Showing rows  1  -  12  of  38 Rows per page:
+				416 pop up button (collapsed, settable) Description: Rows per page, Value: 12, Secondary Actions: Expand
+					417 menu
+						418 (selected) 12
+						419 24
+						420 48
+						421 96
+				422 container Campaign pages
+					423 button (disabled) Previous page
+						424 image
+					425 button Current Page, Page 1
+					426 button Go to Page 2
+					427 text …
+					428 button Go to Page 4
+					429 button Next page
+						430 image
+			431 button Priority Sorter
+				432 image
+				433 text Priority Sorter
+		434 container
+			435 button Create with Operator
+				436 image
+				437 text Create with Operator
+			438 text MESSAGE ONE OR MORE CHANNELS
+			439 button Multichannel
+				440 text Multichannel
+			441 text SINGLE CHANNEL
+			442 button Email
+				443 text Email
+			444 button Push notification
+				445 text Push notification
+			446 button In-app message (1 / 200 active)
+				447 text In-app message
+				448 text (1 / 200 active)
+			449 button Content Card (0 / 500 active)
+				450 text Content Card
+				451 text (0 / 500 active)
+			452 button Banner (0 / 200 active)
+				453 text Banner
+				454 text (0 / 200 active)
+			455 button SMS/MMS/RCS
+				456 text SMS/MMS/RCS
+			457 button Webhook
+				458 text Webhook
+			459 button WhatsApp
+				460 text WhatsApp
+			461 button LINE
+				462 text LINE
+			463 text FEATURE FLAGS
+			464 button Feature flag experiment (0 / 1 active)
+				465 text Feature flag experiment
+				466 container
+					467 text ( 0  / 1  active )
+			468 text TRACK MESSAGES SENT VIA API
+			469 button API campaign
+				470 text API campaign
+
+The focused UI element is 84 button Create campaign

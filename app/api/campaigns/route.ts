@@ -11,6 +11,8 @@ export function GET(request: Request) {
     limit: Number(searchParams.get("limit") ?? 12),
     offset: Number(searchParams.get("offset") ?? 0),
     sort: searchParams.get("sort") ?? undefined,
+    includeArchived: searchParams.get("includeArchived") === "true",
+    workspaceId: searchParams.get("workspace") ?? "local",
   }));
 }
 

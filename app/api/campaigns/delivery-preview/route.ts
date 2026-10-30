@@ -1,0 +1,3 @@
+import {previewCampaignDeliveryTimes} from '@/lib/braze-store';
+export const runtime='nodejs';
+export async function POST(request:Request){try{const input=await request.json();if(!input.campaign||typeof input.campaign.channel!=='string')throw new Error('Provide a campaign snapshot.');const channel=typeof input.channel==='string'?input.channel:input.campaign.channel;if(!['email','push','iam','content','banner','sms','webhook','whatsapp','line','multichannel'].includes(channel))throw new Error('Choose a supported delivery channel.');return Response.json(previewCampaignDeliveryTimes(input.campaign,channel));}catch(error){return Response.json({error:error instanceof Error?error.message:'Could not preview delivery times.'},{status:400});}}

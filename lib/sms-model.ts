@@ -39,5 +39,5 @@ export function smsLanguageSnippet(languages: string[]) {
 }
 
 export function smsIssues(message: string, groupId: string) {
-  return [!groupId && "Select an SMS subscription group.", !message.trim() && "Add message content.", message.length > 20000 && "Message must be 20,000 characters or fewer."].filter(Boolean) as string[];
+  return [!groupId && "Select an SMS subscription group.", !message.trim() && "Add message content.", message.length > 1600 && "Message must be 1,600 characters or fewer."].filter(Boolean) as string[];
 }

@@ -1,0 +1,193 @@
+- link "跳至内容":
+  - /url: "#main-col"
+  - generic: 跳至内容
+- navigation "侧边导航":
+  - button "Minimize menu":
+  - button "演示 – bba":
+    - generic: Demo – bba
+    - img: 
+  - generic: 快速链接
+  - link "帆布":
+    - /url: /engagement/canvas/canvas/6ad0b98fe4b4110085216601?locale=en
+    - generic: Canvas
+  - link "竞选活动":
+    - /url: /engagement/campaigns/campaigns/6ad0b98fe4b4110085216601?locale=en
+    - generic: Campaigns
+  - link "细分市场":
+    - /url: /engagement/segmenter/segmenter/6ad0b98fe4b4110085216601?locale=en
+    - generic: Segments
+  - button "入门":
+    - generic: Getting Started
+    - generic: 8%
+  - link "绩效概述":
+    - /url: /dashboard/app_usage/6ad0b98fe4b4110085216601?locale=en
+    - generic: Home
+  - button "人工智能决策":
+    - generic: AI Decisioning
+  - button "代理控制台":
+    - generic: Agent Console
+  - button "消息传递":
+    - generic: Messaging
+  - button "观众":
+    - generic: Audience
+  - button "内容":
+    - generic: Content
+  - button "分析":
+    - generic: Analytics
+  - button "合作伙伴集成":
+    - generic: Partner Integrations
+  - button "数据设置":
+    - generic: Data Settings
+  - button "设置":
+    - generic: Settings
+  - generic "页脚徽标":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 免费试用期还剩1天。
+- button "联系销售":
+  - generic: 联系销售
+- navigation "顶部导航":
+  - navigation "左上导航":
+    - button "搜索工作区 ⌘+K":
+      - generic: 搜索工作区
+      - generic: ⌘+K
+  - navigation "右上角导航":
+    - button "支持。使用 Enter 键打开子菜单，使用上下箭头键选择子菜单项，按 Esc 键关闭子菜单。":
+    - button "社区。使用 Enter 键打开子菜单，使用向下或向上箭头键选择子菜单项，按 Esc 键关闭。":
+    - button "选择您的语言（当前默认语言为英语）":
+    - button "通知":
+    - button "[对象 对象]。使用 Enter 键打开子菜单，使用上下箭头键选择子菜单项，按 Esc 键关闭子菜单。":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- navigation:
+  - tablist "打开页面标签":
+    - tab "竞选活动":
+      - generic: 竞选活动
+    - tab "编辑“新活动 - 2026 年 10 月 28 日” 关闭标签页":
+      - generic: 编辑“新活动 - 2026 年 10 月 28 日”
+      - button "关闭标签页":
+    - tab "编辑“新活动 - 2026 年 10 月 29 日” 关闭标签页":
+      - generic: 编辑“新活动 - 2026 年 10 月 29 日”
+      - button "关闭标签页":
+    - tab "Edit 'New Campaign - October 29, 2026' Close tab" [selected]:
+      - text: 
+      - generic: Edit 'New Campaign - October 29, 2026'
+      - button "Close tab":
+- img: 
+- generic: 访问受限
+- navigation:
+  - generic "进步":
+    - generic: 五步进度跟踪器：撰写消息、安排发送时间、目标受众、分配转化任务、查看摘要
+  - button "步骤：撰写邮件":
+    - generic: "1"
+    - generic: 撰写消息
+  - button "步骤计划交付":
+    - img: 
+    - generic: 安排交付
+  - button "步骤 目标受众":
+    - generic: "3"
+    - generic: 目标受众
+  - button "步骤分配转换":
+    - generic: "4"
+    - generic: 分配转换
+  - button "步骤回顾总结":
+    - generic: "5"
+    - generic: 审查摘要
+- heading "分配转换事件" [level=3]:
+  - generic: 分配转换事件
+- generic: 为本次广告系列定义最多 4 个要跟踪的转化事件。转化事件必须在创建广告系列时分配，广告系列上线后无法更改。
+- list:
+  - heading "主要转化事件 - A" [level=4]:
+    - generic: 主要转化事件 - A
+  - button "移除转化事件":
+  - generic: 转换事件类型
+  - log:
+    - generic: 已选择“开始会话”，当前显示第 2/9 个
+    - generic: 结果。共有 9 个结果可用。
+    - generic: 使用上下键选择选项，按 Enter 键选择当前选中的选项，按 Esc 键退出菜单，按 Tab 键选择选项并退出菜单。
+  - generic: 开始会话
+  - combobox "转换事件类型" [expanded] [active]
+  - listbox:
+    - generic: 一般活动
+    - option "执行自定义事件":
+      - generic: 执行自定义事件
+    - option "开始会话":
+      - generic: 开始会话
+    - option "升级应用":
+      - generic: 升级应用
+    - generic: 电子商务
+    - option "查看产品":
+      - generic: 查看产品
+    - option "更新购物车":
+      - generic: 更新购物车
+    - option "开始结账":
+      - generic: 开始结账
+    - option "下单":
+      - generic: 下单
+    - option "取消订单":
+      - generic: 取消订单
+    - option "退款订单":
+      - generic: 退款订单
+  - generic: 针对特定目标的应用程序和网站
+  - log
+  - generic: 来自所有应用的用户
+  - combobox "针对特定目标的应用程序和网站"
+  - generic: 转换截止日期
+  - generic: 定义用户进入营销活动到完成转化之间可以经过的最长时间。
+  - spinbutton "转换截止日期": "3"
+  - img: 
+  - img: 
+  - log
+  - generic: 天
+  - combobox "转换截止时间的单位"
+  - term:
+    - generic: 转换截止日期
+    - text: ":"
+  - definition:
+    - generic: 3天
+- button "添加转化事件":
+  - generic: 添加转化事件
+- button "后退":
+  - img: 
+- navigation:
+  - generic "进步":
+    - generic: 五步进度跟踪器：撰写、安排、设定目标、分配任务、回顾
+  - button "步骤组成":
+    - generic: "1"
+    - generic: 撰写
+  - button "步骤安排":
+    - img: 
+    - generic: 日程
+  - button "步骤目标":
+    - generic: "3"
+    - generic: 目标
+  - button "步骤分配":
+    - generic: "4"
+    - generic: 分配
+  - button "步骤回顾":
+    - generic: "5"
+    - generic: 审查
+- button "向前":
+  - img: 
+- button "保存草稿":
+  - generic: 保存草稿
+- text: 
+- contentinfo:
+  - generic: © Braze 2026
+  - generic: 在新标签页中打开
+  - link "在新标签页中打开":
+    - /url: https://braze.statuspage.io
+    - generic: 地位
+  - generic: 在新标签页中打开
+  - link "在新标签页中打开":
+    - /url: https://www.braze.com/terms
+    - generic: 条款
+  - generic: 在新标签页中打开
+  - link "在新标签页中打开":
+    - /url: https://www.braze.com/privacy
+    - generic: 隐私政策
+- iframe
+- alert
+- alert

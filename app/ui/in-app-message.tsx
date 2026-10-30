@@ -1,4 +1,5 @@
 "use client";
+import CampaignBrief from "./campaign-brief";
 
 import { useEffect, useRef, useState, type CSSProperties, type DragEvent } from "react";
 import { createPortal } from "react-dom";
@@ -8,6 +9,7 @@ import {
   Sparkles, Trash2, Type, Undo2, X,
 } from "lucide-react";
 import styles from "./in-app-message.module.css";
+import CampaignTeamPicker from "./campaign-team-picker";
 import TagPicker from "./tag-picker";
 import TraditionalComposer, { TraditionalPreview } from "./in-app-traditional";
 import { createTraditionalVariant, describeInAppAction } from "@/lib/in-app-traditional";
@@ -61,7 +63,7 @@ function validateLanguageLiquid(value: string) {
 
 function inAppColor(color: string, opacity = 100) { return /^#[a-f0-9]{6}$/i.test(color) ? `${color}${Math.round(opacity * 2.55).toString(16).padStart(2, "0")}` : color; }
 
-function InAppPreview({ page, global: inherited, device, editor = false, htmlLanguage, onDrop, onSelectBlock, onAction, onDismiss }: { onAction?: (button: InAppButton) => void; onDismiss?: () => void; page: InAppPage; global: InAppGlobalStyle; device: Device; editor?: boolean; htmlLanguage?: string; onDrop?: (kind: BlockKind) => void; onSelectBlock?: (id: string) => void }) {
+export function InAppPreview({ page, global: inherited, device, editor = false, htmlLanguage, onDrop, onSelectBlock, onAction, onDismiss }: { onAction?: (button: InAppButton) => void; onDismiss?: () => void; page: InAppPage; global: InAppGlobalStyle; device: Device; editor?: boolean; htmlLanguage?: string; onDrop?: (kind: BlockKind) => void; onSelectBlock?: (id: string) => void }) {
   const global = { ...inherited, ...page.styleOverrides };
   const frameStyle = { "--iam-accent": inAppColor(global.accentColor ?? global.buttonColor, global.accentOpacity), "--iam-overlay": `${global.overlayColor}${Math.round(global.overlayOpacity * 2.55).toString(16).padStart(2, "0")}` } as CSSProperties;
   const cardStyle: CSSProperties = {
@@ -163,10 +165,12 @@ export default function InAppCampaignCompose({ draft, update, saveCampaign, noti
     persistVariants(next);
   };
   const addTraditionalVariant = () => {
+    if(variants.length>=8)return;
     const nextVariant = createTraditionalVariant(current, `iam_variant_${crypto.randomUUID().slice(0, 8)}`, `Variant ${variants.length + 1}`);
     const next = [...variants, nextVariant]; persistVariants(next, next.length - 1); setSelectedVariant(next.length - 1); setPreviewPage(0);
   };
   const addVariant = () => {
+    if(variants.length>=8)return;
     const nextVariant: InAppVariant = { ...current, id: `iam_variant_${crypto.randomUUID().slice(0, 8)}`, name: `Variant ${variants.length + 1}`, pages: appendTemplatePages([], current.pages, `variant_${crypto.randomUUID()}`) };
     const next = [...variants, nextVariant];
     persistVariants(next, next.length - 1);
@@ -178,14 +182,15 @@ export default function InAppCampaignCompose({ draft, update, saveCampaign, noti
       <h2>Campaign Details</h2>
       <label>Campaign Name<input value={draft.name} onChange={event => update({ name: event.target.value })} placeholder="Enter Campaign Name"/></label>
       {showDescription ? <label>Description<textarea value={description} onChange={event => update({ config: { ...draft.config, description: event.target.value } })} placeholder="Describe this campaign"/></label> : <button className={styles.inlineAction} onClick={() => setShowDescription(true)}><Plus size={16}/> Add description</button>}
+      <CampaignTeamPicker value={String(draft.config?.team??"")} onChange={team=>update({config:{...draft.config,team}})}/>
       <TagPicker value={tags} onChange={tags => update({ config: { ...draft.config, tags } })}/>
-      <div className={styles.idRow}><label>Campaign ID<input value={draft.id} readOnly/></label><button onClick={() => { void navigator.clipboard?.writeText(draft.id); setCopied(true); }}><Copy size={16}/>{copied ? "Copied" : "Copy"}</button></div>
+      <CampaignBrief draft={{...draft,channel:"iam"}} update={update}/><div className={styles.idRow}><label>Campaign ID<input value={String(draft.config?.apiIdentifier??draft.id)} readOnly/></label><button onClick={() => { void navigator.clipboard?.writeText(String(draft.config?.apiIdentifier??draft.id)); setCopied(true); }}><Copy size={16}/>{copied ? "Copied" : "Copy"}</button></div>
     </section>
 
     <section className={styles.composerCard} aria-label="In-app message composer">
       <h2>Message Composer</h2>
-      <div className={styles.variantSection}><h3>Variants</h3><div>{variants.map((variant, index) => <button key={variant.id} className={index === selectedVariant ? styles.selectedVariant : ""} onClick={() => setSelectedVariant(index)}>{variant.name}</button>)}<button aria-label="Add variant" onClick={addVariant}><Plus size={16}/></button></div></div>
-      <label className={styles.sendTo}>Send To<select value={current.sendTo} onChange={event => replaceCurrent({ ...current, sendTo: event.target.value as InAppVariant["sendTo"] })}><option>Both Mobile Apps &amp; Web Browsers</option><option>Mobile Apps</option><option>Web Browsers</option></select></label>
+      <div className={styles.variantSection}><h3>Variants</h3><div>{variants.map((variant, index) => <button key={variant.id} className={index === selectedVariant ? styles.selectedVariant : ""} onClick={() => setSelectedVariant(index)}>{variant.name}</button>)}<button aria-label="Add variant" disabled={variants.length>=8} onClick={addVariant}><Plus size={16}/></button></div></div>
+      <label className={styles.sendTo}>Send To<select value={current.sendTo} onChange={event => replaceCurrent({ ...current, sendTo: event.target.value as InAppVariant["sendTo"] })}><option>Both Mobile Apps &amp; Web Browsers</option><option>Mobile Apps</option><option>Web Browsers</option><option>Roku Devices</option></select></label>
       <label className={styles.sendTo}>Editing Experience<select aria-label="Editing experience" value={current.editorMode === "traditional" ? "traditional" : "drag-and-drop"} onChange={event => { if (event.target.value === "traditional") addTraditionalVariant(); else { const index = variants.findIndex(item => item.editorMode !== "traditional"); if (index >= 0) setSelectedVariant(index); } }}><option value="drag-and-drop">Drag-And-Drop Editor</option><option value="traditional">Traditional Editor</option></select></label>
       {current.editorMode === "traditional" ? <TraditionalComposer value={current} update={replaceCurrent} liquid={insert => <LiquidInsert compact insert={insert}/>} renderSettings={(value, update) => <InAppSettings value={value} update={update}/>} renderTest={value => <InAppTestWorkspace variant={value} campaignId={draft.id} selected={0} select={() => {}} device={device} setDevice={setDevice}/>}/> : <>
       <div className={styles.composeHeading}><h3>Compose In-App Message</h3><button onClick={() => setEditorOpen(true)}><span>✎</span> Edit Message</button></div>
@@ -302,7 +307,8 @@ function InAppEditor({ initial, campaignId, notify = () => {}, close, done }: { 
 function InAppSettings({ value, update }: { value: InAppVariant; update: (patch: Partial<InAppVariant>) => void }) {
   const [section, setSection] = useState("Key-value pairs");
   const pairs = value.keyValuePairs ?? [];
-  return <div className={styles.settingsShell}><aside><h2>Settings</h2>{["Key-value pairs", "Accessibility"].map(name => <button key={name} aria-pressed={section === name} onClick={() => setSection(name)}>{name}</button>)}</aside>{section === "Accessibility" ? <AccessibilitySettings language={value.accessibilityLanguage} setLanguage={accessibilityLanguage => update({ accessibilityLanguage })} liquidEnabled={value.accessibilityLanguageLiquid !== undefined} setLiquidEnabled={enabled => update({ accessibilityLanguageLiquid: enabled ? "" : undefined })} liquid={value.accessibilityLanguageLiquid ?? ""} setLiquid={accessibilityLanguageLiquid => update({ accessibilityLanguageLiquid })}/> : <main className={styles.kvpSettings} data-empty={!pairs.length}>{!pairs.length && <><h2>Add custom metadata with key-value pairs</h2><p>Use key-value pairs (KVPs) to add custom metadata, such as tracking parameters, custom tags, or behavior triggers, to this message.</p></>}{pairs.map((pair, index) => <section key={pair.id} className={styles.kvpRow}><ArrowRight className={styles.kvpConnector} size={18}/>{(["key", "value"] as const).map(field => <label key={field}>{field === "key" ? "Key" : "Value"}<input aria-label={`${field === "key" ? "Key" : "Value"} ${index + 1}`} value={pair[field]} placeholder="Type in a value" onChange={event => update({ keyValuePairs: pairs.map(item => item.id === pair.id ? { ...item, [field]: event.target.value } : item) })}/><LiquidInsert compact insert={token => update({ keyValuePairs: pairs.map(item => item.id === pair.id ? { ...item, [field]: item[field] + token } : item) })}/></label>)}<button aria-label={`Remove pair ${index + 1}`} onClick={() => update({ keyValuePairs: pairs.filter(item => item.id !== pair.id) })}><Trash2 size={17}/></button></section>)}<button className={styles.inlineAction} onClick={() => update({ keyValuePairs: [...pairs, { id: crypto.randomUUID(), key: "", value: "" }] })}><Plus size={16}/> Add new pair</button></main>}</div>;
+  const stacked=value.editorMode==="traditional";
+  return <div className={styles.settingsShell} style={stacked?{display:"block"}:undefined}><aside hidden={stacked}><h2>Settings</h2>{["Key-value pairs", "Accessibility"].map(name => <button key={name} aria-pressed={section === name} onClick={() => setSection(name)}>{name}</button>)}</aside>{(stacked||section === "Accessibility") && <AccessibilitySettings language={value.accessibilityLanguage} setLanguage={accessibilityLanguage => update({ accessibilityLanguage })} liquidEnabled={value.accessibilityLanguageLiquid !== undefined} setLiquidEnabled={enabled => update({ accessibilityLanguageLiquid: enabled ? "" : undefined })} liquid={value.accessibilityLanguageLiquid ?? ""} setLiquid={accessibilityLanguageLiquid => update({ accessibilityLanguageLiquid })}/>}{(stacked||section !== "Accessibility") && <main className={styles.kvpSettings} data-empty={!pairs.length}>{!pairs.length && <><h2>Add custom metadata with key-value pairs</h2><p>Use key-value pairs (KVPs) to add custom metadata, such as tracking parameters, custom tags, or behavior triggers, to this message.</p></>}{pairs.map((pair, index) => <section key={pair.id} className={styles.kvpRow}><ArrowRight className={styles.kvpConnector} size={18}/>{(["key", "value"] as const).map(field => <label key={field}>{field === "key" ? "Key" : "Value"}<input aria-label={`${field === "key" ? "Key" : "Value"} ${index + 1}`} value={pair[field]} placeholder="Type in a value" onChange={event => update({ keyValuePairs: pairs.map(item => item.id === pair.id ? { ...item, [field]: event.target.value } : item) })}/><LiquidInsert compact insert={token => update({ keyValuePairs: pairs.map(item => item.id === pair.id ? { ...item, [field]: item[field] + token } : item) })}/></label>)}<button aria-label={`Remove pair ${index + 1}`} onClick={() => update({ keyValuePairs: pairs.filter(item => item.id !== pair.id) })}><Trash2 size={17}/></button></section>)}<button className={styles.inlineAction} onClick={() => update({ keyValuePairs: [...pairs, { id: crypto.randomUUID(), key: "", value: "" }] })}><Plus size={16}/> Add new pair</button></main>}</div>;
 }
 
 function AccessibilitySettings({ language, setLanguage, liquidEnabled, setLiquidEnabled, liquid, setLiquid, delivery, updateDelivery }: { language: string; setLanguage: (value: string) => void; liquidEnabled: boolean; setLiquidEnabled: (value: boolean) => void; liquid: string; setLiquid: (value: string) => void; delivery?: InAppDelivery; updateDelivery?: (patch: Partial<InAppDelivery>) => void }) {

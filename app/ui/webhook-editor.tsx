@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
+import {LiquidButton} from "./channel-personalization";
+import styles from "./webhook-editor.module.css";
 import { Languages, Plus, Save, Trash2 } from "lucide-react";
 import {
   defaultWebhookVariant,
@@ -32,23 +34,26 @@ export default function WebhookEditor({ draft, update, openTest }: { draft: Camp
   const variants = useMemo(() => normalizeWebhookVariants(draft), [draft]);
   const [selected, setSelected] = useState(0);
   const [locale, setLocale] = useState("en");
-  const [templateOpen, setTemplateOpen] = useState(false);
+  const [templateOpen, setTemplateOpen] = useState(()=>{const values=(draft.config?.channelValues??{}) as Record<string,unknown>;return values.webhookTemplateSelected!==true&&!values.webhookVariants&&!values.url;});
+  const [tab,setTab]=useState("Compose"),[credentials,setCredentials]=useState<Array<{id:string;name:string;status:string}>>([]);
   const [savedTemplates, setSavedTemplates] = useState<TemplateRecord[]>([]);
   const [templateName, setTemplateName] = useState("");
   const [customPreview, setCustomPreview] = useState(JSON.stringify(webhookPreviewUser, null, 2));
   const [capability, setCapability] = useState<{ enabled: boolean; allowedHosts: string[] } | null>(null);
   const variant = variants[Math.min(selected, variants.length - 1)] ?? variants[0];
 
+  useEffect(()=>{void fetch("/api/resources/webhook-credentials").then(r=>r.json()).then(p=>setCredentials((p.data??[]).filter((c:{status:string})=>c.status==="Active"))).catch(()=>{});},[]);
   useEffect(() => { void fetch("/api/webhooks/capability").then(response => response.json()).then(setCapability).catch(() => {}); }, []);
   useEffect(() => { void fetch("/api/resources/webhook-templates").then(response => response.json()).then(result => setSavedTemplates(result.data ?? [])).catch(() => {}); }, []);
 
   const persist = (next: WebhookVariant[], nextSelected = selected) => {
     const values = (draft.config?.channelValues ?? {}) as Record<string, unknown>;
-    update({ body: next[0]?.body ?? "", config: { ...draft.config, channelValues: { ...values, webhookVariants: next, method: next[0]?.method, url: next[0]?.url } } });
+    update({ body: next[0]?.body ?? "", config: { ...draft.config, channelValues: { ...values, webhookTemplateSelected:true,webhookVariants: next, method: next[0]?.method, url: next[0]?.url } } });
     setSelected(Math.max(0, Math.min(nextSelected, next.length - 1)));
   };
   const patchVariant = (patch: Partial<WebhookVariant>) => persist(variants.map((item, index) => index === selected ? { ...item, ...patch } : item));
   const addVariant = () => {
+    if(variants.length>=8)return;
     const next = { ...defaultWebhookVariant(variant.body), id: `var_${crypto.randomUUID().slice(0, 8)}`, name: `Variant ${variants.length + 1}`, url: variant.url, headers: variant.headers.map(header => ({ ...header, id: crypto.randomUUID() })) };
     persist([...variants, next], variants.length);
   };
@@ -89,16 +94,17 @@ export default function WebhookEditor({ draft, update, openTest }: { draft: Camp
   const renderedHeaders = redactHeaders(variant.headers.map(header => ({ ...header, value: renderWebhookText(header.value, previewContext, locale, variant.translations) })));
   const issues = validateWebhookVariant(variant, previewContext);
 
-  return <div className="webhook-editor">
+  return <div className={`webhook-editor ${styles.editor}`}>
     <div className="webhook-toolbar">
       <div className="webhook-variants"><b>Variants</b>{variants.map((item, index) => <button type="button" key={item.id} className={index === selected ? "selected" : ""} onClick={() => setSelected(index)}>{item.name}</button>)}<button type="button" aria-label="Add webhook variant" onClick={addVariant}><Plus size={14}/></button></div>
-      <div className="webhook-template-actions"><button type="button" className="secondary small" onClick={() => setTemplateOpen(!templateOpen)}>Templates</button><button type="button" className="secondary small" disabled={variants.length === 1} onClick={removeVariant}><Trash2 size={13}/> Remove</button></div>
+      <div className="webhook-template-actions"><button type="button" className="secondary small" onClick={() => setTemplateOpen(!templateOpen)}>Choose New Template</button><button type="button" className="secondary small" disabled={variants.length === 1} onClick={removeVariant}><Trash2 size={13}/> Remove</button></div>
     </div>
     {templateOpen && <section className="webhook-template-picker"><h3>Webhook templates</h3>{builtInTemplates.map(template => <button type="button" key={template.name} onClick={() => applyTemplate(template.variant)}><b>{template.name}</b><small>{template.description}</small></button>)}{savedTemplates.filter(template => template.data?.variant).map(template => <button type="button" key={template.id} onClick={() => applyTemplate(template.data!.variant!)}><b>{template.name}</b><small>{template.description}</small></button>)}</section>}
-    <div className={capability?.enabled ? "webhook-capability enabled" : "webhook-capability"}><b>{capability?.enabled ? "Live webhook delivery enabled" : "Live webhook delivery disabled"}</b><span>{capability?.enabled ? `Allowed hosts: ${capability.allowedHosts.join(", ") || "none"}` : "Preview works locally. Set WEBHOOK_DELIVERY_ENABLED and WEBHOOK_ALLOWED_HOSTS to send tests or launches."}</span></div>
+    {!templateOpen&&<div className={styles.split}><aside className={styles.preview}><h3>Preview</h3><pre>{variant.method} {renderedUrl||"[missing URL]"}{"\n"}{renderedHeaders.map(header=>`${header.key}: ${header.value}`).join("\n")}{"\n\n"}{renderedBody||"{}"}</pre><button type="button" className="secondary small" onClick={()=>void navigator.clipboard.writeText(`${variant.method} ${renderedUrl}\n${renderedBody}`)}>Copy</button><p>Adding a webhook allows you to send data to third-party systems or your own servers.</p></aside><main><nav className={styles.tabs}>{["Compose","Test"].map(name=><button key={name} aria-pressed={tab===name} onClick={()=>setTab(name)}>{name}</button>)}<button type="button" onClick={addLocale}>Manage languages</button></nav>{tab==="Test"?<section><h3>Preview as custom user</h3><textarea aria-label="Webhook preview user JSON" value={customPreview} onChange={event=>setCustomPreview(event.target.value)}/><p>{capability?.enabled?"Webhook delivery is available for configured destinations.":"Preview this request before sending. Contact your administrator to enable webhook test delivery."}</p><button type="button" className="primary" onClick={openTest}>Test webhook</button></section>:<><h3>Compose Webhook</h3>
     <div className="form-grid">{field("Variant name", <input value={variant.name} onChange={event => patchVariant({ name: event.target.value })}/>)}{field("HTTP method", <select value={variant.method} onChange={event => patchVariant({ method: event.target.value as WebhookVariant["method"], body: event.target.value === "GET" ? "" : variant.body })}><option>POST</option><option>GET</option><option>PUT</option><option>DELETE</option></select>)}</div>
-    {field("Webhook URL", <input aria-label="Webhook URL" value={variant.url} onChange={event => patchVariant({ url: event.target.value })} placeholder="https://api.example.com/events"/>, "Supports Liquid and translation tags. Only ports 80 and 443 are accepted.")}
+    <LiquidButton insert={token=>patchVariant({url:variant.url+token})}/>{field("Webhook URL", <input aria-label="Webhook URL" value={variant.url} onChange={event => patchVariant({ url: event.target.value })} placeholder="https://api.example.com/events"/>, "Supports Liquid and translation tags. Only ports 80 and 443 are accepted.")}
     <div className="webhook-language-row"><Languages size={16}/><b>Languages</b>{variant.locales.map(item => <button type="button" className={locale === item ? "selected" : ""} key={item} onClick={() => setLocale(item)}>{item}</button>)}<button type="button" onClick={addLocale}><Plus size={13}/> Add language</button></div>
+    {field("Credential (Optional)",<select aria-label="Credential" disabled={!credentials.length} value={variant.credentialId??""} onChange={event=>patchVariant({credentialId:event.target.value||undefined})}><option value="">{credentials.length?"Select...":"No credentials available"}</option>{credentials.map(credential=><option key={credential.id} value={credential.id}>{credential.name}</option>)}</select>)}
     <h3>Request headers</h3><div className="webhook-quick-auth"><span>Quick authentication:</span><button type="button" onClick={() => addAuthorization("Bearer")}>Bearer token</button><button type="button" onClick={() => addAuthorization("Basic")}>Basic</button></div>
     <div className="webhook-headers">{variant.headers.map(header => <div key={header.id}><input aria-label="Header name" value={header.key} onChange={event => patchHeader(header.id, { key: event.target.value })} placeholder="Header name"/><input aria-label={`${header.key || "Header"} value`} type={/authorization|token|secret|api[-_]?key/i.test(header.key) ? "password" : "text"} value={header.value} onChange={event => patchHeader(header.id, { value: event.target.value })} placeholder="Value"/><button type="button" aria-label={`Remove ${header.key || "header"}`} onClick={() => patchVariant({ headers: variant.headers.filter(item => item.id !== header.id) })}><Trash2 size={14}/></button></div>)}<button type="button" className="inline-link" onClick={addHeader}><Plus size={14}/> Add header</button></div>
     <div className="webhook-body-title"><h3>Request body</h3><div className="segmented"><button type="button" className={variant.bodyType === "json" ? "selected" : ""} onClick={() => patchVariant({ bodyType: "json" })}>JSON key/value</button><button type="button" className={variant.bodyType === "text" ? "selected" : ""} onClick={() => patchVariant({ bodyType: "text" })}>Raw text</button></div></div>
@@ -106,7 +112,8 @@ export default function WebhookEditor({ draft, update, openTest }: { draft: Camp
     <div className="webhook-personalization"><span>Insert personalization:</span>{[["First name", "{{${first_name} | default: 'there'}}"], ["Email", "{{${email} | default: 'unknown@example.com'}}"], ["External ID", "{{${user_id} | default: 'unknown'}}"], ["Translation", "{% translation greeting %}Hello{% endtranslation %}"]].map(([label, token]) => <button type="button" key={label} onClick={() => insertBodyToken(token)}>{label}</button>)}</div>
     {translationKeys.length > 0 && <section className="webhook-translations"><h3>Translations · {locale}</h3>{translationKeys.map(key => <div key={key}>{field(key, <input value={variant.translations[locale]?.[key] ?? ""} onChange={event => setTranslation(key, event.target.value)} placeholder="Use source text"/>)}</div>)}</section>}
     {issues.length > 0 && <div className="review-issues" role="alert"><b>Complete before launch</b>{issues.map(issue => <p key={issue}>{issue}</p>)}</div>}
-    <section className="webhook-preview"><div><h3>Preview as custom user</h3><textarea aria-label="Webhook preview user JSON" value={customPreview} onChange={event => setCustomPreview(event.target.value)}/></div><pre><b>{variant.method} {renderedUrl || "[missing URL]"}</b>{"\n"}{renderedHeaders.map(header => `${header.key}: ${header.value}`).join("\n")}{renderedBody ? `\n\n${renderedBody}` : ""}</pre></section>
+
     <div className="webhook-footer-actions"><div><input aria-label="Webhook template name" value={templateName} onChange={event => setTemplateName(event.target.value)} placeholder="Template name"/><button type="button" className="secondary small" onClick={() => void saveTemplate()}><Save size={13}/> Save as template</button></div><button type="button" className="primary" onClick={openTest}>Test webhook</button></div>
+    </>}</main></div>}
   </div>;
 }

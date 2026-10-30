@@ -1,6 +1,6 @@
-import { defaultGlobal, defaultPage, pageButtons, type InAppVariant, type InAppButton } from "./in-app-model.ts";
+import { defaultGlobal, defaultPage, pageButtons, type InAppVariant, type InAppButton, type InAppGlobalStyle } from "./in-app-model.ts";
 
-export const traditionalMessageTypes = ["Modal", "Full Screen", "Slideup", "Custom HTML", "Email Capture Form"] as const;
+export const traditionalMessageTypes = ["Modal", "Full Screen", "Slideup", "Custom HTML", "Email Capture Form", "Web modal with CSS"] as const;
 export type TraditionalMessageType = typeof traditionalMessageTypes[number];
 export type TraditionalAction = "dismiss" | "web_url" | "deep_link" | "log_event" | "set_attribute" | "request_push";
 export type TraditionalButtonDesign = { background: string; color: string; borderColor: string; opacity: number };
@@ -19,6 +19,9 @@ export type TraditionalConfig = {
   headerOpacity: number;
   headerAlignment: "left" | "center" | "right";
   bodyAlignment: "left" | "center" | "right";
+  customCss?: string;
+  darkModeEnabled?: boolean;
+  darkStyle?: {global:Partial<InAppGlobalStyle>;traditional:Partial<TraditionalConfig>};
   buttonDesigns: TraditionalButtonDesign[];
 };
 export function traditionalDefaults(): TraditionalConfig {
@@ -63,6 +66,8 @@ export function validateTraditional(variant: InAppVariant): string[] {
   const issues: string[] = [];
   if (!traditionalMessageTypes.includes(config.messageType)) issues.push("Choose a traditional message type.");
   if (variant.pages.length !== 1) issues.push("Traditional messages must contain exactly one page.");
+  if (variant.sendTo === "Roku Devices" && config.messageType !== "Modal") issues.push("Roku devices support modal messages only.");
+  if (config.messageType === "Web modal with CSS" && variant.sendTo !== "Web Browsers") issues.push("Web modal with CSS is available for Web Browsers only.");
   if (!config.bodyAction || typeof config.bodyAction.text !== "string") issues.push("Choose the message on-click behavior.");
   if (config.messageType === "Email Capture Form" && pageButtons(variant.pages[0]).length !== 1) issues.push("Email capture forms require one submit button.");
   if (pageButtons(variant.pages[0]).length > 2) issues.push("Traditional messages support at most two buttons.");
@@ -80,6 +85,14 @@ export function validateTraditional(variant: InAppVariant): string[] {
   if (config.messageType === "Custom HTML" && !variant.customCode) issues.push("Custom HTML requires the HTML editor.");
   if (config.messageType === "Custom HTML" && !/appboy:\/\/close|brazeBridge\.(?:closeMessage|dismissMessage)/.test(variant.customHtml ?? "")) issues.push("Custom HTML must include a close or dismiss control.");
   if (config.messageType === "Email Capture Form" && !config.emailPlaceholder?.trim()) issues.push("Enter an email capture placeholder.");
+  if(config.darkModeEnabled!==undefined&&typeof config.darkModeEnabled!=="boolean")issues.push("Invalid dark mode setting.");
+  if(config.darkStyle){
+    if(!config.darkStyle.global||typeof config.darkStyle.global!=="object"||!config.darkStyle.traditional||typeof config.darkStyle.traditional!=="object")issues.push("Invalid dark mode style.");
+    else{
+      for(const [key,value] of Object.entries(config.darkStyle.global))if(["backgroundColor","textColor","overlayColor","closeColor"].includes(key)&&typeof value!=="string"||["backgroundOpacity","textOpacity","overlayOpacity"].includes(key)&&(typeof value!=="number"||!Number.isFinite(value)||value<0||value>100))issues.push(`Invalid dark mode ${key}.`);
+      issues.push(...validateTraditional({...variant,traditional:{...config,...config.darkStyle.traditional,darkModeEnabled:false,darkStyle:undefined}}).map(issue=>`Dark mode: ${issue}`));
+    }
+  }
   return issues;
 }
 
@@ -96,3 +109,6 @@ export function describeInAppAction(button: InAppButton): string {
   if (button.behavior === "request_push") return "Local preview: request push permission. No browser permission prompt is sent.";
   return button.href;
 }
+
+export function traditionalAppearance(variant:InAppVariant,mode:string):InAppVariant{const config=variant.traditional;if(mode!=="dark"||!config?.darkModeEnabled||!config.darkStyle)return variant;return {...variant,global:{...variant.global,...config.darkStyle.global},traditional:{...config,...config.darkStyle.traditional}};}
+export function platformInAppButton(button:InAppButton,platform:string):InAppButton{return {...button,...button.platformActions?.[platform as "Android"|"iOS"],platformActions:button.platformActions};}

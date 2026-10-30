@@ -1,0 +1,235 @@
+Browser tab: 1969334808, Title: "Engagement - Campaigns - Edit 'Welcome Offer'", URL: "https://dashboard-09.braze.com/engagement/campaigns/6ad0b999485c580061eb1d3b/6ad0b98fe4b4110085216601?locale=en".
+0 AXWebArea Engagement - Campaigns - Edit 'Welcome Offer', URL: dashboard-09.braze.com/engagement/campaigns/6ad0b999485c580061eb1d3b/6ad0b98fe4b4110085216601?locale=en
+	1 container
+		2 image Download
+		3 image
+	4 container
+		11 container body-wrapper
+			12 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/campaigns/6ad0b999485c580061eb1d3b/6ad0b98fe4b4110085216601?locale=en#main-col
+			13 container
+				14 container Side navigation
+					15 container
+						16 button Minimize menu
+						17 pop up button (collapsed) Description: Demo – bba, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+							18 image
+							19 text Demo – bba
+						20 text Quick links
+						21 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6ad0b98fe4b4110085216601?locale=en
+						22 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6ad0b98fe4b4110085216601?locale=en
+						23 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6ad0b98fe4b4110085216601?locale=en
+						24 button Getting Started
+							25 image
+							26 container
+								27 text Getting Started
+								28 container
+									29 text 8 %
+						30 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6ad0b98fe4b4110085216601?locale=en
+						31 button AI Decisioning
+							32 image
+							33 text AI Decisioning
+						34 button Agent Console
+							35 image
+							36 text Agent Console
+						37 button Messaging
+							38 image
+							39 text Messaging
+						40 button Audience
+							41 image
+							42 text Audience
+						43 button Content
+							44 image
+							45 text Content
+						46 button Analytics
+							47 image
+							48 text Analytics
+						49 button Partner Integrations
+							50 image
+							51 text Partner Integrations
+						52 button Data Settings
+							53 image
+							54 text Data Settings
+						55 button Settings
+							56 image
+							57 text Settings
+					58 container Footer Logo
+						59 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+				60 text No days left in your free trial.
+				61 button Connect with sales
+				62 container Top navigation
+					63 container Left top navigation
+						64 button Search workspace ⌘+K
+							65 image
+							66 text Search workspace
+							67 text ⌘+K
+					68 container Right top navigation
+						69 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							70 image
+						71 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							72 image
+						73 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+							74 image
+						75 container
+							76 button Notifications
+								77 image
+						78 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							79 image
+						80 button BrazeAI Operator™
+							81 image
+			82 container main
+				83 container main-col
+					84 tab group Open page tabs
+						85 tab (selectable, settable, boolean) Campaigns, Value: 0, ID: campaigns
+						86 tab (selectable, settable, boolean) Edit 'New Campaign - October 29, 2026' Close tab, Description: Close tab, ID: 6ae2d0de5e731b00885db684, Value: 0
+Edit 'New Campaign - October 29, 2026'
+						259 tab (selected, settable, boolean) Edit 'Welcome Offer' Close tab, Description: Close tab, ID: 6ad0b999485c580061eb1d3b, Value: 1
+Edit 'Welcome Offer'
+					260 container
+						261 text Limited access
+						262 container progress
+							263 text Progress Tracker with 5 steps: Compose Messages, Schedule Delivery, Target Audiences, Assign Conversions, Review Summary
+						264 button Step Compose Messages
+						267 button Step Schedule Delivery
+							329 text 2
+							330 text Schedule Delivery
+						268 button Step Target Audiences
+						269 button Step Assign Conversions
+						270 button Step Review Summary
+						331 container
+							332 heading Delivery, Value: 3
+								333 text Delivery
+							334 heading Choose a Type, Value: 4
+								335 text Choose a Type
+							336 container
+								337 radio button (settable, integer) Description: Scheduled Enter users at designated times, Value: 0, ID: tile-radio-1299897416
+								338 heading Scheduled, Value: 4
+									339 text Scheduled
+								340 text Enter users at designated times
+							341 container
+								342 radio button (settable, integer) Description: Action-Based Enter user when they perform actions, Value: 1, ID: tile-radio-3888693752
+								343 heading Action-Based, Value: 4
+									344 text Action-Based
+								345 text Enter user when they perform actions
+							346 container
+								347 radio button (settable, integer) Description: API-Triggered Enter users via API request, Value: 0, ID: tile-radio-2904784470
+								348 heading API-Triggered, Value: 4
+									349 text API-Triggered
+								350 text Enter users via API request
+						351 container
+							352 heading Action-Based delivery, Value: 3
+								353 text Action-Based delivery
+							354 text Perform Custom Event Custom event name
+							355 container
+								356 text completed_account_signup
+								357 combo box (collapsed, settable) Description: Choose a custom event, ID: react-select-21-input, Secondary Actions: Expand
+							358 checkbox (settable, integer) Description: Add property filters, Value: 0, ID: bc-checkbox-1213327590
+							359 text Add property filters
+							360 button close
+							361 text Evaluate if user takes specified actions
+							411 container
+								412 text Perform Custom Event, 1 of 22.
+								413 text 22 results available.
+								414 text Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+							362 container
+								363 text Select Trigger
+								364 combo box (expanded, settable) Description: Select Trigger, ID: react-select-22-input, Secondary Actions: Collapse
+							365 button (disabled) Add Trigger
+							366 heading Schedule Delay, Value: 5
+								367 text Schedule Delay
+							368 text Choose when to send the campaign after the trigger event occurs. Send
+							369 container
+								370 text Immediately
+								371 combo box (collapsed, settable) Description: Send, ID: react-select-23-input, Secondary Actions: Expand
+							372 heading Campaign duration, Value: 5
+								373 text Campaign duration
+							374 text Start Time (Required)
+							375 container
+								376 text field (settable) Description: Select Date, Value: 2025/12/01
+								377 text Type a date month/day/year, or use arrow keys or page up/page down to choose a date
+							378 container
+								379 text field (settable) 2:45 pm
+							380 container
+								381 text Company time - Eastern Time (US & Canada)
+								382 combo box (collapsed, settable) Description: Time zone, ID: react-select-24-input, Secondary Actions: Expand
+							383 checkbox (settable, integer) Description: End Time (Optional), Value: 0, ID: bc-checkbox-324299605
+							384 text End Time (Optional)
+							385 heading Quiet hours, Value: 5
+								386 text Quiet hours
+							387 text Prevent messages from sending during certain hours (in user's local time)
+							388 checkbox (settable, integer) Description: Enable quiet hours, Value: 0, ID: bc-checkbox-3228245359
+							389 text Enable quiet hours
+							390 content list
+								391 container
+									392 AXListMarker • 
+									393 text Schedule delay:  immediately after trigger criteria are met
+								394 container
+									395 AXListMarker • 
+									396 text Campaign start:  December 1, 2025 at 2:45 PM
+						397 container
+							398 heading Delivery Controls, Value: 3
+								399 text Delivery Controls
+							400 text Manage the number of messages your users will receive.
+							401 checkbox (settable, integer) Description: Allow users to become re-eligible to receive campaign, Value: 0, ID: bc-checkbox-1721673341
+							402 text Allow users to become re-eligible to receive campaign
+							403 heading Frequency Capping, Value: 4
+								404 text Frequency Capping
+							405 container
+								406 text You have not created any Frequency Capping rules.
+								407 text Opening in a new tab
+								408 link Description: Opening in a new tab, Value: dashboard-09.braze.com/engagement/global_message_settings/global-message-settings/6ad0b98fe4b4110085216601?locale=en
+						316 pop up button Back
+						317 container
+							318 container progress
+								319 text Progress Tracker with 5 steps: Compose, Schedule, Target, Assign, Review
+							320 button Step Compose
+							323 button Step Schedule
+								409 text 2
+								410 text Schedule
+							324 button Step Target
+							325 button Step Assign
+							326 button Step Review
+						327 pop up button Forward
+						328 button Save Draft
+				249 container
+					250 text © Braze 2026
+					251 text Opening in a new tab
+					252 link Description: Opening in a new tab, Value: 01.emailinboundprocessing.com/preference_center/v1/eyJhbGciOiJSUzI1NiJ9/eyJzdWIiOiJwY3YxIiwiaWF0IjoxNzkzMzM0NDI4LCJleHAiOjE4MjQ4NzA0MjgsImQiOiIkMCR0SnRqRHZzcnpGRUxaZkxqU0w4eWt3PT0kaTVQSUUwV0ZTTENOTUpCeXMyUDgySWRTcnI3bmt5ZHJMeFFiM2xzODlFUjd1ckpZRDViZk93Zm1YMllPXG45STNjIiwiaCI6IjAxLmVtYWlsaW5ib3VuZHByb2Nlc3NpbmcuY29tIn0/UTv3OWP3etSCIz4pd6Sj6D6CPO9JMnlCGfg_H87Cm8Cd_clXeAWa1Hxe4TzipTt0f7mjWJiMXbNjQb4CdvtMxuwoJY_2sMN5e_61_cDQRFDq4LmFl_AO_YzEUzW_soMk9xKpJAvWol-IJIhEMVGawE4cuUInbW5QC4c3GqHadVOo2GU15AgpBrgOgGR1Od2qzND4TX3iUz2tUz8iCewTrcCRD6rRe91oMd5tJLQ0bxwOPyTf84Eg98HDZDnZUdKTJEInOsCeZ_PNa56pmpoh6Z5hsR1Koxk3O76_1iOzWG8ZCr1WeTvuU_W1AXkZQV9NyXxNQj4Vz-ASXr0h_MQyeg
+					253 text Opening in a new tab
+					254 link Description: Opening in a new tab, Value: braze.statuspage.io/
+					255 text Opening in a new tab
+					256 link Description: Opening in a new tab, Value: braze.com/terms
+					257 text Opening in a new tab
+					258 link Description: Opening in a new tab, Value: braze.com/privacy
+		7 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+			8 container
+				9 image Download
+				10 image
+		415 list react-select-22-listbox
+			416 text GENERAL ACTIVITY
+			417 Value: Perform Custom Event, ID: react-select-22-option-0-0
+			418 Value: Start Session, ID: react-select-22-option-0-1
+			419 Value: Interact With Campaign, ID: react-select-22-option-0-2
+			420 Value: Interact With Step, ID: react-select-22-option-0-3
+			421 Value: Interact with Landing Page, ID: react-select-22-option-0-4
+			422 Value: Perform Conversion Event, ID: react-select-22-option-0-5
+			423 Value: Perform Exception Event For Campaign, ID: react-select-22-option-0-6
+			424 text PROFILE UPDATES
+			425 Value: Change Custom Attribute Value, ID: react-select-22-option-1-0
+			426 Value: Update Subscription Status, ID: react-select-22-option-1-1
+			427 Value: Update Subscription Group Status, ID: react-select-22-option-1-2
+			428 Value: Add an Email Address, ID: react-select-22-option-1-3
+			429 text ECOMMERCE
+			430 Value: View product, ID: react-select-22-option-2-0
+			431 Value: Update cart, ID: react-select-22-option-2-1
+			432 Value: Start checkout, ID: react-select-22-option-2-2
+			433 Value: Place order, ID: react-select-22-option-2-3
+			434 Value: Cancel order, ID: react-select-22-option-2-4
+			435 Value: Refund order, ID: react-select-22-option-2-5
+			436 text INBOUND MESSAGING
+			437 Value: Send an SMS inbound message, ID: react-select-22-option-3-0
+			438 Value: Send a WhatsApp inbound message, ID: react-select-22-option-3-1
+			439 Value: Send a LINE inbound message, ID: react-select-22-option-3-2
+			440 text LOCATION
+			441 Value: Enter a Location, ID: react-select-22-option-4-0
+			442 Value: Trigger a Geofence, ID: react-select-22-option-4-1
+
+The focused UI element is 364 combo box (expanded, settable) Description: Select Trigger, ID: react-select-22-input, Secondary Actions: Collapse

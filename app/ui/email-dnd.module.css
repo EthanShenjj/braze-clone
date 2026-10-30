@@ -15,6 +15,7 @@
 .leftTitle button{border:0;background:transparent;color:#9a9eaa;cursor:pointer}
 .leftRail>button:not(.styleLink){width:100%;min-height:42px;padding:0 10px;border:0;border-radius:7px;background:transparent;color:#3e3470;text-align:left;font-size:12px;font-weight:750;cursor:pointer}
 .leftRail>button.leftActive{background:#e9e8ef;color:#2f255b}
+.leftRail>button:disabled{opacity:.45;cursor:default}
 .leftRail small{margin:16px 8px 0;color:#898d97;font-size:11px;font-weight:650}
 .leftRail .styleLink{margin-top:auto;padding:14px 4px;border:0;background:transparent;color:#3a2c72;text-align:left;font-size:12px;font-weight:750;text-decoration:underline;cursor:pointer}
 .leftPanel{margin:8px 0 15px;padding:12px;border:1px solid #e1dde7;border-radius:6px;background:#fff;font-size:12px}
@@ -365,3 +366,4 @@
 .grapesSaveError{position:absolute;z-index:40;left:50%;top:55px;max-width:600px;padding:12px 18px;transform:translateX(-50%);border:1px solid #df9c92;border-radius:5px;background:#fff4f1;color:#962d1c;font-size:12px}
 .grapesMigration{position:absolute;z-index:20;left:255px;bottom:55px;max-width:440px;padding:8px 12px;border:1px solid #d8cfed;border-radius:5px;background:#faf7ff;color:#66547b;font-size:11px}
 @media(max-width:900px){.page:has(>[aria-label="Email design tools"]){min-width:900px}.personalizationPage:has(>[aria-label="Email design tools"]){min-width:900px}}
+.page:not(.personalizationPage){grid-template-columns:60px 174px minmax(0,1fr) 370px;grid-template-rows:54px minmax(0,1fr) 53px}.page:not(.personalizationPage) .leftRail{padding:0;background:#f5f6f8}.page:not(.personalizationPage) .leftTitle{height:63px;padding:0 22px;font-size:10px}.page:not(.personalizationPage) .leftRail>button:not(.styleLink){min-height:50px;padding:0 22px;border-radius:0;font-size:13px}.page:not(.personalizationPage) .leftRail>button.leftActive{background:#e7e7e8;border-radius:0 7px 7px 0}.page:not(.personalizationPage) .iconRail button{height:60px}

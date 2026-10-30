@@ -9,7 +9,7 @@ import styles from "./email-grapes-sidebar.module.css";
 import { beginPaletteDrag } from "./email-grapes-drag";
 
 const groups = [
-  { name: "BASIC BLOCKS", blocks: [["braze-title", "TITLE", LetterText], ["braze-text", "PARAGRAPH", PilcrowLeft], ["braze-list", "LIST", List], ["braze-button", "BUTTON", MousePointer2], ["braze-divider", "DIVIDER", SeparatorHorizontal], ["braze-spacer", "SPACER", MoveVertical]] },
+  { name: "BASIC BLOCKS", blocks: [["braze-title", "TITLE", LetterText], ["braze-text", "PARAGRAPH", PilcrowLeft], ["braze-list", "LIST", List], ["braze-button", "BUTTON", MousePointer2], ["braze-divider", "DIVIDER", SeparatorHorizontal], ["braze-spacer", "SPACER", MoveVertical], ["braze-nps", "NPS SURVEY", Smile]] },
   { name: "MEDIA", blocks: [["braze-image", "IMAGE", ImageIcon], ["braze-video", "VIDEO", Film], ["braze-social", "SOCIAL", Share2], ["braze-icon", "ICONS", Smile]] },
   { name: "ADVANCED", blocks: [["braze-html", "HTML", Code2], ["braze-menu", "MENU", Menu]] },
 ] as const;

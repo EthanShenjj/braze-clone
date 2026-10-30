@@ -1,0 +1,210 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_email_settings_1029?locale=en".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_email_settings_1029?locale=en
+	1 container
+		2 image Download
+		3 image
+	4 container
+		5 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			6 image
+		7 text b
+		8 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			9 image
+			10 text Local workspace
+		11 text Quick links
+		12 button Canvas
+			13 image
+			14 text Canvas
+		15 button Campaigns
+			16 image
+			17 text Campaigns
+		18 button Segments
+			19 image
+			20 text Segments
+		21 button Getting Started
+			22 image
+			23 text Getting Started
+		24 button Performance Overview
+			25 image
+			26 text Performance Overview
+		27 button AI Decisioning
+			28 image
+			29 text AI Decisioning
+		30 button Agent Console
+			31 image
+			32 text Agent Console
+		33 button Messaging
+			34 image
+			35 text Messaging
+		36 button Audience
+			37 image
+			38 text Audience
+		39 button Content
+			40 image
+			41 text Content
+		42 button Analytics
+			43 image
+			44 text Analytics
+		45 button Partner Integrations
+			46 image
+			47 text Partner Integrations
+		48 button Data Settings
+			49 image
+			50 text Data Settings
+		51 button Settings
+			52 image
+			53 text Settings
+		54 text braze
+		55 container
+			56 text ◷   8 days left in your free trial.
+			57 button Connect with sales
+		58 container
+			59 button Search workspace ⌘K
+				60 image
+				61 text Search workspace
+				62 text ⌘K
+			63 button Take a tour
+				64 image
+			65 image
+			66 button (collapsed) Description: Language, Secondary Actions: Expand
+				67 image
+			68 button Notifications
+				69 image
+			70 button S
+			71 image
+			72 button
+				73 image
+		74 button Campaigns
+		75 button Edit 'Email settings entry verification'
+			76 text Edit
+			77 text  '
+			78 text Email settings entry verification
+			79 text '
+			80 image
+		81 container
+			82 image
+			83 text Limited access
+			84 container Campaign steps
+				85 button ✓ Compose Messages
+					86 text ✓
+					87 text Compose Messages
+				88 button ✓ Schedule Delivery
+					89 text ✓
+					90 text Schedule Delivery
+				91 button ✓ Target Audiences
+					92 text ✓
+					93 text Target Audiences
+				94 button ✓ Assign Conversions
+					95 text ✓
+					96 text Assign Conversions
+				97 button 5 Review Summary
+					98 text 5
+					99 text Review Summary
+			186 container Email sending settings
+				187 container
+					188 text Email settings entry verification
+					189 button BrazeAI Operator
+						190 image
+				191 container Email editor sections
+					192 button Sending settings
+						193 image
+					194 button Content
+						195 image
+					196 button Preview & Test
+						197 image
+				198 container
+					199 text SENDING SETTINGS
+					200 button Back to campaign
+						201 image
+					202 button Sending Info
+					203 button Advanced
+					204 button Personalization
+					205 button Languages
+					206 link Description: Style Settings ↗, Value: 127.0.0.1:3100/app_settings/app_settings/email_settings/drag_and_drop_email/6ad0b98fe4b4110085216601?locale=en
+				207 container
+					208 heading Advanced, Value: 2
+						209 text Advanced
+					210 heading Email attachments, Value: 3
+						211 text Email attachments
+					212 button Add from media library
+					213 heading Drag and drop a file here, Value: 4
+						214 text Drag and drop a file here
+					215 text Accepted file types: images, PDFs, or other files. Up to 2 MB
+					216 text Upload file
+					217 container
+						218 text Add from URL
+						219 text field (settable) Attachment URL
+					220 container
+						221 text File name
+						222 text field (settable) Attachment file name
+					223 button (disabled) Add attachment
+					224 text settings-qa.pdf
+					225 button Remove settings-qa.pdf
+					226 heading Email Headers, Value: 3
+						227 text Email Headers
+					228 button + Add New Header
+						229 text + Add New 
+						230 text Header
+					231 container
+						232 text You have not yet defined  email headers  for this message.
+						233 text To add a new  header , click 'Add New  Header '.
+					234 heading Email Extras, Value: 3
+						235 text Email Extras
+					236 button + Add New Extra
+						237 text + Add New 
+						238 text Extra
+					239 container
+						240 text You have not yet defined  email extras  for this message.
+						241 text To add a new  extra , click 'Add New  Extra '.
+					242 heading Tracking, Value: 3
+						243 text Tracking
+					244 text Configure tracking and link behavior for this campaign.
+					245 checkbox (settable, integer) Description: Track opens Injects an open-tracking pixel into delivered emails, Value: 1
+					246 text Track opens
+					247 text Injects an open-tracking pixel into delivered emails
+					248 checkbox (settable, integer) Description: Track clicks Rewrites links to route through click tracking, Value: 1
+					249 text Track clicks
+					250 text Rewrites links to route through click tracking
+					251 heading Google Analytics, Value: 3
+						252 text Google Analytics
+					253 checkbox (settable, integer) Description: Enable Google Analytics tracking Appends UTM parameters to links in this campaign, Value: 0
+					254 text Enable Google Analytics tracking
+					255 text Appends UTM parameters to links in this campaign
+					256 text One-click list-unsubscribe setting
+					257 pop up button (collapsed, settable) One-click list-unsubscribe setting, Value: Use workspace default, Secondary Actions: Expand
+						258 menu
+							259 (selected) Use workspace default
+							260 Enabled
+							261 Disabled
+				262 container
+					263 heading Preview, Value: 2
+						264 text Preview
+					265 text From: QA  < qa@example.com > Subject: Settings entry saved Preheader: Saved through the editor settings entry
+					266 container Email message preview
+						267 AXWebArea about:srcdoc
+							268 text Keep this content when opening settings.
+					269 text Actual rendering may not be identical to this preview depending on the user's environment
+				270 container
+					271 button Download file
+					272 button Done
+			166 button (disabled) Back
+				167 image
+			168 button ✓ Compose
+				169 text ✓
+				170 text Compose
+			171 button ✓ Schedule
+				172 text ✓
+				173 text Schedule
+			174 button ✓ Target
+				175 text ✓
+				176 text Target
+			177 button ✓ Assign
+				178 text ✓
+				179 text Assign
+			180 button 5 Review
+				181 text 5
+				182 text Review
+			183 button Forward
+				184 image
+			185 button Save Draft
+
+The focused UI element is 203 button Advanced

@@ -3,6 +3,7 @@ import "server-only";
 import { lookup } from "node:dns/promises";
 import { isIP } from "node:net";
 import { renderWebhookText, validateWebhookVariant, type WebhookHeader, type WebhookVariant } from "./webhook-model";
+import {webhookRetryDelay}from"./webhook-retry";
 
 export type WebhookAttempt = {
   attempt: number;
@@ -20,6 +21,7 @@ export type WebhookDeliveryResult = {
   requestBody: string;
   attempts: WebhookAttempt[];
   delivered: boolean;
+  retryAt?:string;
 };
 
 export function webhookDeliveryCapability() {
@@ -66,9 +68,7 @@ async function assertSafeDestination(url: URL) {
 function retryable(status: number | null) { return status === 408 || status === 429 || (status !== null && status >= 500); }
 
 function retryDelay(response: Response | null, attempt: number) {
-  const retryAfter = response?.headers.get("retry-after");
-  if (retryAfter && /^\d+$/.test(retryAfter)) return Math.min(30_000, Number(retryAfter) * 1000);
-  return Math.min(5_000, 250 * 2 ** (attempt - 1));
+  return webhookRetryDelay(response?.headers??null,attempt);
 }
 
 function wait(ms: number) { return new Promise(resolve => setTimeout(resolve, ms)); }
@@ -84,6 +84,7 @@ export async function deliverWebhook(variant: WebhookVariant, context: Record<st
   const headers = new Headers();
   for (const header of requestHeaders) headers.set(header.key, header.value);
   const attempts: WebhookAttempt[] = [];
+  let retryAt:string|undefined;
   const maximum = Math.min(webhookDeliveryCapability().maxAttempts, Math.max(1, requestedAttempts ?? webhookDeliveryCapability().maxAttempts));
   for (let attempt = 1; attempt <= maximum; attempt += 1) {
     const started = Date.now();
@@ -100,13 +101,16 @@ export async function deliverWebhook(variant: WebhookVariant, context: Record<st
       const responseBody = (await response.text()).slice(0, 8_192);
       const delivered = response.status >= 200 && response.status < 300;
       attempts.push({ attempt, statusCode: response.status, outcome: delivered ? "delivered" : "failed", responseBody, error: "", durationMs: Date.now() - started });
-      if (delivered || !retryable(response.status) || attempt === maximum) break;
+      if(delivered||!retryable(response.status))break;
+      if(attempt===maximum){if(maximum===1)retryAt=new Date(Date.now()+retryDelay(response,attempt)).toISOString();break;}
     } catch (cause) {
       const error = cause instanceof Error ? cause.message : "Webhook request failed.";
       attempts.push({ attempt, statusCode: null, outcome: "failed", responseBody: "", error, durationMs: Date.now() - started });
       if (attempt === maximum) break;
     }
-    await wait(retryDelay(response, attempt));
+    const delay=retryDelay(response,attempt);
+    if(delay>1000){retryAt=new Date(Date.now()+delay).toISOString();break;}
+    await wait(delay);
   }
-  return { url, method: variant.method, requestHeaders, requestBody, attempts, delivered: attempts.at(-1)?.outcome === "delivered" };
+  return { url, method: variant.method, requestHeaders, requestBody, attempts,retryAt, delivered: attempts.at(-1)?.outcome === "delivered" };
 }

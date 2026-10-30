@@ -1,0 +1,218 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_email?locale=en&step=audience".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_email?locale=en&step=audience
+	127 container
+		128 image Download
+		129 image
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agent Console
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+		25 container
+			26 text ◷   8 days left in your free trial.
+			27 button Connect with sales
+		28 container
+			29 button Search workspace ⌘K
+				30 image
+				31 text Search workspace
+				32 text ⌘K
+			33 button Take a tour
+			34 image Community
+			35 button (collapsed) Description: Language, Secondary Actions: Expand
+			36 button Notifications
+			37 button (collapsed) Description: Profile, Secondary Actions: Expand
+			38 image
+			39 button Open BrazeAI Operator
+		40 button Campaigns
+		130 button Edit 'Audit 2026-10-29 email'
+			131 text Edit
+			132 text  '
+			133 text Audit 2026-10-29 email
+			134 text '
+			135 image
+		136 container
+			137 image
+			138 text Limited access
+			139 container Campaign steps
+				140 button ✓ Compose Messages
+					141 text ✓
+					142 text Compose Messages
+				143 button 2 Schedule Delivery
+					144 text 2
+					145 text Schedule Delivery
+				146 button 3 Target Audiences
+					147 text 3
+					148 text Target Audiences
+				149 button ✓ Assign Conversions
+					150 text ✓
+					151 text Assign Conversions
+				152 button 5 Review Summary
+					153 text 5
+					154 text Review Summary
+			713 heading Targeting Options, Value: 2
+				714 text Targeting Options
+			715 text Target users by choosing multiple segments they must fall into. Further refine your audience by adding additional filters.
+			716 heading Target Users By Segment, Value: 3
+				717 text Target Users By Segment
+			718 combo box (collapsed, settable) Description: Target Users By Segment, Secondary Actions: Expand
+			719 button (collapsed) Description: Toggle segments, Secondary Actions: Expand
+			720 heading Additional Filters, Value: 3
+				721 text Additional Filters
+			722 container Filter group
+				723 container Description: Drag filter group, Help: Drag to reorder groups
+					724 text ⠿
+				725 text field (settable) Description: Filter group title, Value: Filter group
+				726 button (disabled) Move group up
+				727 button (disabled) Move group down
+				728 pop up button (collapsed, settable) Description: Filter group operator, Value: OR, Secondary Actions: Expand
+					729 menu
+						730 (selected) OR
+						731 AND
+				820 container
+					821 text Filter field
+					822 text field Filter field, Help: country, Value: Country
+				823 container
+					824 text Filter operator
+					825 pop up button (collapsed, settable) Filter operator, Value: equals, Secondary Actions: Expand
+						826 menu
+							827 (selected) equals
+							828 not equals
+							829 contains
+							830 not contains
+							831 greater than
+							832 less than
+							833 exists
+							834 not exists
+				835 container
+					836 text Filter value
+					837 text field (settable) Filter value
+				838 button Remove filter
+				817 container
+					818 combo box (collapsed, settable) Description: Select filter, Secondary Actions: Expand
+					819 button (collapsed) Description: Toggle filter catalog, Secondary Actions: Expand
+				735 button Remove filter group
+			736 button ＋ Add filter group
+				737 text ＋ Add 
+				738 text filter
+				739 text  group
+			740 button ＋ Add exclusion group
+				741 text ＋ Add 
+				742 text exclusion
+				743 text  group
+			744 heading Audience Summary, Value: 3
+				745 text Audience Summary
+			746 container
+				747 text No segments selected  ·  1  filters
+			748 heading User Lookup, Value: 3
+				749 text User Lookup
+			750 text Check if a user matches the segment, filter, and app criteria.
+			751 button Lookup User
+			752 container
+				753 text Send to these users
+				754 pop up button (collapsed, settable) Send to these users, Value: users who are subscribed or opted in, Secondary Actions: Expand
+					755 menu
+						756 (selected) users who are subscribed or opted in
+						757 users who are opted in
+						758 all eligible users (excludes global unsubscribes)
+			759 container
+				760 text Email subscription group
+				761 pop up button (collapsed, settable) Email subscription group, Value: Select a subscription group, Secondary Actions: Expand
+					762 menu
+						763 (selected) Select a subscription group
+						764 Product updates
+						765 Promotions
+			766 checkbox (settable, integer) Description: Limit the number of people who will receive this Campaign, Value: 0
+			767 checkbox (settable, integer) Description: Limit the rate at which this Campaign sends, Value: 0
+			768 heading A/B Testing, Value: 2
+				769 text A/B Testing
+			770 checkbox (disabled, settable, integer) Description: Optimize with BrazeAI™, Value: 0
+			771 container
+				772 text To use Optimize with BrazeAI™, add at least two variants.
+				773 button Compose messages
+			774 container
+				775 text Set your own variant split and control group.  All variants send at the date and time you set in Schedule delivery.
+			776 container
+				777 text % Control Group
+				778 stepper (settable, integer) % Control Group, Value: 20
+			779 container
+				780 text % Variant 1
+				781 stepper (settable, integer) % Variant 1, Value: 80
+			782 container
+				783 text Total:  100.00 %
+			784 button Remove Control Group
+			785 button Distribute Variants Evenly
+			786 heading Suppression Lists, Value: 2
+				787 text Suppression Lists
+			788 text There are no suppression lists applied.
+			789 container
+				790 text To manage suppression for this Campaign, visit 
+				791 link Description: Suppression Lists, Value: 127.0.0.1:3100/suppression-lists?locale=en
+				792 text .
+			793 heading Total Population, Value: 2
+				794 text Total Population
+			795 text Exact users
+			796 text Calculating…
+			797 text 0.00 %  of total users
+			798 progress indicator Description: Percent of total users, Value: 0
+			799 container
+				800 text Last calculated:  Not calculated
+			801 button (disabled) ↻ Refresh exact statistics
+			802 button ☷ View calculation queue
+			839 container
+				840 text Queued  ·  0 %
+			803 heading Channel breakdown, Value: 4
+				804 text Channel breakdown
+			805 table
+				806 row
+					807 cell
+						808 text Email
+				809 row
+					810 cell
+						811 text Reachable Users
+					812 cell
+						813 text —
+			814 button (collapsed) ⊕ Show Additional Statistics, Secondary Actions: Expand
+				815 text ⊕ Show
+				816 text  Additional Statistics
+			195 button Back
+				196 image
+			197 button ✓ Compose
+				198 text ✓
+				199 text Compose
+			200 button 2 Schedule
+				201 text 2
+				202 text Schedule
+			203 button 3 Target
+				204 text 3
+				205 text Target
+			206 button ✓ Assign
+				207 text ✓
+				208 text Assign
+			209 button 5 Review
+				210 text 5
+				211 text Review
+			212 button Forward
+				213 image
+			214 button Save Draft
+		711 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			712 image
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_email?locale=en&step=audience

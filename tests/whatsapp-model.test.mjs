@@ -19,10 +19,10 @@ test("template variables require either a value or a fallback", () => {
   assert.ok(issues.some(issue => issue.includes("First name")));
 });
 
-test("response messages require an open simulated conversation window", () => {
+test("response authoring does not fabricate recipient conversation eligibility", () => {
   const variant = { ...createWhatsAppVariant(), mode: "response", conversationWindowOpen: false };
   const issues = validateWhatsAppCampaign({ config: { whatsappVariants: [variant] } });
-  assert.ok(issues.some(issue => issue.includes("24-hour conversation window")));
+  assert.ok(!issues.some(issue => issue.includes("conversation window")));
 });
 
 test("template preview resolves mapped values and fallbacks", () => {

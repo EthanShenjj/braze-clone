@@ -1,0 +1,229 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_banner?locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_banner?locale=en
+	2 container
+		3 image Download
+		4 image
+	5 container
+		6 text b
+		7 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			8 image
+			9 text Local workspace
+		10 text Quick links
+		11 button Canvas
+			12 image
+			13 text Canvas
+		14 button Campaigns
+			15 image
+			16 text Campaigns
+		17 button Segments
+			18 image
+			19 text Segments
+		20 button Getting Started
+			21 image
+			22 text Getting Started
+		23 button Performance Overview
+			24 image
+			25 text Performance Overview
+		26 button AI Decisioning
+			27 image
+			28 text AI Decisioning
+		29 button Agent Console
+			30 image
+			31 text Agent Console
+		32 button Messaging
+			33 image
+			34 text Messaging
+		35 button Audience
+			36 image
+			37 text Audience
+		38 button Content
+			39 image
+			40 text Content
+		41 button Analytics
+			42 image
+			43 text Analytics
+		44 button Partner Integrations
+			45 image
+			46 text Partner Integrations
+		47 button Data Settings
+			48 image
+			49 text Data Settings
+		50 button Settings
+			51 image
+			52 text Settings
+		53 text braze
+		54 container
+			55 text ◷   8 days left in your free trial.
+			56 button Connect with sales
+		57 container
+			58 button Search workspace ⌘K
+				59 image
+				60 text Search workspace
+				61 text ⌘K
+			62 button Take a tour
+				63 image
+			64 image
+			65 button (collapsed) Description: Language, Secondary Actions: Expand
+				66 image
+			67 button Notifications
+				68 image
+			69 button S
+			70 image
+			71 button
+				72 image
+		73 button Campaigns
+		74 button Edit 'Audit 2026-10-29 banner'
+			75 text Edit
+			76 text  '
+			77 text Audit 2026-10-29 banner
+			78 text '
+			79 image
+		80 container
+			81 image
+			82 text Limited access
+			83 container Campaign steps
+				84 button ✓ Compose Messages
+					85 text ✓
+					86 text Compose Messages
+				87 button ✓ Schedule Delivery
+					88 text ✓
+					89 text Schedule Delivery
+				90 button ✓ Target Audiences
+					91 text ✓
+					92 text Target Audiences
+				93 button ✓ Assign Conversions
+					94 text ✓
+					95 text Assign Conversions
+				96 button 5 Review Summary
+					97 text 5
+					98 text Review Summary
+			99 heading Campaign Details, Value: 2
+				100 text Campaign Details
+			101 container
+				102 text Campaign Name
+				103 text field (settable) Campaign Name, Value: Audit 2026-10-29 banner
+			104 container
+				105 text Teams
+				106 pop up button (collapsed, settable) Teams, Value: Select…, Secondary Actions: Expand
+					107 menu
+						108 (selected) Select…
+			109 button Add description
+				110 image
+				111 text Add description
+			112 button (collapsed) Tags, Secondary Actions: Expand
+				113 image
+				114 text Tags
+				115 image
+			116 container Campaign brief
+				117 heading Campaign brief, Value: 3
+					118 text Campaign brief
+				119 text Attach a brief so BrazeAI Operator can build your campaign and your Standards can review it against your goals
+				120 text Attach a campaign brief (optional)
+				121 text PDF, TXT, MD, CSV, DOCX up to 15MB
+				122 button Upload file
+					123 image
+					124 text Upload file
+			125 container
+				126 text Campaign ID
+				127 text field Campaign ID, Help: d15e2888-48f6-5407-a46f-7afc301ae2ef
+			128 button Copy
+				129 image
+				130 text Copy
+			131 heading Compose Banner, Value: 2
+				132 text Compose Banner
+			133 text Place persistent messages on your property.
+			134 button Preview and test
+			135 container
+				136 heading Variants, Value: 3
+					137 text Variants
+				138 tab group Message variants
+					139 tab (selected, settable, boolean) Variant 1 Message configured, Description: Message configured, Value: 1
+Variant 1
+✓
+					140 button Add message variant
+				141 button (collapsed) Description: Variant actions, Secondary Actions: Expand
+				193 container
+					194 checkbox Compose, Value: 1
+					195 checkbox Settings, Value: 0
+					196 checkbox Preview, Value: 0
+					197 text Audit 2026-10-29 banner
+					198 button Cancel
+					199 button Done
+				200 button Style
+				201 pop up button (collapsed, settable) Description: Preview device, Value: Mobile, Secondary Actions: Expand
+					202 menu
+						203 (selected) Mobile
+						204 Desktop
+				205 button Edit canvas size
+				206 checkbox Hide outlines, Value: 1
+				207 button (collapsed) Add Liquid, Secondary Actions: Expand
+				208 button Manage languages
+				209 button Copywriter
+				210 heading Build your Banner, Value: 3
+					211 text Build your Banner
+				212 container
+					213 button (disabled) Undo
+					214 button (disabled) Redo
+				215 container
+					216 heading Rows, Value: 3
+						217 text Rows
+					218 button + 1 column
+						219 text + 
+						220 text 1
+						221 text  column
+					222 button + 2 columns
+						223 text + 
+						224 text 2
+						225 text  column
+						226 text s
+					227 button + 3 columns
+						228 text + 
+						229 text 3
+						230 text  column
+						231 text s
+					232 heading Blocks, Value: 3
+						233 text Blocks
+					234 button Title
+					235 button Paragraph
+					236 button Image
+					237 button Button
+					238 button Link
+					239 button Custom Code
+					240 button Spacer
+					241 button Phone Capture
+					242 button Email Capture
+					243 button Manage Subscriptions
+				244 container
+					245 text Row  1
+					246 button (disabled) Move row 1 up
+					247 button (disabled) Delete row 1
+					248 checkbox Audit title, Value: 0
+					249 checkbox Hello {{${first_name}}}, Value: 0
+					250 checkbox Learn more, Value: 0
+				251 heading Select a block, Value: 3
+					252 text Select a block
+				253 button Save as template
+			171 button (disabled) Back
+				172 image
+			173 button ✓ Compose
+				174 text ✓
+				175 text Compose
+			176 button ✓ Schedule
+				177 text ✓
+				178 text Schedule
+			179 button ✓ Target
+				180 text ✓
+				181 text Target
+			182 button ✓ Assign
+				183 text ✓
+				184 text Assign
+			185 button 5 Review
+				186 text 5
+				187 text Review
+			188 button Forward
+				189 image
+			190 button Save Draft
+		191 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			192 image
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_banner?locale=en

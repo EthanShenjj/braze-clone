@@ -1,0 +1,133 @@
+- complementary:
+  - generic: b
+  - button "Demo – Thinkingai":
+    - generic: Demo – Thinkingai
+  - generic: Quick links
+  - button "Canvas":
+    - generic: Canvas
+  - button "Campaigns":
+    - generic: Campaigns
+  - button "Segments":
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+  - button "Performance Overview":
+    - generic: Performance Overview
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic: braze
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour":
+  - button "Language":
+  - button "Notifications":
+  - button "S"
+  - button:
+  - button "Campaigns"
+  - button "Edit 'Audit 2026-10-29 push'":
+    - text: Edit 'Audit 2026-10-29 push'
+  - text: Limited access
+  - navigation "Campaign steps":
+    - button "✓ Compose Messages":
+      - generic: ✓
+      - generic: Compose Messages
+    - button "✓ Schedule Delivery":
+      - generic: ✓
+      - generic: Schedule Delivery
+    - button "✓ Target Audiences":
+      - generic: ✓
+      - generic: Target Audiences
+    - button "✓ Assign Conversions":
+      - generic: ✓
+      - generic: Assign Conversions
+    - button "5 Review Summary" [active]:
+      - generic: "5"
+      - generic: Review Summary
+  - heading "Review Campaign Summary" [level=2]
+  - generic: Reachable users is calculating….
+  - heading "Messages" [level=3]
+  - button "Edit Messages"
+  - article:
+    - heading "Variant 1 Preview" [level=3]
+    - generic: iOS · Lock screen
+    - text: Audit title
+    - paragraph: Hello Sofia
+    - generic "Message settings"
+  - heading "Delivery" [level=3]
+  - button "Edit Delivery"
+  - paragraph: Scheduled Entry
+  - paragraph: Enter users at designated times
+  - paragraph: "Next Send Time: No upcoming messages scheduled."
+  - list:
+    - listitem: Users are not eligible to re-enter this campaign
+  - heading "Target Audience" [level=3]
+  - button "Edit Target Audience"
+  - heading "Audience Summary" [level=4]
+  - paragraph: No segments or filters selected
+  - heading "Entry Audience" [level=4]
+  - list:
+    - listitem: No limitations on the rate at which users will receive messages.
+    - listitem: Loading workspace delivery limits…
+    - listitem: Loading suppression lists…
+  - heading "Total Population" [level=4]
+  - heading "Exact users" [level=4]
+  - strong: …
+  - paragraph: 0% of total users
+  - heading "Channel breakdown" [level=4]
+  - table:
+    - rowgroup:
+      - row "Push notification":
+        - columnheader "Push notification"
+        - cell
+      - row "Reachable Users …":
+        - cell "Reachable Users"
+        - cell "…"
+      - row "% of Workspace 0%":
+        - cell "% of Workspace"
+        - cell "0%"
+  - heading "Conversion Events" [level=3]
+  - button "Edit Conversion Events"
+  - paragraph:
+    - text: Primary Conversion Event - A
+    - text: Made Purchase within 3 Days
+  - button "Back":
+  - button "✓ Compose":
+    - generic: ✓
+    - text: Compose
+  - button "✓ Schedule":
+    - generic: ✓
+    - text: Schedule
+  - button "✓ Target":
+    - generic: ✓
+    - text: Target
+  - button "✓ Assign":
+    - generic: ✓
+    - text: Assign
+  - button "5 Review":
+    - generic: "5"
+    - text: Review
+  - button "Forward" [disabled]:
+  - button "Save Draft"
+  - button "Launch Campaign"
+- button "Open Next.js Dev Tools":
+- alert

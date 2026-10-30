@@ -1,0 +1,230 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_1939a2fa?locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_1939a2fa?locale=en
+	2 container
+		3 image Download
+		4 image
+	5 container
+		6 text b
+		7 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			8 image
+			9 text Local workspace
+		10 text Quick links
+		11 button Canvas
+			12 image
+			13 text Canvas
+		14 button Campaigns
+			15 image
+			16 text Campaigns
+		17 button Segments
+			18 image
+			19 text Segments
+		20 button Getting Started
+			21 image
+			22 text Getting Started
+		23 button Performance Overview
+			24 image
+			25 text Performance Overview
+		26 button AI Decisioning
+			27 image
+			28 text AI Decisioning
+		29 button Agent Console
+			30 image
+			31 text Agent Console
+		32 button Messaging
+			33 image
+			34 text Messaging
+		35 button Audience
+			36 image
+			37 text Audience
+		38 button Content
+			39 image
+			40 text Content
+		41 button Analytics
+			42 image
+			43 text Analytics
+		44 button Partner Integrations
+			45 image
+			46 text Partner Integrations
+		47 button Data Settings
+			48 image
+			49 text Data Settings
+		50 button Settings
+			51 image
+			52 text Settings
+		53 text braze
+		54 container
+			55 text ◷   8 days left in your free trial.
+			56 button Connect with sales
+		57 container
+			58 button Search workspace ⌘K
+				59 image
+				60 text Search workspace
+				61 text ⌘K
+			62 button Take a tour
+				63 image
+			64 image
+			65 button (collapsed) Description: Language, Secondary Actions: Expand
+				66 image
+			67 button Notifications
+				68 image
+			69 button S
+			70 image
+			71 button Open BrazeAI Operator
+				72 image
+		73 button Campaigns
+		74 button Edit 'New Campaign - October 30, 2026'
+			75 text Edit
+			76 text  '
+			77 text New Campaign - October 30, 2026
+			78 text '
+			79 image
+		80 container API Campaign Editor
+			81 button Campaigns
+				82 image
+				83 text Campaigns
+			84 text Unsaved changes
+			85 container
+				86 heading Campaign Details, Value: 2
+					87 text Campaign Details
+				88 text Campaign Name
+				89 text field (settable) Campaign Name, Value: New Campaign - October 30, 2026
+				90 text Teams
+				91 pop up button (collapsed, settable) Teams, Value: Select…, Secondary Actions: Expand
+					92 menu
+						93 (selected) Select…
+				94 button Add description
+					95 image
+					96 text Add description
+				97 button (collapsed) Tags, Secondary Actions: Expand
+					98 image
+					99 text Tags
+					100 image
+				101 container Campaign brief
+					102 heading Campaign brief, Value: 3
+						103 text Campaign brief
+					104 text Attach a brief so BrazeAI Operator can build your campaign and your Standards can review it against your goals
+					105 text Attach a campaign brief (optional)
+					106 text PDF, TXT, MD, CSV, DOCX up to 15MB
+					107 button Upload file
+						108 image
+						109 text Upload file
+				110 heading Campaign ID, Value: 3
+					111 text Campaign ID
+				112 text field Description: Campaign ID, Value: 472e6ba9-5605-471a-a8b5-fe3999b59a20
+				113 button  Copy
+					114 image
+					115 text  Copy
+			116 container
+				117 heading API Campaigns, Value: 2
+					118 text API Campaigns
+				119 text These Campaigns track messages sent via your API. Create the channels and message variations here, then pass their generated identifiers with external sends. Message content, recipients and scheduling are supplied by your sending system.
+				120 heading Channels, Value: 3
+					121 text Channels
+				122 tab group
+					123 tab (selected, settable, boolean) Email, Value: 1
+					124 button (collapsed) Description: Add channel, Secondary Actions: Expand
+						125 image
+				126 heading Campaign ID, Value: 3
+					127 text Campaign ID
+				128 text field Description: Campaign ID, Value: 472e6ba9-5605-471a-a8b5-fe3999b59a20
+				129 button  Copy
+					130 image
+					131 text  Copy
+				132 text This is the unique campaign key used with a Message Variation ID to collect statistics for transactional messages.
+				133 heading Message Variation ID, Value: 3
+					134 text Message Variation ID
+				135 text Variation for request example
+				136 pop up button (collapsed, settable) Variation for request example, Value: Variant 1, Secondary Actions: Expand
+					137 menu
+						138 (selected) Variant 1
+						139 Variant 2
+				140 text Pass the selected variation identifier with your external messages. Identifiers remain stable after saving.
+				141 heading Email: Variant 1, Value: 3
+					142 text Email: Variant 1
+				143 text field Description: Email: Variant 1, Value: <redacted>
+				144 button  Copy
+					145 image
+					146 text  Copy
+				147 heading Email: Variant 2, Value: 3
+					148 text Email: Variant 2
+				149 text field Description: Email: Variant 2, Value: <redacted>
+				150 button  Copy
+					151 image
+					152 text  Copy
+				153 button Add variation
+					154 image
+					155 text Add variation
+				156 button (disabled) Remove channel
+					157 image
+					158 text Remove channel
+				159 heading Sending Campaigns via cURL, Value: 3
+					160 text Sending Campaigns via cURL
+				161 text Reference request for an external Braze messaging service. Supply the required channel content, recipient identifiers and credentials before sending. curl -X POST 'https://YOUR-BRAZE-REST-ENDPOINT/messages/send' \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer YOUR_REST_API_KEY' \
+  --data '{
+  "campaign_id": "472e6ba9-5605-471a-a8b5-fe3999b59a20",
+  "external_user_ids": [
+    "EXTERNAL_USER_ID"
+  ],
+  "messages": {
+    "email": {
+      "message_variation_id": "6e502124-d09c-40f1-9b08-2978cd7132c6"
+    }
+  }
+}'
+				162 button Copy reference request
+					163 image
+					164 text Copy reference request
+				165 text This workspace does not provide a local /messages/send endpoint. The reference request above is never executed by this editor.
+				166 heading Record actual delivery receipts, Value: 3
+					167 text Record actual delivery receipts
+				168 text Your sending service can attribute real delivery results to this campaign with the existing local receipts endpoint. Send a receipt after delivery is confirmed; saving this form does not send a message or create an event. curl -X POST 'http://127.0.0.1:3100/api/campaigns/cmp_1939a2fa/events' \
+  -H 'Content-Type: application/json' \
+  --data '{
+  "userId": "EXTERNAL_USER_ID",
+  "event": "delivered",
+  "attributes": {
+    "variantId": "6e502124-d09c-40f1-9b08-2978cd7132c6",
+    "channel": "email"
+  }
+}'
+				169 button Copy receipt request
+					170 image
+					171 text Copy receipt request
+				172 text Save this campaign to register the identifiers before using them externally.
+			173 container
+				174 heading Suppression Lists, Value: 2
+					175 text Suppression Lists
+				176 text There are no suppression lists applied. To manage suppression for this Campaign, visit 
+				177 link Description: Suppression Lists, Value: 127.0.0.1:3100/suppression-lists?locale=en
+				178 text .
+			179 container
+				180 heading Assign Conversion Events, Value: 2
+					181 text Assign Conversion Events
+				182 text Define up to 4 conversion events to track for this Campaign. Assign conversion events when creating the Campaign; they cannot be changed after it has launched.
+				183 button + Add Conversion Event
+			184 container
+				185 heading Additional Options, Value: 2
+					186 text Additional Options
+				187 checkbox (settable, integer) Description: Allow users to become re-eligible to receive campaign, Value: 1
+				188 text After a user is messaged by this campaign, allow them to become re-eligible again in Re-eligibility interval
+				189 stepper (settable, integer) Re-eligibility interval, Value: 0
+				190 text Time unit for Re-eligibility window
+				191 pop up button (collapsed, settable) Time unit for Re-eligibility window, Value: Minutes, Secondary Actions: Expand
+					192 menu
+						193 (selected) Minutes
+						194 Hours
+						195 Days
+						196 Weeks
+				197 checkbox (settable, integer) Description: Limit the rate at which this Campaign will send, Value: 0
+				198 text Re-eligibility, suppression and rate-limit settings are saved with the campaign. An external sending system must enforce them; receipt recording does not perform a send.
+				199 heading Frequency Capping, Value: 3
+					200 text Frequency Capping
+				201 text You have not created any Frequency Capping rules.
+				202 link Description: Manage frequency capping rules, Value: 127.0.0.1:3100/frequency-capping-rules?locale=en
+			203 container
+				204 text Unsaved changes
+				205 button Save Campaign
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_1939a2fa?locale=en

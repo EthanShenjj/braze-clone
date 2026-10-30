@@ -1,0 +1,1314 @@
+{
+  "date": "2026-10-30",
+  "branch": "codex/campaigns-fidelity-completion",
+  "scope": "79 historical Campaigns findings",
+  "statusDefinitions": {
+    "Verified": "原始条目的页面结构/入口已实现且保存本地浏览器证据；具体复核范围见条目。外部服务能力单独列出，不表示全页面逐像素认证。",
+    "Implemented": "实现和模型/接口检查已完成；该条未单独完成完整浏览器交互验收。",
+    "Partial": "主要界面已补齐，仍有明确能力或源站证据限制。"
+  },
+  "counts": {
+    "Verified": 64,
+    "Implemented": 15
+  },
+  "items": [
+    {
+      "id": "CMP-001",
+      "title": "Campaigns 全局布局仍不一致",
+      "status": "Verified",
+      "implemented": "使用源站导航/品牌/顶部图标，补齐真实 Minimize、工作区头像、Home、侧栏滚动与底部品牌；Operator 打开时主区域让出侧栏空间。",
+      "remaining": "",
+      "evidence": [
+        "campaigns-followup-2026-10-30/fixed-001-campaign-list.png",
+        "campaigns-followup-2026-10-30/fixed-075-operator.png"
+      ],
+      "originalEvidence": [
+        "01-braze-list",
+        "01-local-list",
+        "04-braze-create",
+        "04-local-create"
+      ],
+      "pixelParity": "not_certified",
+      "resolutionScope": "原始审计条目的页面结构、入口、配置和本轮验证的交互；不表示外部 Braze 服务可用或整站逐像素认证。",
+      "capabilityLimitations": [],
+      "followup": "campaigns-followup-12-2026-10-30.md"
+    },
+    {
+      "id": "CMP-002",
+      "title": "状态筛选缺少 Archived 和 Idle",
+      "status": "Verified",
+      "implemented": "补齐 Active/Draft/Archived/Stopped/Idle 状态及归档记录查询",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/01-list.png"
+      ],
+      "originalEvidence": [
+        "11-braze-status-options",
+        "01-local-list"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-003",
+      "title": "高级筛选目录大量缺失",
+      "status": "Verified",
+      "implemented": "补齐创建者、编辑者、类型、日期、排程等高级筛选",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/02-filters.png"
+      ],
+      "originalEvidence": [
+        "02-braze-filters",
+        "02-local-filters"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-004",
+      "title": "Columns 缺少管理列及全选",
+      "status": "Verified",
+      "implemented": "补齐 All Columns 和逐列显隐并持久化",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/03-columns.png"
+      ],
+      "originalEvidence": [
+        "03-braze-columns",
+        "03-local-columns"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-005",
+      "title": "表格排序能力不完整",
+      "status": "Implemented",
+      "implemented": "补齐 Name/Stop date/Sent/Teams/Last edited 排序",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/01-list.png"
+      ],
+      "originalEvidence": [
+        "01-braze-list",
+        "01-local-list"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-006",
+      "title": "搜索与筛选标签交互不同",
+      "status": "Implemented",
+      "implemented": "搜索采用显式提交，筛选芯片可单项移除",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/01-list.png"
+      ],
+      "originalEvidence": [
+        "01-braze-list",
+        "02-braze-filters",
+        "01-local-list",
+        "02-local-filters"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-007",
+      "title": "分页缺少 96 行和页码导航",
+      "status": "Implemented",
+      "implemented": "补齐 12/24/48/96 每页条数及可跳页分页",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/01-list.png"
+      ],
+      "originalEvidence": [
+        "01-braze-list",
+        "01-local-list"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-008",
+      "title": "Copy to workspace 弹窗未复刻",
+      "status": "Implemented",
+      "implemented": "补齐工作区选择、二步复制和独立公共 UUID",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/51-copy-workspace.png"
+      ],
+      "originalEvidence": [
+        "12-braze-row-actions",
+        "12-braze-copy-workspace",
+        "01-local-list"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-009",
+      "title": "批量操作缺少 Archive",
+      "status": "Implemented",
+      "implemented": "补齐多选归档、标签批处理及失败反馈",
+      "remaining": "",
+      "evidence": [],
+      "originalEvidence": [
+        "13-braze-bulk",
+        "01-local-list"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-010",
+      "title": "列表缺少 Priority Sorter 快捷入口",
+      "status": "Verified",
+      "implemented": "增加列表 Priority Sorter 入口",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/52-priority-sorter.png"
+      ],
+      "originalEvidence": [
+        "14-braze-priority-sorter",
+        "14-local-priority-manager",
+        "01-local-list"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-011",
+      "title": "优先级弹窗结构未对齐",
+      "status": "Verified",
+      "implemented": "补齐分组优先级、计数、批量和上下移动操作",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/52-priority-sorter.png"
+      ],
+      "originalEvidence": [
+        "14-braze-priority-sorter",
+        "14-local-priority-manager"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-012",
+      "title": "Create campaign 菜单底部被视口裁切",
+      "status": "Verified",
+      "implemented": "创建菜单按视口限制高度并支持滚动到 LINE/API 等底部入口",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/04-create.png",
+        "campaigns-fidelity-2026-10-30/04-create-bottom.png"
+      ],
+      "originalEvidence": [
+        "04-braze-create",
+        "33-local-create-menu-bottom"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-013",
+      "title": "Campaign brief 上传区缺失",
+      "status": "Verified",
+      "implemented": "普通、IAM、API、Feature 详情增加 15MB brief 上传、下载及替换",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/07-email-sending-settings.png",
+        "campaigns-fidelity-2026-10-30/05-api-campaign.png"
+      ],
+      "originalEvidence": [
+        "09-braze-compose-details",
+        "33-local-api-campaign",
+        "18-local-push"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-014",
+      "title": "Campaign ID 的形式及用途未对齐",
+      "status": "Implemented",
+      "implemented": "展示稳定公共 UUID 并复制，保留内部路由 ID",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/05-api-campaign.png"
+      ],
+      "originalEvidence": [
+        "09-braze-compose-details",
+        "18-local-push",
+        "33-braze-api-campaign",
+        "33-local-api-campaign"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-015",
+      "title": "Variant 工具和校验状态不同",
+      "status": "Verified",
+      "implemented": "变体标签增加校验图标、集中 Rename/Duplicate/Delete，保留独立设置",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/23-variant-actions.png"
+      ],
+      "originalEvidence": [
+        "18-braze-push",
+        "18-local-push-editor",
+        "30-braze-multichannel-channels",
+        "30-local-multichannel-channels"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-016",
+      "title": "步骤打勾只依赖导航位置",
+      "status": "Verified",
+      "implemented": "完成状态按每步实际校验计算，修复后续导航造成假打勾",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/31-iam-compose.png"
+      ],
+      "originalEvidence": [
+        "08-braze-review",
+        "08-local-review"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-017",
+      "title": "发送类型与 Timing 控件未按原版呈现",
+      "status": "Verified",
+      "implemented": "补齐 Scheduled/Action-Based/API-Triggered 类型卡片和 Timing 选项",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/13-schedule.png"
+      ],
+      "originalEvidence": [
+        "05-braze-schedule-top",
+        "19-braze-schedule-frequency",
+        "05-local-schedule-default"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-018",
+      "title": "默认立即发送与条件字段、Review 不一致",
+      "status": "Implemented",
+      "implemented": "统一默认立即发送在表单、Review、调度器中的含义",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/13-schedule.png",
+        "campaigns-fidelity-2026-10-30/20-review.png"
+      ],
+      "originalEvidence": [
+        "05-local-schedule-default",
+        "08-local-review"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-019",
+      "title": "Intelligent Timing 专属设置缺失",
+      "status": "Verified",
+      "implemented": "补齐 Quiet Hours、热门/自定义兜底、前置条件、渠道选择与实际 UTC 投递分布；预览与调度共用真实受众及兜底逻辑。",
+      "remaining": "",
+      "evidence": [
+        "campaigns-followup-2026-10-30/fixed-019-intelligent-popular.png",
+        "campaigns-followup-2026-10-30/fixed-019-intelligent-custom.png",
+        "campaigns-followup-2026-10-30/fixed-019-delivery-preview.png"
+      ],
+      "originalEvidence": [
+        "20-braze-intelligent-timing",
+        "05-local-schedule-default"
+      ],
+      "pixelParity": "not_certified",
+      "resolutionScope": "原始审计条目的页面结构、入口、配置和本轮验证的交互；不表示外部 Braze 服务可用或整站逐像素认证。",
+      "capabilityLimitations": [
+        "未连接 Braze 远程预测训练；本地使用已有 best_send_hour 与真实会话分布，缺数据时采用明确的兜底。"
+      ],
+      "followup": "campaigns-followup-12-2026-10-30.md"
+    },
+    {
+      "id": "CMP-020",
+      "title": "Action-Based 触发器目录大幅简化",
+      "status": "Verified",
+      "implemented": "按源站逐字核对普通渠道 22 项、5 个分组；独立保留 IAM 9 项。补齐可搜索、可滚动、键盘可操作的触发器浮层及添加流程。",
+      "remaining": "",
+      "evidence": [
+        "campaigns-followup-2026-10-30/fixed-020-trigger-catalog.png",
+        "campaigns-followup-2026-10-30/fixed-020-trigger-search.png",
+        "campaigns-followup-2026-10-30/fixed-020-trigger-selected.png"
+      ],
+      "originalEvidence": [
+        "21-braze-trigger-options",
+        "21-braze-action-delivery",
+        "05-local-schedule-default"
+      ],
+      "pixelParity": "not_certified",
+      "resolutionScope": "原始审计条目的页面结构、入口、配置和本轮验证的交互；不表示外部 Braze 服务可用或整站逐像素认证。",
+      "capabilityLimitations": [],
+      "followup": "campaigns-followup-12-2026-10-30.md"
+    },
+    {
+      "id": "CMP-021",
+      "title": "Action-Based 的延迟与活动周期结构未对齐",
+      "status": "Verified",
+      "implemented": "补齐触发后延迟、时间单位、时区、开始结束和运行时期限",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/14-schedule-action-based.png"
+      ],
+      "originalEvidence": [
+        "21-braze-action-delivery",
+        "05-local-schedule-default"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-022",
+      "title": "API-Triggered 缺少请求示例与标识操作",
+      "status": "Verified",
+      "implemented": "补齐 API-triggered 说明、请求示例和真实触发接口",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/15-schedule-api-triggered.png"
+      ],
+      "originalEvidence": [
+        "22-braze-api-delivery",
+        "05-local-schedule-default"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-023",
+      "title": "重新入组间隔单位未对齐",
+      "status": "Implemented",
+      "implemented": "补齐再准入时间单位及规范化运行时计算",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/13-schedule.png"
+      ],
+      "originalEvidence": [
+        "05-braze-schedule-current",
+        "05-local-schedule-default"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-024",
+      "title": "Frequency Capping 展示与管理入口未对齐",
+      "status": "Implemented",
+      "implemented": "补齐 Frequency Capping、工作区设置跳转和摘要",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/13-schedule.png"
+      ],
+      "originalEvidence": [
+        "05-braze-schedule-current",
+        "05-local-schedule-default"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-025",
+      "title": "分群选择器未复刻搜索与多选呈现",
+      "status": "Verified",
+      "implemented": "补齐分群搜索、多选、已选移除及 AND/OR",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/16-audience.png"
+      ],
+      "originalEvidence": [
+        "06-braze-audience",
+        "06-local-audience",
+        "41-local-audience-filter-fields"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-026",
+      "title": "Additional Filters 缺少原版分层筛选目录",
+      "status": "Verified",
+      "implemented": "补齐 16 类、6 个其他入口及源站三级目录；浮层支持上下自动定位、图标、返回、搜索及点击外部关闭，组标题与拖动操作保留。可用字段接入同一受众 SQL。",
+      "remaining": "",
+      "evidence": [
+        "campaigns-followup-2026-10-30/fixed-026-filter-catalog.png",
+        "campaigns-followup-2026-10-30/fixed-026-filter-sessions.png",
+        "campaigns-followup-2026-10-30/fixed-026-filter-session-count.png"
+      ],
+      "originalEvidence": [
+        "41-braze-audience-filter-catalog",
+        "41-local-audience-filter-fields"
+      ],
+      "pixelParity": "not_certified",
+      "resolutionScope": "原始审计条目的页面结构、入口、配置和本轮验证的交互；不表示外部 Braze 服务可用或整站逐像素认证。",
+      "capabilityLimitations": [
+        "没有数据或尚未实现的 cohort、预测、地理半径、Canvas variation、survey 等高级集成字段显示不可用，目录存在不等于执行能力已实现。"
+      ],
+      "followup": "campaigns-followup-12-2026-10-30.md"
+    },
+    {
+      "id": "CMP-027",
+      "title": "User Lookup 弹窗被替换为行内输入",
+      "status": "Verified",
+      "implemented": "补齐 User Lookup 弹窗、查询、匹配及排除原因",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/18-audience-user-lookup.png",
+        "campaigns-fidelity-2026-10-30/18-audience-user-lookup-result.png"
+      ],
+      "originalEvidence": [
+        "40-braze-user-lookup",
+        "06-local-audience"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-028",
+      "title": "A/B Testing 缺少 Optimize with BrazeAI",
+      "status": "Verified",
+      "implemented": "补齐源站单变体状态的禁用开关、至少两个变体提示与 Compose messages 快捷跳转；服务不可用时不会接受无实际作用的优化开关。",
+      "remaining": "",
+      "evidence": [
+        "campaigns-followup-2026-10-30/fixed-028-ab-prerequisite.png",
+        "campaigns-followup-2026-10-30/fixed-028-compose-shortcut.png"
+      ],
+      "originalEvidence": [
+        "06-braze-audience",
+        "06-local-audience"
+      ],
+      "pixelParity": "not_certified",
+      "resolutionScope": "原始审计条目的页面结构、入口、配置和本轮验证的交互；不表示外部 Braze 服务可用或整站逐像素认证。",
+      "capabilityLimitations": [
+        "当前工作区没有 BrazeAI 优化服务；满足两变体前置条件后仍不会伪装为可优化。"
+      ],
+      "followup": "campaigns-followup-12-2026-10-30.md"
+    },
+    {
+      "id": "CMP-029",
+      "title": "Suppression Lists 独立区块未复刻",
+      "status": "Verified",
+      "implemented": "补齐 Suppression Lists 入口和实际抑制规则",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/16-audience.png"
+      ],
+      "originalEvidence": [
+        "06-braze-audience",
+        "06-local-audience",
+        "43-braze-audience-statistics"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-030",
+      "title": "Total Population 缺少队列、刷新与细分统计",
+      "status": "Verified",
+      "implemented": "精确人数、占比、时间、刷新、breakdown 与 LTV 展开均连接实际数据；队列使用 SQLite 持久化，记录 Queued/Running/Completed/Failed/Cancelled、历史及结果。",
+      "remaining": "",
+      "evidence": [
+        "campaigns-followup-2026-10-30/fixed-030-calculation-queue.png",
+        "campaigns-followup-2026-10-30/fixed-030-calculation-history.png",
+        "campaigns-followup-2026-10-30/fixed-030-additional-statistics.png"
+      ],
+      "originalEvidence": [
+        "42-braze-calculation-queue",
+        "43-braze-audience-statistics",
+        "06-local-audience",
+        "08-local-review"
+      ],
+      "pixelParity": "not_certified",
+      "resolutionScope": "原始审计条目的页面结构、入口、配置和本轮验证的交互；不表示外部 Braze 服务可用或整站逐像素认证。",
+      "capabilityLimitations": [
+        "这是本地持久化队列；重启后的待办在后续队列请求恢复，未知 ETA/LTV 显示 —。"
+      ],
+      "followup": "campaigns-followup-12-2026-10-30.md"
+    },
+    {
+      "id": "CMP-031",
+      "title": "Conversion event 类型目录不一致",
+      "status": "Implemented",
+      "implemented": "补齐转化事件目录、应用、事件属性和截止时间",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/19-conversions.png"
+      ],
+      "originalEvidence": [
+        "07-braze-conversion-types",
+        "07-local-conversions"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-032",
+      "title": "旧草稿的转化编辑页和 Review 显示不同事件",
+      "status": "Implemented",
+      "implemented": "统一旧购买事件别名，保证表单和 Review 不改写已有含义",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/19-conversions.png"
+      ],
+      "originalEvidence": [
+        "07-local-conversions",
+        "08-local-review"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-033",
+      "title": "转化配置的字段层级与说明不足",
+      "status": "Verified",
+      "implemented": "补齐主/次转化卡片布局、4 项上限和上线后锁定",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/19-conversions.png"
+      ],
+      "originalEvidence": [
+        "07-braze-conversions",
+        "07-local-conversions"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-034",
+      "title": "Review 缺少 Agentic Standards",
+      "status": "Verified",
+      "implemented": "按源站当前无 Standards 的状态呈现紧凑卡片和 Create one in Agent Console 链接；加载失败单独显示，避免误报空状态。",
+      "remaining": "",
+      "evidence": [
+        "campaigns-followup-2026-10-30/fixed-034-standards.png"
+      ],
+      "originalEvidence": [
+        "08-braze-review",
+        "08-local-review"
+      ],
+      "pixelParity": "not_certified",
+      "resolutionScope": "原始审计条目的页面结构、入口、配置和本轮验证的交互；不表示外部 Braze 服务可用或整站逐像素认证。",
+      "capabilityLimitations": [
+        "复核覆盖源站无 Standards 的实际空状态；未连接远程 Standards 评估服务。"
+      ],
+      "followup": "campaigns-followup-12-2026-10-30.md"
+    },
+    {
+      "id": "CMP-035",
+      "title": "Review 卡片、编辑入口及统计呈现未对齐",
+      "status": "Verified",
+      "implemented": "重建 Review 卡片、编辑入口、消息预览、受众及投递摘要",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/20-review.png"
+      ],
+      "originalEvidence": [
+        "08-braze-review",
+        "08-local-review"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-036",
+      "title": "Limited access 下的 Launch 按钮状态不同",
+      "status": "Verified",
+      "implemented": "按本地 access 配置呈现访问状态，Limited access 隐藏普通 Launch",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/20-review.png"
+      ],
+      "originalEvidence": [
+        "08-braze-review",
+        "08-local-review"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-037",
+      "title": "发送设置页结构和尺寸仍不一致",
+      "status": "Verified",
+      "implemented": "补齐邮件 Sending Settings 页面壳、独立导航和完成操作",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/07-email-sending-settings.png"
+      ],
+      "originalEvidence": [
+        "10-braze-email-sending-current",
+        "10-local-email-sending",
+        "32-local-email-drag-settings"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-038",
+      "title": "发送身份、IP Pool 和 Reply-to 控件未对齐",
+      "status": "Verified",
+      "implemented": "Limited access 的 From/IP pool 只读、Customize reply-to 禁用；允许的预设 Reply-to/BCC 保持可选，显式能力覆盖仍有效。",
+      "remaining": "",
+      "evidence": [
+        "campaigns-followup-2026-10-30/fixed-038-email-sending.png"
+      ],
+      "originalEvidence": [
+        "10-braze-email-sending-current",
+        "10-local-email-sending"
+      ],
+      "pixelParity": "not_certified",
+      "resolutionScope": "原始审计条目的页面结构、入口、配置和本轮验证的交互；不表示外部 Braze 服务可用或整站逐像素认证。",
+      "capabilityLimitations": [],
+      "followup": "campaigns-followup-12-2026-10-30.md"
+    },
+    {
+      "id": "CMP-039",
+      "title": "Subject / Preheader 未复刻 Liquid 代码字段",
+      "status": "Verified",
+      "implemented": "Subject/Preheader 增加 Liquid 入口，语言译文进入编译结果",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/07-email-sending-settings.png"
+      ],
+      "originalEvidence": [
+        "10-braze-email-sending-current",
+        "10-local-email-sending"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-040",
+      "title": "Advanced 缺少 Headers 与 Extras 编辑区",
+      "status": "Verified",
+      "implemented": "补齐 Custom Headers、Extras 保存、校验及编译",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/08-email-advanced.png"
+      ],
+      "originalEvidence": [
+        "15-braze-email-advanced",
+        "15-local-email-advanced"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-041",
+      "title": "邮件附件上传流程未完整复刻",
+      "status": "Implemented",
+      "implemented": "补齐邮件附件上传、媒体库、2MB 校验及编译引用",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/08-email-advanced.png"
+      ],
+      "originalEvidence": [
+        "15-braze-email-advanced",
+        "15-local-email-advanced"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-042",
+      "title": "HTML 编辑页三栏布局未复刻",
+      "status": "Verified",
+      "implemented": "重建 HTML 三栏内容、代码和预览区域",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/11-email-html-editor.png"
+      ],
+      "originalEvidence": [
+        "16-braze-email-html",
+        "16-local-email-html"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-043",
+      "title": "HTML 编辑页缺少同等代码工具和状态",
+      "status": "Verified",
+      "implemented": "补齐搜索、图片、源码视图、CSS inlining、下载和保存状态",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/11-email-html-editor.png"
+      ],
+      "originalEvidence": [
+        "16-braze-email-html",
+        "16-local-email-html"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-044",
+      "title": "Gmail Promotion 配置页未复刻",
+      "status": "Verified",
+      "implemented": "补齐 Gmail Promotion 面板及安全注释生成",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/12-email-gmail-promotion.png"
+      ],
+      "originalEvidence": [
+        "17-braze-gmail-promotion",
+        "16-local-email-html"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-045",
+      "title": "拖拽编辑器外层导航未对齐",
+      "status": "Verified",
+      "implemented": "对齐 CONTENT → Design and Build、Link Management、Personalization、Languages，以及 Copy 和固定底部 Style Settings；移除重复 Sending/Liquid/Subject 层级。",
+      "remaining": "",
+      "evidence": [
+        "campaigns-followup-2026-10-30/fixed-045-email-content.png"
+      ],
+      "originalEvidence": [
+        "32-braze-email-drag",
+        "32-local-email-drag",
+        "32-local-email-drag-settings"
+      ],
+      "pixelParity": "not_certified",
+      "resolutionScope": "原始审计条目的页面结构、入口、配置和本轮验证的交互；不表示外部 Braze 服务可用或整站逐像素认证。",
+      "capabilityLimitations": [
+        "复核针对原条目的外层导航；第三方 Bee 编辑器内部不属于本轮已验证范围。"
+      ],
+      "followup": "campaigns-followup-12-2026-10-30.md"
+    },
+    {
+      "id": "CMP-046",
+      "title": "多平台预览和消息编辑布局不同",
+      "status": "Verified",
+      "implemented": "Push 同时显示已选平台和各自预览",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/21-push-compose.png"
+      ],
+      "originalEvidence": [
+        "18-braze-push",
+        "18-local-push-editor"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-047",
+      "title": "iOS 高级设置不完整",
+      "status": "Verified",
+      "implemented": "补齐 iOS 高级设置和平台 payload 映射",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/22-push-settings.png"
+      ],
+      "originalEvidence": [
+        "18-braze-push-ios-settings",
+        "18-local-push-settings"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-048",
+      "title": "Android Notification 设置未复刻",
+      "status": "Verified",
+      "implemented": "补齐 Android 高级设置和平台 payload 映射",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/22-push-settings.png"
+      ],
+      "originalEvidence": [
+        "18-braze-push-all-settings",
+        "18-local-push-settings"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-049",
+      "title": "传统编辑器未支持按钮的 Android / iOS 独立行为",
+      "status": "Verified",
+      "implemented": "补齐 IAM 平台点击动作、保存及实际运行时映射",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/32-iam-traditional.png"
+      ],
+      "originalEvidence": [
+        "23-braze-iam-platform-actions",
+        "23-local-iam-traditional"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-050",
+      "title": "传统编辑器缺少 Light/Dark mode 样式切换",
+      "status": "Verified",
+      "implemented": "补齐 IAM 明暗设计、颜色透明度和运行时主题",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/33-iam-traditional-design.png"
+      ],
+      "originalEvidence": [
+        "23-braze-iam-design",
+        "23-local-iam-design"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-051",
+      "title": "传统 Settings 的 Accessibility 与 KVP 结构不同",
+      "status": "Verified",
+      "implemented": "补齐 IAM Settings 纵向布局",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/34-iam-traditional-settings.png"
+      ],
+      "originalEvidence": [
+        "23-braze-iam-settings",
+        "23-local-iam-settings",
+        "23-local-iam-accessibility"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-052",
+      "title": "Banner 创建入口缺少原版的分阶段选择",
+      "status": "Verified",
+      "implemented": "Banner 按 Placement 和编辑体验分阶段进入",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/29-banner.png"
+      ],
+      "originalEvidence": [
+        "24-braze-banner-entry",
+        "24-local-banner"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-053",
+      "title": "Banner 积木目录不完整",
+      "status": "Verified",
+      "implemented": "补齐 Banner Link/Phone/Email/Subscriptions 等块及 SDK 动作",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/30-banner-fullscreen.png"
+      ],
+      "originalEvidence": [
+        "24-braze-banner-builder",
+        "24-local-banner"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-054",
+      "title": "Banner 全屏编辑工具未完整复刻",
+      "status": "Verified",
+      "implemented": "补齐 Banner 全屏、画布尺寸、设备、Liquid、语言及撤销工具",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/30-banner-fullscreen.png"
+      ],
+      "originalEvidence": [
+        "24-braze-banner-builder",
+        "24-local-banner"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-055",
+      "title": "Content Card 缺少原版设备预览和页签结构",
+      "status": "Verified",
+      "implemented": "Content Card 增加设备、Compose/Settings/Test 和语言工具",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/26-content-card.png"
+      ],
+      "originalEvidence": [
+        "25-braze-content-card",
+        "25-local-content-card"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-056",
+      "title": "Content Card 点击行为未按平台分开",
+      "status": "Verified",
+      "implemented": "补齐 Content Card 各平台点击行为并进入编译",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/27-content-platform-actions.png"
+      ],
+      "originalEvidence": [
+        "25-braze-content-card",
+        "25-local-content-card",
+        "25-local-content-settings"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-057",
+      "title": "Content Card Settings 缺少 Accessibility",
+      "status": "Verified",
+      "implemented": "补齐 Content Card 无障碍语言、Liquid 和图片替代文本",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/28-content-settings.png"
+      ],
+      "originalEvidence": [
+        "25-braze-content-settings",
+        "25-local-content-settings"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-058",
+      "title": "消息类型与 Contact Card 的能力门槛未对齐",
+      "status": "Verified",
+      "implemented": "SMS/MMS/RCS 根据订阅组实际能力启用，并在测试/运行时校验",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/35-sms.png"
+      ],
+      "originalEvidence": [
+        "26-braze-sms",
+        "26-braze-contact-card",
+        "26-local-sms",
+        "26-local-contact-card"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-059",
+      "title": "SMS 预览、语言和字段工具不同",
+      "status": "Verified",
+      "implemented": "补齐 SMS 编辑布局、语言、Liquid、Copywriter 和联系人生成工具",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/35-sms.png"
+      ],
+      "originalEvidence": [
+        "26-braze-sms",
+        "26-local-sms"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-060",
+      "title": "Webhook 缺少原版初始模板选择页",
+      "status": "Verified",
+      "implemented": "Webhook 首次进入模板选择",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/36-webhook.png"
+      ],
+      "originalEvidence": [
+        "27-braze-webhook",
+        "27-local-webhook"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-061",
+      "title": "Credential 管理入口未复刻",
+      "status": "Implemented",
+      "implemented": "补齐受管 Webhook 凭据引用、服务端解析和敏感信息脱敏",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/37-webhook-request.png"
+      ],
+      "originalEvidence": [
+        "27-braze-webhook",
+        "27-local-webhook"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-062",
+      "title": "Webhook 请求预览及 Liquid 字段布局不同",
+      "status": "Verified",
+      "implemented": "补齐 Webhook 请求/预览分栏及 URL Liquid",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/37-webhook-request.png"
+      ],
+      "originalEvidence": [
+        "27-braze-webhook",
+        "27-local-webhook"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-063",
+      "title": "Webhook 页面暴露本地部署环境变量",
+      "status": "Verified",
+      "implemented": "移除 Webhook 主编辑流中的部署环境变量提示",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/37-webhook-request.png"
+      ],
+      "originalEvidence": [
+        "27-braze-webhook",
+        "27-local-webhook"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-064",
+      "title": "订阅组、WABA 与布局选择的顺序不同",
+      "status": "Verified",
+      "implemented": "WhatsApp 按订阅组、类型、布局分阶段进入",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/38-whatsapp.png",
+        "campaigns-fidelity-2026-10-30/39-whatsapp-message-types.png"
+      ],
+      "originalEvidence": [
+        "28-braze-whatsapp-layouts",
+        "28-local-whatsapp"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-065",
+      "title": "Text response 缺少语言与 URL preview 控件",
+      "status": "Verified",
+      "implemented": "补齐 WhatsApp 语言、URL preview 和内容预览",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/39-whatsapp-message-types.png"
+      ],
+      "originalEvidence": [
+        "28-braze-whatsapp-text",
+        "28-local-whatsapp-response"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-066",
+      "title": "Provider 信息和模板工具不在同等流程位置",
+      "status": "Verified",
+      "implemented": "按订阅组→只读实际 WABA→消息类型→8 种响应布局→左预览/右 Compose-Test 呈现；账户工具移入 Test，移除主编辑中的模拟窗口；响应窗口以真实入站事件判断。",
+      "remaining": "",
+      "evidence": [
+        "campaigns-followup-2026-10-30/fixed-066-whatsapp-type.png",
+        "campaigns-followup-2026-10-30/fixed-066-whatsapp-layout-cards.png",
+        "campaigns-followup-2026-10-30/fixed-066-whatsapp-new-response.png"
+      ],
+      "originalEvidence": [
+        "28-braze-whatsapp-layouts",
+        "28-braze-whatsapp-text",
+        "28-local-whatsapp",
+        "28-local-whatsapp-response"
+      ],
+      "pixelParity": "not_certified",
+      "resolutionScope": "原始审计条目的页面结构、入口、配置和本轮验证的交互；不表示外部 Braze 服务可用或整站逐像素认证。",
+      "capabilityLimitations": [
+        "Meta 模板审批、供应商同步和真实发送依赖工作区提供商配置；本轮没有向外发送。"
+      ],
+      "followup": "campaigns-followup-12-2026-10-30.md"
+    },
+    {
+      "id": "CMP-067",
+      "title": "LINE 未复刻订阅组后的全屏编辑体验",
+      "status": "Verified",
+      "implemented": "LINE 按订阅组进入 Launch Editor 全屏流程",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/40-line-entry.png",
+        "campaigns-fidelity-2026-10-30/44-line-fullscreen.png"
+      ],
+      "originalEvidence": [
+        "29-braze-line-editor",
+        "29-local-line"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-068",
+      "title": "LINE 积木和编辑工具未对齐",
+      "status": "Verified",
+      "implemented": "补齐 LINE 拖拽块、消息堆栈、工具和设备预览",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/44-line-fullscreen.png"
+      ],
+      "originalEvidence": [
+        "29-braze-line-editor",
+        "29-local-line"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-069",
+      "title": "渠道选择和导航未按原版复刻",
+      "status": "Verified",
+      "implemented": "Multichannel 先选渠道，随后 Channels tabs 和 Add channel",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/53-multichannel-first.png",
+        "campaigns-fidelity-2026-10-30/24-multichannel-compose.png"
+      ],
+      "originalEvidence": [
+        "30-braze-multichannel-first",
+        "30-braze-multichannel-channels",
+        "30-local-multichannel",
+        "30-local-multichannel-channels"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-070",
+      "title": "Preview and test 显示旧消息",
+      "status": "Verified",
+      "implemented": "预览/测试读取选中子渠道和变体，不继承父级旧消息，先保存再测试",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/25-multichannel-current-preview.png"
+      ],
+      "originalEvidence": [
+        "30-local-multichannel-channels",
+        "31-local-multichannel-stale-preview"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-071",
+      "title": "API Campaign 错用了普通五步流程",
+      "status": "Verified",
+      "implemented": "API Campaign 改为独立单页，移除普通五步和模拟事件按钮",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/05-api-campaign.png"
+      ],
+      "originalEvidence": [
+        "33-braze-api-campaign",
+        "33-local-api-campaign"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-072",
+      "title": "API Campaign 渠道变体标识和示例缺失",
+      "status": "Implemented",
+      "implemented": "补齐九个渠道、稳定 Variation UUID、外部参考和真实本地回执示例",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/06-api-variations.png"
+      ],
+      "originalEvidence": [
+        "33-braze-api-campaign",
+        "33-local-api-campaign"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-073",
+      "title": "Feature flag experiment 步骤不一致",
+      "status": "Verified",
+      "implemented": "Feature Flag Experiment 改为独立四步",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/41-feature-experiment-basics.png"
+      ],
+      "originalEvidence": [
+        "34-braze-feature-basics",
+        "34-local-feature-basics"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-074",
+      "title": "Experiment Basics 未复刻实验与 Feature Flag 设置",
+      "status": "Implemented",
+      "implemented": "补齐真实 Feature Flag、属性覆盖、变体权重、校验和实验分配",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/41-feature-experiment-basics.png"
+      ],
+      "originalEvidence": [
+        "34-braze-feature-basics",
+        "34-local-feature-basics"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-075",
+      "title": "Create with Operator 被实现成另一种活动类型",
+      "status": "Verified",
+      "implemented": "保留对话侧栏、历史、附件、展开和 Auto-approve，主页面让位、菜单收起；PDF/DOCX 可在隔离 worker 中实际提取文字，原文件可下载，配置 AI 服务后走真实网关。",
+      "remaining": "",
+      "evidence": [
+        "campaigns-followup-2026-10-30/fixed-075-operator.png",
+        "campaigns-followup-2026-10-30/fixed-075-brief-context.png",
+        "campaigns-followup-2026-10-30/fixed-075-history.png"
+      ],
+      "originalEvidence": [
+        "35-braze-operator-entry-result",
+        "35-local-operator"
+      ],
+      "pixelParity": "not_certified",
+      "resolutionScope": "原始审计条目的页面结构、入口、配置和本轮验证的交互；不表示外部 Braze 服务可用或整站逐像素认证。",
+      "capabilityLimitations": [
+        "当前没有真实 AI 网关凭据；成功生成流程通过受控适配器测试，未把真实服务可用性记作已验证。扫描 PDF 无 OCR，受损/加密文件有明确提示。"
+      ],
+      "followup": "campaigns-followup-12-2026-10-30.md"
+    },
+    {
+      "id": "CMP-076",
+      "title": "已上线活动缺少 Campaign Analytics 详情入口",
+      "status": "Verified",
+      "implemented": "Active 名称默认进入 Campaign Analytics，保留独立编辑入口",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/45-active-analytics.png"
+      ],
+      "originalEvidence": [
+        "36-braze-active-analytics",
+        "36-local-active-opens-editor"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-077",
+      "title": "活动性能与 Historical Performance 未复刻",
+      "status": "Verified",
+      "implemented": "补齐变体性能、列管理、点击明细、历史图表、筛选及 CSV",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/48-historical-metrics.png",
+        "campaigns-fidelity-2026-10-30/49-historical-chart.png"
+      ],
+      "originalEvidence": [
+        "36-braze-active-performance",
+        "36-braze-historical-chart",
+        "36-local-active-opens-editor"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-078",
+      "title": "活动变更记录未复刻",
+      "status": "Verified",
+      "implemented": "补齐变更记录筛选、Before/After 和真实审计记录",
+      "remaining": "",
+      "evidence": [
+        "campaigns-fidelity-2026-10-30/46-change-history.png"
+      ],
+      "originalEvidence": [
+        "38-braze-change-history",
+        "36-local-active-opens-editor"
+      ],
+      "pixelParity": "not_certified"
+    },
+    {
+      "id": "CMP-079",
+      "title": "Campaign Monitoring 设置未复刻",
+      "status": "Verified",
+      "implemented": "源站初始状态的两个时长/阈值留空、两种通知渠道不选；行内控件保持可编辑，零阈值和禁用行的空字段在保存后正确回显。",
+      "remaining": "",
+      "evidence": [
+        "campaigns-followup-2026-10-30/fixed-079-monitor-blank.png",
+        "campaigns-followup-2026-10-30/fixed-079-monitor-persisted.png"
+      ],
+      "originalEvidence": [
+        "39-braze-campaign-monitoring",
+        "36-local-active-opens-editor"
+      ],
+      "pixelParity": "not_certified",
+      "resolutionScope": "原始审计条目的页面结构、入口、配置和本轮验证的交互；不表示外部 Braze 服务可用或整站逐像素认证。",
+      "capabilityLimitations": [
+        "外部 Email/Webhook 告警发送尚未连接；设置保存和本地评估可用，不能等同于外部通知已送达。"
+      ],
+      "followup": "campaigns-followup-12-2026-10-30.md"
+    }
+  ],
+  "lastFollowup": "campaigns-followup-12-2026-10-30.md",
+  "verification": {
+    "modelTests": 304,
+    "modelTestsPassed": 304,
+    "httpChecks": 25,
+    "httpChecksPassed": 25,
+    "productionBuild": "passed",
+    "diffCheck": "passed",
+    "browser": "Chrome, local production build, isolated SQLite"
+  }
+}

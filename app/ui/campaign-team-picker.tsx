@@ -1,0 +1,3 @@
+"use client";
+import {useEffect,useState}from"react";
+export default function CampaignTeamPicker({value,onChange}:{value:string;onChange:(value:string)=>void}){const[teams,setTeams]=useState<string[]>([]);useEffect(()=>{fetch("/api/resources/user-management").then(r=>r.json()).then(p=>setTeams([...new Set((p.data??[]).map((row:{data?:{team?:string}})=>row.data?.team).filter((v:unknown):v is string=>typeof v==="string"&&Boolean(v)))] as string[])).catch(()=>{});},[]);return <label>Teams<select value={value} onChange={e=>onChange(e.target.value)}><option value="">Select…</option>{[...new Set([...teams,...(value?[value]:[])])].map(team=><option key={team}>{team}</option>)}</select></label>;}

@@ -1,0 +1,206 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_email_settings_1029?locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_email_settings_1029?locale=en
+	2 container
+		3 image Download
+		4 image
+	5 container
+		6 text b
+		7 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			8 image
+			9 text Local workspace
+		10 text Quick links
+		11 button Canvas
+			12 image
+			13 text Canvas
+		14 button Campaigns
+			15 image
+			16 text Campaigns
+		17 button Segments
+			18 image
+			19 text Segments
+		20 button Getting Started
+			21 image
+			22 text Getting Started
+		23 button Performance Overview
+			24 image
+			25 text Performance Overview
+		26 button AI Decisioning
+			27 image
+			28 text AI Decisioning
+		29 button Agent Console
+			30 image
+			31 text Agent Console
+		32 button Messaging
+			33 image
+			34 text Messaging
+		35 button Audience
+			36 image
+			37 text Audience
+		38 button Content
+			39 image
+			40 text Content
+		41 button Analytics
+			42 image
+			43 text Analytics
+		44 button Partner Integrations
+			45 image
+			46 text Partner Integrations
+		47 button Data Settings
+			48 image
+			49 text Data Settings
+		50 button Settings
+			51 image
+			52 text Settings
+		53 text braze
+		54 container
+			55 text ◷   8 days left in your free trial.
+			56 button Connect with sales
+		57 container
+			58 button Search workspace ⌘K
+				59 image
+				60 text Search workspace
+				61 text ⌘K
+			62 button Take a tour
+				63 image
+			64 image
+			65 button (collapsed) Description: Language, Secondary Actions: Expand
+				66 image
+			67 button Notifications
+				68 image
+			69 button S
+			70 image
+			71 button Open BrazeAI Operator
+				72 image
+		73 button Campaigns
+		74 button Edit 'Email settings entry verification'
+			75 text Edit
+			76 text  '
+			77 text Email settings entry verification
+			78 text '
+			79 image
+		80 container
+			81 image
+			82 text Limited access
+			83 container Campaign steps
+				84 button ✓ Compose Messages
+					85 text ✓
+					86 text Compose Messages
+				87 button ✓ Schedule Delivery
+					88 text ✓
+					89 text Schedule Delivery
+				90 button ✓ Target Audiences
+					91 text ✓
+					92 text Target Audiences
+				93 button ✓ Assign Conversions
+					94 text ✓
+					95 text Assign Conversions
+				96 button 5 Review Summary
+					97 text 5
+					98 text Review Summary
+			99 container Email sending settings
+				100 container
+					101 text Email settings entry verification
+					102 button BrazeAI Operator
+						103 image
+				104 container Email editor sections
+					105 button Sending settings
+						106 image
+					107 button Content
+						108 image
+					109 button Preview & Test
+						110 image
+				111 container
+					112 text SENDING SETTINGS
+					113 button Back to campaign
+						114 image
+					115 button Sending Info
+					116 button Advanced
+					117 button Personalization
+					118 button Languages
+					119 link Description: Style Settings ↗, Value: 127.0.0.1:3100/app_settings/app_settings/email_settings/drag_and_drop_email/6ad0b98fe4b4110085216601?locale=en
+				120 container
+					121 heading Sending Info, Value: 2
+						122 text Sending Info
+					123 text You can update the default value of your sending information from 
+					124 link Description: Email Settings, Value: 127.0.0.1:3100/app_settings/app_settings/email_settings/sending_configuration/6ad0b98fe4b4110085216601?locale=en
+					125 text . Subject
+					126 button Subject 1 Settings entry saved Personalize subject, Help: BrazeAI Operator
+					127 text 1
+					128 text entry area (settable) Settings entry saved
+					129 button Description: Personalize subject, Help: Add Liquid
+					130 text Preheader
+					131 text (Optional)
+					132 text 1
+					133 text entry area (settable) Preheader (Optional) 1 Personalize preheader, Value: Saved through the editor settings entry
+					134 button Description: Personalize preheader, Help: Add Liquid
+					135 checkbox (settable, integer) Value: 0, Description: Add whitespace after preheader Prevents most email clients from pulling additional content from your email to fill the remaining preview space
+					136 text Add whitespace after preheader
+					137 text Prevents most email clients from pulling additional content from your email to fill the remaining preview space
+					138 heading From display name + address, Value: 3
+						139 text From display name + address
+					140 text From address (verified sending identity)
+					141 pop up button (collapsed, settable) From address (verified sending identity), Value: QA <qa@example.com>, Secondary Actions: Expand
+						142 menu
+							143 Powered by Braze <braze@mta-a348.bftmail.com>
+							144 Powered by Braze <braze@mta-h466.bftmail.com>
+							145 Thinkingai Marketing <marketing@thinkingai.com>
+							146 Thinkingai Support <support@thinkingai.com>
+							147 (selected) QA <qa@example.com>
+					148 text IP pool
+					149 pop up button (collapsed, settable) IP pool, Value: PLG_IP_Pool, Secondary Actions: Expand
+						150 menu
+							151 (selected) PLG_IP_Pool
+							152 Transactional_IP_Pool
+							153 Shared_IP_Pool
+					154 text Reply-to address
+					155 pop up button (collapsed, settable) Reply-to address, Value: Exclude reply-to and send replies to "from" address, Secondary Actions: Expand
+						156 menu
+							157 (selected) Exclude reply-to and send replies to "from" address
+							158 braze@mta-h466.bftmail.com
+							159 marketing@thinkingai.com
+							160 support@thinkingai.com
+							161 Exclude reply-to and send replies to "from" address
+					162 checkbox (settable, integer) Description: Customize reply-to address, Value: 0
+					163 text BCC address
+					164 pop up button (collapsed, settable) BCC address, Value: No BCC address, Secondary Actions: Expand
+						165 menu
+							166 (selected) No BCC address
+					167 text One-click list-unsubscribe setting
+					168 pop up button (collapsed, settable) One-click list-unsubscribe setting, Value: Use workspace default, Secondary Actions: Expand
+						169 menu
+							170 (selected) Use workspace default
+							171 Enabled
+							172 Disabled
+				173 container
+					174 heading Preview, Value: 2
+						175 text Preview
+					176 text From: QA  < qa@example.com > Subject: Settings entry saved Preheader: Saved through the editor settings entry
+					177 container Email message preview
+						178 AXWebArea about:srcdoc
+							179 text Keep this content when opening settings.
+					180 text Actual rendering may not be identical to this preview depending on the user's environment
+				181 container
+					182 button Download file
+					183 button Done
+			184 button (disabled) Back
+				185 image
+			186 button ✓ Compose
+				187 text ✓
+				188 text Compose
+			189 button ✓ Schedule
+				190 text ✓
+				191 text Schedule
+			192 button ✓ Target
+				193 text ✓
+				194 text Target
+			195 button ✓ Assign
+				196 text ✓
+				197 text Assign
+			198 button 5 Review
+				199 text 5
+				200 text Review
+			201 button Forward
+				202 image
+			203 button Save Draft
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_email_settings_1029?locale=en

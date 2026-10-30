@@ -1,0 +1,52 @@
+[
+  {
+    "channel": "multichannel",
+    "id": "cmp_audit_20261028_multichannel",
+    "url": "http://127.0.0.1:3218/engagement/campaigns/cmp_audit_20261028_multichannel?locale=en&step=compose"
+  },
+  {
+    "channel": "email",
+    "id": "cmp_audit_20261028_email",
+    "url": "http://127.0.0.1:3218/engagement/campaigns/cmp_audit_20261028_email?locale=en&step=compose"
+  },
+  {
+    "channel": "iam",
+    "id": "cmp_audit_20261028_iam",
+    "url": "http://127.0.0.1:3218/engagement/campaigns/cmp_audit_20261028_iam?locale=en&step=compose"
+  },
+  {
+    "channel": "push",
+    "id": "cmp_audit_20261028_push",
+    "url": "http://127.0.0.1:3218/engagement/campaigns/cmp_audit_20261028_push?locale=en&step=compose"
+  },
+  {
+    "channel": "banner",
+    "id": "cmp_audit_20261028_banner",
+    "url": "http://127.0.0.1:3218/engagement/campaigns/cmp_audit_20261028_banner?locale=en&step=compose"
+  },
+  {
+    "channel": "content",
+    "id": "cmp_audit_20261028_content",
+    "url": "http://127.0.0.1:3218/engagement/campaigns/cmp_audit_20261028_content?locale=en&step=compose"
+  },
+  {
+    "channel": "sms",
+    "id": "cmp_audit_20261028_sms",
+    "url": "http://127.0.0.1:3218/engagement/campaigns/cmp_audit_20261028_sms?locale=en&step=compose"
+  },
+  {
+    "channel": "webhook",
+    "id": "cmp_audit_20261028_webhook",
+    "url": "http://127.0.0.1:3218/engagement/campaigns/cmp_audit_20261028_webhook?locale=en&step=compose"
+  },
+  {
+    "channel": "whatsapp",
+    "id": "cmp_audit_20261028_whatsapp",
+    "url": "http://127.0.0.1:3218/engagement/campaigns/cmp_audit_20261028_whatsapp?locale=en&step=compose"
+  },
+  {
+    "channel": "line",
+    "id": "cmp_audit_20261028_line",
+    "url": "http://127.0.0.1:3218/engagement/campaigns/cmp_audit_20261028_line?locale=en&step=compose"
+  }
+]

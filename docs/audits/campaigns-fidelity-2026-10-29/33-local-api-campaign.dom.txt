@@ -1,0 +1,127 @@
+- button "Open Next.js Dev Tools":
+- alert: Campaigns
+- complementary:
+  - generic: b
+  - button "Demo – Thinkingai":
+    - generic: Demo – Thinkingai
+  - generic: Quick links
+  - button "Canvas":
+    - generic: Canvas
+  - button "Campaigns":
+    - generic: Campaigns
+  - button "Segments":
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+  - button "Performance Overview":
+    - generic: Performance Overview
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic: braze
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour":
+  - button "Language":
+  - button "Notifications":
+  - button "S"
+  - button:
+  - button "Campaigns"
+  - button "Edit 'Untitled API campaign Campaign'":
+    - text: Edit 'Untitled API campaign Campaign'
+  - text: Limited access
+  - navigation "Campaign steps":
+    - button "1 Compose Messages":
+      - generic: "1"
+      - generic: Compose Messages
+    - button "2 Schedule Delivery":
+      - generic: "2"
+      - generic: Schedule Delivery
+    - button "3 Target Audiences":
+      - generic: "3"
+      - generic: Target Audiences
+    - button "4 Assign Conversions":
+      - generic: "4"
+      - generic: Assign Conversions
+    - button "5 Review Summary":
+      - generic: "5"
+      - generic: Review Summary
+  - heading "Campaign Details" [level=2]
+  - generic: Campaign Name
+  - textbox "Campaign Name":
+    - /placeholder: Enter Campaign Name
+    - text: Untitled API campaign Campaign
+  - text: Teams
+  - combobox "Teams":
+    - option "Select…" [selected]
+  - button "Add description":
+    - text: Add description
+  - button "Tags":
+    - text: Tags
+  - generic: Campaign ID
+  - textbox "Campaign ID": cmp_05m5ge0c
+  - button "Copy":
+    - text: Copy
+  - heading "Compose API campaign" [level=2]
+  - paragraph: Track messages sent from an API.
+  - button "Preview and test"
+  - heading "API campaign" [level=3]
+  - paragraph: Create an identifier used to associate external sends with campaign analytics, then record events sent from your systems.
+  - generic: Campaign name
+  - textbox "Campaign name": Untitled API campaign Campaign
+  - generic: API campaign ID
+  - textbox "API campaign ID": api_cmp_05m5ge0c
+  - generic: Event mapping
+  - textbox "Event mapping":
+    - /placeholder: Describe how external events map to this campaign
+  - generic: User ID
+  - textbox "User ID": user_1
+  - generic: Event
+  - combobox "Event":
+    - option "sent"
+    - option "delivered" [selected]
+    - option "opened"
+    - option "clicked"
+    - option "conversion"
+    - option "failed"
+  - button "Record event"
+  - generic: Allow external attribution
+  - generic: Accept locally simulated message and conversion events.
+  - switch "Allow external attribution" [checked]
+  - button "Back" [disabled]:
+  - button "1 Compose":
+    - generic: "1"
+    - text: Compose
+  - button "2 Schedule":
+    - generic: "2"
+    - text: Schedule
+  - button "3 Target":
+    - generic: "3"
+    - text: Target
+  - button "4 Assign":
+    - generic: "4"
+    - text: Assign
+  - button "5 Review":
+    - generic: "5"
+    - text: Review
+  - button "Forward":
+  - button "Save Draft"

@@ -4,6 +4,13 @@
 // blocks, per-kind properties, rich text, languages, link management, template
 // gallery and an all-channel preview/test modal.
 
+import { applyGmailPromotion, normalizeGmailPromotion } from "@/lib/email-fidelity-model";
+import { GmailPromotionFields, GmailPromotionCode } from "./email-gmail-promotion";
+import sendingStyles from "./braze-sending.module.css";
+import sourceStyles from "./email-source.module.css";
+import { EmailSourceTools,EmailAttachments,InboxVision,type EmailAttachment } from "./email-source-tools";
+import { campaignVariants, variantDraft } from "@/lib/campaign-shared";
+import { NativeMessagePreview } from "./message-controls";
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type DragEvent as ReactDragEvent, type ReactNode } from "react";
 import {
   AlignCenter, AlignLeft, AlignRight, ArrowDown, ArrowUp, Bold, Check, ChevronLeft, Code2, Copy, Eraser, Eye, Facebook, FileCode2,
@@ -15,13 +22,14 @@ import {
 import { workspaceContentBlockHtml } from "@/lib/email-liquid";
 import styles from "./email-dnd.module.css";
 import GrapesEmailEditor from "./email-grapes-editor";
+import EmailContentNavigation from "./email-content-navigation";
 import {
   blockText, defaultBlock, defaultStyle, downloadHtmlFile, emailFontFamilies, emailLocales, emailTemplates, escapeHtml,
   extractLinks, liquidIssues, liquidTokens, makeCell, makeRow, newId, normalizeRows, normalizeStyle,
   resolveLiquidPreview, rowsToPlainText, type EmailBlock, type EmailBlockKind, type EmailEditorLocale, type EmailLink,
   type EmailRow, type EmailStyle, type MenuItem, type PreviewUser, type SocialItem, type WorkspaceLiquid,
 } from "@/lib/email-editor-model";
-import { getWhatsAppTemplate, normalizeWhatsAppVariants, renderWhatsAppVariant } from "@/lib/whatsapp-model";
+import { customWhatsAppTemplates, getWhatsAppTemplate, normalizeWhatsAppVariants, renderWhatsAppVariant } from "@/lib/whatsapp-model";
 import { translate, type Locale } from "@/lib/i18n";
 
 export type EmailCampaignLike = { id: string; name: string; subject?: string; body?: string; channel?: string; config?: Record<string, unknown> };
@@ -112,7 +120,7 @@ function variantRows(draft: EmailCampaignLike, variantIndex = 0): EmailRow[] {
 
 function variantBody(draft: EmailCampaignLike) {
   const first = emailVariantList(draft)[0];
-  return first?.body ?? draft.body ?? "";
+  return draft.body ?? first?.body ?? "";
 }
 
 // --- Generic editor chrome --------------------------------------------------
@@ -773,28 +781,22 @@ export function BrazeEmailDndEditor({ locale, draft, variantName, save, onClose,
       {leftMode === "personalization"
         ? <CatalogPersonalizationPanel data={catalogData} onInsert={insertPersonalization} onClose={() => setLeftMode("content")} />
         : <>
-          <div className={styles.leftTitle}>{translate(locale, "CONTENT")}<button aria-label={translate(locale, "Back to campaign")} onClick={() => void saveAndClose()}><ChevronLeft size={15} /></button></div>
-          {(["content", "links", "personalization", "languages"] as const).map(mode => <button key={mode} className={leftMode === mode ? styles.leftActive : ""} onClick={() => setLeftMode(mode)}>
-            {translate(locale, { content: "Content Build", links: "Link Management", personalization: "Personalization", languages: "Languages" }[mode])}
-            {mode === "links" && linksCount ? ` (${linksCount})` : ""}
-          </button>)}
-          {leftMode === "links" && <div className={styles.leftPanel}><b>{translate(locale, "Link Management")}</b>
+          <EmailContentNavigation locale={locale} active={leftMode} onNavigate={setLeftMode} onClose={()=>void saveAndClose()} onInsert={text=>{const row=makeRow(1,[{...defaultBlock("Paragraph"),text}]);commitRows([...rows,row]);}}
+            linksPanel={<div className={styles.leftPanel}><b>{translate(locale, "Link Management")}</b>
             {links.length ? links.map(link => <div className={styles.linkRow} key={link.key}>
               <span className={styles.linkKind}>{link.kind}</span>
               <label>{link.label || "Link"}</label>
               <input value={link.href} onChange={event => updateLink(link, event.target.value)} placeholder="https://"/>
             </div>) : <p>No links yet. Add a button, image link, or in-text link.</p>}
           </div>}
-          {leftMode === "languages" && <div className={styles.leftPanel}>
+            languagesPanel={<div className={styles.leftPanel}>
             <b>{translate(locale, "Languages")}</b>
             {emailLocales.map(item => <button type="button" key={item.code} className={className(styles.localeRow, editingLocale === item.code && styles.localeActive)} onClick={() => setEditingLocale(item.code)}>
               <span>{item.label}</span><span className={className(styles.dot, (item.code === "en" || rows.flatMap(row => row.cells).flatMap(cell => cell.blocks).some(block => block.translations?.[item.code])) && styles.done)} />
             </button>)}
             <p className={styles.localeHint}>{editingLocale === "en" ? "English is the default locale." : `Editing ${localeInfo?.label}. Content falls back to English when no translation exists. ${translatedCount} block(s) translated.`}</p>
           </div>}
-          <small>{translate(locale, "Create with Operator")}</small>
-          <button onClick={() => { const block = { ...defaultBlock("Paragraph"), text: "A fresh offer, just for you, {{${first_name} | default: 'there'}}." }; const row = makeRow(1, [block]); commitRows([...rows, row]); }}>✎ &nbsp; {translate(locale, "Copy")}</button>
-          <button className={styles.styleLink} onClick={() => { setSelection(null); setRightTab("settings"); }}>{translate(locale, "Style Settings")} ↗</button>
+          />
         </>}
     </aside>
     <main className={styles.canvasArea}>
@@ -1143,37 +1145,42 @@ export function EmailTemplateGallery({ locale, onApply, onClose }: { locale: Loc
 
 // --- Preview & test modal ------------------------------------------------------
 
-export function TestModal({ locale, draft, variantIndex = 0, close }: { locale: Locale; draft: EmailCampaignLike; variantIndex?: number; close: () => void }) {
+export function TestModal({ locale, draft, variantIndex = 0, initialRecipient, initialVariantId, close }: { locale: Locale; draft: EmailCampaignLike; variantIndex?: number; initialRecipient?:string; initialVariantId?:string; close: () => void }) {
   const catalogData = useCatalogWorkspace();
   const workspace = { ...useWorkspaceLiquid(), ...catalogData.workspace };
   const [mode, setMode] = useState<"random" | "existing" | "custom">("existing");
-  const [recipient, setRecipient] = useState(draft.channel === "webhook" ? "user_1" : draft.channel === "whatsapp" ? "+1 415 555 0138" : "marketing.qa@example.com");
+  const [recipient, setRecipient] = useState(initialRecipient ?? (draft.channel === "sms" || draft.channel === "whatsapp" ? "" : draft.channel === "email" ? "" : "user_1"));
   const [customUser, setCustomUser] = useState('{\n  "user_id": "custom_1",\n  "email": "custom@example.com",\n  "first_name": "Custom",\n  "language": "en"\n}');
   const [previewUser, setPreviewUser] = useState<PreviewUser>({ first_name: "Sofia", last_name: "Chen", email: "sofia@example.com", language: "en", country: "US" });
-  const [variantId, setVariantId] = useState("");
+  const [variantId, setVariantId] = useState(initialVariantId ?? String(draft.config?.previewVariantId ?? campaignVariants({...draft,channel:draft.channel??"email"})[variantIndex]?.id ?? ""));
   const [testLocale, setTestLocale] = useState("en");
   const [device, setDevice] = useState<"desktop" | "mobile">("desktop");
   const [dark, setDark] = useState(false);
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [result, setResult] = useState<Record<string, unknown> | null>(null);
   const [error, setError] = useState("");
+  const [delivery,setDelivery]=useState<{configured:boolean;enabled:boolean;provider:string}|null>(null);
+  useEffect(()=>{const c=new AbortController();fetch("/api/messages/capability",{signal:c.signal}).then(r=>r.json()).then(p=>setDelivery((p.channels??[]).find((v:{channel:string})=>v.channel===(draft.channel??"email"))??null)).catch(()=>{});return()=>c.abort();},[draft.channel]);
 
   const variants = emailVariantList(draft);
   const isEmail = draft.channel === "email";
   const isWhatsapp = draft.channel === "whatsapp";
-  const current = variants[variantIndex] ?? variants[0];
-  const rows = isEmail && draft.config?.emailEditorEngine !== "grapesjs-mjml" ? variantRows(draft, variantIndex) : [];
-  const htmlBody = isEmail && !rows.length ? variantBody(draft) : "";
-  const plainBody = isEmail && !rows.length && !htmlBody ? variantBody(draft) : "";
-  const sendingInfo = (current?.sending ?? draft.config?.emailSending) as Record<string, unknown> | undefined;
+  const current = variants.find(v=>v.id===variantId) ?? variants[variantIndex] ?? variants[0];
+  const selectedIndex=Math.max(0,campaignVariants({...draft,channel:draft.channel??"email"}).findIndex(v=>v.id===variantId));
+  const selectedEmailDraft=variantDraft({...draft,channel:draft.channel??"email"},selectedIndex);
+  const rows = isEmail && selectedEmailDraft.config?.emailEditorEngine !== "grapesjs-mjml" ? variantRows(selectedEmailDraft, selectedIndex) : [];
+  const htmlBody = isEmail && selectedEmailDraft.config?.emailEditorMode!=="plain" && !rows.length ? selectedEmailDraft.body ?? "" : "";
+  const plainBody = isEmail && selectedEmailDraft.config?.emailEditorMode==="plain" ? selectedEmailDraft.body ?? "" : "";
+  const sendingInfo = (current?.sending ?? selectedEmailDraft.config?.emailSending) as Record<string, unknown> | undefined;
   const localeAliases: Record<string, string> = { zh: "zh-CN", "zh-cn": "zh-CN", zh_cn: "zh-CN", en_us: "en" };
   const normalizedTestLocale = localeAliases[testLocale.toLowerCase()] ?? testLocale;
   const previewLocale = (emailLocales.some(item => item.code === normalizedTestLocale) ? normalizedTestLocale : "en") as EmailEditorLocale;
   const subjectTranslations = (sendingInfo?.subjectTranslations ?? {}) as Record<string, string>;
   const preheaderTranslations = (sendingInfo?.preheaderTranslations ?? {}) as Record<string, string>;
-  const subjectLine = subjectTranslations[normalizedTestLocale] ?? current?.subject ?? draft.subject ?? "";
+  const subjectLine = subjectTranslations[normalizedTestLocale] ?? current?.subject ?? selectedEmailDraft.subject ?? "";
   const preheader = preheaderTranslations[normalizedTestLocale] ?? String(sendingInfo?.preheader ?? "");
   const whatsappVariants = isWhatsapp ? normalizeWhatsAppVariants(draft as never) : [];
+  const whatsappTemplates = isWhatsapp ? customWhatsAppTemplates(draft) : [];
   const whatsappVariant = whatsappVariants.find(item => item.id === (variantId || current?.id)) ?? whatsappVariants[0];
 
   const applyPreviewUser = (user: Record<string, unknown>) => setPreviewUser({
@@ -1198,7 +1205,7 @@ export function TestModal({ locale, draft, variantIndex = 0, close }: { locale: 
     setState("sending"); setError("");
     let parsedCustom: Record<string, unknown> = {};
     if (mode === "custom") { try { parsedCustom = JSON.parse(customUser) as Record<string, unknown>; } catch { setState("error"); setError("Custom user attributes must be valid JSON."); return; } }
-    const response = await fetch(`/api/campaigns/${draft.id}/test`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ recipient, mode, customUser: parsedCustom, variantId: variantId || current?.id, locale: testLocale }) });
+    const response = await fetch(`/api/campaigns/${draft.id}/test`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ recipient, mode, customUser: parsedCustom, variantId: variantId || current?.id, locale: testLocale, snapshot: draft }) });
     const payload = await response.json().catch(() => ({}));
     setResult(payload);
     setError(response.ok ? "" : String(payload.error ?? "The test request failed."));
@@ -1209,10 +1216,10 @@ export function TestModal({ locale, draft, variantIndex = 0, close }: { locale: 
   const attempt = webhook?.attempts?.at(-1);
 
   const frameStyle = { maxWidth: device === "mobile" ? 340 : 600, width: "100%", margin: "0 auto" } as CSSProperties;
-  const savedStyle = { ...defaultStyle(), ...((draft.config?.emailStyle ?? {}) as Record<string, never>) };
+  const savedStyle = { ...defaultStyle(), ...((selectedEmailDraft.config?.emailStyle ?? {}) as Record<string, never>) };
   const rowsHtml = resolveLiquidPreview(`<table role="presentation" width="100%" style="border-collapse:collapse">${rows.map(row => `<tr><td style="padding:${row.padding ?? 10}px;${row.bg ? `background:${row.bg};` : ""}"><table role="presentation" width="100%" style="border-collapse:collapse"><tr>${row.cells.map(cell => `<td width="${cell.width}%" style="vertical-align:top;padding:0 8px">${cell.blocks.map(block => block.style?.hideOn === device ? "" : `<div style="padding:${blockPadding(block)}px">${blockToHtml(block, previewLocale, savedStyle)}</div>`).join("")}</td>`).join("")}</tr></table></td></tr>`).join("")}</table>`, previewUser, previewLocale, workspace);
   const channelValuesPreview = (draft.config?.channelValues ?? {}) as Record<string, unknown>;
-  const messageSubject = current?.subject ?? draft.subject ?? "";
+  const messageSubject = current?.subject ?? selectedEmailDraft.subject ?? "";
   const messageBody = current?.body ?? draft.body ?? "";
   const channelPreviews: Array<[string, ReactNode]> = [
     ["push", <div key="push" style={{ border: "1px solid #d9d5df", borderRadius: 18, padding: 16, background: dark ? "#1d1d27" : "#f6f5f9" }}><b>{messageSubject || "Title"}</b><p style={{ margin: "6px 0 8px" }}>{messageBody || "Your message will appear here."}</p><small>{String(channelValuesPreview.summaryAndroid ?? "now")}</small></div>],
@@ -1227,11 +1234,11 @@ export function TestModal({ locale, draft, variantIndex = 0, close }: { locale: 
   const multichannelContent = (channelValuesPreview.channelContent ?? {}) as Record<string, string>;
 
   return <div className={styles.modalBackdrop} onMouseDown={close}>
-    <section className={styles.testModal} onMouseDown={event => event.stopPropagation()}>
+    <section role="dialog" aria-modal="true" aria-label="Preview and test" className={styles.testModal} onMouseDown={event => event.stopPropagation()}>
       <button className={styles.testModalClose} onClick={close} aria-label={translate(locale, "Close")}><X size={17} /></button>
       <div className={styles.testBody}>
         <h2>{translate(locale, "Preview and test")}</h2>
-        <p>{draft.channel === "webhook" ? "Send a real request through the protected webhook delivery service and inspect the endpoint response." : isWhatsapp ? "Simulate a WhatsApp test delivery in the local activity log. No Meta API or device is contacted." : isEmail ? "Preview with user data and inspect a compiled test message. Email delivery is not configured for this local workspace." : "Preview with sample user data, then write a test delivery event to the local activity log."}</p>
+        <p>{draft.channel === "webhook" ? "Send a real request through the protected webhook delivery service and inspect the endpoint response." : isWhatsapp ? "Simulate a WhatsApp test delivery in the local activity log. No Meta API or device is contacted." : isEmail ? delivery?.configured&&delivery.enabled?`Preview with user data or send a test through ${delivery.provider}.`:"Preview with user data and prepare a test message. Live email delivery is unavailable in this workspace." : "Preview with sample user data, then write a test delivery event to the local activity log."}</p>
         <div className={styles.testGrid}>
           <label className={styles.testField}>{translate(locale, "Preview as")}
             <select value={mode} onChange={event => setMode(event.target.value as typeof mode)}>
@@ -1247,11 +1254,9 @@ export function TestModal({ locale, draft, variantIndex = 0, close }: { locale: 
           {mode === "custom" && <label className={styles.testField}>Custom user attributes
             <textarea value={customUser} onChange={event => setCustomUser(event.target.value)} aria-label="Custom user attributes" />
           </label>}
-          {(variants.length > 1 || whatsappVariants.length > 1) && <label className={styles.testField}>Variant
+          {(campaignVariants({...draft,channel:draft.channel??"email"}).length > 1) && <label className={styles.testField}>Variant
             <select value={variantId || current?.id} onChange={event => setVariantId(event.target.value)}>
-              {isWhatsapp
-                ? whatsappVariants.map(variant => <option key={variant.id} value={variant.id}>{variant.name}</option>)
-                : variants.map(variant => <option key={variant.id} value={variant.id}>{variant.name}</option>)}
+              {campaignVariants({...draft,channel:draft.channel??"email"}).map(v=><option value={v.id} key={v.id}>{v.name}</option>)}
             </select>
           </label>}
           <label className={styles.testField}>Locale<input value={testLocale} onChange={event => setTestLocale(event.target.value)} /></label>
@@ -1264,9 +1269,9 @@ export function TestModal({ locale, draft, variantIndex = 0, close }: { locale: 
             <button className={dark ? styles.deviceActive : ""} onClick={() => setDark(!dark)}><Moon size={13} /> Dark mode</button>
           </div>
           {rows.length
-            ? <div className={className(styles.emailTestFrame, device === "mobile" && styles.mobile, dark && styles.darkMode)} style={frameStyle} dangerouslySetInnerHTML={{ __html: rowsHtml }} />
+            ? <iframe title="Email preview" sandbox="" className={className(styles.emailTestFrame, device === "mobile" && styles.mobile, dark && styles.darkMode)} style={frameStyle} srcDoc={rowsHtml} />
             : htmlBody
-              ? <div className={className(styles.emailTestFrame, device === "mobile" && styles.mobile, dark && styles.darkMode)} style={frameStyle} dangerouslySetInnerHTML={{ __html: resolveLiquidPreview(htmlBody, previewUser, "en", workspace) }} />
+              ? <iframe title="Email preview" sandbox="" className={className(styles.emailTestFrame, device === "mobile" && styles.mobile, dark && styles.darkMode)} style={frameStyle} srcDoc={resolveLiquidPreview(htmlBody, previewUser, "en", workspace)} />
               : <div className={className(styles.emailTestFrame, device === "mobile" && styles.mobile, dark && styles.darkMode)} style={frameStyle}>
                   <p className={styles.tFrom}>From: Powered by Braze &lt;braze@mta-h466.bftmail.com&gt;</p>
                   <p className={styles.tSubject}>{resolveLiquidPreview(subjectLine, previewUser, "en", workspace)}</p>
@@ -1275,18 +1280,18 @@ export function TestModal({ locale, draft, variantIndex = 0, close }: { locale: 
                 </div>}
         </>}
         {isWhatsapp && whatsappVariant && <div className={styles.emailTestFrame} style={frameStyle}>
-          <div>{renderWhatsAppVariant(whatsappVariant)}</div>
-          {whatsappVariant.mode === "template" && getWhatsAppTemplate(whatsappVariant.templateId).footer && <small>{getWhatsAppTemplate(whatsappVariant.templateId).footer}</small>}
+          <div>{resolveLiquidPreview(renderWhatsAppVariant(whatsappVariant, whatsappTemplates), previewUser, previewLocale, workspace)}</div>
+          {whatsappVariant.mode === "template" && getWhatsAppTemplate(whatsappVariant.templateId, whatsappTemplates).footer && <small>{resolveLiquidPreview(getWhatsAppTemplate(whatsappVariant.templateId, whatsappTemplates).footer, previewUser, previewLocale, workspace)}</small>}
         </div>}
-        {channelPreview && <div className={className(styles.emailTestFrame, dark && styles.darkMode)} style={frameStyle}>{channelPreview[1]}</div>}
+        {channelPreview && <div className={className(styles.emailTestFrame, dark && styles.darkMode)} style={frameStyle}><NativeMessagePreview draft={variantDraft({...draft,channel:draft.channel??"email"},Math.max(0,campaignVariants({...draft,channel:draft.channel??"email"}).findIndex(v=>v.id===variantId)))} profile={{...previewUser,colorScheme:dark?"dark":"light"}} language={testLocale}/></div>}
         {draft.channel === "multichannel" && <div className={className(styles.emailTestFrame, dark && styles.darkMode)} style={frameStyle}>
           <p className={styles.tSubject}>{subjectLine}</p>
           {(multichannelChannels.length ? multichannelChannels : ["Email", "Push notification"]).map(channel => <div key={channel} style={{ border: "1px solid #d9d5df", borderRadius: 8, padding: 10, marginBottom: 8 }}><small>{channel}</small><p style={{ margin: "4px 0 0", fontSize: 13 }}>{multichannelContent[channel] || messageBody || `Write the ${channel.toLowerCase()} message`}</p></div>)}
         </div>}
         <div style={{ marginTop: 16 }}>
-          <button className={styles.sendButton} disabled={state === "sending"} onClick={() => void send()}>{state === "sending" ? "Sending…" : isWhatsapp ? "Record simulated test" : isEmail ? "Prepare test" : "Send test"}</button>
+          <button className={styles.sendButton} disabled={state === "sending"} onClick={() => void send()}>{state === "sending" ? "Sending…" : isWhatsapp ? "Record simulated test" : isEmail ? delivery?.configured&&delivery.enabled?"Send test":"Prepare test" : "Send test"}</button>
         </div>
-        {state === "sent" && !webhook && <div className={styles.testSuccess}><Eye size={16} /><span>{isWhatsapp ? "Simulated WhatsApp test recorded" : isEmail ? "Test message prepared (email delivery is not configured)" : "Test delivery recorded"} for {recipient}.</span></div>}
+        {state === "sent" && !webhook && <div className={styles.testSuccess}><Eye size={16} /><span>{String((result?.capability as {status?:string;mode?:string})?.status??"prepared")==="delivered"?"Delivery confirmed":(result?.capability as {mode?:string})?.mode==="provider"?"Accepted by provider":"Test message prepared"} for {recipient}. {String((result?.capability as {reason?:string})?.reason??"")}</span></div>}
         {state === "sent" && isEmail && result?.message !== undefined && <details><summary>Compiled test message</summary><pre style={{ whiteSpace: "pre-wrap", fontSize: 12 }}>{JSON.stringify(result.message, null, 2)}</pre><button className={styles.sendButton} onClick={() => { const artifact = result.message as { mime?: string }; const blob = new Blob([artifact.mime ?? JSON.stringify(result.message, null, 2)], { type: artifact.mime ? "message/rfc822" : "application/json" }); const url = URL.createObjectURL(blob); const anchor = document.createElement("a"); anchor.href = url; anchor.download = artifact.mime ? "compiled-email-test.eml" : "compiled-email-test.json"; anchor.click(); URL.revokeObjectURL(url); }}>Download test message</button></details>}
         {state === "sent" && webhook && <div className={className(webhook.delivered ? styles.testSuccess : styles.testError, styles.webhookResult)}>
           <b>{attempt?.statusCode ? `${attempt.statusCode} ${attempt.outcome}` : attempt?.outcome ?? "failed"}</b>
@@ -1329,10 +1334,16 @@ function GeneralEmailEditor({ locale, mode, variantName, draft, save, onClose, o
   const [subject, setSubject] = useState(draft.subject ?? "");
   const [preheader, setPreheader] = useState(typeof sending.preheader === "string" ? sending.preheader : "");
   const [body, setBody] = useState(variantBody(draft));
+  const [plain,setPlain]=useState(String(draft.config?.emailPlainText??"")),[plainCustomized,setPlainCustomized]=useState(draft.config?.emailPlainTextCustomized===true),[amp,setAmp]=useState(String(draft.config?.emailAmp??"")),[attachments,setAttachments]=useState<EmailAttachment[]>((draft.config?.emailAttachments??[]) as EmailAttachment[]),[operatorError,setOperatorError]=useState(""),[operatorBusy,setOperatorBusy]=useState(false);
+
   const [personalizationOpen, setPersonalizationOpen] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(mode === "template");
   const [operatorPrompt, setOperatorPrompt] = useState("Create a warm welcome email with a first-purchase offer.");
   const codeRef = useRef<HTMLTextAreaElement | null>(null);
+  const [contentSection,setContentSection] = useState("Design and Build");
+  const [expandContent,setExpandContent] = useState(true);
+  const [inlineCss,setInlineCss] = useState(draft.config?.emailCssInlining !== false);
+  const [promotion,setPromotion] = useState(() => normalizeGmailPromotion(draft.config?.emailGmailPromotion));
   const labels: Record<EditorMode, string> = { operator: "Create with Operator", drag: "Drag-and-drop editor", html: "HTML code editor", plain: "Plain-text editor", template: "Templates" };
 
   const insertAtCursor = (token: string) => {
@@ -1344,8 +1355,8 @@ function GeneralEmailEditor({ locale, mode, variantName, draft, save, onClose, o
     requestAnimationFrame(() => { el.focus(); el.selectionStart = el.selectionEnd = start + token.length; });
   };
 
-  const persist = () => save({ subject, body, config: { ...draft.config, emailEditorMode: mode, emailSending: { ...sending, preheader } } });
-  const autoSaveState = useAutoSave(persist, [subject, preheader, body]);
+  const persist = () => save({ subject, body, config: { ...draft.config, emailEditorMode: mode, emailGmailPromotion:promotion,emailCssInlining:inlineCss, emailPlainText:plain,emailPlainTextCustomized:plainCustomized,emailAmp:amp,emailAttachments:attachments,emailSending: { ...sending, preheader } } });
+  const autoSaveState = useAutoSave(persist, [subject, preheader, body, plain,plainCustomized,amp,attachments,promotion,inlineCss]);
   const saveAndClose = async () => { if (await persist()) onClose(); };
   const saveAndSending = async () => { if (await persist()) onSendingSettings(); };
   const issues = mode === "html" ? liquidIssues(body) : [];
@@ -1364,16 +1375,23 @@ function GeneralEmailEditor({ locale, mode, variantName, draft, save, onClose, o
     setGalleryOpen(false);
   };
 
-  const generateOperator = () => {
-    const row = makeRow(1, [
-      { ...defaultBlock("Image"), src: "https://placehold.co/600x280/e9e4f4/5632a6?text=" + encodeURIComponent(operatorPrompt.slice(0, 28)) },
-      { ...defaultBlock("Title"), text: "Your first order offer" },
-      { ...defaultBlock("Paragraph"), text: "Welcome! Use code WELCOME10 for 10% off your first purchase. This offer is ready whenever you are." },
-      { ...defaultBlock("Button"), text: "Start shopping", href: "https://example.com/start" },
-    ]);
-    void save({ subject: "Your first order offer", body: rowsToPlainText([row]), config: { ...draft.config, emailEditorMode: "drag", emailEditorEngine: "grapesjs-mjml", emailRows: [row], emailStyle: normalizeStyle(draft.config?.emailStyle) } });
-    onModeChange("drag");
-  };
+  const generateOperator = async () => { setOperatorBusy(true);setOperatorError("");try{const response=await fetch("/api/messages/assist",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:operatorPrompt})}),result=await response.json();if(!response.ok)throw new Error(result.error);await save({subject:result.subject,body:result.html,config:{...draft.config,emailEditorMode:"html"}});onModeChange("html");}catch(e){setOperatorError(e instanceof Error?e.message:"Generation failed.");}finally{setOperatorBusy(false);} };
+
+
+  if (mode === "html") return <section className={sendingStyles.page} aria-label="HTML code editor">
+    <header className={sendingStyles.header}><b>{draft.name}</b><span>{saveStateLabel(autoSaveState)}</span></header>
+    <nav className={sendingStyles.iconRail} aria-label="Email editor sections"><button title="Sending settings" onClick={()=>void saveAndSending()}><Mail size={22}/></button><button className={sendingStyles.iconActive} title="Content" onClick={()=>setContentSection("Design and Build")}><FileCode2 size={22}/></button><button title="Preview & Test" onClick={()=>void persist().then(ok=>{if(ok)onOpenTest();})}><Eye size={22}/></button></nav>
+    <aside className={sendingStyles.sideRail}><div className={sendingStyles.railTitle}>CONTENT<button aria-label="Back to campaign" onClick={()=>void saveAndClose()}><ChevronLeft size={15}/></button></div>{["Design and Build","Link Management","Gmail Promotion","Personalization","Languages"].map(name=><button key={name} className={contentSection===name?sendingStyles.navActive:""} onClick={()=>setContentSection(name)}>{name}</button>)}<hr className={sourceStyles.navSeparator}/><small>Create with Operator</small><button onClick={()=>setContentSection("Personalization")}>Liquid</button><button onClick={()=>void persist().then(ok=>{if(ok)onModeChange("operator");})}>Copy</button></aside>
+    <main className={sendingStyles.formArea}>
+      {contentSection==="Design and Build"&&<EmailSourceTools html={body} onHtml={setBody} plain={plain} onPlain={setPlain} customized={plainCustomized} onCustomized={setPlainCustomized} amp={amp} onAmp={setAmp} inputRef={codeRef}/>}
+      {contentSection==="Gmail Promotion"&&<GmailPromotionFields value={promotion} onChange={setPromotion}/>}
+      {contentSection==="Personalization"&&<CatalogPersonalizationPanel data={catalogData} onInsert={token=>{insertAtCursor(token);setContentSection("Design and Build");}} onClose={()=>setContentSection("Design and Build")}/>}
+      {contentSection==="Languages"&&<><h2>Languages</h2><p>Manage localized subject lines and preheaders in Sending Settings. Content falls back to the default language.</p><button onClick={()=>void saveAndSending()}>Manage languages</button></>}
+      {contentSection==="Link Management"&&<><h2>Link Management</h2><p>Add a unique alias to each link to track clicks.</p>{[...body.matchAll(/<a\b[^>]*href=["']([^"']+)["'][^>]*>/gi)].map((match,index)=><div key={index} className={sourceStyles.card}><p>{match[1]}</p><label>Link alias<input className={sourceStyles.fullField} value={/data-link-alias=["']([^"']*)/.exec(match[0])?.[1]??""} onChange={e=>{const next=match[0].replace(/\sdata-link-alias=["'][^"']*["']/gi,"").replace(/>$/,` data-link-alias="${e.target.value.replaceAll('"','&quot;')}">`);setBody(body.slice(0,match.index)+next+body.slice((match.index??0)+match[0].length));}}/></label></div>)}{!/<a\b/i.test(body)&&<p>No links yet. Add an HTML link to manage it here.</p>}</>}
+    </main>
+    <aside className={sendingStyles.preview+" "+sourceStyles.sourcePreview}>{contentSection==="Gmail Promotion"?<GmailPromotionCode value={promotion}/>:<><div className={sourceStyles.previewControls}><h2>Preview</h2><label><input type="checkbox" checked={expandContent} onChange={e=>setExpandContent(e.target.checked)}/>Expand Content Blocks</label></div><p><b>From:</b> {String(sending.fromName??"")} {String(sending.fromAddress??"")}</p><iframe title="Email HTML preview" className={sourceStyles.previewFrame} sandbox="" srcDoc={resolveLiquidPreview(body,undefined,"en",expandContent?workspace:{...workspace,contentBlocks:Object.fromEntries(Object.keys(workspace.contentBlocks??{}).map(name=>[name,`<div style="padding:10px;border:1px dashed #ccc;color:#777">Content block: ${escapeHtml(name)}</div>`]))}) || "<p style='text-align:center;margin-top:160px;color:#777'>No content available for preview</p>"}/><small>Actual rendering may not be identical to this preview depending on the user&apos;s environment</small><label className={sendingStyles.checkbox}><input type="checkbox" checked={inlineCss} onChange={e=>setInlineCss(e.target.checked)}/>CSS inlining {inlineCss?"enabled":"disabled"}</label></>}</aside>
+    <footer className={sendingStyles.footer+" "+sourceStyles.sourceFooter}><span>{issues.length?issues.join(" · "):""}</span><button onClick={()=>downloadHtmlFile("email.html",applyGmailPromotion(body,promotion))}>Download file</button><button className={sendingStyles.done} onClick={()=>void saveAndClose()}>Done</button></footer>
+  </section>;
 
   return <section className={styles.genPage} aria-label={translate(locale, labels[mode])}>
     <header className={styles.genHeader}>
@@ -1386,7 +1404,6 @@ function GeneralEmailEditor({ locale, mode, variantName, draft, save, onClose, o
     <div className={styles.genBody}>
       <main className={styles.genMain}>
         <div className={styles.genCanvasLabel}>{translate(locale, "Email preview")} · {mode === "plain" ? "plain text" : "600 px"}</div>
-        {mode === "html" && <article className={styles.emailFrame} dangerouslySetInnerHTML={{ __html: resolveLiquidPreview(body || "<p style='color:#9a93a8'>Start typing HTML on the left to see it rendered here.</p>", undefined, "en", workspace) }} />}
         {mode === "plain" && <article className={styles.plainFrame}>{resolveLiquidPreview(body || "Write your plain-text email on the left.", undefined, "en", workspace)}</article>}
         {(mode === "template" || mode === "operator") && <article className={styles.emailFrame}>
           <p className={styles.tSubject}>{subject || "Message preview"}</p>
@@ -1397,24 +1414,22 @@ function GeneralEmailEditor({ locale, mode, variantName, draft, save, onClose, o
       </main>
       <aside className={styles.genSide}>
         <h2>{translate(locale, labels[mode])}</h2>
-        <p>{mode === "html" ? "Edit your email source. The central canvas renders the current message with Liquid resolved."
-          : mode === "plain" ? "Write the plain-text version. Users on clients without HTML rendering receive exactly this."
+        <p>{mode === "plain" ? "Write the plain-text version. Users on clients without HTML rendering receive exactly this."
           : mode === "template" ? "Choose a template, then make changes in the editor."
           : "Describe the email you want to create."}</p>
-        {(mode === "html" || mode === "plain") && <>
+        {mode === "plain" && <>
           <label className={styles.genField}>{translate(locale, "Subject line")}<input value={subject} onChange={event => setSubject(event.target.value)} /></label>
           <label className={styles.genField}>{translate(locale, "Preheader")}<input value={preheader} onChange={event => setPreheader(event.target.value)} /></label>
-          <label className={styles.genField}>{mode === "html" ? "HTML source" : "Plain text"}<textarea ref={codeRef} aria-label={mode === "html" ? "Email HTML source" : "Email plain-text source"} className={mode === "html" ? styles.codeArea : undefined} value={body} onChange={event => setBody(event.target.value)} /></label>
+          <label className={styles.genField}>Plain text<textarea ref={codeRef} aria-label="Email plain-text source" value={body} onChange={e=>setBody(e.target.value)}/></label>
+          <EmailAttachments value={attachments} onChange={setAttachments}/>
+          <InboxVision html={body} subject={subject}/>
           <button type="button" className={styles.personalizationToggle} onClick={() => setPersonalizationOpen(!personalizationOpen)}><Sparkles size={13} /> {translate(locale, "Personalization")}</button>
-          {personalizationOpen && <div className={styles.leftPanel} style={{ marginTop: 10 }}><PersonalizationMenu title={mode === "html" ? "Insert into HTML" : "Insert into plain text"} onInsert={insertAtCursor} /></div>}
-          {mode === "html" && (issues.length
-            ? <div className={styles.liquidIssues}><b>Liquid checks</b>{issues.map(issue => <div key={issue}>• {issue}</div>)}</div>
-            : <div className={styles.liquidOk}>Liquid checks passed.</div>)}
+          {personalizationOpen && <div className={styles.leftPanel} style={{ marginTop: 10 }}><PersonalizationMenu title="Insert into plain text" onInsert={insertAtCursor} /></div>}
           <div className={styles.modeNote}>Personalization, content blocks, and link tracking are available in this local editor.</div>
         </>}
         {mode === "operator" && <>
           <label className={styles.genField}>Prompt<textarea value={operatorPrompt} onChange={event => setOperatorPrompt(event.target.value)} /></label>
-          <button type="button" className={styles.sendButton} onClick={generateOperator}><Sparkles size={14} /> {translate(locale, "Generate email")}</button>
+          <button type="button" className={styles.sendButton} disabled={operatorBusy} onClick={()=>void generateOperator()}><Sparkles size={14} /> {operatorBusy?"Generating…":translate(locale, "Generate email")}</button>{operatorError&&<p role="alert">{operatorError}</p>}
         </>}
         {mode === "template" && <button type="button" className={styles.sendButton} onClick={() => setGalleryOpen(true)}><LayoutDashboard size={14} /> {translate(locale, "Choose a template")}</button>}
       </aside>

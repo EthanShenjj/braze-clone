@@ -4,3 +4,5 @@
 .phonePreview{height:410px;overflow-y:auto;box-shadow:none}
 .messageCanvas{min-height:520px;height:auto;padding:21px}
 .bubble{margin-left:0;padding:14px 16px;border-radius:18px 18px 18px 4px}
+
+.messageBubble{background:#e6e6e8;border-radius:18px 18px 18px 4px;padding:16px 20px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.5;margin:26px 4px;min-height:70px;color:#25232b}

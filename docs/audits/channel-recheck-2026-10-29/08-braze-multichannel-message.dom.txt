@@ -1,0 +1,211 @@
+- link "Skip to main content":
+  - /url: "#main-col"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Demo – bba":
+    - generic: Demo – bba
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6ad0b98fe4b4110085216601?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6ad0b98fe4b4110085216601?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6ad0b98fe4b4110085216601?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6ad0b98fe4b4110085216601?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 1 day left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- navigation:
+  - tablist "Open page tabs":
+    - tab "Campaigns":
+      - generic: Campaigns
+    - tab "Edit 'New Campaign - October 29, 2026' Close tab":
+      - generic: Edit 'New Campaign - October 29, 2026'
+      - button "Close tab":
+    - tab "Edit 'New Campaign - October 29, 2026' Close tab":
+      - generic: Edit 'New Campaign - October 29, 2026'
+      - button "Close tab":
+    - tab "Edit 'New Campaign - October 29, 2026' Close tab":
+      - generic: Edit 'New Campaign - October 29, 2026'
+      - button "Close tab":
+    - button "Show other tabs":
+      - generic: More
+      - img: 
+- img: 
+- generic: Limited access
+- navigation:
+  - generic "progress":
+    - generic: "Progress Tracker with 5 steps: Compose Messages, Schedule Delivery, Target Audiences, Assign Conversions, Review Summary"
+  - button "Step Compose Messages":
+    - generic: "1"
+    - generic: Compose Messages
+  - button "Step Schedule Delivery":
+    - generic: "2"
+    - generic: Schedule Delivery
+  - button "Step Target Audiences":
+    - generic: "3"
+    - generic: Target Audiences
+  - button "Step Assign Conversions":
+    - generic: "4"
+    - generic: Assign Conversions
+  - button "Step Review Summary":
+    - generic: "5"
+    - generic: Review Summary
+- heading "Campaign Details" [level=3]
+- generic: Campaign Name
+- textbox "Enter Campaign Name": New Campaign - October 29, 2026
+- button "Add description":
+  - img: 
+  - generic: Add description
+- button "Tags":
+  - img: 
+  - generic: Tags
+  - img: 
+- heading "Campaign brief" [level=4]
+- generic: Attach a brief so BrazeAI Operator can build your campaign and your Standards can review it against your goals
+- status
+- heading "Attach a campaign brief (optional)" [level=5]
+- generic: PDF, TXT, MD, CSV, DOCX up to 15MB
+- button "Upload file":
+  - generic: Upload file
+- text: Campaign ID
+- button "Help text available. Tab to view help text, click to open popover":
+- textbox "Campaign ID Help text available. Tab to view help text, click to open popover": 2010c646-ddfd-4b96-b9a2-e1620ce9fca8
+- button "Copy":
+  - img: 
+  - generic: Copy
+- heading "Messages" [level=3]: Messages
+- heading "Channels" [level=5]
+- tablist:
+  - tab "SMS/MMS/RCS" [selected]:
+    - button "SMS/MMS/RCS":
+      - img: 
+      - generic: SMS/MMS/RCS
+  - button "Add channel":
+    - img: 
+- text: Subscription Group
+- button "Help text available. Tab to view help text, click to open popover":
+- log
+- generic: SMS Canvas Subscription Group
+- combobox "Subscription Group"
+- heading "Preview" [level=5]
+- generic: Your message...
+- paragraph: Actual rendering may not be identical to this preview depending on the user's environment.
+- navigation:
+  - tablist:
+    - tab "Compose" [selected]:
+      - text: 
+      - generic: Compose
+    - tab "Contact Card Generator":
+      - generic: Contact Card Generator
+    - tab "Test":
+      - generic: Test
+- tabpanel:
+  - heading "Language" [level=4]
+  - button "Add languages":
+    - img: 
+    - generic: Add languages
+  - heading "Content" [level=4]
+  - heading "Message" [level=5]
+  - text: 0 | 0 Billable Segments
+  - button "BrazeAI Operator":
+  - code:
+    - textbox "Liquid text area"
+    - list
+  - generic: Your message...
+  - button "Add Liquid":
+  - checkbox "Link shortening" [checked]
+  - generic: Link shortening
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://www.braze.com/docs/en/user_guide/message_building_by_channel/sms/campaign/link_shortening
+    - text: Shorten the URL
+    - text: ⁠
+  - text: contained in your message and better understand message engagement.
+- button "Back" [disabled]:
+  - img: 
+- navigation:
+  - generic "progress":
+    - generic: "Progress Tracker with 5 steps: Compose, Schedule, Target, Assign, Review"
+  - button "Step Compose":
+    - generic: "1"
+    - generic: Compose
+  - button "Step Schedule":
+    - generic: "2"
+    - generic: Schedule
+  - button "Step Target":
+    - generic: "3"
+    - generic: Target
+  - button "Step Assign":
+    - generic: "4"
+    - generic: Assign
+  - button "Step Review":
+    - generic: "5"
+    - generic: Review
+- button "Forward":
+  - img: 
+- button "Save Draft":
+  - generic: Save Draft
+- text: 
+- contentinfo:
+  - generic: © Braze 2026
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://braze.statuspage.io
+    - text: Status
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://www.braze.com/terms
+    - text: Terms
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://www.braze.com/privacy
+    - text: Privacy Policy
+- iframe
+- alert
+- alert

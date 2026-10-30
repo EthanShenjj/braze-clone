@@ -1,0 +1,158 @@
+- button "Open Next.js Dev Tools":
+- alert: Braze Demo — Thinkingai
+- complementary:
+  - generic: b
+  - button "Demo – Thinkingai":
+    - generic: Demo – Thinkingai
+  - generic: Quick links
+  - button "Canvas":
+    - generic: Canvas
+  - button "Campaigns":
+    - generic: Campaigns
+  - button "Segments":
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+  - button "Performance Overview":
+    - generic: Performance Overview
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic: braze
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - button "Language"
+  - button "Notifications":
+  - button "S"
+  - button:
+  - button "Campaigns"
+  - button "Edit 'Welcome Offer IAM'":
+    - text: Edit 'Welcome Offer IAM'
+  - text: Limited access
+  - navigation "Campaign steps":
+    - button "✓ Compose Messages":
+      - generic: ✓
+      - generic: Compose Messages
+    - button "2 Schedule Delivery":
+      - generic: "2"
+      - generic: Schedule Delivery
+    - button "3 Target Audiences":
+      - generic: "3"
+      - generic: Target Audiences
+    - button "4 Assign Conversions":
+      - generic: "4"
+      - generic: Assign Conversions
+    - button "5 Review Summary":
+      - generic: "5"
+      - generic: Review Summary
+  - region "Action-Based delivery":
+    - heading "Action-Based delivery" [level=2]:
+      - text: Action-Based delivery
+    - generic: Start Session
+    - radio "Start session in any app" [checked]
+    - text: Start session in any app
+    - radio "Start session in a specific app"
+    - text: Start session in a specific app
+    - button "Close Start Session":
+    - paragraph: Evaluate if user takes specified actions
+    - combobox "Select Trigger":
+      - generic: Select Trigger
+    - button "Add Trigger" [disabled]:
+      - text: Add Trigger
+    - heading "Schedule Delay" [level=3]
+    - paragraph: Choose when to send the campaign after the trigger event occurs.
+    - generic: Send
+    - combobox "Send":
+      - generic: Immediately
+    - heading "Campaign duration" [level=3]
+    - generic: Start Time (Required)
+    - textbox "Select Date": 2026-09-17
+    - textbox "Start time": 10:00
+    - combobox "Time zone":
+      - generic: Company time - Eastern Time (US & Canada)
+    - checkbox "End Time (Optional)"
+    - text: End Time (Optional)
+    - list:
+      - listitem: "Schedule delay: immediately after trigger criteria are met"
+      - listitem: "Campaign start: September 17, 2026 at 10:00 AM"
+  - heading "Delivery Controls" [level=2]
+  - paragraph: Manage the number of messages your users will receive.
+  - checkbox "Allow users to become re-eligible to receive campaign"
+  - text: Allow users to become re-eligible to receive campaign
+  - heading "Select message priority" [level=3]
+  - paragraph: Set the priority of this campaign relative to other in-app message campaigns and Canvases.
+  - generic: Message priority
+  - combobox "Message priority":
+    - generic: Medium priority
+  - button "View exact priority"
+  - dialog "Set priority for in-app messages" [active]:
+    - heading "Set priority for in-app messages" [level=2]
+    - button "Close"
+    - paragraph: Priorities apply across Campaigns and Canvas messages. Drag messages to change their order within a priority.
+    - textbox "Search message priorities":
+      - /placeholder: Search
+    - combobox "Priority type":
+      - option "All" [selected]
+      - option "Campaign"
+      - option "Canvas"
+    - combobox "Priority status":
+      - option "All" [selected]
+      - option "Draft"
+      - option "Active"
+      - option "Stopped"
+      - option "Archived"
+    - heading "High priority" [level=3]
+    - heading "Medium priority" [level=3]
+    - generic: ⠿ Audit 2026-10-29 iam · Campaign · Draft
+    - combobox "Priority for Audit 2026-10-29 iam":
+      - option "High"
+      - option "Medium" [selected]
+      - option "Low"
+    - spinbutton "Order for Audit 2026-10-29 iam": "0"
+    - generic: ⠿ Welcome Offer IAM · Campaign · Active
+    - combobox "Priority for Welcome Offer IAM":
+      - option "High"
+      - option "Medium" [selected]
+      - option "Low"
+    - spinbutton "Order for Welcome Offer IAM": "0"
+    - heading "Low priority" [level=3]
+    - button "Cancel"
+    - button "Save changes"
+  - button "Back":
+  - button "✓ Compose":
+    - generic: ✓
+    - text: Compose
+  - button "2 Schedule":
+    - generic: "2"
+    - text: Schedule
+  - button "3 Target":
+    - generic: "3"
+    - text: Target
+  - button "4 Assign":
+    - generic: "4"
+    - text: Assign
+  - button "5 Review":
+    - generic: "5"
+    - text: Review
+  - button "Forward":
+  - button "Save Draft"

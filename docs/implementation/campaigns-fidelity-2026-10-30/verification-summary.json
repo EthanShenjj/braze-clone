@@ -1,0 +1,471 @@
+{
+  "models": {
+    "passed": 267,
+    "failed": 0
+  },
+  "http": {
+    "passed": 14,
+    "failed": 0
+  },
+  "typescript": "passed",
+  "productionBuild": "passed",
+  "screenshots": 56,
+  "axSnapshots": 56,
+  "verificationDatabase": "isolated copy; no source workspace mutated",
+  "sourceAuditFindings": 79,
+  "statusCounts": {
+    "Partial": 12,
+    "Verified": 52,
+    "Implemented": 15
+  },
+  "files": [
+    {
+      "path": "01-list.png",
+      "sha256": "79790c9917e5ac5bdb82773e3c4e9f4c01f6d72eb73b912e9a897534841f98f1"
+    },
+    {
+      "path": "02-filters.png",
+      "sha256": "99d61d0d6af686573dfe43c6df54117243b0b4cbec56f6495aed60a8149d2b0e"
+    },
+    {
+      "path": "03-columns.png",
+      "sha256": "2a3cb40d2bc7deed5021f007cac4431440aae7e53071a4c7031bbd0711ff84e4"
+    },
+    {
+      "path": "04-create-bottom.png",
+      "sha256": "14996ba8b9ee884194cdb1ae695a68113d6666bab83dfc81a4956304bd6cfb2d"
+    },
+    {
+      "path": "04-create.png",
+      "sha256": "b284f5ca05f57dd835368d1e2d848a97be2fdb44f3a405155d1c9a61ba03cbc5"
+    },
+    {
+      "path": "05-api-campaign.png",
+      "sha256": "5ef518a641f1c77cd8c189458e5a4a5e2679d07805c6fdd08fed89d97384b18d"
+    },
+    {
+      "path": "06-api-variations.png",
+      "sha256": "d70a01557b595d3a9a83b51d9bd7a8ce2a1a38e9b5eba340a05eefde951d666a"
+    },
+    {
+      "path": "07-email-sending-settings.png",
+      "sha256": "4e7e3abc0241568ea2d9a36a13cc0c9f0e74c0e06e163e24bf1c77d9707a008d"
+    },
+    {
+      "path": "08-email-advanced.png",
+      "sha256": "93d813ebde1165e89a38e90f3cf6bf08bf1f27e70f742b9493b2960f9afd76fb"
+    },
+    {
+      "path": "09-email-languages.png",
+      "sha256": "1a860e1b1d725491bebe83266bf49e9186a8a16a487326eb2579d87eed99bd2e"
+    },
+    {
+      "path": "10-email-drag-editor.png",
+      "sha256": "e0624c3b731dfb6490879108b5f92a6bf386c6f483b77eac0f221efab9a1313f"
+    },
+    {
+      "path": "11-email-html-editor.png",
+      "sha256": "e03787c40fa6d9bd1fe2261abdca31b8265982d9752c2600db921b7d0b667a39"
+    },
+    {
+      "path": "12-email-gmail-promotion.png",
+      "sha256": "8a0f089ba0f3859f2edd8eb4e20e85b983f693a12ed6e58c961e98abea47c0fe"
+    },
+    {
+      "path": "13-schedule.png",
+      "sha256": "fc26ab111963fadffb8e6783f7ae2fce90201385052acc2a9b1c11cbfd9dfcd4"
+    },
+    {
+      "path": "14-schedule-action-based.png",
+      "sha256": "ab11f3c949dc70de2f9df498d5b7f881b5fd7758f659490384f27665032442b3"
+    },
+    {
+      "path": "15-schedule-api-triggered.png",
+      "sha256": "6fe3e194591f5f90d8af145ab95804eb8bda74800fa14b821238cd56ef82fc48"
+    },
+    {
+      "path": "16-audience.png",
+      "sha256": "01dcfc55b4955a66802704856ebd2a42b5379199057a4a7002577785345dab29"
+    },
+    {
+      "path": "17-audience-filter-catalog.png",
+      "sha256": "64c3a61a9b1ef6107d973b8518bce6869ca1969f0c50782e595431dc8860a1b9"
+    },
+    {
+      "path": "18-audience-user-lookup-result.png",
+      "sha256": "4373e3eb4766fa1420f1ea95e3a424609465d05e3c440d0af5918bcb045f95e5"
+    },
+    {
+      "path": "18-audience-user-lookup.png",
+      "sha256": "a624e0bf054e2ad4655f79bb98a5c1d1bcbcd165e993365084e5efa52c242e02"
+    },
+    {
+      "path": "19-conversions.png",
+      "sha256": "5d4b8e8f1a338ac5c7c933a80cbeef777eb1b3c30f057007235616020cb296ae"
+    },
+    {
+      "path": "20-review.png",
+      "sha256": "796f3e71cd55a32dce186ad6fb54a3860b7219af3d980ff601354d0a2df81ae9"
+    },
+    {
+      "path": "21-push-compose.png",
+      "sha256": "ef394fd1cf4b44552b6355c184924cb66cc2e75c0808cac581e7c93db7bd7a4a"
+    },
+    {
+      "path": "22-push-settings.png",
+      "sha256": "62c495ad13670ce18babe27c25daac7a83fadd8f24cc41b6b7a7f61906fb9084"
+    },
+    {
+      "path": "23-variant-actions.png",
+      "sha256": "9dbd510af0fdce7fe1e54bdfba8706da1da33abcdeb9b8bf57131f9773d7a758"
+    },
+    {
+      "path": "24-multichannel-compose.png",
+      "sha256": "bcd5e26de94b0278e180d7a1b2c285ce3d933ae61832050a20fe56ddd702fa91"
+    },
+    {
+      "path": "25-multichannel-current-preview.png",
+      "sha256": "e2978a7e841979fb66bbf0977cbff4ae279d0f577785e22eb50e29b390ce2db1"
+    },
+    {
+      "path": "26-content-card.png",
+      "sha256": "f6b489e3142102add9617530b937020a5d3e775f8f1ea464713bcd87af64ee21"
+    },
+    {
+      "path": "27-content-platform-actions.png",
+      "sha256": "f0d5931257dd04184989d259816b52c70127ef6bc2be2f2c0b22c5f94b17b02e"
+    },
+    {
+      "path": "28-content-settings.png",
+      "sha256": "c8629217f9019e48c7e08b46dd87c19f948a17223de11a6ec3d5e32cc27db873"
+    },
+    {
+      "path": "29-banner.png",
+      "sha256": "c6940e060a6a6ab5b530f224f9558f050eba7ea71c92dc8a03038b301f114763"
+    },
+    {
+      "path": "30-banner-fullscreen.png",
+      "sha256": "1fd26a5173c86a3689d96eabcdb301c1be4209b398138c71505f64661c683caf"
+    },
+    {
+      "path": "31-iam-compose.png",
+      "sha256": "a306d3dfd504f9f9b5f97008ccec473df88c5166f71da022e2d0b862e3812a2c"
+    },
+    {
+      "path": "32-iam-traditional.png",
+      "sha256": "ab95fa78af4e3ec338ded9abe6bb2c34c034b7ce0f0977ed3f8455bc25de9759"
+    },
+    {
+      "path": "33-iam-traditional-design.png",
+      "sha256": "b7319763a3a29ed9c24032e4a22955997684069ff15f7191ec774b5734caccfb"
+    },
+    {
+      "path": "34-iam-traditional-settings.png",
+      "sha256": "ecfa841fb0771e5c526df14531098a901d10dfdc0aaacc38cc91b793ce16178f"
+    },
+    {
+      "path": "35-sms.png",
+      "sha256": "c2fad426f9bd5277cdd55c9d47320c8ddf1fc205fc1fc3a8cfca47867770a0c2"
+    },
+    {
+      "path": "36-webhook.png",
+      "sha256": "ea04313f5b45fee996b3b913336b04032e064af1473536b8986eea889d123369"
+    },
+    {
+      "path": "37-webhook-request.png",
+      "sha256": "a599c1f260a8b054ca9e528367e4e80ee8663ceee0fe72821c93681579188471"
+    },
+    {
+      "path": "38-whatsapp.png",
+      "sha256": "40f269ee89fa36c79e06b007ef8a382e0d3719357f9f726e19634aa918c5e684"
+    },
+    {
+      "path": "39-whatsapp-message-types.png",
+      "sha256": "fadfa760031b59679a7d481fc1a9158e6f7c9d03c7890910ff0136b84a461a18"
+    },
+    {
+      "path": "40-line-entry.png",
+      "sha256": "58d55ddd7970fe6da8a254719524de1a9bb666154533d8068eeab3a2c6d8323d"
+    },
+    {
+      "path": "41-feature-experiment-basics.png",
+      "sha256": "6c322596fbdbbcf1de81cf7f4f9c8b0c565ec1e0c0ad4c5da6c8b213b3f0ed22"
+    },
+    {
+      "path": "42-operator.png",
+      "sha256": "8e474a9c9491b10df80a5639fdb9a0cb0adf6b14d23623ca63464f100a4bd275"
+    },
+    {
+      "path": "43-operator-expanded.png",
+      "sha256": "7e1763f009d53544867783a10f26351e65eb737833dfa89037720f45d5d60932"
+    },
+    {
+      "path": "44-line-fullscreen.png",
+      "sha256": "c9e9a23b10518e3793fe65609bc021b2071db1abebf5b7d7c290eb37cf013338"
+    },
+    {
+      "path": "45-active-analytics.png",
+      "sha256": "2439d71975cf1f35f113fcad33d9bf14b87f90b92e0ffef319e90aa541827403"
+    },
+    {
+      "path": "46-change-history.png",
+      "sha256": "338ebbf54a104635161e2ed5bb7221424f7c8700b1223f2757e18dc283576764"
+    },
+    {
+      "path": "47-campaign-monitoring.png",
+      "sha256": "574932804f1e7276e944cc5841805be1d6b91673c2ca26eaa4396701febdd666"
+    },
+    {
+      "path": "48-historical-metrics.png",
+      "sha256": "0fdd0c35595772b6d0fe380e10617c80398252b55291068087d275c3f560f3da"
+    },
+    {
+      "path": "49-historical-chart.png",
+      "sha256": "f9ba0e46169c7fc187ce9f168d90ac62fd0e22b5574356ce053cadf8988c2972"
+    },
+    {
+      "path": "50-messaging-channels.png",
+      "sha256": "e9fbe4ed57a8ed0e7520a36d5908aeb8558e7924c9750f5acca303272b3d301a"
+    },
+    {
+      "path": "51-copy-workspace-destination.png",
+      "sha256": "8aa6287414082bc092793f1b4af57b08b749b3b362d1f6ef8c3560266291c412"
+    },
+    {
+      "path": "51-copy-workspace.png",
+      "sha256": "0cb9d6526ee02950ff5b752f0e7c49f7727af0a0a4e48a69bc2fe080c60c4ba6"
+    },
+    {
+      "path": "52-priority-sorter.png",
+      "sha256": "b5397c052421c78c17ea27db4c46f39dbfbcaa5bd50a6ed854f2acf50c370a8c"
+    },
+    {
+      "path": "53-multichannel-first.png",
+      "sha256": "da4088c6647a5e7deabdff7a786ca3fb15a4a7111ed173348c2e1c73add6f894"
+    },
+    {
+      "path": "01-list.ax.txt",
+      "sha256": "0d1e588f0ee72ca67f8c783f0ffac7c00ff66095741cea6393e1f2dc5f5fd46d"
+    },
+    {
+      "path": "02-filters.ax.txt",
+      "sha256": "a812e54a225df5ded97dca96f53c558e79696ef10b4e7386ce297fc55f80760b"
+    },
+    {
+      "path": "03-columns.ax.txt",
+      "sha256": "3b5b2d521a298093e49b7280006347e277bc98c627499f911838475033769296"
+    },
+    {
+      "path": "04-create-bottom.ax.txt",
+      "sha256": "2c48ebffa982040839aaa32f6f66c20bbc2e56f7633be9ad7b3a28540862be0b"
+    },
+    {
+      "path": "04-create.ax.txt",
+      "sha256": "2c48ebffa982040839aaa32f6f66c20bbc2e56f7633be9ad7b3a28540862be0b"
+    },
+    {
+      "path": "05-api-campaign.ax.txt",
+      "sha256": "262b9a56fa9f791eef878655b317d3fe3adbfdc69c0b470037328952af8bbf33"
+    },
+    {
+      "path": "06-api-variations.ax.txt",
+      "sha256": "38c640906c1bf2fb7ce33739dce0f822a19b609b6de652813405e5c1ea2d6b2e"
+    },
+    {
+      "path": "07-email-sending-settings.ax.txt",
+      "sha256": "ea5c29dbe33958a0b6d16c09dccdec8a7283a91f72c3bea2ef44356abb2e5d9b"
+    },
+    {
+      "path": "08-email-advanced.ax.txt",
+      "sha256": "708852c1f5c5f5a9fb52765a09624cd68e16c239725b20a8c4c80b9b9a0f987a"
+    },
+    {
+      "path": "09-email-languages.ax.txt",
+      "sha256": "8caea8c22c57945ea5e212248c4cd96147057a7af2e9afc44cf9f9da12f9fff9"
+    },
+    {
+      "path": "10-email-drag-editor.ax.txt",
+      "sha256": "dd91014cd5ffa479e3b3c6403814476096a5c61aed5e76fae59a44d41e8624ba"
+    },
+    {
+      "path": "11-email-html-editor.ax.txt",
+      "sha256": "bac3632243f6f7e1dfbd9894b44480e625bf0c4252376633c95858bb4fa2c180"
+    },
+    {
+      "path": "12-email-gmail-promotion.ax.txt",
+      "sha256": "c7c0d5c6cc6cf24d5096cac613191acd99bda0731438f37e420822681e35b36f"
+    },
+    {
+      "path": "13-schedule.ax.txt",
+      "sha256": "5626d4951a295854d36a0a66884c314b46374fd652ef7aea1d849d37eeb48ebe"
+    },
+    {
+      "path": "14-schedule-action-based.ax.txt",
+      "sha256": "72c80f7474af7a51c7594c5de0879f18df27ba30ec52e6c69d1978bf042ca857"
+    },
+    {
+      "path": "15-schedule-api-triggered.ax.txt",
+      "sha256": "a01bc6c2a8c77f24315aeec221aed37c8aef37d7d690463e5b3c98d1f6576717"
+    },
+    {
+      "path": "16-audience.ax.txt",
+      "sha256": "e1865cce16d201982164a7ab55a17e354f9417ceef341df1bfa036d09122c0ff"
+    },
+    {
+      "path": "17-audience-filter-catalog.ax.txt",
+      "sha256": "5d89946327e8c8685776814d0b29a88193f704334773cf304ffb352bc8a7b762"
+    },
+    {
+      "path": "18-audience-user-lookup-result.ax.txt",
+      "sha256": "202291615fa56778b58ca7ca85c261df4eee4797e42d940e6e4d3a87b71e369d"
+    },
+    {
+      "path": "18-audience-user-lookup.ax.txt",
+      "sha256": "f38f0a78b2f67166bca9648544b375295de9b6214f6ce7b1918a5eb72ee0a022"
+    },
+    {
+      "path": "19-conversions.ax.txt",
+      "sha256": "b861d747fa46a5d4e413a4043f468da406927698c1f7a5c9ff0ed1143ddff1cc"
+    },
+    {
+      "path": "20-review.ax.txt",
+      "sha256": "cb6f657cb1a433fa1cbbbeb4643fa4d98210608b2bc564a9b3648f2c84b7c6eb"
+    },
+    {
+      "path": "21-push-compose.ax.txt",
+      "sha256": "4c958ce4ea624ca580018f41f4c3222ca0a9ab098484a03d48f92a0c1721b155"
+    },
+    {
+      "path": "22-push-settings.ax.txt",
+      "sha256": "72534fe5632e4192b2f190dc41c58a61d65037c579e14a982f9ecf09cdeb4d8b"
+    },
+    {
+      "path": "23-variant-actions.ax.txt",
+      "sha256": "69edb19a09b9018b4c802026b307c6a42cf6ba72e82eb20f5b7a3e81790fe091"
+    },
+    {
+      "path": "24-multichannel-compose.ax.txt",
+      "sha256": "8395916cc93ae1aacf6f9ae5a5e93bb36c732710f66c57a739eb9c1e2e8f1948"
+    },
+    {
+      "path": "25-multichannel-current-preview.ax.txt",
+      "sha256": "ee7f8b6ea6011321e8a6e747c9c9aedc6b411e78be403f20f9e15b1dd44d650a"
+    },
+    {
+      "path": "26-content-card.ax.txt",
+      "sha256": "56dc616a6241d62f295b1567e1ef9c700d315f743a9ee6d3d889bede0b9f12a2"
+    },
+    {
+      "path": "27-content-platform-actions.ax.txt",
+      "sha256": "4c033c37ba22a178ed2c82c681f724efc62b0a48ce57f1095ba8fedd542a87de"
+    },
+    {
+      "path": "28-content-settings.ax.txt",
+      "sha256": "a20d27de1b3342ffc0549363d190f6d0d08272cbbf3a37846a47e2a81e97d6ff"
+    },
+    {
+      "path": "29-banner.ax.txt",
+      "sha256": "8f79cd11f59d2d4cce7fd435fd2cf6f86f01c8fffa77a9cfaae9d61189699fb1"
+    },
+    {
+      "path": "30-banner-fullscreen.ax.txt",
+      "sha256": "9db4771749fed314327919f3ea92d0b3625b15f3979649cb4212c117ab4818e4"
+    },
+    {
+      "path": "31-iam-compose.ax.txt",
+      "sha256": "759ad154dfb118db17b77554270f5dcdf88d1a26382a8a56a0f08677abe1be48"
+    },
+    {
+      "path": "32-iam-traditional.ax.txt",
+      "sha256": "d17b01fbc2848738440b9ac48e0d0e7d26d7114527195a9a7a34ae15750d73e3"
+    },
+    {
+      "path": "33-iam-traditional-design.ax.txt",
+      "sha256": "8901857b1ca880df1e4290300bdfd61fbc847ce5ba558a5a1f5c05ed03f1129a"
+    },
+    {
+      "path": "34-iam-traditional-settings.ax.txt",
+      "sha256": "69e4ef32a748ee9cc86350d014523e41db8cdb9053bba8a26e3c5a6cfd9c61e1"
+    },
+    {
+      "path": "35-sms.ax.txt",
+      "sha256": "2904c896b92c032f2c000669f2e90dbb0dfb5a5f44e60aa8cf460010e7c352be"
+    },
+    {
+      "path": "36-webhook.ax.txt",
+      "sha256": "7389c7c6b6585d21e5f21420f21a93012062b886316f3900723646c83ee0102d"
+    },
+    {
+      "path": "37-webhook-request.ax.txt",
+      "sha256": "23b8f90c5fc3852f66ce8e7551fe92af1aaff8b5e24d1d437bc9df90a9316e33"
+    },
+    {
+      "path": "38-whatsapp.ax.txt",
+      "sha256": "0a704aab62e17e9e71c41a12499f54f7b74d9e37183ceaa4c9cf343bddde4fdf"
+    },
+    {
+      "path": "39-whatsapp-message-types.ax.txt",
+      "sha256": "15c1d7d57de8171e2c4d21d7178e04a4844544102c27b077a9c097bb8d7d7e4c"
+    },
+    {
+      "path": "40-line-entry.ax.txt",
+      "sha256": "8da3ebb98a3ba3b9287341e700ded53e14a874273cbe560a6a447ec34bd15265"
+    },
+    {
+      "path": "41-feature-experiment-basics.ax.txt",
+      "sha256": "f75cfa9cf1ce462f57aa895fe66728e7e31e510e28c4117a66af1168b5595dd1"
+    },
+    {
+      "path": "42-operator.ax.txt",
+      "sha256": "846557193cf01b9059bdc4c3496d5ed5771b78c5280c4052be58bfb5bb6bbd6b"
+    },
+    {
+      "path": "43-operator-expanded.ax.txt",
+      "sha256": "9acb6321db585f36504074e418d647af246b68209d5b936818db51df8f4b7aed"
+    },
+    {
+      "path": "44-line-fullscreen.ax.txt",
+      "sha256": "f63643f20fe57d7198cb5b58f97f09bfdba3856b46b32a3d93b56035ef45e66e"
+    },
+    {
+      "path": "45-active-analytics.ax.txt",
+      "sha256": "14ad3ff1e4ab5995aa061d4b5653352f97a4fec38f61d4b6502aa47499333eb8"
+    },
+    {
+      "path": "46-change-history.ax.txt",
+      "sha256": "ca62574304ca65886376e63a5266c472100ed71dcb8c81d0fbf6fccf1e092cfc"
+    },
+    {
+      "path": "47-campaign-monitoring.ax.txt",
+      "sha256": "9bf3443baea5bc6b8bbaf314c13102eb9a5a39ed96b6ea365443a2e0484256fd"
+    },
+    {
+      "path": "48-historical-metrics.ax.txt",
+      "sha256": "2928c57c029e8d69dfb3d8c681b06c494c83305891f9fcfb253a11aa6e700d17"
+    },
+    {
+      "path": "49-historical-chart.ax.txt",
+      "sha256": "d5eef3709dc52af32b859724d3ea64ac659a86992697da62879fafa9d9fb63e2"
+    },
+    {
+      "path": "50-messaging-channels.ax.txt",
+      "sha256": "839672ad4c7efcfc7d132aeb74913cea34fe4b6c4c66003ab60f6961ee2efa76"
+    },
+    {
+      "path": "51-copy-workspace-destination.ax.txt",
+      "sha256": "063690cfddf8b2c42d44de45a68b0a4e3d375b8ea02279e9cdb73e644c9ba1f2"
+    },
+    {
+      "path": "51-copy-workspace.ax.txt",
+      "sha256": "664ab3e9d8eaec67b293ef0b807274432e33fb5c6e13df57b3c8a367ee74b4e6"
+    },
+    {
+      "path": "52-priority-sorter.ax.txt",
+      "sha256": "7fb470b0232d8654b78a737c555cdffd5c0316cf2c9e0958b5f65e7b3db07f24"
+    },
+    {
+      "path": "53-multichannel-first.ax.txt",
+      "sha256": "91e245b3be8107c8b831b78096416b5e1418144f98616daa889f17c732c19132"
+    }
+  ]
+}

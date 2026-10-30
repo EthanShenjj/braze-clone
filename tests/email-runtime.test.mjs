@@ -35,3 +35,24 @@ test('bot classifications include explicit flags and security scanners',()=>{
 test('rendered header line breaks are rejected before producing a MIME message',()=>{
  throws(()=>compileWorkspaceEmail({subject:'Hello {{${first_name}}}'},defaultEmailPreferences(),{...context,profile:{first_name:'Ada\r\nBcc: attacker@example.test'}}),/line breaks/);
 });
+
+test('localized subject and preheader use exact/region/base locale fallbacks before Liquid rendering',()=>{
+ const message={subject:'Default {{${first_name}}}',body:'<html><body>Body</body></html>',config:{emailSending:{preheader:'Default preview',subjectTranslations:{'zh-CN':'你好 {{${first_name}}}',ko:'안녕 {{${first_name}}}'},preheaderTranslations:{'zh-CN':'预览 {{${first_name}}}',ko:''}}}};
+ const chinese=compileWorkspaceEmail(message,defaultEmailPreferences(),{...context,profile:{first_name:'Ada',language:'zh_CN'}});equal(chinese.subject,'你好 Ada');ok(chinese.html.includes('预览 Ada'));
+ equal(compileWorkspaceEmail(message,defaultEmailPreferences(),{...context,profile:{first_name:'Ada',language:'zh'}}).subject,'你好 Ada');
+ const korean=compileWorkspaceEmail(message,defaultEmailPreferences(),{...context,profile:{first_name:'Ada',language:'ko-KR'}});equal(korean.subject,'안녕 Ada');ok(korean.html.includes('Default preview'));
+ equal(compileWorkspaceEmail(message,defaultEmailPreferences(),{...context,profile:{first_name:'Ada',language:'fr'}}).subject,'Default Ada');
+});
+test('GA parameters resolve Liquid, preserve query/fragments, and reach tracking destinations before rewriting',()=>{
+ const seen=[];const result=compileWorkspaceEmail({body:'<a data-link-alias="buy" href="https://example.test/p?item=1&amp;utm_source=old#offer">Buy</a><a href="mailto:help@example.test">Help</a><img src="https://example.test/image.png">',config:{emailSending:{gaEnabled:true,utmSource:'newsletter',utmMedium:'email',utmCampaign:'offer {{${first_name}}}'}}},defaultEmailPreferences(),{...context,trackLink:(url,alias)=>{seen.push({url,alias});return 'https://tracking.test/click?token=x&channel=email';}});
+ const destination=new URL(seen[0].url);equal(destination.searchParams.get('item'),'1');equal(destination.searchParams.get('utm_source'),'newsletter');equal(destination.searchParams.getAll('utm_source').length,1);equal(destination.searchParams.get('utm_campaign'),'offer Ada');equal(destination.hash,'#offer');equal(seen[0].alias,'buy');ok(result.html.includes('https://tracking.test/click'));ok(result.html.includes('mailto:help@example.test'));ok(!result.html.includes('image.png?utm'));equal(result.aliases[0].url,seen[0].url);
+});
+test('GA can work independently of click tracking and disabling GA leaves links untouched',()=>{
+ const body='<a data-link-alias="buy" href="https://example.test/p">Buy</a>';
+ const enabled=compileWorkspaceEmail({body,config:{emailSending:{gaEnabled:true,utmSource:'news',clickTracking:false}}},defaultEmailPreferences(),{...context,trackLink:()=>{throw Error('tracking disabled');}});ok(enabled.html.includes('utm_source=news'));
+ const disabled=compileWorkspaceEmail({body,config:{emailSending:{gaEnabled:false,utmSource:'news',clickTracking:false}}},defaultEmailPreferences(),context);ok(!disabled.html.includes('utm_source'));
+});
+test('workspace fallback metadata follows the explicitly selected listed identity',()=>{
+ const preferences=defaultEmailPreferences();preferences.sending.senders.push({id:'second',displayName:'Support',localPart:'help',domain:'example.test',ipPool:'Support_Pool'});
+ const compiled=compileWorkspaceEmail({config:{emailSending:{fromAddress:'help@example.test'}}},preferences,context);equal(compiled.fromName,'Support');equal(compiled.ipPool,'Support_Pool');
+});

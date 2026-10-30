@@ -1,0 +1,17 @@
+▲ Next.js 16.3.5 (webpack)
+✓ Running next.config.ts took 66ms
+
+  Creating an optimized production build ...
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOSPC: no space left on device, write
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOSPC: no space left on device, write
+✓ Compiled successfully in 24.3s
+  Running TypeScript ...
+app/ui/email-grapes-drag.ts(21,52): error TS18047: 'doc' is possibly 'null'.
+app/ui/email-grapes-drag.ts(44,40): error TS2345: Argument of type 'ContentType | (() => ContentType) | undefined' is not assignable to parameter of type 'ComponentAdd'.
+  Type 'undefined' is not assignable to type 'ComponentAdd'.
+app/ui/email-grapes-editor.tsx(367,34): error TS2345: Argument of type '(_data: DataTransfer | null | undefined, component: Component) => void' is not assignable to parameter of type '(args_0: DataTransfer | null | undefined, args_1: Component | Component[]) => void'.
+  Types of parameters 'component' and 'args_1' are incompatible.
+    Type 'Component | Component[]' is not assignable to type 'Component'.
+      Type 'Component[]' is missing the following properties from type 'Component': defaults, tagName, classes, traits, and 182 more.
+Failed to type check.
+

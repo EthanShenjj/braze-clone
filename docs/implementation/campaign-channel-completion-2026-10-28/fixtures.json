@@ -1,0 +1,42 @@
+{
+  "email": {
+    "id": "cmp_complete_93ccb761_email_1",
+    "url": "http://127.0.0.1:3228/engagement/campaigns/cmp_complete_93ccb761_email_1?locale=en&step=compose"
+  },
+  "iam": {
+    "id": "cmp_complete_93ccb761_iam_1",
+    "url": "http://127.0.0.1:3228/engagement/campaigns/cmp_complete_93ccb761_iam_1?locale=en&step=compose"
+  },
+  "push": {
+    "id": "cmp_complete_93ccb761_push_1",
+    "url": "http://127.0.0.1:3228/engagement/campaigns/cmp_complete_93ccb761_push_1?locale=en&step=compose"
+  },
+  "banner": {
+    "id": "cmp_complete_93ccb761_banner_1",
+    "url": "http://127.0.0.1:3228/engagement/campaigns/cmp_complete_93ccb761_banner_1?locale=en&step=compose"
+  },
+  "content": {
+    "id": "cmp_complete_93ccb761_content_1",
+    "url": "http://127.0.0.1:3228/engagement/campaigns/cmp_complete_93ccb761_content_1?locale=en&step=compose"
+  },
+  "sms": {
+    "id": "cmp_complete_93ccb761_sms_1",
+    "url": "http://127.0.0.1:3228/engagement/campaigns/cmp_complete_93ccb761_sms_1?locale=en&step=compose"
+  },
+  "webhook": {
+    "id": "cmp_complete_93ccb761_webhook_1",
+    "url": "http://127.0.0.1:3228/engagement/campaigns/cmp_complete_93ccb761_webhook_1?locale=en&step=compose"
+  },
+  "whatsapp": {
+    "id": "cmp_complete_93ccb761_whatsapp_1",
+    "url": "http://127.0.0.1:3228/engagement/campaigns/cmp_complete_93ccb761_whatsapp_1?locale=en&step=compose"
+  },
+  "line": {
+    "id": "cmp_complete_93ccb761_line_1",
+    "url": "http://127.0.0.1:3228/engagement/campaigns/cmp_complete_93ccb761_line_1?locale=en&step=compose"
+  },
+  "multichannel": {
+    "id": "cmp_complete_93ccb761_multichannel_1",
+    "url": "http://127.0.0.1:3228/engagement/campaigns/cmp_complete_93ccb761_multichannel_1?locale=en&step=compose"
+  }
+}

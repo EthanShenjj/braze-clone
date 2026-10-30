@@ -1,0 +1,127 @@
+{
+  "snapshot_created_local": "2026-10-28 12:51 Asia/Shanghai",
+  "head": "6ba367e37413e9137b5d55baddfabed016dbd492",
+  "warning": "Concurrent workspace edits. UI captures predate frozen source build. Snapshot build failed and latest drag editor UI is unverified.",
+  "source_files": [
+    {
+      "path": "app/ui/dashboard.tsx",
+      "sha256": "f3a488fead9ef1d760d1932be89a07419c8dfb6d250246f64101ee4222729c46",
+      "bytes": 170886,
+      "evidence_path": "source-snapshot/app/ui/dashboard.tsx.txt"
+    },
+    {
+      "path": "app/ui/sms-editor.tsx",
+      "sha256": "1e5e89389d40d4556107ca1022122b7b49e74a4febec783f2799030edf86a04a",
+      "bytes": 10759,
+      "evidence_path": "source-snapshot/app/ui/sms-editor.tsx.txt"
+    },
+    {
+      "path": "app/ui/whatsapp-editor.tsx",
+      "sha256": "c693ae4f0aecbd4b2c2a5a7b47302d957024a16a44faa3cf66dd2102068425b5",
+      "bytes": 31765,
+      "evidence_path": "source-snapshot/app/ui/whatsapp-editor.tsx.txt"
+    },
+    {
+      "path": "app/ui/webhook-editor.tsx",
+      "sha256": "5fb86b4ae791ad6bd2c9596d2dd2eb30a34f39be6ef41150e9726cd70e8768b8",
+      "bytes": 14720,
+      "evidence_path": "source-snapshot/app/ui/webhook-editor.tsx.txt"
+    },
+    {
+      "path": "app/ui/in-app-message.tsx",
+      "sha256": "fd3a222eb5c9bdf1f71ed240c2736a4180c4dc12ee1850ae0d838154d7a4b238",
+      "bytes": 77052,
+      "evidence_path": "source-snapshot/app/ui/in-app-message.tsx.txt"
+    },
+    {
+      "path": "app/ui/in-app-schedule.tsx",
+      "sha256": "bb74c7a354c39fc8426f6e307d8e20e0a78b9d77373d1f5f6422a9ca54452094",
+      "bytes": 34199,
+      "evidence_path": "source-snapshot/app/ui/in-app-schedule.tsx.txt"
+    },
+    {
+      "path": "app/ui/email-dnd-editor.tsx",
+      "sha256": "48198c228dfb4dbbbb9634974bf1a73a15b28e6c771f82d1068c3f6d4c127796",
+      "bytes": 111918,
+      "evidence_path": "source-snapshot/app/ui/email-dnd-editor.tsx.txt"
+    },
+    {
+      "path": "app/ui/email-grapes-editor.tsx",
+      "sha256": "e108faafbafeccb69bd7752abd4fcae399fb92d7bf5322863072c731fa2eac43",
+      "bytes": 52835,
+      "evidence_path": "source-snapshot/app/ui/email-grapes-editor.tsx.txt"
+    },
+    {
+      "path": "app/ui/email-grapes-sidebar.tsx",
+      "sha256": "3649fd54c3a51ba41201256ba6884598da7baece595a1ef887240443864919d3",
+      "bytes": 21946,
+      "evidence_path": "source-snapshot/app/ui/email-grapes-sidebar.tsx.txt"
+    },
+    {
+      "path": "app/ui/email-grapes-drag.ts",
+      "sha256": "210d130351d12cf0dd345f9e1dfe90331a60e6b9372f47bbcc59305b308fa03f",
+      "bytes": 3633,
+      "evidence_path": "source-snapshot/app/ui/email-grapes-drag.ts.txt"
+    },
+    {
+      "path": "lib/braze-store.ts",
+      "sha256": "9ab3f86ebd1fb01dda4b296f3518bb0ce3e520c14a389a36d64459bcfb2b3fdb",
+      "bytes": 165040,
+      "evidence_path": "source-snapshot/lib/braze-store.ts.txt"
+    },
+    {
+      "path": "lib/campaign-validation.ts",
+      "sha256": "e4be7674bdb0c1f934f505f49f5ac5a5e08b20f8fe875c946455690bb9980a44",
+      "bytes": 3670,
+      "evidence_path": "source-snapshot/lib/campaign-validation.ts.txt"
+    },
+    {
+      "path": "lib/in-app-templates.ts",
+      "sha256": "443a0faefc5be2858b394ada22b60245b3ee6a4b38ffc8de11e5c0d6b6a373a6",
+      "bytes": 1029,
+      "evidence_path": "source-snapshot/lib/in-app-templates.ts.txt"
+    },
+    {
+      "path": "lib/in-app-traditional.ts",
+      "sha256": "c1d32bab51e67a53c92c8e35662df6f8af3cea0758d451f4c25b780e50a081e8",
+      "bytes": 9007,
+      "evidence_path": "source-snapshot/lib/in-app-traditional.ts.txt"
+    },
+    {
+      "path": "lib/email-liquid.ts",
+      "sha256": "d17130d1ad15433aa7e2be0c4487b512f792f8bf7a78363e79b56046d5e89e04",
+      "bytes": 2249,
+      "evidence_path": "source-snapshot/lib/email-liquid.ts.txt"
+    },
+    {
+      "path": "lib/email-editor-model.ts",
+      "sha256": "6add81cce5da4e537fe7aa9d04b09da8606e83fa92ff3bddda3c4fabe7697f6d",
+      "bytes": 24840,
+      "evidence_path": "source-snapshot/lib/email-editor-model.ts.txt"
+    },
+    {
+      "path": "lib/email-runtime.ts",
+      "sha256": "cad6f016dcf78aca1c204e37b08df1b39a46fdb7c15f5eaf07ce3ee59952e985",
+      "bytes": 8428,
+      "evidence_path": "source-snapshot/lib/email-runtime.ts.txt"
+    },
+    {
+      "path": "lib/line-model.ts",
+      "sha256": "4c550355047210f9f297e7dabff999a88c9484eca7e18de12cb976df21f33317",
+      "bytes": 3417,
+      "evidence_path": "source-snapshot/lib/line-model.ts.txt"
+    },
+    {
+      "path": "lib/webhook-delivery.ts",
+      "sha256": "68b21dd4af48b25205df44bd0dd0256705ac5e2ae02840fe7fcb49a8036e1447",
+      "bytes": 5695,
+      "evidence_path": "source-snapshot/lib/webhook-delivery.ts.txt"
+    },
+    {
+      "path": "lib/whatsapp-model.ts",
+      "sha256": "acf08de49adde0c82c81ff34c61d696d0f737440756a1061ca4a55f991e632c3",
+      "bytes": 23967,
+      "evidence_path": "source-snapshot/lib/whatsapp-model.ts.txt"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 import "server-only";
 import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { createResource, listResources, updateResource } from "./braze-store";
-export const integrationScopes = ["users.track", "events.track", "purchases.track", "feature_flags.read"];
+export const integrationScopes = ["users.track", "events.track", "purchases.track", "feature_flags.read", "campaigns.trigger"];
 export function issueIntegrationKey(name: string, scopes: string[]) {
   if (!name?.trim() || !Array.isArray(scopes) || !scopes.length || scopes.some(s => !integrationScopes.includes(s))) throw new Error("Enter a name and select supported API permissions.");
   const key = `brz_${randomBytes(32).toString("hex")}`;

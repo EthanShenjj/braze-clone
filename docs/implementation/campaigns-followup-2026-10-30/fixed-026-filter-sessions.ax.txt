@@ -1,0 +1,224 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_email?locale=en&step=audience".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_email?locale=en&step=audience
+	2 container
+		3 image Download
+		4 image
+	5 container
+		6 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		7 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			8 text Local workspace
+			9 image
+		10 container Side navigation
+			11 text Quick links
+			12 button Canvas
+			13 button Campaigns
+			14 button Segments
+			15 button Getting Started
+			16 button Home
+			17 button AI Decisioning
+			18 button Agent Console
+			19 button Messaging
+			20 button Audience
+			21 button Content
+			22 button Analytics
+			23 button Partner Integrations
+			24 button Data Settings
+			25 button Settings
+		26 button Home
+			27 image Braze
+		28 container
+			29 text ◷   8 days left in your free trial.
+			30 button Connect with sales
+		31 container
+			32 button Search workspace ⌘K
+				33 image
+				34 text Search workspace
+				35 text ⌘K
+			36 button Take a tour
+			37 image Community
+			38 button (collapsed) Description: Language, Secondary Actions: Expand
+			39 button Notifications
+			40 button (collapsed) Description: Profile, Secondary Actions: Expand
+			41 image
+			42 button Open BrazeAI Operator
+		43 button Campaigns
+		44 button Edit 'Audit 2026-10-29 email'
+			45 text Edit
+			46 text  '
+			47 text Audit 2026-10-29 email
+			48 text '
+			49 image
+		50 container
+			51 image
+			52 text Limited access
+			53 container Campaign steps
+				54 button ✓ Compose Messages
+					55 text ✓
+					56 text Compose Messages
+				57 button 2 Schedule Delivery
+					58 text 2
+					59 text Schedule Delivery
+				60 button ✓ Target Audiences
+					61 text ✓
+					62 text Target Audiences
+				63 button ✓ Assign Conversions
+					64 text ✓
+					65 text Assign Conversions
+				66 button 5 Review Summary
+					67 text 5
+					68 text Review Summary
+			69 heading Targeting Options, Value: 2
+				70 text Targeting Options
+			71 text Target users by choosing multiple segments they must fall into. Further refine your audience by adding additional filters.
+			72 heading Target Users By Segment, Value: 3
+				73 text Target Users By Segment
+			74 combo box (collapsed, settable) Description: Target Users By Segment, Secondary Actions: Expand
+			75 button (collapsed) Description: Toggle segments, Secondary Actions: Expand
+			76 heading Additional Filters, Value: 3
+				77 text Additional Filters
+			78 container Filter group
+				79 container Description: Drag filter group, Help: Drag to reorder groups
+					80 text ⠿
+				81 text field (settable) Description: Filter group title, Value: Filter group
+				82 button (disabled) Move group up
+				83 button (disabled) Move group down
+				84 pop up button (collapsed, settable) Description: Filter group operator, Value: OR, Secondary Actions: Expand
+					85 menu
+						86 (selected) OR
+						87 AND
+				88 container
+					89 text Filter field
+					90 text field Filter field, Help: country, Value: Country
+				91 container
+					92 text Filter operator
+					93 pop up button (collapsed, settable) Filter operator, Value: equals, Secondary Actions: Expand
+						94 menu
+							95 (selected) equals
+							96 not equals
+							97 contains
+							98 not contains
+							99 greater than
+							100 less than
+							101 exists
+							102 not exists
+				103 container
+					104 text Filter value
+					105 text field (settable) Filter value, Value: US
+				106 button Remove filter
+				107 container
+					108 combo box (expanded, settable) Description: Select filter, Secondary Actions: Collapse
+					109 button (expanded) Description: Toggle filter catalog, Secondary Actions: Collapse
+					212 container
+						213 button Back to filter categories
+						214 text Sessions
+					215 button Session count
+					216 button First session
+					217 button Last session
+					218 text Other Filters
+					219 button Median Session Duration Users by the median time of their sessions in your app
+						220 text Median Session Duration
+						221 text Users by the median time of their sessions in your app
+				110 button Remove filter group
+			111 button ＋ Add filter group
+				112 text ＋ Add 
+				113 text filter
+				114 text  group
+			115 button ＋ Add exclusion group
+				116 text ＋ Add 
+				117 text exclusion
+				118 text  group
+			119 heading Audience Summary, Value: 3
+				120 text Audience Summary
+			121 container
+				122 text No segments selected  ·  1  filters
+			123 heading User Lookup, Value: 3
+				124 text User Lookup
+			125 text Check if a user matches the segment, filter, and app criteria.
+			126 button Lookup User
+			127 container
+				128 text Send to these users
+				129 pop up button (collapsed, settable) Send to these users, Value: users who are subscribed or opted in, Secondary Actions: Expand
+					130 menu
+						131 (selected) users who are subscribed or opted in
+						132 users who are opted in
+						133 all eligible users (excludes global unsubscribes)
+			134 container
+				135 text Email subscription group
+				136 pop up button (collapsed, settable) Email subscription group, Value: Select a subscription group, Secondary Actions: Expand
+					137 menu
+						138 (selected) Select a subscription group
+						139 Product updates
+						140 Promotions
+			141 checkbox (settable, integer) Description: Limit the number of people who will receive this Campaign, Value: 0
+			142 checkbox (settable, integer) Description: Limit the rate at which this Campaign sends, Value: 0
+			143 heading A/B Testing, Value: 2
+				144 text A/B Testing
+			145 checkbox (disabled, settable, integer) Description: Optimize with BrazeAI™, Value: 0
+			146 container
+				147 text To use Optimize with BrazeAI™, add at least two variants.
+				148 button Compose messages
+			149 container
+				150 text Set your own variant split and control group.  All variants send at the date and time you set in Schedule delivery.
+			151 container
+				152 text % Control Group
+				153 stepper (settable, integer) % Control Group, Value: 20
+			154 container
+				155 text % Variant 1
+				156 stepper (settable, integer) % Variant 1, Value: 80
+			157 container
+				158 text Total:  100.00 %
+			159 button Remove Control Group
+			160 button Distribute Variants Evenly
+			161 heading Suppression Lists, Value: 2
+				162 text Suppression Lists
+			163 text There are no suppression lists applied.
+			164 container
+				165 text To manage suppression for this Campaign, visit 
+				166 link Description: Suppression Lists, Value: 127.0.0.1:3100/suppression-lists?locale=en
+				167 text .
+			168 heading Total Population, Value: 2
+				169 text Total Population
+			170 text Exact users
+			171 text 200
+			172 text 20.00 %  of total users
+			173 progress indicator Description: Percent of total users, Value: 20
+			174 container
+				175 text Last calculated:  2026/10/30 12:47:15
+			176 button ↻ Refresh exact statistics
+			177 button ☷ View calculation queue
+			178 heading Channel breakdown, Value: 4
+				179 text Channel breakdown
+			180 table
+				181 row
+					182 cell
+						183 text Email
+				184 row
+					185 cell
+						186 text Reachable Users
+					187 cell
+						188 text 168
+			189 button (collapsed) ⊕ Show Additional Statistics, Secondary Actions: Expand
+				190 text ⊕ Show
+				191 text  Additional Statistics
+			192 button Back
+				193 image
+			194 button ✓ Compose
+				195 text ✓
+				196 text Compose
+			197 button 2 Schedule
+				198 text 2
+				199 text Schedule
+			200 button ✓ Target
+				201 text ✓
+				202 text Target
+			203 button ✓ Assign
+				204 text ✓
+				205 text Assign
+			206 button 5 Review
+				207 text 5
+				208 text Review
+			209 button Forward
+				210 image
+			211 button Save Draft
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_email?locale=en&step=audience

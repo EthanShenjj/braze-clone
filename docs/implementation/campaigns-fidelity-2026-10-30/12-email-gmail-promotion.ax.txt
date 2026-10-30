@@ -1,0 +1,194 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_email?locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_email?locale=en
+	2 container
+		3 image Download
+		4 image
+	5 container
+		6 text b
+		7 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			8 image
+			9 text Local workspace
+		10 text Quick links
+		11 button Canvas
+			12 image
+			13 text Canvas
+		14 button Campaigns
+			15 image
+			16 text Campaigns
+		17 button Segments
+			18 image
+			19 text Segments
+		20 button Getting Started
+			21 image
+			22 text Getting Started
+		23 button Performance Overview
+			24 image
+			25 text Performance Overview
+		26 button AI Decisioning
+			27 image
+			28 text AI Decisioning
+		29 button Agent Console
+			30 image
+			31 text Agent Console
+		32 button Messaging
+			33 image
+			34 text Messaging
+		35 button Audience
+			36 image
+			37 text Audience
+		38 button Content
+			39 image
+			40 text Content
+		41 button Analytics
+			42 image
+			43 text Analytics
+		44 button Partner Integrations
+			45 image
+			46 text Partner Integrations
+		47 button Data Settings
+			48 image
+			49 text Data Settings
+		50 button Settings
+			51 image
+			52 text Settings
+		53 text braze
+		54 container
+			55 text ◷   8 days left in your free trial.
+			56 button Connect with sales
+		57 container
+			58 button Search workspace ⌘K
+				59 image
+				60 text Search workspace
+				61 text ⌘K
+			62 button Take a tour
+				63 image
+			64 image
+			65 button (collapsed) Description: Language, Secondary Actions: Expand
+				66 image
+			67 button Notifications
+				68 image
+			69 button S
+			70 image
+			71 button
+				72 image
+		73 button Campaigns
+		74 button Edit 'Audit 2026-10-29 email'
+			75 text Edit
+			76 text  '
+			77 text Audit 2026-10-29 email
+			78 text '
+			79 image
+		80 container
+			81 image
+			82 text Limited access
+			83 container Campaign steps
+				84 button ✓ Compose Messages
+					85 text ✓
+					86 text Compose Messages
+				87 button ✓ Schedule Delivery
+					88 text ✓
+					89 text Schedule Delivery
+				90 button ✓ Target Audiences
+					91 text ✓
+					92 text Target Audiences
+				93 button ✓ Assign Conversions
+					94 text ✓
+					95 text Assign Conversions
+				96 button 5 Review Summary
+					97 text 5
+					98 text Review Summary
+			99 container HTML code editor
+				100 container
+					101 text Audit 2026-10-29 email All changes saved
+				102 container Email editor sections
+					103 button Sending settings
+						104 image
+					105 button Content
+						106 image
+					107 button Preview & Test
+						108 image
+				109 container
+					110 text CONTENT
+					111 button Back to campaign
+						112 image
+					113 button Design and Build
+					114 button Link Management
+					115 button Gmail Promotion
+					116 button Personalization
+					117 button Languages
+					118 text Create with Operator
+					119 button Liquid
+					120 button Copy
+				172 container
+					173 heading Gmail Promotion Setup, Value: 2
+						174 text Gmail Promotion Setup
+					175 text Set up a Gmail promotion to add an annotation to this email, making it available to appear in the Promotions tab for Gmail users. Gmail determines whether to display annotations.
+					176 heading Basic Information, Value: 3
+						177 text Basic Information
+					178 text Company Logo
+					179 text field (settable) Company Logo
+					180 text Subject Line
+					181 text field (settable) Subject Line
+					182 text Image
+					183 text field (settable) Image
+					184 text Only PNG and JPG image formats are supported
+					185 heading Discount Offer, Value: 3
+						186 text Discount Offer
+					187 checkbox (settable, integer) Description: Discount Switch, Value: 1
+					188 text Enable Discount Offer The Discount Offer type lets you specify the value of a deal as part of the promotion. You can include a discount code and specify dates for which the discount is valid. Offer
+					189 text field (settable) Offer
+					190 text Code
+					191 text field (settable) Code
+					192 text Start Date and Time
+					193 date field (settable) Start Date and Time
+						194 container
+							195 stepper
+							196 stepper
+							197 stepper
+							198 stepper
+							199 stepper
+						200 pop up button 显示当地日期和时间选择器 显示当地日期和时间选择器
+					201 text Ends
+					202 pop up button (collapsed, settable) Ends, Value: Never, Secondary Actions: Expand
+						203 menu
+							204 (selected) Never
+							205 On a specified date
+					206 heading Deal Card New, Value: 3
+						207 text Deal Card  New
+					208 checkbox (settable, integer) Description: Deal Card Switch, Value: 0
+					209 text Enable Deal Card
+					210 heading Promotion Cards, Value: 3
+						211 text Promotion Cards
+					212 checkbox (settable, integer) Description: Use Promotion Cards, Value: 0
+					213 text Use Promotion Cards
+				133 container
+					214 heading Copy and Paste HTML code into <Head>, Value: 3
+						215 text Copy and Paste HTML code into <Head>
+					216 button Generate HTML code ⟳
+				143 container
+					144 button Download file
+					145 button Done
+			146 button (disabled) Back
+				147 image
+			148 button ✓ Compose
+				149 text ✓
+				150 text Compose
+			151 button ✓ Schedule
+				152 text ✓
+				153 text Schedule
+			154 button ✓ Target
+				155 text ✓
+				156 text Target
+			157 button ✓ Assign
+				158 text ✓
+				159 text Assign
+			160 button 5 Review
+				161 text 5
+				162 text Review
+			163 button Forward
+				164 image
+			165 button Save Draft
+		170 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			171 image
+
+The focused UI element is 115 button Gmail Promotion

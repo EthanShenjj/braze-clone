@@ -1,0 +1,145 @@
+- button "Open Next.js Dev Tools":
+- alert: Braze Demo — Thinkingai
+- complementary:
+  - generic: b
+  - button "Demo – Thinkingai":
+    - generic: Demo – Thinkingai
+  - generic: Quick links
+  - button "Canvas":
+    - generic: Canvas
+  - button "Campaigns":
+    - generic: Campaigns
+  - button "Segments":
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+  - button "Performance Overview":
+    - generic: Performance Overview
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic: braze
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour":
+  - button "Language":
+  - button "Notifications":
+  - button "S"
+  - button:
+  - button "Campaigns"
+  - button "Edit 'Audit 2026-10-29 email'":
+    - text: Edit 'Audit 2026-10-29 email'
+  - text: Limited access
+  - navigation "Campaign steps":
+    - button "✓ Compose Messages":
+      - generic: ✓
+      - generic: Compose Messages
+    - button "✓ Schedule Delivery":
+      - generic: ✓
+      - generic: Schedule Delivery
+    - button "3 Target Audiences" [active]:
+      - generic: "3"
+      - generic: Target Audiences
+    - button "4 Assign Conversions":
+      - generic: "4"
+      - generic: Assign Conversions
+    - button "5 Review Summary":
+      - generic: "5"
+      - generic: Review Summary
+  - heading "Targeting Options" [level=2]
+  - paragraph: Choose segments, then refine the audience with filter and exclusion groups.
+  - generic: Segment operator
+  - combobox "Segment operator":
+    - option "AND" [selected]
+    - option "OR"
+  - generic: Add segment
+  - combobox "Add segment":
+    - option "Search Segments…" [selected]
+    - option "New Users"
+    - option "Recent Purchasers"
+    - option "Active Subscribers"
+    - option "Reachable Users"
+    - option "Pro Plan Customers"
+    - option "Free Plan Customers"
+    - option "English Speakers"
+    - option "Chinese Speakers"
+    - option "United States Users"
+    - option "United Kingdom Users"
+    - option "China Users"
+    - option "Singapore Users"
+    - option "Germany Users"
+  - heading "Additional Filters" [level=3]
+  - button "+ Add filter group"
+  - button "+ Add exclusion group"
+  - heading "Audience Summary" [level=3]
+  - paragraph: All users · 0 filter groups
+  - heading "User Lookup" [level=3]
+  - textbox "Search user ID":
+    - /placeholder: Email or external ID
+  - button "Lookup User"
+  - generic: Send to these users
+  - combobox "Send to these users":
+    - option "users who are subscribed or opted in" [selected]
+    - option "users who are opted in"
+    - option "all eligible users (excludes global unsubscribes)"
+  - generic: Email subscription group
+  - combobox "Email subscription group":
+    - option "Select a subscription group" [selected]
+    - option "Product updates"
+    - option "Promotions"
+  - checkbox "Limit send volume"
+  - text: Limit send volume
+  - checkbox "Limit the rate at which this Campaign sends"
+  - text: Limit the rate at which this Campaign sends
+  - heading "A/B Testing" [level=2]
+  - paragraph: Variant allocations and control group must total 100%.
+  - generic: "% Control Group"
+  - spinbutton "% Control Group": "20"
+  - generic: "% Variant 1"
+  - spinbutton "% Variant 1": "80"
+  - paragraph: "Total: 100.00%"
+  - button "Distribute evenly"
+  - button "Remove control group"
+  - heading "Workspace delivery policies" [level=3]
+  - paragraph: 0 suppression entries apply.
+  - paragraph: Frequency Capping is off.
+  - heading "Total Population" [level=2]
+  - strong: 840 reachable users
+  - paragraph: 1,000 match filters · 0 excluded by Global Control Group · 1,000 users in workspace
+  - button "Back":
+  - button "✓ Compose":
+    - generic: ✓
+    - text: Compose
+  - button "✓ Schedule":
+    - generic: ✓
+    - text: Schedule
+  - button "3 Target":
+    - generic: "3"
+    - text: Target
+  - button "4 Assign":
+    - generic: "4"
+    - text: Assign
+  - button "5 Review":
+    - generic: "5"
+    - text: Review
+  - button "Forward":
+  - button "Save Draft"

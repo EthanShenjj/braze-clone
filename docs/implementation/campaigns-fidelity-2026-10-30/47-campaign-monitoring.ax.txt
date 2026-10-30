@@ -1,0 +1,49 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_iam?view=analytics&workspace=local&locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_iam?view=analytics&workspace=local&locale=en
+	2 container Campaign Monitoring
+		3 heading Campaign Monitoring, Value: 2
+			4 text Campaign Monitoring
+		5 button Close dialog
+			6 image
+		7 text Send an alert when the following criteria is met:
+		8 checkbox (settable, integer) Description: Every time this campaign is sent, the impressions fall below, Value: 0
+		9 text During the course of
+		10 pop up button (disabled, collapsed, settable) Description: Lower threshold duration, Value: 1 hour, Secondary Actions: Expand
+			11 menu
+				12 (disabled) 1 minute
+				13 (disabled) 5 minutes
+				14 (disabled) 15 minutes
+				15 (disabled) 30 minutes
+				16 (disabled) 1 hour
+				17 (disabled) 3 hours
+				18 (disabled) 6 hours
+				19 (disabled) 12 hours
+				20 (disabled) 1 day
+		21 text the impressions 
+		22 text fall below
+		23 stepper (disabled, settable, integer) Description: Lower threshold, Value: 0
+		24 checkbox (settable, integer) Description: Every time this campaign is sent, the impressions exceed, Value: 0
+		25 text During the course of
+		26 pop up button (disabled, collapsed, settable) Description: Upper threshold duration, Value: 1 hour, Secondary Actions: Expand
+			27 menu
+				28 (disabled) 1 minute
+				29 (disabled) 5 minutes
+				30 (disabled) 15 minutes
+				31 (disabled) 30 minutes
+				32 (disabled) 1 hour
+				33 (disabled) 3 hours
+				34 (disabled) 6 hours
+				35 (disabled) 12 hours
+				36 (disabled) 1 day
+		37 text the impressions 
+		38 text exceed
+		39 stepper (disabled, settable, integer) Description: Upper threshold, Value: 1000
+		40 heading Via the following notification channels:, Value: 3
+			41 text Via the following notification channels:
+		42 checkbox (settable, integer) Description: Email, Value: 1
+		43 checkbox (settable, integer) Description: Webhook, Value: 0
+		44 text Saves monitoring preferences and evaluates recorded campaign volume locally. External Email and Webhook notifications are not sent by this configuration.
+		45 button Cancel
+		46 button Save
+
+The focused UI element is 5 button Close dialog

@@ -1,0 +1,182 @@
+- link "跳至内容":
+  - /url: "#main-col"
+  - generic: 跳至内容
+- navigation "侧边导航":
+  - button "Minimize menu":
+  - button "演示 – bba":
+    - generic: Demo – bba
+    - img: 
+  - generic: 快速链接
+  - link "帆布":
+    - /url: /engagement/canvas/canvas/6ad0b98fe4b4110085216601?locale=en
+    - generic: Canvas
+  - link "竞选活动":
+    - /url: /engagement/campaigns/campaigns/6ad0b98fe4b4110085216601?locale=en
+    - generic: Campaigns
+  - link "细分市场":
+    - /url: /engagement/segmenter/segmenter/6ad0b98fe4b4110085216601?locale=en
+    - generic: Segments
+  - button "入门":
+    - generic: Getting Started
+    - generic: 8%
+  - link "绩效概述":
+    - /url: /dashboard/app_usage/6ad0b98fe4b4110085216601?locale=en
+    - generic: Home
+  - button "人工智能决策":
+    - generic: AI Decisioning
+  - button "代理控制台":
+    - generic: Agent Console
+  - button "消息传递":
+    - generic: Messaging
+  - button "观众":
+    - generic: Audience
+  - button "内容":
+    - generic: Content
+  - button "分析":
+    - generic: Analytics
+  - button "合作伙伴集成":
+    - generic: Partner Integrations
+  - button "数据设置":
+    - generic: Data Settings
+  - button "设置":
+    - generic: Settings
+  - generic "页脚徽标":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 免费试用期还剩1天。
+- button "联系销售":
+  - generic: 联系销售
+- navigation "顶部导航":
+  - navigation "左上导航":
+    - button "搜索工作区 ⌘+K":
+      - generic: 搜索工作区
+      - generic: ⌘+K
+  - navigation "右上角导航":
+    - button "支持。使用 Enter 键打开子菜单，使用上下箭头键选择子菜单项，按 Esc 键关闭子菜单。":
+    - button "社区。使用 Enter 键打开子菜单，使用向下或向上箭头键选择子菜单项，按 Esc 键关闭。":
+    - button "选择您的语言（当前默认语言为英语）":
+    - button "通知":
+    - button "[对象 对象]。使用 Enter 键打开子菜单，使用上下箭头键选择子菜单项，按 Esc 键关闭子菜单。":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- navigation:
+  - tablist "打开页面标签":
+    - tab "竞选活动":
+      - generic: 竞选活动
+    - tab "编辑“新活动 - 2026 年 10 月 28 日” 关闭标签页":
+      - generic: 编辑“新活动 - 2026 年 10 月 28 日”
+      - button "关闭标签页":
+    - tab "编辑“新活动 - 2026 年 10 月 29 日” 关闭标签页":
+      - generic: 编辑“新活动 - 2026 年 10 月 29 日”
+      - button "关闭标签页":
+    - tab "Edit 'New Campaign - October 29, 2026' Close tab" [selected]:
+      - text: 
+      - generic: Edit 'New Campaign - October 29, 2026'
+      - button "Close tab":
+- img: 
+- generic: 访问受限
+- navigation:
+  - generic "进步":
+    - generic: 五步进度跟踪器：撰写消息、安排发送时间、目标受众、分配转化任务、查看摘要
+  - button "步骤：撰写邮件":
+    - generic: "1"
+    - generic: 撰写消息
+  - button "步骤计划交付":
+    - generic: "2"
+    - generic: 安排交付
+  - button "步骤 目标受众":
+    - generic: "3"
+    - generic: 目标受众
+  - button "步骤分配转换":
+    - generic: "4"
+    - generic: 分配转换
+  - button "步骤回顾总结":
+    - generic: "5"
+    - generic: 审查摘要
+- heading "送货" [level=3]:
+  - generic: 送货
+- heading "选择类型" [level=4]:
+  - generic: 选择类型
+- radiogroup:
+  - radio "已安排 用户可在指定时间进入系统" [checked]
+  - heading "已安排" [level=4]:
+    - generic: 已安排
+  - generic: 用户可在指定时间进入系统
+  - radio "基于行动的 用户执行操作时进入用户界面"
+  - heading "基于行动的" [level=4]:
+    - generic: 基于行动的
+  - generic: 用户执行操作时进入用户界面
+  - radio "API触发 通过 API 请求输入用户"
+  - heading "API触发" [level=4]:
+    - generic: API触发
+  - generic: 通过 API 请求输入用户
+- heading "基于时间的排班选项" [level=3]:
+  - generic: 基于时间的排班选项
+- radio "活动启动后立即发送" [checked] [active]
+- generic: 活动启动后立即发送
+- radio "在指定时间发送"
+- generic: 在指定时间发送
+- generic: 选择用户接收此消息的时间。
+- radio "智能定时"
+- generic: 智能定时
+- generic: 每个用户都会在最有可能参与的时候收到活动信息。
+- generic: 在新标签页中打开
+- link "在新标签页中打开":
+  - /url: https://www.braze.com/docs/user_guide/brazeai/intelligence/intelligent_timing
+  - generic: 了解更多。
+- heading "交付控制" [level=3]:
+  - generic: 交付控制
+- generic: 管理用户将收到的消息数量。
+- checkbox "允许用户重新获得参与活动的资格"
+- generic: 允许用户重新获得参与活动的资格
+- heading "频率限制" [level=4]:
+  - generic: 频率限制
+- generic: 您尚未创建任何频率限制规则。
+- generic: 在新标签页中打开
+- link "在新标签页中打开":
+  - /url: /engagement/global_message_settings/global-message-settings/6ad0b98fe4b4110085216601?locale=en
+  - generic: 管理频率上限规则
+- button "后退":
+  - img: 
+- navigation:
+  - generic "进步":
+    - generic: 五步进度跟踪器：撰写、安排、设定目标、分配任务、回顾
+  - button "步骤组成":
+    - generic: "1"
+    - generic: 撰写
+  - button "步骤安排":
+    - generic: "2"
+    - generic: 日程
+  - button "步骤目标":
+    - generic: "3"
+    - generic: 目标
+  - button "步骤分配":
+    - generic: "4"
+    - generic: 分配
+  - button "步骤回顾":
+    - generic: "5"
+    - generic: 审查
+- button "向前":
+  - img: 
+- button "保存草稿":
+  - generic: 保存草稿
+- text: 
+- contentinfo:
+  - generic: © Braze 2026
+  - generic: 在新标签页中打开
+  - link "在新标签页中打开":
+    - /url: https://braze.statuspage.io
+    - generic: 地位
+  - generic: 在新标签页中打开
+  - link "在新标签页中打开":
+    - /url: https://www.braze.com/terms
+    - generic: 条款
+  - generic: 在新标签页中打开
+  - link "在新标签页中打开":
+    - /url: https://www.braze.com/privacy
+    - generic: 隐私政策
+- iframe
+- alert
+- alert

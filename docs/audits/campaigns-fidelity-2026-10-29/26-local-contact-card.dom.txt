@@ -1,0 +1,133 @@
+- button "Open Next.js Dev Tools":
+- alert: Campaigns
+- complementary:
+  - generic: b
+  - button "Demo – Thinkingai":
+    - generic: Demo – Thinkingai
+  - generic: Quick links
+  - button "Canvas":
+    - generic: Canvas
+  - button "Campaigns":
+    - generic: Campaigns
+  - button "Segments":
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+  - button "Performance Overview":
+    - generic: Performance Overview
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic: braze
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour":
+  - button "Language":
+  - button "Notifications":
+  - button "S"
+  - button:
+  - button "Campaigns"
+  - button "Edit 'Audit 2026-10-29 sms'":
+    - text: Edit 'Audit 2026-10-29 sms'
+  - text: Limited access
+  - navigation "Campaign steps":
+    - button "1 Compose Messages":
+      - generic: "1"
+      - generic: Compose Messages
+    - button "2 Schedule Delivery":
+      - generic: "2"
+      - generic: Schedule Delivery
+    - button "3 Target Audiences":
+      - generic: "3"
+      - generic: Target Audiences
+    - button "4 Assign Conversions":
+      - generic: "4"
+      - generic: Assign Conversions
+    - button "5 Review Summary":
+      - generic: "5"
+      - generic: Review Summary
+  - heading "Campaign Details" [level=2]
+  - generic: Campaign Name
+  - textbox "Campaign Name":
+    - /placeholder: Enter Campaign Name
+    - text: Audit 2026-10-29 sms
+  - text: Teams
+  - combobox "Teams":
+    - option "Select…" [selected]
+  - button "Add description":
+    - text: Add description
+  - button "Tags":
+    - text: Tags
+  - generic: Campaign ID
+  - textbox "Campaign ID": cmp_recheck_1029_sms
+  - button "Copy":
+    - text: Copy
+  - region "SMS/MMS/RCS Composer":
+    - heading "SMS/MMS/RCS Composer" [level=2]
+    - heading "Variants" [level=3]
+    - tablist "SMS variants":
+      - tab "Audit 2026-10-29 sms" [selected]
+      - button "Add variant":
+    - text: Subscription Group
+    - combobox "Subscription Group":
+      - option "Workspace subscription status"
+      - option "SMS alerts" [selected]
+    - complementary:
+      - heading "Preview" [level=3]
+      - generic: Hello Sofia
+      - generic: 11 characters · 1 segments · GSM-7
+      - paragraph: Actual rendering may not be identical to this preview depending on the user's environment.
+    - navigation "SMS composer sections":
+      - button "Compose"
+      - button "Contact Card Generator" [active]
+      - button "Test"
+    - heading "Contact Card Generator" [level=3]
+    - paragraph: Attach a vCard so recipients can save your business as a contact.
+    - text: First name
+    - textbox "First name"
+    - text: Last name
+    - textbox "Last name"
+    - text: Organization
+    - textbox "Organization"
+    - text: Phone
+    - textbox "Phone"
+    - text: Email
+    - textbox "Email"
+    - button "Generate and attach contact card"
+  - button "Back" [disabled]:
+  - button "1 Compose":
+    - generic: "1"
+    - text: Compose
+  - button "2 Schedule":
+    - generic: "2"
+    - text: Schedule
+  - button "3 Target":
+    - generic: "3"
+    - text: Target
+  - button "4 Assign":
+    - generic: "4"
+    - text: Assign
+  - button "5 Review":
+    - generic: "5"
+    - text: Review
+  - button "Forward":
+  - button "Save Draft"

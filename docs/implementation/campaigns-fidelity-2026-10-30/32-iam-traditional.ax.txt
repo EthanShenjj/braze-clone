@@ -1,0 +1,281 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_iam?locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_iam?locale=en
+	2 container
+		3 image Download
+		4 image
+	5 container
+		6 text b
+		7 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			8 image
+			9 text Local workspace
+		10 text Quick links
+		11 button Canvas
+			12 image
+			13 text Canvas
+		14 button Campaigns
+			15 image
+			16 text Campaigns
+		17 button Segments
+			18 image
+			19 text Segments
+		20 button Getting Started
+			21 image
+			22 text Getting Started
+		23 button Performance Overview
+			24 image
+			25 text Performance Overview
+		26 button AI Decisioning
+			27 image
+			28 text AI Decisioning
+		29 button Agent Console
+			30 image
+			31 text Agent Console
+		32 button Messaging
+			33 image
+			34 text Messaging
+		35 button Audience
+			36 image
+			37 text Audience
+		38 button Content
+			39 image
+			40 text Content
+		41 button Analytics
+			42 image
+			43 text Analytics
+		44 button Partner Integrations
+			45 image
+			46 text Partner Integrations
+		47 button Data Settings
+			48 image
+			49 text Data Settings
+		50 button Settings
+			51 image
+			52 text Settings
+		53 text braze
+		54 container
+			55 text ◷   8 days left in your free trial.
+			56 button Connect with sales
+		57 container
+			58 button Search workspace ⌘K
+				59 image
+				60 text Search workspace
+				61 text ⌘K
+			62 button Take a tour
+				63 image
+			64 image
+			65 button (collapsed) Description: Language, Secondary Actions: Expand
+				66 image
+			67 button Notifications
+				68 image
+			69 button S
+			70 image
+			71 button
+				72 image
+		73 button Campaigns
+		74 button Edit 'Audit 2026-10-29 iam'
+			75 text Edit
+			76 text  '
+			77 text Audit 2026-10-29 iam
+			78 text '
+			79 image
+		80 container
+			81 image
+			82 text Limited access
+			83 container Campaign steps
+				84 button ✓ Compose Messages
+					85 text ✓
+					86 text Compose Messages
+				87 button ✓ Schedule Delivery
+					88 text ✓
+					89 text Schedule Delivery
+				90 button 3 Target Audiences
+					91 text 3
+					92 text Target Audiences
+				93 button ✓ Assign Conversions
+					94 text ✓
+					95 text Assign Conversions
+				96 button 5 Review Summary
+					97 text 5
+					98 text Review Summary
+			99 heading Campaign Details, Value: 2
+				100 text Campaign Details
+			101 container
+				102 text Campaign Name
+				103 text field (settable) Campaign Name, Value: Audit 2026-10-29 iam
+			104 button Add description
+				105 image
+				106 text Add description
+			107 container
+				108 text Teams
+				109 pop up button (collapsed, settable) Teams, Value: Select…, Secondary Actions: Expand
+					110 menu
+						111 (selected) Select…
+			112 button (collapsed) Tags, Secondary Actions: Expand
+				113 image
+				114 text Tags
+				115 image
+			194 container Campaign brief
+				195 heading Campaign brief, Value: 3
+					196 text Campaign brief
+				197 text Attach a brief so BrazeAI Operator can build your campaign and your Standards can review it against your goals
+				198 text Attach a campaign brief (optional)
+				199 text PDF, TXT, MD, CSV, DOCX up to 15MB
+				200 button Upload file
+					201 image
+					202 text Upload file
+			203 container
+				204 text Campaign ID
+				205 text field Campaign ID, Value: 6c9653d5-a25a-5163-afd8-9fd1d94a824c
+			206 button Copy
+				207 image
+				208 text Copy
+			122 container In-app message composer
+				123 heading Message Composer, Value: 2
+					124 text Message Composer
+				125 heading Variants, Value: 3
+					126 text Variants
+				127 button Variant 1
+				128 button Variant 2
+				129 button Variant 3
+				209 button Variant 4
+				130 button Add variant
+					131 image
+				132 container
+					133 text Send To
+					134 pop up button (collapsed, settable) Send To, Value: Both Mobile Apps & Web Browsers, Secondary Actions: Expand
+						135 menu
+							136 (selected) Both Mobile Apps & Web Browsers
+							137 Mobile Apps
+							138 Web Browsers
+							139 Roku Devices
+				140 container
+					141 text Editing Experience
+					142 pop up button (collapsed, settable) Description: Editing experience, Value: Traditional Editor, Secondary Actions: Expand
+						143 menu
+							144 Drag-And-Drop Editor
+							145 (selected) Traditional Editor
+				210 container Traditional in-app message editor
+					211 container
+						212 text Message Type
+						213 pop up button (collapsed, settable) Message Type, Value: Modal, Secondary Actions: Expand
+							214 menu
+								215 (selected) Modal
+								216 Full Screen
+								217 Slideup
+								218 Custom HTML
+								219 Email Capture Form
+					220 container
+						221 text Layout
+						222 pop up button (collapsed, settable) Layout, Value: Image & text, Secondary Actions: Expand
+							223 menu
+								224 (selected) Image & text
+								225 Image only
+					226 container
+						227 heading Preview, Value: 3
+							228 text Preview
+						229 checkbox Description: Traditional Phone preview, Value: 1
+						230 checkbox Description: Traditional Tablet preview, Value: 0
+						231 checkbox Description: Traditional Desktop preview, Value: 0
+						232 container
+							233 button Close Message
+							234 heading Audit title, Value: 2
+								235 text Audit title
+							236 text Hello {{${first_name}}}
+							237 button Shop Now
+					238 container
+						239 tab group Traditional editor tabs
+							240 tab (selected, settable, boolean) Compose, Value: 1
+							241 tab (selectable, settable, boolean) Design, Value: 0
+							242 tab (selectable, settable, boolean) Settings, Value: 0
+							243 tab (selectable, settable, boolean) Test, Value: 0
+						244 heading Language, Value: 3
+							245 text Language
+						246 button Add languages
+						247 heading Image, Value: 3
+							248 text Image
+						249 button Add from Media Library
+						250 text Drag and drop a file here
+						251 text Accepted file types: PNG, JPEG, JPG, or GIF
+						252 button Upload file
+						253 container
+							254 text Add from URL
+							255 text entry area (settable) Add from URL
+							256 button Add Liquid
+						257 text Header
+						258 text entry area (settable) Description: Header, Value: Audit title
+						259 button Add Liquid
+						260 text Body
+						261 text entry area (settable) Description: Body, Value: Hello {{${first_name}}}
+						262 button Add Liquid
+						263 container
+							264 text Button 1 text
+							265 text entry area (settable) Description: Button 1 text, Value: Shop Now
+							266 button Add Liquid
+						267 container
+							268 heading Button 1 on-click behavior, Value: 4
+								269 text Button 1 on-click behavior
+							270 text Android
+							271 pop up button (collapsed, settable) Description: Android, Value: Close message, Secondary Actions: Expand
+								272 menu
+									273 (selected) Close message
+									274 Open web URL
+									275 Deep link into application
+									276 Log custom event
+									277 Log custom attribute
+									278 Request push permission
+							279 text iOS
+							280 pop up button (collapsed, settable) Description: iOS, Value: Close message, Secondary Actions: Expand
+								281 menu
+									282 (selected) Close message
+									283 Open web URL
+									284 Deep link into application
+									285 Log custom event
+									286 Log custom attribute
+									287 Request push permission
+						288 button Remove button 1
+							289 text Remove button 
+							290 text 1
+						291 button Add button
+						292 heading Message settings, Value: 3
+							293 text Message settings
+						294 container
+							295 text iOS devices
+							296 pop up button (collapsed, settable) iOS devices, Value: All iOS devices, Secondary Actions: Expand
+								297 menu
+									298 (selected) All iOS devices
+									299 iPad only
+									300 iPhone and iPod touch only
+						301 container
+							302 text Message close
+							303 pop up button (collapsed, settable) Message close, Value: Wait for user, Secondary Actions: Expand
+								304 menu
+									305 (selected) Wait for user
+									306 Automatically dismiss
+				168 text Always test your messages on a real device, as actual rendering may vary.
+				169 button (disabled) Switch/convert to custom code
+				170 link Description: Docs, Value: braze.com/docs/user_guide/message_building_by_channel/in-app_messages/drag_and_drop/
+				171 button Save as template
+			172 button (disabled) Back
+				173 image
+			174 button ✓ Compose
+				175 text ✓
+				176 text Compose
+			177 button ✓ Schedule
+				178 text ✓
+				179 text Schedule
+			180 button 3 Target
+				181 text 3
+				182 text Target
+			183 button ✓ Assign
+				184 text ✓
+				185 text Assign
+			186 button 5 Review
+				187 text 5
+				188 text Review
+			189 button Forward
+				190 image
+			191 button Save Draft
+		192 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			193 image
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_iam?locale=en

@@ -1,0 +1,12 @@
+{
+  "email": "cmp_recheck_1029_email",
+  "sms": "cmp_recheck_1029_sms",
+  "push": "cmp_recheck_1029_push",
+  "banner": "cmp_recheck_1029_banner",
+  "content": "cmp_recheck_1029_content",
+  "line": "cmp_recheck_1029_line",
+  "iam": "cmp_recheck_1029_iam",
+  "webhook": "cmp_recheck_1029_webhook",
+  "whatsapp": "cmp_recheck_1029_whatsapp",
+  "multichannel": "cmp_recheck_1029_multichannel"
+}

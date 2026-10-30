@@ -1,0 +1,185 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_followup_whatsapp_1030?locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_followup_whatsapp_1030?locale=en
+	2 container
+		3 image Download
+		4 image
+	5 container
+		6 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		7 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			8 text Local workspace
+			9 image
+		10 container Side navigation
+			11 text Quick links
+			12 button Canvas
+			13 button Campaigns
+			14 button Segments
+			15 button Getting Started
+			16 button Home
+			17 button AI Decisioning
+			18 button Agent Console
+			19 button Messaging
+			20 button Audience
+			21 button Content
+			22 button Analytics
+			23 button Partner Integrations
+			24 button Data Settings
+			25 button Settings
+		26 button Home
+			27 image Braze
+		28 container
+			29 text ◷   8 days left in your free trial.
+			30 button Connect with sales
+		31 container
+			32 button Search workspace ⌘K
+				33 image
+				34 text Search workspace
+				35 text ⌘K
+			36 button Take a tour
+			37 image Community
+			38 button (collapsed) Description: Language, Secondary Actions: Expand
+			39 button Notifications
+			40 button (collapsed) Description: Profile, Secondary Actions: Expand
+			41 image
+			42 button Open BrazeAI Operator
+		43 button Campaigns
+		44 button Edit 'WhatsApp follow-up verification'
+			45 text Edit
+			46 text  '
+			47 text WhatsApp follow-up verification
+			48 text '
+			49 image
+		50 container
+			51 image
+			52 text Limited access
+			53 container Campaign steps
+				54 button 1 Compose Messages
+					55 text 1
+					56 text Compose Messages
+				57 button ✓ Schedule Delivery
+					58 text ✓
+					59 text Schedule Delivery
+				60 button ✓ Target Audiences
+					61 text ✓
+					62 text Target Audiences
+				63 button ✓ Assign Conversions
+					64 text ✓
+					65 text Assign Conversions
+				66 button 5 Review Summary
+					67 text 5
+					68 text Review Summary
+			69 heading Campaign Details, Value: 2
+				70 text Campaign Details
+			71 container
+				72 text Campaign Name
+				73 text field (settable) Campaign Name, Value: WhatsApp follow-up verification
+			74 container
+				75 text Teams
+				76 pop up button (collapsed, settable) Teams, Value: Select…, Secondary Actions: Expand
+					77 menu
+						78 (selected) Select…
+			79 button Add description
+				80 image
+				81 text Add description
+			82 button (collapsed) Tags, Secondary Actions: Expand
+				83 image
+				84 text Tags
+				85 image
+			86 container Campaign brief
+				87 heading Campaign brief, Value: 3
+					88 text Campaign brief
+				89 text Attach a brief so BrazeAI Operator can build your campaign and your Standards can review it against your goals
+				90 text Attach a campaign brief (optional)
+				91 text PDF, TXT, MD, CSV, DOCX up to 15MB
+				92 button Upload file
+					93 image
+					94 text Upload file
+			95 container
+				96 text Campaign ID
+				97 text field Campaign ID, Help: c61bc897-c955-4a7b-bd99-90a8cbc575ab
+			98 button Copy
+				99 image
+				100 text Copy
+			101 heading Compose WhatsApp, Value: 2
+				102 text Compose WhatsApp
+			103 button Preview and test
+			104 text Compose a response to a user message within a 24-hour window.
+			105 heading Variants, Value: 3
+				106 text Variants
+			107 tab group WhatsApp variants
+				108 tab (selected, settable, boolean) Variant 1, Value: 1
+				109 button Add variant
+					110 image
+			111 button Duplicate variant
+				112 image
+			113 button (disabled) Delete variant
+				114 image
+			115 container
+				116 text Subscription Group
+				117 pop up button (collapsed, settable) Description: WhatsApp subscription group, Value: WhatsApp updates, Secondary Actions: Expand
+					118 menu
+						119 Select a subscription group
+						120 (selected) WhatsApp updates
+				121 text WhatsApp business account Not specified
+			152 container
+				153 text Response Message layout
+				154 pop up button (collapsed, settable) Description: Response Message layout, Value: Text, Secondary Actions: Expand
+					155 menu
+						156 Quick Reply
+						157 (selected) Text
+						158 Media
+						159 Call-to-action Button
+						160 List
+						161 Carousel
+						162 Flow
+						163 Meta Products
+			164 button Change message type
+			165 text Response messages can only be sent in response to a user message within a 24 hour window.
+			166 container WhatsApp message preview
+				167 heading Preview, Value: 3
+					168 text Preview
+				169 text 8:21 AM
+			170 container WhatsApp composer sections
+				171 checkbox Compose, Value: 1
+				172 checkbox Test, Value: 0
+			173 container
+				174 heading Language, Value: 3
+					175 text Language
+				176 button (collapsed) Add languages, Secondary Actions: Expand
+					177 image
+					178 text Add languages
+				179 heading Content, Value: 3
+					180 text Content
+				181 button (collapsed) Add Liquid, Secondary Actions: Expand
+				182 text Body
+				183 text entry area (settable) Body 0/4096
+				184 container
+					185 text 0 / 4096
+				186 heading URL preview, Value: 3
+					187 text URL preview
+				188 checkbox (settable, integer) Description: Include a preview of the URL in the message, Value: 0
+				189 heading Link options, Value: 3
+					190 text Link options
+				191 checkbox (settable, integer) Description: Click Tracking, Value: 1
+				192 text Track clicks on links included in your message.
+			132 button (disabled) Back
+				133 image
+			134 button 1 Compose
+				135 text 1
+				136 text Compose
+			137 button ✓ Schedule
+				138 text ✓
+				139 text Schedule
+			140 button ✓ Target
+				141 text ✓
+				142 text Target
+			143 button ✓ Assign
+				144 text ✓
+				145 text Assign
+			146 button 5 Review
+				147 text 5
+				148 text Review
+			149 button Forward
+				150 image
+			151 button Save Draft
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_followup_whatsapp_1030?locale=en

@@ -1,0 +1,166 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_email_settings_1029?locale=en&step=review".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_email_settings_1029?locale=en&step=review
+	2 container
+		3 image Download
+		4 image
+	5 container
+		6 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		7 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			8 text Local workspace
+			9 image
+		10 container Side navigation
+			11 text Quick links
+			12 button Canvas
+			13 button Campaigns
+			14 button Segments
+			15 button Getting Started
+			16 button Home
+			17 button AI Decisioning
+			18 button Agent Console
+			19 button Messaging
+			20 button Audience
+			21 button Content
+			22 button Analytics
+			23 button Partner Integrations
+			24 button Data Settings
+			25 button Settings
+		26 button Home
+			27 image Braze
+		28 container
+			29 text ◷   8 days left in your free trial.
+			30 button Connect with sales
+		31 container
+			32 button Search workspace ⌘K
+				33 image
+				34 text Search workspace
+				35 text ⌘K
+			36 button Take a tour
+			37 image Community
+			38 button (collapsed) Description: Language, Secondary Actions: Expand
+			39 button Notifications
+			40 button (collapsed) Description: Profile, Secondary Actions: Expand
+			41 image
+			42 button Open BrazeAI Operator
+		43 button Campaigns
+		44 button Edit 'Email settings entry verification'
+			45 text Edit
+			46 text  '
+			47 text Email settings entry verification
+			48 text '
+			49 image
+		50 container
+			51 image
+			52 text Limited access
+			53 container Campaign steps
+				54 button ✓ Compose Messages
+					55 text ✓
+					56 text Compose Messages
+				57 button ✓ Schedule Delivery
+					58 text ✓
+					59 text Schedule Delivery
+				60 button ✓ Target Audiences
+					61 text ✓
+					62 text Target Audiences
+				63 button ✓ Assign Conversions
+					64 text ✓
+					65 text Assign Conversions
+				66 button 5 Review Summary
+					67 text 5
+					68 text Review Summary
+			285 heading Review Campaign Summary, Value: 2
+				286 text Review Campaign Summary
+			287 text Reachable users is  840 .
+			288 heading Agentic Standards New, Value: 3
+				289 text Agentic Standards New
+			290 container
+				291 text No Standard set up yet. 
+				292 link Description: Create one in Agent Console, Value: 127.0.0.1:3100/agent-console
+			293 heading Messages, Value: 2
+				294 text Messages
+			295 button Edit Messages
+				296 image
+			297 container
+				298 heading Variant 1 Preview, Value: 3
+					299 text Variant 1  Preview
+				300 text From: qa@example.com Subject: Settings entry saved
+				301 container Email message preview
+					302 AXWebArea about:srcdoc
+						303 text Keep this content when opening settings.
+			304 heading Delivery, Value: 2
+				305 text Delivery
+			306 button Edit Delivery
+				307 image
+			308 heading Scheduled Entry, Value: 3
+				309 text Scheduled Entry
+			310 text Send as soon as Campaign is launched.
+			311 heading Target Audience, Value: 2
+				312 text Target Audience
+			313 button Edit Target Audience
+				314 image
+			315 heading Audience Summary, Value: 3
+				316 text Audience Summary
+			317 text No segments or filters selected
+			318 heading Entry Audience, Value: 3
+				319 text Entry Audience
+			320 content list
+				321 container
+					322 AXListMarker • 
+					323 text Workspace Messaging Rate Limits OFF
+				324 container
+					325 AXListMarker • 
+					326 text 0 workspace suppression entries apply.
+			327 container
+				328 heading Total Population, Value: 2
+					329 text Total Population
+				330 text Exact users 1,000 100.00 %  of total users
+				331 progress indicator Description: Percent of total users, Value: 100
+				332 text Last calculated:  2026/10/30 12:37:54
+				333 button ↻ Refresh exact statistics
+				334 button ☷ View calculation queue
+				335 heading Channel breakdown, Value: 4
+					336 text Channel breakdown
+				337 table
+					338 row
+						339 cell
+							340 text Email
+					341 row
+						342 cell
+							343 text Reachable Users
+						344 cell
+							345 text 840
+				346 button (collapsed) ⊕ Show Additional Statistics, Secondary Actions: Expand
+					347 text ⊕ Show
+					348 text  Additional Statistics
+			349 heading Conversion Events, Value: 2
+				350 text Conversion Events
+			351 button Edit Conversion Events
+				352 image
+			353 text Primary Conversion Event - A
+			354 container
+				355 text Makes Purchase  within  3 days
+			135 button Back
+				136 image
+			137 button ✓ Compose
+				138 text ✓
+				139 text Compose
+			140 button ✓ Schedule
+				141 text ✓
+				142 text Schedule
+			143 button ✓ Target
+				144 text ✓
+				145 text Target
+			146 button ✓ Assign
+				147 text ✓
+				148 text Assign
+			149 button 5 Review
+				150 text 5
+				151 text Review
+			152 button (disabled) Forward
+				153 image
+			154 button Save Draft
+		281 image
+		282 text Draft saved.
+		283 button Close
+			284 image
+
+The focused UI element is 66 button 5 Review Summary

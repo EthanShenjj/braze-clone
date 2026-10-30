@@ -1,0 +1,642 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_email?locale=en&step=schedule".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_recheck_1029_email?locale=en&step=schedule
+	2 container
+		3 image Download
+		4 image
+	5 container
+		6 text b
+		7 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			8 image
+			9 text Local workspace
+		10 text Quick links
+		11 button Canvas
+			12 image
+			13 text Canvas
+		14 button Campaigns
+			15 image
+			16 text Campaigns
+		17 button Segments
+			18 image
+			19 text Segments
+		20 button Getting Started
+			21 image
+			22 text Getting Started
+		23 button Performance Overview
+			24 image
+			25 text Performance Overview
+		26 button AI Decisioning
+			27 image
+			28 text AI Decisioning
+		29 button Agent Console
+			30 image
+			31 text Agent Console
+		32 button Messaging
+			33 image
+			34 text Messaging
+		35 button Audience
+			36 image
+			37 text Audience
+		38 button Content
+			39 image
+			40 text Content
+		41 button Analytics
+			42 image
+			43 text Analytics
+		44 button Partner Integrations
+			45 image
+			46 text Partner Integrations
+		47 button Data Settings
+			48 image
+			49 text Data Settings
+		50 button Settings
+			51 image
+			52 text Settings
+		53 text braze
+		54 container
+			55 text ◷   8 days left in your free trial.
+			56 button Connect with sales
+		57 container
+			58 button Search workspace ⌘K
+				59 image
+				60 text Search workspace
+				61 text ⌘K
+			62 button Take a tour
+				63 image
+			64 image
+			65 button (collapsed) Description: Language, Secondary Actions: Expand
+				66 image
+			67 button Notifications
+				68 image
+			69 button S
+			70 image
+			71 button
+				72 image
+		73 button Campaigns
+		74 button Edit 'Audit 2026-10-29 email'
+			75 text Edit
+			76 text  '
+			77 text Audit 2026-10-29 email
+			78 text '
+			79 image
+		80 container
+			81 image
+			82 text Limited access
+			83 container Campaign steps
+				84 button ✓ Compose Messages
+					85 text ✓
+					86 text Compose Messages
+				87 button ✓ Schedule Delivery
+					88 text ✓
+					89 text Schedule Delivery
+				90 button ✓ Target Audiences
+					91 text ✓
+					92 text Target Audiences
+				93 button ✓ Assign Conversions
+					94 text ✓
+					95 text Assign Conversions
+				96 button 5 Review Summary
+					97 text 5
+					98 text Review Summary
+			172 heading Delivery, Value: 2
+				173 text Delivery
+			174 heading Choose a Type, Value: 3
+				175 text Choose a Type
+			176 Delivery type
+				177 container
+					178 radio button (settable, integer) Description: Scheduled Enter users at designated times, Value: 0
+					179 text Scheduled Enter users at designated times
+				180 container
+					181 radio button (settable, integer) Description: Action-Based Enter users when they perform actions, Value: 1
+					182 text Action-Based Enter users when they perform actions
+				183 container
+					184 radio button (settable, integer) Description: API-Triggered Enter users via API request, Value: 0
+					185 text API-Triggered Enter users via API request
+			186 heading ◎ Action-Based delivery, Value: 2
+				187 text ◎ Action-Based delivery
+			212 text Evaluate if user takes specified actions
+			213 container
+				214 text Select Trigger
+				215 pop up button (collapsed, settable) Select Trigger, Value: Start Session, Secondary Actions: Expand
+					216 menu
+						217 container General Activity
+							218 Perform Custom Event
+							219 (selected) Start Session
+							220 Interact With Campaign
+							221 Interact With Step
+							222 Interact with Landing Page
+							223 Make Purchase
+							224 Upgrade App
+						225 container User Profile
+							226 Change Custom Attribute Value
+							227 Update User Profile
+							228 Change Subscription Status
+						229 container eCommerce
+							230 View Product
+							231 Update Cart
+							232 Start Checkout
+							233 Place Order
+							234 Cancel Order
+							235 Refund Order
+						236 container Messaging
+							237 Send Inbound SMS
+							238 Send Inbound WhatsApp Message
+							239 Send Inbound LINE Message
+							240 Subscribe to Subscription Group
+						241 container Location
+							242 Enter Location
+							243 Exit Location
+				244 text App
+				245 pop up button (collapsed, settable) App, Value: Any app, Secondary Actions: Expand
+					246 menu
+						247 (selected) Any app
+				248 checkbox (settable, integer) Description: Filter event properties, Value: 0
+				249 button Remove trigger
+			250 button + Add Trigger
+			251 heading Schedule Delay, Value: 3
+				252 text Schedule Delay
+			253 text Choose when to send the campaign after the trigger event occurs.
+			254 container
+				255 text Send
+				256 pop up button (collapsed, settable) Send, Value: Immediately, Secondary Actions: Expand
+					257 menu
+						258 (selected) Immediately
+						259 After a delay
+			260 heading Campaign duration, Value: 3
+				261 text Campaign duration
+			262 container
+				263 text Start Time (Required)
+				264 date field (settable) Start Time (Required), Value: 2026-10-30
+					265 container
+						266 stepper
+						267 stepper
+						268 stepper
+					269 pop up button 显示日期选择器 显示日期选择器
+			270 container
+				271 text Send time
+				272 time field (settable) Send time, Value: 10:00
+					273 container
+						274 stepper
+						275 stepper
+					276 pop up button 显示时间选择器 显示时间选择器
+			277 container
+				278 text Time zone
+				279 pop up button (collapsed, settable) Time zone, Value: Company time — UTC, Secondary Actions: Expand
+					280 menu
+						281 (selected) Company time — UTC
+						282 Africa/Abidjan
+						283 Africa/Accra
+						284 Africa/Addis_Ababa
+						285 Africa/Algiers
+						286 Africa/Asmera
+						287 Africa/Bamako
+						288 Africa/Bangui
+						289 Africa/Banjul
+						290 Africa/Bissau
+						291 Africa/Blantyre
+						292 Africa/Brazzaville
+						293 Africa/Bujumbura
+						294 Africa/Cairo
+						295 Africa/Casablanca
+						296 Africa/Ceuta
+						297 Africa/Conakry
+						298 Africa/Dakar
+						299 Africa/Dar_es_Salaam
+						300 Africa/Djibouti
+						301 Africa/Douala
+						302 Africa/El_Aaiun
+						303 Africa/Freetown
+						304 Africa/Gaborone
+						305 Africa/Harare
+						306 Africa/Johannesburg
+						307 Africa/Juba
+						308 Africa/Kampala
+						309 Africa/Khartoum
+						310 Africa/Kigali
+						311 Africa/Kinshasa
+						312 Africa/Lagos
+						313 Africa/Libreville
+						314 Africa/Lome
+						315 Africa/Luanda
+						316 Africa/Lubumbashi
+						317 Africa/Lusaka
+						318 Africa/Malabo
+						319 Africa/Maputo
+						320 Africa/Maseru
+						321 Africa/Mbabane
+						322 Africa/Mogadishu
+						323 Africa/Monrovia
+						324 Africa/Nairobi
+						325 Africa/Ndjamena
+						326 Africa/Niamey
+						327 Africa/Nouakchott
+						328 Africa/Ouagadougou
+						329 Africa/Porto-Novo
+						330 Africa/Sao_Tome
+						331 Africa/Tripoli
+						332 Africa/Tunis
+						333 Africa/Windhoek
+						334 America/Adak
+						335 America/Anchorage
+						336 America/Anguilla
+						337 America/Antigua
+						338 America/Araguaina
+						339 America/Argentina/La_Rioja
+						340 America/Argentina/Rio_Gallegos
+						341 America/Argentina/Salta
+						342 America/Argentina/San_Juan
+						343 America/Argentina/San_Luis
+						344 America/Argentina/Tucuman
+						345 America/Argentina/Ushuaia
+						346 America/Aruba
+						347 America/Asuncion
+						348 America/Bahia
+						349 America/Bahia_Banderas
+						350 America/Barbados
+						351 America/Belem
+						352 America/Belize
+						353 America/Blanc-Sablon
+						354 America/Boa_Vista
+						355 America/Bogota
+						356 America/Boise
+						357 America/Buenos_Aires
+						358 America/Cambridge_Bay
+						359 America/Campo_Grande
+						360 America/Cancun
+						361 America/Caracas
+						362 America/Catamarca
+						363 America/Cayenne
+						364 America/Cayman
+						365 America/Chicago
+						366 America/Chihuahua
+						367 America/Ciudad_Juarez
+						368 America/Coral_Harbour
+						369 America/Cordoba
+						370 America/Costa_Rica
+						371 America/Coyhaique
+						372 America/Creston
+						373 America/Cuiaba
+						374 America/Curacao
+						375 America/Danmarkshavn
+						376 America/Dawson
+						377 America/Dawson_Creek
+						378 America/Denver
+						379 America/Detroit
+						380 America/Dominica
+						381 America/Edmonton
+						382 America/Eirunepe
+						383 America/El_Salvador
+						384 America/Fort_Nelson
+						385 America/Fortaleza
+						386 America/Glace_Bay
+						387 America/Godthab
+						388 America/Goose_Bay
+						389 America/Grand_Turk
+						390 America/Grenada
+						391 America/Guadeloupe
+						392 America/Guatemala
+						393 America/Guayaquil
+						394 America/Guyana
+						395 America/Halifax
+						396 America/Havana
+						397 America/Hermosillo
+						398 America/Indiana/Knox
+						399 America/Indiana/Marengo
+						400 America/Indiana/Petersburg
+						401 America/Indiana/Tell_City
+						402 America/Indiana/Vevay
+						403 America/Indiana/Vincennes
+						404 America/Indiana/Winamac
+						405 America/Indianapolis
+						406 America/Inuvik
+						407 America/Iqaluit
+						408 America/Jamaica
+						409 America/Jujuy
+						410 America/Juneau
+						411 America/Kentucky/Monticello
+						412 America/Kralendijk
+						413 America/La_Paz
+						414 America/Lima
+						415 America/Los_Angeles
+						416 America/Louisville
+						417 America/Lower_Princes
+						418 America/Maceio
+						419 America/Managua
+						420 America/Manaus
+						421 America/Marigot
+						422 America/Martinique
+						423 America/Matamoros
+						424 America/Mazatlan
+						425 America/Mendoza
+						426 America/Menominee
+						427 America/Merida
+						428 America/Metlakatla
+						429 America/Mexico_City
+						430 America/Miquelon
+						431 America/Moncton
+						432 America/Monterrey
+						433 America/Montevideo
+						434 America/Montserrat
+						435 America/Nassau
+						436 America/New_York
+						437 America/Nome
+						438 America/Noronha
+						439 America/North_Dakota/Beulah
+						440 America/North_Dakota/Center
+						441 America/North_Dakota/New_Salem
+						442 America/Ojinaga
+						443 America/Panama
+						444 America/Paramaribo
+						445 America/Phoenix
+						446 America/Port-au-Prince
+						447 America/Port_of_Spain
+						448 America/Porto_Velho
+						449 America/Puerto_Rico
+						450 America/Punta_Arenas
+						451 America/Rankin_Inlet
+						452 America/Recife
+						453 America/Regina
+						454 America/Resolute
+						455 America/Rio_Branco
+						456 America/Santarem
+						457 America/Santiago
+						458 America/Santo_Domingo
+						459 America/Sao_Paulo
+						460 America/Scoresbysund
+						461 America/Sitka
+						462 America/St_Barthelemy
+						463 America/St_Johns
+						464 America/St_Kitts
+						465 America/St_Lucia
+						466 America/St_Thomas
+						467 America/St_Vincent
+						468 America/Swift_Current
+						469 America/Tegucigalpa
+						470 America/Thule
+						471 America/Tijuana
+						472 America/Toronto
+						473 America/Tortola
+						474 America/Vancouver
+						475 America/Whitehorse
+						476 America/Winnipeg
+						477 America/Yakutat
+						478 Antarctica/Casey
+						479 Antarctica/Davis
+						480 Antarctica/DumontDUrville
+						481 Antarctica/Macquarie
+						482 Antarctica/Mawson
+						483 Antarctica/McMurdo
+						484 Antarctica/Palmer
+						485 Antarctica/Rothera
+						486 Antarctica/Syowa
+						487 Antarctica/Troll
+						488 Antarctica/Vostok
+						489 Arctic/Longyearbyen
+						490 Asia/Aden
+						491 Asia/Almaty
+						492 Asia/Amman
+						493 Asia/Anadyr
+						494 Asia/Aqtau
+						495 Asia/Aqtobe
+						496 Asia/Ashgabat
+						497 Asia/Atyrau
+						498 Asia/Baghdad
+						499 Asia/Bahrain
+						500 Asia/Baku
+						501 Asia/Bangkok
+						502 Asia/Barnaul
+						503 Asia/Beirut
+						504 Asia/Bishkek
+						505 Asia/Brunei
+						506 Asia/Calcutta
+						507 Asia/Chita
+						508 Asia/Colombo
+						509 Asia/Damascus
+						510 Asia/Dhaka
+						511 Asia/Dili
+						512 Asia/Dubai
+						513 Asia/Dushanbe
+						514 Asia/Famagusta
+						515 Asia/Gaza
+						516 Asia/Hebron
+						517 Asia/Hong_Kong
+						518 Asia/Hovd
+						519 Asia/Irkutsk
+						520 Asia/Jakarta
+						521 Asia/Jayapura
+						522 Asia/Jerusalem
+						523 Asia/Kabul
+						524 Asia/Kamchatka
+						525 Asia/Karachi
+						526 Asia/Katmandu
+						527 Asia/Khandyga
+						528 Asia/Krasnoyarsk
+						529 Asia/Kuala_Lumpur
+						530 Asia/Kuching
+						531 Asia/Kuwait
+						532 Asia/Macau
+						533 Asia/Magadan
+						534 Asia/Makassar
+						535 Asia/Manila
+						536 Asia/Muscat
+						537 Asia/Nicosia
+						538 Asia/Novokuznetsk
+						539 Asia/Novosibirsk
+						540 Asia/Omsk
+						541 Asia/Oral
+						542 Asia/Phnom_Penh
+						543 Asia/Pontianak
+						544 Asia/Pyongyang
+						545 Asia/Qatar
+						546 Asia/Qostanay
+						547 Asia/Qyzylorda
+						548 Asia/Rangoon
+						549 Asia/Riyadh
+						550 Asia/Saigon
+						551 Asia/Sakhalin
+						552 Asia/Samarkand
+						553 Asia/Seoul
+						554 Asia/Shanghai
+						555 Asia/Singapore
+						556 Asia/Srednekolymsk
+						557 Asia/Taipei
+						558 Asia/Tashkent
+						559 Asia/Tbilisi
+						560 Asia/Tehran
+						561 Asia/Thimphu
+						562 Asia/Tokyo
+						563 Asia/Tomsk
+						564 Asia/Ulaanbaatar
+						565 Asia/Urumqi
+						566 Asia/Ust-Nera
+						567 Asia/Vientiane
+						568 Asia/Vladivostok
+						569 Asia/Yakutsk
+						570 Asia/Yekaterinburg
+						571 Asia/Yerevan
+						572 Atlantic/Azores
+						573 Atlantic/Bermuda
+						574 Atlantic/Canary
+						575 Atlantic/Cape_Verde
+						576 Atlantic/Faeroe
+						577 Atlantic/Madeira
+						578 Atlantic/Reykjavik
+						579 Atlantic/South_Georgia
+						580 Atlantic/St_Helena
+						581 Atlantic/Stanley
+						582 Australia/Adelaide
+						583 Australia/Brisbane
+						584 Australia/Broken_Hill
+						585 Australia/Darwin
+						586 Australia/Eucla
+						587 Australia/Hobart
+						588 Australia/Lindeman
+						589 Australia/Lord_Howe
+						590 Australia/Melbourne
+						591 Australia/Perth
+						592 Australia/Sydney
+						593 Europe/Amsterdam
+						594 Europe/Andorra
+						595 Europe/Astrakhan
+						596 Europe/Athens
+						597 Europe/Belgrade
+						598 Europe/Berlin
+						599 Europe/Bratislava
+						600 Europe/Brussels
+						601 Europe/Bucharest
+						602 Europe/Budapest
+						603 Europe/Busingen
+						604 Europe/Chisinau
+						605 Europe/Copenhagen
+						606 Europe/Dublin
+						607 Europe/Gibraltar
+						608 Europe/Guernsey
+						609 Europe/Helsinki
+						610 Europe/Isle_of_Man
+						611 Europe/Istanbul
+						612 Europe/Jersey
+						613 Europe/Kaliningrad
+						614 Europe/Kiev
+						615 Europe/Kirov
+						616 Europe/Lisbon
+						617 Europe/Ljubljana
+						618 Europe/London
+						619 Europe/Luxembourg
+						620 Europe/Madrid
+						621 Europe/Malta
+						622 Europe/Mariehamn
+						623 Europe/Minsk
+						624 Europe/Monaco
+						625 Europe/Moscow
+						626 Europe/Oslo
+						627 Europe/Paris
+						628 Europe/Podgorica
+						629 Europe/Prague
+						630 Europe/Riga
+						631 Europe/Rome
+						632 Europe/Samara
+						633 Europe/San_Marino
+						634 Europe/Sarajevo
+						635 Europe/Saratov
+						636 Europe/Simferopol
+						637 Europe/Skopje
+						638 Europe/Sofia
+						639 Europe/Stockholm
+						640 Europe/Tallinn
+						641 Europe/Tirane
+						642 Europe/Ulyanovsk
+						643 Europe/Vaduz
+						644 Europe/Vatican
+						645 Europe/Vienna
+						646 Europe/Vilnius
+						647 Europe/Volgograd
+						648 Europe/Warsaw
+						649 Europe/Zagreb
+						650 Europe/Zurich
+						651 Indian/Antananarivo
+						652 Indian/Chagos
+						653 Indian/Christmas
+						654 Indian/Cocos
+						655 Indian/Comoro
+						656 Indian/Kerguelen
+						657 Indian/Mahe
+						658 Indian/Maldives
+						659 Indian/Mauritius
+						660 Indian/Mayotte
+						661 Indian/Reunion
+						662 Pacific/Apia
+						663 Pacific/Auckland
+						664 Pacific/Bougainville
+						665 Pacific/Chatham
+						666 Pacific/Easter
+						667 Pacific/Efate
+						668 Pacific/Enderbury
+						669 Pacific/Fakaofo
+						670 Pacific/Fiji
+						671 Pacific/Funafuti
+						672 Pacific/Galapagos
+						673 Pacific/Gambier
+						674 Pacific/Guadalcanal
+						675 Pacific/Guam
+						676 Pacific/Honolulu
+						677 Pacific/Kiritimati
+						678 Pacific/Kosrae
+						679 Pacific/Kwajalein
+						680 Pacific/Majuro
+						681 Pacific/Marquesas
+						682 Pacific/Midway
+						683 Pacific/Nauru
+						684 Pacific/Niue
+						685 Pacific/Norfolk
+						686 Pacific/Noumea
+						687 Pacific/Pago_Pago
+						688 Pacific/Palau
+						689 Pacific/Pitcairn
+						690 Pacific/Ponape
+						691 Pacific/Port_Moresby
+						692 Pacific/Rarotonga
+						693 Pacific/Saipan
+						694 Pacific/Tahiti
+						695 Pacific/Tarawa
+						696 Pacific/Tongatapu
+						697 Pacific/Truk
+						698 Pacific/Wake
+						699 Pacific/Wallis
+			700 checkbox (settable, integer) Description: End Time (Optional), Value: 0
+			701 heading Quiet hours, Value: 3
+				702 text Quiet hours
+			703 container
+				704 checkbox (settable, integer) Description: Enable quiet hours Prevent messages from sending during these hours., Value: 0
+				705 text Enable quiet hours Prevent messages from sending during these hours.
+			706 text Send immediately after trigger criteria are met. Campaign starts 2026-10-30 at 10:00 (UTC).
+			201 heading Delivery Controls, Value: 2
+				202 text Delivery Controls
+			203 text Manage the number of messages your users will receive.
+			204 checkbox (settable, integer) Description: Allow users to become re-eligible to receive campaign, Value: 0
+			208 heading Frequency Capping, Value: 3
+				209 text Frequency Capping
+			210 text You have not created any Frequency Capping rules.
+			211 link Description: Manage frequency capping rules, Value: 127.0.0.1:3100/frequency-capping-rules?locale=en
+			146 button Back
+				147 image
+			148 button ✓ Compose
+				149 text ✓
+				150 text Compose
+			151 button ✓ Schedule
+				152 text ✓
+				153 text Schedule
+			154 button ✓ Target
+				155 text ✓
+				156 text Target
+			157 button ✓ Assign
+				158 text ✓
+				159 text Assign
+			160 button 5 Review
+				161 text 5
+				162 text Review
+			163 button Forward
+				164 image
+			165 button Save Draft
+		170 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			171 image
+
+The focused UI element is 181 radio button (settable, integer) Description: Action-Based Enter users when they perform actions, Value: 1

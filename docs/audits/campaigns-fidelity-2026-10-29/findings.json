@@ -1,0 +1,1215 @@
+[
+  {
+    "id": "CMP-001",
+    "area": "列表与入口",
+    "priority": "P2",
+    "type": "视觉差异",
+    "title": "Campaigns 全局布局仍不一致",
+    "braze": "侧栏约 260px，带插画和徽标的渠道菜单，独立的列表工具栏、卡片间距及表头样式。",
+    "local": "侧栏约 228px，渠道图标、字体、按钮尺寸、卡片边距、行高和搜索位置均不同。",
+    "reproduction": "Campaigns → 列表与 Create campaign",
+    "evidence": [
+      "01-braze-list",
+      "01-local-list",
+      "04-braze-create",
+      "04-local-create"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-002",
+    "area": "列表与入口",
+    "priority": "P1",
+    "type": "选项缺失",
+    "title": "状态筛选缺少 Archived 和 Idle",
+    "braze": "Status 包含 All、Active、Draft、Archived、Stopped、Idle。",
+    "local": "仅 All、Draft、Active、Stopped。",
+    "reproduction": "Campaigns → Status",
+    "evidence": [
+      "11-braze-status-options",
+      "01-local-list"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-003",
+    "area": "列表与入口",
+    "priority": "P1",
+    "type": "功能缺失",
+    "title": "高级筛选目录大量缺失",
+    "braze": "Filters 提供活动类型、创建者、编辑者、入组计划、日期、过期交互数据、受众复杂度、BrazeAI 优化、目标分群等。",
+    "local": "面板只有 Channel、Tag、Status。",
+    "reproduction": "Campaigns → Filters",
+    "evidence": [
+      "02-braze-filters",
+      "02-local-filters"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-004",
+    "area": "列表与入口",
+    "priority": "P1",
+    "type": "字段缺失",
+    "title": "Columns 缺少管理列及全选",
+    "braze": "有 All Columns、Teams、Last edited by、Created by 等选项。",
+    "local": "只有 6 个列开关，没有这 3 个管理列和 All Columns。",
+    "reproduction": "Campaigns → Columns",
+    "evidence": [
+      "03-braze-columns",
+      "03-local-columns"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-005",
+    "area": "列表与入口",
+    "priority": "P2",
+    "type": "交互差异",
+    "title": "表格排序能力不完整",
+    "braze": "Name、Stop date、Sent、Teams、Last edited 使用可访问的排序按钮。",
+    "local": "UI 主要只有 Name 排序；其余列没有对应操作，Name 也未使用同等语义按钮。",
+    "reproduction": "Campaigns → 点击列标题",
+    "evidence": [
+      "01-braze-list",
+      "01-local-list"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-006",
+    "area": "列表与入口",
+    "priority": "P2",
+    "type": "交互差异",
+    "title": "搜索与筛选标签交互不同",
+    "braze": "搜索框带 Search 提交按钮；筛选条件用各自可关闭的标签展示。",
+    "local": "输入即时筛选，条件以汇总文字展示，缺少逐条关闭的标签。",
+    "reproduction": "Campaigns → Search / 应用筛选",
+    "evidence": [
+      "01-braze-list",
+      "02-braze-filters",
+      "01-local-list",
+      "02-local-filters"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-007",
+    "area": "列表与入口",
+    "priority": "P2",
+    "type": "选项缺失",
+    "title": "分页缺少 96 行和页码导航",
+    "braze": "每页 12/24/48/96 行，支持页码。",
+    "local": "每页 12/24/48 行，仅上一页、下一页。",
+    "reproduction": "Campaigns → 列表底部",
+    "evidence": [
+      "01-braze-list",
+      "01-local-list"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-008",
+    "area": "列表与入口",
+    "priority": "P1",
+    "type": "页面缺失",
+    "title": "Copy to workspace 弹窗未复刻",
+    "braze": "行菜单有 Copy to workspace，进入选择目标工作区的两步弹窗。",
+    "local": "行菜单没有该入口。",
+    "reproduction": "Campaigns → More Actions → Copy to workspace",
+    "evidence": [
+      "12-braze-row-actions",
+      "12-braze-copy-workspace",
+      "01-local-list"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-009",
+    "area": "列表与入口",
+    "priority": "P1",
+    "type": "操作缺失",
+    "title": "批量操作缺少 Archive",
+    "braze": "选中行后有 Archive 和 Tag as。",
+    "local": "选中行后只有批量打标签。",
+    "reproduction": "Campaigns → 勾选活动",
+    "evidence": [
+      "13-braze-bulk",
+      "01-local-list"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-010",
+    "area": "列表与入口",
+    "priority": "P1",
+    "type": "入口缺失",
+    "title": "列表缺少 Priority Sorter 快捷入口",
+    "braze": "Campaigns 列表有 Priority Sorter 入口。",
+    "local": "列表没有入口；本地在 IAM Schedule → View exact priority 已有优先级弹窗，不能记为整个功能不存在。",
+    "reproduction": "Campaigns → 列表底部；本地 IAM → Schedule",
+    "evidence": [
+      "14-braze-priority-sorter",
+      "14-local-priority-manager",
+      "01-local-list"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-011",
+    "area": "列表与入口",
+    "priority": "P2",
+    "type": "交互与视觉差异",
+    "title": "优先级弹窗结构未对齐",
+    "braze": "三档带计数、折叠、复选、多选操作、上下移动按钮、消息链接；本账号显示 View only。",
+    "local": "三块普通分组、每行优先级下拉和数字顺序输入；缺少折叠、计数、复选与同等行操作。",
+    "reproduction": "Priority Sorter；本地 IAM → Schedule → View exact priority",
+    "evidence": [
+      "14-braze-priority-sorter",
+      "14-local-priority-manager"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-012",
+    "area": "列表与入口",
+    "priority": "P2",
+    "type": "布局缺陷",
+    "title": "Create campaign 菜单底部被视口裁切",
+    "braze": "菜单中的 API campaign 可完整展示并点击。",
+    "local": "741px 高视口中 API campaign 位于约 y=740–773，鼠标不可正常点击；聚焦后 Enter 可进入，处理函数本身存在。",
+    "reproduction": "Campaigns → Create campaign → 菜单底部",
+    "evidence": [
+      "04-braze-create",
+      "33-local-create-menu-bottom"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-013",
+    "area": "公共编辑步骤",
+    "priority": "P1",
+    "type": "区块缺失",
+    "title": "Campaign brief 上传区缺失",
+    "braze": "新活动详情有可选 brief 上传，支持 PDF/TXT/MD/CSV/DOCX，15MB。",
+    "local": "公共详情卡只有名称、Teams、标签和 ID，没有 brief 区。",
+    "reproduction": "Create campaign → Compose → Campaign Details",
+    "evidence": [
+      "09-braze-compose-details",
+      "33-local-api-campaign",
+      "18-local-push"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-014",
+    "area": "公共编辑步骤",
+    "priority": "P2",
+    "type": "数据呈现差异",
+    "title": "Campaign ID 的形式及用途未对齐",
+    "braze": "展示独立的公共 UUID 和 Copy。",
+    "local": "普通活动显示 cmp_* 内部标识；API Campaign 另有一个可编辑 ID 输入。",
+    "reproduction": "Compose → Campaign ID / API campaign",
+    "evidence": [
+      "09-braze-compose-details",
+      "18-local-push",
+      "33-braze-api-campaign",
+      "33-local-api-campaign"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-015",
+    "area": "公共编辑步骤",
+    "priority": "P2",
+    "type": "视觉与交互差异",
+    "title": "Variant 工具和校验状态不同",
+    "braze": "变体以带状态颜色、警告图标的标签展示，新增及管理操作集中。",
+    "local": "普通渠道附加常显的名称输入、Copy、Delete；标签样式和校验标记未对齐。",
+    "reproduction": "Compose → Variants",
+    "evidence": [
+      "18-braze-push",
+      "18-local-push-editor",
+      "30-braze-multichannel-channels",
+      "30-local-multichannel-channels"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-016",
+    "area": "公共编辑步骤",
+    "priority": "P1",
+    "type": "行为缺陷",
+    "title": "步骤打勾只依赖导航位置",
+    "braze": "未完成的先前步骤保留警告状态，完成状态由校验决定。",
+    "local": "只要进入后续步骤，所有前面的步骤都显示 ✓；并不能代表内容有效。",
+    "reproduction": "打开未完整配置的草稿 → 直接进入 Review",
+    "evidence": [
+      "08-braze-review",
+      "08-local-review"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-017",
+    "area": "发送计划",
+    "priority": "P2",
+    "type": "视觉差异",
+    "title": "发送类型与 Timing 控件未按原版呈现",
+    "braze": "Scheduled / Action-Based / API-Triggered 是带描述的卡片；Timing 使用单选行及帮助入口。",
+    "local": "发送类型是普通按钮，Timing 是原生下拉，缺少相同的卡片说明层级。",
+    "reproduction": "普通渠道 → Schedule Delivery",
+    "evidence": [
+      "05-braze-schedule-top",
+      "19-braze-schedule-frequency",
+      "05-local-schedule-default"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-018",
+    "area": "发送计划",
+    "priority": "P1",
+    "type": "行为缺陷",
+    "title": "默认立即发送与条件字段、Review 不一致",
+    "braze": "选择立即发送时，表单和摘要应一致表达立即发送。",
+    "local": "未设置 delivery.timing 的草稿中，下拉显示立即发送，却仍展示日期/频率；Review 显示 designated times 和 No upcoming messages scheduled。",
+    "reproduction": "打开 Audit email → Schedule，不更改 Timing → Review",
+    "evidence": [
+      "05-local-schedule-default",
+      "08-local-review"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-019",
+    "area": "发送计划",
+    "priority": "P1",
+    "type": "配置缺失",
+    "title": "Intelligent Timing 专属设置缺失",
+    "braze": "有 quiet hours、热门时段或自定义 fallback、投递时间预览及适用条件说明。",
+    "local": "选择 intelligent 后仍复用普通日期/时间字段，没有 fallback 和投递时间预览。",
+    "reproduction": "普通渠道 → Schedule → Intelligent Timing",
+    "evidence": [
+      "20-braze-intelligent-timing",
+      "05-local-schedule-default"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-020",
+    "area": "发送计划",
+    "priority": "P1",
+    "type": "选项缺失",
+    "title": "Action-Based 触发器目录大幅简化",
+    "braze": "本账号当前目录包含常规事件、资料更新、电商、入站 SMS/WhatsApp/LINE、位置等共 22 项。",
+    "local": "公共发送计划只提供 Start Session、Perform Custom Event、Make Purchase、Interact With Campaign 四项。IAM 使用独立组件，不能据此判定 IAM 同样只有四项。",
+    "reproduction": "普通渠道 → Action-Based → 触发器目录",
+    "evidence": [
+      "21-braze-trigger-options",
+      "21-braze-action-delivery",
+      "05-local-schedule-default"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-021",
+    "area": "发送计划",
+    "priority": "P1",
+    "type": "配置差异",
+    "title": "Action-Based 的延迟与活动周期结构未对齐",
+    "braze": "Schedule Delay 下拉、开始日期和时间、公司时区、可选结束时间、摘要分别展示。",
+    "local": "公共组件只有 Delay(minutes)、Start date 和通用结束字段，缺少相同的周期配置层级及摘要。",
+    "reproduction": "普通渠道 → Schedule → Action-Based",
+    "evidence": [
+      "21-braze-action-delivery",
+      "05-local-schedule-default"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-022",
+    "area": "发送计划",
+    "priority": "P1",
+    "type": "区块缺失",
+    "title": "API-Triggered 缺少请求示例与标识操作",
+    "braze": "展示 Campaign ID、Copy 和 API/cURL 示例说明。",
+    "local": "公共发送计划只显示 campaigns.trigger 权限提示和通用控制项。",
+    "reproduction": "普通渠道 → Schedule → API-Triggered",
+    "evidence": [
+      "22-braze-api-delivery",
+      "05-local-schedule-default"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-023",
+    "area": "发送计划",
+    "priority": "P2",
+    "type": "控件差异",
+    "title": "重新入组间隔单位未对齐",
+    "braze": "间隔值与时间单位可分别设置。",
+    "local": "公共发送计划固定为天数数字输入，未提供同等单位选择。",
+    "reproduction": "普通渠道 → Delivery Controls → Re-eligibility",
+    "evidence": [
+      "05-braze-schedule-current",
+      "05-local-schedule-default"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-024",
+    "area": "发送计划",
+    "priority": "P2",
+    "type": "区块差异",
+    "title": "Frequency Capping 展示与管理入口未对齐",
+    "braze": "显示频控状态和管理频控的链接。",
+    "local": "公共组件以 Workspace delivery policies 汇总展示，没有同等的频控管理入口。",
+    "reproduction": "普通渠道 → Schedule → Delivery Controls",
+    "evidence": [
+      "05-braze-schedule-current",
+      "05-local-schedule-default"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-025",
+    "area": "受众",
+    "priority": "P2",
+    "type": "交互差异",
+    "title": "分群选择器未复刻搜索与多选呈现",
+    "braze": "使用可搜索的分群选择器，选中项在控件内展示。",
+    "local": "原生 Add segment 下拉加独立 Segment operator，控件与已选项的呈现不同。",
+    "reproduction": "Target Audiences → Target Users By Segment",
+    "evidence": [
+      "06-braze-audience",
+      "06-local-audience",
+      "41-local-audience-filter-fields"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-026",
+    "area": "受众",
+    "priority": "P1",
+    "type": "目录与交互缺失",
+    "title": "Additional Filters 缺少原版分层筛选目录",
+    "braze": "有 16 个类别与 6 个其他入口，可按分群/CSV、自定义事件、Sessions、Retargeting、设备、位置、电商等选择。",
+    "local": "只有少量固定字段和通用运算符表单，没有上述分层目录；默认组、拖动柄、组标题编辑和 OR 菜单布局也不同。",
+    "reproduction": "Target Audiences → Select filter；本地 + Add filter group",
+    "evidence": [
+      "41-braze-audience-filter-catalog",
+      "41-local-audience-filter-fields"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-027",
+    "area": "受众",
+    "priority": "P2",
+    "type": "页面差异",
+    "title": "User Lookup 弹窗被替换为行内输入",
+    "braze": "打开独立 User Lookup 弹窗，搜索 External User ID 或 Braze ID。",
+    "local": "常显一个 Email or external ID 输入和 Lookup User 按钮，入口、标识范围和结果承载方式未对齐。",
+    "reproduction": "Target Audiences → Lookup User",
+    "evidence": [
+      "40-braze-user-lookup",
+      "06-local-audience"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-028",
+    "area": "受众",
+    "priority": "P1",
+    "type": "功能入口缺失",
+    "title": "A/B Testing 缺少 Optimize with BrazeAI",
+    "braze": "有优化开关，并提示至少两个变体及 Compose messages 快捷入口。",
+    "local": "仅手动分配变体与控制组，没有 AI 优化入口。",
+    "reproduction": "Target Audiences → A/B Testing",
+    "evidence": [
+      "06-braze-audience",
+      "06-local-audience"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-029",
+    "area": "受众",
+    "priority": "P2",
+    "type": "区块缺失",
+    "title": "Suppression Lists 独立区块未复刻",
+    "braze": "展示已应用名单或无名单状态，并链接到 Suppression Lists。",
+    "local": "只有 Workspace delivery policies 中的 suppression 条数，没有同等名单区块和管理入口。",
+    "reproduction": "Target Audiences → Suppression Lists",
+    "evidence": [
+      "06-braze-audience",
+      "06-local-audience",
+      "43-braze-audience-statistics"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-030",
+    "area": "受众",
+    "priority": "P1",
+    "type": "页面与统计缺失",
+    "title": "Total Population 缺少队列、刷新与细分统计",
+    "braze": "有精确人数、占比、计算时间、刷新、Calculation Queue 弹窗、渠道 breakdown 和可展开 LTV。",
+    "local": "受众编辑页只有 reachable/matched/workspace/GCG 汇总；Review 虽有基础 breakdown，仍缺少队列、计算历史与 LTV 等。",
+    "reproduction": "Target Audiences → Total Population → View calculation queue / Show Additional Statistics",
+    "evidence": [
+      "42-braze-calculation-queue",
+      "43-braze-audience-statistics",
+      "06-local-audience",
+      "08-local-review"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-031",
+    "area": "转化与摘要",
+    "priority": "P1",
+    "type": "选项缺失",
+    "title": "Conversion event 类型目录不一致",
+    "braze": "本次可见 9 类：自定义事件、会话、升级应用，以及查看产品/更新购物车/开始结账/下单/取消订单/退款订单。",
+    "local": "本地为会话、购买、自定义事件、打开邮件、点击邮件；缺少升级与对应电商类型，并增加原账号当前目录未列出的邮件类型。",
+    "reproduction": "Assign Conversions → Conversion event type",
+    "evidence": [
+      "07-braze-conversion-types",
+      "07-local-conversions"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-032",
+    "area": "转化与摘要",
+    "priority": "P1",
+    "type": "行为缺陷",
+    "title": "旧草稿的转化编辑页和 Review 显示不同事件",
+    "braze": "同一活动的事件类型在编辑与摘要之间应一致。",
+    "local": "无 config.conversionEvents、旧字段为 Make Purchase 的草稿，编辑页默认 Starts Session，Review 却为 Made Purchase。",
+    "reproduction": "Audit email → Assign Conversions → Review，不修改事件",
+    "evidence": [
+      "07-local-conversions",
+      "08-local-review"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-033",
+    "area": "转化与摘要",
+    "priority": "P2",
+    "type": "视觉差异",
+    "title": "转化配置的字段层级与说明不足",
+    "braze": "窄列选择器、事件说明、应用范围、截止时间及计算摘要分层呈现。",
+    "local": "宽表单字段，缺少同等说明和截止时间摘要。",
+    "reproduction": "Assign Conversions",
+    "evidence": [
+      "07-braze-conversions",
+      "07-local-conversions"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-034",
+    "area": "转化与摘要",
+    "priority": "P1",
+    "type": "区块缺失",
+    "title": "Review 缺少 Agentic Standards",
+    "braze": "摘要页有 Agentic Standards 评估区域；本账号显示未配置 standards 及 Agent Console 入口。",
+    "local": "没有该区域及对应状态。",
+    "reproduction": "Review Summary → Agentic Standards",
+    "evidence": [
+      "08-braze-review",
+      "08-local-review"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-035",
+    "area": "转化与摘要",
+    "priority": "P2",
+    "type": "视觉差异",
+    "title": "Review 卡片、编辑入口及统计呈现未对齐",
+    "braze": "原版的信息层级、卡片边距、图标编辑入口及人口统计布局有明确结构。",
+    "local": "为简化的平铺卡片与文字编辑按钮，统计表内容和布局也不同。",
+    "reproduction": "Review Summary",
+    "evidence": [
+      "08-braze-review",
+      "08-local-review"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-036",
+    "area": "转化与摘要",
+    "priority": "P2",
+    "type": "权限状态差异",
+    "title": "Limited access 下的 Launch 按钮状态不同",
+    "braze": "本次原版账号处于 Limited access，摘要页仅显示 Save Draft。",
+    "local": "本地同样标记 Limited access，但摘要出现可点击 Launch Campaign。未点击，不能据此判断真实权限或发送行为。",
+    "reproduction": "Review Summary → 页面底部",
+    "evidence": [
+      "08-braze-review",
+      "08-local-review"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-037",
+    "area": "Email",
+    "priority": "P2",
+    "type": "视觉差异",
+    "title": "发送设置页结构和尺寸仍不一致",
+    "braze": "全屏图标栏、左导航、中间设置表单、右侧预览，字段与间距按原版组织。",
+    "local": "发送设置已存在，但栏宽、导航文字、图标、字段行距、Preheader 换行和保存/退出位置不同。",
+    "reproduction": "Email → Sending Settings / Sending Info",
+    "evidence": [
+      "10-braze-email-sending-current",
+      "10-local-email-sending",
+      "32-local-email-drag-settings"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-038",
+    "area": "Email",
+    "priority": "P2",
+    "type": "字段与权限差异",
+    "title": "发送身份、IP Pool 和 Reply-to 控件未对齐",
+    "braze": "本账号身份/IP Pool 只读，并显示受限的 Customize Reply-to 控件。",
+    "local": "本地可编辑身份/IP Pool，缺少同位置的 Customize Reply-to 选择项。权限原因需用同等账号能力再核实。",
+    "reproduction": "Email → Sending Info",
+    "evidence": [
+      "10-braze-email-sending-current",
+      "10-local-email-sending"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-039",
+    "area": "Email",
+    "priority": "P2",
+    "type": "编辑交互差异",
+    "title": "Subject / Preheader 未复刻 Liquid 代码字段",
+    "braze": "代码式输入带 Add Liquid 和 AI 辅助入口。",
+    "local": "普通 textarea 和不同的插入工具，编辑器样式、入口位置及交互不同。",
+    "reproduction": "Email → Sending Info → Subject / Preheader",
+    "evidence": [
+      "10-braze-email-sending-current",
+      "10-local-email-sending"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-040",
+    "area": "Email",
+    "priority": "P1",
+    "type": "设置缺失",
+    "title": "Advanced 缺少 Headers 与 Extras 编辑区",
+    "braze": "高级设置有附件、Headers 和 Extras 区域。",
+    "local": "高级设置没有 Headers/Extras；加入了不同位置的打开/点击追踪、UTM 等控件。",
+    "reproduction": "Email → Sending Settings → Advanced",
+    "evidence": [
+      "15-braze-email-advanced",
+      "15-local-email-advanced"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-041",
+    "area": "Email",
+    "priority": "P2",
+    "type": "交互差异",
+    "title": "邮件附件上传流程未完整复刻",
+    "braze": "拖放上传、2MB 提示、媒体库以及 URL/文件名配置分层展示。",
+    "local": "基本附件输入存在，但拖放区、说明、媒体选择与表单布局不同。",
+    "reproduction": "Email → Advanced → Attachments",
+    "evidence": [
+      "15-braze-email-advanced",
+      "15-local-email-advanced"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-042",
+    "area": "Email",
+    "priority": "P1",
+    "type": "页面结构差异",
+    "title": "HTML 编辑页三栏布局未复刻",
+    "braze": "左功能导航、中间代码编辑器、右预览，带行号和代码工具。",
+    "local": "主要是左侧大预览和右侧窄代码区，HTML/Classic/Plaintext/AMP 等标签及顶栏行为与原版不同。",
+    "reproduction": "Email → HTML code editor",
+    "evidence": [
+      "16-braze-email-html",
+      "16-local-email-html"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-043",
+    "area": "Email",
+    "priority": "P1",
+    "type": "工具缺失",
+    "title": "HTML 编辑页缺少同等代码工具和状态",
+    "braze": "可见代码搜索、Add images、Expand Content Blocks、CSS Inlining 状态、Download / Done。",
+    "local": "未提供同等工具组合及状态呈现；保存与完成流程也不同。",
+    "reproduction": "Email → HTML code editor → 工具栏与底栏",
+    "evidence": [
+      "16-braze-email-html",
+      "16-local-email-html"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-044",
+    "area": "Email",
+    "priority": "P1",
+    "type": "页面缺失",
+    "title": "Gmail Promotion 配置页未复刻",
+    "braze": "有公司 Logo、Subject、Image、Discount Offer、Deal Card、Promotion Cards 与生成 HTML head 的配置。",
+    "local": "HTML 编辑体验没有对应完整配置页。",
+    "reproduction": "Email HTML editor → Gmail Promotion",
+    "evidence": [
+      "17-braze-gmail-promotion",
+      "16-local-email-html"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-045",
+    "area": "Email",
+    "priority": "P2",
+    "type": "导航差异",
+    "title": "拖拽编辑器外层导航未对齐",
+    "braze": "Content 下是 Design and Build、Link Management、Personalization、Languages，另有 Copy 与 Style Settings。",
+    "local": "本地为 MESSAGE 下 Content、Personalization、Link Management、Languages，层级、顺序和外层布局不同。发送设置和 Style Settings 入口已存在。",
+    "reproduction": "Email → Drag-and-drop editor → 外层导航",
+    "evidence": [
+      "32-braze-email-drag",
+      "32-local-email-drag",
+      "32-local-email-drag-settings"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-046",
+    "area": "Push",
+    "priority": "P2",
+    "type": "布局与交互差异",
+    "title": "多平台预览和消息编辑布局不同",
+    "braze": "可同时查看 iOS 与 Android 预览，带平台预览状态，Compose/Settings/Test 与 Manage languages 独立。",
+    "local": "通过 Preview platform 切换单个预览；语言配置常显在表单中，平台选择、预览与编辑区域结构不同。",
+    "reproduction": "Push → Compose",
+    "evidence": [
+      "18-braze-push",
+      "18-local-push-editor"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-047",
+    "area": "Push",
+    "priority": "P1",
+    "type": "设置缺失",
+    "title": "iOS 高级设置不完整",
+    "braze": "有 Notification group、Alert options、content-available、mutable-content、可选 badge、Relevance Score、Expiration 等。",
+    "local": "仅 interruption level、category/sound/collapseId/threadId/summaryArgument、TTL、badge、Silent push，缺少上述独立控件。",
+    "reproduction": "Push → Settings → iOS",
+    "evidence": [
+      "18-braze-push-ios-settings",
+      "18-local-push-settings"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-048",
+    "area": "Push",
+    "priority": "P1",
+    "type": "设置缺失",
+    "title": "Android Notification 设置未复刻",
+    "braze": "有通知频道、Custom notification channel、Category、Visibility、TTL 单位、Notification ID、App icon color、Display priority、Sound。",
+    "local": "Settings 是一套通用/iOS 为主的字段，没有对应 Android 设置区与管理权限提示。",
+    "reproduction": "Push → Settings → Android",
+    "evidence": [
+      "18-braze-push-all-settings",
+      "18-local-push-settings"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-049",
+    "area": "In-App Message",
+    "priority": "P1",
+    "type": "行为配置缺失",
+    "title": "传统编辑器未支持按钮的 Android / iOS 独立行为",
+    "braze": "每个按钮分别配置 Android 和 iOS 的点击行为。",
+    "local": "每个按钮只有一个统一的 on-click behavior。",
+    "reproduction": "IAM → Traditional → Compose → On-click behavior",
+    "evidence": [
+      "23-braze-iam-platform-actions",
+      "23-local-iam-traditional"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-050",
+    "area": "In-App Message",
+    "priority": "P1",
+    "type": "设置缺失",
+    "title": "传统编辑器缺少 Light/Dark mode 样式切换",
+    "braze": "Design 有 Dark mode 启用及 Light mode style / Dark mode style，支持分别编辑。",
+    "local": "Design 有颜色及 Color profile，但没有同等模式切换。",
+    "reproduction": "IAM → Traditional → Design",
+    "evidence": [
+      "23-braze-iam-design",
+      "23-local-iam-design"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-051",
+    "area": "In-App Message",
+    "priority": "P2",
+    "type": "视觉差异",
+    "title": "传统 Settings 的 Accessibility 与 KVP 结构不同",
+    "braze": "Accessibility 与 KVP 在一个 Settings 页面顺序展示。",
+    "local": "拆为 Key-value pairs / Accessibility 二级页签，控件和预览尺寸不同；两项均已存在。",
+    "reproduction": "IAM → Traditional → Settings",
+    "evidence": [
+      "23-braze-iam-settings",
+      "23-local-iam-settings",
+      "23-local-iam-accessibility"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-052",
+    "area": "Banner",
+    "priority": "P1",
+    "type": "流程差异",
+    "title": "Banner 创建入口缺少原版的分阶段选择",
+    "braze": "先选 Placement，再选 Drag-and-drop / HTML / Templates 卡片，进入全屏编辑器。",
+    "local": "Placement 字段已存在，但未选择时即显示完整行内 builder；以原生模式及模板下拉代替选择卡片。",
+    "reproduction": "Create campaign → Banner → 编辑体验",
+    "evidence": [
+      "24-braze-banner-entry",
+      "24-local-banner"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-053",
+    "area": "Banner",
+    "priority": "P1",
+    "type": "组件缺失",
+    "title": "Banner 积木目录不完整",
+    "braze": "Title、Paragraph、Button、Image、Link、Spacer、Custom Code、Phone Capture、Email Capture、Manage Subscriptions。",
+    "local": "只有 Title/Text/Image/Button/HTML/Spacer，缺少 Link 及三种采集/订阅积木。",
+    "reproduction": "Banner → Drag-and-drop builder → Blocks",
+    "evidence": [
+      "24-braze-banner-builder",
+      "24-local-banner"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-054",
+    "area": "Banner",
+    "priority": "P1",
+    "type": "工具与页面差异",
+    "title": "Banner 全屏编辑工具未完整复刻",
+    "braze": "有 Style、设备切换、Canvas Size、Outlines、Personalization、Manage Languages、Copywriter 和 Cancel/Done。",
+    "local": "行内 Rows/Blocks/属性面板，没有同等全屏结构及工具集合。Undo/Redo 已存在。",
+    "reproduction": "Banner → builder",
+    "evidence": [
+      "24-braze-banner-builder",
+      "24-local-banner"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-055",
+    "area": "Content Card",
+    "priority": "P2",
+    "type": "布局差异",
+    "title": "Content Card 缺少原版设备预览和页签结构",
+    "braze": "设备预览选择、Compose/Settings/Test、Language 与语言管理入口。",
+    "local": "预览为固定卡片，页签是 Compose/Settings/Card controls；没有同等设备选择与语言区域。Card controls 生命周期功能已存在。",
+    "reproduction": "Content Card → Compose",
+    "evidence": [
+      "25-braze-content-card",
+      "25-local-content-card"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-056",
+    "area": "Content Card",
+    "priority": "P1",
+    "type": "配置缺失",
+    "title": "Content Card 点击行为未按平台分开",
+    "braze": "行为按平台配置，当前默认 None；Pin 在 Compose。",
+    "local": "统一点击行为且默认 Open web URL；Pin 移入 Settings。",
+    "reproduction": "Content Card → Compose → On-click behavior",
+    "evidence": [
+      "25-braze-content-card",
+      "25-local-content-card",
+      "25-local-content-settings"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-057",
+    "area": "Content Card",
+    "priority": "P1",
+    "type": "设置缺失",
+    "title": "Content Card Settings 缺少 Accessibility",
+    "braze": "有辅助功能语言、Liquid 语言入口及 KVP。",
+    "local": "只有 Category、Pin、click tracking、KVP，没有辅助功能语言设置。",
+    "reproduction": "Content Card → Settings",
+    "evidence": [
+      "25-braze-content-settings",
+      "25-local-content-settings"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-058",
+    "area": "SMS/MMS/RCS",
+    "priority": "P2",
+    "type": "能力门槛差异",
+    "title": "消息类型与 Contact Card 的能力门槛未对齐",
+    "braze": "当前订阅组权限下，Contact Card 显示 MMS 能力限制与说明，不能进入可用编辑状态。",
+    "local": "本地直接提供 SMS/MMS/RCS 和 vCard 编辑字段。原版真实 MMS/RCS 编辑器因账号能力受限未验证。",
+    "reproduction": "SMS → Contact Card / 类型选择",
+    "evidence": [
+      "26-braze-sms",
+      "26-braze-contact-card",
+      "26-local-sms",
+      "26-local-contact-card"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-059",
+    "area": "SMS/MMS/RCS",
+    "priority": "P2",
+    "type": "布局与编辑差异",
+    "title": "SMS 预览、语言和字段工具不同",
+    "braze": "左侧消息气泡预览，Liquid/AI 字段及语言入口按原版组织。",
+    "local": "手机外框预览、普通消息输入、额外 Sending number/opt-out 字段，语言和工具位置不同。",
+    "reproduction": "SMS → Compose",
+    "evidence": [
+      "26-braze-sms",
+      "26-local-sms"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-060",
+    "area": "Webhook",
+    "priority": "P1",
+    "type": "流程差异",
+    "title": "Webhook 缺少原版初始模板选择页",
+    "braze": "初始 Compose 有模板卡片和 Choose New Template 入口。",
+    "local": "直接进入请求表单，只有 Templates 按钮和简化的模板管理。",
+    "reproduction": "Create campaign → Webhook",
+    "evidence": [
+      "27-braze-webhook",
+      "27-local-webhook"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-061",
+    "area": "Webhook",
+    "priority": "P1",
+    "type": "配置入口缺失",
+    "title": "Credential 管理入口未复刻",
+    "braze": "有受管理的 Credential 下拉；当前账号无可用凭据时禁用。",
+    "local": "只有 None / Bearer / Basic 等快速认证字段，缺少同等受管理凭据选择。",
+    "reproduction": "Webhook → Compose → Authentication",
+    "evidence": [
+      "27-braze-webhook",
+      "27-local-webhook"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-062",
+    "area": "Webhook",
+    "priority": "P2",
+    "type": "页面与编辑差异",
+    "title": "Webhook 请求预览及 Liquid 字段布局不同",
+    "braze": "左侧请求预览、右侧 Compose/Test、Manage languages 与代码式 URL/Body/KVP 输入。",
+    "local": "堆叠的长表单及靠下预览，使用普通 URL/JSON 输入和不同的插入工具。",
+    "reproduction": "Webhook → Compose",
+    "evidence": [
+      "27-braze-webhook",
+      "27-local-webhook"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-063",
+    "area": "Webhook",
+    "priority": "P2",
+    "type": "产品文案差异",
+    "title": "Webhook 页面暴露本地部署环境变量",
+    "braze": "原版按账号能力和编辑上下文展示说明。",
+    "local": "在产品编辑流直接出现 WEBHOOK_DELIVERY_ENABLED / WEBHOOK_ALLOWED_HOSTS 部署变量说明。",
+    "reproduction": "Webhook → 表单顶部提示",
+    "evidence": [
+      "27-braze-webhook",
+      "27-local-webhook"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-064",
+    "area": "WhatsApp",
+    "priority": "P1",
+    "type": "流程差异",
+    "title": "订阅组、WABA 与布局选择的顺序不同",
+    "braze": "先选 Subscription Group，再显示 WABA 和类型卡片，然后八种布局卡片及 Select layout。",
+    "local": "未选订阅组即展示模板/WABA/编辑表单，使用不同的选择与分栏结构。八种布局并非全部缺失。",
+    "reproduction": "Create campaign → WhatsApp",
+    "evidence": [
+      "28-braze-whatsapp-layouts",
+      "28-local-whatsapp"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-065",
+    "area": "WhatsApp",
+    "priority": "P1",
+    "type": "设置缺失",
+    "title": "Text response 缺少语言与 URL preview 控件",
+    "braze": "有 Add languages、URL preview 开关及 click tracking。",
+    "local": "有 Header/Footer、模拟会话窗口等不同字段，但缺少同等语言及 URL preview 设置。",
+    "reproduction": "WhatsApp → Response → Text",
+    "evidence": [
+      "28-braze-whatsapp-text",
+      "28-local-whatsapp-response"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-066",
+    "area": "WhatsApp",
+    "priority": "P2",
+    "type": "信息架构差异",
+    "title": "Provider 信息和模板工具不在同等流程位置",
+    "braze": "按订阅组及所选类型展示对应编辑器。",
+    "local": "额外展示样例 WABA、质量/模板管理等 Provider 信息和本地模拟状态，预览左右位置也不同。",
+    "reproduction": "WhatsApp → 模板 / Response",
+    "evidence": [
+      "28-braze-whatsapp-layouts",
+      "28-braze-whatsapp-text",
+      "28-local-whatsapp",
+      "28-local-whatsapp-response"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-067",
+    "area": "LINE",
+    "priority": "P1",
+    "type": "流程与页面差异",
+    "title": "LINE 未复刻订阅组后的全屏编辑体验",
+    "braze": "订阅组后 Launch editor，打开全屏 Compose/Settings/Preview，带 Cancel/Done。",
+    "local": "未选组即出现行内 Message Stack 表单，缺少同等编辑器外壳和入口流程。",
+    "reproduction": "Create campaign → LINE → Launch editor",
+    "evidence": [
+      "29-braze-line-editor",
+      "29-local-line"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-068",
+    "area": "LINE",
+    "priority": "P1",
+    "type": "工具与组件差异",
+    "title": "LINE 积木和编辑工具未对齐",
+    "braze": "Text/Image/Card-based/Rich message 积木，Undo/Redo、设备切换、Personalization、Copywriter。",
+    "local": "Text/Image/Rich/Carousel/Flex 的表单选择，缺少同等积木与工具栏。最大五条堆栈已存在。",
+    "reproduction": "LINE → 编辑器",
+    "evidence": [
+      "29-braze-line-editor",
+      "29-local-line"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-069",
+    "area": "Multichannel",
+    "priority": "P1",
+    "type": "流程差异",
+    "title": "渠道选择和导航未按原版复刻",
+    "braze": "先选渠道，随后 Channels 标签页和 Add channel 菜单。",
+    "local": "以渠道复选框行和额外子变体表单呈现，页面组织与操作顺序不同。",
+    "reproduction": "Create campaign → Multichannel",
+    "evidence": [
+      "30-braze-multichannel-first",
+      "30-braze-multichannel-channels",
+      "30-local-multichannel",
+      "30-local-multichannel-channels"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-070",
+    "area": "Multichannel",
+    "priority": "P1",
+    "type": "行为缺陷",
+    "title": "Preview and test 显示旧消息",
+    "braze": "当前选中渠道与变体的预览应对应正在编辑的内容。",
+    "local": "Push 编辑器为 Retained push / Push remains，公共预览和测试弹窗仍显示 Audit title / Hello first_name 的旧内容。",
+    "reproduction": "打开 Audit multichannel → 查看 Push 编辑内容 → Preview and test",
+    "evidence": [
+      "30-local-multichannel-channels",
+      "31-local-multichannel-stale-preview"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-071",
+    "area": "API Campaign",
+    "priority": "P1",
+    "type": "流程缺失",
+    "title": "API Campaign 错用了普通五步流程",
+    "braze": "是独立单页 API 活动配置，没有普通 Compose/Schedule/Audience 五步流程。",
+    "local": "复用普通五步编辑页，加入 Event mapping、Record event 与 Allow external attribution 等本地模拟字段。",
+    "reproduction": "Create campaign → API campaign",
+    "evidence": [
+      "33-braze-api-campaign",
+      "33-local-api-campaign"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-072",
+    "area": "API Campaign",
+    "priority": "P1",
+    "type": "标识与配置缺失",
+    "title": "API Campaign 渠道变体标识和示例缺失",
+    "braze": "支持九类消息渠道选择，包含独立 Android/iOS/Kindle/Web Push；展示生成的 Campaign ID、Message Variation ID、Copy、messages/send 示例及附加控制。",
+    "local": "只有可编辑 API campaign ID、事件记录等字段，没有对应渠道变体标识和请求示例区。",
+    "reproduction": "API campaign → 渠道与 API identifiers",
+    "evidence": [
+      "33-braze-api-campaign",
+      "33-local-api-campaign"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-073",
+    "area": "Feature Flag Experiment",
+    "priority": "P1",
+    "type": "流程缺失",
+    "title": "Feature flag experiment 步骤不一致",
+    "braze": "四步：Experiment Basics、Target Audience、Assign Conversions、Review Summary。",
+    "local": "使用五步普通活动流程，加入了原流程不存在的 Schedule Delivery。",
+    "reproduction": "Create campaign → Feature flag experiment",
+    "evidence": [
+      "34-braze-feature-basics",
+      "34-local-feature-basics"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-074",
+    "area": "Feature Flag Experiment",
+    "priority": "P1",
+    "type": "配置区差异",
+    "title": "Experiment Basics 未复刻实验与 Feature Flag 设置",
+    "braze": "有变体、Experiment setup；当前没有 flags，展示空状态和创建 flag 链接。",
+    "local": "以 Rollout percentage、Variant properties JSON、Primary conversion 等简化字段替代。已选 flag 的深层属性因账号无 flag 未验证。",
+    "reproduction": "Feature flag experiment → Experiment Basics",
+    "evidence": [
+      "34-braze-feature-basics",
+      "34-local-feature-basics"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-075",
+    "area": "Operator",
+    "priority": "P1",
+    "type": "流程差异",
+    "title": "Create with Operator 被实现成另一种活动类型",
+    "braze": "从 Create 打开右侧 AI 对话面板，含目标/渠道/受众/时间提示、对话输入、历史、附件及 Auto-approve。",
+    "local": "创建 operator 渠道的普通五步活动，只有目标 textarea 和 Generate Local Plan，缺少同等入口体验。",
+    "reproduction": "Create campaign → Create with Operator",
+    "evidence": [
+      "35-braze-operator-entry-result",
+      "35-local-operator"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-076",
+    "area": "活动详情与分析",
+    "priority": "P1",
+    "type": "页面缺失",
+    "title": "已上线活动缺少 Campaign Analytics 详情入口",
+    "braze": "点击 Active 活动进入详情：日期范围、收件人、转化率、当前受众、创建/编辑信息、投递/受众/转化设置摘要。",
+    "local": "点击 Active 活动直接进入 Compose 编辑器，未出现 Campaign Analytics 详情页。",
+    "reproduction": "Campaigns → Active → 点击活动名称",
+    "evidence": [
+      "36-braze-active-analytics",
+      "36-local-active-opens-editor"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-077",
+    "area": "活动详情与分析",
+    "priority": "P1",
+    "type": "页面区块缺失",
+    "title": "活动性能与 Historical Performance 未复刻",
+    "braze": "有变体性能表、指标列管理、点击结果明细、按变体/统计量筛选的历史趋势图、转化详情。",
+    "local": "Active 入口进入编辑器，缺少上述详情区块与图表。",
+    "reproduction": "Active campaign → In-App Performance / Historical Performance",
+    "evidence": [
+      "36-braze-active-performance",
+      "36-braze-historical-chart",
+      "36-local-active-opens-editor"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-078",
+    "area": "活动详情与分析",
+    "priority": "P1",
+    "type": "弹窗缺失",
+    "title": "活动变更记录未复刻",
+    "braze": "Changes Since Last Viewed 打开按类别/用户筛选的记录表，列 Timestamp/User/Category/Action/Before/After；当前为空状态。",
+    "local": "没有对应详情页入口及变更记录弹窗。",
+    "reproduction": "Active campaign → Changes Since Last Viewed",
+    "evidence": [
+      "38-braze-change-history",
+      "36-local-active-opens-editor"
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "CMP-079",
+    "area": "活动详情与分析",
+    "priority": "P1",
+    "type": "弹窗缺失",
+    "title": "Campaign Monitoring 设置未复刻",
+    "braze": "Set Up Alert 打开低于/超过阈值、时间段与 Email/Webhook 通知配置弹窗。",
+    "local": "没有对应活动监控设置入口。未保存或发送任何通知。",
+    "reproduction": "Active campaign → Set Up Alert",
+    "evidence": [
+      "39-braze-campaign-monitoring",
+      "36-local-active-opens-editor"
+    ],
+    "status": "Open"
+  }
+]

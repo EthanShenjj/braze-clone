@@ -1,0 +1,30 @@
+{
+  "checks": [
+    "LINE groups can be created and subscribed",
+    "email draft persists its complete configuration",
+    "iam draft persists its complete configuration",
+    "push draft persists its complete configuration",
+    "banner draft persists its complete configuration",
+    "content draft persists its complete configuration",
+    "sms draft persists its complete configuration",
+    "webhook draft persists its complete configuration",
+    "whatsapp draft persists its complete configuration",
+    "line draft persists its complete configuration",
+    "multichannel draft persists its complete configuration",
+    "SMS tests preserve phone number and selected variant",
+    "unconfigured delivery is prepared, never falsely delivered",
+    "email test compiles independent plaintext",
+    "Banner rejects unsupported API-triggered delivery",
+    "SMS publication rejects length overflow",
+    "audience preview returns computed eligibility",
+    "exclusion groups affect the actual estimate",
+    "launched conversion definitions are immutable on the API",
+    "API-triggered Campaigns enqueue eligible users",
+    "the authenticated worker processes persisted delivery jobs",
+    "first-impression cards materialize in the authenticated SDK feed",
+    "configured removal events remove cards without recreating them"
+  ],
+  "count": 23,
+  "baseUrl": "http://127.0.0.1:3228",
+  "liveDelivery": false
+}

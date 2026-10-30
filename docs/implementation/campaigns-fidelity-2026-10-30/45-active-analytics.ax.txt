@@ -1,0 +1,289 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_iam?view=analytics&workspace=local&locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_iam?view=analytics&workspace=local&locale=en
+	2 container
+		3 image Download
+		4 image
+	5 container
+		219 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			220 image
+		221 text Campaigns
+		222 text b
+		223 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			224 image
+			225 text Local workspace
+		226 text Quick links
+		227 button Canvas
+			228 image
+			229 text Canvas
+		230 button Campaigns
+			231 image
+			232 text Campaigns
+		233 button Segments
+			234 image
+			235 text Segments
+		236 button Getting Started
+			237 image
+			238 text Getting Started
+		239 button Performance Overview
+			240 image
+			241 text Performance Overview
+		242 button AI Decisioning
+			243 image
+			244 text AI Decisioning
+		245 button Agent Console
+			246 image
+			247 text Agent Console
+		248 button Messaging
+			249 image
+			250 text Messaging
+		251 button Audience
+			252 image
+			253 text Audience
+		254 button Content
+			255 image
+			256 text Content
+		257 button Analytics
+			258 image
+			259 text Analytics
+		260 button Partner Integrations
+			261 image
+			262 text Partner Integrations
+		263 button Data Settings
+			264 image
+			265 text Data Settings
+		266 button Settings
+			267 image
+			268 text Settings
+		269 text braze
+		270 container
+			271 text ◷   8 days left in your free trial.
+			272 button Connect with sales
+		273 container
+			274 button Search workspace ⌘K
+				275 image
+				276 text Search workspace
+				277 text ⌘K
+			278 button Take a tour
+				279 image
+			280 image
+			281 button (collapsed) Description: Language, Secondary Actions: Expand
+				282 image
+			283 button Notifications
+				284 image
+			285 button S
+			286 image
+			287 button
+				288 image
+		289 button Campaigns
+		290 button Details for 'Welcome Offer IAM'
+			291 text Details for
+			292 text  '
+			293 text Welcome Offer IAM
+			294 text '
+			295 image
+		296 container Campaign Analytics
+			297 tab group Campaign reports
+				298 tab (selected, settable, boolean) Campaign Analytics, Value: 1
+				299 tab (selectable, settable, boolean) Funnel Report, Value: 0
+				300 tab (selectable, settable, boolean) Retention Report, Value: 0
+			301 date field (settable) Description: Start Date, Value: 2026-10-16
+				302 container
+					303 stepper
+					304 stepper
+					305 stepper
+				306 pop up button 显示日期选择器 显示日期选择器
+			307 text →
+			308 date field (settable) Description: End Date, Value: 2026-10-30
+				309 container
+					310 stepper
+					311 stepper
+					312 stepper
+				313 pop up button 显示日期选择器 显示日期选择器
+			314 button Apply
+			315 button Refresh analytics
+				316 image
+			317 container
+				318 heading Welcome Offer IAM, Value: 1
+					319 text Welcome Offer IAM
+				320 button Copy campaign name
+					321 image
+				322 text Active Campaign Analytics Unique recipients 0 Conversion rate
+				323 text (Primary conversions) — 0 Current audience 200 Created:  2026/9/28 18:06:45  by Local user Last Edited:  2026/9/28 18:06:45  by Local user
+				324 button 0 Changes Since Last Viewed
+					325 text 0
+					326 text  Changes Since Last Viewed
+				327 text Campaign Monitoring Be the first to know if unusual volume is detected.
+				328 button Set Up Alert
+				329 heading Delivery Settings, Value: 3
+					330 text Delivery Settings
+				331 container
+					332 text Type:  One time
+				333 container
+					334 text Time Zone:  UTC
+				335 container
+					336 text Re-eligibility:  Not enabled
+				337 container
+					338 text Frequency Capping:  Workspace rules apply
+				339 text Send at a designated time · One time · 2026-09-17 at 10:00 (UTC).
+				340 heading Audience Settings, Value: 3
+					341 text Audience Settings
+				342 container
+					343 text Segments:  None
+				344 container
+					345 text Filters:  New Users
+				346 container
+					347 text Rate Limit:  None
+				348 container
+					349 text Recipients Limit:  None
+				350 container
+					351 text Description:  None
+				352 heading Conversion Settings, Value: 3
+					353 text Conversion Settings
+				354 container
+					355 text Primary  Conversion Event:  Starts Session  within  3 days
+			356 container
+				357 heading In-App Performance, Value: 2
+					358 text In-App  Performance
+				359 button (collapsed)  Add/Remove Columns, Secondary Actions: Expand
+					360 image
+					361 text  Add/Remove Columns
+				362 table
+					363 row
+						364 cell Preview
+						365 cell
+							366 text Variation
+						367 cell
+							368 text Audience %
+						369 cell
+							370 text Unique Impressions
+						371 cell
+							372 text Impressions
+						373 cell
+							374 text Clicks
+						375 cell
+							376 text Revenue
+						377 cell
+							378 text Primary Conversions
+					379 row
+						380 cell
+							381 button Preview Variant 1
+								382 image
+						383 cell
+							384 text A Variant 1
+						385 cell
+							386 text 80%
+						387 cell
+							388 text 0
+						389 cell
+							390 text 0
+						391 cell
+							392 button Results — Clicks — Variant 1
+								393 text Results (
+								394 text 0
+								395 text )⌄
+						396 cell
+							397 text 0.00
+						398 cell
+							399 text —
+							400 text 0
+				401 text Counts use recorded production receipts. Tests, simulations, bots and provider acceptance are excluded from delivery totals. Unique counts deduplicate users; events without a variant are shown as unattributed. Revenue uses explicit conversion-event amounts and keeps currencies separate.
+			402 container
+				403 heading Historical Performance, Value: 2
+					404 text Historical Performance
+				405 text Filter
+				406 pop up button (collapsed, settable) Description: Filter, Value: Message, Secondary Actions: Expand
+					407 menu
+						408 (selected) Message
+						409 Campaign
+				410 text Variant
+				411 pop up button (collapsed, settable) Description: Variant, Value: All Variants, Secondary Actions: Expand
+					412 menu
+						413 (selected) All Variants
+						414 Variant 1
+				415 text Statistics
+				416 button (collapsed) 4 items selected, Secondary Actions: Expand
+					417 text 4
+					418 text  items selected
+				419 text Clicks Impressions Primary Conversions Unique Impressions
+				420 container Historical performance: Clicks, Impressions, Primary Conversions, Unique Impressions. Daily UTC event counts.
+				421 button View as data table
+				422 button  Download CSV
+					423 image
+					424 text  Download CSV
+				425 text Daily UTC counts within the selected range. Zero indicates no matching recorded events for that day.
+			426 container
+				427 heading Conversion Event Details, Value: 2
+					428 text Conversion Event Details
+				429 container
+					430 text Primary  Conversion Event —  A
+				431 text —
+				432 text Starts Session  within  3 days
+				433 table
+					434 row
+						435 cell
+							436 text Variation
+						437 cell
+							438 text Conversion Rate
+						439 cell
+							440 text Unique Conversions
+					441 row
+						442 cell
+							443 text Total
+						444 cell
+							445 text —
+						446 cell
+							447 text 0
+					448 row
+						449 cell
+							450 text Variant 1
+						451 cell
+							452 text —
+						453 cell
+							454 text 0
+			455 container
+				456 heading Audience Details, Value: 2
+					457 text Audience Details
+				458 button Edit Audience
+				459 table
+					460 row
+						461 cell
+							462 text iam
+					463 row
+						464 cell
+							465 text Reachable Users
+						466 cell
+							467 text 185
+					468 row
+						469 cell
+							470 text % of Workspace
+						471 cell
+							472 text 18.50%
+					473 row
+						474 cell
+							475 text LTV
+						476 cell
+							477 text —
+				478 text Current audience estimates may differ from the historical recipients in the date range.
+				479 button Show Additional Statistics
+					480 text Show
+					481 text  Additional Statistics
+				482 heading Targeted Segments:, Value: 3
+					483 text Targeted Segments:
+				484 text No Segments
+				485 heading Audience Summary:, Value: 3
+					486 text Audience Summary:
+				487 text New Users
+			488 container
+				489 heading API Identifier, Value: 2
+					490 text API Identifier
+				491 text Use this identifier to access your campaign from the external API. Campaign API Identifier:
+				492 text field Description: Campaign API Identifier, Value: daddf655-c2c7-58e1-9f85-704959f09a0b
+				493 button Copy campaign API identifier
+					494 image
+			495 container
+				496 heading Conversion Correlation, Value: 2
+					497 text Conversion Correlation
+				498 text Behavior and attribute correlation analysis is unavailable for this workspace. Conversion counts above reflect recorded attributed events.
+			499 button Edit campaign ⌄
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_iam?view=analytics&workspace=local&locale=en

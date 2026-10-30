@@ -1,5 +1,6 @@
 "use client";
 
+import InAppPriorityManager from "./in-app-priority-manager";
 import { useEffect, useId, useRef, useState } from "react";
 import { ChevronDown, ChevronUp, Copy, Eye, GripVertical, Plus, Search, Trash2, X, Zap } from "lucide-react";
 import { delayInMinutes, inAppTriggerTypes, scheduleDelay, scheduleTriggers, scheduleValidationIssues, type DeliveryMetadata, type InAppTrigger, type PropertyCondition, type PropertyGroup } from "@/lib/in-app-schedule";
@@ -40,7 +41,7 @@ function TargetIcon() { return <img src="/braze-iam/action-based-delivery.svg" w
 const newCondition = (): PropertyCondition => ({ id: crypto.randomUUID(), property: "", operator: "eq", value: "", valueType: "string" });
 const newGroup = (): PropertyGroup => ({ id: crypto.randomUUID(), match: "any", conditions: [] });
 
-function PropertyEditor({ trigger, properties, update, t }: { trigger: InAppTrigger; properties: Record<string, string>; update: (patch: Partial<InAppTrigger>) => void; t: Text }) {
+export function PropertyEditor({ trigger, properties, update, t }: { trigger: InAppTrigger; properties: Record<string, string>; update: (patch: Partial<InAppTrigger>) => void; t: Text }) {
   const [collapsed, setCollapsed] = useState<string[]>([]);
   const groups = trigger.filterGroups ?? [];
   const changeGroup = (id: string, patch: Partial<PropertyGroup>) => update({ filterGroups: groups.map(group => group.id === id ? { ...group, ...patch } : group) });
@@ -105,6 +106,6 @@ export default function InAppSchedule({ draft, update, locale = "en" }: { draft:
       {errors.length > 0 && <ul className={styles.validation} aria-live="polite">{errors.map(issue => <li key={issue}>{t(issue)}</li>)}</ul>}
     </section>
     <section className={styles.panel}><h2 className={styles.heading}>{t("Delivery Controls")}</h2><p>{t("Manage the number of messages your users will receive.")}</p><label className={styles.checkbox}><input type="checkbox" checked={Boolean(delivery.reeligible)} onChange={e => change({ reeligible: e.target.checked })}/>{t("Allow users to become re-eligible to receive campaign")}</label>{Boolean(delivery.reeligible) && <div className={styles.reentry}><b>{t("Re-eligibility after")}</b><input aria-label={t("Re-eligibility after")} type="number" min={1} value={Number(delivery.reentryValue ?? delivery.reentryDays ?? 7)} onChange={e => { const value = Number(e.target.value); const unit = String(delivery.reentryUnit ?? "days"); change({ reentryValue: value, reentryUnit: unit, reentryDays: unit === "hours" ? value / 24 : unit === "weeks" ? value * 7 : value }); }}/><Select label="Time unit for re-eligibility" t={t} value={String(delivery.reentryUnit ?? "days")} options={["hours", "days", "weeks"].map(value => ({ value, label: t(value[0].toUpperCase() + value.slice(1)) }))} onChange={unit => { const value = Number(delivery.reentryValue ?? delivery.reentryDays ?? 7); change({ reentryValue: value, reentryUnit: unit, reentryDays: unit === "hours" ? value / 24 : unit === "weeks" ? value * 7 : value }); }}/></div>}<h3 className={styles.priorityTitle}>{t("Select message priority")}</h3><p>{t("Set the priority of this campaign relative to other in-app message campaigns and Canvases.")}</p><div className={styles.field}><b>{t("Message priority")}</b></div><div className={styles.priorityControl}><Select label="Message priority" t={t} value={priority} options={[["High", "High priority (Shown before other messages)"], ["Medium", "Medium priority"], ["Low", "Low priority (Shown after other messages)"]].map(([value, label]) => ({ value, label: t(label) }))} onChange={iamPriority => change({ iamPriority })}/><button type="button" className={styles.priorityButton} onClick={() => setPriorityOpen(true)}>{t("View exact priority")}</button></div></section>
-    {priorityOpen && <PriorityDialog metadata={metadata} draft={draft} priority={priority} t={t} close={() => setPriorityOpen(false)}/>}
+    {priorityOpen && <InAppPriorityManager id={draft.id} priority={priority} close={()=>setPriorityOpen(false)} saved={(iamPriority,iamOrder)=>change({iamPriority,iamOrder})}/>}
   </div>;
 }

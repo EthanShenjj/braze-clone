@@ -1,0 +1,37 @@
+Browser tab: 1969334804, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3100/engagement/campaigns/cmp_iam?view=analytics&workspace=local&locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3100/engagement/campaigns/cmp_iam?view=analytics&workspace=local&locale=en
+	2 container Changes for Welcome Offer IAM
+		3 heading Changes for Welcome Offer IAM, Value: 2
+			4 text Changes for Welcome Offer IAM
+		5 button Close dialog
+			6 image
+		7 container
+			8 text Filter by Category
+			9 pop up button (collapsed, settable) Description: Filter by Category, Value: All Categories, Secondary Actions: Expand
+				10 menu
+					11 (selected) All Categories
+		12 container
+			13 text Filter by User
+			14 pop up button (collapsed, settable) Description: Filter by User, Value: All users, Secondary Actions: Expand
+				15 menu
+					16 (selected) All users
+		17 table
+			18 row
+				19 cell
+					20 text Timestamp
+				21 cell
+					22 text User
+				23 cell
+					24 text Category
+				25 cell
+					26 text Action
+				27 cell
+					28 text Before
+				29 cell
+					30 text After
+			31 row
+				32 cell
+					33 text No activity to display
+		34 button Close
+
+The focused UI element is 5 button Close dialog

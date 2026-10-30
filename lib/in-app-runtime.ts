@@ -1,21 +1,26 @@
+import { traditionalAppearance, platformInAppButton } from "./in-app-traditional.ts";
 import { Liquid } from "liquidjs";
 import sanitizeHtml from "sanitize-html";
-import { brazeLiquidSource, renderBrazeLiquid } from "./email-liquid.ts";
+import { brazeLiquidSource, renderBrazeLiquid,registerBrazeRuntimeTags } from "./email-liquid.ts";
 import { validateInAppVariant, type InAppVariant } from "./in-app-model.ts";
 
 export function validateInAppSnapshot(value: unknown): asserts value is InAppVariant {
   const issues = validateInAppVariant(value);
   if (issues.length) throw new Error(issues.join(" "));
   const variant = value as InAppVariant;
-  const engine = new Liquid({ strictFilters: true });
+  const engine = registerBrazeRuntimeTags(new Liquid({ strictFilters: true }));
   const strings = [variant.accessibilityLanguageLiquid ?? variant.accessibilityLanguage, variant.global.closeAccessibleName, variant.global.backgroundImageUrl, variant.customHtml ?? "", ...(variant.keyValuePairs ?? []).flatMap(pair => [pair.key, pair.value]), ...variant.pages.flatMap(page => [page.title, page.body, page.imageUrl, page.styleOverrides?.closeAccessibleName ?? "", page.styleOverrides?.backgroundImageUrl ?? "", ...(page.buttons ?? []).flatMap(button => [button.text, button.href, button.eventName ?? "", button.attributeName ?? "", button.attributeValue ?? ""]), ...page.extraBlocks.flatMap(block => [block.text, block.src ?? ""])])];
   if (variant.traditional) strings.push(variant.traditional.emailPlaceholder, variant.traditional.termsText, variant.traditional.termsUrl, ...[variant.traditional.bodyAction, ...variant.pages.flatMap(page => page.buttons ?? [])].flatMap(button => [button.text, button.href, button.eventName ?? "", button.attributeName ?? "", button.attributeValue ?? ""]));
+  for(const button of [...variant.pages.flatMap(page=>page.buttons??[]),...(variant.traditional?[variant.traditional.bodyAction]:[])]) for(const action of Object.values(button.platformActions??{}))if(action)strings.push(action.href,action.eventName??"",action.attributeName??"",action.attributeValue??"");
   for (const text of strings) engine.parse(brazeLiquidSource(text));
 }
 
 export function prepareInAppPreview(value: unknown, profile: Record<string, unknown> = {}) {
   validateInAppSnapshot(value);
-  const variant = structuredClone(value);
+  const variant = structuredClone(traditionalAppearance(value,String(profile.colorScheme??profile.theme??"light")));
+  const platform=String(profile.platform??"iOS");
+  variant.pages=variant.pages.map(page=>({...page,buttons:page.buttons?.map(button=>platformInAppButton(button,platform))}));
+  if(variant.traditional)variant.traditional.bodyAction=platformInAppButton(variant.traditional.bodyAction,platform);
   const render = (text: string) => renderBrazeLiquid(text, profile);
   const cleanHtml = (html: string) => sanitizeHtml(html, {
     allowedTags: [...sanitizeHtml.defaults.allowedTags, "html", "head", "body", "style", "img", "button", "input", "select", "option", "label", "form", "meta"],

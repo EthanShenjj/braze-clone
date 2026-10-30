@@ -1,0 +1,52 @@
+[
+  {
+    "channel": "multichannel",
+    "configurationRoundtrip": true,
+    "bodyPreserved": true
+  },
+  {
+    "channel": "email",
+    "configurationRoundtrip": true,
+    "bodyPreserved": true
+  },
+  {
+    "channel": "iam",
+    "configurationRoundtrip": true,
+    "bodyPreserved": true
+  },
+  {
+    "channel": "push",
+    "configurationRoundtrip": true,
+    "bodyPreserved": true
+  },
+  {
+    "channel": "banner",
+    "configurationRoundtrip": true,
+    "bodyPreserved": true
+  },
+  {
+    "channel": "content",
+    "configurationRoundtrip": true,
+    "bodyPreserved": true
+  },
+  {
+    "channel": "sms",
+    "configurationRoundtrip": true,
+    "bodyPreserved": true
+  },
+  {
+    "channel": "webhook",
+    "configurationRoundtrip": true,
+    "bodyPreserved": true
+  },
+  {
+    "channel": "whatsapp",
+    "configurationRoundtrip": true,
+    "bodyPreserved": true
+  },
+  {
+    "channel": "line",
+    "configurationRoundtrip": true,
+    "bodyPreserved": true
+  }
+]

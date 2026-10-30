@@ -1,0 +1,42 @@
+[
+  {
+    "name": "SMS message above documented 1600 character limit",
+    "issues": []
+  },
+  {
+    "name": "Banner invalid click URL",
+    "issues": []
+  },
+  {
+    "name": "Push invalid deep link and negative TTL",
+    "issues": []
+  },
+  {
+    "name": "Content Card invalid image, destination and expiration",
+    "issues": []
+  },
+  {
+    "name": "LINE missing subscription group",
+    "issues": []
+  },
+  {
+    "name": "Multichannel includes IAM",
+    "issues": []
+  },
+  {
+    "name": "Variant distribution sums to 10 percent",
+    "issues": []
+  },
+  {
+    "name": "Braze Liquid tag: {% connected_content https://example.com :save data %}{{data.name}}",
+    "error": "tag \"connected_content\" not found, line:1, col:1"
+  },
+  {
+    "name": "Braze Liquid tag: {% catalog_items products 1 %}{{items[0].title}}",
+    "error": "tag \"catalog_items\" not found, line:1, col:1"
+  },
+  {
+    "name": "Braze Liquid tag: {% abort_message(\"audit\") %}",
+    "error": "tag \"abort_message\" not found, line:1, col:1"
+  }
+]

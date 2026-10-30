@@ -1,0 +1,172 @@
+- complementary:
+  - generic: b
+  - button "Demo – Thinkingai":
+    - generic: Demo – Thinkingai
+  - generic: Quick links
+  - button "Canvas":
+    - generic: Canvas
+  - button "Campaigns":
+    - generic: Campaigns
+  - button "Segments":
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+  - button "Performance Overview":
+    - generic: Performance Overview
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agent Console":
+    - generic: Agent Console
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic: braze
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour":
+  - button "Language":
+  - button "Notifications":
+  - button "S"
+  - button:
+  - button "Campaigns"
+  - button "Edit 'Audit banner'":
+    - text: Edit 'Audit banner'
+  - text: Limited access
+  - navigation "Campaign steps":
+    - button "✓ Compose Messages":
+      - generic: ✓
+      - generic: Compose Messages
+    - button "✓ Schedule Delivery":
+      - generic: ✓
+      - generic: Schedule Delivery
+    - button "3 Target Audiences":
+      - generic: "3"
+      - generic: Target Audiences
+    - button "4 Assign Conversions":
+      - generic: "4"
+      - generic: Assign Conversions
+    - button "5 Review Summary":
+      - generic: "5"
+      - generic: Review Summary
+  - heading "Targeting Options" [level=2]
+  - paragraph: Target users by choosing multiple segments they must fall into. Further refine your audience by adding additional filters.
+  - generic: Target Users By Segment
+  - combobox "Target Users By Segment":
+    - option "Search Segments..." [selected]
+    - option "New Users"
+    - option "Recent Purchasers"
+    - option "Active Subscribers"
+    - option "Reachable Users"
+    - option "Pro Plan Customers"
+    - option "Free Plan Customers"
+    - option "English Speakers"
+    - option "Chinese Speakers"
+    - option "United States Users"
+    - option "United Kingdom Users"
+    - option "China Users"
+    - option "Singapore Users"
+    - option "Germany Users"
+    - option "New Users"
+    - option "Recent Purchasers"
+    - option "Active Subscribers"
+    - option "Reachable Users"
+    - option "Pro Plan Customers"
+    - option "Free Plan Customers"
+    - option "English Speakers"
+    - option "Chinese Speakers"
+    - option "United States Users"
+    - option "United Kingdom Users"
+    - option "China Users"
+    - option "Singapore Users"
+    - option "Germany Users"
+  - heading "Additional Filters" [level=3]
+  - generic: ⠿ Filter group
+  - combobox "Filter group operator":
+    - option "OR" [selected]
+    - option "AND"
+  - combobox "Select filter":
+    - option "Search filter..." [selected]
+    - option "Country"
+  - button "Remove filter" [disabled]:
+  - button "Add filter group":
+    - text: Add filter group
+  - button "Add exclusion group":
+    - text: Add exclusion group
+  - heading "Audience Summary" [level=3]
+  - paragraph: No segments or filters selected
+  - heading "User Lookup" [level=3]
+  - paragraph: Check if a user matches the segment, filter, and app criteria
+  - textbox "Search user ID"
+  - button "Lookup User"
+  - generic: "Send to these users:"
+  - combobox "Send to these users:":
+    - option "users who are subscribed or opted in" [selected]
+    - option "users who are opted in"
+    - option "all eligible users (excludes global unsubscribes)"
+  - checkbox "Limit send volume"
+  - text: Limit send volume
+  - checkbox "Limit the rate at which this Campaign will send"
+  - text: Limit the rate at which this Campaign will send
+  - heading "A/B Testing Optimize with BrazeAI™" [level=2]
+  - paragraph: Set your own variant split and control group. All variants send at the date and time you set in Schedule delivery.
+  - generic: "% Control Group"
+  - spinbutton "% Control Group": "20"
+  - generic: "% Variant 1"
+  - spinbutton "% Variant 1": "80"
+  - button "Remove Control Group"
+  - heading "Suppression Lists" [level=2]
+  - paragraph: There are no suppression lists applied
+  - heading "Total Population" [level=2]
+  - heading "Exact users" [level=3]
+  - strong: "924"
+  - paragraph: 92.4% of total users
+  - text: Calculated from local users
+  - heading "Channel breakdown" [level=3]
+  - table:
+    - rowgroup:
+      - row "Banner":
+        - columnheader "Banner"
+        - cell
+      - row "Reachable Users 924":
+        - cell "Reachable Users"
+        - cell "924"
+      - row "% of Workspace 92.4%":
+        - cell "% of Workspace"
+        - cell "92.4%"
+      - row "LTV --":
+        - cell "LTV"
+        - cell "--"
+  - button "Back":
+  - button "✓ Compose":
+    - generic: ✓
+    - text: Compose
+  - button "✓ Schedule":
+    - generic: ✓
+    - text: Schedule
+  - button "3 Target":
+    - generic: "3"
+    - text: Target
+  - button "4 Assign":
+    - generic: "4"
+    - text: Assign
+  - button "5 Review":
+    - generic: "5"
+    - text: Review
+  - button "Forward":
+  - button "Save Draft"
+- alert

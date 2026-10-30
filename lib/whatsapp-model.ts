@@ -31,16 +31,28 @@ export type WhatsAppVariant = {
   responseButtonUrl: string;
   quickReplies: string[];
   listOptions: string[];
+  /** Legacy preview preference; never evidence of recipient eligibility. */
   conversationWindowOpen: boolean;
+  messageTypeChosen?: boolean;
   responseHeaderType: "none" | "text" | "media";
   responseHeaderText: string;
   responseFooter: string;
   clickTracking: boolean;
+  urlPreview?:boolean;
+  responseTranslations?:Record<string,string>;
+  responseLanguages?:string[];
+  responseLayoutChosen?:boolean;
   carouselMediaType: "image" | "video";
   carouselButtonType: "website" | "quick_reply";
   carouselCards: Array<{ id: string; body: string; mediaUrl: string; buttons: Array<{ label: string; url: string }> }>;
   listSections: Array<{ id: string; title: string; rows: string[] }>;
   productLayout: "catalog" | "multi" | "single";
+  flowId?: string;
+  flowToken?: string;
+  flowCta?: string;
+  flowScreen?: string;
+  catalogId?: string;
+  productIds?: string[];
 };
 
 export type WhatsAppTemplate = {
@@ -135,7 +147,7 @@ export const whatsappTemplates: WhatsAppTemplate[] = [
 export type WhatsAppCampaignLike = { body?: string; config?: Record<string, unknown> };
 
 export function getWhatsAppTemplate(id: string, extras?: WhatsAppTemplate[]) {
-  return whatsappTemplates.find(template => template.id === id) ?? extras?.find(template => template.id === id) ?? whatsappTemplates[0];
+  return extras?.find(template => template.id === id) ?? whatsappTemplates.find(template => template.id === id) ?? whatsappTemplates[0];
 }
 
 // Custom templates submitted from the editor live in campaign config with a
@@ -166,6 +178,7 @@ export function createWhatsAppVariant(index = 0): WhatsAppVariant {
     variables: template.variables.map(variable => ({ ...variable, value: variable.example })),
     buttonUrl: template.button.url ?? "",
     responseLayout: "text",
+    messageTypeChosen:false,responseLayoutChosen:false,urlPreview:true,responseLanguages:["en"],responseTranslations:{},
     responseBody: "Thanks for messaging Thinkingai. How can we help?",
     responseMediaType: "image",
     responseMediaUrl: "",
@@ -177,7 +190,7 @@ export function createWhatsAppVariant(index = 0): WhatsAppVariant {
     responseHeaderType: "none", responseHeaderText: "", responseFooter: "", clickTracking: true,
     carouselMediaType: "image", carouselButtonType: "quick_reply",
     carouselCards: [1, 2].map(index => ({ id: `card_${index}`, body: "", mediaUrl: "", buttons: [{ label: "", url: "" }] })),
-    listSections: [], productLayout: "catalog",
+    listSections: [], productLayout: "catalog", flowId:"",flowToken:"",flowCta:"Open",flowScreen:"",catalogId:"",productIds:[],
   };
 }
 
@@ -191,7 +204,13 @@ export function normalizeWhatsAppVariants(campaign: WhatsAppCampaignLike): Whats
       if (typeof base[key] === "string" && typeof item[key] === "string") (next as unknown as Record<string, unknown>)[key] = item[key];
     }
     next.conversationWindowOpen = item.conversationWindowOpen === true;
+    next.messageTypeChosen = item.messageTypeChosen === true || (item.messageTypeChosen === undefined && typeof item.mode === "string");
     next.clickTracking = item.clickTracking !== false;
+    next.urlPreview=item.urlPreview===true;
+    next.responseLayoutChosen=item.responseLayoutChosen===true||(item.responseLayoutChosen===undefined&&typeof item.responseLayout==="string");
+    next.responseLanguages=Array.isArray(item.responseLanguages)?item.responseLanguages.filter((v):v is string=>typeof v==="string"):["en"];
+    next.responseTranslations=item.responseTranslations&&typeof item.responseTranslations==="object"?Object.fromEntries(Object.entries(item.responseTranslations).filter(([,v])=>typeof v==="string")) as Record<string,string>:{};
+    next.productIds=Array.isArray(item.productIds)?item.productIds.filter((v):v is string=>typeof v==="string"):[];
     next.carouselCards = Array.isArray(item.carouselCards) ? item.carouselCards.filter(v => v && typeof v === "object").map((v, i) => ({ id: String(v.id ?? `card_${i}`), body: String(v.body ?? ""), mediaUrl: String(v.mediaUrl ?? ""), buttons: Array.isArray(v.buttons) ? v.buttons.filter((b: unknown) => b && typeof b === "object").map((b: {label?: unknown; url?: unknown}) => ({label: String(b.label ?? ""), url: String(b.url ?? "")})) : [] })) : base.carouselCards;
     next.listSections = Array.isArray(item.listSections) ? item.listSections.filter(v => v && typeof v === "object").map((v, i) => ({ id: String(v.id ?? `section_${i}`), title: String(v.title ?? ""), rows: Array.isArray(v.rows) ? v.rows.filter((row: unknown): row is string => typeof row === "string") : [] })) : [];
     next.variables = Array.isArray(item.variables) ? item.variables.filter(v => v && typeof v === "object").map(v => ({ key: String(v.key ?? ""), label: String(v.label ?? "Variable"), value: typeof v.value === "string" ? v.value : "", fallback: typeof v.fallback === "string" ? v.fallback : "" })) : [];
@@ -233,9 +252,10 @@ function isHttpsUrl(value: string) {
 export function validateWhatsAppCampaign(campaign: WhatsAppCampaignLike): string[] {
   const issues: string[] = [];
   if (campaign.config?.whatsappSetupStage === "type") issues.push("Select a WhatsApp message type and template or response layout.");
+  if (campaign.config?.whatsappSetupStage === "layout") issues.push("Select a WhatsApp response layout.");
   for (const variant of normalizeWhatsAppVariants(campaign)) {
     const prefix = `${variant.name}:`;
-    if (!whatsappAccounts.some(account => account.id === variant.businessAccount)) issues.push(`${prefix} Select a WhatsApp Business Account.`);
+    if (!variant.businessAccount.trim()) issues.push(`${prefix} Select a WhatsApp Business Account.`);
     if (!variant.subscriptionGroup) issues.push(`${prefix} Select a WhatsApp subscription group.`);
     if (variant.mode === "template") {
       const template = [...whatsappTemplates, ...customWhatsAppTemplates(campaign)].find(item => item.id === variant.templateId);
@@ -254,7 +274,6 @@ export function validateWhatsAppCampaign(campaign: WhatsAppCampaignLike): string
       if (!["none", "text", "media"].includes(variant.responseHeaderType)) issues.push(`${prefix} Select a valid header type.`);
       if (!["image", "video", "document", "audio"].includes(variant.responseMediaType)) issues.push(`${prefix} Select a valid media type.`);
       if (!["text", "quick_reply", "media", "cta", "list", "carousel", "flow", "product"].includes(variant.responseLayout)) issues.push(`${prefix} Select a valid response layout.`);
-      if (!variant.conversationWindowOpen) issues.push(`${prefix} Response messages require a simulated open 24-hour conversation window.`);
       if (!variant.responseBody.trim() && !(variant.responseLayout === "media" && variant.responseMediaUrl)) issues.push(`${prefix} Add response message content.`);
       const bodyLimit = variant.responseLayout === "text" ? 4096 : 1024;
       if (variant.responseBody.length > bodyLimit) issues.push(`${prefix} Response body exceeds ${bodyLimit.toLocaleString("en-US")} characters.`);
@@ -280,8 +299,8 @@ export function validateWhatsAppCampaign(campaign: WhatsAppCampaignLike): string
           if (!card.buttons.length || card.buttons.length > max || card.buttons.some(button => !button.label.trim() || button.label.length > 20 || variant.carouselButtonType === "website" && !isHttpsUrl(button.url))) issues.push(`${prefix} Card ${index + 1} requires valid button text and URLs.`);
         });
       }
-      if (variant.responseLayout === "flow") issues.push(`${prefix} No Flows available for this WhatsApp Business Account.`);
-      if (variant.responseLayout === "product") issues.push(`${prefix} Connect a Meta catalog before sending product messages.`);
+      if (variant.responseLayout === "flow" && (!variant.flowId?.trim() || !variant.flowCta?.trim())) issues.push(`${prefix} No Flows available for this WhatsApp Business Account. Enter a published Flow ID and button label.`);
+      if (variant.responseLayout === "product" && (!variant.catalogId?.trim() || variant.productLayout!=="catalog"&&!variant.productIds?.length)) issues.push(`${prefix} Connect a Meta catalog before sending product messages and choose products.`);
     } else issues.push(`${prefix} Select a valid message type.`);
   }
   return [...new Set(issues)];
@@ -310,7 +329,7 @@ export function prepareWhatsAppMessage(variant: WhatsAppVariant, extras: WhatsAp
   const resolved = { ...variant, variables: variant.variables.map(variable => ({ ...variable, value: render(variable.value).trim() || render(variable.fallback).trim() })) };
   if (variant.mode === "template" && !template) throw new Error("Select an approved template.");
   if (variant.mode === "template" && template?.variables.some(required => !resolved.variables.find(variable => variable.key === required.key)?.value)) throw new Error("A required template variable is empty for this recipient.");
-  const message = render(renderWhatsAppVariant(resolved, extras));
+  const message = render(variant.mode==="response"?variant.responseTranslations?.[String(profile.language??variant.language)]??renderWhatsAppVariant(resolved,extras):renderWhatsAppVariant(resolved, extras));
   if (!message.trim() && !(variant.mode === "response" && variant.responseLayout === "media" && variant.responseMediaUrl)) throw new Error("The rendered WhatsApp message is empty.");
   const buttons = variant.mode === "template" && template ? (template.buttons ?? [template.button]).map(button => ({ label: render(button.label), type: button.type, url: button.type === "website" ? render((button === template.button ? variant.buttonUrl : button.url ?? variant.buttonUrl).replace(/\{\{(\d+)\}\}/g, (_match, key) => encodeURIComponent(resolved.variables.find(variable => variable.key === key)?.value ?? ""))) : undefined }))
     : variant.responseLayout === "cta" ? [{ label: render(variant.responseButtonText), type: "website", url: render(variant.responseButtonUrl) }]
@@ -321,7 +340,7 @@ export function prepareWhatsAppMessage(variant: WhatsAppVariant, extras: WhatsAp
   if (listOptions.some(option => !option.trim() || option.length > 24) || new Set(listOptions.map(option => option.toLowerCase().trim())).size !== listOptions.length) throw new Error("Rendered list rows must be unique and contain 1–24 characters.");
   const mediaUrl = variant.mode === "template" ? variant.headerType === "image" ? render(variant.headerUrl) : undefined : variant.responseLayout === "media" || variant.responseLayout === "quick_reply" && variant.responseHeaderType === "media" ? render(variant.responseMediaUrl) : undefined;
   if (mediaUrl !== undefined && !isMediaUrl(mediaUrl)) throw new Error("The rendered media URL must use HTTPS.");
-  return { message, mode: variant.mode, layout: variant.mode === "template" ? "template" : variant.responseLayout, templateId: variant.mode === "template" ? variant.templateId : undefined, language: variant.language,
+  return { message, urlPreview:variant.urlPreview===true,clickTracking:variant.clickTracking,mode: variant.mode, layout: variant.mode === "template" ? "template" : variant.responseLayout, templateId: variant.mode === "template" ? variant.templateId : undefined, language: variant.language,
     headerText: variant.mode === "template" ? template?.headerType === "text" ? render(template.headerText ?? "") : undefined : ["list", "cta", "flow"].includes(variant.responseLayout) || variant.responseLayout === "quick_reply" && variant.responseHeaderType === "text" ? render(variant.responseHeaderText) : undefined,
     mediaUrl,
     mediaType: variant.mode === "template" ? "image" : variant.responseMediaType,
@@ -329,6 +348,8 @@ export function prepareWhatsAppMessage(variant: WhatsAppVariant, extras: WhatsAp
     listOptions,
     listSections: variant.mode === "response" && variant.responseLayout === "list" ? variant.listSections.map(section => ({title: render(section.title), rows: section.rows.map(render)})) : [],
     listButton: variant.responseLayout === "list" ? render(variant.responseButtonText) : undefined,
+    flow:variant.mode==="response"&&variant.responseLayout==="flow"?{id:variant.flowId,token:variant.flowToken,cta:render(variant.flowCta??"Open"),screen:variant.flowScreen}:undefined,
+    product:variant.mode==="response"&&variant.responseLayout==="product"?{catalogId:variant.catalogId,layout:variant.productLayout,ids:variant.productIds??[]}:undefined,
     carouselCards: variant.mode === "response" && variant.responseLayout === "carousel" ? variant.carouselCards.map(card => {
       const mediaUrl = render(card.mediaUrl);
       const buttons = card.buttons.map(button => ({ label: render(button.label), url: variant.carouselButtonType === "website" ? render(button.url) : undefined }));
@@ -336,4 +357,32 @@ export function prepareWhatsAppMessage(variant: WhatsAppVariant, extras: WhatsAp
       if (buttons.some(button => !button.label.trim() || button.label.length > 20)) throw new Error("Rendered carousel button labels must contain 1–20 characters.");
       return { body: render(card.body), mediaUrl, buttons };
     }) : [] };
+}
+
+/** Setup state is independent of provider credentials and delivery eligibility. */
+export function whatsAppComposeStage(campaign: WhatsAppCampaignLike, variant = normalizeWhatsAppVariants(campaign)[0]): "subscription" | "type" | "layout" | "editor" {
+  if (!campaign.config?.subscriptionGroupId) return "subscription";
+  if (campaign.config?.whatsappSetupStage === "type" || variant.messageTypeChosen === false) return "type";
+  if (variant.mode === "response" && !variant.responseLayoutChosen) return "layout";
+  return "editor";
+}
+
+export function whatsAppResponseEligibility(mode: WhatsAppMessageMode, inboundAt: unknown, now: string | number = Date.now()) {
+  if (mode === "template") return { eligible: true, reason: "template" };
+  const timestamp = typeof inboundAt === "string" && inboundAt.trim() ? Date.parse(inboundAt) : NaN;
+  const clock = typeof now === "number" ? now : Date.parse(now);
+  if (!Number.isFinite(timestamp) || !Number.isFinite(clock) || timestamp > clock) return { eligible: false, reason: "No verified inbound WhatsApp message timestamp is available." };
+  const expiresAt = new Date(timestamp + 86400000).toISOString();
+  return clock < timestamp + 86400000
+    ? { eligible: true, reason: "inbound_window", inboundAt: new Date(timestamp).toISOString(), expiresAt }
+    : { eligible: false, reason: "The recipient’s 24-hour WhatsApp response window has expired.", inboundAt: new Date(timestamp).toISOString(), expiresAt };
+}
+
+/** Read persisted profile activity only, never preview/test overrides or legacy flags. */
+export function latestWhatsAppInbound(attributes: Record<string, unknown> = {}, events: Array<{ name: string; data: Record<string, unknown> }> = [], now: string | number = Date.now()) {
+  const clock = typeof now === "number" ? now : Date.parse(now);
+  const candidates = [attributes.whatsapp_last_inbound_at, attributes.last_whatsapp_inbound_at,
+    ...events.filter(event => ["inbound_whatsapp", "Send Inbound WhatsApp Message"].includes(event.name)).map(event => event.data.createdAt)];
+  return candidates.filter((value): value is string => typeof value === "string" && Number.isFinite(Date.parse(value)) && Date.parse(value) <= clock)
+    .sort((a,b) => Date.parse(b)-Date.parse(a))[0];
 }
