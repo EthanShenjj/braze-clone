@@ -1,0 +1,110 @@
+Browser tab: 1, Title: "Global Control Group", URL: "https://dashboard-09.braze.com/engagement/global_message_settings/global-control-settings/6af4374c46d3080087f1c5d2?locale=en".
+1 AXWebArea Global Control Group, URL: dashboard-09.braze.com/engagement/global_message_settings/global-control-settings/6af4374c46d3080087f1c5d2?locale=en
+	2 container
+		3 container react-root
+			4 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/global_message_settings/global-control-settings/6af4374c46d3080087f1c5d2?locale=en#main-container
+			5 container Side navigation
+				6 container
+					7 button Minimize menu
+					8 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+						9 image
+						10 text Demo – ittor
+					11 text Quick links
+					12 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+					13 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+					14 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+					15 button Getting Started
+						16 image
+						17 text Getting Started
+						18 container
+							19 text 8 %
+					20 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+					21 button AI Decisioning
+						22 image
+						23 text AI Decisioning
+					24 button Agents
+						25 image
+						26 text Agents
+					27 button Messaging
+						28 image
+						29 text Messaging
+					30 button Audience
+						31 image
+						32 text Audience
+					33 button Content
+						34 image
+						35 text Content
+					36 button Analytics
+						37 image
+						38 text Analytics
+					39 button Partner Integrations
+						40 image
+						41 text Partner Integrations
+					42 button Data Settings
+						43 image
+						44 text Data Settings
+					45 button Settings
+						46 image
+						47 text Settings
+				48 container Footer Logo
+					49 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+			50 text 14 days left in your free trial.
+			51 button Connect with sales
+			52 container Top navigation
+				53 container Left top navigation
+					54 button Search workspace ⌘+K
+						55 image
+						56 text Search workspace
+						57 text ⌘+K
+				58 container Right top navigation
+					59 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						60 image
+					61 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						62 image
+					63 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+						64 image
+					65 container
+						66 button Notifications
+							67 image
+					68 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						69 image
+					70 button BrazeAI Operator™
+						71 image
+			72 container main-container
+				81 container main-content
+					82 text Global Control Groups can be edited, enabled, and disabled by users with the Edit Global Control Group permission.
+					83 container
+						84 heading Global Control Group Settings, Value: 3
+							85 text Global Control Group Settings
+						86 heading Audience Settings, Value: 5
+							87 text Audience Settings
+						88 text Specify a percentage of your all users that will be randomly assigned to the Global Control Group. Assign
+						89 text % of all users to the Global Control Group All Users
+						90 heading 1,000, Value: 3
+							91 text 1,000
+						92 text Global Control Group
+						93 heading --, Value: 3
+							94 text --
+						95 text Treatment Group
+						96 heading --, Value: 3
+							97 text --
+						98 text Treatment Group Sample
+						99 heading --, Value: 3
+							100 text --
+						101 text Audience sizes are estimated.
+						102 button (disabled) Cancel
+						103 button (disabled) Save
+						104 heading Exclusion Settings, Value: 5
+							105 text Exclusion Settings
+						106 text Users in the Global Control Group will be eligible to receive messages from the Campaigns and Canvases with any of the specific tags added here. Tags
+						107 text Add tags
+						108 button (disabled) Update Exceptions
+				74 text © Braze 2026
+				75 text Opening in a new tab
+				76 link Description: Opening in a new tab, Value: braze.statuspage.io/
+				77 text Opening in a new tab
+				78 link Description: Opening in a new tab, Value: braze.com/terms
+				79 text Opening in a new tab
+				80 link Description: Opening in a new tab, Value: braze.com/privacy
+
+The focused UI element is 30 button Audience

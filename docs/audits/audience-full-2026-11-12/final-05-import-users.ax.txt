@@ -1,0 +1,102 @@
+Browser tab: 15, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/users/user_import/local?locale=en&workspace=local".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/user_import/local?locale=en&workspace=local
+	2 container
+		3 text Import Users
+		4 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		5 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			6 text Local workspace
+			7 image
+		8 container Side navigation
+			9 text Quick links
+			10 button Canvas
+			11 button Campaigns
+			12 button Segments
+			13 button Getting Started
+			14 button Home
+			15 button AI Decisioning
+			16 button Agents
+			17 button Messaging
+			18 button Audience
+			19 button Content
+			20 button Analytics
+			21 button Partner Integrations
+			22 button Data Settings
+			23 button Settings
+		24 button Home
+			25 image Braze
+		26 container
+			27 text ◷   8 days left in your free trial.
+			28 button Connect with sales
+		29 container
+			30 button Search workspace ⌘K
+				31 image
+				32 text Search workspace
+				33 text ⌘K
+			34 button Take a tour
+			35 image Community
+			36 button (collapsed) Description: Language, Secondary Actions: Expand
+			37 button Notifications
+			38 button (collapsed) Description: Profile, Secondary Actions: Expand
+			39 image
+			40 button Open BrazeAI Operator
+		41 button Import Users
+		42 container
+			43 heading Import Users, Value: 1
+				44 text Import Users
+			45 button (disabled) Description: Send feedback, Help: Feedback collection is not configured for this workspace.
+				46 image
+			47 button (collapsed) Description: Import, Secondary Actions: Expand
+				48 text Import
+				49 image
+			50 text Add or update users in your workspace by uploading a CSV or entering details manually.
+			51 button Refresh table
+			52 table
+				53 row
+					54 cell
+						55 text Date
+						56 image Information
+					57 cell
+						58 text Uploader
+					59 cell
+						60 text File Name
+					61 cell
+						62 text Type
+					63 cell
+						64 text Targeting Availability
+					65 cell
+						66 text Records
+						67 image Information
+					68 cell
+						69 text Status
+				70 row
+					71 cell
+						72 text Nov 12, 2026, 12:43 PM
+					73 cell
+						74 text —
+					75 cell
+						76 text audience_qa_83e337e7 CSV import
+					77 cell
+						78 text Attributes
+					79 cell
+						80 text Available
+					81 cell
+						82 text 3
+					83 cell
+						84 text Active
+				85 row
+					86 cell
+						87 text Nov 12, 2026, 11:32 AM
+					88 cell
+						89 text —
+					90 cell
+						91 text audience_qa_9fdd22dd CSV import
+					92 cell
+						93 text Attributes
+					94 cell
+						95 text Available
+					96 cell
+						97 text 3
+					98 cell
+						99 text Active
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/user_import/local?locale=en&workspace=local

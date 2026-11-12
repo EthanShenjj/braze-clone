@@ -1,0 +1,207 @@
+Browser tab: 5, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3220/engagement/canvas/322ef7c3-bd70-4553-81df-819a884b95cf?locale=en&workspace=local&step=build&workspaceId=local".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3220/engagement/canvas/322ef7c3-bd70-4553-81df-819a884b95cf?locale=en&workspace=local&step=build&workspaceId=local
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agent Console
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+		25 container
+			26 text ◷   8 days left in your free trial.
+			27 button Connect with sales
+		28 container
+			29 button Search workspace ⌘K
+				30 image
+				31 text Search workspace
+				32 text ⌘K
+			33 button Take a tour
+			34 image Community
+			35 button (collapsed) Description: Language, Secondary Actions: Expand
+			36 button Notifications
+			37 button (collapsed) Description: Profile, Secondary Actions: Expand
+			38 image
+			39 button Open BrazeAI Operator
+		40 container
+			41 button Canvas
+			42 text ›
+			43 container
+				44 text Edit ' New Canvas - November 12, 2026 '
+			45 button Close Canvas
+				46 image
+			47 container Canvas flow builder
+				48 container
+					49 container Components
+						50 text Components
+						51 text Select components to build your user journey.
+						52 button Collapse components
+							53 image
+						54 container
+							55 heading Message Controls, Value: 3
+								56 text Message Controls
+							57 button Message
+								58 image
+								59 text Message
+							60 button Delay
+								61 image
+								62 text Delay
+							63 heading AI Actions, Value: 3
+								64 text AI Actions
+							65 button Agent Step
+								66 image
+								67 text Agent Step
+							68 button Content Optimizer
+								69 image
+								70 text Content Optimizer
+							71 heading Flow Controls, Value: 3
+								72 text Flow Controls
+							73 button Decision Split
+								74 image
+								75 text Decision Split
+							76 button Audience Paths
+								77 image
+								78 text Audience Paths
+							79 button Action Paths
+								80 image
+								81 text Action Paths
+							82 button Experiment Paths
+								83 image
+								84 text Experiment Paths
+							85 button Send to Destination
+								86 image
+								87 text Send to Destination
+							88 heading Audience Updates, Value: 3
+								89 text Audience Updates
+							90 button Context
+								91 image
+								92 text Context
+							93 button User Update
+								94 image
+								95 text User Update
+							96 button Feature Flag
+								97 image
+								98 text Feature Flag
+							99 button Audience Sync
+								100 image
+								101 text Audience Sync
+						102 button Clean Up Canvas
+							103 image
+							104 text Clean Up Canvas
+					105 button (collapsed) Version history, Secondary Actions: Expand
+					106 button Expand
+						107 text Expand
+						108 image
+					109 container
+						110 button Zoom out
+						111 text 100 %
+						112 button Zoom in
+					113 container
+						114 button Entry Rules
+							115 text Entry Rules
+							116 image
+						117 image
+						118 text Schedule
+						119 text No schedule selected.
+						120 image
+						121 text Audience
+						122 text All eligible users
+						123 image
+						124 text Exit Criteria
+						125 text No exit criteria selected.
+						126 image
+						127 text Controls
+						128 text Users are not eligible to re-enter this Canvas.
+						129 button Add Variant
+							130 image
+							131 text Add Variant
+						132 container
+							133 text 100 % Variant 1
+							134 button Settings for Variant 1
+								135 image
+						136 button Delay Delay After 2 hours
+							137 image
+							138 text Delay
+							139 text Delay
+							140 text After 2 hours
+							141 image
+						142 button Step actions for Delay
+							143 image
+						144 button Message Message
+							145 image
+							146 text Message
+							147 text Message
+							148 image
+						149 button Step actions for Message
+							150 image
+						151 button Add step after Message
+							152 image
+				156 container HTML code editor
+					157 container
+						158 text Message Unsaved changes
+					159 container Email editor sections
+						160 button Sending settings
+							161 image
+						162 button Content
+							163 image
+						164 button Preview & Test
+							165 image
+					166 container
+						167 text CONTENT
+						168 button Back to campaign
+							169 image
+						170 button Design and Build
+						171 button Link Management
+						172 button Gmail Promotion
+						173 button Personalization
+						174 button Languages
+						175 text Create with Operator
+						176 button Liquid
+						177 button Copy
+					178 container
+						179 tab group Email source views
+							180 tab (selected, settable, boolean) HTML, Value: 1
+							181 tab (selectable, settable, boolean) Plaintext, Value: 0
+							182 pop up button (collapsed, settable) Description: More source views, Value: More, Secondary Actions: Expand
+								183 menu
+									184 (disabled) More
+									185 Classic
+									186 AMP
+							187 button Add images
+							188 button Search code
+						189 text entry area (settable) Description: Email HTML source, Value: <h1>Canvas acceptance</h1><p>Full email editing is available.</p>
+					190 container
+						191 heading Preview, Value: 2
+							192 text Preview
+						193 checkbox (settable, integer) Description: Expand Content Blocks, Value: 1
+						194 text From: Powered by Braze braze@mta-a348.bftmail.com
+						195 container Email HTML preview
+							203 AXWebArea about:srcdoc
+								204 heading Canvas acceptance, Value: 1
+									205 text Canvas acceptance
+								206 text Full email editing is available.
+						198 text Actual rendering may not be identical to this preview depending on the user's environment
+						199 checkbox (settable, integer) Description: CSS inlining enabled, Value: 1
+					200 container
+						201 button Download file
+						202 button Done
+			153 button Back
+			154 button Save
+			155 button Forward
+
+The focused UI element is 189 text entry area (settable) Description: Email HTML source, Value: <h1>Canvas acceptance</h1><p>Full email editing is available.</p>

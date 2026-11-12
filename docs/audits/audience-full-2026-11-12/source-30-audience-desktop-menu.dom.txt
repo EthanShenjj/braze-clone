@@ -1,0 +1,119 @@
+- link "Skip to main content":
+  - /url: "#main-container"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Demo – ittor":
+    - generic: Demo – ittor
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agents":
+    - generic: Agents
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 14 days left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- main:
+  - heading "User not found!" [level=2]
+  - img: 
+  - generic: Limited access
+  - textbox "Email address, phone number or External User ID": <redacted>
+  - button "Clear Selection":
+  - button "Search":
+  - generic: Your search for "@" did not match any users. Make sure that you've correctly spelled your search keyword and that you've selected the correct workspace in the sidebar.
+  - generic: You can try again to search for the user by their External User ID, User Alias, email address, phone number, or push token.
+- generic: © Braze 2026
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://braze.statuspage.io
+  - text: Status
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/terms
+  - text: Terms
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/privacy
+  - text: Privacy Policy
+- text:          
+- iframe
+- dialog "Audience":
+  - heading "Audience" [level=3]
+  - menuitem "Split your audience into segments to target a specific list of users" [active]:
+    - generic: Segments
+    - generic: Split your audience into segments to target a specific list of users
+  - menuitem "Target audiences based on specific behaviors over longer periods of time":
+    - generic: Segment Extensions
+    - generic: Target audiences based on specific behaviors over longer periods of time
+  - menuitem "Exclude a percentage of your audience from receiving messages":
+    - generic: Global Control Group
+    - generic: Exclude a percentage of your audience from receiving messages
+  - menuitem "Exclude specific users from receiving messages":
+    - generic: Suppression Lists
+    - generic: Exclude specific users from receiving messages
+  - menuitem "Manage your subscription groups for applicable channels":
+    - generic: Subscription Group Management
+    - generic: Manage your subscription groups for applicable channels
+  - menuitem "Create preference centers to help users manage communications":
+    - generic: Email Preference Centers
+    - generic: Create preference centers to help users manage communications
+  - menuitem "View user profiles to find information about specific users":
+    - generic: Search Users
+    - generic: View user profiles to find information about specific users
+  - menuitem "Take actions to manage the health of your userbase":
+    - generic: Manage Audience
+    - generic: Take actions to manage the health of your userbase
+  - menuitem "Import a CSV of user information to add or update user profiles":
+    - generic: Import Users
+    - generic: Import a CSV of user information to add or update user profiles
+  - menuitem "Create geofences to trigger messages when a user enters or exits an area":
+    - generic: Locations
+    - generic: Create geofences to trigger messages when a user enters or exits an area
+  - button "Close drawer":

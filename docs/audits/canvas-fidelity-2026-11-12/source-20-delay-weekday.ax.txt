@@ -1,0 +1,58 @@
+Browser tab: 4, Title: "Engagement - Canvas - Edit 'New Canvas - November 11, 2026'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'New Canvas - November 11, 2026', URL: dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container
+		171 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		172 container Step step editor
+			173 container
+				174 text Step
+				175 button
+				176 text DISCONNECTED
+				177 button Delay Until Monday at 12:00 PM company time (EST)
+					178 text Delay
+					204 text Until Monday at 12:00 PM company time (EST)
+			180 button Done
+			181 container
+				182 text Set a delay
+				183 button BrazeAI Operator™
+					184 image
+				185 text Looking for Intelligent Timing and quiet hours? You can now find them in the Message step under “Delivery settings”
+				186 button Close
+				187 container Delay type
+					188 text Delay type
+					189 container
+						190 radio button (settable, integer) Description: Duration, Value: 0, ID: radio-button-467741848
+						191 text Duration
+					192 text Wait for hours, days, or weeks (Example: 7 days)
+					193 container
+						194 radio button (settable, integer) Description: Calendar date, Value: 0, ID: radio-button-613280520
+						195 text Calendar date
+					196 text Wait until a specific calendar date (Example: March 25 at 12 pm)
+					197 container
+						198 radio button (settable, integer) Description: Day of the week, Value: 1, ID: radio-button-162935729
+						199 text Day of the week
+					200 text Wait until a specific day of the week (Example: Next Monday)
+				201 container
+					202 text Opening in a new tab
+					203 link Description: Opening in a new tab, Value: braze.com/docs/user_guide/engagement_tools/canvas/canvas_components/delay_step
+				205 heading Day of the week, Value: 4
+					206 text Day of the week
+				207 text Users will move to the next step on this day of the week at this time
+				208 container
+					209 text Monday
+					210 combo box (collapsed, settable) Description: Day of the week, ID: react-select-24-input, Secondary Actions: Expand
+				211 container
+					212 text field (settable) 12:00 pm
+				213 container
+					214 container
+						215 text Company time - [Eastern Time (US & Canada)]
+						216 combo box (collapsed, settable) Description: Delivery time zone, ID: react-select-25-input, Secondary Actions: Expand
+				217 container Behavior if users enter after this day and time
+					218 text Behavior if users enter after this day and time
+					219 container
+						220 radio button (settable, integer) Description: Advance the user on the same day, Value: 0, ID: radio-button-12585470
+						221 text Advance the user on the same day
+					222 container
+						223 radio button (settable, integer) Description: Wait until the following Monday, Value: 1, ID: radio-button-647365102
+						224 text Wait until the following Monday
+
+The focused UI element is 198 radio button (settable, integer) Description: Day of the week, Value: 1, ID: radio-button-162935729

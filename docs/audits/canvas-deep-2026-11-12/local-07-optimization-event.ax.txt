@@ -1,0 +1,30 @@
+Browser tab: 12, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3221/engagement/canvas/c754785c-fad4-423d-8c9f-7967e2b59389?locale=en&workspaceId=local&step=build&initialConditionsCollapsed=false".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3221/engagement/canvas/c754785c-fad4-423d-8c9f-7967e2b59389?locale=en&workspaceId=local&step=build&initialConditionsCollapsed=false
+	2 container Content Optimizer step editor
+		3 container
+			4 text field (settable) Description: Step name, Value: optimizer
+			5 text Content Optimizer Opens 4  combinations Email All users who enter this step  advance to the next step
+			6 button Done
+		7 container
+			8 text Content Optimizer setup
+			9 tab group Message step
+				10 tab (selectable, settable, boolean) Messaging channels, Value: 0
+				11 tab (selectable, settable, boolean) Delivery settings, Value: 0
+				12 tab (selected, settable, boolean) Content Optimizer settings, Value: 1
+				13 tab (selectable, settable, boolean) Agentic Standards results, Value: 0
+			14 tab group Content Optimizer settings
+				15 tab (selectable, settable, boolean) Components 2, Value: 0
+				16 tab (selected, settable, boolean) Optimization Event, Value: 1
+			17 text * Select one
+			18 radio button (settable, integer) Description: Opens, Value: 1
+			19 radio button (settable, integer) Description: Clicks, Value: 0
+			20 text Content Optimizer needs enough data to identify your best-performing variant. Results may be limited if:
+			21 content list
+				22 container
+					23 AXListMarker • 
+					24 text Re-eligibility is off and your estimated audience is under 30,000
+				25 container
+					26 AXListMarker • 
+					27 text This step has  4  combination s . Content Optimizer steps with 5 or more combinations perform meaningfully better.
+
+The focused UI element is 18 radio button (settable, integer) Description: Opens, Value: 1

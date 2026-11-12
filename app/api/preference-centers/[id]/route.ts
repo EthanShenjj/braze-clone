@@ -1,27 +1,6 @@
-import { archivePreferenceCenter, getPreferenceCenter, updatePreferenceCenter } from "@/lib/braze-store";
-import { normalizePreferenceCenterConfig } from "@/lib/preference-center-model";
-
-export const runtime = "nodejs";
-
-export async function GET(_request: Request, context: RouteContext<"/api/preference-centers/[id]">) {
-  const { id } = await context.params;
-  const result = getPreferenceCenter(id);
-  return result ? Response.json(result) : Response.json({ error: "Preference center not found" }, { status: 404 });
-}
-
-export async function PATCH(request: Request, context: RouteContext<"/api/preference-centers/[id]">) {
-  const { id } = await context.params;
-  const input = await request.json() as { name?: unknown; description?: unknown; groupIds?: unknown; status?: unknown; config?: unknown };
-  if (input.status === "Archived" && Object.keys(input).length === 1) {
-    const archived = archivePreferenceCenter(id);
-    return archived ? Response.json(archived) : Response.json({ error: "Preference center not found" }, { status: 404 });
-  }
-  const result = updatePreferenceCenter(id, {
-    name: typeof input.name === "string" ? input.name : undefined,
-    description: typeof input.description === "string" ? input.description : undefined,
-    groupIds: Array.isArray(input.groupIds) ? input.groupIds.filter((value): value is string => typeof value === "string") : undefined,
-    status: input.status === "Active" || input.status === "Draft" || input.status === "Archived" ? input.status : undefined,
-    config: input.config === undefined ? undefined : normalizePreferenceCenterConfig(input.config),
-  });
-  return result ? Response.json(result) : Response.json({ error: "Preference center not found" }, { status: 404 });
-}
+import { archivePreferenceCenter, getPreferenceCenter, updatePreferenceCenter } from '@/lib/braze-store';
+import { normalizePreferenceCenterConfig } from '@/lib/preference-center-model';
+export const runtime='nodejs';
+function scoped(id:string,request:Request){const params=new URL(request.url).searchParams,scope=params.get('workspaceId')??params.get('workspace')??'local',center=getPreferenceCenter(id);return center&&String(center.config.workspaceId??'local')===scope?center:null;}
+export async function GET(request:Request,context:RouteContext<'/api/preference-centers/[id]'>){const {id}=await context.params,result=scoped(id,request);return result?Response.json(result):Response.json({error:'Preference center not found.'},{status:404});}
+export async function PATCH(request:Request,context:RouteContext<'/api/preference-centers/[id]'>){const {id}=await context.params;if(!scoped(id,request))return Response.json({error:'Preference center not found.'},{status:404});try{const input=await request.json();if(input.status==='Archived'&&Object.keys(input).every(key=>['status','expectedVersion'].includes(key)))return Response.json(archivePreferenceCenter(id));const result=updatePreferenceCenter(id,{name:typeof input.name==='string'?input.name:undefined,description:typeof input.description==='string'?input.description:undefined,groupIds:input.groupIds,status:['Draft','Active','Archived'].includes(input.status)?input.status:undefined,config:input.config===undefined?undefined:normalizePreferenceCenterConfig(input.config)},input.expectedVersion);return Response.json(result);}catch(cause){return Response.json({error:cause instanceof Error?cause.message:'Unable to save preference center.'},{status:(cause as {status?:number})?.status??400});}}

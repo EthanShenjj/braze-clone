@@ -1,0 +1,49 @@
+Browser tab: 12, Title: "Search Users", URL: "https://dashboard-09.braze.com/users/user_search/6af4374c46d3080087f1c5d2?query=%40".
+0 AXWebArea Search Users, URL: dashboard-09.braze.com/users/user_search/6af4374c46d3080087f1c5d2?query=%40
+	1 container Audience
+		2 heading Audience, Value: 3
+			3 text Audience
+		4 container
+			5 Split your audience into segments to target a specific list of users
+				6 image
+				7 text Segments
+				8 text Split your audience into segments to target a specific list of users
+			9 Target audiences based on specific behaviors over longer periods of time
+				10 image
+				11 text Segment Extensions
+				12 text Target audiences based on specific behaviors over longer periods of time
+			13 Exclude a percentage of your audience from receiving messages
+				14 image
+				15 text Global Control Group
+				16 text Exclude a percentage of your audience from receiving messages
+			17 Exclude specific users from receiving messages
+				18 image
+				19 text Suppression Lists
+				20 text Exclude specific users from receiving messages
+			21 Manage your subscription groups for applicable channels
+				22 image
+				23 text Subscription Group Management
+				24 text Manage your subscription groups for applicable channels
+			25 Create preference centers to help users manage communications
+				26 image
+				27 text Email Preference Centers
+				28 text Create preference centers to help users manage communications
+			29 View user profiles to find information about specific users
+				30 image
+				31 text Search Users
+				32 text View user profiles to find information about specific users
+			33 Take actions to manage the health of your userbase
+				34 image
+				35 text Manage Audience
+				36 text Take actions to manage the health of your userbase
+			37 Import a CSV of user information to add or update user profiles
+				38 image
+				39 text Import Users
+				40 text Import a CSV of user information to add or update user profiles
+			41 Create geofences to trigger messages when a user enters or exits an area
+				42 image
+				43 text Locations
+				44 text Create geofences to trigger messages when a user enters or exits an area
+		45 pop up button Close drawer
+
+The focused UI element is 5 Split your audience into segments to target a specific list of users

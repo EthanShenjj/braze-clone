@@ -1,0 +1,102 @@
+- alert: Import Users
+- complementary:
+  - button "Minimize menu" [expanded]
+  - button "Select workspace":
+    - generic: Local workspace
+  - navigation "Side navigation":
+    - generic: Quick links
+    - button "Canvas":
+      - generic: Canvas
+    - button "Campaigns":
+      - generic: Campaigns
+    - button "Segments":
+      - generic: Segments
+    - button "Getting Started":
+      - generic: Getting Started
+    - button "Home":
+      - generic: Home
+    - button "AI Decisioning":
+      - generic: AI Decisioning
+    - button "Agents":
+      - generic: Agents
+    - button "Messaging":
+      - generic: Messaging
+    - button "Audience":
+      - generic: Audience
+    - button "Content":
+      - generic: Content
+    - button "Analytics":
+      - generic: Analytics
+    - button "Partner Integrations":
+      - generic: Partner Integrations
+    - button "Data Settings":
+      - generic: Data Settings
+    - button "Settings":
+      - generic: Settings
+  - button "Home":
+    - img "Braze"
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - generic "Community":
+    - img "Community"
+  - button "Language"
+  - button "Notifications"
+  - button "Profile"
+  - button "Open BrazeAI Operator"
+  - button "Import Users"
+  - heading "Import Users" [level=1]
+  - button "Send feedback" [disabled]:
+  - button "Import" [expanded] [active]:
+    - text: Import
+  - menu "Import":
+    - heading "ATTRIBUTES" [level=3]
+    - menuitem "User attributes Add or update profile fields, such as email, first name, or loyalty tier":
+      - generic: User attributes
+      - generic: Add or update profile fields, such as email, first name, or loyalty tier
+    - heading "EVENTS" [level=3]
+    - menuitem "Custom events Log actions your users took, such as completed_onboarding":
+      - generic: Custom events
+      - generic: Log actions your users took, such as completed_onboarding
+    - menuitem "eCommerce recommended events Log purchases and browsing in Braze's eCommerce format, such as order_placed":
+      - generic: eCommerce recommended events
+      - generic: Log purchases and browsing in Braze's eCommerce format, such as order_placed
+  - paragraph: Add or update users in your workspace by uploading a CSV or entering details manually.
+  - button "Refresh table"
+  - table:
+    - rowgroup:
+      - row "DateInformation Uploader File Name Type Targeting Availability RecordsInformation Status":
+        - columnheader "DateInformation":
+          - text: Date
+          - img "Information"
+        - columnheader "Uploader"
+        - columnheader "File Name"
+        - columnheader "Type"
+        - columnheader "Targeting Availability"
+        - columnheader "RecordsInformation":
+          - text: Records
+          - img "Information"
+        - columnheader "Status"
+    - rowgroup:
+      - row "Nov 12, 2026, 12:43 PM — audience_qa_83e337e7 CSV import Attributes Available — Active":
+        - cell "Nov 12, 2026, 12:43 PM"
+        - cell "—"
+        - cell "audience_qa_83e337e7 CSV import"
+        - cell "Attributes"
+        - cell "Available"
+        - cell "—"
+        - cell "Active":
+          - generic: Active
+      - row "Nov 12, 2026, 11:32 AM — audience_qa_9fdd22dd CSV import Attributes Available — Active":
+        - cell "Nov 12, 2026, 11:32 AM"
+        - cell "—"
+        - cell "audience_qa_9fdd22dd CSV import"
+        - cell "Attributes"
+        - cell "Available"
+        - cell "—"
+        - cell "Active":
+          - generic: Active

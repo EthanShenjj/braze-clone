@@ -1,0 +1,88 @@
+Browser tab: 14, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/users/subscription_groups/preference_centers/6aa75e37db69160082adb7ae?locale=en&workspace=local&centerId=new".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/subscription_groups/preference_centers/6aa75e37db69160082adb7ae?locale=en&workspace=local&centerId=new
+	2 container
+		7 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			8 image
+		6 text Custom Email Preference Centers
+		9 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		10 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			11 text Local workspace
+			12 image
+		13 container Side navigation
+			14 text Quick links
+			15 button Canvas
+			16 button Campaigns
+			17 button Segments
+			18 button Getting Started
+			19 button Home
+			20 button AI Decisioning
+			21 button Agent Console
+			22 button Messaging
+			23 button Audience
+			24 button Content
+			25 button Analytics
+			26 button Partner Integrations
+			27 button Data Settings
+			28 button Settings
+		29 button Home
+			30 image Braze
+		31 container
+			32 text ◷   8 days left in your free trial.
+			33 button Connect with sales
+		34 container
+			35 button Search workspace ⌘K
+				36 image
+				37 text Search workspace
+				38 text ⌘K
+			39 button Take a tour
+			40 image Community
+			41 button (collapsed) Description: Language, Secondary Actions: Expand
+			42 button Notifications
+			43 button (collapsed) Description: Profile, Secondary Actions: Expand
+			44 image
+			45 button Open BrazeAI Operator
+		46 container
+			47 button Email Preference Centers
+			48 button Create Preference Center
+				49 text Create Preference Center
+				50 image
+			51 heading Email Preference Center, Value: 1
+				52 text Email Preference Center
+			53 heading Details, Value: 2
+				54 text Details
+			55 container
+				56 text Name 0 /280 characters
+				57 text field (settable) Name
+			58 button Add Description
+				59 image
+				60 text Add Description
+			61 image
+			62 text The Liquid tag will be generated after the preference center is launched
+			63 button Close Liquid notice
+				64 image
+			65 container
+				66 text Liquid
+				67 text field Description: Liquid, Value: {{preference_center.${}}}
+				68 button Copy Liquid
+					69 image
+			70 image
+			71 text The API ID will be generated after the preference center is saved
+			72 button Close API ID notice
+				73 image
+			74 container
+				75 text API ID
+				76 text field API ID
+				77 button Copy API ID
+					78 image
+			79 container
+				80 heading Page Previews, Value: 2
+					81 text Page Previews
+				82 button Edit
+			83 image
+			84 heading Begin building your preference center, Value: 3
+				85 text Begin building your preference center
+			86 button Launch Editor
+			87 button (disabled) Save as draft
+			88 button (disabled) Launch preference center
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/subscription_groups/preference_centers/6aa75e37db69160082adb7ae?locale=en&workspace=local&centerId=new

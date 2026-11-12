@@ -1,0 +1,120 @@
+- complementary:
+  - button "Minimize menu" [expanded]
+  - button "Select workspace":
+    - generic: Local workspace
+  - navigation "Side navigation":
+    - generic: Quick links
+    - button "Canvas":
+      - generic: Canvas
+    - button "Campaigns":
+      - generic: Campaigns
+    - button "Segments":
+      - generic: Segments
+    - button "Getting Started":
+      - generic: Getting Started
+    - button "Home":
+      - generic: Home
+    - button "AI Decisioning":
+      - generic: AI Decisioning
+    - button "Agents":
+      - generic: Agents
+    - button "Messaging":
+      - generic: Messaging
+    - button "Audience":
+      - generic: Audience
+    - button "Content":
+      - generic: Content
+    - button "Analytics":
+      - generic: Analytics
+    - button "Partner Integrations":
+      - generic: Partner Integrations
+    - button "Data Settings":
+      - generic: Data Settings
+    - button "Settings":
+      - generic: Settings
+  - button "Home":
+    - img "Braze"
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - generic "Community":
+    - img "Community"
+  - button "Language"
+  - button "Notifications"
+  - button "Profile"
+  - button "Open BrazeAI Operator"
+  - heading "Segment Insights" [level=1]
+  - paragraph: Insight statistics are estimated. Open a Segment to calculate exact numbers.
+  - generic: Baseline
+  - combobox "Baseline": All Users
+  - button "Toggle Baseline":
+  - text: Segments
+  - generic: 1/10
+  - text: New Users
+  - button "Remove New Users":
+  - combobox "Segments"
+  - button "Toggle Segments":
+  - button "Columns":
+    - text: Columns
+  - table:
+    - rowgroup:
+      - row "Segment name User size column, unsorted. Select to sort descending Sessions per day column, unsorted. Select to sort descending Days since first session column, unsorted. Select to sort descending Days since last session column, unsorted. Select to sort descending Lifetime revenue in dollars column, unsorted. Select to sort descending Days since first purchase column, unsorted. Select to sort descending Days since last purchase column, unsorted. Select to sort descending":
+        - columnheader "Segment name"
+        - columnheader "User size column, unsorted. Select to sort descending":
+          - button "User size column, unsorted. Select to sort descending":
+            - text: User size
+            - generic: ↕
+        - columnheader "Sessions per day column, unsorted. Select to sort descending":
+          - button "Sessions per day column, unsorted. Select to sort descending":
+            - text: Sessions per day
+            - generic: ↕
+        - columnheader "Days since first session column, unsorted. Select to sort descending":
+          - button "Days since first session column, unsorted. Select to sort descending":
+            - text: Days since first session
+            - generic: ↕
+        - columnheader "Days since last session column, unsorted. Select to sort descending":
+          - button "Days since last session column, unsorted. Select to sort descending":
+            - text: Days since last session
+            - generic: ↕
+        - columnheader "Lifetime revenue in dollars column, unsorted. Select to sort descending":
+          - button "Lifetime revenue in dollars column, unsorted. Select to sort descending":
+            - text: Lifetime revenue in dollars
+            - generic: ↕
+        - columnheader "Days since first purchase column, unsorted. Select to sort descending":
+          - button "Days since first purchase column, unsorted. Select to sort descending":
+            - text: Days since first purchase
+            - generic: ↕
+        - columnheader "Days since last purchase column, unsorted. Select to sort descending":
+          - button "Days since last purchase column, unsorted. Select to sort descending":
+            - text: Days since last purchase
+            - generic: ↕
+    - rowgroup:
+      - row "All Users Baseline 1,006 — — — — — —":
+        - cell "All Users Baseline":
+          - text: All Users
+          - generic: Baseline
+        - cell "1,006"
+        - cell "—"
+        - cell "—"
+        - cell "—"
+        - cell "—"
+        - cell "—"
+        - cell "—"
+      - row "New Users 200 -80.1% vs baseline — — — — — —":
+        - cell "New Users":
+          - link "New Users":
+            - /url: /engagement/segmenter/segmenter/local?segmentId=seg_new&workspace=local&locale=en
+        - cell "200 -80.1% vs baseline":
+          - text: "200"
+          - generic: "-80.1% vs baseline"
+        - cell "—"
+        - cell "—"
+        - cell "—"
+        - cell "—"
+        - cell "—"
+        - cell "—"
+- alert

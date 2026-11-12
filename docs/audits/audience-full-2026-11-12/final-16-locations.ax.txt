@@ -1,0 +1,106 @@
+Browser tab: 15, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/engagement/locations/local?locale=en&workspace=local".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/engagement/locations/local?locale=en&workspace=local
+	1 container
+		2 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		3 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			4 text Local workspace
+			5 image
+		6 container Side navigation
+			7 text Quick links
+			8 button Canvas
+			9 button Campaigns
+			10 button Segments
+			11 button Getting Started
+			12 button Home
+			13 button AI Decisioning
+			14 button Agents
+			15 button Messaging
+			16 button Audience
+			17 button Content
+			18 button Analytics
+			19 button Partner Integrations
+			20 button Data Settings
+			21 button Settings
+		22 button Home
+			23 image Braze
+		24 container
+			25 text ◷   8 days left in your free trial.
+			26 button Connect with sales
+		27 container
+			28 button Search workspace ⌘K
+				29 image
+				30 text Search workspace
+				31 text ⌘K
+			32 button Take a tour
+			33 image Community
+			34 button (collapsed) Description: Language, Secondary Actions: Expand
+			35 button Notifications
+			36 button (collapsed) Description: Profile, Secondary Actions: Expand
+			37 image
+			38 button Open BrazeAI Operator
+		39 container
+			40 container
+				41 text field (settable) Search map
+				42 button Clear search
+			43 container
+				44 button Zoom in
+					45 image
+				46 button Zoom out
+					47 image
+			48 container
+				49 link Description: Leaflet, Value: leafletjs.com/
+				50 text  | © 
+				51 link Description: Mapbox, Value: mapbox.com/
+				52 text  © 
+				53 link Description: OpenStreetMap, Value: openstreetmap.org/copyright
+			54 container
+				55 heading 0 of 0 Apps with Geofences enabled, Value: 2
+					56 text 0  of  0  Apps with Geofences enabled
+				57 button Manage Apps
+				58 button Create Geofence Set
+					59 text Create Geofence Set
+					60 image
+			61 container
+				62 text Status
+				63 pop up button (collapsed, settable) Status, Value: Active, Secondary Actions: Expand
+					64 menu
+						65 All
+						66 (selected) Active
+						67 Archived
+						68 Draft
+			69 container
+				70 text Tags
+				71 combo box (collapsed, settable) Description: Tags, Secondary Actions: Expand
+				72 button Toggle Tags
+					73 image
+			74 container
+				75 text field (settable)
+				76 image
+			77 button Status: Active
+				78 text Status: 
+				79 text Active
+				80 image
+			81 heading 1 Geofence Set, Value: 3
+				82 text 1 Geofence Set
+			83 table
+				84 row
+					85 cell
+						86 checkbox (settable, integer) Description: Select all rows, Value: 0
+					87 cell
+						88 text Name
+					89 cell
+						90 text Number of Geofences
+					91 cell
+						92 text Last Edited 
+						93 image
+				94 row
+					95 cell
+						96 checkbox (settable, integer) Description: Select Audience QA geofences, Value: 0
+					97 cell
+						98 button Audience QA geofences
+					99 cell
+						100 text 1
+					101 cell
+						102 text 2026/11/12 11:58:53
+
+The focused UI element is 0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/engagement/locations/local?locale=en&workspace=local

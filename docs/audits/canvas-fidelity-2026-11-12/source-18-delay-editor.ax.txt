@@ -1,0 +1,56 @@
+Browser tab: 4, Title: "Engagement - Canvas - Edit 'New Canvas - November 11, 2026'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'New Canvas - November 11, 2026', URL: dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container
+		171 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		172 container Step step editor
+			173 container
+				174 text Step
+				175 button
+				176 text DISCONNECTED
+				177 button Delay After 1 day
+					178 text Delay
+					179 text After 1 day
+			180 button Done
+			181 container
+				182 text Set a delay
+				183 button BrazeAI Operator™
+					184 image
+				185 text Looking for Intelligent Timing and quiet hours? You can now find them in the Message step under “Delivery settings”
+				186 button Close
+				187 container Delay type
+					188 text Delay type
+					189 container
+						190 radio button (settable, integer) Description: Duration, Value: 1, ID: radio-button-467741848
+						191 text Duration
+					192 text Wait for hours, days, or weeks (Example: 7 days)
+					193 container
+						194 radio button (settable, integer) Description: Calendar date, Value: 0, ID: radio-button-613280520
+						195 text Calendar date
+					196 text Wait until a specific calendar date (Example: March 25 at 12 pm)
+					197 container
+						198 radio button (settable, integer) Description: Day of the week, Value: 0, ID: radio-button-162935729
+						199 text Day of the week
+					200 text Wait until a specific day of the week (Example: Next Monday)
+				201 container
+					202 text Opening in a new tab
+					203 link Description: Opening in a new tab, Value: braze.com/docs/user_guide/engagement_tools/canvas/canvas_components/delay_step
+				204 heading Duration, Value: 4
+					205 text Duration
+				206 text Users will move to the next step after this amount of time
+				207 stepper (settable, integer) Value: 1, ID: db-duration-input
+				208 container db-delay-step-composer--multiplier-delay
+					209 container
+						210 text Days
+						211 combo box (collapsed, settable) Description: Unit, ID: react-select-21-input, Secondary Actions: Expand
+				212 text ( 24 hours )
+				213 checkbox (settable, integer) Description: At a specific time, Value: 0, ID: bc-checkbox-2139281278
+				214 text At a specific time
+				215 image Information
+				216 container
+					217 text field (disabled) 12:00 pm
+				218 container
+					219 text Company time - [Eastern Time (US & Canada)]
+				220 checkbox (settable, integer) Description: Personalize delay, Value: 0, ID: bcl-switch__input-615397139
+				221 text Personalize delay
+
+The focused UI element is 172 container Step step editor

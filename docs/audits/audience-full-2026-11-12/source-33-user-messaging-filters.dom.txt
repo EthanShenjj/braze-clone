@@ -1,0 +1,256 @@
+- link "Skip to main content":
+  - /url: "#main-container"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Demo – ittor":
+    - generic: Demo – ittor
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agents":
+    - generic: Agents
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 14 days left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- main:
+  - heading "Search users" [level=3]
+  - img: 
+  - generic: Limited access
+  - textbox "Email address, phone number or External User ID": <redacted>
+  - button "Clear Selection":
+  - button "Search":
+  - text: Search for users by their External User ID
+  - img "Information":
+  - text: User Alias
+  - img "Information":
+  - text: email, phone number, or push token.
+  - img "user profile image of Euna Fadel"
+  - heading "Euna Fadel" [level=2]
+  - 'heading "User ID: braze-2ee39a80-a79a-49a0-aac9-1d1a25cac87f" [level=4]':
+    - generic: "User ID:"
+    - text: braze-2ee39a80-a79a-49a0-aac9-1d1a25cac87f
+  - 'heading "Braze ID: 6af4378a641a6600597b5b58" [level=4]':
+    - generic: "Braze ID:"
+    - text: 6af4378a641a6600597b5b58
+  - img: 
+  - generic: None
+  - img: 
+  - generic: None
+  - button "User aliases" [disabled]
+  - button "Refresh user profile":
+  - navigation:
+    - tablist:
+      - tab "Overview":
+        - generic: Overview
+      - tab "Engagement":
+        - generic: Engagement
+      - tab "Messaging History" [selected]:
+        - text: 
+        - generic: Messaging History
+      - tab "Event History":
+        - generic: Event History
+      - tab "Commerce":
+        - generic: Commerce
+      - tab "Feature Flags Eligibility":
+        - generic: Feature Flags Eligibility
+  - tabpanel:
+    - text: Events are shown for the past 30 days. Please share your comments and suggestions with us at
+    - generic: Opening in a new tab
+    - link "Opening in a new tab":
+      - /url: mailto:user-targeting@braze.com
+      - text: user-targeting@braze.com
+    - text: .
+    - generic: Opening in a new tab
+    - link "Opening in a new tab":
+      - /url: https://www.braze.com/docs/user_guide/engagement_tools/segments/user_profiles/#messaging-history-tab
+      - text: More info
+    - button "Filters":
+      - generic: Filters
+    - table:
+      - rowgroup:
+        - row "Channel column, unsorted. Select to sort descending Event column, unsorted. Select to sort descending Time column, sorted descending. Select to sort ascending Campaign/Canvas column, unsorted. Select to sort descending Message Sent column, unsorted. Select to sort descending Destination column, unsorted. Select to sort descending":
+          - columnheader "Channel column, unsorted. Select to sort descending":
+            - button "Channel column, unsorted. Select to sort descending": Channel
+          - columnheader "Event column, unsorted. Select to sort descending":
+            - button "Event column, unsorted. Select to sort descending": Event
+          - columnheader "Time column, sorted descending. Select to sort ascending":
+            - button "Time column, sorted descending. Select to sort ascending": Time
+          - columnheader "Campaign/Canvas column, unsorted. Select to sort descending":
+            - button "Campaign/Canvas column, unsorted. Select to sort descending": Campaign/Canvas
+          - columnheader "Message Sent column, unsorted. Select to sort descending":
+            - button "Message Sent column, unsorted. Select to sort descending": Message Sent
+          - columnheader "Destination column, unsorted. Select to sort descending":
+            - button "Destination column, unsorted. Select to sort descending": Destination
+      - rowgroup
+    - heading "There are no events for this user in the past 30 days" [level=3]
+- generic: © Braze 2026
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://braze.statuspage.io
+  - text: Status
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/terms
+  - text: Terms
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/privacy
+  - text: Privacy Policy
+- text:          
+- dialog "Filters":
+  - heading "Filters" [level=3]
+  - checkbox "Email" [active]
+  - generic: Email
+  - checkbox "Abort"
+  - generic: Abort
+  - checkbox "Bounce"
+  - generic: Bounce
+  - checkbox "Click"
+  - generic: Click
+  - checkbox "Deferral"
+  - generic: Deferral
+  - checkbox "Delivery"
+  - generic: Delivery
+  - checkbox "Frequency capped"
+  - generic: Frequency capped
+  - checkbox "Mark as spam"
+  - generic: Mark as spam
+  - checkbox "Open"
+  - generic: Open
+  - checkbox "Send"
+  - generic: Send
+  - checkbox "Soft bounce"
+  - generic: Soft bounce
+  - checkbox "Unsubscribe"
+  - generic: Unsubscribe
+  - checkbox "SMS/MMS"
+  - generic: SMS/MMS
+  - checkbox "Abort"
+  - generic: Abort
+  - checkbox "Carrier send"
+  - generic: Carrier send
+  - checkbox "Delivery"
+  - generic: Delivery
+  - checkbox "Delivery failure"
+  - generic: Delivery failure
+  - checkbox "Frequency capped"
+  - generic: Frequency capped
+  - checkbox "Inbound receive"
+  - generic: Inbound receive
+  - checkbox "Rejection"
+  - generic: Rejection
+  - checkbox "Send"
+  - generic: Send
+  - checkbox "Push"
+  - generic: Push
+  - checkbox "Abort"
+  - generic: Abort
+  - checkbox "Bounce"
+  - generic: Bounce
+  - checkbox "Frequency capped"
+  - generic: Frequency capped
+  - checkbox "Influenced open"
+  - generic: Influenced open
+  - checkbox "iOS Foreground"
+  - generic: iOS Foreground
+  - checkbox "Open"
+  - generic: Open
+  - checkbox "Send"
+  - generic: Send
+  - checkbox "In-App Message"
+  - generic: In-App Message
+  - checkbox "Click"
+  - generic: Click
+  - checkbox "Frequency capped"
+  - generic: Frequency capped
+  - checkbox "Impression"
+  - generic: Impression
+  - checkbox "Content Card"
+  - generic: Content Card
+  - checkbox "Click"
+  - generic: Click
+  - checkbox "Dismiss"
+  - generic: Dismiss
+  - checkbox "Frequency capped"
+  - generic: Frequency capped
+  - checkbox "Impression"
+  - generic: Impression
+  - checkbox "Send"
+  - generic: Send
+  - checkbox "Webhook"
+  - generic: Webhook
+  - checkbox "Abort"
+  - generic: Abort
+  - checkbox "Frequency capped"
+  - generic: Frequency capped
+  - checkbox "Send"
+  - generic: Send
+  - checkbox "WhatsApp"
+  - generic: WhatsApp
+  - checkbox "Abort"
+  - generic: Abort
+  - checkbox "Delivery"
+  - generic: Delivery
+  - checkbox "Failure"
+  - generic: Failure
+  - checkbox "Frequency capped"
+  - generic: Frequency capped
+  - checkbox "Inbound receive"
+  - generic: Inbound receive
+  - checkbox "Read"
+  - generic: Read
+  - checkbox "Send"
+  - generic: Send
+  - button "Select All":
+    - generic: Select All
+  - button "Apply":
+    - generic: Apply
+  - button "Close drawer":

@@ -1,0 +1,324 @@
+Browser tab: 5, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3220/engagement/canvas?locale=en&workspace=local".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3220/engagement/canvas?locale=en&workspace=local
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agent Console
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+	25 container
+		26 text ◷   8 days left in your free trial.
+		27 button Connect with sales
+		28 button Search workspace ⌘K
+			29 image
+			30 text Search workspace
+			31 text ⌘K
+		32 button Take a tour
+		33 image Community
+		34 button (collapsed) Description: Language, Secondary Actions: Expand
+		35 button Notifications
+		36 button (collapsed) Description: Profile, Secondary Actions: Expand
+		37 image
+		38 button Open BrazeAI Operator
+		39 button Canvas
+		40 heading Canvas Limited access, Value: 1
+			41 text Canvas Limited access
+		42 text Design and launch customer journeys with Canvas. Drag, drop, and connect messaging across channels to create seamless, automated experiences.
+		43 button Take a tour
+		44 button Create Canvas
+			45 text Create Canvas
+			46 image
+		47 text Status
+		48 container
+			49 combo box (collapsed, settable) Description: Status, Value: Draft, Secondary Actions: Expand
+			50 button Toggle Status
+				51 image
+		52 text Tags
+		53 container
+			54 combo box (collapsed, settable) Description: Tags, Secondary Actions: Expand
+			55 button Toggle Tags
+				56 image
+		292 container
+			293 button (expanded) Filters, Secondary Actions: Collapse
+				294 image
+				295 text Filters
+			296 container
+				297 text Canvas experience
+				298 combo box (collapsed, settable) Description: Canvas experience, Secondary Actions: Expand
+				299 button Toggle Canvas experience
+					300 image
+			301 container
+				302 text Created by
+				303 combo box (collapsed, settable) Description: Created by, Secondary Actions: Expand
+				304 button Toggle Created by
+					305 image
+			306 container
+				307 text Last edited by
+				308 combo box (collapsed, settable) Description: Last edited by, Secondary Actions: Expand
+				309 button Toggle Last edited by
+					310 image
+			311 container Search by
+				312 text Search by
+				313 radio button (settable, integer) Description: Date created, Value: 0
+				314 radio button (settable, integer) Description: Date last edited, Value: 0
+				315 radio button (settable, integer) Description: None, Value: 1
+			316 container Show only
+				317 text Show only
+				318 checkbox (settable, integer) Description: Canvases with expired interaction data, Value: 0
+				319 checkbox (settable, integer) Description: Optimized with BrazeAI Decisioning Studio™, Value: 0
+				320 checkbox (settable, integer) Description: Canvases exceeding targeting complexity threshold, Value: 0
+			321 container
+				322 text Target segment
+				323 combo box (collapsed, settable) Description: Target segment, Value: All segments, Secondary Actions: Expand
+				324 button Toggle Target segment
+					325 image
+		60 button (collapsed) Columns, Secondary Actions: Expand
+			61 image
+			62 text Columns
+		63 button Reset filters
+		64 container
+			65 image
+			66 text field (settable) Search Canvases
+		67 button Status: Draft
+			68 text Status: 
+			69 text Draft
+			70 image
+		71 container
+			72 text 10 Results
+		73 table
+			74 row
+				75 cell
+					76 checkbox (settable, integer) Description: Select all Canvas rows, Value: 0
+				77 cell
+					78 button Select to sort by Name in alphabetical order
+						79 text Name 
+						80 text ↕
+				81 cell
+					82 text Status
+				83 cell
+					84 text Description
+				85 cell
+					86 text Last edited by
+				87 cell
+					88 button Last edited ↓
+						89 text Last edited 
+						90 text ↓
+				91 cell
+					92 text Alerts Configured
+				93 cell
+					94 text Actions
+			111 row
+				112 cell
+					113 checkbox (settable, integer) Description: Select Canvas audience_qa_ba0152e9 audience Canvas, Value: 0
+				114 cell
+					115 button audience_qa_ba0152e9 audience Canvas
+				116 cell
+					117 text Draft
+				118 cell
+					119 text —
+				120 cell
+					121 text Local workspace
+				122 cell
+					123 text 15 hours ago
+				124 cell
+					125 text —
+				126 cell
+					127 button Actions for audience_qa_ba0152e9 audience Canvas
+						128 image
+			129 row
+				130 cell
+					131 checkbox (settable, integer) Description: Select Canvas audience_qa_9f08eeb7 audience Canvas, Value: 0
+				132 cell
+					133 button audience_qa_9f08eeb7 audience Canvas
+				134 cell
+					135 text Draft
+				136 cell
+					137 text —
+				138 cell
+					139 text Local workspace
+				140 cell
+					141 text 15 hours ago
+				142 cell
+					143 text —
+				144 cell
+					145 button Actions for audience_qa_9f08eeb7 audience Canvas
+						146 image
+			147 row
+				148 cell
+					149 checkbox (settable, integer) Description: Select Canvas Tagged welcome journey, Value: 0
+				150 cell
+					151 button Tagged welcome journey
+					152 text Welcome
+				153 cell
+					154 text Draft
+				155 cell
+					156 text —
+				157 cell
+					158 text Local workspace
+				159 cell
+					160 text 15 hours ago
+				161 cell
+					162 text —
+				163 cell
+					164 button Actions for Tagged welcome journey
+						165 image
+			166 row
+				167 cell
+					168 checkbox (settable, integer) Description: Select Canvas audience_qa_1297cd67 audience Canvas, Value: 0
+				169 cell
+					170 button audience_qa_1297cd67 audience Canvas
+				171 cell
+					172 text Draft
+				173 cell
+					174 text —
+				175 cell
+					176 text Local workspace
+				177 cell
+					178 text 15 hours ago
+				179 cell
+					180 text —
+				181 cell
+					182 button Actions for audience_qa_1297cd67 audience Canvas
+						183 image
+			184 row
+				185 cell
+					186 checkbox (settable, integer) Description: Select Canvas tag_qa_d0950e36_scope_journey, Value: 0
+				187 cell
+					188 button tag_qa_d0950e36_scope_journey
+				189 cell
+					190 text Draft
+				191 cell
+					192 text —
+				193 cell
+					194 text Local workspace
+				195 cell
+					196 text 16 hours ago
+				197 cell
+					198 text —
+				199 cell
+					200 button Actions for tag_qa_d0950e36_scope_journey
+						201 image
+			202 row
+				203 cell
+					204 checkbox (settable, integer) Description: Select Canvas tag_qa_d0950e36, Value: 0
+				205 cell
+					206 button tag_qa_d0950e36
+				207 cell
+					208 text Draft
+				209 cell
+					210 text —
+				211 cell
+					212 text Local workspace
+				213 cell
+					214 text 16 hours ago
+				215 cell
+					216 text —
+				217 cell
+					218 button Actions for tag_qa_d0950e36
+						219 image
+			220 row
+				221 cell
+					222 checkbox (settable, integer) Description: Select Canvas tag_qa_083e6329_scope_journey, Value: 0
+				223 cell
+					224 button tag_qa_083e6329_scope_journey
+				225 cell
+					226 text Draft
+				227 cell
+					228 text —
+				229 cell
+					230 text Local workspace
+				231 cell
+					232 text 16 hours ago
+				233 cell
+					234 text —
+				235 cell
+					236 button Actions for tag_qa_083e6329_scope_journey
+						237 image
+			238 row
+				239 cell
+					240 checkbox (settable, integer) Description: Select Canvas tag_qa_083e6329, Value: 0
+				241 cell
+					242 button tag_qa_083e6329
+				243 cell
+					244 text Draft
+				245 cell
+					246 text —
+				247 cell
+					248 text Local workspace
+				249 cell
+					250 text 16 hours ago
+				251 cell
+					252 text —
+				253 cell
+					254 button Actions for tag_qa_083e6329
+						255 image
+			256 row
+				257 cell
+					258 checkbox (settable, integer) Description: Select Canvas tag_qa_3274d7cf, Value: 0
+				259 cell
+					260 button tag_qa_3274d7cf
+				261 cell
+					262 text Draft
+				263 cell
+					264 text —
+				265 cell
+					266 text Local workspace
+				267 cell
+					268 text 16 hours ago
+				269 cell
+					270 text —
+				271 cell
+					272 button Actions for tag_qa_3274d7cf
+						273 image
+			274 row
+				275 cell
+					276 checkbox (settable, integer) Description: Select Canvas Welcome journey, Value: 0
+				277 cell
+					278 button Welcome journey
+				279 cell
+					280 text Draft
+				281 cell
+					282 text Entry, delay, email and conversion journey
+				283 cell
+					284 text Local workspace
+				285 cell
+					286 text 16 hours ago
+				287 cell
+					288 text —
+				289 cell
+					290 button Actions for Welcome journey
+						291 image
+		96 text Showing rows  1  -  10  of  10
+		97 container
+			98 text Rows per page:
+			99 pop up button (collapsed, settable) Rows per page:, Value: 20, Secondary Actions: Expand
+				100 menu
+					101 10
+					102 (selected) 20
+					103 40
+					104 60
+					105 100
+		106 button (disabled) Previous page
+			107 image
+		108 button Current Page, Page 1
+		109 button (disabled) Next page
+			110 image
+
+The focused UI element is 293 button (expanded) Filters, Secondary Actions: Collapse

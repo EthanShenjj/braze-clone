@@ -1,0 +1,60 @@
+Browser tab: 4, Title: "Engagement - Canvas - Edit 'New Canvas - November 11, 2026'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'New Canvas - November 11, 2026', URL: dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container
+		171 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		172 container Step 2 step editor
+			173 container
+				174 text Step 2
+				175 button
+				176 text DISCONNECTED
+				177 button User Update
+					178 text User Update
+			179 button Done
+			180 container
+				181 text Set Up User Update
+				182 button BrazeAI Operator™
+					183 image
+				184 text Update existing, add new, or remove user profile information. Switch to the 
+				185 button advanced JSON editor
+				186 text  to use Content Blocks and Connected Content. User update steps will update up to 200,000 users per minute per workspace. Learn more in 
+				187 text Opening in a new tab
+				188 link Description: Opening in a new tab, Value: braze.com/docs/user_update/
+				189 text . Action
+				190 container user-update-select-action
+					191 container
+						192 text UI Editor
+						193 combo box (collapsed, settable) Description: Action, ID: react-select-42-input, Secondary Actions: Expand
+				194 text Switching between actions will clear all existing inputs Users will advance to the next step after their profile is updated.
+				195 tab group
+					196 tab (selected, settable, boolean) Compose, Value: 1, ID: 0
+					197 tab (selectable, settable, boolean) Test, Value: 0, ID: preview-and-test-tab
+				198 container attributes-box
+					199 text Choose from your list of existing attributes to update or create a new attribute.
+					200 text Attribute Name
+					201 container attribute-name-select-0
+						202 container
+							203 text Search custom attributes...
+							204 combo box (collapsed, settable) Description: Attribute Name, ID: react-select-43-input, Secondary Actions: Expand
+					205 text Action
+					206 container attribute-action-select-0
+						219 container
+							220 text Update selected, 1 of 2.
+							221 text 2 results available.
+							222 text Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+						207 container
+							208 text Update
+							209 combo box (expanded, settable) Description: Action, ID: react-select-44-input, Secondary Actions: Collapse
+						223 list react-select-44-listbox
+							224 Value: Update, ID: react-select-44-option-0
+							225 Value: Remove, ID: react-select-44-option-1
+					210 text Key Value
+					211 text field (settable) attribute-value-input-0
+					212 container
+						213 checkbox (settable, integer) Description: Use personalization Information, Value: 0, ID: attribute-personalization-switch-0
+						214 container bcl-switch-2734395607
+							215 text Use personalization
+							216 image Information
+					217 button Description: Add another attribute, ID: add-attribute-btn
+				218 button Have feedback on this feature? Send us your thoughts, ID: uus-feedback-target
+
+The focused UI element is 209 combo box (expanded, settable) Description: Action, ID: react-select-44-input, Secondary Actions: Collapse

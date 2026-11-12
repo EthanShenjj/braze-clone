@@ -1,0 +1,45 @@
+Browser tab: 4, Title: "Engagement - Canvas - Edit 'New Canvas - November 11, 2026'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'New Canvas - November 11, 2026', URL: dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container
+		171 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		172 container Step 1 step editor
+			173 container
+				174 text Step 1
+				175 button
+				176 text DISCONNECTED
+				177 button Decision Split
+					178 text Decision Split
+			179 button Done
+			180 container
+				181 text Add a Decision Split
+				182 button BrazeAI Operator™
+					183 image
+				184 text Split the existing audience by selecting additional segments and filters
+				185 container
+					186 text Additional Segments
+					187 pop up button (collapsed) Description: Help text available. Tab to view help text, click to open popover, Secondary Actions: Expand
+				188 container
+					189 container
+						190 text Search Segments...
+						191 combo box (collapsed, settable) Description: Additional Segments, ID: react-select-26-input, Secondary Actions: Expand
+				192 heading Additional Filters, Value: 3
+					193 text Additional Filters
+				194 container Filter group
+					195 button
+						196 image
+					197 text Filter group
+					198 pop up button (collapsed) Description: or, Secondary Actions: Expand
+						199 text OR
+					200 container
+						201 container
+							202 text Search filter...
+							203 combo box (collapsed, settable) Description: Select filter, ID: react-select-27-input, Secondary Actions: Expand
+					204 button (disabled) Remove
+				205 button Add filter group
+				206 button Add exclusion group
+				207 heading User Lookup, Value: 4
+					208 text User Lookup
+				209 text Check if a user matches the segment, filter, and app criteria
+				210 button Lookup User
+
+The focused UI element is 172 container Step 1 step editor

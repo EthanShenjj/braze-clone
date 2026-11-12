@@ -1,0 +1,174 @@
+- link "Skip to main content":
+  - /url: "#main-container"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Demo – ittor":
+    - generic: Demo – ittor
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agents":
+    - generic: Agents
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 14 days left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- main:
+  - heading "Subscription Group Details" [level=3]
+  - generic: Name
+  - textbox "Name":
+    - /placeholder: Enter Subscription Group Name
+    - text: SMS Canvas Subscription Group
+  - generic: Subscription Group Description
+  - generic: 90 / 250 characters
+  - textbox "Subscription Group Description 90 / 250 characters":
+    - /placeholder: Enter Subscription Group Description
+    - text: Users must be subscribed to this group to receive SMS from "SMS Canvas Subscription Group"
+  - button "Remove Description":
+    - generic: Remove Description
+  - generic: ID
+  - textbox "ID" [disabled]: d1d038f7-75c9-4bff-bed2-2b9f6698b65c
+  - text: Link Shortening Domain
+  - button "Help text available. Tab to view help text, click to open popover":
+  - log
+  - generic: brz.ai
+  - combobox "Link Shortening Domain"
+  - text: Short Codes
+  - generic: No short codes
+  - generic: Long Code
+  - generic: "+15005550006"
+  - heading "Geographic Permissions" [level=3]
+  - generic: To protect against traffic pumping, Braze will send SMS/MMS/RCS messages only to the countries on your allowlist. If you need to make changes to your allowlist, please contact your customer success manager.
+  - img: 
+  - text: Protect against traffic pumping
+  - generic: SMS traffic pumping occurs when fraudsters exploit vulnerable touchpoints—such as web forms or authentication flows—to generate increased message volumes and collect a cut of the resulting fees.
+  - generic: Because all transmitted messages count toward account usage or billing, and your company will be financially responsible for such usage, we recommend restricting the geographic permissions allowlist to countries where your intended recipients reside.
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://www.braze.com/docs/en/user_guide/channels/sms_mms_and_rcs/compliance_and_delivery/sms_traffic_pumping_fraud
+    - text: Learn more about preventing traffic pumping fraud
+  - generic: Country allowlist
+  - generic: The allowlist is empty; SMS/MMS/RCS messages for this subscription group will not send.
+  - button "Save" [disabled]:
+    - generic: Save
+  - heading "Global Keywords" [level=3]
+  - img: 
+  - text: The use of SMS is subject to specific legal requirements. To ensure that you are using the SMS Services in compliance with all applicable laws, you should seek the advice of your legal counsel.
+  - link "Learn More":
+    - /url: https://www.braze.com/docs/en/user_guide/onboarding_with_braze/sms_setup/sms_laws_and_regulations/
+  - button "Close":
+  - navigation:
+    - tablist "Keyword languages":
+      - tab "English" [selected]:
+        - text: 
+        - generic: English
+  - button "Add a Language":
+    - img: 
+    - generic: Add a Language
+  - tabpanel:
+    - generic: Keyword Category
+    - generic: Keywords
+    - generic: Response
+    - generic: Opt-In
+    - img: 
+    - generic: Opt-in
+    - generic: (Required)
+    - generic: START
+    - generic: UNSTOP
+    - generic: "YES"
+    - generic: You have been re-subscribed to messages from this number. Reply HELP for help. Reply STOP to unsubscribe. Msg&Data Rates May Apply.
+    - img: 
+    - generic: Double Opt-In
+    - generic: Consent verification requiring users to reply to a text message opt-in prompt before becoming subscribed
+    - generic: Opt-Out
+    - img: 
+    - generic: Opt-out
+    - generic: (Required)
+    - generic: STOP
+    - generic: STOPALL
+    - generic: UNSUBSCRIBE
+    - generic: CANCEL
+    - generic: END
+    - generic: QUIT
+    - generic: OPT OUT
+    - generic: REVOKE
+    - generic: You have successfully been unsubscribed. You will not receive any more messages from this number. Reply START to resubscribe.
+    - img: 
+    - generic: Fuzzy Opt-Out
+    - generic: Intelligent processing that handles misspelled message responses that represent opt-out intent
+    - generic: Help
+    - img: 
+    - generic: Help
+    - generic: (Required)
+    - generic: HELP
+    - generic: INFO
+    - generic: Reply STOP to unsubscribe. Msg&Data Rates May Apply.
+  - button "Add custom keyword":
+    - img: 
+    - generic: Add custom keyword
+- generic: © Braze 2026
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://braze.statuspage.io
+  - text: Status
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/terms
+  - text: Terms
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/privacy
+  - text: Privacy Policy
+- text:          
+- iframe
+- alert
+- alert
+- tooltip "Custom keyword categories are limited to a maximum of 25 per Subscription Group.":
+  - generic: Custom keyword categories are limited to a maximum of 25 per Subscription Group.

@@ -1,0 +1,1 @@
+TypeScript --noEmit: passed (Node 22.22.3).

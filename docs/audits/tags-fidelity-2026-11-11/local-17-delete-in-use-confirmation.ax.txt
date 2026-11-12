@@ -1,0 +1,22 @@
+Browser tab: 4, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3210/app_settings/app_settings/tags/local?locale=en".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3210/app_settings/app_settings/tags/local?locale=en
+	1 container Delete tags
+		2 heading Delete tags, Value: 2
+			3 text Delete tags
+		4 container
+			5 text Are you sure you want to delete the tag " Welcome "?
+		6 text It will be automatically removed from the following places that currently have this tag:
+		7 content list
+			8 container
+				9 AXListMarker • 
+				10 text 1 canvas
+			11 container
+				12 AXListMarker • 
+				13 text 2 campaigns
+			14 container
+				15 AXListMarker • 
+				16 text 1 segment
+		17 button Cancel
+		18 button Delete Tag
+
+The focused UI element is 17 button Cancel

@@ -1,0 +1,727 @@
+Browser tab: 11, Title: "Edit Segment", URL: "https://dashboard-09.braze.com/engagement/segmenter/edit/6af4375220abdf005fc2eef4/6af4374c46d3080087f1c5d2?locale=en".
+0 AXWebArea Edit Segment, URL: dashboard-09.braze.com/engagement/segmenter/edit/6af4375220abdf005fc2eef4/6af4374c46d3080087f1c5d2
+	1 container close User Preview Showing 50 random users from this segment. The User Preview draws a random sample from your userbase and might not display all users.
+		2 button close
+		3 heading User Preview, Value: 2
+			4 text User Preview
+		5 container
+			6 text Showing 50 random users from this segment. The User Preview draws a random sample from your userbase and might not display all users.
+			7 table
+				8 row Name column, unsorted. Select to sort ascending Gender column, unsorted. Select to sort descending Age column, unsorted. Select to sort descending Sessions column, unsorted. Select to sort descending First Used column, unsorted. Select to sort descending Last Used column, unsorted. Select to sort descending Push column, unsorted. Select to sort descending Email column, unsorted. Select to sort descending
+					9 cell
+						10 button Name column, unsorted. Select to sort ascending
+					11 cell
+						12 button Gender column, unsorted. Select to sort descending
+					13 cell
+						14 button Age column, unsorted. Select to sort descending
+					15 cell
+						16 button Sessions column, unsorted. Select to sort descending
+					17 cell
+						18 button First Used column, unsorted. Select to sort descending
+					19 cell
+						20 button Last Used column, unsorted. Select to sort descending
+					21 cell
+						22 button Push column, unsorted. Select to sort descending
+					23 cell
+						24 button Email column, unsorted. Select to sort descending
+				25 row Opening in a new tab Opening in a new tab 29 2026-06-15 2026-10-30
+					26 cell
+						27 text Opening in a new tab
+						28 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					29 cell
+					30 cell
+					31 cell
+						32 text 29
+					33 cell
+						34 text 2026-06-15
+					35 cell
+						36 text 2026-10-30
+					37 cell
+					38 cell
+				39 row Opening in a new tab Opening in a new tab P 21 2026-07-18 2026-11-08
+					40 cell
+						41 text Opening in a new tab
+						42 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					43 cell
+						44 text P
+					45 cell
+					46 cell
+						47 text 21
+					48 cell
+						49 text 2026-07-18
+					50 cell
+						51 text 2026-11-08
+					52 cell
+					53 cell
+				54 row Opening in a new tab Opening in a new tab P 40 2026-05-30 2026-11-09
+					55 cell
+						56 text Opening in a new tab
+						57 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					58 cell
+						59 text P
+					60 cell
+					61 cell
+						62 text 40
+					63 cell
+						64 text 2026-05-30
+					65 cell
+						66 text 2026-11-09
+					67 cell
+					68 cell
+				69 row Opening in a new tab Opening in a new tab O 52 2026-06-22 2026-11-09
+					70 cell
+						71 text Opening in a new tab
+						72 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					73 cell
+						74 text O
+					75 cell
+					76 cell
+						77 text 52
+					78 cell
+						79 text 2026-06-22
+					80 cell
+						81 text 2026-11-09
+					82 cell
+					83 cell
+				84 row Opening in a new tab Opening in a new tab 14 2026-10-24 2026-11-10
+					85 cell
+						86 text Opening in a new tab
+						87 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					88 cell
+					89 cell
+					90 cell
+						91 text 14
+					92 cell
+						93 text 2026-10-24
+					94 cell
+						95 text 2026-11-10
+					96 cell
+					97 cell
+				98 row Opening in a new tab Opening in a new tab F 11 2026-08-30 2026-11-10
+					99 cell
+						100 text Opening in a new tab
+						101 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					102 cell
+						103 text F
+					104 cell
+					105 cell
+						106 text 11
+					107 cell
+						108 text 2026-08-30
+					109 cell
+						110 text 2026-11-10
+					111 cell
+					112 cell
+				113 row Opening in a new tab Opening in a new tab 0
+					114 cell
+						115 text Opening in a new tab
+						116 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					117 cell
+					118 cell
+					119 cell
+						120 text 0
+					121 cell
+					122 cell
+					123 cell
+					124 cell
+				125 row Opening in a new tab Opening in a new tab P 37 2026-09-08 2026-11-10
+					126 cell
+						127 text Opening in a new tab
+						128 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					129 cell
+						130 text P
+					131 cell
+					132 cell
+						133 text 37
+					134 cell
+						135 text 2026-09-08
+					136 cell
+						137 text 2026-11-10
+					138 cell
+					139 cell
+				140 row Opening in a new tab Opening in a new tab M 18 2026-09-09 2026-11-10
+					141 cell
+						142 text Opening in a new tab
+						143 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					144 cell
+						145 text M
+					146 cell
+					147 cell
+						148 text 18
+					149 cell
+						150 text 2026-09-09
+					151 cell
+						152 text 2026-11-10
+					153 cell
+					154 cell
+				155 row Opening in a new tab Opening in a new tab M 47 2026-06-10 2026-11-01
+					156 cell
+						157 text Opening in a new tab
+						158 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					159 cell
+						160 text M
+					161 cell
+					162 cell
+						163 text 47
+					164 cell
+						165 text 2026-06-10
+					166 cell
+						167 text 2026-11-01
+					168 cell
+					169 cell
+				170 row Opening in a new tab Opening in a new tab M 29 2026-07-20 2026-11-08
+					171 cell
+						172 text Opening in a new tab
+						173 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					174 cell
+						175 text M
+					176 cell
+					177 cell
+						178 text 29
+					179 cell
+						180 text 2026-07-20
+					181 cell
+						182 text 2026-11-08
+					183 cell
+					184 cell
+				185 row Opening in a new tab Opening in a new tab 0
+					186 cell
+						187 text Opening in a new tab
+						188 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					189 cell
+					190 cell
+					191 cell
+						192 text 0
+					193 cell
+					194 cell
+					195 cell
+					196 cell
+				197 row Opening in a new tab Opening in a new tab M 51 2026-05-22 2026-11-09
+					198 cell
+						199 text Opening in a new tab
+						200 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					201 cell
+						202 text M
+					203 cell
+					204 cell
+						205 text 51
+					206 cell
+						207 text 2026-05-22
+					208 cell
+						209 text 2026-11-09
+					210 cell
+					211 cell
+				212 row Opening in a new tab Opening in a new tab 2 2026-09-07 2026-09-26
+					213 cell
+						214 text Opening in a new tab
+						215 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					216 cell
+					217 cell
+					218 cell
+						219 text 2
+					220 cell
+						221 text 2026-09-07
+					222 cell
+						223 text 2026-09-26
+					224 cell
+					225 cell
+				226 row Opening in a new tab Opening in a new tab 0
+					227 cell
+						228 text Opening in a new tab
+						229 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					230 cell
+					231 cell
+					232 cell
+						233 text 0
+					234 cell
+					235 cell
+					236 cell
+					237 cell
+				238 row Opening in a new tab Opening in a new tab O 3 2026-10-24 2026-10-30
+					239 cell
+						240 text Opening in a new tab
+						241 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					242 cell
+						243 text O
+					244 cell
+					245 cell
+						246 text 3
+					247 cell
+						248 text 2026-10-24
+					249 cell
+						250 text 2026-10-30
+					251 cell
+					252 cell
+				253 row Opening in a new tab Opening in a new tab M 25 2026-07-11 2026-11-09
+					254 cell
+						255 text Opening in a new tab
+						256 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					257 cell
+						258 text M
+					259 cell
+					260 cell
+						261 text 25
+					262 cell
+						263 text 2026-07-11
+					264 cell
+						265 text 2026-11-09
+					266 cell
+					267 cell
+				268 row Opening in a new tab Opening in a new tab 0
+					269 cell
+						270 text Opening in a new tab
+						271 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					272 cell
+					273 cell
+					274 cell
+						275 text 0
+					276 cell
+					277 cell
+					278 cell
+					279 cell
+				280 row Opening in a new tab Opening in a new tab O 42 2026-08-09 2026-11-10
+					281 cell
+						282 text Opening in a new tab
+						283 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					284 cell
+						285 text O
+					286 cell
+					287 cell
+						288 text 42
+					289 cell
+						290 text 2026-08-09
+					291 cell
+						292 text 2026-11-10
+					293 cell
+					294 cell
+				295 row Opening in a new tab Opening in a new tab 52 2026-05-27 2026-11-10
+					296 cell
+						297 text Opening in a new tab
+						298 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					299 cell
+					300 cell
+					301 cell
+						302 text 52
+					303 cell
+						304 text 2026-05-27
+					305 cell
+						306 text 2026-11-10
+					307 cell
+					308 cell
+				309 row Opening in a new tab Opening in a new tab 31 2026-07-09 2026-11-07
+					310 cell
+						311 text Opening in a new tab
+						312 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					313 cell
+					314 cell
+					315 cell
+						316 text 31
+					317 cell
+						318 text 2026-07-09
+					319 cell
+						320 text 2026-11-07
+					321 cell
+					322 cell
+				323 row Opening in a new tab Opening in a new tab 3 2026-11-08 2026-11-10
+					324 cell
+						325 text Opening in a new tab
+						326 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					327 cell
+					328 cell
+					329 cell
+						330 text 3
+					331 cell
+						332 text 2026-11-08
+					333 cell
+						334 text 2026-11-10
+					335 cell
+					336 cell
+				337 row Opening in a new tab Opening in a new tab M 25 2026-07-15 2026-11-10
+					338 cell
+						339 text Opening in a new tab
+						340 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					341 cell
+						342 text M
+					343 cell
+					344 cell
+						345 text 25
+					346 cell
+						347 text 2026-07-15
+					348 cell
+						349 text 2026-11-10
+					350 cell
+					351 cell
+				352 row Opening in a new tab Opening in a new tab 0
+					353 cell
+						354 text Opening in a new tab
+						355 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					356 cell
+					357 cell
+					358 cell
+						359 text 0
+					360 cell
+					361 cell
+					362 cell
+					363 cell
+				364 row Opening in a new tab Opening in a new tab P 31 2026-10-10 2026-11-10
+					365 cell
+						366 text Opening in a new tab
+						367 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					368 cell
+						369 text P
+					370 cell
+					371 cell
+						372 text 31
+					373 cell
+						374 text 2026-10-10
+					375 cell
+						376 text 2026-11-10
+					377 cell
+					378 cell
+				379 row Opening in a new tab Opening in a new tab M 45 2026-06-30 2026-11-09
+					380 cell
+						381 text Opening in a new tab
+						382 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					383 cell
+						384 text M
+					385 cell
+					386 cell
+						387 text 45
+					388 cell
+						389 text 2026-06-30
+					390 cell
+						391 text 2026-11-09
+					392 cell
+					393 cell
+				394 row Opening in a new tab Opening in a new tab F 20 2026-09-10 2026-11-10
+					395 cell
+						396 text Opening in a new tab
+						397 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					398 cell
+						399 text F
+					400 cell
+					401 cell
+						402 text 20
+					403 cell
+						404 text 2026-09-10
+					405 cell
+						406 text 2026-11-10
+					407 cell
+					408 cell
+				409 row Opening in a new tab Opening in a new tab 60 2026-06-26 2026-11-04
+					410 cell
+						411 text Opening in a new tab
+						412 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					413 cell
+					414 cell
+					415 cell
+						416 text 60
+					417 cell
+						418 text 2026-06-26
+					419 cell
+						420 text 2026-11-04
+					421 cell
+					422 cell
+				423 row Opening in a new tab Opening in a new tab F 50 2026-06-27 2026-11-11
+					424 cell
+						425 text Opening in a new tab
+						426 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					427 cell
+						428 text F
+					429 cell
+					430 cell
+						431 text 50
+					432 cell
+						433 text 2026-06-27
+					434 cell
+						435 text 2026-11-11
+					436 cell
+					437 cell
+				438 row Opening in a new tab Opening in a new tab 0
+					439 cell
+						440 text Opening in a new tab
+						441 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					442 cell
+					443 cell
+					444 cell
+						445 text 0
+					446 cell
+					447 cell
+					448 cell
+					449 cell
+				450 row Opening in a new tab Opening in a new tab 0
+					451 cell
+						452 text Opening in a new tab
+						453 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					454 cell
+					455 cell
+					456 cell
+						457 text 0
+					458 cell
+					459 cell
+					460 cell
+					461 cell
+				462 row Opening in a new tab Opening in a new tab 29 2026-08-26 2026-11-06
+					463 cell
+						464 text Opening in a new tab
+						465 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					466 cell
+					467 cell
+					468 cell
+						469 text 29
+					470 cell
+						471 text 2026-08-26
+					472 cell
+						473 text 2026-11-06
+					474 cell
+					475 cell
+				476 row Opening in a new tab Opening in a new tab O 3 2026-10-07 2026-11-03
+					477 cell
+						478 text Opening in a new tab
+						479 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					480 cell
+						481 text O
+					482 cell
+					483 cell
+						484 text 3
+					485 cell
+						486 text 2026-10-07
+					487 cell
+						488 text 2026-11-03
+					489 cell
+					490 cell
+				491 row Opening in a new tab Opening in a new tab 0
+					492 cell
+						493 text Opening in a new tab
+						494 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					495 cell
+					496 cell
+					497 cell
+						498 text 0
+					499 cell
+					500 cell
+					501 cell
+					502 cell
+				503 row Opening in a new tab Opening in a new tab 0
+					504 cell
+						505 text Opening in a new tab
+						506 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					507 cell
+					508 cell
+					509 cell
+						510 text 0
+					511 cell
+					512 cell
+					513 cell
+					514 cell
+				515 row Opening in a new tab Opening in a new tab F 4 2026-10-11 2026-10-31
+					516 cell
+						517 text Opening in a new tab
+						518 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					519 cell
+						520 text F
+					521 cell
+					522 cell
+						523 text 4
+					524 cell
+						525 text 2026-10-11
+					526 cell
+						527 text 2026-10-31
+					528 cell
+					529 cell
+				530 row Opening in a new tab Opening in a new tab 0
+					531 cell
+						532 text Opening in a new tab
+						533 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					534 cell
+					535 cell
+					536 cell
+						537 text 0
+					538 cell
+					539 cell
+					540 cell
+					541 cell
+				542 row Opening in a new tab Opening in a new tab F 23 2026-08-27 2026-11-11
+					543 cell
+						544 text Opening in a new tab
+						545 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					546 cell
+						547 text F
+					548 cell
+					549 cell
+						550 text 23
+					551 cell
+						552 text 2026-08-27
+					553 cell
+						554 text 2026-11-11
+					555 cell
+					556 cell
+				557 row Opening in a new tab Opening in a new tab 5 2026-10-08 2026-11-03
+					558 cell
+						559 text Opening in a new tab
+						560 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					561 cell
+					562 cell
+					563 cell
+						564 text 5
+					565 cell
+						566 text 2026-10-08
+					567 cell
+						568 text 2026-11-03
+					569 cell
+					570 cell
+				571 row Opening in a new tab Opening in a new tab 0
+					572 cell
+						573 text Opening in a new tab
+						574 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					575 cell
+					576 cell
+					577 cell
+						578 text 0
+					579 cell
+					580 cell
+					581 cell
+					582 cell
+				583 row Opening in a new tab Opening in a new tab O 3 2026-09-29 2026-10-21
+					584 cell
+						585 text Opening in a new tab
+						586 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					587 cell
+						588 text O
+					589 cell
+					590 cell
+						591 text 3
+					592 cell
+						593 text 2026-09-29
+					594 cell
+						595 text 2026-10-21
+					596 cell
+					597 cell
+				598 row Opening in a new tab Opening in a new tab O 19 2026-08-14 2026-11-05
+					599 cell
+						600 text Opening in a new tab
+						601 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					602 cell
+						603 text O
+					604 cell
+					605 cell
+						606 text 19
+					607 cell
+						608 text 2026-08-14
+					609 cell
+						610 text 2026-11-05
+					611 cell
+					612 cell
+				613 row Opening in a new tab Opening in a new tab 0
+					614 cell
+						615 text Opening in a new tab
+						616 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					617 cell
+					618 cell
+					619 cell
+						620 text 0
+					621 cell
+					622 cell
+					623 cell
+					624 cell
+				625 row Opening in a new tab Opening in a new tab M 27 2026-07-13 2026-11-07
+					626 cell
+						627 text Opening in a new tab
+						628 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					629 cell
+						630 text M
+					631 cell
+					632 cell
+						633 text 27
+					634 cell
+						635 text 2026-07-13
+					636 cell
+						637 text 2026-11-07
+					638 cell
+					639 cell
+				640 row Opening in a new tab Opening in a new tab P 54 2026-07-01 2026-11-09
+					641 cell
+						642 text Opening in a new tab
+						643 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					644 cell
+						645 text P
+					646 cell
+					647 cell
+						648 text 54
+					649 cell
+						650 text 2026-07-01
+					651 cell
+						652 text 2026-11-09
+					653 cell
+					654 cell
+				655 row Opening in a new tab Opening in a new tab 47 2026-06-22 2026-11-08
+					656 cell
+						657 text Opening in a new tab
+						658 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					659 cell
+					660 cell
+					661 cell
+						662 text 47
+					663 cell
+						664 text 2026-06-22
+					665 cell
+						666 text 2026-11-08
+					667 cell
+					668 cell
+				669 row Opening in a new tab Opening in a new tab O 5 2026-10-02 2026-11-02
+					670 cell
+						671 text Opening in a new tab
+						672 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					673 cell
+						674 text O
+					675 cell
+					676 cell
+						677 text 5
+					678 cell
+						679 text 2026-10-02
+					680 cell
+						681 text 2026-11-02
+					682 cell
+					683 cell
+				684 row Opening in a new tab Opening in a new tab 19 2026-07-26 2026-11-09
+					685 cell
+						686 text Opening in a new tab
+						687 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					688 cell
+					689 cell
+					690 cell
+						691 text 19
+					692 cell
+						693 text 2026-07-26
+					694 cell
+						695 text 2026-11-09
+					696 cell
+					697 cell
+				698 row Opening in a new tab Opening in a new tab 0
+					699 cell
+						700 text Opening in a new tab
+						701 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					702 cell
+					703 cell
+					704 cell
+						705 text 0
+					706 cell
+					707 cell
+					708 cell
+					709 cell
+				710 row Opening in a new tab Opening in a new tab 29 2026-07-13 2026-11-09
+					711 cell
+						712 text Opening in a new tab
+						713 link Description: Opening in a new tab, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2
+					714 cell
+					715 cell
+					716 cell
+						717 text 29
+					718 cell
+						719 text 2026-07-13
+					720 cell
+						721 text 2026-11-09
+					722 cell
+					723 cell
+
+The focused UI element is 1 container close User Preview Showing 50 random users from this segment. The User Preview draws a random sample from your userbase and might not display all users.

@@ -1,0 +1,58 @@
+Browser tab: 7, Title: "Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build&initialConditionsCollapsed=true".
+0 AXWebArea Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build&initialConditionsCollapsed=true
+	1 container
+		193 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		194 container Step 2 step editor
+			195 container
+				196 text Step 2
+				197 button
+				198 text DISCONNECTED
+				199 button Window: 1 day Ranking: Off Advance: Immediately
+					200 container
+						201 text Window : 1 day
+					202 container
+						203 text Ranking : Off
+					204 container
+						205 text Advance : Immediately
+				206 container
+					207 button 1 1 Group 1
+						208 image
+							209 text 1
+						210 text Group 1
+				211 button 2 2 Everyone Else
+					212 image
+						213 text 2
+					214 text Everyone Else
+				215 button Add Action Group
+			216 button Done
+			217 container action-path-step-editor1482
+				218 container
+					219 image
+						220 text 1
+					221 text Group 1
+					222 button BrazeAI Operator™
+						223 image
+				224 container
+					225 text Action Group Name
+					226 text field (settable) Group 1
+					227 checkbox (settable, integer) Description: I want this group to exit the Canvas, Value: 0, ID: bc-checkbox-798465175
+					228 text I want this group to exit the Canvas
+					229 text Interact With Campaign
+					230 container
+						231 container
+							232 text Choose an Interaction...
+							233 combo box (collapsed, settable) Description: Interaction, ID: react-select-15-input, Secondary Actions: Expand
+						234 text Please select an interaction for campaign
+						235 container
+							236 text Choose Campaign...
+							237 combo box (collapsed, settable) Description: for campaign, ID: react-select-16-input, Secondary Actions: Expand
+						238 text Please select a campaign
+					239 button close
+					240 text Evaluate if user takes specified actions
+					241 container
+						242 container
+							243 text Select Trigger
+							244 combo box (collapsed, settable) Description: Select Trigger, ID: react-select-14-input, Secondary Actions: Expand
+					245 button (disabled) Add Trigger
+
+The focused UI element is 0 AXWebArea Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build&initialConditionsCollapsed=true

@@ -1,0 +1,10 @@
+Browser tab: 25, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3216/sms/preview/res_0ce1843f75114074".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3216/sms/preview/res_0ce1843f75114074
+	1 container
+		2 heading SMS Preview, Value: 1
+			3 text SMS Preview
+		4 text Thanks for being a loyal customer, Ada! Your reward for being so loyal? Early access to our limited edition sale: https://brz.ai/XXXXXXXX
+
+Reply STOP to opt-out. 161  |  2  Billable Segment s Actual rendering may not be identical to this preview depending on the user's environment.
+
+The focused UI element is 0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3216/sms/preview/res_0ce1843f75114074

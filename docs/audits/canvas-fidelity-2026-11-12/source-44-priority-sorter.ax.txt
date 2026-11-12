@@ -1,0 +1,81 @@
+Browser tab: 4, Title: "Engagement - Canvas - Canvas", URL: "https://dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en".
+0 AXWebArea Engagement - Canvas - Canvas, URL: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+	1 container Set priority for in-app messages View only When multiple in-app messages share a trigger and have overlapping schedules, priority determines which one appears first. Drag to reorder messages, with highest priority at the top. Use Canvas-level sorters to manage message priority within a single Canvas. Opening in a new tab Opening in a new tab Status All Status Type All Type Select all items in High priority High priority (0) Shown before other messages Collapse High priority No items in this bucket Select all items in Medium priority Medium priority (4) Collapse Medium priority Select Referral Offer IAM Opening in a new tab Opening in a new tab
+		2 heading Set priority for in-app messages View only, Value: 2
+			3 text Set priority for in-app messages
+			4 text View only
+		5 container
+			6 text When multiple in-app messages share a trigger and have overlapping schedules, priority determines which one appears first. Drag to reorder messages, with highest priority at the top. Use Canvas-level sorters to manage message priority within a single Canvas. 
+			7 text Opening in a new tab
+			8 link Description: Opening in a new tab, Value: braze.com/docs/en/user_guide/channels/in_app_messages/traditional/#choose-a-priority
+			9 text Status
+			10 container priority-filter-status
+				11 container
+					12 text All
+					13 combo box (collapsed, settable) Description: Status, ID: react-select-47-input, Secondary Actions: Expand
+			14 text Type
+			15 container priority-filter-type
+				16 container
+					17 text All
+					18 combo box (collapsed, settable) Description: Type, ID: react-select-48-input, Secondary Actions: Expand
+			19 text field (settable) Description: Search, ID: priority-filter-search
+			20 button (disabled) Search
+			21 container
+				22 checkbox (disabled, settable, integer) Description: Select all items in High priority, Value: 0, ID: bc-checkbox-4144374088
+				23 text High priority (0) Shown before other messages
+				24 button (expanded) Description: Collapse High priority, Secondary Actions: Collapse
+			25 text No items in this bucket
+			26 container
+				27 checkbox (settable, integer) Description: Select all items in Medium priority, Value: 0, ID: bc-checkbox-3075370486
+				28 text Medium priority (4)
+				29 button (expanded) Description: Collapse Medium priority, Secondary Actions: Collapse
+			30 container
+				31 button Select Referral Offer IAM Opening in a new tab Opening in a new tab Active Move Referral Offer IAM up Move Referral Offer IAM down Actions for Referral Offer IAM
+					32 checkbox (settable, integer) Description: Select Referral Offer IAM, Value: 0, ID: bc-checkbox-2675466664
+					33 image
+					34 text Opening in a new tab
+					35 link Description: Opening in a new tab, Value: dashboard-09.braze.com/engagement/campaigns/6af4375520abdf005fc2eff1/6af4374c46d3080087f1c5d2?page=-2&locale=en
+					36 text Active
+					37 container
+						38 button (disabled) Move Referral Offer IAM up
+						39 button Move Referral Offer IAM down
+						40 pop up button (collapsed) Description: Actions for Referral Offer IAM, ID: priority-item-actions-button-84077077, Secondary Actions: Expand
+				41 button Select Welcome Offer IAM Opening in a new tab Opening in a new tab Draft Move Welcome Offer IAM up Move Welcome Offer IAM down Actions for Welcome Offer IAM
+					42 checkbox (settable, integer) Description: Select Welcome Offer IAM, Value: 0, ID: bc-checkbox-4007353268
+					43 image
+					44 text Opening in a new tab
+					45 link Description: Opening in a new tab, Value: dashboard-09.braze.com/engagement/campaigns/6af4375520abdf005fc2efb0/6af4374c46d3080087f1c5d2?page=0&locale=en
+					46 text Draft
+					47 container
+						48 button Move Welcome Offer IAM up
+						49 button Move Welcome Offer IAM down
+						50 pop up button (collapsed) Description: Actions for Welcome Offer IAM, ID: priority-item-actions-button-3896160905, Secondary Actions: Expand
+				51 button Select Push Primer Opening in a new tab Opening in a new tab Draft Move Push Primer up Move Push Primer down Actions for Push Primer
+					52 checkbox (settable, integer) Description: Select Push Primer, Value: 0, ID: bc-checkbox-2811352679
+					53 image
+					54 text Opening in a new tab
+					55 link Description: Opening in a new tab, Value: dashboard-09.braze.com/engagement/campaigns/6af4375420abdf005fc2ef99/6af4374c46d3080087f1c5d2?page=0&locale=en
+					56 text Draft
+					57 container
+						58 button Move Push Primer up
+						59 button Move Push Primer down
+						60 pop up button (collapsed) Description: Actions for Push Primer, ID: priority-item-actions-button-2121672054, Secondary Actions: Expand
+				61 button Select Custom IAM Examples Opening in a new tab Opening in a new tab Draft Move Custom IAM Examples up Move Custom IAM Examples down Actions for Custom IAM Examples
+					62 checkbox (settable, integer) Description: Select Custom IAM Examples, Value: 0, ID: bc-checkbox-3282464198
+					63 image
+					64 text Opening in a new tab
+					65 link Description: Opening in a new tab, Value: dashboard-09.braze.com/engagement/campaigns/6af4375220abdf005fc2ef07/6af4374c46d3080087f1c5d2?page=0&locale=en
+					66 text Draft
+					67 container
+						68 button Move Custom IAM Examples up
+						69 button (disabled) Move Custom IAM Examples down
+						70 pop up button (collapsed) Description: Actions for Custom IAM Examples, ID: priority-item-actions-button-2027694644, Secondary Actions: Expand
+			71 container
+				72 checkbox (disabled, settable, integer) Description: Select all items in Low priority, Value: 0, ID: bc-checkbox-2655298547
+				73 text Low priority (0) Shown after other messages
+				74 button (expanded) Description: Collapse Low priority, Secondary Actions: Collapse
+			75 text No items in this bucket
+		76 button Cancel
+		77 button (disabled) Save changes
+
+The focused UI element is 1 container Set priority for in-app messages View only When multiple in-app messages share a trigger and have overlapping schedules, priority determines which one appears first. Drag to reorder messages, with highest priority at the top. Use Canvas-level sorters to manage message priority within a single Canvas. Opening in a new tab Opening in a new tab Status All Status Type All Type Select all items in High priority High priority (0) Shown before other messages Collapse High priority No items in this bucket Select all items in Medium priority Medium priority (4) Collapse Medium priority Select Referral Offer IAM Opening in a new tab Opening in a new tab

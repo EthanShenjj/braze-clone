@@ -1,0 +1,49 @@
+Browser tab: 4, Title: "Engagement - Canvas - Edit 'New Canvas - November 11, 2026'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'New Canvas - November 11, 2026', URL: dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container
+		171 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		172 container Step 2 step editor
+			173 container
+				174 text Step 2
+				175 button
+				176 text DISCONNECTED
+				177 button User Update
+					178 text User Update
+			179 button Done
+			180 container
+				181 text Set Up User Update
+				182 button BrazeAI Operator™
+					183 image
+				184 text Update existing, add new, or remove user profile information. Switch to the 
+				185 button advanced JSON editor
+				186 text  to use Content Blocks and Connected Content. User update steps will update up to 200,000 users per minute per workspace. Learn more in 
+				187 text Opening in a new tab
+				188 link Description: Opening in a new tab, Value: braze.com/docs/user_update/
+				189 text . Action
+				190 container user-update-select-action
+					219 container
+						220 text option Advanced JSON Editor, selected.
+					191 container
+						192 text Advanced JSON Editor
+						193 combo box (collapsed, settable) Description: Action, ID: react-select-42-input, Secondary Actions: Expand
+				194 text Switching between actions will clear all existing inputs Users will advance to the next step after their profile is updated.
+				221 tab group
+					222 tab (selected, settable, boolean) Compose, Value: 1, ID: 0
+					223 tab (selectable, settable, boolean) Preview and test, Value: 0, ID: preview-and-test-tab
+				224 text The Advanced JSON Editor has a 65,536 character limit.
+				225 text User Update Object
+				226 container
+					227 container
+						228 editor (settable) Description: User Update Object, ID: json-editor
+					229 text Create a JSON object similar to:
+{
+"attributes": [
+{
+"string_attribute": "fruit"
+}
+]
+}
+					230 pop up button (collapsed) Description: Add Liquid, Secondary Actions: Expand
+				218 button Have feedback on this feature? Send us your thoughts, ID: uus-feedback-target
+
+The focused UI element is 193 combo box (collapsed, settable) Description: Action, ID: react-select-42-input, Secondary Actions: Expand

@@ -1,0 +1,137 @@
+Browser tab: 8, Title: "Engagement - Canvas - Canvas", URL: "https://dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?name=%22fidelity%22&locale=en".
+0 AXWebArea Engagement - Canvas - Canvas, URL: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?name=%22fidelity%22&locale=en
+	1 container
+		2 container body-wrapper
+			3 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?name=%22fidelity%22&locale=en#main-col
+			4 container
+				5 container Side navigation
+					6 container
+						7 button Minimize menu
+						8 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+							9 image
+							10 text Demo – ittor
+						11 text Quick links
+						12 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+						13 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+						14 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+						15 button Getting Started
+							16 image
+							17 container
+								18 text Getting Started
+								19 container
+									20 text 8 %
+						21 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+						22 button AI Decisioning
+							23 image
+							24 text AI Decisioning
+						25 button Agents
+							26 image
+							27 text Agents
+						28 button Messaging
+							29 image
+							30 text Messaging
+						31 button Audience
+							32 image
+							33 text Audience
+						34 button Content
+							35 image
+							36 text Content
+						37 button Analytics
+							38 image
+							39 text Analytics
+						40 button Partner Integrations
+							41 image
+							42 text Partner Integrations
+						43 button Data Settings
+							44 image
+							45 text Data Settings
+						46 button Settings
+							47 image
+							48 text Settings
+					49 container Footer Logo
+						50 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+				51 text 14 days left in your free trial.
+				52 button Connect with sales
+				53 container Top navigation
+					54 container Left top navigation
+						55 button Search workspace ⌘+K
+							56 image
+							57 text Search workspace
+							58 text ⌘+K
+					59 container Right top navigation
+						60 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							61 image
+						62 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							63 image
+						64 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+							65 image
+						66 container
+							67 button Notifications
+								68 image
+						69 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							70 image
+						71 button BrazeAI Operator™
+							72 image
+			73 container main
+				74 container main-col
+					75 tab group Open page tabs
+						76 tab (selected, settable, boolean) Canvas, Value: 1, ID: canvas
+					77 container
+						78 heading Canvas, Value: 2
+							79 text Canvas
+						80 text Limited access
+						81 text Design and launch customer journeys with Canvas. Drag, drop, and connect messaging across channels to create seamless, automated experiences.
+						82 button Take a tour
+							83 text Take a tour
+						84 pop up button (collapsed) Description: More options, Secondary Actions: Expand
+						85 pop up button (collapsed) Description: Create Canvas, ID: canvas-create-button, Secondary Actions: Expand
+						86 text Status
+						87 pop up button (collapsed) Description: Help text available. Tab to view help text, click to open popover, Secondary Actions: Expand
+						88 container db-canvas-digest--status-select
+							89 container
+								90 text Active
+								91 combo box (collapsed, settable) Description: Status, ID: react-select-2-input, Secondary Actions: Expand
+						92 text Tags
+						93 container db-canvas-digest--tags-select
+							94 container
+								95 text All Tags
+								96 combo box (collapsed, settable) Description: Tags, ID: react-select-3-input, Secondary Actions: Expand
+						97 pop up button (collapsed) Filters, Secondary Actions: Expand
+						98 pop up button (collapsed) Description: Columns, Secondary Actions: Expand
+						99 pop up button Reset filters
+						100 text field (settable) Description: Search Canvases, Value: fidelity
+						204 button Clear Selection
+						101 container Description: Inline Tag 0, ID: db-canvas-digest--badge-status
+							102 text Status: Active
+							103 button close
+						104 heading Fetching results Fetching results, Value: 4
+							205 image Fetching results
+							206 text Fetching results
+						207 table
+							208 row
+								209 cell
+									210 button Select to sort by Name in alphabetical order
+								211 cell
+									212 text Status
+								213 cell
+									214 text Description
+								215 cell
+									216 text Last edited by
+								217 cell
+									218 button Sorting by Last Edited date from newest to oldest
+								219 cell
+									220 text Alerts Configured
+						194 button Priority Sorter
+				195 container
+					196 text © Braze 2026
+					197 text Opening in a new tab
+					198 link Description: Opening in a new tab, Value: braze.statuspage.io/
+					199 text Opening in a new tab
+					200 link Description: Opening in a new tab, Value: braze.com/terms
+					201 text Opening in a new tab
+					202 link Description: Opening in a new tab, Value: braze.com/privacy
+		203 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		221 container Unsorted, Sort ascending, ID: bcl-popper-2208271900
+			222 text Unsorted, Sort ascending
+
+The focused UI element is 100 text field (settable) Description: Search Canvases, Value: fidelity

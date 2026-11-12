@@ -3,10 +3,10 @@ import {useEffect,useId,useRef,useState} from 'react';
 import {campaignTriggerCatalog} from '@/lib/campaign-form-model';
 import styles from './campaign-forms.module.css';
 
-export default function CampaignTriggerPicker({value,onChange,label='Select Trigger'}:{value:string;onChange:(value:string)=>void;label?:string}){
+export default function CampaignTriggerPicker({value,onChange,label='Select Trigger',choices=campaignTriggerCatalog}:{value:string;onChange:(value:string)=>void;label?:string;choices?:ReadonlyArray<{type:string;group:string}>}){
  const [open,setOpen]=useState(false),[query,setQuery]=useState(''),[active,setActive]=useState(0),[above,setAbove]=useState(false);
  const root=useRef<HTMLDivElement>(null),input=useRef<HTMLInputElement>(null),id=useId();
- const catalog:Array<{type:string;group:string}>=[...campaignTriggerCatalog,...(value&&!campaignTriggerCatalog.some(option=>option.type===value)?[{type:value,group:'SAVED LEGACY TRIGGER'}]:[])];
+ const catalog:Array<{type:string;group:string}>=[...choices,...(value&&!choices.some(option=>option.type===value)?[{type:value,group:'SAVED LEGACY TRIGGER'}]:[])];
  const options=catalog.filter(option=>`${option.type} ${option.group}`.toLowerCase().includes(query.toLowerCase()));
  const show=()=>{setQuery('');setActive(Math.max(0,catalog.findIndex(option=>option.type===value)));setAbove((root.current?.getBoundingClientRect().bottom??0)+310>window.innerHeight);setOpen(true);};
  const choose=(selection:string)=>{onChange(selection);setOpen(false);setQuery('');input.current?.focus();};

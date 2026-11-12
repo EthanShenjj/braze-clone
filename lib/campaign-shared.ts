@@ -1,3 +1,6 @@
+import {findCampaignInteraction} from './tag-interactions.ts';
+import {audienceOperators,audienceComparisonIssues,compareAudienceValue,type AudienceOperator,type AudienceTimeUnit} from './audience-rule-model.ts';
+import {campaignAudienceFieldKind} from './campaign-audience-model.ts';
 export type MessageDraft = { id?: string; name?: string; channel: string; subject?: string; body?: string; schedule?: string; status?: string; audience?: string; config?: Record<string, unknown> };
 export type MessageVariant = { id: string; name: string; subject?: string; body?: string; config?: Record<string, unknown>; [key: string]: unknown };
 export const variantLimit = 8;
@@ -52,17 +55,17 @@ export function validDestination(value: unknown, httpsOnly = false) {
   if (hasLiquid(value)) return true;
   try { const url = new URL(String(value)); return httpsOnly ? url.protocol === "https:" : /^[a-z][a-z0-9+.-]*:$/i.test(url.protocol) && !["javascript:", "data:", "vbscript:"].includes(url.protocol); } catch { return false; }
 }
-export type AudienceRule = { id: string; field: string; operator: "equals" | "not_equals" | "contains" | "not_contains" | "greater_than" | "less_than" | "exists" | "not_exists"; value: string };
+export type AudienceRule = { id: string; field: string; operator: AudienceOperator; value: string; value2?:string; params?:Record<string,string|number|boolean>; timeUnit?: AudienceTimeUnit; tagInteraction?:string };
 export type AudienceGroup = { id: string; name?: string; operator: "AND" | "OR"; exclude: boolean; rules: AudienceRule[] };
+export function audienceRuleIssues(rule:AudienceRule):string[]{
+ if(!rule||typeof rule.field!=="string"||!rule.field.trim()||!audienceOperators.includes(rule.operator)||typeof rule.value!=="string"||rule.params!==undefined&&(!rule.params||typeof rule.params!=="object"||Array.isArray(rule.params)||Object.values(rule.params).some(value=>!["string","number","boolean"].includes(typeof value))))return ["Complete the audience filter field, operator and value."];
+ if((rule.field.startsWith('receipt_count:engaged:')||rule.field==='canvas_receipt_count:engaged')&&rule.tagInteraction!==undefined&&!findCampaignInteraction(rule.tagInteraction))return ['Choose an Interaction for the Campaign or Canvas filter.'];
+ return audienceComparisonIssues(rule,rule.field.startsWith('attr:')&&(['less_than_ago','more_than_ago'].includes(rule.operator)||/^\d{4}-\d{2}-\d{2}(?:T|$)/.test(rule.value))?'date':campaignAudienceFieldKind(rule.field));
+}
 export function matchesRule(user: Record<string, unknown>, rule: AudienceRule) {
-  const attrs = user.attributes as Record<string, unknown> | undefined;
-  const actual = rule.field.startsWith("attr:") ? attrs?.[rule.field.slice(5)] : user[rule.field];
-  if (rule.operator === "exists") return actual !== undefined && actual !== null && actual !== "";
-  if (rule.operator === "not_exists") return actual === undefined || actual === null || actual === "";
-  if (rule.operator === "greater_than") return Number(actual) > Number(rule.value);
-  if (rule.operator === "less_than") return Number(actual) < Number(rule.value);
-  const a = String(actual ?? "").toLowerCase(), b = rule.value.toLowerCase();
-  return rule.operator === "equals" ? a === b : rule.operator === "not_equals" ? a !== b : rule.operator === "contains" ? a.includes(b) : !a.includes(b);
+ const attrs=user.attributes as Record<string,unknown>|undefined,actual=rule.field.startsWith("attr:")?attrs?.[rule.field.slice(5)]:user[rule.field];
+ const kind=rule.field.startsWith('attr:')&&typeof actual==='number'?'number':rule.field.startsWith('attr:')&&typeof actual==='boolean'?'boolean':rule.field.startsWith('attr:')&&typeof actual==='string'&&/^\d{4}-\d{2}-\d{2}(?:T|$)/.test(actual)?'date':campaignAudienceFieldKind(rule.field);
+ return compareAudienceValue(actual,rule,kind);
 }
 export function matchesAudienceGroups(user: Record<string, unknown>, groups: AudienceGroup[]) {
   return groups.every(group => { const result = !group.rules.length || (group.operator === "OR" ? group.rules.some(rule => matchesRule(user, rule)) : group.rules.every(rule => matchesRule(user, rule))); return group.exclude ? !result : result; });
@@ -71,5 +74,5 @@ export function audienceConfigurationIssues(campaign: MessageDraft) {
   const groups = campaign.config?.audienceGroups;
   if (groups === undefined) return [];
   if (!Array.isArray(groups) || groups.length > 30) return ["Invalid audience filter groups."];
-  return groups.flatMap(group => !group || !["AND", "OR"].includes(group.operator) || !Array.isArray(group.rules) || !group.rules.length || group.rules.length > 30 ? ["Add at least one valid filter to each group."] : group.rules.flatMap((rule: AudienceRule) => !rule.field || !["equals", "not_equals", "contains", "not_contains", "greater_than", "less_than", "exists", "not_exists"].includes(rule.operator) || !["exists", "not_exists"].includes(rule.operator) && !rule.value?.trim() ? ["Complete the audience filter field, operator and value."] : []));
+  return groups.flatMap(group => !group || !["AND", "OR"].includes(group.operator) || !Array.isArray(group.rules) || !group.rules.length || group.rules.length > 30 ? ["Add at least one valid filter to each group."] : group.rules.flatMap(audienceRuleIssues));
 }

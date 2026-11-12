@@ -10,7 +10,9 @@ const briefParserPackages = [
 ];
 
 const nextConfig: NextConfig = {
+  distDir: process.env.NEXT_BUILD_DIR || ".next",
   reactStrictMode: true,
+  experimental: { turbopackFileSystemCacheForBuild: process.env.NEXT_DISABLE_BUILD_CACHE !== "1" },
   serverExternalPackages: ["unpdf", "mammoth"],
   outputFileTracingIncludes: {
     "/api/campaign-operator": briefParserPackages.map(name => `./node_modules/${name}/**/*`),

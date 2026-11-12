@@ -1,0 +1,42 @@
+Browser tab: 14, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/users/subscription_groups/preference_centers/6aa75e37db69160082adb7ae?locale=en&workspace=local&centerId=new".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/subscription_groups/preference_centers/6aa75e37db69160082adb7ae?locale=en&workspace=local&centerId=new
+	2 container Preference center editor
+		3 container
+			4 tab group
+				5 tab (selectable, settable, boolean) Compose, Value: 0
+				6 tab (selectable, settable, boolean) Settings, Value: 0
+				7 tab (selected, settable, boolean) Preview, Value: 1
+			44 button Collapse sidebar
+				45 image
+		46 container
+			122 heading Update your email preferences, Value: 2
+				123 text Update your email preferences
+			124 container
+				125 checkbox (settable, integer) Description: Product updates Feature launches, release notes, and product education., Value: 0
+				126 text Product updates Feature launches, release notes, and product education.
+			127 button Save my preferences
+			128 button Unsubscribe from all emails
+			129 button Undo
+				130 image
+			131 button (disabled) Redo
+				132 image
+			133 checkbox Description: Phone, Value: 0
+				134 image
+			135 checkbox Description: Tablet, Value: 0
+				136 image
+			137 checkbox Description: Desktop, Value: 1
+				138 image
+			139 button Hide Outlines
+				140 image
+			141 button Add Personalization
+				142 image
+		114 container
+			115 button (disabled) Send feedback, Help: Feedback collection is not configured for this workspace.
+				116 image
+				117 text Send feedback
+			118 button Cancel
+			119 button Done
+			120 button (disabled) Description: BrazeAI Operator, Help: BrazeAI Operator does not support preference center editing in this workspace.
+				121 image
+
+The focused UI element is 7 tab (selected, settable, boolean) Preview, Value: 1

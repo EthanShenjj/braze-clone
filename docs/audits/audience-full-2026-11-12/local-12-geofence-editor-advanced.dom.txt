@@ -1,0 +1,108 @@
+- button "Open Next.js Dev Tools":
+- alert
+- complementary:
+  - button "Minimize menu" [expanded]
+  - button "Select workspace":
+    - generic: Local workspace
+  - navigation "Side navigation":
+    - generic: Quick links
+    - button "Canvas":
+      - generic: Canvas
+    - button "Campaigns":
+      - generic: Campaigns
+    - button "Segments":
+      - generic: Segments
+    - button "Getting Started":
+      - generic: Getting Started
+    - button "Home":
+      - generic: Home
+    - button "AI Decisioning":
+      - generic: AI Decisioning
+    - button "Agent Console":
+      - generic: Agent Console
+    - button "Messaging":
+      - generic: Messaging
+    - button "Audience":
+      - generic: Audience
+    - button "Content":
+      - generic: Content
+    - button "Analytics":
+      - generic: Analytics
+    - button "Partner Integrations":
+      - generic: Partner Integrations
+    - button "Data Settings":
+      - generic: Data Settings
+    - button "Settings":
+      - generic: Settings
+  - button "Home":
+    - img "Braze"
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - generic "Community":
+    - img "Community"
+  - button "Language"
+  - button "Notifications"
+  - button "Profile"
+  - button "Open BrazeAI Operator"
+  - complementary:
+    - text: Set name
+    - textbox "Set name":
+      - /placeholder: Enter Geofence Set name
+      - text: Audience QA geofences
+    - button "Tags":
+      - text: Tags
+    - button "Advanced settings":
+      - text: Advanced settings
+    - heading "Geofence name" [level=3]
+    - textbox "Search by name or ID"
+    - button "14.96km around 40.98, -74.03"
+    - button "Delete 14.96km around 40.98, -74.03":
+  - button "Select geofence 14.96km around 40.98, -74.03"
+  - button "Draw Geofence"
+  - textbox "Search map":
+    - /placeholder: Search
+  - button "Clear search": ×
+  - button "Zoom in":
+  - button "Zoom out":
+  - link "Leaflet":
+    - /url: https://leafletjs.com/
+  - text: "| ©"
+  - link "Mapbox":
+    - /url: https://mapbox.com/
+  - text: ©
+  - link "OpenStreetMap":
+    - /url: https://osm.org/copyright
+  - textbox "Geofence name": 14.96km around 40.98, -74.03
+  - button "Done"
+  - text: Radius (meters)
+  - spinbutton "Radius (meters)": "14963"
+  - text: Latitude
+  - spinbutton "Latitude": "40.9792578125"
+  - text: Longitude
+  - spinbutton "Longitude": "-74.029013671875"
+  - button "Hide Advanced Settings" [active]
+  - checkbox "Enable Analytics for Enter"
+  - text: Enable Analytics for Enter
+  - checkbox "Enable Analytics for Exit"
+  - text: Enable Analytics for Exit
+  - text: Cooldown for Enter
+  - spinbutton "Cooldown for Enter sec": "0"
+  - text: sec
+  - text: Cooldown for Exit
+  - spinbutton "Cooldown for Exit sec": "0"
+  - text: sec
+  - text: Android Notification Responsiveness
+  - spinbutton "Android Notification Responsiveness ms": "0"
+  - text: ms
+  - button "Back to Locations":
+    - text: Back to Locations
+  - link "Learn more about Locations ↗":
+    - /url: https://www.braze.com/docs/user_guide/engagement_tools/locations_and_geofences/creating_geofences/#how-it-works
+  - button "More":
+    - text: More
+  - button "Save Geofence Set"

@@ -1,0 +1,99 @@
+Browser tab: 15, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/engagement/segment_cohorts/segment_cohorts/local?locale=en&workspace=local".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/engagement/segment_cohorts/segment_cohorts/local?locale=en&workspace=local
+	1 container
+		2 text Build more precise audiences with Segment Extensions
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agents
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+		25 container
+			26 text ◷   8 days left in your free trial.
+			27 button Connect with sales
+		28 container
+			29 button Search workspace ⌘K
+				30 image
+				31 text Search workspace
+				32 text ⌘K
+			33 button Take a tour
+			34 image Community
+			35 button (collapsed) Description: Language, Secondary Actions: Expand
+			36 button Notifications
+			37 button (collapsed) Description: Profile, Secondary Actions: Expand
+			38 image
+			39 button Open BrazeAI Operator
+		40 button Segment Extensions
+		41 container
+			42 text AVAILABLE FOR PAID PLANS
+			43 heading Build more precise audiences with Segment Extensions, Value: 1
+				44 text Build more precise
+				45 text audiences with Segment
+				46 text Extensions
+			47 link Description: Connect with sales, Value: braze.com/company/contact-sales
+			48 container
+				49 heading Target customers within a broader timeframe, Value: 3
+					50 text Target customers within a broader timeframe
+				51 text Engage customers based on specific actions they took in the past two years to get a holistic view into their long-term actions and behaviors.
+			52 container
+				53 heading Get granular with custom event properties, Value: 3
+					54 text Get granular with custom event properties
+				55 text Make your messaging even more personalized by adding event properties, like the exact product that was viewed, to your segmentation criteria.
+			56 container
+				57 heading Unlock new segmentation use cases, Value: 3
+					58 text Unlock new segmentation use cases
+				59 text Segment your audience on additional data types and order of events using SQL advanced segmentation to describe the relationship of data.
+			60 image Explore our other audience capabilities
+			61 heading Explore our other audience capabilities, Value: 2
+				62 text Explore our other audience capabilities
+			63 container
+				64 heading Segments, Value: 3
+					65 text Segments
+				66 text Create tailored audiences using customers’ demographic, behavioral, and technical characteristics and actions.
+				67 button Segments
+			68 container
+				69 heading Segment Insights, Value: 3
+					70 text Segment Insights
+				71 text Compare how one segment is performing against other segments across a range of KPIs.
+				72 button Segment Insights
+			73 container
+				74 heading Predictive Events, Value: 3
+					75 text Predictive Events
+				76 text Identify and engage customers based on their likelihood to make a purchase or perform any other high value action.
+				77 link Description: Predictive Events ↗, Value: dashboard-09.braze.com/engagement/predictions/predictions/6af4374b46d3080087f1c558?modelType=%22purchase%22
+			78 heading See how others are reaching customers in Braze, Value: 2
+				79 text See how others are reaching customers in Braze
+			80 container
+				81 image torchie
+				82 text Email Retention
+				83 heading Read the case study: Showmax, Value: 3
+					84 text Read the case study:  Showmax
+				85 text 3  minute read
+			86 container
+				87 image torchie
+				88 text Email Braze Alloys
+				89 heading Read the case study: Yonder, Value: 3
+					90 text Read the case study:  Yonder
+				91 text 4  minute read
+			92 image Banner Image
+			93 heading Got a Braze question? Crowdsource advice from Braze Bonfire., Value: 3
+				94 text Got a Braze question? Crowdsource advice from Braze Bonfire.
+			95 link Description: Join the conversation, Value: community.braze.com/
+
+The focused UI element is 0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/engagement/segment_cohorts/segment_cohorts/local?locale=en&workspace=local

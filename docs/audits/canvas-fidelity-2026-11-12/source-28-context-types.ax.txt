@@ -1,0 +1,56 @@
+Browser tab: 4, Title: "Engagement - Canvas - Edit 'New Canvas - November 11, 2026'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'New Canvas - November 11, 2026', URL: dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container
+		171 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		172 container Step 5 step editor
+			173 container
+				174 text Step 5
+				175 button
+				176 text DISCONNECTED
+				177 button Context Define context variables
+					178 text Context
+					179 text Define context variables
+			180 button Done
+			181 container
+				182 text Define context variables
+				183 button BrazeAI Operator™
+					184 image
+				185 tab group
+					186 tab (selected, settable, boolean) Description: Compose, Value: 1, ID: compose-tab
+					187 tab (selectable, settable, boolean) Description: Preview, Value: 0, ID: preview-and-test-tab
+				188 container attributes-box
+					189 text Opening in a new tab
+					190 link Description: Opening in a new tab, Value: braze.com/docs/context_step/
+					191 text  lets you do more with user data in Canvas, like delay messages based on dynamic user information. Context follows users throughout their Canvas journey. If the variable doesn’t match a data type when evaluated for a user, that user will advance to the next step without an update.
+					192 sortable Handle to reorder choices
+					193 container
+						194 text Context variable name
+						195 pop up button (collapsed) Description: Help text available. Tab to view help text, click to open popover, Secondary Actions: Expand
+					196 text field (settable) Context variable name Help text available. Tab to view help text, click to open popover, ID: context-update-step--variable-name-input-0
+					197 text Data type
+					198 container context-update-step--variable-type-select-0
+						211 container
+							212 text Boolean, 1 of 6.
+							213 text 6 results available.
+							214 text Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+						199 container
+							200 text Select from the options
+							201 combo box (expanded, settable) Description: Data type, ID: react-select-33-input, Secondary Actions: Collapse
+						215 list react-select-33-listbox
+							216 Value: Boolean, ID: react-select-33-option-0
+							217 Value: Number, ID: react-select-33-option-1
+							218 Value: String, ID: react-select-33-option-2
+							219 Value: Array, ID: react-select-33-option-3
+							220 Value: Time, ID: react-select-33-option-4
+							221 Value: Object, ID: react-select-33-option-5
+					202 text Value
+					203 container
+						204 container
+							205 editor (settable) Description: Value, ID: context-update-step--variable-definition-textarea-0
+						206 text Enter a Liquid expression
+						207 pop up button (collapsed) Description: Add Liquid, Secondary Actions: Expand
+					208 button Description: Add context variable, ID: add-attribute-btn
+					209 text 1/10 Context variables added
+				210 button Have feedback on this feature? Send us your thoughts, ID: cus-feedback-target
+
+The focused UI element is 201 combo box (expanded, settable) Description: Data type, ID: react-select-33-input, Secondary Actions: Collapse

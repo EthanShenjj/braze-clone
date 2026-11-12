@@ -4,17 +4,29 @@ import { smsMetrics } from "./sms-model.ts";
 
 export type SmsValues = { messageType?: string; mediaUrl?: string; mediaType?: string; mediaCaption?: string; appendStop?: boolean; stopText?: string; linkShortening?: boolean; sendingNumber?: string; translations?: Record<string, string>; rcsTitle?: string; rcsDescription?: string; rcsButtons?: Array<{ label: string; url: string }>; rcsCards?: Array<{ title: string; description: string; mediaUrl: string; url: string }>; [key: string]: unknown };
 export function channelValues(campaign: MessageDraft) { return (campaign.config?.channelValues ?? {}) as Record<string, unknown>; }
-export function compileSms(campaign: MessageDraft, profile: Record<string, unknown> = {}, shorten?: (url: string) => string) {
+export function compileSms(campaign: MessageDraft, profile: Record<string, unknown> = {}, shorten?: (url: string) => string, variables: Record<string, unknown> = {}) {
   const v = channelValues(campaign) as SmsValues;
   const source = v.translations?.[String(profile.language)] ?? campaign.body ?? "";
-  const render = (value: string) => renderBrazeLiquid(value, profile);
+  const extras:Record<string,unknown>={};
+  const render = (value: string) => {
+    let expanded=value;
+    for(let depth=0;depth<10;depth++){
+      let changed=false;
+      expanded=expanded.replace(/\{\{\s*content_blocks\.\$\{([^}]+)\}\s*\}\}/g,(_,key)=>{const block=(variables.content_blocks as Record<string,unknown>|undefined)?.[key];if(typeof block!=='string')throw new Error(`Content block ${key} is unavailable in this render context.`);changed=true;return block;});
+      if(!changed)return renderBrazeLiquid(expanded,profile,{...variables,__messageExtras:extras});
+    }
+    throw new Error('Content blocks contain a circular reference.');
+  };
   let message = render(source);
   if (v.appendStop !== false && !/\bSTOP\b/i.test(message)) message += `${message ? "\n\n" : ""}${v.stopText || "Reply STOP to opt-out."}`;
   if (v.linkShortening !== false && shorten) message = message.replace(/https?:\/\/[^\s<>"']+/g, raw => { const suffix = raw.match(/[.,!?;:)\]]+$/)?.[0] ?? ""; return shorten(suffix ? raw.slice(0, -suffix.length) : raw) + suffix; });
-  const mediaUrl = v.mediaUrl ? render(v.mediaUrl) : "";
   const kind = String(v.messageType ?? "SMS");
+  const mediaUrl = kind!=="SMS"&&v.mediaUrl ? render(v.mediaUrl) : "";
+  if(mediaUrl&&!validDestination(mediaUrl,true)&&!mediaUrl.startsWith('/api/message-assets/'))throw new Error('The rendered media must use an HTTPS URL or an uploaded asset.');
+  if(kind==='SMS'&&!message.trim())throw new Error('The rendered SMS message is empty.');
+  if(kind==='MMS'&&!mediaUrl.trim())throw new Error('The rendered MMS media is empty.');
   if (kind !== "RCS" && message.length > 1600) throw new Error("SMS/MMS message must be 1,600 characters or fewer after personalization.");
-  return { type: kind, to: String(profile.phone ?? profile.phone_number ?? ""), from: String(v.sendingNumber ?? ""), message, mediaUrl, mediaType: String(v.mediaType ?? "image"), caption: String(v.mediaCaption ?? ""), metrics: smsMetrics(message), ...(kind === "RCS" ? { richCard: { title: render(String(v.rcsTitle ?? "")), description: render(String(v.rcsDescription ?? "")), mediaUrl, buttons: (v.rcsButtons ?? []).map(b => ({ label: render(b.label), url: render(b.url) })) }, cards: (v.rcsCards ?? []).map(c => ({ ...c, title: render(c.title), description: render(c.description), mediaUrl: render(c.mediaUrl), url: render(c.url) })), fallbackText: message } : {}) };
+  return { type: kind, to: String(profile.phone ?? profile.phone_number ?? ""), from: String(v.sendingNumber ?? ""), message, mediaUrl, mediaType: String(v.mediaType ?? "image"), caption: String(v.mediaCaption ?? ""), metrics: smsMetrics(message),extras, ...(kind === "RCS" ? { richCard: { title: render(String(v.rcsTitle ?? "")), description: render(String(v.rcsDescription ?? "")), mediaUrl, buttons: (v.rcsButtons ?? []).map(b => ({ label: render(b.label), url: render(b.url) })) }, cards: (v.rcsCards ?? []).map(c => ({ ...c, title: render(c.title), description: render(c.description), mediaUrl: render(c.mediaUrl), url: render(c.url) })), fallbackText: message } : {}) };
 }
 export type ContactCard = { firstName: string; lastName: string; organization: string; phone: string; email: string };
 export function contactVcard(contact: ContactCard) {
@@ -28,10 +40,10 @@ export function channelConfigurationIssues(campaign: MessageDraft): string[] {
     const kind = String(v.messageType ?? "SMS");
     if (!["SMS", "MMS", "RCS"].includes(kind)) issues.push("Choose SMS, MMS or RCS.");
     if (!campaign.config?.subscriptionGroupId) issues.push("Select an SMS subscription group.");
-    if (kind !== "RCS" && !hasTemplate(campaign.body) && (campaign.body ?? "").length > 1600) issues.push("SMS/MMS message must be 1,600 characters or fewer.");
+    if (kind !== "RCS" && v.linkShortening===false && !hasTemplate(campaign.body) && (campaign.body ?? "").length > 1600) issues.push("SMS/MMS message must be 1,600 characters or fewer.");
     if (kind === "SMS" && !campaign.body?.trim()) issues.push("Add SMS message content.");
     if (kind === "MMS" && !v.mediaUrl) issues.push("Add MMS media.");
-    if (v.mediaUrl && !validDestination(v.mediaUrl, true) && !String(v.mediaUrl).startsWith("/api/message-assets/")) issues.push("Media must use an HTTPS URL or an uploaded asset.");
+    if (kind!=="SMS" && v.mediaUrl && !validDestination(v.mediaUrl, true) && !String(v.mediaUrl).startsWith("/api/message-assets/")) issues.push("Media must use an HTTPS URL or an uploaded asset.");
     if (kind === "RCS" && v.rcsTitle && !String(v.rcsDescription ?? "").trim()) issues.push("Add a rich card description.");
     if (kind === "RCS" && !campaign.body?.trim() && !v.rcsTitle && !(Array.isArray(v.rcsCards) && v.rcsCards.length)) issues.push("Add RCS text, media or cards.");
   }

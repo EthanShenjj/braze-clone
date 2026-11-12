@@ -1,0 +1,7 @@
+{
+  "canvasId": "c754785c-fad4-423d-8c9f-7967e2b59389",
+  "actionCanvasId": "beb4295a-d720-458a-8451-18c65ab5d22d",
+  "base": "http://127.0.0.1:3221",
+  "database": "/private/tmp/braze-canvas-fidelity-deep-20261112.sqlite",
+  "liveDelivery": false
+}

@@ -1,0 +1,178 @@
+- complementary:
+  - button "Minimize menu" [expanded]
+  - button "Select workspace":
+    - generic: Demo – Thinkingai
+  - navigation "Side navigation":
+    - generic: Quick links
+    - button "Canvas":
+      - generic: Canvas
+    - button "Campaigns":
+      - generic: Campaigns
+    - button "Segments":
+      - generic: Segments
+    - button "Getting Started":
+      - generic: Getting Started
+    - button "Home":
+      - generic: Home
+    - button "AI Decisioning":
+      - generic: AI Decisioning
+    - button "Agents":
+      - generic: Agents
+    - button "Messaging":
+      - generic: Messaging
+    - button "Audience":
+      - generic: Audience
+    - button "Content":
+      - generic: Content
+    - button "Analytics":
+      - generic: Analytics
+    - button "Partner Integrations":
+      - generic: Partner Integrations
+    - button "Data Settings":
+      - generic: Data Settings
+    - button "Settings":
+      - generic: Settings
+  - button "Home":
+    - img "Braze"
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - generic "Community":
+    - img "Community"
+  - button "Language"
+  - button "Notifications"
+  - button "Profile"
+  - button "Open BrazeAI Operator"
+  - button "Campaigns"
+  - button "Edit 'Early Access'":
+    - text: Edit 'Early Access'
+  - text: Limited access
+  - navigation "Campaign steps":
+    - button "✓ Compose Messages":
+      - generic: ✓
+      - generic: Compose Messages
+    - button "✓ Schedule Delivery":
+      - generic: ✓
+      - generic: Schedule Delivery
+    - button "✓ Target Audiences":
+      - generic: ✓
+      - generic: Target Audiences
+    - button "✓ Assign Conversions":
+      - generic: ✓
+      - generic: Assign Conversions
+    - button "5 Review Summary":
+      - generic: "5"
+      - generic: Review Summary
+  - heading "Campaign Details" [level=2]
+  - generic: Campaign Name
+  - textbox "Campaign Name":
+    - /placeholder: Enter Campaign Name
+    - text: Early Access
+  - text: Teams
+  - combobox "Teams":
+    - option "Select…" [selected]
+  - button "Add description":
+    - text: Add description
+  - button "Tags":
+    - text: Tags
+  - region "Campaign brief":
+    - heading "Campaign brief" [level=3]
+    - paragraph: Attach a brief so BrazeAI Operator can build your campaign and your Standards can review it against your goals
+    - strong: Attach a campaign brief (optional)
+    - paragraph: PDF, TXT, MD, CSV, DOCX up to 15MB
+    - button "Upload file":
+      - text: Upload file
+  - generic: Campaign ID
+  - textbox "Campaign ID": 148bb5b4-1eb6-4a95-9f43-9ab3e93be668
+  - button "Copy":
+    - text: Copy
+  - region "SMS/MMS/RCS Composer":
+    - heading "SMS/MMS/RCS Composer" [level=2]
+    - heading "Variants" [level=3]
+    - tablist "SMS variants":
+      - tab "Early Access" [selected]:
+        - text: Early Access
+      - button "Add variant":
+    - text: Subscription Group
+    - combobox "Subscription Group": SMS sms_qa_f730215b
+    - button "Toggle Subscription Group":
+    - complementary:
+      - heading "Preview" [level=5]
+      - generic: "Thanks for being a loyal customer, {{${first_name} | default: 'aficionado'}}! Your reward for being so loyal? Early access to our limited edition sale: https://brz.ai/XXXXXXXX Reply STOP to opt-out."
+      - paragraph: Actual rendering may not be identical to this preview depending on the user's environment.
+    - tablist "SMS composer sections":
+      - tab "Compose" [selected]
+      - tab "Contact Card Generator"
+      - tab "Test"
+    - heading "Language" [level=4]
+    - button "Add languages":
+      - text: Add languages
+    - heading "Content" [level=4]
+    - generic: Message
+    - generic "Character count excludes Liquid. The rendered message may use more billable segments.":
+      - text: 158 | 1 Billable Segment
+    - button "BrazeAI Operator":
+    - text: Thanks for being a loyal customer,
+    - generic: "{{${first_name} | default: 'aficionado'}}"
+    - text: "! Your reward for being so loyal? Early access to our limited edition sale: https://www.braze.com/ Reply STOP to opt-out."
+    - textbox "Message":
+      - /placeholder: Write your message
+      - text: "Thanks for being a loyal customer, {{${first_name} | default: 'aficionado'}}! Your reward for being so loyal? Early access to our limited edition sale: https://www.braze.com/ Reply STOP to opt-out."
+    - button "Add Liquid":
+    - checkbox "Link shortening" [checked]
+    - text: Link shortening
+    - paragraph:
+      - link "Shorten the URL":
+        - /url: https://www.braze.com/docs/en/user_guide/message_building_by_channel/sms/campaign/link_shortening
+        - text: Shorten the URL
+      - text: contained in your message and better understand message engagement.
+  - button "Back" [disabled]:
+  - button "✓ Compose":
+    - generic: ✓
+    - text: Compose
+  - button "✓ Schedule":
+    - generic: ✓
+    - text: Schedule
+  - button "✓ Target":
+    - generic: ✓
+    - text: Target
+  - button "✓ Assign":
+    - generic: ✓
+    - text: Assign
+  - button "5 Review":
+    - generic: "5"
+    - text: Review
+  - button "Forward":
+  - button "Save Draft"
+- alert
+- dialog "Internationalize your message":
+  - button "Close language dialog":
+  - heading "Internationalize your message" [level=2]
+  - generic: Languages
+  - text: English
+  - button "Remove English":
+  - combobox "Languages"
+  - button "Toggle Languages":
+  - heading "Fields to internationalize" [level=5]
+  - checkbox "Message" [checked] [active]
+  - text: Message
+  - generic: This field has content already
+  - checkbox "Image"
+  - text: Image
+  - generic: This field has content already
+  - paragraph:
+    - text: Select a method of insertion or paste the following snippet into the desired location. Learn more about
+    - link "conditional messaging":
+      - /url: https://www.braze.com/docs/en/user_guide/personalization_and_dynamic_content/liquid/conditional_logic/
+    - text: .
+  - generic: "{% if ${language} == 'en' %} {% else %} {% endif %}"
+  - button "Copy":
+    - text: Copy
+  - contentinfo:
+    - button "Cancel"
+    - button "Replace existing text"
+    - button "Add after existing text"

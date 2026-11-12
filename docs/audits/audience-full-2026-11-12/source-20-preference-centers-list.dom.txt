@@ -1,0 +1,122 @@
+- link "Skip to main content":
+  - /url: "#main-container"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Demo – ittor":
+    - generic: Demo – ittor
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agents":
+    - generic: Agents
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience" [active]:
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 14 days left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- main:
+  - navigation:
+    - tablist:
+      - tab "Email Preference Centers" [selected]:
+        - text: 
+        - generic: Email Preference Centers
+  - banner:
+    - heading "Build email preference centers on Landing Pages" [level=4]
+    - generic: Use your own branded domain and drag-and-drop editor to design email preference pages. Add form blocks to collect subscriber interests, frequency, and more, then track how subscribers engage.
+    - button "Create landing page":
+      - generic: Create landing page
+    - button "Close":
+  - heading "Custom Email Preference Centers" [level=3]
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://www.braze.com/docs/user_guide/message_building_by_channel/email/preference_center/
+    - text: About email preference centers
+    - text: ⁠
+  - button "Create New":
+    - generic: Create New
+  - generic "List of preference centers":
+    - table:
+      - rowgroup:
+        - row "Name Description Type Status Last Edited Created by":
+          - columnheader "Name"
+          - columnheader "Description"
+          - columnheader "Type"
+          - columnheader "Status"
+          - columnheader "Last Edited"
+          - columnheader "Created by"
+          - columnheader
+      - rowgroup:
+        - row "You don't have any email preference centers yet Create one now using the drag-and-drop editor, or learn more about how to create preference centers with Opening in a new tab custom HTML⁠ Create preference center":
+          - cell "You don't have any email preference centers yet Create one now using the drag-and-drop editor, or learn more about how to create preference centers with Opening in a new tab custom HTML⁠ Create preference center":
+            - generic: You don't have any email preference centers yet
+            - text: Create one now using the drag-and-drop editor, or learn more about how to create preference centers with
+            - generic: Opening in a new tab
+            - link "Opening in a new tab":
+              - /url: https://www.braze.com/docs/en/user_guide/message_building_by_channel/email/preference_center/
+              - text: custom HTML
+              - text: ⁠
+            - button "Create preference center":
+              - generic: Create preference center
+- generic: © Braze 2026
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://braze.statuspage.io
+  - text: Status
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/terms
+  - text: Terms
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/privacy
+  - text: Privacy Policy
+- text:          
+- iframe
+- alert
+- alert

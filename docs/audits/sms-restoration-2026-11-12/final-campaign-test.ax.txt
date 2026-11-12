@@ -1,0 +1,194 @@
+Browser tab: 23, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3216/engagement/campaigns/cmp_sms_qa_f730215b_campaign?step=compose&workspace=sms_qa_f730215b&locale=en".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3216/engagement/campaigns/cmp_sms_qa_f730215b_campaign?step=compose&workspace=sms_qa_f730215b&locale=en
+	1 container
+		2 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		3 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			4 text Demo – Thinkingai
+			5 image
+		6 container Side navigation
+			7 text Quick links
+			8 button Canvas
+			9 button Campaigns
+			10 button Segments
+			11 button Getting Started
+			12 button Home
+			13 button AI Decisioning
+			14 button Agents
+			15 button Messaging
+			16 button Audience
+			17 button Content
+			18 button Analytics
+			19 button Partner Integrations
+			20 button Data Settings
+			21 button Settings
+		22 button Home
+			23 image Braze
+		24 container
+			25 text ◷   8 days left in your free trial.
+			26 button Connect with sales
+		27 container
+			28 button Search workspace ⌘K
+				29 image
+				30 text Search workspace
+				31 text ⌘K
+			32 button Take a tour
+			33 image Community
+			34 button (collapsed) Description: Language, Secondary Actions: Expand
+			35 button Notifications
+			36 button (collapsed) Description: Profile, Secondary Actions: Expand
+			37 image
+			38 button Open BrazeAI Operator
+		39 button Campaigns
+		40 button Edit 'Early Access'
+			41 text Edit
+			42 text  '
+			43 text Early Access
+			44 text '
+			45 image
+		46 container
+			47 image
+			48 text Limited access
+			49 container Campaign steps
+				50 button ✓ Compose Messages
+					51 text ✓
+					52 text Compose Messages
+				53 button ✓ Schedule Delivery
+					54 text ✓
+					55 text Schedule Delivery
+				56 button ✓ Target Audiences
+					57 text ✓
+					58 text Target Audiences
+				59 button ✓ Assign Conversions
+					60 text ✓
+					61 text Assign Conversions
+				62 button 5 Review Summary
+					63 text 5
+					64 text Review Summary
+			65 heading Campaign Details, Value: 2
+				66 text Campaign Details
+			67 container
+				68 text Campaign Name
+				69 text field (settable) Campaign Name, Value: Early Access
+			70 container
+				71 text Teams
+				72 pop up button (collapsed, settable) Teams, Value: Select…, Secondary Actions: Expand
+					73 menu
+						74 (selected) Select…
+			75 button Add description
+				76 image
+				77 text Add description
+			78 button (collapsed) Tags, Secondary Actions: Expand
+				79 image
+				80 text Tags
+				81 image
+			82 container Campaign brief
+				83 heading Campaign brief, Value: 3
+					84 text Campaign brief
+				85 text Attach a brief so BrazeAI Operator can build your campaign and your Standards can review it against your goals
+				86 text Attach a campaign brief (optional)
+				87 text PDF, TXT, MD, CSV, DOCX up to 15MB
+				88 button Upload file
+					89 image
+					90 text Upload file
+			91 container
+				92 text Campaign ID
+				93 text field Campaign ID, Help: 148bb5b4-1eb6-4a95-9f43-9ab3e93be668
+			94 button Copy
+				95 image
+				96 text Copy
+			97 container SMS/MMS/RCS Composer
+				98 heading SMS/MMS/RCS Composer, Value: 2
+					99 text SMS/MMS/RCS Composer
+				100 container
+					101 heading Variants, Value: 3
+						102 text Variants
+					103 tab group SMS variants
+						104 tab (selected, settable, boolean) Early Access, Value: 1
+Early Access
+						105 button Add variant
+							106 image
+				107 container
+					108 text Subscription Group
+					109 image
+				110 container
+					111 combo box (collapsed, settable) Description: Subscription Group, Value: SMS sms_qa_f730215b, Secondary Actions: Expand
+					112 button Toggle Subscription Group
+						113 image
+				114 container
+					115 heading Preview, Value: 5
+						116 text Preview
+					117 text Thanks for being a loyal customer, Ada! Your reward for being so loyal? Early access to our limited edition sale: https://brz.ai/XXXXXXXX
+
+Reply STOP to opt-out.
+					164 container Character count excludes Liquid. The rendered message may use more billable segments.
+						165 image
+						166 text 158  |  1  Billable Segment
+						167 image
+					168 text Actual rendering may not be identical to this preview depending on the user's environment.
+				118 tab group SMS composer sections
+					119 tab (selectable, settable, boolean) Compose, Value: 0
+					120 tab (selectable, settable, boolean) Contact Card Generator, Value: 0
+					121 tab (selected, settable, boolean) Test, Value: 1
+				169 heading Content Review with Operator, Value: 5
+					170 text Content Review with Operator
+				171 container
+					172 text Use Operator to review your message's formatting, content, grammar, and style. 
+					173 link Description: See our documentation for more information , Value: braze.com/docs/en/user_guide/brazeai/operator/capabilities/#review-content-quality
+					174 text .
+				175 button Review with Operator
+					176 image
+					177 text Review with Operator
+				178 heading Test Recipients, Value: 5
+					179 text Test Recipients
+				180 text Select at least one Content Test Group or individual user to receive this test message. Messages will be customized with recipients' attributes by default.
+				181 text Add content test group
+				182 container
+					183 combo box (collapsed, settable) Description: Add content test group, Secondary Actions: Expand
+					184 button Toggle Add content test group
+						185 image
+				205 text SMS Testers
+				206 button Remove test group SMS Testers
+					207 image
+				186 container
+					187 text Add individual users
+					188 text field (settable) Add individual users
+				189 container
+					190 checkbox (settable, integer) Description: Override recipients' attributes with current preview user's attributes, Value: 0
+					191 text Override recipients' attributes with current preview user's attributes
+					192 image
+				193 button Send Test
+				194 button Copy preview link
+					195 image
+					196 text Copy preview link
+				197 text Preview message as user
+				198 container
+					199 combo box (collapsed, settable) Description: Preview message as user, Value: Random user, Secondary Actions: Expand
+					200 button Toggle Preview message as user
+						201 image
+				202 button Get random user
+					203 image
+					204 text Get random user
+				208 text Ada  ·  sms_qa_f730215b_ada
+				209 text 1 test message(s) prepared. Connect an SMS provider to deliver tests.
+			144 button (disabled) Back
+				145 image
+			146 button ✓ Compose
+				147 text ✓
+				148 text Compose
+			149 button ✓ Schedule
+				150 text ✓
+				151 text Schedule
+			152 button ✓ Target
+				153 text ✓
+				154 text Target
+			155 button ✓ Assign
+				156 text ✓
+				157 text Assign
+			158 button 5 Review
+				159 text 5
+				160 text Review
+			161 button Forward
+				162 image
+			163 button Save Draft
+
+The focused UI element is 0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3216/engagement/campaigns/cmp_sms_qa_f730215b_campaign?step=compose&workspace=sms_qa_f730215b&locale=en

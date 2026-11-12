@@ -1,0 +1,101 @@
+- button "Open Next.js Dev Tools":
+  - text: Rendering
+  - generic: .
+  - generic: .
+  - generic: .
+- alert: Braze Demo — Thinkingai
+- complementary:
+  - button "Minimize menu" [expanded]
+  - button "Select workspace":
+    - generic: Local workspace
+  - navigation "Side navigation":
+    - generic: Quick links
+    - button "Canvas":
+      - generic: Canvas
+    - button "Campaigns":
+      - generic: Campaigns
+    - button "Segments":
+      - generic: Segments
+    - button "Getting Started":
+      - generic: Getting Started
+    - button "Home":
+      - generic: Home
+    - button "AI Decisioning":
+      - generic: AI Decisioning
+    - button "Agent Console":
+      - generic: Agent Console
+    - button "Messaging":
+      - generic: Messaging
+    - button "Audience":
+      - generic: Audience
+    - button "Content":
+      - generic: Content
+    - button "Analytics":
+      - generic: Analytics
+    - button "Partner Integrations":
+      - generic: Partner Integrations
+    - button "Data Settings":
+      - generic: Data Settings
+    - button "Settings":
+      - generic: Settings
+  - button "Home":
+    - img "Braze"
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - generic "Community":
+    - img "Community"
+  - button "Language"
+  - button "Notifications"
+  - button "Profile"
+  - button "Open BrazeAI Operator"
+  - button "Suppression Lists"
+  - heading "Suppression Lists" [level=1]
+  - paragraph: Keep your marketing list clean and compliant by excluding users who should no longer receive messages. Use exception tags to make sure important messages still send.
+  - button "Send feedback":
+  - button "Create Suppression List"
+  - text: Status
+  - combobox "Status":
+    - option "All status" [selected]
+    - option "Active"
+    - option "Inactive"
+    - option "Archived"
+  - text: Created by
+  - combobox "Created by":
+    - option "All users" [selected]
+  - button "Columns":
+    - text: Columns
+  - textbox "Search suppression lists"
+  - button "Search" [disabled]:
+  - heading "No Results Found" [level=3]
+  - table:
+    - rowgroup:
+      - row "Select all rows Name Status Exception tags Estimated size Last edited by Last edited":
+        - columnheader "Select all rows":
+          - checkbox "Select all rows"
+        - columnheader "Name":
+          - button "Name"
+        - columnheader "Status"
+        - columnheader "Exception tags"
+        - columnheader "Estimated size"
+        - columnheader "Last edited by"
+        - columnheader "Last edited":
+          - button "Last edited":
+            - text: Last edited
+    - rowgroup:
+      - row "No results found":
+        - cell "No results found":
+          - strong: No results found
+  - dialog "Create Suppression List":
+    - heading "Create Suppression List" [level=2]
+    - text: Suppression List Name
+    - textbox "Suppression List Name" [active]:
+      - /placeholder: Enter Suppression List Name
+    - button "Add description":
+      - text: Add description
+    - button "Cancel"
+    - button "Create Suppression List" [disabled]

@@ -1,0 +1,101 @@
+- alert: Build more precise audiences with Segment Extensions
+- complementary:
+  - button "Minimize menu" [expanded]
+  - button "Select workspace":
+    - generic: Local workspace
+  - navigation "Side navigation":
+    - generic: Quick links
+    - button "Canvas":
+      - generic: Canvas
+    - button "Campaigns":
+      - generic: Campaigns
+    - button "Segments":
+      - generic: Segments
+    - button "Getting Started":
+      - generic: Getting Started
+    - button "Home":
+      - generic: Home
+    - button "AI Decisioning":
+      - generic: AI Decisioning
+    - button "Agents":
+      - generic: Agents
+    - button "Messaging":
+      - generic: Messaging
+    - button "Audience":
+      - generic: Audience
+    - button "Content":
+      - generic: Content
+    - button "Analytics":
+      - generic: Analytics
+    - button "Partner Integrations":
+      - generic: Partner Integrations
+    - button "Data Settings":
+      - generic: Data Settings
+    - button "Settings":
+      - generic: Settings
+  - button "Home":
+    - img "Braze"
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - generic "Community":
+    - img "Community"
+  - button "Language"
+  - button "Notifications"
+  - button "Profile"
+  - button "Open BrazeAI Operator"
+  - button "Segment Extensions"
+  - generic: AVAILABLE FOR PAID PLANS
+  - heading "Build more precise audiences with Segment Extensions" [level=1]:
+    - text: Build more precise
+    - text: audiences with Segment
+    - text: Extensions
+  - link "Connect with sales":
+    - /url: https://www.braze.com/company/contact-sales
+  - article:
+    - heading "Target customers within a broader timeframe" [level=3]
+    - paragraph: Engage customers based on specific actions they took in the past two years to get a holistic view into their long-term actions and behaviors.
+  - article:
+    - heading "Get granular with custom event properties" [level=3]
+    - paragraph: Make your messaging even more personalized by adding event properties, like the exact product that was viewed, to your segmentation criteria.
+  - article:
+    - heading "Unlock new segmentation use cases" [level=3]
+    - paragraph: Segment your audience on additional data types and order of events using SQL advanced segmentation to describe the relationship of data.
+  - img "Explore our other audience capabilities"
+  - heading "Explore our other audience capabilities" [level=2]
+  - article:
+    - heading "Segments" [level=3]
+    - paragraph: Create tailored audiences using customers’ demographic, behavioral, and technical characteristics and actions.
+    - button "Segments": Segments ↗
+  - article:
+    - heading "Segment Insights" [level=3]
+    - paragraph: Compare how one segment is performing against other segments across a range of KPIs.
+    - button "Segment Insights": Segment Insights ↗
+  - article:
+    - heading "Predictive Events" [level=3]
+    - paragraph: Identify and engage customers based on their likelihood to make a purchase or perform any other high value action.
+    - link "Predictive Events ↗":
+      - /url: https://dashboard-09.braze.com/engagement/predictions/predictions/6af4374b46d3080087f1c558?modelType=%22purchase%22
+  - heading "See how others are reaching customers in Braze" [level=2]
+  - article:
+    - img "torchie"
+    - paragraph:
+      - generic: Email
+      - generic: Retention
+    - 'heading "Read the case study: Showmax" [level=3]'
+    - generic: 3 minute read
+  - article:
+    - img "torchie"
+    - paragraph:
+      - generic: Email
+      - generic: Braze Alloys
+    - 'heading "Read the case study: Yonder" [level=3]'
+    - generic: 4 minute read
+  - img "Banner Image"
+  - heading "Got a Braze question? Crowdsource advice from Braze Bonfire." [level=3]
+  - link "Join the conversation":
+    - /url: https://community.braze.com/

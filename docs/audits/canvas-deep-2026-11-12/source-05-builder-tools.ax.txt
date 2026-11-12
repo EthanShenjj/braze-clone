@@ -1,0 +1,190 @@
+Browser tab: 7, Title: "Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container
+		2 container body-wrapper
+			3 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build#main-col
+			4 container
+				5 container Side navigation
+					6 container
+						7 button Minimize menu
+						8 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+							9 image
+							10 text Demo – ittor
+						11 text Quick links
+						12 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+						13 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+						14 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+						15 button Getting Started
+							16 image
+							17 container
+								18 text Getting Started
+								19 container
+									20 text 8 %
+						21 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+						22 button AI Decisioning
+							23 image
+							24 text AI Decisioning
+						25 button Agents
+							26 image
+							27 text Agents
+						28 button Messaging
+							29 image
+							30 text Messaging
+						31 button Audience
+							32 image
+							33 text Audience
+						34 button Content
+							35 image
+							36 text Content
+						37 button Analytics
+							38 image
+							39 text Analytics
+						40 button Partner Integrations
+							41 image
+							42 text Partner Integrations
+						43 button Data Settings
+							44 image
+							45 text Data Settings
+						46 button Settings
+							47 image
+							48 text Settings
+					49 container Footer Logo
+						50 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+				51 text 14 days left in your free trial.
+				52 button Connect with sales
+				53 container Top navigation
+					54 container Left top navigation
+						55 button Search workspace ⌘+K
+							56 image
+							57 text Search workspace
+							58 text ⌘+K
+					59 container Right top navigation
+						60 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							61 image
+						62 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							63 image
+						64 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+							65 image
+						66 container
+							67 button Notifications
+								68 image
+						69 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							70 image
+						71 button BrazeAI Operator™
+							72 image
+			73 container main
+				74 container main-col
+					75 tab group Open page tabs
+						76 tab (selectable, settable, boolean) Canvas, Value: 0, ID: canvas
+						191 tab (selected, settable, boolean) Edit 'Canvas fidelity audit - 2026-11-12 (temporary)' Close tab, Description: Close tab, ID: 6af5503cd8512f008c15c8bd, Value: 1
+Edit 'Canvas fidelity audit - 2026-11-12 (temporary)'
+					192 container
+						193 container
+							194 text Limited access
+							195 heading Canvas fidelity audit - 2026-11-12 (temporary), Value: 4
+								196 text Canvas fidelity audit - 2026-11-12 (temporary)
+							197 text No description
+							198 button Tags
+							199 button 0 Changes Since Last Viewed
+								200 text 0 Changes Since Last Viewed
+							202 button Edit
+							203 text Send Settings
+							204 content list
+								205 container
+									206 AXListMarker • 
+									207 text No limitations on the rate at which users will receive messages.
+								290 container
+									291 AXListMarker • 
+									292 text Workspace Messaging Rate Limits OFF
+								209 container
+									210 AXListMarker • 
+									211 text Quiet hours OFF
+							212 button Edit
+							213 text Conversion Events
+							214 text Started Session within 3 days
+							215 button Edit
+						216 button Expand
+						217 container
+							218 pop up button Collapse components
+							219 text Components Select components to build your user journey.
+							220 content list
+								221 container
+									222 text Message Controls
+									223 content list
+										224 button Message
+										225 button Delay
+								226 container
+									227 text AI Actions
+									228 content list
+										229 button Agent Step
+										230 button Content Optimizer
+											231 image
+											232 text Content Optimizer
+								233 container
+									234 text Flow Controls
+									235 content list
+										236 button Decision Split
+											237 image
+											238 text Decision Split
+										239 button Audience Paths
+										240 button Action Paths
+										241 button Experiment Paths
+										242 button Send to Destination
+								243 container
+									244 text Audience Updates
+									245 content list
+										246 button Context
+											247 image
+											248 text Context
+										249 button User Update
+										250 button Feature Flag
+										251 button Audience Sync
+											252 image
+											253 text Audience Sync
+							254 button Clean Up Canvas
+						255 container
+							256 container
+								257 text Entry Rules
+							258 container
+								259 text Schedule
+							260 container
+								261 text Audience
+							262 container
+								263 image
+								264 text Exit Criteria No exit criteria selected.
+							265 container
+								266 text Controls Users are not eligible to re-enter this Canvas.
+							267 image
+							268 image
+							269 container
+								270 image
+								271 pop up button (collapsed) Description: Open Add Variant menu, Secondary Actions: Expand
+							272 container
+								273 button 100%
+								274 container
+									275 text Variant 1
+									276 button
+								277 pop up button (collapsed) Description: Open actions menu for Variant 1, Secondary Actions: Expand
+								278 button
+						279 pop up button Run evaluation
+						280 pop up button (collapsed) Description: Canvas zoom and view, Secondary Actions: Expand
+							281 text Detailed View
+							282 text , 
+							283 text 100%
+						284 pop up button Enter full screen
+						285 heading Maximum Duration, Value: 4
+							286 pop up button (collapsed) Description: Maximum Duration, Secondary Actions: Expand
+						287 button (disabled) Test Canvas
+						288 button Save
+						289 button Save and continue
+				182 container
+					183 text © Braze 2026
+					184 text Opening in a new tab
+					185 link Description: Opening in a new tab, Value: braze.statuspage.io/
+					186 text Opening in a new tab
+					187 link Description: Opening in a new tab, Value: braze.com/terms
+					188 text Opening in a new tab
+					189 link Description: Opening in a new tab, Value: braze.com/privacy
+		190 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+
+The focused UI element is 0 AXWebArea Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build

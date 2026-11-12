@@ -1,0 +1,37 @@
+Browser tab: 7, Title: "Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container
+		220 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		221 container Step step editor
+			222 container
+				223 text Step
+				224 button
+				225 text DISCONNECTED Incomplete Messages
+				226 button Content Optimizer Clicks 1 combination
+					227 image
+					228 text Content Optimizer
+					229 text Clicks
+					230 text 1 combination
+				231 text All users who enter this step advance to the next step
+			232 button Done
+			233 container
+				234 text Content Optimizer setup
+				235 button BrazeAI Operator™
+					236 image
+				237 tab group Message step
+					238 tab (selectable, settable, boolean) Description: Messaging channels, Value: 0, ID: content
+					239 tab (selectable, settable, boolean) Description: Delivery settings, Value: 0, ID: settings
+					240 tab (selected, settable, boolean) Description: Content Optimizer settings, Value: 1, ID: content-optimizer-settings
+						242 text Content Optimizer settings
+					241 tab (selectable, settable, boolean) Description: Agentic Standards results, Value: 0, ID: message-step-tab-standards-results
+				243 tab group
+					244 tab (selected, settable, boolean) Description: Components, ID: components, Value: 1
+Components
+0
+					245 tab (selectable, settable, boolean) Description: Optimization Event, Value: 0, ID: optimization-event
+				246 container
+					247 pop up button (collapsed) Description: Add component, Secondary Actions: Expand
+					248 text At least one component is required
+				249 button Send feedback, ID: co-settings-feedback-target
+
+The focused UI element is 240 tab (selected, settable, boolean) Description: Content Optimizer settings, Value: 1, ID: content-optimizer-settings

@@ -1,0 +1,17 @@
+Browser tab: 14, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/engagement/suppression_lists/local?locale=en&workspace=local".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/engagement/suppression_lists/local?locale=en&workspace=local
+	2 container Create Suppression List
+		3 heading Create Suppression List, Value: 2, ID: suppression-create-title
+			4 text Create Suppression List
+		5 container
+			6 text Suppression List Name
+			7 text field (settable) Suppression List Name
+		8 button Add description
+			9 image
+			10 text Add
+			11 text  description
+		12 container
+			13 button Cancel
+			14 button (disabled) Create Suppression List
+
+The focused UI element is 7 text field (settable) Suppression List Name

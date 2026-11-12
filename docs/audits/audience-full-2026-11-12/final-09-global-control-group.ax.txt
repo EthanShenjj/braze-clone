@@ -1,0 +1,68 @@
+Browser tab: 15, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/engagement/global_message_settings/global-control-settings/6aa75e37db69160082adb7ae?locale=en&workspace=local".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/engagement/global_message_settings/global-control-settings/6aa75e37db69160082adb7ae?locale=en&workspace=local
+	1 container
+		2 text Global Control Group Settings
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agents
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+		25 container
+			26 text ◷   8 days left in your free trial.
+			27 button Connect with sales
+		28 container
+			29 button Search workspace ⌘K
+				30 image
+				31 text Search workspace
+				32 text ⌘K
+			33 button Take a tour
+			34 image Community
+			35 button (collapsed) Description: Language, Secondary Actions: Expand
+			36 button Notifications
+			37 button (collapsed) Description: Profile, Secondary Actions: Expand
+			38 image
+			39 button Open BrazeAI Operator
+		40 container
+			41 heading Global Control Group Settings, Value: 1
+				42 text Global Control Group Settings
+			43 heading Audience Settings, Value: 2
+				44 text Audience Settings
+			45 text Specify a percentage of your all users that will be randomly assigned to the Global Control Group. Assign
+			46 stepper (settable) Global Control Group percentage
+			47 text % of all users to the Global Control Group All Users 1,006 Global Control Group
+			48 image Users withheld from campaigns and Canvases, except tagged exclusions.
+			49 text -- Treatment Group
+			50 image All users outside the Global Control Group.
+			51 text -- Treatment Group Sample
+			52 image A random sample of non-control users, approximately the size of the control group.
+			53 text --
+			54 image
+			55 text Audience sizes are estimated.
+			56 button (disabled) Cancel
+			57 button (disabled) Save
+			58 heading Exclusion Settings, Value: 2
+				59 text Exclusion Settings
+			60 text Users in the Global Control Group will be eligible to receive messages from the Campaigns and Canvases with any of the specific tags added here. Tags
+			61 combo box (collapsed, settable) Tags, ID: global-control-tags, Secondary Actions: Expand
+			62 button Show tags
+				63 image
+			64 button (disabled) Update Exceptions
+
+The focused UI element is 0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/engagement/global_message_settings/global-control-settings/6aa75e37db69160082adb7ae?locale=en&workspace=local

@@ -1,0 +1,154 @@
+Browser tab: 4, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3211/app_settings/app_settings/tags/local?locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3211/app_settings/app_settings/tags/local?locale=en
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agent Console
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+	25 container
+		26 text ◷   8 days left in your free trial.
+		27 button Connect with sales
+		28 button Search workspace ⌘K
+			29 image
+			30 text Search workspace
+			31 text ⌘K
+		32 button Take a tour
+		33 image Community
+		34 button (collapsed) Description: Language, Secondary Actions: Expand
+		35 button Notifications
+		36 button (collapsed) Description: Profile, Secondary Actions: Expand
+		37 image
+		38 button Open BrazeAI Operator
+		39 container Tag Management
+			40 container
+				41 heading Manage Tags, Value: 1
+					42 text Manage Tags
+				43 button Add New Tag
+			44 container
+				45 text field (settable) Description: Search, Value: Lifecycle
+				46 button Search tags
+					47 image
+			48 heading 2Results, Value: 2
+				49 text Results
+			50 table
+				51 row
+					52 cell
+						53 button Name column, sorted ascending. Select to sort descending
+							54 text Name
+							55 image
+					56 cell
+						57 button Canvases column, unsorted. Select to sort descending
+							58 text Canvases
+							59 image
+					60 cell
+						61 button Campaigns column, unsorted. Select to sort descending
+							62 text Campaigns
+							63 image
+					64 cell
+						65 button Segments column, unsorted. Select to sort descending
+							66 text Segments
+							67 image
+					68 cell
+						69 button Cards column, unsorted. Select to sort descending
+							70 text Cards
+							71 image
+					72 cell
+						73 button Templates column, unsorted. Select to sort descending
+							74 text Templates
+							75 image
+					76 cell
+						77 button Engagement Reports column, unsorted. Select to sort descending
+							78 text Engagement Reports
+							79 image
+					80 cell
+						81 button Geofences column, unsorted. Select to sort descending
+							82 text Geofences
+							83 image
+					84 cell
+						85 button Agents column, unsorted. Select to sort descending
+							86 text Agents
+							87 image
+					88 cell Tag actions
+				89 row
+					90 cell
+						91 text Lifecycle
+					92 cell
+						93 text 0
+					94 cell
+						95 text 0
+					96 cell
+						97 text 1
+					98 cell
+						99 text 0
+					100 cell
+						101 text 0
+					102 cell
+						103 text 0
+					104 cell
+						105 text 0
+					106 cell
+						107 text 0
+					108 cell
+						109 button Edit tag
+							110 image
+						111 button Delete tag
+							112 image
+				113 row
+					114 cell
+						115 text Lifecycle / Welcome
+					116 cell
+						117 text 1
+					118 cell
+						119 text 2
+					120 cell
+						121 text 1
+					122 cell
+						123 text 0
+					124 cell
+						125 text 0
+					126 cell
+						127 text 0
+					128 cell
+						129 text 0
+					130 cell
+						131 text 0
+					132 cell
+						133 button Edit tag
+							134 image
+						135 button Delete tag
+							136 image
+			137 container
+				138 text Showing rows  1  -  2  of  2 Rows per page:
+				139 pop up button (collapsed, settable) Description: Rows per page, Value: 10, Secondary Actions: Expand
+					140 menu
+						141 (selected) 10
+						142 20
+						143 40
+						144 60
+						145 100
+				146 container Tag pages
+					147 button (disabled) Previous page
+						148 image
+					149 button Current Page, Page 1
+					150 button (disabled) Next page
+						151 image
+
+The focused UI element is 46 button Search tags

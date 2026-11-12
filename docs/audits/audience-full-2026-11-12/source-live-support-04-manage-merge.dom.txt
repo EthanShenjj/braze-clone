@@ -1,0 +1,123 @@
+- link "Skip to main content":
+  - /url: "#main-container"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Live – ittor":
+    - generic: Live – ittor
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6af4374b46d3080087f1c558?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6af4374b46d3080087f1c558?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6af4374b46d3080087f1c558?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6af4374b46d3080087f1c558?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agents":
+    - generic: Agents
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience" [active]:
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 14 days left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- main:
+  - heading "Manage Audience" [level=1]
+  - img: 
+  - generic: Have feedback on this feature?
+  - button "Send us your thoughts"
+  - navigation:
+    - tablist:
+      - tab "Merge users" [selected]:
+        - text: 
+        - generic: Merge users
+      - tab "Delete users":
+        - generic: Delete users
+  - tabpanel:
+    - heading "Merge users" [level=2]
+    - generic: Merges and previews from the last 30 days are listed
+    - button "Schedule":
+      - generic: Schedule
+    - button "Edit rules":
+      - generic: Edit rules
+    - button "Generate list of duplicates":
+      - generic: Generate list of duplicates
+    - button "Merge all duplicates":
+      - generic: Merge all duplicates
+    - heading "No Results Found" [level=4]:
+      - generic: No Results Found
+    - table:
+      - rowgroup:
+        - row "Run date Information Requester Type Status Information Profiles previewed Information Profiles merged Information":
+          - columnheader
+          - columnheader "Run date Information":
+            - text: Run date
+            - img "Information":
+          - columnheader "Requester"
+          - columnheader "Type"
+          - columnheader "Status Information":
+            - text: Status
+            - img "Information":
+          - columnheader "Profiles previewed Information":
+            - text: Profiles previewed
+            - img "Information":
+          - columnheader "Profiles merged Information":
+            - text: Profiles merged
+            - img "Information":
+      - rowgroup:
+        - row "No results found":
+          - cell "No results found":
+            - generic: No results found
+- generic: © Braze 2026
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://braze.statuspage.io
+  - text: Status
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/terms
+  - text: Terms
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/privacy
+  - text: Privacy Policy
+- text:     

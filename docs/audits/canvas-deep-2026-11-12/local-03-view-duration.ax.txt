@@ -1,0 +1,174 @@
+Browser tab: 12, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3221/engagement/canvas/c754785c-fad4-423d-8c9f-7967e2b59389?locale=en&workspaceId=local&step=build&initialConditionsCollapsed=false".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3221/engagement/canvas/c754785c-fad4-423d-8c9f-7967e2b59389?locale=en&workspaceId=local&step=build&initialConditionsCollapsed=false
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agents
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+	25 container
+		26 text ◷   8 days left in your free trial.
+		27 button Connect with sales
+		28 button Search workspace ⌘K
+			29 image
+			30 text Search workspace
+			31 text ⌘K
+		32 button Take a tour
+		33 image Community
+		34 button (collapsed) Description: Language, Secondary Actions: Expand
+		35 button Notifications
+		36 button (collapsed) Description: Profile, Secondary Actions: Expand
+		37 image
+		38 button Open BrazeAI Operator
+		39 container
+			40 button Canvas
+			41 text › Edit ' canvas_deep_182992db optimizer persistence '
+			42 button Close Canvas
+				43 image
+		153 container
+			154 button Edit
+			155 heading canvas_deep_182992db optimizer persistence, Value: 2
+				156 text canvas_deep_182992db optimizer persistence
+			157 text No description
+			158 button (collapsed) Tags, Secondary Actions: Expand
+				159 image
+				160 text Tags
+				161 image
+		162 container
+			163 text Send Settings No quiet hours  ·  No rate limit
+			164 button Edit
+		165 container
+			166 text Conversion Events Performs Custom Event, Starts Session
+			167 button Edit
+		44 container Canvas flow builder
+			45 container
+				46 container Components
+					47 text Components
+					48 text Select components to build your user journey.
+					49 button Collapse components
+						50 image
+					51 container
+						52 heading Message Controls, Value: 3
+							53 text Message Controls
+						54 button Message
+							55 image
+							56 text Message
+						57 button Delay
+							58 image
+							59 text Delay
+						60 heading AI Actions, Value: 3
+							61 text AI Actions
+						62 button Agent Step
+							63 image
+							64 text Agent Step
+						65 button Content Optimizer
+							66 image
+							67 text Content Optimizer
+						68 heading Flow Controls, Value: 3
+							69 text Flow Controls
+						70 button Decision Split
+							71 image
+							72 text Decision Split
+						73 button Audience Paths
+							74 image
+							75 text Audience Paths
+						76 button Action Paths
+							77 image
+							78 text Action Paths
+						79 button Experiment Paths
+							80 image
+							81 text Experiment Paths
+						82 button Send to Destination
+							83 image
+							84 text Send to Destination
+						85 heading Audience Updates, Value: 3
+							86 text Audience Updates
+						87 button Context
+							88 image
+							89 text Context
+						90 button User Update
+							91 image
+							92 text User Update
+						93 button Feature Flag
+							94 image
+							95 text Feature Flag
+						96 button Audience Sync
+							97 image
+							98 text Audience Sync
+					99 button Clean Up Canvas
+						100 image
+						101 text Clean Up Canvas
+				102 button (collapsed) Version history, Secondary Actions: Expand
+				103 button Collapse
+					104 text Collapse
+					105 image
+				106 container
+					107 button Entry Rules
+						108 text Entry Rules
+						109 image
+					110 image
+					111 text Schedule
+					112 text As soon as Canvas is launched
+					113 image
+					114 text Audience
+					115 text 0 segments, 1 filter
+					116 image
+					117 text Exit Criteria
+					118 text No exit criteria selected.
+					119 image
+					120 text Controls
+					121 text Users are not eligible to re-enter this Canvas.
+					122 button Add Variant
+						123 image
+						124 text Add Variant
+					125 container
+						126 text 100 % Variant 1
+						127 button Settings for Variant 1
+							128 image
+					129 button optimizer
+						130 image
+						132 text optimizer
+						133 image
+					134 button Step actions for optimizer
+						135 image
+					136 button Add step after optimizer
+						137 image
+			138 container
+				139 button Run evaluation
+				140 button (collapsed) Description: Canvas zoom and view, Secondary Actions: Expand
+					141 image
+					142 text Simplified View
+					143 text , 
+					144 text 75
+					145 text %
+				146 button Enter full screen
+					147 image
+				148 button (expanded) Description: Maximum Duration, Secondary Actions: Collapse
+					149 image
+				168 container The longest time a user could take to complete this Canvas is: 0 seconds plus any personalized delays Learn more ↗
+					169 text The longest time a user could take to complete this Canvas is: 
+					170 text 0 seconds
+					171 text  plus any personalized delays
+					172 link Description: Learn more ↗, Value: braze.com/docs/user_guide/engagement_tools/canvas/canvas_components/delay_step
+				150 button (disabled) Test Canvas, Help: A complete supported Canvas and a configured test delivery service are required.
+				151 button Save
+				152 button Save and continue
+
+The focused UI element is 148 button (expanded) Description: Maximum Duration, Secondary Actions: Collapse

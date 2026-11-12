@@ -1,0 +1,118 @@
+- link "Skip to main content":
+  - /url: "#main-container"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Live – ittor":
+    - generic: Live – ittor
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6af4374b46d3080087f1c558?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6af4374b46d3080087f1c558?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6af4374b46d3080087f1c558?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6af4374b46d3080087f1c558?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agents":
+    - generic: Agents
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 14 days left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- main:
+  - navigation:
+    - tablist:
+      - tab "Email Preference Centers":
+        - generic: Email Preference Centers
+      - tab "Create Preference Center Close tab" [selected]:
+        - text: 
+        - generic: Create Preference Center
+        - button "Close tab":
+  - heading "Email Preference Center" [level=2]
+  - heading "Details" [level=3]
+  - text: Name
+  - generic: 0/280 characters
+  - textbox "Name 0/280 characters":
+    - /placeholder: Enter preference center name
+  - button "Add Description":
+    - generic: Add Description
+  - img: 
+  - generic: The Liquid tag will be generated after the preference center is launched
+  - button "Close":
+  - generic: Liquid
+  - textbox "Liquid": "{{preference_center.${}}}"
+  - button:
+    - img: 
+  - img: 
+  - generic: The API ID will be generated after the preference center is saved
+  - button "Close":
+  - generic: API ID
+  - textbox "API ID"
+  - button:
+    - img: 
+  - heading "Page Previews" [level=3]
+  - button "Edit":
+    - generic: Edit
+  - img "Drag and drop editor illustration"
+  - generic: Begin building your preference center
+  - button "Launch Editor":
+    - generic: Launch Editor
+  - button "Save as draft" [disabled]:
+    - generic: Save as draft
+  - button "Launch preference center" [disabled]:
+    - generic: Launch preference center
+- generic: © Braze 2026
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://braze.statuspage.io
+  - text: Status
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/terms
+  - text: Terms
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/privacy
+  - text: Privacy Policy
+- text:     

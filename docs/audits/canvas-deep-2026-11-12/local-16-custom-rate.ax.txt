@@ -1,0 +1,16 @@
+Browser tab: 12, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3221/engagement/canvas/beb4295a-d720-458a-8451-18c65ab5d22d?locale=en&workspaceId=local&step=sendSettings&initialConditionsCollapsed=false".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3221/engagement/canvas/beb4295a-d720-458a-8451-18c65ab5d22d?locale=en&workspaceId=local&step=sendSettings&initialConditionsCollapsed=false
+	2 container Set custom rate limit
+		3 container
+			4 heading Set custom rate limit, Value: 2
+				5 text Set custom rate limit
+			6 button Close custom rate limit
+		7 container
+			8 text Maximum messages per minute
+			9 stepper (settable, integer) Description: Custom maximum messages per minute, Value: 1500
+			10 text Enter a whole number
+		11 container
+			12 button Cancel
+			13 button Save
+
+The focused UI element is 9 stepper (settable, integer) Description: Custom maximum messages per minute, Value: 1500

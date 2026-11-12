@@ -1,0 +1,20 @@
+Browser tab: 3, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3210/tag-management?locale=en".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3210/tag-management?locale=en
+	1 container Create Tag
+		2 heading Create Tag, Value: 2
+			3 text Create Tag
+		4 button close
+			5 image
+		6 container
+			7 text Tag Name
+			8 text field (settable) Tag Name, Value: Onboarding
+			9 checkbox (settable, integer) Description: Nest Tag Under:, Value: 1
+			10 container
+				11 text Parent Tag
+				12 combo box (collapsed, settable) Description: Parent Tag, Value: Lifecycle, Secondary Actions: Expand
+				13 button Toggle parent tags
+					14 image
+			20 button Cancel
+			21 button Create Tag
+
+The focused UI element is 0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3210/tag-management?locale=en

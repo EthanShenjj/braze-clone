@@ -1,0 +1,232 @@
+Browser tab: 3, Title: "Edit Segment", URL: "https://dashboard-09.braze.com/engagement/segmenter/edit/6af5250fd8512f008c15c8b7/6af4374c46d3080087f1c5d2?locale=en".
+0 AXWebArea Edit Segment, URL: dashboard-09.braze.com/engagement/segmenter/edit/6af5250fd8512f008c15c8b7/6af4374c46d3080087f1c5d2?locale=en
+	1 container
+		82 container
+			83 image
+			84 heading BrazeAI Operator™, Value: 3
+				85 text BrazeAI Operator™
+			86 text New
+			87 button Clear chat history
+			88 button Maximize
+			89 button Close
+			90 container
+				91 text Let's create a segment! Just tell me who you are trying to reach. Provide any attributes or events you have in mind. Or if you're unsure, we can figure out the criteria together.
+			92 text entry area (settable)
+			93 pop up button (collapsed) Description: Add context for Operator, ID: add-context-button, Secondary Actions: Expand
+			94 button Send
+			95 container
+				96 checkbox (settable, integer) Description: Auto-approve actions, Value: 0, ID: bcl-switch__input-1014598567
+				97 text Auto-approve actions
+			98 image Information
+		2 container react-root
+			3 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/segmenter/edit/6af5250fd8512f008c15c8b7/6af4374c46d3080087f1c5d2?locale=en#main-container
+			4 container Side navigation
+				5 container
+					6 button Expand menu
+					7 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+						8 image
+					10 text Quick links
+					11 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+					12 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+					13 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+					14 button Getting Started
+					17 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+					18 button AI Decisioning
+					21 button Agents
+					24 button Messaging
+					27 button Audience
+					30 button Content
+					33 button Analytics
+					36 button Partner Integrations
+					39 button Data Settings
+					42 button Settings
+				45 container Footer Logo
+					46 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+			47 text 14 days left in your free trial.
+			48 button Connect with sales
+			49 container Top navigation
+				50 container Left top navigation
+					51 button Search workspace ⌘+K
+						52 image
+						53 text Search workspace
+						54 text ⌘+K
+				55 container Right top navigation
+					56 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						57 image
+					58 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						59 image
+					60 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+						61 image
+					62 container
+						63 button Notifications
+							64 image
+					65 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						66 image
+					67 button BrazeAI Operator™
+						68 image
+			69 container main-container
+				70 container main-content
+					71 tab group
+						72 tab (selectable, settable, boolean) Segments, Value: 0, ID: /engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2
+						99 tab (selected, settable, boolean) Edit (unnamed) Close tab, Description: Close tab, ID: /engagement/segmenter/edit/6af5250fd8512f008c15c8b7/6af4374c46d3080087f1c5d2, Value: 1
+Edit (unnamed)
+					100 heading Edit segment, Value: 2
+						101 text Edit segment
+					102 container
+						103 heading Segment Details User Data Create campaign, Value: 3
+							104 text Segment Details
+							105 pop up button (collapsed) Description: User Data, Secondary Actions: Expand
+							106 pop up button (collapsed) Description: Create campaign, Secondary Actions: Expand
+						107 text Segment Name
+						108 text field (settable) (unnamed)
+						109 button Add description
+						110 button Tags
+						111 button 0 Changes Since Last Viewed
+							112 text 0 Changes Since Last Viewed
+						113 text Apps and websites targeted
+						114 container apps-used-selector
+							115 container
+								116 text Users from all apps
+								117 combo box (collapsed, settable) Description: Apps and websites targeted, ID: apps-used-select, Secondary Actions: Expand
+						118 checkbox (settable, integer) Description: Analytics Tracking, Value: 0, ID: bcl-switch__input-626438383
+						119 text Analytics Tracking
+					120 container
+						121 heading Segment Builder, Value: 3
+							122 text Segment Builder
+						123 text Users will be included in this segment if they match your filter groups, and omitted if they match your exclusion groups.
+						124 button (expanded) Show less, Secondary Actions: Collapse
+						125 container bcl-collapsible-panel-1423432371
+							126 heading The following rules apply to groups:, Value: 5
+								127 text The following rules apply to groups:
+							128 content list
+								129 container
+									130 AXListMarker • 
+									131 text You can add as many filters as you want to each group
+								132 container
+									133 AXListMarker • 
+									134 text You can switch between AND and OR within the same group
+								135 container
+									136 AXListMarker • 
+									137 text When linking groups, you can use either AND or OR for all linked groups
+						138 container Filter group
+							139 button
+								140 image
+							141 text Filter group
+							142 pop up button (collapsed) Description: or, Secondary Actions: Expand
+								143 text OR
+							144 container
+								145 container
+									146 text Search filter...
+									147 combo box (collapsed, settable) Description: Select filter, ID: react-select-9-input, Secondary Actions: Expand
+							148 button (disabled) Remove
+						149 button Add filter group
+						150 button Add exclusion group
+					151 container
+						152 heading User Lookup, Value: 3
+							153 text User Lookup
+						154 heading Check if a user matches the segment, filter, and app criteria, Value: 6
+							155 text Check if a user matches the segment, filter, and app criteria
+						156 text field (settable) Search by External User ID or Braze ID
+						157 button (disabled) Search
+					158 container
+						159 heading Messaging Use, Value: 3
+							160 text Messaging Use
+						161 table
+							162 row
+								163 cell
+									164 text Campaigns
+								165 cell
+									166 text Not used by any Campaigns
+							167 row
+								168 cell
+									169 text Segments
+								170 cell
+									171 text Not used by any Segments
+							172 row
+								173 cell
+									174 text Canvases
+								175 cell
+									176 text Not used by any Canvases
+					177 container
+						178 heading Segment Insights Information, Value: 3
+							179 text Segment Insights
+							180 image Information
+						181 text (unnamed) / Baseline: All Users Usage
+						182 table
+							183 row
+								184 cell
+									185 text Session Frequency
+									186 image Information
+								187 cell
+									188 text 0.26 sessions per day / 0 sessions per day
+								189 cell
+									190 text --
+							191 row
+								192 cell
+									193 text Time since First Session
+									194 image Information
+								195 cell
+									196 text 90.97 days / 0 days
+								197 cell
+									198 text --
+							199 row
+								200 cell
+									201 text Time since Last Session
+									202 image Information
+								203 cell
+									204 text 6.37 days / 0 days
+								205 cell
+									206 text --
+						207 text Purchases
+						208 table
+							209 row
+								210 cell
+									211 text Lifetime Revenue
+									212 image Information
+								213 cell
+									214 text $0.00 / --
+								215 cell
+									216 text --
+							217 row
+								218 cell
+									219 text Time to First Purchase
+									220 image Information
+								221 cell
+									222 text 0 days / 0 days
+								223 cell
+									224 text --
+							225 row
+								226 cell
+									227 text Time since Last Purchase
+									228 image Information
+								229 cell
+									230 text 0 days / 0 days
+								231 cell
+									232 text --
+						233 text Opening in a new tab
+						234 link Description: Opening in a new tab, Value: dashboard-09.braze.com/engagement/segmenter/segment_insights/6af4374c46d3080087f1c5d2?segmentIds=6af5250fd8512f008c15c8b7&baselineSegmentId=
+					235 container
+						236 heading API Identifier, Value: 3
+							237 text API Identifier
+						238 text Segment API Identifier :
+						239 text field a8432b73-e5ec-4ba0-9b9a-bd581220420b
+						240 button Copy
+						241 text Use this identifier to access your Segment from Braze's external API. A full list of your API identifiers is available at the 
+						242 text Opening in a new tab
+						243 link Description: Opening in a new tab, Value: dashboard-09.braze.com/app_settings/developer_console/apisettings
+						244 text  page. 
+						245 text Opening in a new tab
+						246 link Description: Opening in a new tab, Value: braze.com/docs/en/developer_guide/rest_api/user_data/
+					247 container
+						248 button (disabled) Revert
+						249 button (disabled) Save
+				74 text © Braze 2026
+				75 text Opening in a new tab
+				76 link Description: Opening in a new tab, Value: braze.statuspage.io/
+				77 text Opening in a new tab
+				78 link Description: Opening in a new tab, Value: braze.com/terms
+				79 text Opening in a new tab
+				80 link Description: Opening in a new tab, Value: braze.com/privacy
+		81 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+
+The focused UI element is 92 text entry area (settable)

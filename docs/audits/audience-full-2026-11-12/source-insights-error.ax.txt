@@ -1,0 +1,85 @@
+Browser tab: 4, Title: "Data - Overview - Overview", URL: "https://dashboard-09.braze.com/engagement/segmenter/segment_insights/6af4374c46d3080087f1c5d2?segmentIds=6af4375220abdf005fc2eef4&baselineSegmentId=".
+0 AXWebArea Data - Overview - Overview, URL: dashboard-09.braze.com/engagement/segmenter/segment_insights/6af4374c46d3080087f1c5d2?segmentIds=6af4375220abdf005fc2eef4&baselineSegmentId=
+	1 container
+		2 container react-root
+			3 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/segmenter/segment_insights/6af4374c46d3080087f1c5d2?segmentIds=6af4375220abdf005fc2eef4&baselineSegmentId=#main-container
+			4 container Side navigation
+				5 container
+					6 button Minimize menu
+					7 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+						8 image
+						9 text Demo – ittor
+					10 text Quick links
+					11 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+					12 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+					13 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+					14 button Getting Started
+						15 image
+						16 text Getting Started
+						17 container
+							18 text 8 %
+					19 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+					20 button AI Decisioning
+						21 image
+						22 text AI Decisioning
+					23 button Agents
+						24 image
+						25 text Agents
+					26 button Messaging
+						27 image
+						28 text Messaging
+					29 button Audience
+						30 image
+						31 text Audience
+					32 button Content
+						33 image
+						34 text Content
+					35 button Analytics
+						36 image
+						37 text Analytics
+					38 button Partner Integrations
+						39 image
+						40 text Partner Integrations
+					41 button Data Settings
+						42 image
+						43 text Data Settings
+					44 button Settings
+						45 image
+						46 text Settings
+				47 container Footer Logo
+					48 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+			49 text 14 days left in your free trial.
+			50 button Connect with sales
+			51 container Top navigation
+				52 container Left top navigation
+					53 button Search workspace ⌘+K
+						54 image
+						55 text Search workspace
+						56 text ⌘+K
+				57 container Right top navigation
+					58 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						59 image
+					60 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						61 image
+					62 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+						63 image
+					64 container
+						65 button Notifications
+							66 image
+					67 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						68 image
+					69 button BrazeAI Operator™
+						70 image
+			71 container main-container
+				114 container main-content
+					115 text An unexpected error occurred.
+				106 text © Braze 2026
+				107 text Opening in a new tab
+				108 link Description: Opening in a new tab, Value: braze.statuspage.io/
+				109 text Opening in a new tab
+				110 link Description: Opening in a new tab, Value: braze.com/terms
+				111 text Opening in a new tab
+				112 link Description: Opening in a new tab, Value: braze.com/privacy
+		113 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+
+The focused UI element is 0 AXWebArea Data - Overview - Overview, URL: dashboard-09.braze.com/engagement/segmenter/segment_insights/6af4374c46d3080087f1c5d2?segmentIds=6af4375220abdf005fc2eef4&baselineSegmentId=

@@ -1,0 +1,458 @@
+{
+  "date": "2026-11-11",
+  "scope": "Braze tag capabilities",
+  "sourceWorkspace": "6af4374c46d3080087f1c5d2",
+  "sourceWrites": false,
+  "productionModePreview": "http://127.0.0.1:3211",
+  "verification": {
+    "unitIntegration": {
+      "passed": 347,
+      "failed": 0
+    },
+    "build": "passed",
+    "productionApi": "passed"
+  },
+  "captures": [
+    {
+      "name": "local-01-create-parent",
+      "kind": "local",
+      "screenshot": "local-01-create-parent.jpg",
+      "snapshot": "local-01-create-parent.ax.txt",
+      "bytes": 50063,
+      "sha256": "e4a4c0f26bcab61127b2e83b27866f8f1cba983746d6e7e76773ce4352f3c502",
+      "url": "\"http://127.0.0.1:3210/tag-management?locale=en\""
+    },
+    {
+      "name": "local-02-create-nested",
+      "kind": "local",
+      "screenshot": "local-02-create-nested.jpg",
+      "snapshot": "local-02-create-nested.ax.txt",
+      "bytes": 51081,
+      "sha256": "c5d857976ff707949a4ebdc8fb0c168da4714b658239b0302e7d486ae8bfc042",
+      "url": "\"http://127.0.0.1:3210/tag-management?locale=en\""
+    },
+    {
+      "name": "local-03-management",
+      "kind": "local",
+      "screenshot": "local-03-management.jpg",
+      "snapshot": "local-03-management.ax.txt",
+      "bytes": 59853,
+      "sha256": "b1e59b4e646eb2742e464c80adc746edc2777271a4a11c99c47fe300f12d5513",
+      "url": "\"http://127.0.0.1:3210/tag-management?locale=en\""
+    },
+    {
+      "name": "local-04-segment-tag-picker",
+      "kind": "local",
+      "screenshot": "local-04-segment-tag-picker.jpg",
+      "snapshot": "local-04-segment-tag-picker.ax.txt",
+      "bytes": 66154,
+      "sha256": "0b26524f9a45f16c206250ac2340e1f7c42bd394ad66ff317dad104ebb7ac20a",
+      "url": "\"http://127.0.0.1:3210/audience/segments?locale=en&workspace=local\""
+    },
+    {
+      "name": "local-05-segment-tag-filter",
+      "kind": "local",
+      "screenshot": "local-05-segment-tag-filter.jpg",
+      "snapshot": "local-05-segment-tag-filter.ax.txt",
+      "bytes": 66013,
+      "sha256": "d879182832b2783b1d04e272b7f3b105d777ca2bc6d45754a336b929a57b22c2",
+      "url": "\"http://127.0.0.1:3210/audience/segments?locale=en&workspace=local\""
+    },
+    {
+      "name": "local-06-segment-bulk-tags",
+      "kind": "local",
+      "screenshot": "local-06-segment-bulk-tags.jpg",
+      "snapshot": "local-06-segment-bulk-tags.ax.txt",
+      "bytes": 68189,
+      "sha256": "a450351a3c4b336cd4c9ea403c8700ff024166fc5716aa51356628ef52c8357e",
+      "url": "\"http://127.0.0.1:3210/audience/segments?locale=en&workspace=local\""
+    },
+    {
+      "name": "local-07-segment-tagged-receipt",
+      "kind": "local",
+      "screenshot": "local-07-segment-tagged-receipt.jpg",
+      "snapshot": "local-07-segment-tagged-receipt.ax.txt",
+      "bytes": 60929,
+      "sha256": "8087d44db6df35e5c8b19c252d926ec20418c52ab5be7fe7f078a2e898b2dca6",
+      "url": "\"http://127.0.0.1:3210/audience/segments?locale=en&workspace=local\""
+    },
+    {
+      "name": "local-08-campaign-bulk-tags",
+      "kind": "local",
+      "screenshot": "local-08-campaign-bulk-tags.jpg",
+      "snapshot": "local-08-campaign-bulk-tags.ax.txt",
+      "bytes": 86135,
+      "sha256": "7f90ef2381eedfee3ae45b98a4ee5a2143421835791c05f34ea154481832f4ca",
+      "url": "\"http://127.0.0.1:3210/engagement/campaigns/campaigns?start=0&limit=12&sortby=last_edited&sortdir=-1&display=list&locale=en&workspace=local\""
+    },
+    {
+      "name": "local-09-campaign-tag-filter",
+      "kind": "local",
+      "screenshot": "local-09-campaign-tag-filter.jpg",
+      "snapshot": "local-09-campaign-tag-filter.ax.txt",
+      "bytes": 75548,
+      "sha256": "bd5edc71a5785779b285e19d2c61c0b401915415fef5cf41ebf002262bed4c02",
+      "url": "\"http://127.0.0.1:3210/engagement/campaigns/campaigns?start=0&limit=12&sortby=edited&sortdir=-1&display=list&locale=en&workspace=local&tag=Onboarding\""
+    },
+    {
+      "name": "local-10-canvas-tag-assignment",
+      "kind": "local",
+      "screenshot": "local-10-canvas-tag-assignment.jpg",
+      "snapshot": "local-10-canvas-tag-assignment.ax.txt",
+      "bytes": 76247,
+      "sha256": "9b9b42992e49fcffb9c4e151d2df51a1d1a67fa824c0b74a834bd8d73676ac4f",
+      "url": "\"http://127.0.0.1:3210/engagement/canvas/f216ee2a-4db7-4d57-9e52-1fafce349f8a?locale=en&workspace=local&step=basics&workspaceId=local\""
+    },
+    {
+      "name": "local-11-canvas-tagged-interaction",
+      "kind": "local",
+      "screenshot": "local-11-canvas-tagged-interaction.jpg",
+      "snapshot": "local-11-canvas-tagged-interaction.ax.txt",
+      "bytes": 71469,
+      "sha256": "a327b53b5d96f6aa28b77fa49a78a270a6d2fa6f6cc81be09edca689d9cd2298",
+      "url": "\"http://127.0.0.1:3210/engagement/canvas/f216ee2a-4db7-4d57-9e52-1fafce349f8a?locale=en&workspace=local&step=audience&workspaceId=local\""
+    },
+    {
+      "name": "local-12-rename-tag",
+      "kind": "local",
+      "screenshot": "local-12-rename-tag.jpg",
+      "snapshot": "local-12-rename-tag.ax.txt",
+      "bytes": 47889,
+      "sha256": "150b33a708c35c53e3c94ddd4ae638acb299c979a7032fb3a0c3f9fd3672bddb",
+      "url": "\"http://127.0.0.1:3210/app_settings/app_settings/tags/local?locale=en\""
+    },
+    {
+      "name": "local-13-renamed-usage-counts",
+      "kind": "local",
+      "screenshot": "local-13-renamed-usage-counts.jpg",
+      "snapshot": "local-13-renamed-usage-counts.ax.txt",
+      "bytes": 55465,
+      "sha256": "ee2da80e34c443a8d12316f9be0901a8b1c0e7b8aac7c207a42c524d64ae4601",
+      "url": "\"http://127.0.0.1:3210/app_settings/app_settings/tags/local?locale=en\""
+    },
+    {
+      "name": "local-14-canvas-renamed-reference",
+      "kind": "local",
+      "screenshot": "local-14-canvas-renamed-reference.jpg",
+      "snapshot": "local-14-canvas-renamed-reference.ax.txt",
+      "bytes": 69681,
+      "sha256": "254e85436735b08b54582acdab1befc6b1ea49b50350e272dc899fda7c009999",
+      "url": "\"http://127.0.0.1:3210/engagement/canvas/f216ee2a-4db7-4d57-9e52-1fafce349f8a?locale=en&workspace=local&step=audience&workspaceId=local\""
+    },
+    {
+      "name": "local-15-management-final",
+      "kind": "local",
+      "screenshot": "local-15-management-final.jpg",
+      "snapshot": "local-15-management-final.ax.txt",
+      "bytes": 63994,
+      "sha256": "6f6087c0868a1a44e22213160e5618249ceccebd6d54f350ef7db8b479c44e2e",
+      "url": "\"http://127.0.0.1:3210/app_settings/app_settings/tags/local?locale=en\""
+    },
+    {
+      "name": "local-16-management-clean",
+      "kind": "local",
+      "screenshot": "local-16-management-clean.jpg",
+      "snapshot": "local-16-management-clean.ax.txt",
+      "bytes": 56413,
+      "sha256": "502248df8c2ebbdc1e8dd83a41d2aa61bb0fd73af611bf3080455f5af2725e49",
+      "url": "\"http://127.0.0.1:3210/app_settings/app_settings/tags/local?locale=en\""
+    },
+    {
+      "name": "local-17-delete-in-use-confirmation",
+      "kind": "local",
+      "screenshot": "local-17-delete-in-use-confirmation.jpg",
+      "snapshot": "local-17-delete-in-use-confirmation.ax.txt",
+      "bytes": 53353,
+      "sha256": "8ab06b423c8769745609e973608ec9754f317b213d870da8626353773331ef75",
+      "url": "\"http://127.0.0.1:3210/app_settings/app_settings/tags/local?locale=en\""
+    },
+    {
+      "name": "local-18-production-interaction-options",
+      "kind": "local",
+      "screenshot": "local-18-production-interaction-options.jpg",
+      "snapshot": "local-18-production-interaction-options.ax.txt",
+      "bytes": 65741,
+      "sha256": "73e90e66d388333f57bb0ea6f4598c6574dbd3c2fdd4f594476ecd09fa1095f9",
+      "url": "\"http://127.0.0.1:3211/engagement/canvas/f216ee2a-4db7-4d57-9e52-1fafce349f8a?locale=en&workspace=local&step=audience\""
+    },
+    {
+      "name": "local-19-production-canvas-population",
+      "kind": "local",
+      "screenshot": "local-19-production-canvas-population.jpg",
+      "snapshot": "local-19-production-canvas-population.ax.txt",
+      "bytes": 68631,
+      "sha256": "931d0eafa5bfafb0f238b711982bf1df93df217e02f535fc8fd7103490b3258e",
+      "url": "\"http://127.0.0.1:3211/engagement/canvas/f216ee2a-4db7-4d57-9e52-1fafce349f8a?locale=en&workspace=local&step=audience\""
+    },
+    {
+      "name": "local-20-production-management",
+      "kind": "local",
+      "screenshot": "local-20-production-management.jpg",
+      "snapshot": "local-20-production-management.ax.txt",
+      "bytes": 56052,
+      "sha256": "d4bba897c899058da326d29d79d84d279cf5f892226a4824588ea4e1b95a4441",
+      "url": "\"http://127.0.0.1:3211/app_settings/app_settings/tags/local?locale=en\""
+    },
+    {
+      "name": "source-01-tag-management",
+      "kind": "source",
+      "screenshot": "source-01-tag-management.jpg",
+      "snapshot": "source-01-tag-management.ax.txt",
+      "bytes": 64281,
+      "sha256": "bcdfa7644a8a2dfd154c3a5de0793a68581b373aedde40bd65affc113ec6d417",
+      "url": "\"https://dashboard-09.braze.com/app_settings/app_settings/tags/6af4374c46d3080087f1c5d2?locale=en\""
+    },
+    {
+      "name": "source-02-add-tag",
+      "kind": "source",
+      "screenshot": "source-02-add-tag.jpg",
+      "snapshot": "source-02-add-tag.ax.txt",
+      "bytes": 51803,
+      "sha256": "399ef753863e380d28f2b1f68f3f804eaf71349b91d5e50711771c57becc2553",
+      "url": "\"https://dashboard-09.braze.com/app_settings/app_settings/tags/6af4374c46d3080087f1c5d2?locale=en\""
+    },
+    {
+      "name": "source-03-create-nested",
+      "kind": "source",
+      "screenshot": "source-03-create-nested.jpg",
+      "snapshot": "source-03-create-nested.ax.txt",
+      "bytes": 55090,
+      "sha256": "5c0806bb4b364e435bc18a16ab8c1e67fc74efcb627ef9dcdeb0154461ed95c3",
+      "url": "\"https://dashboard-09.braze.com/app_settings/app_settings/tags/6af4374c46d3080087f1c5d2?locale=en\""
+    },
+    {
+      "name": "source-04-parent-options",
+      "kind": "source",
+      "screenshot": "source-04-parent-options.jpg",
+      "snapshot": "source-04-parent-options.ax.txt",
+      "bytes": 58063,
+      "sha256": "bfa767a9cb02cb5929561ab9a745596a297e18337b4922eb37508f73552e2c8e",
+      "url": "\"https://dashboard-09.braze.com/app_settings/app_settings/tags/6af4374c46d3080087f1c5d2?locale=en\""
+    },
+    {
+      "name": "source-05-edit-tag",
+      "kind": "source",
+      "screenshot": "source-05-edit-tag.jpg",
+      "snapshot": "source-05-edit-tag.ax.txt",
+      "bytes": 50653,
+      "sha256": "66fa0b843940ceebb9dd5b6ac382eccfed457f9d24ce88b71bc24476c3d4f3cd",
+      "url": "\"https://dashboard-09.braze.com/app_settings/app_settings/tags/6af4374c46d3080087f1c5d2?locale=en\""
+    },
+    {
+      "name": "source-06-delete-in-use-confirmation",
+      "kind": "source",
+      "screenshot": "source-06-delete-in-use-confirmation.jpg",
+      "snapshot": "source-06-delete-in-use-confirmation.ax.txt",
+      "bytes": 55682,
+      "sha256": "8265d36a1ae7d8f036fcaca4248770a8719042dd352c3a6565323ce7f1ec2518",
+      "url": "\"https://dashboard-09.braze.com/app_settings/app_settings/tags/6af4374c46d3080087f1c5d2?locale=en\""
+    },
+    {
+      "name": "source-07-canvas-list",
+      "kind": "source",
+      "screenshot": "source-07-canvas-list.jpg",
+      "snapshot": "source-07-canvas-list.ax.txt",
+      "bytes": 89745,
+      "sha256": "1f7f5d2820b17c365d771b80e341787ec769c59a3322c30210c45136604759b8",
+      "url": "\"https://dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en\""
+    },
+    {
+      "name": "source-08-canvas-tag-filter",
+      "kind": "source",
+      "screenshot": "source-08-canvas-tag-filter.jpg",
+      "snapshot": "source-08-canvas-tag-filter.ax.txt",
+      "bytes": 92940,
+      "sha256": "d681bf72c5e86d261fe149245353aa1457491a2eb6a8234954842c1c47235f43",
+      "url": "\"https://dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en\""
+    },
+    {
+      "name": "source-09-canvas-two-tag-filter",
+      "kind": "source",
+      "screenshot": "source-09-canvas-two-tag-filter.jpg",
+      "snapshot": "source-09-canvas-two-tag-filter.ax.txt",
+      "bytes": 87875,
+      "sha256": "48a625251fa5efdf32f24c0e6d426ee11bbbe2c55d7b41d20786aad5731d27d9",
+      "url": "\"https://dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?status=%22draft%22&tags=%5B%22Onboarding%22%2C%22US%22%5D&locale=en\""
+    },
+    {
+      "name": "source-10-canvas-tag-as",
+      "kind": "source",
+      "screenshot": "source-10-canvas-tag-as.jpg",
+      "snapshot": "source-10-canvas-tag-as.ax.txt",
+      "bytes": 84920,
+      "sha256": "55c548136ced288f058b837623cfeef2cc29a1e574f54ed53941bb69aeecdccb",
+      "url": "\"https://dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?status=%22draft%22&tags=%5B%22Onboarding%22%2C%22US%22%5D&locale=en\""
+    },
+    {
+      "name": "source-11-canvas-existing-view",
+      "kind": "source",
+      "screenshot": "source-11-canvas-existing-view.jpg",
+      "snapshot": "source-11-canvas-existing-view.ax.txt",
+      "bytes": 65774,
+      "sha256": "ddff67b90f2e027c68e3a1d1ef989d50fa6188d8ab19cf0d62a0f912fe402bed",
+      "url": "\"https://dashboard-09.braze.com/engagement/canvas/6af4375920abdf005fc2f151/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true\""
+    },
+    {
+      "name": "source-12-segments-list",
+      "kind": "source",
+      "screenshot": "source-12-segments-list.jpg",
+      "snapshot": "source-12-segments-list.ax.txt",
+      "bytes": 78198,
+      "sha256": "346864e1bf5501d592dfb4ca4d9457d1cda881d69b353d415430c465673dfa7f",
+      "url": "\"https://dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?start=0&limit=20&globalFilter=&columnFilters%5Bstatus%5D=active&sortby=last_edited&sortdir=-1&display=list\""
+    },
+    {
+      "name": "source-13-segments-tag-as",
+      "kind": "source",
+      "screenshot": "source-13-segments-tag-as.jpg",
+      "snapshot": "source-13-segments-tag-as.ax.txt",
+      "bytes": 78677,
+      "sha256": "0ccb63f35d3f7fc3366568ccaf7832c80427ae08e784aba38fe476951d4d3238",
+      "url": "\"https://dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?start=0&limit=20&globalFilter=&columnFilters%5Bstatus%5D=active&sortby=last_edited&sortdir=-1&display=list\""
+    },
+    {
+      "name": "source-14-segments-tag-options",
+      "kind": "source",
+      "screenshot": "source-14-segments-tag-options.jpg",
+      "snapshot": "source-14-segments-tag-options.ax.txt",
+      "bytes": 83722,
+      "sha256": "7257d0e70aaf16804932d84a99deda90f8eefd861ecbf0b074ceba418308a529",
+      "url": "\"https://dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?start=0&limit=20&globalFilter=&columnFilters%5Bstatus%5D=active&sortby=last_edited&sortdir=-1&display=list\""
+    },
+    {
+      "name": "source-15-segment-editor",
+      "kind": "source",
+      "screenshot": "source-15-segment-editor.jpg",
+      "snapshot": "source-15-segment-editor.ax.txt",
+      "bytes": 66210,
+      "sha256": "25ea940f7b1ba0fa081901183109d03dd35a4d16943b1677981dc5c57466551f",
+      "url": "\"https://dashboard-09.braze.com/engagement/segmenter/edit/6af4375220abdf005fc2eef4/6af4374c46d3080087f1c5d2?locale=en\""
+    },
+    {
+      "name": "source-16-segment-tags",
+      "kind": "source",
+      "screenshot": "source-16-segment-tags.jpg",
+      "snapshot": "source-16-segment-tags.ax.txt",
+      "bytes": 62523,
+      "sha256": "e6fbaf04432e2721e123576d40e31b860097214f6f1f7950dd82fb0908cabbac",
+      "url": "\"https://dashboard-09.braze.com/engagement/segmenter/edit/6af4375220abdf005fc2eef4/6af4374c46d3080087f1c5d2?locale=en\""
+    },
+    {
+      "name": "source-17-segment-inline-create",
+      "kind": "source",
+      "screenshot": "source-17-segment-inline-create.jpg",
+      "snapshot": "source-17-segment-inline-create.ax.txt",
+      "bytes": 68685,
+      "sha256": "24fa14a56eb324828480ea2b87a0819648a98c3ab5d7b2983cdf126472253592",
+      "url": "\"https://dashboard-09.braze.com/engagement/segmenter/edit/6af4375220abdf005fc2eef4/6af4374c46d3080087f1c5d2?locale=en\""
+    },
+    {
+      "name": "source-18-tagged-receipt-filter",
+      "kind": "source",
+      "screenshot": "source-18-tagged-receipt-filter.jpg",
+      "snapshot": "source-18-tagged-receipt-filter.ax.txt",
+      "bytes": 58342,
+      "sha256": "0159a3e0b2a3bdc5ad20f6cfc2ea91f439267a66bbe2966b5d01c7de4d9442d4",
+      "url": "\"https://dashboard-09.braze.com/engagement/segmenter/edit/6af4375220abdf005fc2eef4/6af4374c46d3080087f1c5d2?locale=en\""
+    },
+    {
+      "name": "source-19-tag-receipt-comparison",
+      "kind": "source",
+      "screenshot": "source-19-tag-receipt-comparison.jpg",
+      "snapshot": "source-19-tag-receipt-comparison.ax.txt",
+      "bytes": 75996,
+      "sha256": "d9c14cd9aec8edfea7067fcf4b74d50dd104bf16248a5fe226b79859cec2cfee",
+      "url": "\"https://dashboard-09.braze.com/engagement/segmenter/edit/6af4375220abdf005fc2eef4/6af4374c46d3080087f1c5d2?locale=en\""
+    },
+    {
+      "name": "source-20-receipt-tag-options",
+      "kind": "source",
+      "screenshot": "source-20-receipt-tag-options.jpg",
+      "snapshot": "source-20-receipt-tag-options.ax.txt",
+      "bytes": 75660,
+      "sha256": "507c5821c0fb38ab3e714560ed5daf2361e6a37f421b129993fa990242fc932d",
+      "url": "\"https://dashboard-09.braze.com/engagement/segmenter/edit/6af4375220abdf005fc2eef4/6af4374c46d3080087f1c5d2?locale=en\""
+    },
+    {
+      "name": "source-21-tagged-last-receipt",
+      "kind": "source",
+      "screenshot": "source-21-tagged-last-receipt.jpg",
+      "snapshot": "source-21-tagged-last-receipt.ax.txt",
+      "bytes": 68357,
+      "sha256": "96726e326168351e7e90f043a6e1445e91f8cc21172f5735a17f76eb62753ab3",
+      "url": "\"https://dashboard-09.braze.com/engagement/segmenter/edit/6af4375220abdf005fc2eef4/6af4374c46d3080087f1c5d2?locale=en\""
+    },
+    {
+      "name": "source-22-last-receipt-comparisons",
+      "kind": "source",
+      "screenshot": "source-22-last-receipt-comparisons.jpg",
+      "snapshot": "source-22-last-receipt-comparisons.ax.txt",
+      "bytes": 78311,
+      "sha256": "90957e529b15466e5f44fa2b983f1cf4f44f04cad31874e28e9bee8464a704cc",
+      "url": "\"https://dashboard-09.braze.com/engagement/segmenter/edit/6af4375220abdf005fc2eef4/6af4374c46d3080087f1c5d2?locale=en\""
+    },
+    {
+      "name": "source-23-last-receipt-relative",
+      "kind": "source",
+      "screenshot": "source-23-last-receipt-relative.jpg",
+      "snapshot": "source-23-last-receipt-relative.ax.txt",
+      "bytes": 68916,
+      "sha256": "93f7cdda90c40706921009094dc719f92c32d8d921fee96202ce16774876df07",
+      "url": "\"https://dashboard-09.braze.com/engagement/segmenter/edit/6af4375220abdf005fc2eef4/6af4374c46d3080087f1c5d2?locale=en\""
+    },
+    {
+      "name": "source-24-last-receipt-units",
+      "kind": "source",
+      "screenshot": "source-24-last-receipt-units.jpg",
+      "snapshot": "source-24-last-receipt-units.ax.txt",
+      "bytes": 76182,
+      "sha256": "544ff9b5e66698bafa5e89f1320383d1c6dda55077155d5f4db26debd4467658",
+      "url": "\"https://dashboard-09.braze.com/engagement/segmenter/edit/6af4375220abdf005fc2eef4/6af4374c46d3080087f1c5d2?locale=en\""
+    },
+    {
+      "name": "source-25-campaign-tag-filter",
+      "kind": "source",
+      "screenshot": "source-25-campaign-tag-filter.jpg",
+      "snapshot": "source-25-campaign-tag-filter.ax.txt",
+      "bytes": 84089,
+      "sha256": "05de83408291f1bba0d6cd827a406239e4a998fe7544ee2addcd16e30164cfd4",
+      "url": "\"https://dashboard-09.braze.com/engagement/campaigns/6af4374c46d3080087f1c5d2?start=0&limit=12&globalFilter=&columnFilters%5Bstatus%5D=active&sortby=last_edited&sortdir=-1&display=list\""
+    },
+    {
+      "name": "source-26-campaign-tag-as",
+      "kind": "source",
+      "screenshot": "source-26-campaign-tag-as.jpg",
+      "snapshot": "source-26-campaign-tag-as.ax.txt",
+      "bytes": 81064,
+      "sha256": "cdd3bb3d4787bdb73aadddef6d5965d4ce68b9bcae199b081e0c2724503a8867",
+      "url": "\"https://dashboard-09.braze.com/engagement/campaigns/6af4374c46d3080087f1c5d2?start=0&limit=12&globalFilter=&columnFilters%5Bstatus%5D=draft&sortby=last_edited&sortdir=-1&display=list\""
+    },
+    {
+      "name": "source-27-tag-interaction",
+      "kind": "source",
+      "screenshot": "source-27-tag-interaction.jpg",
+      "snapshot": "source-27-tag-interaction.ax.txt",
+      "bytes": 71595,
+      "sha256": "c6d65f4df78b4122d46b3086588e6239c85661a1cd7391cf356d44a3e364329f",
+      "url": "\"https://dashboard-09.braze.com/engagement/segmenter/edit/6af4375220abdf005fc2eef4/6af4374c46d3080087f1c5d2?locale=en\""
+    },
+    {
+      "name": "source-28-tag-clicked-email",
+      "kind": "source",
+      "screenshot": "source-28-tag-clicked-email.jpg",
+      "snapshot": "source-28-tag-clicked-email.ax.txt",
+      "bytes": 76504,
+      "sha256": "1ffdecb0a7c7086de1ee45f4061a5974abbb6a4a31347eb47f45badb76dc581e",
+      "url": "\"https://dashboard-09.braze.com/engagement/segmenter/edit/6af4375220abdf005fc2eef4/6af4374c46d3080087f1c5d2?locale=en\""
+    },
+    {
+      "name": "source-29-tag-performed-interaction",
+      "kind": "source",
+      "screenshot": "source-29-tag-performed-interaction.jpg",
+      "snapshot": "source-29-tag-performed-interaction.ax.txt",
+      "bytes": 77433,
+      "sha256": "530a66771369ccf418054403099d5d460bbc25b7d797fc4dcc476c6c7c30044c",
+      "url": "\"https://dashboard-09.braze.com/engagement/segmenter/edit/6af4375220abdf005fc2eef4/6af4374c46d3080087f1c5d2?locale=en\""
+    }
+  ]
+}

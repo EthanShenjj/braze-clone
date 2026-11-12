@@ -1,0 +1,47 @@
+Browser tab: 4, Title: "Engagement - Canvas - Edit 'New Canvas - November 11, 2026'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'New Canvas - November 11, 2026', URL: dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container
+		171 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		172 container Step 7 step editor
+			173 container
+				174 text Step 7
+				175 button
+				176 text DISCONNECTED
+				177 button Agent Step
+					178 text Agent Step
+			179 button Done
+			180 container
+				181 text Configure Agent Step
+				182 button BrazeAI Operator™
+					183 image
+				184 tab group
+					185 tab (selected, settable, boolean) Description: Compose, Value: 1, ID: compose
+					186 tab (selectable, settable, boolean) Description: Preview, Value: 0, ID: preview
+				187 text Agents can analyze data, make decisions, or generate personalized content in your workflows.
+				188 button (collapsed) Description: How agent steps work, Secondary Actions: Expand
+				189 heading Choose your agent, Value: 4
+					190 text Choose your agent
+				191 text The agent you select determines what this step checks or generates. Agent
+				192 container llm-step--agent-definition-select
+					193 container
+						194 text Select the agent that will process data in this step.
+						195 combo box (collapsed, settable) Description: Agent, ID: react-select-35-input, Secondary Actions: Expand
+				196 text Select the agent that will process data in this step.
+				197 heading Set output, Value: 4
+					198 text Set output
+				199 text Choose how to store the agent's response in a Canvas context variable.
+				200 text Opening in a new tab
+				201 link Description: Opening in a new tab, Value: braze.com/docs/en/user_guide/engagement_tools/canvas/canvas_components/agent_step
+				202 text Context variable name
+				203 text field (settable) Context variable name, ID: llm-step--output-variable-input
+				204 text Data type
+				205 container llm-step--output-type-select
+					206 container
+						207 text Select from the options
+						208 combo box (collapsed, settable) Description: Data type, ID: react-select-36-input, Secondary Actions: Expand
+				209 heading Optional step instructions, Value: 4
+					210 text Optional step instructions
+				211 text Anything else your agent needs to know that it doesn't already have in Agent Instructions? Pass it along here.
+				212 button Add instructions
+
+The focused UI element is 172 container Step 7 step editor

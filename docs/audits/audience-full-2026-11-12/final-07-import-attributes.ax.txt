@@ -1,0 +1,25 @@
+Browser tab: 15, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/users/user_import/local?locale=en&workspace=local".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/user_import/local?locale=en&workspace=local
+	1 container Attributes
+		2 container
+			3 heading Attributes, Value: 2
+				4 text Attributes
+			5 button close
+				6 image
+		7 container
+			8 text Import default or custom user attributes with a user identifier.
+			9 text Download 
+			10 link Description: Sample CSV, Value: 127.0.0.1:3213/braze-audience/attributes-csv-example.csv
+			11 text .
+		12 heading Drag and drop a file here, Value: 3
+			13 text Drag and drop a file here
+		14 text File type: CSV
+		15 container
+			16 text Maximum file size is 1MB.
+			17 text CSV files must contain either an external_id or braze_id, or user_alias_label and user_alias_name, or email or phone to help identify imported users.
+		18 text Free trial environments have a limit of 25 files and 250 user profiles. Each file can have up to 250 rows and 10 columns.
+		19 container
+			20 button Cancel
+			21 button Browse files
+
+The focused UI element is 5 button close

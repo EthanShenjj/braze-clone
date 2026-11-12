@@ -1,0 +1,119 @@
+Browser tab: 3, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3210/audience/segments?locale=en&workspace=local".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3210/audience/segments?locale=en&workspace=local
+	1 container
+		5 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			6 image
+		4 text Braze Demo — Thinkingai
+		7 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		8 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			9 text Local workspace
+			10 image
+		11 container Side navigation
+			12 text Quick links
+			13 button Canvas
+			14 button Campaigns
+			15 button Segments
+			16 button Getting Started
+			17 button Home
+			18 button AI Decisioning
+			19 button Agent Console
+			20 button Messaging
+			21 button Audience
+			22 button Content
+			23 button Analytics
+			24 button Partner Integrations
+			25 button Data Settings
+			26 button Settings
+		27 button Home
+			28 image Braze
+		29 container
+			30 text ◷   8 days left in your free trial.
+			31 button Connect with sales
+		32 container
+			33 button Search workspace ⌘K
+				34 image
+				35 text Search workspace
+				36 text ⌘K
+			37 button Take a tour
+			38 image Community
+			39 button (collapsed) Description: Language, Secondary Actions: Expand
+			40 button Notifications
+			41 button (collapsed) Description: Profile, Secondary Actions: Expand
+			42 image
+			43 button Open BrazeAI Operator
+		44 button Segments
+		45 container
+			46 heading Segments, Value: 1
+				47 text Segments
+			48 text Limited access Find and reach the right audience with segments. Group users based on their behaviors, preferences, or past actions to send messages that truly matter to them.
+			49 button Create Segment
+				50 image
+				51 text Create Segment
+			110 text Status
+			111 pop up button (collapsed, settable) Description: Status, Value: Active, Secondary Actions: Expand
+				112 menu
+					113 (selected) Active
+					114 Draft
+					115 Archived
+					116 All
+			117 text Tags
+			118 combo box (collapsed, settable) Description: Tags, Secondary Actions: Expand
+			119 button Toggle Tags
+				120 image
+			121 image
+			122 text field (settable) Search for segments
+			123 text Status:  Active
+			124 button Remove status filter Active
+				125 image
+			348 text Tags:  Onboarding
+			349 button Remove tag filter Onboarding
+				350 image
+			126 heading 1 Results, Value: 3
+				127 text 1  Results
+			128 table
+				129 row
+					130 cell
+						131 checkbox (settable, integer) Description: Select all rows, Value: 0
+					132 cell
+						133 button Segment name ↕
+							134 text Segment name 
+							135 text ↕
+					136 cell
+						137 text Status
+					138 cell
+						139 text Last edited by
+					140 cell
+						141 button Last edited ↓
+							142 text Last edited 
+							143 text ↓
+				334 row
+					335 cell
+						336 checkbox (settable, integer) Description: Select New customers · tag acceptance, Value: 0
+					337 cell
+						338 button Quick view: New customers · tag acceptance
+							339 image
+						340 button New customers · tag acceptance
+						341 text Onboarding
+					342 cell
+						343 text Active
+					344 cell
+						345 text Local workspace
+					346 cell
+						347 text Nov 11, 2026
+			313 text Showing rows  1  -  1  of  1
+			314 container
+				315 text Rows per page: 
+				316 pop up button (collapsed, settable) Description: Rows per page, Value: 20, Secondary Actions: Expand
+					317 menu
+						318 10
+						319 (selected) 20
+						320 40
+						321 60
+						322 100
+			323 button (disabled) Previous page
+				324 image
+			325 text 1
+			326 button (disabled) Next page
+				327 image
+
+The focused UI element is 118 combo box (collapsed, settable) Description: Tags, Secondary Actions: Expand

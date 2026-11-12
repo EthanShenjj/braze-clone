@@ -1,0 +1,37 @@
+Browser tab: 5, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3220/engagement/canvas/322ef7c3-bd70-4553-81df-819a884b95cf?locale=en&workspace=local&step=build&workspaceId=local".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3220/engagement/canvas/322ef7c3-bd70-4553-81df-819a884b95cf?locale=en&workspace=local&step=build&workspaceId=local
+	2 container Delay step editor
+		3 container
+			4 text field (settable) Description: Step name, Value: Delay
+			5 text Delay After 2 hours
+			6 button Done
+		7 container
+			8 text Set a delay Looking for Intelligent Timing and quiet hours? You can now find them in the Message step under “Delivery settings”
+			9 container Delay type
+				10 text Delay type
+				11 container
+					12 radio button (settable, integer) Description: Duration Wait for hours, days, or weeks (Example: 7 days), Value: 1
+					13 text Duration Wait for hours, days, or weeks (Example: 7 days)
+				14 container
+					15 radio button (settable, integer) Description: Calendar date Wait until a specific calendar date (Example: March 25 at 12 pm), Value: 0
+					16 text Calendar date Wait until a specific calendar date (Example: March 25 at 12 pm)
+				17 container
+					18 radio button (settable, integer) Description: Day of the week Wait until a specific day of the week (Example: Next Monday), Value: 0
+					19 text Day of the week Wait until a specific day of the week (Example: Next Monday)
+			20 link Description: About delay steps ↗, Value: braze.com/docs/user_guide/engagement_tools/canvas/canvas_components/delay_step
+			21 heading Duration, Value: 3
+				22 text Duration
+			23 text Users will move to the next step after this amount of time
+			24 stepper (settable, integer) Description: Duration, Value: 2
+			25 combo box (collapsed, settable) Description: Unit, Value: Hours, Secondary Actions: Expand
+			26 button Toggle Unit
+				27 image
+			32 text ( 2  hours)
+			33 checkbox (settable, integer) Description: At a specific time, Value: 0
+			34 time field (disabled, settable) Description: Time, Value: 12:00
+			35 combo box (disabled, collapsed, settable) Description: Delivery time zone, Value: Company time - [Eastern Time (US & Canada)], Secondary Actions: Expand
+			36 button (disabled) Toggle Delivery time zone
+				37 image
+			38 checkbox (settable, integer) Description: Personalize delay, Value: 0
+
+The focused UI element is 25 combo box (collapsed, settable) Description: Unit, Value: Hours, Secondary Actions: Expand

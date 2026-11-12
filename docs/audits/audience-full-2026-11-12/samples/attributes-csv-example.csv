@@ -1,0 +1,2 @@
+external_id,first_name,last_name,email,email_subscribe,push_subscribe,dob,home_city,gender,phone
+123,Person,One,test@braze.com,opted_in,unsubscribed,1980-12-21,London,F,+442071838750

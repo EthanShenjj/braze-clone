@@ -1,0 +1,18 @@
+Browser tab: 2, Title: "Tag Management", URL: "https://dashboard-09.braze.com/app_settings/app_settings/tags/6af4374c46d3080087f1c5d2?locale=en".
+0 AXWebArea Tag Management, URL: dashboard-09.braze.com/app_settings/app_settings/tags/6af4374c46d3080087f1c5d2?locale=en
+	1 container
+		2 button close
+		3 heading Create Tag, Value: 3
+			4 text Create Tag
+		5 container
+			6 text Tag Name
+			7 text field (settable)
+			8 checkbox (settable, integer) Description: Nest Tag Under:, Value: 1, ID: create-edit-tag-form__nested-checkbox
+			9 text Nest Tag Under: Parent Tag
+			10 container
+				11 text Select parent tag
+				12 combo box (collapsed, settable) Description: Parent Tag, ID: react-select-8-input, Secondary Actions: Expand
+		13 button Cancel
+		14 button Create Tag
+
+The focused UI element is 8 checkbox (settable, integer) Description: Nest Tag Under:, Value: 1, ID: create-edit-tag-form__nested-checkbox

@@ -1,0 +1,258 @@
+Browser tab: 8, Title: "Engagement - Canvas - Edit 'New Canvas - November 12, 2026'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+1 AXWebArea Engagement - Canvas - Edit 'New Canvas - November 12, 2026', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	2 container
+		3 container body-wrapper
+			4 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build#main-col
+			5 container
+				6 container Side navigation
+					7 container
+						8 button Minimize menu
+						9 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+							10 image
+							11 text Demo – ittor
+						12 text Quick links
+						13 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+						14 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+						15 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+						16 button Getting Started
+							17 image
+							18 container
+								19 text Getting Started
+								20 container
+									21 text 8 %
+						22 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+						23 button AI Decisioning
+							24 image
+							25 text AI Decisioning
+						26 button Agents
+							27 image
+							28 text Agents
+						29 button Messaging
+							30 image
+							31 text Messaging
+						32 button Audience
+							33 image
+							34 text Audience
+						35 button Content
+							36 image
+							37 text Content
+						38 button Analytics
+							39 image
+							40 text Analytics
+						41 button Partner Integrations
+							42 image
+							43 text Partner Integrations
+						44 button Data Settings
+							45 image
+							46 text Data Settings
+						47 button Settings
+							48 image
+							49 text Settings
+					50 container Footer Logo
+						51 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+				52 text 14 days left in your free trial.
+				53 button Connect with sales
+				54 container Top navigation
+					55 container Left top navigation
+						56 button Search workspace ⌘+K
+							57 image
+							58 text Search workspace
+							59 text ⌘+K
+					60 container Right top navigation
+						61 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							62 image
+						63 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							64 image
+						65 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+							66 image
+						67 container
+							68 button Notifications
+								69 image
+						70 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							71 image
+						72 button BrazeAI Operator™
+							73 image
+			74 container main
+				75 container main-col
+					76 tab group Open page tabs
+						77 tab (selectable, settable, boolean) Canvas, Value: 0, ID: canvas
+						204 tab (selected, settable, boolean) Edit 'New Canvas - November 12, 2026' Close tab, Description: Close tab, ID: 6af5503cd8512f008c15c8bd, Value: 1
+Edit 'New Canvas - November 12, 2026'
+					205 container
+						206 container
+							207 text Limited access
+							208 heading Canvas fidelity audit - 2026-11-12 (temporary), Value: 4
+								209 text Canvas fidelity audit - 2026-11-12 (temporary)
+							210 text No description
+							211 button Tags
+							212 button 0 Changes Since Last Viewed
+								213 text 0 Changes Since Last Viewed
+							215 button Edit
+							216 text Send Settings
+							217 content list
+								218 container
+									219 AXListMarker • 
+									220 text No limitations on the rate at which users will receive messages.
+								372 container
+									373 AXListMarker • 
+									374 text Workspace Messaging Rate Limits OFF
+								222 container
+									223 AXListMarker • 
+									224 text Quiet hours OFF
+							225 button Edit
+							226 text Conversion Events
+							227 text No conversion event selected for this Canvas
+							228 button Edit
+						229 button Expand
+						230 container
+							231 pop up button Collapse components
+							232 text Components Select components to build your user journey.
+							233 content list
+								234 container
+									235 text Message Controls
+									236 content list
+										237 button Message
+										238 button Delay
+								239 container
+									240 text AI Actions
+									241 content list
+										242 button Agent Step
+										243 button Content Optimizer
+											244 image
+											245 text Content Optimizer
+								246 container
+									247 text Flow Controls
+									248 content list
+										249 button Decision Split
+											250 image
+											251 text Decision Split
+										252 button Audience Paths
+										253 button Action Paths
+										254 button Experiment Paths
+										255 button Send to Destination
+								256 container
+									257 text Audience Updates
+									258 content list
+										259 button Context
+											260 image
+											261 text Context
+										262 button User Update
+										263 button Feature Flag
+										264 button Audience Sync
+											265 image
+											266 text Audience Sync
+							267 button Clean Up Canvas
+						268 container
+							269 container
+								270 text Entry Rules
+							271 container
+								272 text Schedule
+							273 container
+								274 text Audience
+							275 container
+								276 image
+								277 text Exit Criteria No exit criteria selected.
+							278 container
+								279 text Controls Users are not eligible to re-enter this Canvas.
+							280 image
+							281 image
+							282 container
+								283 image
+								284 pop up button (collapsed) Description: Open Add Variant menu, Secondary Actions: Expand
+							285 container
+								286 button 100%
+								287 container
+									288 text Variant 1
+									289 button
+								290 pop up button (collapsed) Description: Open actions menu for Variant 1, Secondary Actions: Expand
+								291 button
+							292 container
+								293 container
+									294 button
+									295 pop up button (collapsed) Description: Open step actions menu, Secondary Actions: Expand
+									296 text DISCONNECTED
+									297 button Window: Ranking: Off Advance: Immediately
+										298 container
+											299 text Window :
+										300 container
+											301 text Ranking : Off
+										302 container
+											303 text Advance : Immediately
+									304 button 1 1 Group 1
+										305 image
+											306 text 1
+										307 text Group 1
+									308 button 2 2 Everyone Else
+										309 image
+											310 text 2
+										311 text Everyone Else
+								312 image
+									313 text 1
+								314 text Group 1
+								315 image
+									316 text 2
+								317 text Everyone Else
+								318 image
+								319 button
+								320 button
+							321 container
+								322 container
+									323 button
+									324 pop up button (collapsed) Description: Open step actions menu, Secondary Actions: Expand
+									325 text DISCONNECTED
+									326 button Window: Ranking: Off Advance: Immediately
+										327 container
+											328 text Window :
+										329 container
+											330 text Ranking : Off
+										331 container
+											332 text Advance : Immediately
+									333 button 1 1 Group 1
+										334 image
+											335 text 1
+										336 text Group 1
+									337 button 2 2 Everyone Else
+										338 image
+											339 text 2
+										340 text Everyone Else
+								341 image
+									342 text 1
+								343 text Group 1
+								344 image
+									345 text 2
+								346 text Everyone Else
+								347 image
+								348 button
+								349 button
+							350 container
+								351 container
+									352 button
+									353 pop up button (collapsed) Description: Open step actions menu, Secondary Actions: Expand
+									354 text DISCONNECTED Incomplete Messages
+									355 button Content Optimizer
+										356 image
+										357 text Content Optimizer
+									358 text All users who enter this step advance to the next step
+								359 button
+						360 pop up button Run evaluation
+						361 pop up button (collapsed) Description: Canvas zoom and view, Secondary Actions: Expand
+							362 text Detailed View
+							363 text , 
+							364 text 100%
+						365 pop up button Enter full screen
+						366 heading Maximum Duration, Value: 4
+							367 pop up button (collapsed) Description: Maximum Duration, Secondary Actions: Expand
+						368 button (disabled) Test Canvas
+						369 button (disabled) Save
+						370 button (disabled) Save and continue
+				196 container
+					197 text © Braze 2026
+					198 text Opening in a new tab
+					199 link Description: Opening in a new tab, Value: braze.statuspage.io/
+					200 text Opening in a new tab
+					201 link Description: Opening in a new tab, Value: braze.com/terms
+					202 text Opening in a new tab
+					203 link Description: Opening in a new tab, Value: braze.com/privacy
+		371 text Errors must be fixed before testing your Canvas.
+
+The focused UI element is 1 AXWebArea Engagement - Canvas - Edit 'New Canvas - November 12, 2026', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build

@@ -1,0 +1,1 @@
+Tag API checks passed: CRUD, hierarchy, conflicts, rename, aliases, bulk merge/replace/clear, limits, cascading deletion, workspace isolation, specific interactions, Segment targeting, Canvas population/lookup and stale-rule rejection.

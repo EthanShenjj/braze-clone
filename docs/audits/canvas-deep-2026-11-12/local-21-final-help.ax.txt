@@ -1,0 +1,193 @@
+Browser tab: 13, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3221/engagement/canvas?locale=en&name=%22optimizer+persistence%22".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3221/engagement/canvas?locale=en&name=%22optimizer+persistence%22
+	1 container
+		2 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		3 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			4 text Local workspace
+			5 image
+		6 container Side navigation
+			7 text Quick links
+			8 button Canvas
+			9 button Campaigns
+			10 button Segments
+			11 button Getting Started
+			12 button Home
+			13 button AI Decisioning
+			14 button Agents
+			15 button Messaging
+			16 button Audience
+			17 button Content
+			18 button Analytics
+			19 button Partner Integrations
+			20 button Data Settings
+			21 button Settings
+		22 button Home
+			23 image Braze
+	24 container
+		25 text ◷   8 days left in your free trial.
+		26 button Connect with sales
+		27 button Search workspace ⌘K
+			28 image
+			29 text Search workspace
+			30 text ⌘K
+		31 button Take a tour
+		32 image Community
+		33 button (collapsed) Description: Language, Secondary Actions: Expand
+		34 button Notifications
+		35 button (collapsed) Description: Profile, Secondary Actions: Expand
+		36 image
+		37 button Open BrazeAI Operator
+		38 button Canvas
+		39 heading Canvas Limited access, Value: 1
+			40 text Canvas Limited access
+		41 text Design and launch customer journeys with Canvas. Drag, drop, and connect messaging across channels to create seamless, automated experiences.
+		42 container
+			43 button Take a tour
+			44 button (expanded) Description: More options, Secondary Actions: Collapse
+				45 image
+			185 link Description: View documentation, Value: braze.com/docs/user_guide/messaging/canvas
+			186 link Description: Browse case studies, Value: braze.com/customers?topic=Canvas+Flow
+			187 button Watch a tutorial
+			188 link Description: Take an eLearning course, Value: dashboard-09.braze.com/lms/auth?next=%2Fintroduction-to-canvas-flow
+			189 link Description: Try the Braze demo app, Value: dashboard-09.braze.com/deeplink?asset_type=campaign&workspace=demo&asset_name=Referral+Offer+IAM
+		46 button Create Canvas
+			47 text Create Canvas
+			48 image
+		49 text Status
+		50 container
+			51 combo box (collapsed, settable) Description: Status, Value: Draft, Secondary Actions: Expand
+			52 button Toggle Status
+				53 image
+		54 text Tags
+		55 container
+			56 combo box (collapsed, settable) Description: Tags, Secondary Actions: Expand
+			57 button Toggle Tags
+				58 image
+		59 button (collapsed) Filters, Secondary Actions: Expand
+			60 image
+			61 text Filters
+		62 button (collapsed) Columns, Secondary Actions: Expand
+			63 image
+			64 text Columns
+		65 button Reset filters
+		66 container
+			67 image
+			68 text field (settable) Description: Search Canvases, Value: optimizer persistence
+		69 button Status: Draft
+			70 text Status: 
+			71 text Draft
+			72 image
+		73 container
+			74 text 4 Results
+		75 table
+			76 row
+				77 cell
+					78 checkbox (settable, integer) Description: Select all Canvas rows, Value: 0
+				79 cell
+					80 button Select to sort by Name in alphabetical order
+						81 text Name 
+						82 text ↕
+				83 cell
+					84 text Status
+				85 cell
+					86 text Description
+				87 cell
+					88 text Last edited by
+				89 cell
+					90 button Last edited ↓
+						91 text Last edited 
+						92 text ↓
+				93 cell
+					94 text Alerts Configured
+				95 cell
+					96 text Actions
+			97 row
+				98 cell
+					99 checkbox (settable, integer) Description: Select Canvas canvas_deep_73cbdab2 optimizer persistence, Value: 0
+				100 cell
+					101 button canvas_deep_73cbdab2 optimizer persistence
+				102 cell
+					103 text Draft
+				104 cell
+					105 text —
+				106 cell
+					107 text Local workspace
+				108 cell
+					109 text 1 minute ago
+				110 cell
+					111 text —
+				112 cell
+					113 button Actions for canvas_deep_73cbdab2 optimizer persistence
+						114 image
+			115 row
+				116 cell
+					117 checkbox (settable, integer) Description: Select Canvas canvas_deep_577192b7 optimizer persistence, Value: 0
+				118 cell
+					119 button canvas_deep_577192b7 optimizer persistence
+				120 cell
+					121 text Draft
+				122 cell
+					123 text —
+				124 cell
+					125 text Local workspace
+				126 cell
+					127 text 12 minutes ago
+				128 cell
+					129 text —
+				130 cell
+					131 button Actions for canvas_deep_577192b7 optimizer persistence
+						132 image
+			133 row
+				134 cell
+					135 checkbox (settable, integer) Description: Select Canvas canvas_deep_182992db optimizer persistence, Value: 0
+				136 cell
+					137 button canvas_deep_182992db optimizer persistence
+				138 cell
+					139 text Draft
+				140 cell
+					141 text —
+				142 cell
+					143 text Local workspace
+				144 cell
+					145 text 16 minutes ago
+				146 cell
+					147 text —
+				148 cell
+					149 button Actions for canvas_deep_182992db optimizer persistence
+						150 image
+			151 row
+				152 cell
+					153 checkbox (settable, integer) Description: Select Canvas canvas_deep_a36f2216 optimizer persistence, Value: 0
+				154 cell
+					155 button canvas_deep_a36f2216 optimizer persistence
+				156 cell
+					157 text Draft
+				158 cell
+					159 text —
+				160 cell
+					161 text Local workspace
+				162 cell
+					163 text 24 minutes ago
+				164 cell
+					165 text —
+				166 cell
+					167 button Actions for canvas_deep_a36f2216 optimizer persistence
+						168 image
+		169 text Showing rows  1  -  4  of  4
+		170 container
+			171 text Rows per page:
+			172 pop up button (collapsed, settable) Rows per page:, Value: 20, Secondary Actions: Expand
+				173 menu
+					174 10
+					175 (selected) 20
+					176 40
+					177 60
+					178 100
+		179 button (disabled) Previous page
+			180 image
+		181 button Current Page, Page 1
+		182 button (disabled) Next page
+			183 image
+		184 button Priority Sorter
+
+The focused UI element is 44 button (expanded) Description: More options, Secondary Actions: Collapse

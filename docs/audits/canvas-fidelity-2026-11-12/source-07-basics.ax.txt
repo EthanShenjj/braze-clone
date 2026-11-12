@@ -1,0 +1,165 @@
+Browser tab: 4, Title: "Engagement - Canvas - Edit 'New Canvas - November 11, 2026'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true".
+0 AXWebArea Engagement - Canvas - Edit 'New Canvas - November 11, 2026', URL: dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true
+	1 container
+		277 container body-wrapper
+			278 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true#main-col
+			279 container
+				280 container Side navigation
+					281 container
+						282 button Minimize menu
+						283 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+							284 image
+							285 text Demo – ittor
+						286 text Quick links
+						287 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+						288 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+						289 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+						290 button Getting Started
+							291 image
+							292 container
+								293 text Getting Started
+								294 container
+									295 text 8 %
+						296 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+						297 button AI Decisioning
+							298 image
+							299 text AI Decisioning
+						300 button Agents
+							301 image
+							302 text Agents
+						303 button Messaging
+							304 image
+							305 text Messaging
+						306 button Audience
+							307 image
+							308 text Audience
+						309 button Content
+							310 image
+							311 text Content
+						312 button Analytics
+							313 image
+							314 text Analytics
+						315 button Partner Integrations
+							316 image
+							317 text Partner Integrations
+						318 button Data Settings
+							319 image
+							320 text Data Settings
+						321 button Settings
+							322 image
+							323 text Settings
+					324 container Footer Logo
+						325 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+				326 text 14 days left in your free trial.
+				327 button Connect with sales
+				328 container Top navigation
+					329 container Left top navigation
+						330 button Search workspace ⌘+K
+							331 image
+							332 text Search workspace
+							333 text ⌘+K
+					334 container Right top navigation
+						335 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							336 image
+						337 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							338 image
+						339 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+							340 image
+						341 container
+							342 button Notifications
+								343 image
+						344 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							345 image
+						346 button BrazeAI Operator™
+							347 image
+			348 container main
+				358 container main-col
+					359 tab group Open page tabs
+						360 tab (selectable, settable, boolean) Canvas, Value: 0, ID: canvas
+						361 tab (selected, settable, boolean) Edit 'New Canvas - November 11, 2026' Close tab, Description: Close tab, ID: 6af522bcc759ad008e444c3c, Value: 1
+Edit 'New Canvas - November 11, 2026'
+					362 container
+						363 text Limited access
+						364 container progress
+							365 text Progress Tracker with 6 steps: Basics, Entry Schedule, Target Audience, Send Settings, Build Canvas, Summary
+						366 button Step Basics
+							367 text 1
+							368 text Basics
+						369 button Step Entry Schedule
+							370 text 2
+							371 text Entry Schedule
+						372 button Step Target Audience
+							373 text 3
+							374 text Target Audience
+						375 button Step Send Settings
+							376 text 4
+							377 text Send Settings
+						378 button Step Build Canvas
+							379 text 5
+							380 text Build Canvas
+						381 button Step Summary
+							382 text 6
+							383 text Summary
+						384 container
+							385 heading Set Up Canvas Details, Value: 3
+								386 heading Set Up Canvas Details, Value: 3
+									387 text Set Up Canvas Details
+							388 container
+								389 text Canvas Name
+								390 text field (settable) New Canvas - November 11, 2026
+								391 button Add description
+							392 button Tags
+							393 heading Canvas brief, Value: 4
+								394 text Canvas brief
+							395 text Attach a brief so BrazeAI Operator can build your Canvas and your Standards can review it against your goals
+							396 text Loading Canvas brief
+							397 heading Attach a Canvas brief (optional), Value: 5
+								398 text Attach a Canvas brief (optional)
+							399 text PDF, TXT, MD, CSV, DOCX, XLSX up to 15MB
+							400 button (disabled) Upload file
+							401 text Canvas ID
+							402 text field Canvas ID, Value: 7ebcf5b8-ac82-44d8-b700-b2167d909a33, ID: api-sendable-id-copy
+							403 button Copy
+							404 container
+								405 text This is the unique key for this Canvas. Use it to identify which Canvas to send in a request to the Canvas Trigger API.
+						406 container
+							407 heading Assign Conversion Events, Value: 3
+								408 heading Assign Conversion Events, Value: 3
+									409 text Assign Conversion Events
+							410 text Define up to 4 conversion events to track for this Canvas. The conversion events must be assigned during Canvas creation, and cannot be changed once a Canvas has launched.
+							411 button Add Conversion Event
+						412 pop up button (disabled) Back
+						413 container
+							414 container progress
+								415 text Progress Tracker with 6 steps: Basics, Entry Schedule, Target Audience, Send Settings, Build Canvas, Summary
+							416 button Step Basics
+								417 text 1
+								418 text Basics
+							419 button Step Entry Schedule
+								420 text 2
+								421 text Entry Schedule
+							422 button Step Target Audience
+								423 text 3
+								424 text Target Audience
+							425 button Step Send Settings
+								426 text 4
+								427 text Send Settings
+							428 button Step Build Canvas
+								429 text 5
+								430 text Build Canvas
+							431 button Step Summary
+								432 text 6
+								433 text Summary
+						434 pop up button Forward
+						435 button Save
+				350 container
+					351 text © Braze 2026
+					352 text Opening in a new tab
+					353 link Description: Opening in a new tab, Value: braze.statuspage.io/
+					354 text Opening in a new tab
+					355 link Description: Opening in a new tab, Value: braze.com/terms
+					356 text Opening in a new tab
+					357 link Description: Opening in a new tab, Value: braze.com/privacy
+		276 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+
+The focused UI element is 0 AXWebArea Engagement - Canvas - Edit 'New Canvas - November 11, 2026', URL: dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true

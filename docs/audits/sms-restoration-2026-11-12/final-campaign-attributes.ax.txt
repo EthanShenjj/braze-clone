@@ -1,0 +1,35 @@
+Browser tab: 22, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3216/engagement/campaigns/cmp_sms_qa_f730215b_campaign?step=compose&workspace=sms_qa_f730215b&locale=en".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3216/engagement/campaigns/cmp_sms_qa_f730215b_campaign?step=compose&workspace=sms_qa_f730215b&locale=en
+	1 container Add Personalization
+		2 heading Add Personalization, Value: 4
+			3 text Add Personalization
+		4 text Personalization type
+		5 container
+			6 combo box (collapsed, settable) Description: Personalization type, Value: Campaign Attributes, Secondary Actions: Expand
+			7 button Toggle Personalization type
+				8 image
+		11 text Attribute
+		12 container
+			13 combo box (expanded, settable) Description: Attribute, Secondary Actions: Collapse
+			14 button Toggle Attribute
+				15 image
+			28 list Attribute options
+				29 name
+				30 api_id
+				31 message_name
+				32 message_api_id
+				33 dispatch_id
+		16 container
+			17 text Default value (Optional)
+			18 image
+			19 text field (settable) Default value
+		20 container
+			21 text Liquid Snippet
+			22 text field Liquid Snippet
+			23 button Copy Liquid snippet
+				24 image
+		25 container
+			26 button Cancel
+			27 button (disabled) Insert
+
+The focused UI element is 13 combo box (expanded, settable) Description: Attribute, Secondary Actions: Collapse

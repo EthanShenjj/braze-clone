@@ -1,5 +1,6 @@
 node_modules
 .next
+.next-audience*
 *.log
 .DS_Store
 .data

@@ -1,0 +1,57 @@
+Browser tab: 4, Title: "Engagement - Canvas - Edit 'New Canvas - November 11, 2026'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'New Canvas - November 11, 2026', URL: dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container
+		171 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		172 container Step 11 step editor
+			173 container
+				174 text Step 11
+				175 button
+				176 text DISCONNECTED
+				177 button Window: 1 day Ranking: Off Advance: Immediately
+					178 container
+						179 text Window : 1 day
+					180 container
+						181 text Ranking : Off
+					182 container
+						183 text Advance : Immediately
+				184 button 1 1 Group 1
+					185 image
+						186 text 1
+					187 text Group 1
+				188 button 2 2 Everyone Else
+					189 image
+						190 text 2
+					191 text Everyone Else
+				192 button Add Action Group
+			193 button Done
+			194 container action-path-step-editor1138
+				195 container
+					196 text Action Settings
+					197 button BrazeAI Operator™
+						198 image
+				199 container
+					200 text Action Paths allow you to set multiple outcomes (up to 8) based on actions users have taken within a given time frame.
+					201 text First, choose the settings that will apply to the entire step.
+					202 container Evaluation Window
+						203 heading Evaluation Window, Value: 5
+							204 text Evaluation Window
+						205 container
+							206 text Users will be evaluated within the following time window after entering this step
+							207 stepper (settable, integer) 1
+							208 container
+								209 container
+									210 text Days
+									211 combo box (collapsed, settable) Description: Evaluation window unit, ID: react-select-39-input, Secondary Actions: Expand
+							212 container
+								213 checkbox (settable, integer) Description: Personalize delay, Value: 0, ID: bcl-switch__input-2965954670
+								214 text Personalize delay
+							215 text Users will advance to the next step based on the first action they perform unless ranked order is turned on.
+							216 container
+								217 checkbox (settable, integer) Value: 0, ID: bcl-switch__input-735612413, Description: Advance users based on ranked order.Information Hold users until the end of the evaluation window and advance based on ranked order.
+								218 container bcl-switch-3856464688
+									219 container
+										220 text Advance users based on ranked order.
+										221 image Information
+									222 text Hold users until the end of the evaluation window and advance based on ranked order.
+
+The focused UI element is 172 container Step 11 step editor

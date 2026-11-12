@@ -1,0 +1,213 @@
+Browser tab: 12, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3221/engagement/canvas/c754785c-fad4-423d-8c9f-7967e2b59389?locale=en&workspaceId=local&step=basics&initialConditionsCollapsed=false".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3221/engagement/canvas/c754785c-fad4-423d-8c9f-7967e2b59389?locale=en&workspaceId=local&step=basics&initialConditionsCollapsed=false
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agents
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+	25 container
+		26 text ◷   8 days left in your free trial.
+		27 button Connect with sales
+		28 button Search workspace ⌘K
+			29 image
+			30 text Search workspace
+			31 text ⌘K
+		32 button Take a tour
+		33 image Community
+		34 button (collapsed) Description: Language, Secondary Actions: Expand
+		35 button Notifications
+		36 button (collapsed) Description: Profile, Secondary Actions: Expand
+		37 image
+		38 button Open BrazeAI Operator
+		39 container
+			40 button Canvas
+			41 text › Edit ' canvas_deep_182992db optimizer persistence '
+			42 button Close Canvas
+				43 image
+		44 text Limited access
+		45 container Canvas creation steps
+			46 button 1 Basics
+				47 text 1
+				48 text Basics
+			49 button 2 Entry Schedule
+				50 text 2
+				51 text Entry Schedule
+			52 button 3 Target Audience
+				53 text 3
+				54 text Target Audience
+			55 button 4 Send Settings
+				56 text 4
+				57 text Send Settings
+			58 button 5 Build Canvas
+				59 text 5
+				60 text Build Canvas
+			61 button 6 Summary
+				62 text 6
+				63 text Summary
+		64 heading Set Up Canvas Details, Value: 2
+			65 text Set Up Canvas Details
+		66 container
+			67 text Canvas Name
+			68 text field (settable) Description: Canvas Name, Value: canvas_deep_182992db optimizer persistence
+		69 button Add description
+			70 image
+			71 text Add description
+		72 button (collapsed) Tags, Secondary Actions: Expand
+			73 image
+			74 text Tags
+			75 image
+		76 container Canvas brief
+			77 heading Canvas brief, Value: 3
+				78 text Canvas brief
+			79 text Attach a brief so BrazeAI Operator can build your Canvas and your Standards can review it against your goals
+			80 heading Attach a Canvas brief (optional), Value: 4
+				81 text Attach a Canvas brief (optional)
+			82 text PDF, TXT, MD, CSV, DOCX, XLSX up to 15MB
+			83 button Upload file
+				84 image
+				85 text Upload file
+		86 container
+			87 text Canvas ID
+			88 text field Canvas ID Copy, Value: c754785c-fad4-423d-8c9f-7967e2b59389
+			89 button Copy
+				90 image
+				91 text Copy
+		92 text This is the unique key for this Canvas. Use it to identify which Canvas to send in a request to the Canvas Trigger API.
+		93 heading Assign Conversion Events, Value: 2
+			94 text Assign Conversion Events
+		95 text Define up to 4 conversion events to track for this Canvas. The conversion events must be assigned during Canvas creation, and cannot be changed once a Canvas has launched.
+		96 container
+			97 heading Primary Conversion Event - A, Value: 3
+				98 text Primary  Conversion Event -  A
+			99 button Remove Conversion Event
+			100 text Conversion event type
+			101 combo box (collapsed, settable) Description: Conversion event type, Value: Performs Custom Event, Secondary Actions: Expand
+			102 button Toggle Conversion event type
+			103 text Custom event name
+			104 combo box (collapsed, settable) Description: Choose a custom event, Value: purchase, Secondary Actions: Expand
+			105 button Toggle Choose a custom event
+				106 image
+			107 checkbox (settable, integer) Description: Add property filters, Value: 1
+			108 heading Custom event property filters, Value: 4
+				109 text Custom event property filters
+			110 container Property filter group
+				111 text Filter group
+				112 container
+					113 combo box (collapsed, settable) Description: Property group operator, Value: AND, Secondary Actions: Expand
+					114 button Toggle Property group operator
+						115 image
+				116 button (disabled) Remove property filter group
+				117 container
+					118 text Property
+					119 combo box (settable) Description: Event property, Value: amount
+				120 container
+					121 text Comparison
+					122 combo box (collapsed, settable) Description: Property comparison, Value: greater than, Secondary Actions: Expand
+					123 button Toggle Property comparison
+						124 image
+				125 container
+					126 text Value
+					127 text field (settable) Description: Property value, Value: 10
+				128 button Remove property filter
+				129 button ＋ Add property filter
+			130 button ＋ Add filter group
+			131 heading Conversion deadline, Value: 3
+				132 text Conversion deadline
+			133 text Define the maximum time that may pass between a user entering a Canvas and the conversion. Minimum time is the maximum length of the longest path ( 0 seconds ). Conversion deadline
+			134 stepper (settable, integer) Description: Conversion deadline, Value: 3
+			135 text Time unit
+			136 combo box (collapsed, settable) Description: Time unit for Conversion deadline, Value: Days, Secondary Actions: Expand
+			137 button Toggle Time unit for Conversion deadline
+				138 image
+			139 definition list
+				140 container Longest path inside Canvas:
+					141 text Longest path inside Canvas:
+				142 text 0 seconds
+				143 container Conversion deadline:
+					144 text Conversion deadline:
+				145 container
+					146 text 3 days
+				147 container Final conversion deadline:
+					148 text Final conversion deadline:
+				149 text 3 days
+			150 heading Secondary Conversion Event - B, Value: 3
+				151 text Secondary  Conversion Event -  B
+			152 button Remove Conversion Event
+			153 text Conversion event type
+			154 combo box (collapsed, settable) Description: Conversion event type, Value: Starts Session, Secondary Actions: Expand
+			155 button Toggle Conversion event type
+			156 text Apps and websites targeted
+			157 combo box (collapsed, settable) Description: Apps and websites targeted, Value: Users from specific apps, Secondary Actions: Expand
+			158 button Toggle Apps and websites targeted
+				159 image
+			160 text Specific Apps
+			161 button Remove app web-app
+				162 text Unavailable app (web-app)
+				163 image
+			164 combo box (collapsed, settable) Specific Apps, Secondary Actions: Expand
+			165 button (collapsed) Description: Toggle Specific Apps, Secondary Actions: Expand
+				166 image
+			167 container
+				168 text 1  selected  app (s) are no longer available in this workspace. Remove them or choose an available  app .
+			169 heading Conversion deadline, Value: 3
+				170 text Conversion deadline
+			171 text Define the maximum time that may pass between a user entering a Canvas and the conversion. Minimum time is the maximum length of the longest path ( 0 seconds ). Conversion deadline
+			172 stepper (settable, integer) Description: Conversion deadline, Value: 2
+			173 text Time unit
+			174 combo box (collapsed, settable) Description: Time unit for Conversion deadline, Value: Hours, Secondary Actions: Expand
+			175 button Toggle Time unit for Conversion deadline
+				176 image
+			177 definition list
+				178 container Longest path inside Canvas:
+					179 text Longest path inside Canvas:
+				180 text 0 seconds
+				181 container Conversion deadline:
+					182 text Conversion deadline:
+				183 container
+					184 text 2 hours
+				185 container Final conversion deadline:
+					186 text Final conversion deadline:
+				187 text 2 hours
+			188 button ＋ Add Conversion Event
+		189 button (disabled) Back
+		190 container Canvas creation steps
+			191 button 1 Basics
+				192 text 1
+				193 text Basics
+			194 button 2 Entry Schedule
+				195 text 2
+				196 text Entry Schedule
+			197 button 3 Target Audience
+				198 text 3
+				199 text Target Audience
+			200 button 4 Send Settings
+				201 text 4
+				202 text Send Settings
+			203 button 5 Build Canvas
+				204 text 5
+				205 text Build Canvas
+			206 button 6 Summary
+				207 text 6
+				208 text Summary
+		209 button Save
+		210 button Forward
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3221/engagement/canvas/c754785c-fad4-423d-8c9f-7967e2b59389?locale=en&workspaceId=local&step=basics&initialConditionsCollapsed=false

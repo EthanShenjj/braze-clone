@@ -1,0 +1,1012 @@
+- link "Skip to main content":
+  - /url: "#main-container"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Demo – ittor":
+    - generic: Demo – ittor
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agents":
+    - generic: Agents
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 14 days left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- main:
+  - navigation:
+    - tablist:
+      - tab "Segments":
+        - generic: Segments
+      - tab "Edit New Users Close tab" [selected]:
+        - text: 
+        - generic: Edit New Users
+        - button "Close tab":
+  - heading "Edit segment" [level=2]
+  - heading "Segment Details User Data Create campaign" [level=3]:
+    - generic: Segment Details
+    - button "User Data":
+      - generic: User Data
+      - img: 
+    - button "Create campaign":
+      - generic: Create campaign
+      - img: 
+  - generic: Segment Name
+  - textbox "Enter Segment Name": New Users
+  - button "Add description":
+    - img: 
+    - generic: Add description
+  - button "Tags":
+    - img: 
+    - generic: Tags
+    - img: 
+  - button "0 Changes Since Last Viewed":
+    - img: 
+    - generic: 0 Changes Since Last Viewed
+  - generic: Apps and websites targeted
+  - log
+  - generic: Users from all apps
+  - combobox "Apps and websites targeted"
+  - checkbox "Analytics Tracking"
+  - generic: Analytics Tracking
+  - heading "Segment Builder" [level=3]
+  - generic: Users will be included in this segment if they match your filter groups, and omitted if they match your exclusion groups.
+  - button "Show more":
+    - generic: Show more
+    - img: 
+  - group "Filter group":
+    - button:
+    - generic: Filter group
+    - button "or":
+      - generic: or
+      - img: 
+    - button:
+    - generic: First Used App
+    - generic: less than
+    - generic: 1 week ago
+    - button "Duplicate":
+      - img: 
+    - button "Remove":
+      - img: 
+    - generic: OR
+    - log
+    - generic: Search filter...
+    - combobox "Select filter"
+  - button "Add filter group":
+    - img: 
+    - generic: Add filter group
+  - button "Add exclusion group":
+    - img: 
+    - generic: Add exclusion group
+  - heading "User Lookup" [level=3]
+  - heading "Check if a user matches the segment, filter, and app criteria" [level=6]
+  - textbox "Search by External User ID or Braze ID"
+  - button "Search" [disabled]:
+  - heading "Messaging Use" [level=3]
+  - table:
+    - rowgroup:
+      - row "Campaigns Not used by any Campaigns":
+        - rowheader "Campaigns"
+        - cell "Not used by any Campaigns"
+    - rowgroup
+    - rowgroup:
+      - row "Segments Not used by any Segments":
+        - rowheader "Segments"
+        - cell "Not used by any Segments"
+    - rowgroup
+    - rowgroup:
+      - row "Canvases Not used by any Canvases":
+        - rowheader "Canvases"
+        - cell "Not used by any Canvases"
+    - rowgroup
+  - heading "Segment Insights Information" [level=3]:
+    - text: Segment Insights
+    - img "Information":
+  - generic: New Users
+  - generic: "/ Baseline: All Users"
+  - generic: usage
+  - table:
+    - rowgroup:
+      - row "Session Frequency Information 1.34 sessions per day / 0 sessions per day --":
+        - cell "Session Frequency Information":
+          - generic: Session Frequency
+          - img "Information":
+        - cell "1.34 sessions per day / 0 sessions per day":
+          - text: 1.34 sessions per day
+          - generic: / 0 sessions per day
+        - cell "--"
+      - row "Time since First Session Information 4.24 days / 0 days --":
+        - cell "Time since First Session Information":
+          - generic: Time since First Session
+          - img "Information":
+        - cell "4.24 days / 0 days":
+          - text: 4.24 days
+          - generic: / 0 days
+        - cell "--"
+      - row "Time since Last Session Information 2.23 days / 0 days --":
+        - cell "Time since Last Session Information":
+          - generic: Time since Last Session
+          - img "Information":
+        - cell "2.23 days / 0 days":
+          - text: 2.23 days
+          - generic: / 0 days
+        - cell "--"
+  - generic: purchases
+  - table:
+    - rowgroup:
+      - row "Lifetime Revenue Information $0.00 / -- --":
+        - cell "Lifetime Revenue Information":
+          - generic: Lifetime Revenue
+          - img "Information":
+        - cell "$0.00 / --":
+          - text: $0.00
+          - generic: / --
+        - cell "--"
+      - row "Time to First Purchase Information 0 days / 0 days --":
+        - cell "Time to First Purchase Information":
+          - generic: Time to First Purchase
+          - img "Information":
+        - cell "0 days / 0 days":
+          - text: 0 days
+          - generic: / 0 days
+        - cell "--"
+      - row "Time since Last Purchase Information 0 days / 0 days --":
+        - cell "Time since Last Purchase Information":
+          - generic: Time since Last Purchase
+          - img "Information":
+        - cell "0 days / 0 days":
+          - text: 0 days
+          - generic: / 0 days
+        - cell "--"
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: /engagement/segmenter/segment_insights/6af4374c46d3080087f1c5d2?segmentIds=6af4375220abdf005fc2eef4&baselineSegmentId=
+    - generic: Compare Against More Segments
+  - heading "API Identifier" [level=3]
+  - generic: "Segment API Identifier:"
+  - textbox: 4b2e84dd-d787-46f5-a94f-a953f1cd32c4
+  - button "Copy":
+    - img: 
+    - generic: Copy
+  - text: Use this identifier to access your Segment from Braze's external API. A full list of your API identifiers is available at the
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: /app_settings/developer_console/apisettings
+    - text: API Keys
+  - text: page.
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://www.braze.com/docs/en/developer_guide/rest_api/user_data/
+    - text: Learn more
+    - text: ⁠
+  - button "Revert" [disabled]:
+    - generic: Revert
+  - button "Save" [disabled]:
+    - generic: Save
+- generic: © Braze 2026
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://braze.statuspage.io
+  - text: Status
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/terms
+  - text: Terms
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/privacy
+  - text: Privacy Policy
+- text:          
+- iframe
+- dialog:
+  - button "close":
+  - heading "User Preview" [level=2]
+  - text: Showing 50 random users from this segment. The User Preview draws a random sample from your userbase and might not display all users.
+  - grid:
+    - rowgroup:
+      - row "Name column, unsorted. Select to sort ascending Gender column, unsorted. Select to sort descending Age column, unsorted. Select to sort descending Sessions column, unsorted. Select to sort descending First Used column, unsorted. Select to sort descending Last Used column, unsorted. Select to sort descending Push column, unsorted. Select to sort descending Email column, unsorted. Select to sort descending":
+        - columnheader "Name column, unsorted. Select to sort ascending":
+          - button "Name column, unsorted. Select to sort ascending": Name
+        - columnheader "Gender column, unsorted. Select to sort descending":
+          - button "Gender column, unsorted. Select to sort descending": Gender
+        - columnheader "Age column, unsorted. Select to sort descending":
+          - button "Age column, unsorted. Select to sort descending": Age
+        - columnheader "Sessions column, unsorted. Select to sort descending":
+          - button "Sessions column, unsorted. Select to sort descending": Sessions
+        - columnheader "First Used column, unsorted. Select to sort descending":
+          - button "First Used column, unsorted. Select to sort descending": First Used
+        - columnheader "Last Used column, unsorted. Select to sort descending":
+          - button "Last Used column, unsorted. Select to sort descending": Last Used
+        - columnheader "Push column, unsorted. Select to sort descending":
+          - button "Push column, unsorted. Select to sort descending": Push
+        - columnheader "Email column, unsorted. Select to sort descending":
+          - button "Email column, unsorted. Select to sort descending": Email
+    - rowgroup:
+      - row "Opening in a new tab Francie K. 29 2026-06-15 2026-10-30":
+        - gridcell "Opening in a new tab Francie K.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af437a8641a6600597b5d5c
+            - text: Francie K.
+        - gridcell
+        - gridcell
+        - gridcell "29"
+        - gridcell "2026-06-15":
+          - generic: 2026-06-15
+        - gridcell "2026-10-30":
+          - generic: 2026-10-30
+        - gridcell
+        - gridcell:
+          - img: 
+      - row "Opening in a new tab braze-6d0caa6d-91b5-48fe-b324-a61c636cbadb P 21 2026-07-18 2026-11-08":
+        - gridcell "Opening in a new tab braze-6d0caa6d-91b5-48fe-b324-a61c636cbadb":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43864641a6600597b6788
+            - text: braze-6d0caa6d-91b5-48fe-b324-a61c636cbadb
+        - gridcell "P"
+        - gridcell
+        - gridcell "21"
+        - gridcell "2026-07-18":
+          - generic: 2026-07-18
+        - gridcell "2026-11-08":
+          - generic: 2026-11-08
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab Royce L. P 40 2026-05-30 2026-11-09":
+        - gridcell "Opening in a new tab Royce L.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af4383b641a6600597b6518
+            - text: Royce L.
+        - gridcell "P"
+        - gridcell
+        - gridcell "40"
+        - gridcell "2026-05-30":
+          - generic: 2026-05-30
+        - gridcell "2026-11-09":
+          - generic: 2026-11-09
+        - gridcell
+        - gridcell:
+          - img: 
+      - row "Opening in a new tab Deeanna B. O 52 2026-06-22 2026-11-09":
+        - gridcell "Opening in a new tab Deeanna B.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af437d5641a6600597b5fc4
+            - text: Deeanna B.
+        - gridcell "O"
+        - gridcell
+        - gridcell "52"
+        - gridcell "2026-06-22":
+          - generic: 2026-06-22
+        - gridcell "2026-11-09":
+          - generic: 2026-11-09
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab ienxo33 14 2026-10-24 2026-11-10":
+        - gridcell "Opening in a new tab ienxo33":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af4382e641a6600597b6470
+            - text: ienxo33
+        - gridcell
+        - gridcell
+        - gridcell "14"
+        - gridcell "2026-10-24":
+          - generic: 2026-10-24
+        - gridcell "2026-11-10":
+          - generic: 2026-11-10
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab Katelyn J. F 11 2026-08-30 2026-11-10":
+        - gridcell "Opening in a new tab Katelyn J.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af437dc641a6600597b6034
+            - text: Katelyn J.
+        - gridcell "F"
+        - gridcell
+        - gridcell "11"
+        - gridcell "2026-08-30":
+          - generic: 2026-08-30
+        - gridcell "2026-11-10":
+          - generic: 2026-11-10
+        - gridcell
+        - gridcell:
+          - img: 
+      - row "Opening in a new tab user 6af43752641a6600597b5879 0":
+        - gridcell "Opening in a new tab user 6af43752641a6600597b5879":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43752641a6600597b5879
+            - text: user 6af43752641a6600597b5879
+        - gridcell
+        - gridcell
+        - gridcell "0"
+        - gridcell
+        - gridcell
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab Armand H. P 37 2026-09-08 2026-11-10":
+        - gridcell "Opening in a new tab Armand H.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af4381f641a6600597b63a8
+            - text: Armand H.
+        - gridcell "P"
+        - gridcell
+        - gridcell "37"
+        - gridcell "2026-09-08":
+          - generic: 2026-09-08
+        - gridcell "2026-11-10":
+          - generic: 2026-11-10
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab Lynetta H. M 18 2026-09-09 2026-11-10":
+        - gridcell "Opening in a new tab Lynetta H.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43761641a6600597b5930
+            - text: Lynetta H.
+        - gridcell "M"
+        - gridcell
+        - gridcell "18"
+        - gridcell "2026-09-09":
+          - generic: 2026-09-09
+        - gridcell "2026-11-10":
+          - generic: 2026-11-10
+        - gridcell
+        - gridcell:
+          - img: 
+      - row "Opening in a new tab Salvador F. M 47 2026-06-10 2026-11-01":
+        - gridcell "Opening in a new tab Salvador F.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43864641a6600597b6774
+            - text: Salvador F.
+        - gridcell "M"
+        - gridcell
+        - gridcell "47"
+        - gridcell "2026-06-10":
+          - generic: 2026-06-10
+        - gridcell "2026-11-01":
+          - generic: 2026-11-01
+        - gridcell
+        - gridcell:
+          - img: 
+      - row "Opening in a new tab Nita H. M 29 2026-07-20 2026-11-08":
+        - gridcell "Opening in a new tab Nita H.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43796641a6600597b5c0c
+            - text: Nita H.
+        - gridcell "M"
+        - gridcell
+        - gridcell "29"
+        - gridcell "2026-07-20":
+          - generic: 2026-07-20
+        - gridcell "2026-11-08":
+          - generic: 2026-11-08
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab user 6af437c6641a6600597b5f29 0":
+        - gridcell "Opening in a new tab user 6af437c6641a6600597b5f29":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af437c6641a6600597b5f29
+            - text: user 6af437c6641a6600597b5f29
+        - gridcell
+        - gridcell
+        - gridcell "0"
+        - gridcell
+        - gridcell
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab Cleveland Y. M 51 2026-05-22 2026-11-09":
+        - gridcell "Opening in a new tab Cleveland Y.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43808641a6600597b6268
+            - text: Cleveland Y.
+        - gridcell "M"
+        - gridcell
+        - gridcell "51"
+        - gridcell "2026-05-22":
+          - generic: 2026-05-22
+        - gridcell "2026-11-09":
+          - generic: 2026-11-09
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab Else J. 2 2026-09-07 2026-09-26":
+        - gridcell "Opening in a new tab Else J.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43775641a6600597b5a44
+            - text: Else J.
+        - gridcell
+        - gridcell
+        - gridcell "2"
+        - gridcell "2026-09-07":
+          - generic: 2026-09-07
+        - gridcell "2026-09-26":
+          - generic: 2026-09-26
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab user 6af43827641a6600597b6439 0":
+        - gridcell "Opening in a new tab user 6af43827641a6600597b6439":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43827641a6600597b6439
+            - text: user 6af43827641a6600597b6439
+        - gridcell
+        - gridcell
+        - gridcell "0"
+        - gridcell
+        - gridcell
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab Marquerite R. O 3 2026-10-24 2026-10-30":
+        - gridcell "Opening in a new tab Marquerite R.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43770641a6600597b59c8
+            - text: Marquerite R.
+        - gridcell "O"
+        - gridcell
+        - gridcell "3"
+        - gridcell "2026-10-24":
+          - generic: 2026-10-24
+        - gridcell "2026-10-30":
+          - generic: 2026-10-30
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab zpvmt06 M 25 2026-07-11 2026-11-09":
+        - gridcell "Opening in a new tab zpvmt06":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af4382e641a6600597b6480
+            - text: zpvmt06
+        - gridcell "M"
+        - gridcell
+        - gridcell "25"
+        - gridcell "2026-07-11":
+          - generic: 2026-07-11
+        - gridcell "2026-11-09":
+          - generic: 2026-11-09
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab user 6af437f9641a6600597b61e5 0":
+        - gridcell "Opening in a new tab user 6af437f9641a6600597b61e5":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af437f9641a6600597b61e5
+            - text: user 6af437f9641a6600597b61e5
+        - gridcell
+        - gridcell
+        - gridcell "0"
+        - gridcell
+        - gridcell
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab Waldo K. O 42 2026-08-09 2026-11-10":
+        - gridcell "Opening in a new tab Waldo K.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43817641a6600597b6320
+            - text: Waldo K.
+        - gridcell "O"
+        - gridcell
+        - gridcell "42"
+        - gridcell "2026-08-09":
+          - generic: 2026-08-09
+        - gridcell "2026-11-10":
+          - generic: 2026-11-10
+        - gridcell
+        - gridcell:
+          - img: 
+      - row "Opening in a new tab David B. 52 2026-05-27 2026-11-10":
+        - gridcell "Opening in a new tab David B.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af437c5641a6600597b5ecc
+            - text: David B.
+        - gridcell
+        - gridcell
+        - gridcell "52"
+        - gridcell "2026-05-27":
+          - generic: 2026-05-27
+        - gridcell "2026-11-10":
+          - generic: 2026-11-10
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab Yael C. 31 2026-07-09 2026-11-07":
+        - gridcell "Opening in a new tab Yael C.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af437f9641a6600597b61cc
+            - text: Yael C.
+        - gridcell
+        - gridcell
+        - gridcell "31"
+        - gridcell "2026-07-09":
+          - generic: 2026-07-09
+        - gridcell "2026-11-07":
+          - generic: 2026-11-07
+        - gridcell
+        - gridcell:
+          - img: 
+      - row "Opening in a new tab Alva H. 3 2026-11-08 2026-11-10":
+        - gridcell "Opening in a new tab Alva H.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af437b0641a6600597b5db8
+            - text: Alva H.
+        - gridcell
+        - gridcell
+        - gridcell "3"
+        - gridcell "2026-11-08":
+          - generic: 2026-11-08
+        - gridcell "2026-11-10":
+          - generic: 2026-11-10
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab ajqjn64 M 25 2026-07-15 2026-11-10":
+        - gridcell "Opening in a new tab ajqjn64":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43826641a6600597b6410
+            - text: ajqjn64
+        - gridcell "M"
+        - gridcell
+        - gridcell "25"
+        - gridcell "2026-07-15":
+          - generic: 2026-07-15
+        - gridcell "2026-11-10":
+          - generic: 2026-11-10
+        - gridcell
+        - gridcell:
+          - img: 
+      - row "Opening in a new tab user 6af43775641a6600597b5a69 0":
+        - gridcell "Opening in a new tab user 6af43775641a6600597b5a69":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43775641a6600597b5a69
+            - text: user 6af43775641a6600597b5a69
+        - gridcell
+        - gridcell
+        - gridcell "0"
+        - gridcell
+        - gridcell
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab nisug19 P 31 2026-10-10 2026-11-10":
+        - gridcell "Opening in a new tab nisug19":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af4383b641a6600597b6510
+            - text: nisug19
+        - gridcell "P"
+        - gridcell
+        - gridcell "31"
+        - gridcell "2026-10-10":
+          - generic: 2026-10-10
+        - gridcell "2026-11-10":
+          - generic: 2026-11-10
+        - gridcell
+        - gridcell:
+          - img: 
+      - row "Opening in a new tab Kimberly F. M 45 2026-06-30 2026-11-09":
+        - gridcell "Opening in a new tab Kimberly F.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af437c6641a6600597b5ee0
+            - text: Kimberly F.
+        - gridcell "M"
+        - gridcell
+        - gridcell "45"
+        - gridcell "2026-06-30":
+          - generic: 2026-06-30
+        - gridcell "2026-11-09":
+          - generic: 2026-11-09
+        - gridcell
+        - gridcell:
+          - img: 
+      - row "Opening in a new tab Lesha B. F 20 2026-09-10 2026-11-10":
+        - gridcell "Opening in a new tab Lesha B.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af4384f641a6600597b663c
+            - text: Lesha B.
+        - gridcell "F"
+        - gridcell
+        - gridcell "20"
+        - gridcell "2026-09-10":
+          - generic: 2026-09-10
+        - gridcell "2026-11-10":
+          - generic: 2026-11-10
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab Rosalie W. 60 2026-06-26 2026-11-04":
+        - gridcell "Opening in a new tab Rosalie W.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43784641a6600597b5b08
+            - text: Rosalie W.
+        - gridcell
+        - gridcell
+        - gridcell "60"
+        - gridcell "2026-06-26":
+          - generic: 2026-06-26
+        - gridcell "2026-11-04":
+          - generic: 2026-11-04
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab zedio33 F 50 2026-06-27 2026-11-11":
+        - gridcell "Opening in a new tab zedio33":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af437f2641a6600597b6144
+            - text: zedio33
+        - gridcell "F"
+        - gridcell
+        - gridcell "50"
+        - gridcell "2026-06-27":
+          - generic: 2026-06-27
+        - gridcell "2026-11-11":
+          - generic: 2026-11-11
+        - gridcell
+        - gridcell:
+          - img: 
+      - row "Opening in a new tab user 6af43808641a6600597b62a5 0":
+        - gridcell "Opening in a new tab user 6af43808641a6600597b62a5":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43808641a6600597b62a5
+            - text: user 6af43808641a6600597b62a5
+        - gridcell
+        - gridcell
+        - gridcell "0"
+        - gridcell
+        - gridcell
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab user 6af4378a641a6600597b5ba5 0":
+        - gridcell "Opening in a new tab user 6af4378a641a6600597b5ba5":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af4378a641a6600597b5ba5
+            - text: user 6af4378a641a6600597b5ba5
+        - gridcell
+        - gridcell
+        - gridcell "0"
+        - gridcell
+        - gridcell
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab Marilu B. 29 2026-08-26 2026-11-06":
+        - gridcell "Opening in a new tab Marilu B.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43751641a6600597b5824
+            - text: Marilu B.
+        - gridcell
+        - gridcell
+        - gridcell "29"
+        - gridcell "2026-08-26":
+          - generic: 2026-08-26
+        - gridcell "2026-11-06":
+          - generic: 2026-11-06
+        - gridcell
+        - gridcell:
+          - img: 
+      - row "Opening in a new tab Stanley W. O 3 2026-10-07 2026-11-03":
+        - gridcell "Opening in a new tab Stanley W.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af437dc641a6600597b6028
+            - text: Stanley W.
+        - gridcell "O"
+        - gridcell
+        - gridcell "3"
+        - gridcell "2026-10-07":
+          - generic: 2026-10-07
+        - gridcell "2026-11-03":
+          - generic: 2026-11-03
+        - gridcell
+        - gridcell:
+          - img: 
+      - row "Opening in a new tab user 6af43791641a6600597b5bfd 0":
+        - gridcell "Opening in a new tab user 6af43791641a6600597b5bfd":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43791641a6600597b5bfd
+            - text: user 6af43791641a6600597b5bfd
+        - gridcell
+        - gridcell
+        - gridcell "0"
+        - gridcell
+        - gridcell
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab user 6af4378a641a6600597b5b9d 0":
+        - gridcell "Opening in a new tab user 6af4378a641a6600597b5b9d":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af4378a641a6600597b5b9d
+            - text: user 6af4378a641a6600597b5b9d
+        - gridcell
+        - gridcell
+        - gridcell "0"
+        - gridcell
+        - gridcell
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab Julee S. F 4 2026-10-11 2026-10-31":
+        - gridcell "Opening in a new tab Julee S.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af437b7641a6600597b5e18
+            - text: Julee S.
+        - gridcell "F"
+        - gridcell
+        - gridcell "4"
+        - gridcell "2026-10-11":
+          - generic: 2026-10-11
+        - gridcell "2026-10-31":
+          - generic: 2026-10-31
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab user 6af43784641a6600597b5b39 0":
+        - gridcell "Opening in a new tab user 6af43784641a6600597b5b39":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43784641a6600597b5b39
+            - text: user 6af43784641a6600597b5b39
+        - gridcell
+        - gridcell
+        - gridcell "0"
+        - gridcell
+        - gridcell
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab lynfs59 F 23 2026-08-27 2026-11-11":
+        - gridcell "Opening in a new tab lynfs59":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af437af641a6600597b5db0
+            - text: lynfs59
+        - gridcell "F"
+        - gridcell
+        - gridcell "23"
+        - gridcell "2026-08-27":
+          - generic: 2026-08-27
+        - gridcell "2026-11-11":
+          - generic: 2026-11-11
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab tjmju58 5 2026-10-08 2026-11-03":
+        - gridcell "Opening in a new tab tjmju58":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43784641a6600597b5b14
+            - text: tjmju58
+        - gridcell
+        - gridcell
+        - gridcell "5"
+        - gridcell "2026-10-08":
+          - generic: 2026-10-08
+        - gridcell "2026-11-03":
+          - generic: 2026-11-03
+        - gridcell
+        - gridcell:
+          - img: 
+      - row "Opening in a new tab user 6af43761641a6600597b5945 0":
+        - gridcell "Opening in a new tab user 6af43761641a6600597b5945":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43761641a6600597b5945
+            - text: user 6af43761641a6600597b5945
+        - gridcell
+        - gridcell
+        - gridcell "0"
+        - gridcell
+        - gridcell
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab Javier B. O 3 2026-09-29 2026-10-21":
+        - gridcell "Opening in a new tab Javier B.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43826641a6600597b640c
+            - text: Javier B.
+        - gridcell "O"
+        - gridcell
+        - gridcell "3"
+        - gridcell "2026-09-29":
+          - generic: 2026-09-29
+        - gridcell "2026-10-21":
+          - generic: 2026-10-21
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab Shane B. O 19 2026-08-14 2026-11-05":
+        - gridcell "Opening in a new tab Shane B.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af4379b641a6600597b5c88
+            - text: Shane B.
+        - gridcell "O"
+        - gridcell
+        - gridcell "19"
+        - gridcell "2026-08-14":
+          - generic: 2026-08-14
+        - gridcell "2026-11-05":
+          - generic: 2026-11-05
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab user 6af43759641a6600597b58e9 0":
+        - gridcell "Opening in a new tab user 6af43759641a6600597b58e9":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43759641a6600597b58e9
+            - text: user 6af43759641a6600597b58e9
+        - gridcell
+        - gridcell
+        - gridcell "0"
+        - gridcell
+        - gridcell
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab Ria P. M 27 2026-07-13 2026-11-07":
+        - gridcell "Opening in a new tab Ria P.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af4384f641a6600597b664c
+            - text: Ria P.
+        - gridcell "M"
+        - gridcell
+        - gridcell "27"
+        - gridcell "2026-07-13":
+          - generic: 2026-07-13
+        - gridcell "2026-11-07":
+          - generic: 2026-11-07
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab Ceola R. P 54 2026-07-01 2026-11-09":
+        - gridcell "Opening in a new tab Ceola R.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af437e9641a6600597b60c0
+            - text: Ceola R.
+        - gridcell "P"
+        - gridcell
+        - gridcell "54"
+        - gridcell "2026-07-01":
+          - generic: 2026-07-01
+        - gridcell "2026-11-09":
+          - generic: 2026-11-09
+        - gridcell
+        - gridcell:
+          - img: 
+      - row "Opening in a new tab braze-6c00acd0-8fc6-468e-b2e9-13e5c691c9de 47 2026-06-22 2026-11-08":
+        - gridcell "Opening in a new tab braze-6c00acd0-8fc6-468e-b2e9-13e5c691c9de":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43826641a6600597b63f0
+            - text: braze-6c00acd0-8fc6-468e-b2e9-13e5c691c9de
+        - gridcell
+        - gridcell
+        - gridcell "47"
+        - gridcell "2026-06-22":
+          - generic: 2026-06-22
+        - gridcell "2026-11-08":
+          - generic: 2026-11-08
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab mjkok96 O 5 2026-10-02 2026-11-02":
+        - gridcell "Opening in a new tab mjkok96":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af437db641a6600597b6010
+            - text: mjkok96
+        - gridcell "O"
+        - gridcell
+        - gridcell "5"
+        - gridcell "2026-10-02":
+          - generic: 2026-10-02
+        - gridcell "2026-11-02":
+          - generic: 2026-11-02
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab Adan L. 19 2026-07-26 2026-11-09":
+        - gridcell "Opening in a new tab Adan L.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43848641a6600597b65f8
+            - text: Adan L.
+        - gridcell
+        - gridcell
+        - gridcell "19"
+        - gridcell "2026-07-26":
+          - generic: 2026-07-26
+        - gridcell "2026-11-09":
+          - generic: 2026-11-09
+        - gridcell
+        - gridcell:
+          - img: 
+      - row "Opening in a new tab user 6af43768641a6600597b59a9 0":
+        - gridcell "Opening in a new tab user 6af43768641a6600597b59a9":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af43768641a6600597b59a9
+            - text: user 6af43768641a6600597b59a9
+        - gridcell
+        - gridcell
+        - gridcell "0"
+        - gridcell
+        - gridcell
+        - gridcell
+        - gridcell
+      - row "Opening in a new tab Rod D. 29 2026-07-13 2026-11-09":
+        - gridcell "Opening in a new tab Rod D.":
+          - generic: Opening in a new tab
+          - link "Opening in a new tab":
+            - /url: /users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af437bf641a6600597b5e74
+            - text: Rod D.
+        - gridcell
+        - gridcell
+        - gridcell "29"
+        - gridcell "2026-07-13":
+          - generic: 2026-07-13
+        - gridcell "2026-11-09":
+          - generic: 2026-11-09
+        - gridcell
+        - gridcell:
+          - img: 

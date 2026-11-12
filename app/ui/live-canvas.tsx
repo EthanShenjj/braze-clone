@@ -11,6 +11,10 @@ import { browserCanvasMode, getBrowserCanvas, saveBrowserGraph } from "@/lib/can
 import styles from "./flow-canvas.module.css";
 import CanvasSmsEditor from "./canvas-sms-editor";
 import CanvasWhatsAppEditor from "./canvas-whatsapp-editor";
+import CanvasStepEditor from './canvas-step-editor';
+import CanvasChannelEditor from './canvas-channel-editor';
+import CanvasBuildToolbar from './canvas-build-toolbar';
+import {removeCanvasStep,connectCanvasRoute,canvasMaxRoutes,canvasPaths,canvasStepDefaults,canvasStepSummary} from '@/lib/canvas-step-model';
 
 type Drag = { id: string; startX: number; startY: number; x: number; y: number; moved: boolean };
 type ComponentDrag = { kind: CanvasNodeKind; startX: number; startY: number };
@@ -25,18 +29,24 @@ const componentByKind = new Map(componentGroups.flatMap(group => group.items).ma
 
 function arrangeLegacyGraph(graph: CanvasGraph): CanvasGraph {
   const steps = graph.nodes.filter(node => node.kind !== "entry");
-  if (!steps.length || !steps.every(node => node.y < 600)) return graph;
-  return { ...graph, nodes: graph.nodes.map(node => node.kind === "entry" ? node : { ...node, x: 610, y: 725 + steps.indexOf(node) * 170 }) };
+  if (!steps.length || !steps.every(node => initialCanvasGraph.nodes.some(seed=>seed.id===node.id&&seed.x===node.x&&seed.y===node.y))) return graph;
+  return { ...graph, nodes: graph.nodes.map(node => node.kind === "entry" ? node : { ...node, x: 650, y: 725 + steps.indexOf(node) * 170 }) };
 }
 
-export default function LiveCanvas({ canvasId, canvasName, onBack, locale: localeValue = "en", notify, embedded = false, wizard = defaultCanvasWizard, saveRef, onSaved }: { canvasId: string; canvasName: string; onBack: () => void; locale?: Locale; notify: (message: string) => void; embedded?: boolean; wizard?: CanvasWizardConfig; saveRef?: React.MutableRefObject<(() => Promise<boolean>) | null>; onSaved?: (graph: CanvasGraph, updatedAt: string) => void }) {
+type LiveCanvasProps={canvasId:string;canvasName:string;onBack:()=>void;locale?:Locale;notify:(message:string)=>void;embedded?:boolean;wizard?:CanvasWizardConfig;saveRef?:React.MutableRefObject<(()=>Promise<boolean>)|null>;onSaved?:(graph:CanvasGraph,updatedAt:string)=>void;revision?:string|null;detailsExpanded?:boolean;onToggleDetails?:()=>void;onSave?:()=>void;onContinue?:()=>void;changeBrief?:(value:CanvasWizardConfig['brief'])=>void;parentSaving?:boolean};
+export default function LiveCanvas({canvasId,canvasName,onBack,locale:localeValue="en",notify,embedded=false,wizard=defaultCanvasWizard,saveRef,onSaved,revision,detailsExpanded=false,onToggleDetails,onSave,onContinue,changeBrief,parentSaving=false}:LiveCanvasProps) {
   const locale = normalizeLocale(localeValue);
   const [history, setHistory] = useState<CanvasGraph[]>([initialCanvasGraph]);
   const [cursor, setCursor] = useState(0);
   const [updatedAt, setUpdatedAt] = useState<string | null>(null);
+  // Wizard metadata and the graph share one persisted revision. A metadata save
+  // must advance the builder's optimistic lock without resetting unsaved nodes.
+  const workspaceId=new URLSearchParams(typeof window==='undefined'?'':window.location.search).get('workspace')||new URLSearchParams(typeof window==='undefined'?'':window.location.search).get('workspaceId')||'local';
+  useEffect(() => { if(revision) setUpdatedAt(revision); }, [revision]);
   const [savedGraph, setSavedGraph] = useState(() => JSON.stringify(initialCanvasGraph));
   const [selected, setSelected] = useState("email");
   const [zoom, setZoom] = useState(1);
+  const [simple,setSimple]=useState(false);
   const [linkFrom, setLinkFrom] = useState<string | null>(null);
   const [drag, setDrag] = useState<Drag | null>(null);
   const dragRef = useRef<Drag | null>(null);
@@ -53,12 +63,18 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
   const [error, setError] = useState("");
   const [browserDraft, setBrowserDraft] = useState(false);
   const [adding, setAdding] = useState(false);
+  const [pendingKind,setPendingKind]=useState<CanvasNodeKind|null>(null);
+  const [placement,setPlacement]=useState({x:650,y:725});
   const [componentsOpen, setComponentsOpen] = useState(true);
   const [entryOpen, setEntryOpen] = useState(true);
   const [expanded, setExpanded] = useState(false);
   const [variantMenu, setVariantMenu] = useState<string | null>(null);
   const [inspectorOpen, setInspectorOpen] = useState(false);
   const [messageEditorId, setMessageEditorId] = useState<string | null>(null);
+  const [stepEditorId,setStepEditorId]=useState<string|null>(null);
+  const [stepMenuId,setStepMenuId]=useState<string|null>(null);
+  const linkRouteIndex=useRef<number|undefined>(undefined);
+  const [versionsOpen,setVersionsOpen]=useState(false),[versions,setVersions]=useState<Array<{id:string;savedAt:string}>>([]);
   const graph = history[cursor];
   const hasUnsavedChanges = JSON.stringify(graph) !== savedGraph;
   const router = useRouter();
@@ -77,7 +93,7 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
     if (local) {
       setBrowserDraft(true);
       const arranged = arrangeLegacyGraph(local.graph);
-      setHistory([arranged]); setCursor(0); setSavedGraph(JSON.stringify(arranged)); setAdding(arranged.nodes.length === 1);
+      setHistory([arranged]); setCursor(0); setSavedGraph(JSON.stringify(arranged)); setAdding(false);
       setSelected(local.graph.nodes[0]?.id ?? ""); setUpdatedAt(local.canvas.updatedAt);
       return () => controller.abort();
     }
@@ -86,7 +102,7 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
       if (isCanvasGraph(result.graph)) {
         const arranged = arrangeLegacyGraph(result.graph);
         setHistory([arranged]); setCursor(0);
-        setSavedGraph(JSON.stringify(arranged)); setAdding(arranged.nodes.length === 1);
+        setSavedGraph(JSON.stringify(arranged)); setAdding(false);
         setSelected(result.graph.nodes[0]?.id ?? "");
       }
       setUpdatedAt(result.updatedAt ?? null);
@@ -98,13 +114,13 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
   }, [canvasId]);
   useEffect(() => {
     const controller = new AbortController();
-    void fetch("/api/subscription-groups?status=Active", { signal: controller.signal }).then(response => response.json()).then(result => setSubscriptionGroups(result.data ?? [])).catch(() => {});
+    void fetch(`/api/subscription-groups?status=Active&workspaceId=${encodeURIComponent(workspaceId)}`, { signal: controller.signal }).then(response => response.json()).then(result => setSubscriptionGroups(result.data ?? [])).catch(() => {});
     return () => controller.abort();
-  }, []);
+  }, [workspaceId]);
 
   useEffect(() => {
     if (!adding) return;
-    const cancel = (event: KeyboardEvent) => { if (event.key === "Escape") { setAdding(false); setLinkFrom(null); } };
+    const cancel = (event: KeyboardEvent) => { if (event.key === "Escape") { setAdding(false);setPendingKind(null); setLinkFrom(null);linkRouteIndex.current=undefined; } };
     window.addEventListener("keydown", cancel);
     return () => window.removeEventListener("keydown", cancel);
   }, [adding]);
@@ -115,10 +131,7 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
     stage.scrollLeft = Math.max(0, (1500 * zoom - stage.clientWidth) / 2);
   }, [zoom, componentsOpen, inspectorOpen, expanded]);
 
-  useEffect(() => {
-    if (!embedded) return;
-    requestAnimationFrame(() => editorRef.current?.scrollIntoView({ block: "start" }));
-  }, [embedded]);
+
 
   const refreshRuns = async () => {
     if (browserDraft) return;
@@ -136,14 +149,13 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
   };
   const add = (kind: CanvasNodeKind, position?: { x: number; y: number }) => {
     const names: Record<CanvasNodeKind, string> = { entry: "Audience entry", delay: "Delay", message: "Message", branch: "Decision Split", update: "User Update", agent: "Agent Step", optimizer: "Content Optimizer", audience_paths: "Audience Paths", action_paths: "Action Paths", experiment_paths: "Experiment Paths", destination: "Send to Destination", context: "Context", feature_flag: "Feature Flag", audience_sync: "Audience Sync" };
-    const configs: Partial<Record<CanvasNodeKind, CanvasNode["config"]>> = { delay: { durationHours: 24 }, message: { channel: "", message: "" }, branch: { attribute: "country", value: "" }, update: { attribute: "plan", value: "" } };
     const id = `${kind}_${crypto.randomUUID().slice(0, 8)}`;
-    const previous = graph.nodes.find(node => node.id === linkFrom) ?? graph.nodes.at(-1);
+    const previous = graph.nodes.find(node => node.id === linkFrom);
     const nextY = Math.max(725, ...graph.nodes.filter(node => node.kind !== "entry").map(node => node.y + 170));
-    const nextNode: CanvasNode = { id, label: names[kind], kind, x: position?.x ?? 610, y: position ? Math.max(position.y, nextY) : nextY, config: configs[kind] };
-    const canConnect = previous && !graph.edges.some(([from]) => from === previous.id) || previous?.kind === "branch" && graph.edges.filter(([from]) => from === previous.id).length < 2;
-    commit({ ...graph, nodes: [...graph.nodes, nextNode], edges: canConnect && previous ? [...graph.edges, [previous.id, id]] : graph.edges });
-    setSelected(id); setInspectorOpen(kind !== "message"); if (kind === "message") setMessageEditorId(id); setAdding(false); setLinkFrom(null);
+    const nextNode: CanvasNode = { id, label: names[kind], kind, x: position?.x ?? 650, y: position ? Math.max(position.y,725) : nextY, config: kind==='message'?{channel:'',message:''}:canvasStepDefaults(kind) };
+    const canConnect = previous && graph.edges.filter(([from])=>from===previous.id).length<canvasMaxRoutes(previous);
+    const next={...graph,nodes:[...graph.nodes,nextNode]};commit(previous&&(canConnect||linkRouteIndex.current!==undefined)?connectCanvasRoute(next,previous.id,id,linkRouteIndex.current):next);linkRouteIndex.current=undefined;
+    setSelected(id); setInspectorOpen(false); setPendingKind(null); setAdding(false); setLinkFrom(null);linkRouteIndex.current=undefined;
     requestAnimationFrame(() => { stageScrollRef.current?.scrollTo({ top: Math.max(0, nextNode.y * zoom - 240), behavior: "smooth" }); });
   };
   const componentPointerUp = (event: React.PointerEvent<HTMLButtonElement>) => {
@@ -156,20 +168,22 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
     if (!stage) return;
     const bounds = stage.getBoundingClientRect();
     if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) return;
-    add(current.kind, { x: Math.max(20, Math.round((event.clientX - bounds.left + stage.scrollLeft) / zoom - 140)), y: Math.max(725, Math.round((event.clientY - bounds.top + stage.scrollTop) / zoom - 50)) });
+    add(current.kind, { x: Math.max(20, Math.round((event.clientX - bounds.left + stage.scrollLeft) / zoom - 100)), y: Math.max(725, Math.round((event.clientY - bounds.top + stage.scrollTop) / zoom - 50)) });
   };
-  const copy = () => { const node = graph.nodes.find(item => item.id === selected); if (!node || node.kind === "entry") return; const id = `${node.kind}_${crypto.randomUUID().slice(0, 8)}`; commit({ ...graph, nodes: [...graph.nodes, { ...node, id, label: `${node.label} copy`, x: node.x + 40, y: node.y + 45, config: { ...node.config, linkedCampaignId: undefined } }] }); setSelected(id); };
+  const copy = () => { const node = graph.nodes.find(item => item.id === selected); if (!node || node.kind === "entry") return; const id = `${node.kind}_${crypto.randomUUID().slice(0, 8)}`; commit({ ...graph, nodes: [...graph.nodes, { ...node, id, label: `${node.label} copy`, x: node.x + 40, y: node.y + 45, config: { ...structuredClone(node.config), linkedCampaignId: undefined,branchTargets:undefined,...(canvasPaths(node).length?{paths:canvasPaths(node).map(path=>({...path,nextNodeId:undefined}))}:{}) } }] }); setSelected(id); };
   const swapBranchRoutes = (id: string) => { const positions = graph.edges.flatMap((edge, index) => edge[0] === id ? [index] : []); if (positions.length !== 2) return; const edges = [...graph.edges]; [edges[positions[0]], edges[positions[1]]] = [edges[positions[1]], edges[positions[0]]]; commit({ ...graph, edges }); };
-  const remove = () => { commit({ nodes: graph.nodes.filter(node => node.id !== selected), edges: graph.edges.filter(edge => !edge.includes(selected)) }); setSelected(""); setLinkFrom(null); };
+  const remove = () => { commit(removeCanvasStep(graph,selected)); setSelected(""); setLinkFrom(null); };
   const selectNode = (id: string) => {
+    if(pendingKind)return;
     if (suppressClick.current) { suppressClick.current = false; return; }
     if (linkFrom && linkFrom !== id) {
-      if (!graph.edges.some(([from, to]) => from === linkFrom && to === id)) commit({ ...graph, edges: [...graph.edges, [linkFrom, id]] });
+      commit(connectCanvasRoute(graph,linkFrom,id,linkRouteIndex.current));linkRouteIndex.current=undefined;
       setLinkFrom(null);
     }
     setSelected(id);
     const node = graph.nodes.find(item => item.id === id);
-    if (node?.kind === "message" && !node.config?.linkedCampaignId && (!node.config?.channel || ["sms", "whatsapp"].includes(node.config.channel))) { setMessageEditorId(id); setInspectorOpen(false); }
+    if (node?.kind === "message" && !node.config?.linkedCampaignId && true) { setMessageEditorId(id); setInspectorOpen(false); }
+    else if(node?.kind!=='message'){setStepEditorId(id);setInspectorOpen(false);}
     else setInspectorOpen(true);
   };
   const pointerDown = (id: string, event: React.PointerEvent<HTMLButtonElement>) => {
@@ -239,14 +253,14 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
         name: `Canvas · ${node.label}`,
         channel: node.config?.channel === "push" ? "push" : node.config?.channel === "sms" ? "sms" : node.config?.channel === "iam" ? "iam" : node.config?.channel === "whatsapp" ? "whatsapp" : "email",
         status: "Draft", schedule: "One time", audience: "All Users", conversion: "Start Session",
-        subject: node.config?.subject ?? node.label, body: node.config?.message ?? "", config: { ...node.config },
+        subject: node.config?.subject ?? node.label, body: node.config?.message ?? "", config: { ...node.config, workspaceId:new URLSearchParams(window.location.search).get("workspace")||new URLSearchParams(window.location.search).get("workspaceId")||"local" },
       }) });
       if (!response.ok) { setError("Could not create the linked campaign draft."); return; }
     }
     const nextGraph = { ...graph, nodes: graph.nodes.map(item => item.id === node.id ? { ...item, config: { ...item.config, linkedCampaignId: campaignId } } : item) };
     if (!await save(nextGraph)) return;
     if (!node.config?.linkedCampaignId) commit(nextGraph);
-    router.push(`/engagement/campaigns/${campaignId}?step=compose&locale=${locale}`);
+    const params=new URLSearchParams(window.location.search);params.set("step","compose");params.set("locale",locale);router.push(`/engagement/campaigns/${campaignId}?${params}`);
   };
 
   const advanceDemo = async () => {
@@ -263,6 +277,9 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
   const visible: CanvasGraph = drag?.moved ? { ...graph, nodes: graph.nodes.map(node => node.id === drag.id ? { ...node, x: drag.x, y: drag.y } : node) } : graph;
   const selectedNode = graph.nodes.find(node => node.id === selected);
   const messageEditorNode = graph.nodes.find(node => node.id === messageEditorId);
+  const stepEditorNode=graph.nodes.find(node=>node.id===stepEditorId);
+  useEffect(()=>{if(!versionsOpen||browserDraft)return;const controller=new AbortController();void fetch(`/api/canvases/${canvasId}/versions?workspaceId=${encodeURIComponent(new URLSearchParams(window.location.search).get('workspace')||new URLSearchParams(window.location.search).get('workspaceId')||'local')}`,{signal:controller.signal}).then(response=>response.ok?response.json():Promise.reject()).then(value=>setVersions(value.data??[])).catch(()=>{if(!controller.signal.aborted)setError('Could not load Canvas versions.');});return()=>controller.abort();},[versionsOpen,canvasId,browserDraft,updatedAt]);
+  const restoreVersion=async(versionId:string)=>{if(hasUnsavedChanges&&!window.confirm('Discard unsaved changes and restore this version?'))return;setWorking(true);try{const response=await fetch(`/api/canvases/${canvasId}/versions`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({versionId,updatedAt,workspaceId})}),value=await response.json();if(!response.ok)throw new Error(value.error);setHistory([value.graph]);setCursor(0);setUpdatedAt(value.updatedAt);setSavedGraph(JSON.stringify(value.graph));onSaved?.(value.graph,value.updatedAt);setVersionsOpen(false);notify('Canvas version restored.');}catch(cause){setError(cause instanceof Error?cause.message:'Could not restore this version.');}finally{setWorking(false);}};
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get("smsNode");
     if (id && graph.nodes.some(node => node.id === id && node.config?.channel === "sms")) setMessageEditorId(id);
@@ -288,14 +305,16 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
   };
   const cleanUp = () => {
     const ordered = graph.nodes.filter(node => node.kind !== "entry");
-    commit({ ...graph, nodes: graph.nodes.map(node => node.kind === "entry" ? node : { ...node, x: 610, y: 725 + ordered.indexOf(node) * 170 }) });
+    commit({ ...graph, nodes: graph.nodes.map(node => node.kind === "entry" ? node : { ...node, x: 650, y: 725 + ordered.indexOf(node) * 170 }) });
     notify("Canvas steps arranged.");
   };
   const scheduleSummary = wizard.entry.type === "scheduled" ? wizard.entry.timing === "immediate" ? "As soon as Canvas is launched" : wizard.entry.frequency ? `${wizard.entry.frequency} · ${wizard.entry.startDate || "date not set"}` : "No schedule selected." : wizard.entry.type === "action" ? `${wizard.entry.triggers.length} action trigger${wizard.entry.triggers.length === 1 ? "" : "s"}` : "API-triggered entry";
   const audienceSummary = wizard.audience.segmentIds.length || wizard.audience.filters.length ? `${wizard.audience.segmentIds.length} segment${wizard.audience.segmentIds.length === 1 ? "" : "s"}, ${wizard.audience.filters.length} filter${wizard.audience.filters.length === 1 ? "" : "s"}` : "All eligible users";
   const exitSummary = wizard.audience.exceptions.length || wizard.audience.exitSegmentIds.length || wizard.audience.exitFilters.length ? `${wizard.audience.exceptions.length} exception${wizard.audience.exceptions.length === 1 ? "" : "s"}, ${wizard.audience.exitSegmentIds.length} segment${wizard.audience.exitSegmentIds.length === 1 ? "" : "s"}` : "No exit criteria selected.";
 
-  return <section ref={editorRef} className={`${styles.editor} ${embedded ? styles.embedded : ""} ${expanded ? styles.expanded : ""}`} aria-label="Canvas flow builder">
+  useEffect(()=>{const sync=()=>setExpanded(Boolean(document.fullscreenElement));document.addEventListener('fullscreenchange',sync);return()=>document.removeEventListener('fullscreenchange',sync);},[]);
+  const fullscreen=()=>{if(document.fullscreenElement){void document.exitFullscreen().catch(()=>setExpanded(false));setExpanded(false);}else if(editorRef.current?.requestFullscreen){void editorRef.current.requestFullscreen().then(()=>setExpanded(true)).catch(()=>setExpanded(value=>!value));}else setExpanded(value=>!value);};
+  return <section data-details={detailsExpanded} data-simple={simple} ref={editorRef} className={`${styles.editor} ${embedded ? styles.embedded : ""} ${expanded ? styles.expanded : ""}`} aria-label="Canvas flow builder">
     <div className={styles.toolbar}>
       <div><strong>{embedded ? "Build Canvas" : canvasName}</strong><span>Drag, drop, and connect components to build your user journey.</span></div>
       <div className={styles.toolbarActions}>
@@ -310,13 +329,15 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
     <div className={styles.surface}>
       {componentsOpen ? <aside className={styles.components} aria-label="Components">
         <div className={styles.componentsHead}><div><strong>Components</strong><p>Select components to build your user journey.</p></div><button aria-label="Collapse components" onClick={() => setComponentsOpen(false)}><ChevronLeft size={21}/></button></div>
-        <div className={styles.componentScroll}>{componentGroups.map(group => <div className={styles.group} key={group.title}><h3>{group.title}</h3>{group.items.map(item => { const Icon = item.icon; return <button className={styles.component} key={item.kind} onPointerDown={event => { if (event.button !== 0) return; componentDragRef.current = { kind: item.kind, startX: event.clientX, startY: event.clientY }; event.currentTarget.setPointerCapture(event.pointerId); }} onPointerUp={componentPointerUp} onPointerCancel={() => { componentDragRef.current = null; }} onClick={() => { if (suppressComponentClick.current) { suppressComponentClick.current = false; return; } add(item.kind); }}><span className={`${styles.componentIcon} ${styles[item.tone]}`}><Icon size={19}/></span><span>{item.label}</span></button>; })}</div>)}</div>
+        <div className={styles.componentScroll}>{componentGroups.map(group => <div className={styles.group} key={group.title}><h3>{group.title}</h3>{group.items.map(item => { const Icon = item.icon; return <button className={styles.component} key={item.kind} onPointerDown={event => { if (event.button !== 0) return; componentDragRef.current = { kind: item.kind, startX: event.clientX, startY: event.clientY }; event.currentTarget.setPointerCapture(event.pointerId); }} onPointerUp={componentPointerUp} onPointerCancel={() => { componentDragRef.current = null; }} onClick={() => { if (suppressComponentClick.current) { suppressComponentClick.current = false; return; } setPendingKind(item.kind);setAdding(true); }}><span className={`${styles.componentIcon} ${styles[item.tone]}`}><Icon size={19}/></span><span>{item.label}</span></button>; })}</div>)}</div>
         <button className={styles.cleanUp} onClick={cleanUp}><WandSparkles size={21}/> Clean Up Canvas</button>
       </aside> : <button className={styles.openComponents} onClick={() => setComponentsOpen(true)}>Components <ChevronDown size={16}/></button>}
       <div className={styles.stage}>
-        <div className={styles.stageTools}><button onClick={() => setExpanded(value => !value)}>{expanded ? "Collapse" : "Expand"} <ChevronDown size={17}/></button></div>
-        <div className={styles.zoom}><button aria-label="Zoom out" onClick={() => setZoom(value => Math.max(.6, Math.round((value - .1) * 10) / 10))}>−</button><span>{Math.round(zoom * 100)}%</span><button aria-label="Zoom in" onClick={() => setZoom(value => Math.min(1.5, Math.round((value + .1) * 10) / 10))}>+</button></div>
-        <div className={styles.stageScroll} ref={stageScrollRef}><div className={styles.world} style={{ height: worldHeight, transform: `scale(${zoom})` }}>
+        <button className={styles.versionTrigger} disabled={browserDraft} onClick={()=>setVersionsOpen(!versionsOpen)} aria-expanded={versionsOpen}>Version history</button>{versionsOpen&&<div className={styles.versionsPanel}><strong>Saved Canvas versions</strong>{versions.length?versions.map(version=><div key={version.id}><time>{new Date(version.savedAt).toLocaleString()}</time><button disabled={working} onClick={()=>void restoreVersion(version.id)}>Restore</button></div>):<p>No earlier graph versions.</p>}</div>}
+        <div className={styles.stageTools}><button onClick={embedded&&onToggleDetails?onToggleDetails:()=>setExpanded(value=>!value)}>{embedded?(detailsExpanded?"Collapse":"Expand"):expanded?"Collapse":"Expand"} <ChevronDown size={17}/></button></div>
+        {!embedded&&<div className={styles.zoom}><button aria-label="Zoom out" onClick={() => setZoom(value => Math.max(.6, Math.round((value - .1) * 10) / 10))}>−</button><span>{Math.round(zoom * 100)}%</span><button aria-label="Zoom in" onClick={() => setZoom(value => Math.min(1.5, Math.round((value + .1) * 10) / 10))}>+</button></div>}
+        <div className={styles.stageScroll} ref={stageScrollRef}><div className={`${styles.world} ${pendingKind?styles.placing:''}`} style={{ height: worldHeight, transform: `scale(${zoom})` }} onPointerMove={event=>{if(!pendingKind)return;const rect=event.currentTarget.getBoundingClientRect();setPlacement({x:Math.max(20,Math.round(((event.clientX-rect.left)/zoom-650)/240)*240+650),y:Math.max(725,Math.round(((event.clientY-rect.top)/zoom-725)/170)*170+725)});}} onClick={event=>{if(pendingKind&&event.target===event.currentTarget){const rect=event.currentTarget.getBoundingClientRect();add(pendingKind,{x:Math.max(20,Math.round(((event.clientX-rect.left)/zoom-650)/240)*240+650),y:Math.max(725,Math.round(((event.clientY-rect.top)/zoom-725)/170)*170+725)});}}}>
+          {pendingKind&&<div className={styles.placementPreview} style={{left:placement.x,top:placement.y}}>{componentByKind.get(pendingKind)?.label}</div>}
           <div className={`${styles.entryCard} ${entryOpen ? "" : styles.entryCollapsed}`}>
             <button className={styles.entryHeader} onClick={() => setEntryOpen(value => !value)}>Entry Rules {entryOpen ? <ChevronUp size={20}/> : <ChevronDown size={20}/>}</button>
             {entryOpen && <div className={styles.entryBody}>
@@ -334,8 +355,8 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
             </div>)}
           </div>
           {stepNodes.length === 0 && <button className={styles.firstAddStep} onClick={() => { setLinkFrom(graph.nodes.find(node => node.kind === "entry")?.id ?? null); setAdding(true); }}><Plus size={19}/> Add Step</button>}
-          <svg className={styles.edges} width="1500" height={worldHeight} aria-hidden="true"><line x1="750" y1={entryOpen ? 625 : 297} x2="750" y2={stepNodes[0]?.y ?? 700}/>{visible.edges.filter(([from]) => from !== "entry").map(([from, to]) => { const start = visible.nodes.find(node => node.id === from); const end = visible.nodes.find(node => node.id === to); const index = start?.kind === "branch" ? visible.edges.filter(edge => edge[0] === from).findIndex(edge => edge[1] === to) : -1; return start && end ? <g key={`${from}-${to}`}><line x1={start.x + 140} y1={start.y + 100} x2={end.x + 140} y2={end.y}/>{index >= 0 && <text x={(start.x + end.x) / 2 + 140} y={(start.y + end.y + 100) / 2 - 8}>{index === 0 ? "Yes" : "No"}</text>}</g> : null; })}</svg>
-          {stepNodes.map(node => { const component = componentByKind.get(node.kind); const Icon = component?.icon ?? Mail; const outgoing = graph.edges.filter(([from]) => from === node.id).length; return <div className={styles.nodeWrap} style={{ left: node.x, top: node.y }} key={node.id}><button className={`${styles.flowNode} ${selected === node.id && inspectorOpen ? styles.nodeSelected : ""} ${linkFrom === node.id ? styles.nodeLinkSource : ""}`} onPointerDown={event => pointerDown(node.id, event)} onPointerMove={pointerMove} onPointerUp={pointerUp} onPointerCancel={pointerUp} onClick={() => selectNode(node.id)}><span className={`${styles.nodeIcon} ${styles[component?.tone ?? "green"]}`}><Icon size={20}/></span><span><small>{component?.label ?? node.kind}</small><strong>{node.label}</strong></span><Settings2 size={17}/></button><button className={styles.nodeSettings} aria-label={`Step actions for ${node.label}`} onClick={() => { setSelected(node.id); setInspectorOpen(true); setMessageEditorId(null); }}><Settings2 size={17}/></button>{outgoing < (node.kind === "branch" ? 2 : 1) && <button className={styles.nodeAddStep} aria-label={`Add step after ${node.label}`} onClick={() => { setSelected(node.id); setLinkFrom(node.id); setAdding(true); setInspectorOpen(false); }}><Plus size={17}/></button>}</div>; })}
+          <svg className={styles.edges} width="1500" height={worldHeight} aria-hidden="true"><line x1="750" y1={entryOpen ? 625 : 297} x2={stepNodes[0]?.x+100||750} y2={stepNodes[0]?.y ?? 700}/>{visible.edges.filter(([from]) => from !== "entry").map(([from, to]) => { const start = visible.nodes.find(node => node.id === from); const end = visible.nodes.find(node => node.id === to); const index = start?.kind === "branch" ? visible.edges.filter(edge => edge[0] === from).findIndex(edge => edge[1] === to) : -1; return start && end ? <g key={`${from}-${to}`}><line x1={start.x + 100} y1={start.y + (simple?62:100)} x2={end.x + 100} y2={end.y}/>{index >= 0 && <text x={(start.x + end.x) / 2 + 100} y={(start.y + end.y + 100) / 2 - 8}>{index === 0 ? "Yes" : "No"}</text>}</g> : null; })}</svg>
+          {stepNodes.map(node => { const component = componentByKind.get(node.kind); const Icon = component?.icon ?? Mail; const outgoing = graph.edges.filter(([from]) => from === node.id).length; return <div className={styles.nodeWrap} style={{ left: node.x, top: node.y }} key={node.id}><button className={`${styles.flowNode} ${selected === node.id && inspectorOpen ? styles.nodeSelected : ""} ${linkFrom === node.id ? styles.nodeLinkSource : ""}`} onPointerDown={event => pointerDown(node.id, event)} onPointerMove={pointerMove} onPointerUp={pointerUp} onPointerCancel={pointerUp} onClick={() => selectNode(node.id)}><span className={`${styles.nodeIcon} ${styles[component?.tone ?? "green"]}`}><Icon size={20}/></span><span><small>{component?.label ?? node.kind}</small><strong>{node.label}</strong>{canvasStepSummary(node)&&<em className={styles.stepSummary}>{canvasStepSummary(node)}</em>}</span><Settings2 size={17}/></button><button className={styles.nodeSettings} aria-label={`Step actions for ${node.label}`} onClick={()=>{setSelected(node.id);setStepMenuId(stepMenuId===node.id?null:node.id);}}><Settings2 size={17}/></button>{stepMenuId===node.id&&<div className={styles.stepMenu}><button onClick={()=>{setStepMenuId(null);selectNode(node.id);}}>Edit</button><button onClick={()=>{copy();setStepMenuId(null);}}>Copy step</button><button onClick={()=>{remove();setStepMenuId(null);}}>Delete step</button></div>}{canvasMaxRoutes(node)>1&&<div className={styles.pathPorts}>{(node.kind==='branch'?[{id:'yes',name:'Yes'},{id:'no',name:'No'}]:canvasPaths(node)).map((path,index)=><button key={path.id} aria-label={`Connect ${path.name} from ${node.label}`} onClick={()=>{setLinkFrom(node.id);linkRouteIndex.current=index;setAdding(true);setInspectorOpen(false);}}>{path.name}<Plus size={13}/></button>)}</div>}{outgoing < canvasMaxRoutes(node) && canvasMaxRoutes(node)===1 && <button className={styles.nodeAddStep} aria-label={`Add step after ${node.label}`} onClick={() => { setSelected(node.id); setLinkFrom(node.id); setAdding(true); setInspectorOpen(false); }}><Plus size={17}/></button>}</div>; })}
         </div></div>
         {linkFrom && <div className={styles.connectHint}>Select a destination step or choose a component to add.</div>}
       </div>
@@ -353,7 +374,9 @@ export default function LiveCanvas({ canvasId, canvasName, onBack, locale: local
         </div>
       </aside>}
     </div>
-    {messageEditorNode?.config?.channel === "whatsapp" ? <CanvasWhatsAppEditor key={messageEditorNode.id} node={messageEditorNode} canvasId={canvasId} testAvailable={!browserDraft} onOtherChannel={(channel, config) => { changeConfig(messageEditorNode.id, { ...config, channel, subscriptionGroupId: undefined }); }} connected={graph.edges.some(([, to]) => to === messageEditorNode.id)} onDone={config => { changeConfig(messageEditorNode.id, config); setMessageEditorId(null); }}/> : messageEditorNode && <CanvasSmsEditor key={messageEditorNode.id} node={messageEditorNode} canvasId={canvasId} groups={subscriptionGroups} testAvailable={!browserDraft} connected={graph.edges.some(([, to]) => to === messageEditorNode.id)} onDone={config => { changeConfig(messageEditorNode.id, config); setMessageEditorId(null); }} onOtherChannel={channel => { changeConfig(messageEditorNode.id, { channel, subscriptionGroupId: undefined }); if (channel !== "whatsapp") { setMessageEditorId(null); setInspectorOpen(true); } }}/> }
-    {adding && <div className={styles.addBar}><button onClick={() => { setAdding(false); setLinkFrom(null); }}>Cancel Add Step</button><span>or Press <kbd>Esc</kbd></span></div>}
+    {stepEditorNode?.kind==='optimizer'?<CanvasChannelEditor key={stepEditorNode.id} node={stepEditorNode} canvasId={canvasId} locale={locale} workspaceId={workspaceId} quietEnabled={wizard.send.quietEnabled} connected={graph.edges.some(([,to])=>to===stepEditorNode.id)} onDone={(config,label)=>{changeNode(stepEditorNode.id,{config,label});setStepEditorId(null);}} onChannel={()=>{}}/>:stepEditorNode&&<CanvasStepEditor key={stepEditorNode.id} node={stepEditorNode} graph={graph} workspaceId={workspaceId} canvasId={canvasId} connected={graph.edges.some(([,to])=>to===stepEditorNode.id)} onDone={(label,config)=>{changeNode(stepEditorNode.id,{label,config});setStepEditorId(null);}}/>}
+    {messageEditorNode?.config?.channel&&!['sms','whatsapp'].includes(messageEditorNode.config.channel)?<CanvasChannelEditor key={messageEditorNode.id+messageEditorNode.config.channel} node={messageEditorNode} canvasId={canvasId} locale={locale} workspaceId={workspaceId} quietEnabled={wizard.send.quietEnabled} connected={graph.edges.some(([,to])=>to===messageEditorNode.id)} onDone={(config,label)=>{changeNode(messageEditorNode.id,{config,label});setMessageEditorId(null);}} onChannel={(channel,config)=>changeConfig(messageEditorNode.id,{...config,channel,subscriptionGroupId:undefined})}/> : messageEditorNode?.config?.channel === "whatsapp" ? <CanvasWhatsAppEditor key={messageEditorNode.id} node={messageEditorNode} canvasId={canvasId} workspaceId={workspaceId} quietEnabled={wizard.send.quietEnabled} testAvailable={!browserDraft} onOtherChannel={(channel, config) => { changeConfig(messageEditorNode.id, { ...config, channel, subscriptionGroupId: undefined }); }} connected={graph.edges.some(([, to]) => to === messageEditorNode.id)} onDone={config => { changeConfig(messageEditorNode.id, config); setMessageEditorId(null); }}/> : messageEditorNode && <CanvasSmsEditor key={messageEditorNode.id} node={messageEditorNode} canvasId={canvasId} workspaceId={workspaceId} quietEnabled={wizard.send.quietEnabled} groups={subscriptionGroups} testAvailable={!browserDraft} connected={graph.edges.some(([, to]) => to === messageEditorNode.id)} onDone={config => { changeConfig(messageEditorNode.id, config); setMessageEditorId(null); }} onOtherChannel={(channel,config) => { changeConfig(messageEditorNode.id, { ...config,channel, subscriptionGroupId: undefined }); setInspectorOpen(false); }}/> }
+    {embedded&&!adding&&<CanvasBuildToolbar graph={graph} wizard={wizard} workspaceId={workspaceId} busy={working||parentSaving} zoom={zoom} onZoom={setZoom} simple={simple} onSimple={setSimple} fullscreen={expanded} onFullscreen={fullscreen} onSave={onSave??(()=>void save())} onContinue={onContinue??(()=>{})} changeBrief={changeBrief??(()=>{})}/>}
+    {adding && <div className={styles.addBar}><button onClick={() => { setAdding(false);setPendingKind(null); setLinkFrom(null);linkRouteIndex.current=undefined; }}>Cancel Add Step</button><span>or Press <kbd>Esc</kbd></span></div>}
   </section>;
 }

@@ -1,0 +1,283 @@
+Browser tab: 7, Title: "Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build&initialConditionsCollapsed=true".
+0 AXWebArea Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build&initialConditionsCollapsed=true
+	1 container
+		194 container body-wrapper
+			195 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build&initialConditionsCollapsed=true#main-col
+			196 container
+				197 container Side navigation
+					198 container
+						199 button Minimize menu
+						200 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+							201 image
+							202 text Demo – ittor
+						203 text Quick links
+						204 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+						205 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+						206 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+						207 button Getting Started
+							208 image
+							209 container
+								210 text Getting Started
+								211 container
+									212 text 8 %
+						213 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+						214 button AI Decisioning
+							215 image
+							216 text AI Decisioning
+						217 button Agents
+							218 image
+							219 text Agents
+						220 button Messaging
+							221 image
+							222 text Messaging
+						223 button Audience
+							224 image
+							225 text Audience
+						226 button Content
+							227 image
+							228 text Content
+						229 button Analytics
+							230 image
+							231 text Analytics
+						232 button Partner Integrations
+							233 image
+							234 text Partner Integrations
+						235 button Data Settings
+							236 image
+							237 text Data Settings
+						238 button Settings
+							239 image
+							240 text Settings
+					241 container Footer Logo
+						242 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+				243 text 14 days left in your free trial.
+				244 button Connect with sales
+				245 container Top navigation
+					246 container Left top navigation
+						247 button Search workspace ⌘+K
+							248 image
+							249 text Search workspace
+							250 text ⌘+K
+					251 container Right top navigation
+						252 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							253 image
+						254 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							255 image
+						256 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+							257 image
+						258 container
+							259 button Notifications
+								260 image
+						261 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							262 image
+						263 button BrazeAI Operator™
+							264 image
+			265 container main
+				266 container main-col
+					267 tab group Open page tabs
+						268 tab (selectable, settable, boolean) Canvas, Value: 0, ID: canvas
+						269 tab (selected, settable, boolean) Edit 'Canvas fidelity audit - 2026-11-12 (temporary)' Close tab, Description: Close tab, ID: 6af5503cd8512f008c15c8bd, Value: 1
+Edit 'Canvas fidelity audit - 2026-11-12 (temporary)'
+					279 container
+						280 container
+							281 text Limited access
+							282 heading Canvas fidelity audit - 2026-11-12 (temporary), Value: 4
+								283 text Canvas fidelity audit - 2026-11-12 (temporary)
+							284 text No description
+							285 button Tags
+							286 button 0 Changes Since Last Viewed
+								287 text 0 Changes Since Last Viewed
+							288 button Edit
+							289 text Send Settings
+							290 content list
+								291 container
+									292 AXListMarker • 
+									293 text Users will receive messages at a rate limited to 500,000 messages per minute shared across channels.
+								294 container
+									295 AXListMarker • 
+									296 text Workspace Messaging Rate Limits OFF
+								297 container
+									298 AXListMarker • 
+									299 text Quiet hours ON
+									300 content list
+										301 container
+											302 AXListMarker • 
+											303 text Restricted window: 12:00 AM - 8:00 AM in the recipient's local time
+										304 container
+											305 AXListMarker • 
+											306 text Send at the next available time if a message triggers during quiet hours
+							307 button Edit
+							308 text Conversion Events
+							309 text Started Session within 3 days
+							310 button Edit
+						311 button Expand
+						312 container
+							313 pop up button Collapse components
+							314 text Components Select components to build your user journey.
+							315 content list
+								316 container
+									317 text Message Controls
+									318 content list
+										319 button Message
+										320 button Delay
+								321 container
+									322 text AI Actions
+									323 content list
+										324 button Agent Step
+										325 button Content Optimizer
+											326 image
+											327 text Content Optimizer
+								328 container
+									329 text Flow Controls
+									330 content list
+										331 button Decision Split
+											332 image
+											333 text Decision Split
+										334 button Audience Paths
+										335 button Action Paths
+										336 button Experiment Paths
+										337 button Send to Destination
+								338 container
+									339 text Audience Updates
+									340 content list
+										341 button Context
+											342 image
+											343 text Context
+										344 button User Update
+										345 button Feature Flag
+										346 button Audience Sync
+											347 image
+											348 text Audience Sync
+							349 button Clean Up Canvas
+						350 container
+							351 container
+								352 text Entry Rules
+							353 container
+								354 text Schedule
+							355 container
+								356 text Audience
+							357 container
+								358 image
+								359 text Exit Criteria No exit criteria selected.
+							360 container
+								361 text Controls Users are not eligible to re-enter this Canvas.
+							362 image
+							363 image
+							364 container
+								365 image
+								366 pop up button (collapsed) Description: Open Add Variant menu, Secondary Actions: Expand
+							367 container
+								368 button 100%
+								369 container
+									370 text Variant 1
+									371 button
+								372 pop up button (collapsed) Description: Open actions menu for Variant 1, Secondary Actions: Expand
+								373 button
+							374 container
+								375 container
+									376 text Step
+									377 button
+									378 pop up button (collapsed) Description: Open step actions menu, Secondary Actions: Expand
+									379 text DISCONNECTED Incomplete Messages
+									380 button Content Optimizer Clicks 1 combination
+										381 image
+										382 text Content Optimizer
+										383 text Clicks
+										384 text 1 combination
+									385 button Intelligent Timing:ON Quiet hours:ON 
+										386 definition list
+											387 container Intelligent Timing:
+												388 text Intelligent Timing :
+											389 container
+												390 text ON
+											391 container Quiet hours:
+												392 text Quiet hours :
+											393 container
+												394 text ON
+									395 text All users who enter this step advance to the next step
+								396 button
+							397 container
+								398 container
+									399 text Step 1
+									400 button
+									401 pop up button (collapsed) Description: Open step actions menu, Secondary Actions: Expand
+									402 text DISCONNECTED
+									403 button Window: 1 day Ranking: Off Advance: Immediately
+										404 container
+											405 text Window : 1 day
+										406 container
+											407 text Ranking : Off
+										408 container
+											409 text Advance : Immediately
+									410 button 1 1 Group 1
+										411 image
+											412 text 1
+										413 text Group 1
+									414 button 2 2 Everyone Else
+										415 image
+											416 text 2
+										417 text Everyone Else
+								418 image
+									419 text 1
+								420 text Group 1
+								421 image
+									422 text 2
+								423 text Everyone Else
+								424 image
+								425 button
+								426 button
+							427 container
+								428 container
+									429 text Step 2
+									430 button
+									431 pop up button (collapsed) Description: Open step actions menu, Secondary Actions: Expand
+									432 text DISCONNECTED
+									433 button Window: 1 day Ranking: Off Advance: Immediately
+										434 container
+											435 text Window : 1 day
+										436 container
+											437 text Ranking : Off
+										438 container
+											439 text Advance : Immediately
+									440 button 1 1 Group 1
+										441 image
+											442 text 1
+										443 text Group 1
+									444 button 2 2 Everyone Else
+										445 image
+											446 text 2
+										447 text Everyone Else
+								448 image
+									449 text 1
+								450 text Group 1
+								451 image
+									452 text 2
+								453 text Everyone Else
+								454 image
+								455 button
+								456 button
+						457 pop up button Run evaluation
+						458 pop up button (collapsed) Description: Canvas zoom and view, Secondary Actions: Expand
+							459 text Detailed View
+							460 text , 
+							461 text 100%
+						462 pop up button Enter full screen
+						463 heading Maximum Duration, Value: 4
+							464 pop up button (collapsed) Description: Maximum Duration, Secondary Actions: Expand
+						465 button (disabled) Test Canvas
+						466 button Save
+						467 button Save and continue
+				271 container
+					272 text © Braze 2026
+					273 text Opening in a new tab
+					274 link Description: Opening in a new tab, Value: braze.statuspage.io/
+					275 text Opening in a new tab
+					276 link Description: Opening in a new tab, Value: braze.com/terms
+					277 text Opening in a new tab
+					278 link Description: Opening in a new tab, Value: braze.com/privacy
+		193 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		468 container
+			469 text subscription group must not be blank
+			470 button OK
+
+The focused UI element is 470 button OK

@@ -1,0 +1,97 @@
+Browser tab: 15, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/users/subscription_groups/preference_centers/6aa75e37db69160082adb7ae?locale=en&workspace=local".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/subscription_groups/preference_centers/6aa75e37db69160082adb7ae?locale=en&workspace=local
+	2 container
+		3 text Custom Email Preference Centers
+		4 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		5 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			6 text Local workspace
+			7 image
+		8 container Side navigation
+			9 text Quick links
+			10 button Canvas
+			11 button Campaigns
+			12 button Segments
+			13 button Getting Started
+			14 button Home
+			15 button AI Decisioning
+			16 button Agents
+			17 button Messaging
+			18 button Audience
+			19 button Content
+			20 button Analytics
+			21 button Partner Integrations
+			22 button Data Settings
+			23 button Settings
+		24 button Home
+			25 image Braze
+		26 container
+			27 text ◷   8 days left in your free trial.
+			28 button Connect with sales
+		29 container
+			30 button Search workspace ⌘K
+				31 image
+				32 text Search workspace
+				33 text ⌘K
+			34 button Take a tour
+			35 image Community
+			36 button (collapsed) Description: Language, Secondary Actions: Expand
+			37 button Notifications
+			38 button (collapsed) Description: Profile, Secondary Actions: Expand
+			39 image
+			40 button Open BrazeAI Operator
+		41 container
+			42 button Email Preference Centers
+			43 button Close banner
+				44 image
+			45 heading Build email preference centers on Landing Pages, Value: 2
+				46 text Build email preference centers on Landing Pages
+			47 text Use your own branded domain and drag-and-drop editor to design email preference pages. Add form blocks to collect subscriber interests, frequency, and more, then track how subscribers engage.
+			48 link Description: Create landing page, Value: 127.0.0.1:3213/messaging/landing-pages
+			49 heading Custom Email Preference Centers, Value: 1
+				50 text Custom Email Preference Centers
+			51 link Description: About email preference centers, Value: braze.com/docs/user_guide/message_building_by_channel/email/preference_center/
+			52 button Create New
+				53 image
+				54 text Create New
+			55 table
+				56 row
+					57 cell
+						58 button Name
+					59 cell
+						60 text Description
+					61 cell
+						62 button Type
+					63 cell
+						64 text Status
+					65 cell
+						66 button Last Edited
+					67 cell
+						68 button Created by
+				69 row
+					70 cell
+						71 button Audience QA preferences
+					72 cell
+						73 text —
+					74 cell
+						75 text Drag-and-drop
+					76 cell
+						77 text Draft
+					78 cell
+						79 text Nov 12, 2026
+					80 cell
+						81 text Local user
+				82 row
+					83 cell
+						84 button Marketing preferences
+					85 cell
+						86 text Let users choose the email updates they want to receive.
+					87 cell
+						88 text Drag-and-drop
+					89 cell
+						90 text Active
+					91 cell
+						92 text Sep 16, 2026
+					93 cell
+						94 text —
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/subscription_groups/preference_centers/6aa75e37db69160082adb7ae?locale=en&workspace=local

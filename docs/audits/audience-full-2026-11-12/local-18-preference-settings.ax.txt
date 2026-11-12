@@ -1,0 +1,33 @@
+Browser tab: 14, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/users/subscription_groups/preference_centers/6aa75e37db69160082adb7ae?locale=en&workspace=local&centerId=new".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/subscription_groups/preference_centers/6aa75e37db69160082adb7ae?locale=en&workspace=local&centerId=new
+	2 container Preference center editor
+		3 container
+			4 tab group
+				5 tab (selectable, settable, boolean) Compose, Value: 0
+				6 tab (selected, settable, boolean) Settings, Value: 1
+				7 tab (selectable, settable, boolean) Preview, Value: 0
+			44 button Collapse sidebar
+				45 image
+		46 container
+			122 heading Edit your preference center settings, Value: 2
+				123 text Edit your preference center settings
+			124 heading Accessibility, Value: 3
+				125 text Accessibility
+			126 text Set the 
+			127 link Description: language, Value: braze.com/docs/en/user_guide/engagement_tools/messaging_fundamentals/accessibility#accessibility-language
+			128 text  for your message's HTML. Screen readers and assistive tools use this to pronounce content with the correct language and dialect. Select a language or use Liquid to set it dynamically. Language
+			129 container
+				130 combo box (collapsed, settable) Description: Language, Secondary Actions: Expand
+				131 button (collapsed) Description: Toggle languages, Secondary Actions: Expand
+					132 image
+			133 button Add language with Liquid
+		114 container
+			115 button (disabled) Send feedback, Help: Feedback collection is not configured for this workspace.
+				116 image
+				117 text Send feedback
+			118 button Cancel
+			119 button Done
+			120 button (disabled) Description: BrazeAI Operator, Help: BrazeAI Operator does not support preference center editing in this workspace.
+				121 image
+
+The focused UI element is 6 tab (selected, settable, boolean) Settings, Value: 1

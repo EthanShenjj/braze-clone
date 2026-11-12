@@ -1,0 +1,24 @@
+Browser tab: 11, Title: "Subscription Group Management", URL: "https://dashboard-09.braze.com/users/subscription_groups/subscription_groups/6af4374c46d3080087f1c5d2?locale=en".
+0 AXWebArea Subscription Group Management, URL: dashboard-09.braze.com/users/subscription_groups/subscription_groups/6af4374c46d3080087f1c5d2?locale=en
+	1 container close
+		2 button close
+		3 container
+			4 heading Create email subscription group, Value: 2
+				5 text Create email subscription group
+			6 text These fields will be shown when users subscribe or unsubscribe to each group.
+			7 container
+				8 text Creating subscription groups for SMS or WhatsApp is a different process. For help, refer to documentation for 
+				9 text Opening in a new tab
+				10 link Description: Opening in a new tab, Value: braze.com/docs/user_guide/message_building_by_channel/sms/sms_subscription_group#sms-subscription-states
+				11 text  and 
+				12 text Opening in a new tab
+				13 link Description: Opening in a new tab, Value: braze.com/docs/user_guide/message_building_by_channel/whatsapp/user_subscription#whatsapp-subscription-states
+				14 text .
+			15 text Name
+			16 text field (settable) Name, ID: input--2739289584
+			17 text Description
+			18 text entry area (settable) Description, ID: textarea--1616922773
+			19 button Cancel
+			20 button Save
+
+The focused UI element is 1 container close

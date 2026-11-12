@@ -1,0 +1,138 @@
+Browser tab: 1, Title: "Subscription Group Details", URL: "https://dashboard-09.braze.com/users/subscription_groups/6af4375120abdf005fc2ee85/6af4374c46d3080087f1c5d2".
+1 AXWebArea Subscription Group Details, URL: dashboard-09.braze.com/users/subscription_groups/6af4375120abdf005fc2ee85/6af4374c46d3080087f1c5d2
+	2 container
+		3 container react-root
+			4 link Description: Skip to main content, Value: dashboard-09.braze.com/users/subscription_groups/6af4375120abdf005fc2ee85/6af4374c46d3080087f1c5d2#main-container
+			5 container Side navigation
+				6 container
+					7 button Minimize menu
+					8 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+						9 image
+						10 text Demo – ittor
+					11 text Quick links
+					12 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+					13 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+					14 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+					15 button Getting Started
+						16 image
+						154 container
+							155 text Getting Started
+							156 container
+								157 text 8 %
+					20 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+					21 button AI Decisioning
+						22 image
+						23 text AI Decisioning
+					24 button Agents
+						25 image
+						26 text Agents
+					27 button Messaging
+						28 image
+						29 text Messaging
+					30 button Audience
+						31 image
+						32 text Audience
+					33 button Content
+						34 image
+						35 text Content
+					36 button Analytics
+						37 image
+						38 text Analytics
+					39 button Partner Integrations
+						40 image
+						41 text Partner Integrations
+					42 button Data Settings
+						43 image
+						44 text Data Settings
+					45 button Settings
+						46 image
+						47 text Settings
+				48 container Footer Logo
+					49 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+			50 text 14 days left in your free trial.
+			51 button Connect with sales
+			52 container Top navigation
+				53 container Left top navigation
+					54 button Search workspace ⌘+K
+						55 image
+						56 text Search workspace
+						57 text ⌘+K
+				58 container Right top navigation
+					59 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						60 image
+					61 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						62 image
+					63 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+						64 image
+					65 container
+						66 button Notifications
+							67 image
+					68 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						69 image
+					70 button BrazeAI Operator™
+						71 image
+			72 container main-container
+				73 container main-content
+					74 container
+						75 heading Add New Keywords for English, Value: 3
+							76 text Add New Keywords for English
+						77 text Keyword Category
+						78 text field (settable) keyword-category-field
+						79 text Keywords Keywords are case insensitive (i.e. stop and STOP are the same keyword).
+						80 text field (settable) Description: New keyword input, ID: new-keyword-field
+						81 button Add
+						82 text Reply Message
+						83 text 0 | 0 Billable Segments
+						84 container
+							85 container
+								86 editor (settable) Description: Reply Message, ID: reply-message
+							87 text Enter Reply Message
+							88 pop up button (expanded) Description: Add Liquid, Secondary Actions: Collapse
+						89 container
+							90 checkbox (settable, integer) Description: Link Shortening, Value: 1, ID: bcl-switch__input-1185444056
+							91 container bcl-switch-1590604059
+								92 text Link Shortening
+					93 container
+						94 button Cancel
+						95 button (disabled) Save
+				96 text © Braze 2026
+				97 text Opening in a new tab
+				98 link Description: Opening in a new tab, Value: braze.statuspage.io/
+				99 text Opening in a new tab
+				100 link Description: Opening in a new tab, Value: braze.com/terms
+				101 text Opening in a new tab
+				102 link Description: Opening in a new tab, Value: braze.com/privacy
+		103 container
+			104 container Add Personalization
+				105 heading Add Personalization, Value: 4
+					106 text Add Personalization
+				107 container
+					108 container Personalization type
+						109 container Description: Personalization type, ID: liquid-composition-panel-section-id-240
+							110 text Personalization type
+						111 container
+							158 text option Nested Custom Attributes, selected.
+							112 container
+								113 text Nested Custom Attributes
+								114 combo box (collapsed, settable) Personalization type, ID: liquid-composition-panel-section-child-id239, Secondary Actions: Expand
+					159 container Top Level Attribute
+						160 container Description: Top Level Attribute, ID: liquid-composition-panel-section-id-346
+							161 text Top Level Attribute
+						162 container liquid-composition-panel-section-child-id345
+							163 container
+								164 text Select...
+								165 combo box (collapsed, settable) Top Level Attribute, ID: react-select-10-input, Secondary Actions: Expand
+					149 container Default value
+						150 container Description: Default value, ID: liquid-composition-panel-section-id-296
+							151 text Default value (Optional)
+							152 pop up button (collapsed) Description: Help text available. Tab to view help text, click to open popover, Secondary Actions: Expand
+						153 text field (settable) Default value, ID: liquid-composition-panel-section-child-id295
+					127 container Liquid Snippet
+						128 container Description: Liquid Snippet, ID: liquid-composition-panel-section-id-246
+							129 text Liquid Snippet
+						130 text field Liquid Snippet, Value: {{custom_attribute.${undefined}}}, ID: liquid-composition-panel-section-child-id245
+						131 button
+			132 button Cancel
+			133 button Insert
+
+The focused UI element is 114 combo box (collapsed, settable) Personalization type, ID: liquid-composition-panel-section-child-id239, Secondary Actions: Expand

@@ -1,0 +1,43 @@
+Browser tab: 7, Title: "Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container
+		220 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		221 container Step step editor
+			222 container
+				223 text Step
+				224 button
+				225 text DISCONNECTED Incomplete Messages
+				226 button Content Optimizer Clicks 1 combination
+					227 image
+					228 text Content Optimizer
+					229 text Clicks
+					230 text 1 combination
+				266 button Intelligent Timing:ON Delivery Validations:ON 
+					267 definition list
+						268 container Intelligent Timing:
+							269 text Intelligent Timing :
+						270 container
+							271 text ON
+						272 container Delivery Validations:
+							273 text Delivery Validations :
+						274 container
+							275 text ON
+				231 text All users who enter this step and meet delivery validations will advance to the next step
+			232 button Done
+			233 container
+				234 text Content Optimizer setup
+				235 button BrazeAI Operator™
+					236 image
+				237 tab group Message step
+					238 tab (selectable, settable, boolean) Description: Messaging channels, Value: 0, ID: content
+					239 tab (selectable, settable, boolean) Description: Delivery settings, Value: 0, ID: settings
+					240 tab (selectable, settable, boolean) Description: Content Optimizer settings, ID: content-optimizer-settings, Value: 0
+Content Optimizer settings
+					241 tab (selected, settable, boolean) Description: Agentic Standards results, Value: 1, ID: message-step-tab-standards-results
+				276 container Description: Agentic Standards results, ID: message-step-panel-standards-results
+					277 container
+						278 text Running the evaluation will only check and flag issues related to this step. No Standard set up yet. Create one in 
+						279 link Description: Agent Console, Value: dashboard-09.braze.com/agent_console/agents/create/6af4374c46d3080087f1c5d2?interaction_site=3&locale=en
+						280 text No results for this step yet. Run an evaluation to check it against your Standards.
+
+The focused UI element is 241 tab (selected, settable, boolean) Description: Agentic Standards results, Value: 1, ID: message-step-tab-standards-results

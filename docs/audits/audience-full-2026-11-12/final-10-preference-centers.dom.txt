@@ -1,0 +1,102 @@
+- alert: Custom Email Preference Centers
+- complementary:
+  - button "Minimize menu" [expanded]
+  - button "Select workspace":
+    - generic: Local workspace
+  - navigation "Side navigation":
+    - generic: Quick links
+    - button "Canvas":
+      - generic: Canvas
+    - button "Campaigns":
+      - generic: Campaigns
+    - button "Segments":
+      - generic: Segments
+    - button "Getting Started":
+      - generic: Getting Started
+    - button "Home":
+      - generic: Home
+    - button "AI Decisioning":
+      - generic: AI Decisioning
+    - button "Agents":
+      - generic: Agents
+    - button "Messaging":
+      - generic: Messaging
+    - button "Audience":
+      - generic: Audience
+    - button "Content":
+      - generic: Content
+    - button "Analytics":
+      - generic: Analytics
+    - button "Partner Integrations":
+      - generic: Partner Integrations
+    - button "Data Settings":
+      - generic: Data Settings
+    - button "Settings":
+      - generic: Settings
+  - button "Home":
+    - img "Braze"
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - generic "Community":
+    - img "Community"
+  - button "Language"
+  - button "Notifications"
+  - button "Profile"
+  - button "Open BrazeAI Operator"
+  - navigation:
+    - button "Email Preference Centers"
+  - complementary:
+    - button "Close banner":
+    - heading "Build email preference centers on Landing Pages" [level=2]
+    - paragraph: Use your own branded domain and drag-and-drop editor to design email preference pages. Add form blocks to collect subscriber interests, frequency, and more, then track how subscribers engage.
+    - link "Create landing page":
+      - /url: /messaging/landing-pages
+  - heading "Custom Email Preference Centers" [level=1]
+  - link "About email preference centers":
+    - /url: https://www.braze.com/docs/user_guide/message_building_by_channel/email/preference_center/
+    - text: About email preference centers
+  - button "Create New":
+    - text: Create New
+  - table:
+    - rowgroup:
+      - row "Name Description Type Status Last Edited Created by":
+        - columnheader "Name":
+          - button "Name":
+            - text: Name
+            - generic: ↕
+        - columnheader "Description"
+        - columnheader "Type":
+          - button "Type":
+            - text: Type
+            - generic: ↕
+        - columnheader "Status"
+        - columnheader "Last Edited":
+          - button "Last Edited":
+            - text: Last Edited
+            - generic: ↓
+        - columnheader "Created by":
+          - button "Created by":
+            - text: Created by
+            - generic: ↕
+    - rowgroup:
+      - row "Audience QA preferences — Drag-and-drop Draft Nov 12, 2026 Local user":
+        - cell "Audience QA preferences":
+          - button "Audience QA preferences"
+        - cell "—"
+        - cell "Drag-and-drop"
+        - cell "Draft"
+        - cell "Nov 12, 2026"
+        - cell "Local user"
+      - row "Marketing preferences Let users choose the email updates they want to receive. Drag-and-drop Active Sep 16, 2026 —":
+        - cell "Marketing preferences":
+          - button "Marketing preferences"
+        - cell "Let users choose the email updates they want to receive."
+        - cell "Drag-and-drop"
+        - cell "Active"
+        - cell "Sep 16, 2026"
+        - cell "—"

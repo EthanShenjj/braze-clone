@@ -1,0 +1,147 @@
+- complementary:
+  - button "Minimize menu" [expanded]
+  - button "Select workspace":
+    - generic: Demo – Thinkingai
+  - navigation "Side navigation":
+    - generic: Quick links
+    - button "Canvas":
+      - generic: Canvas
+    - button "Campaigns":
+      - generic: Campaigns
+    - button "Segments":
+      - generic: Segments
+    - button "Getting Started":
+      - generic: Getting Started
+    - button "Home":
+      - generic: Home
+    - button "AI Decisioning":
+      - generic: AI Decisioning
+    - button "Agents":
+      - generic: Agents
+    - button "Messaging":
+      - generic: Messaging
+    - button "Audience":
+      - generic: Audience
+    - button "Content":
+      - generic: Content
+    - button "Analytics":
+      - generic: Analytics
+    - button "Partner Integrations":
+      - generic: Partner Integrations
+    - button "Data Settings":
+      - generic: Data Settings
+    - button "Settings":
+      - generic: Settings
+  - button "Home":
+    - img "Braze"
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - generic "Community":
+    - img "Community"
+  - button "Language"
+  - button "Notifications"
+  - button "Profile"
+  - button "Open BrazeAI Operator"
+  - button "Campaigns"
+  - button "Edit 'Early Access'":
+    - text: Edit 'Early Access'
+  - text: Limited access
+  - navigation "Campaign steps":
+    - button "✓ Compose Messages":
+      - generic: ✓
+      - generic: Compose Messages
+    - button "✓ Schedule Delivery":
+      - generic: ✓
+      - generic: Schedule Delivery
+    - button "✓ Target Audiences":
+      - generic: ✓
+      - generic: Target Audiences
+    - button "✓ Assign Conversions":
+      - generic: ✓
+      - generic: Assign Conversions
+    - button "5 Review Summary":
+      - generic: "5"
+      - generic: Review Summary
+  - heading "Campaign Details" [level=2]
+  - generic: Campaign Name
+  - textbox "Campaign Name":
+    - /placeholder: Enter Campaign Name
+    - text: Early Access
+  - text: Teams
+  - combobox "Teams":
+    - option "Select…" [selected]
+  - button "Add description":
+    - text: Add description
+  - button "Tags":
+    - text: Tags
+  - region "Campaign brief":
+    - heading "Campaign brief" [level=3]
+    - paragraph: Attach a brief so BrazeAI Operator can build your campaign and your Standards can review it against your goals
+    - strong: Attach a campaign brief (optional)
+    - paragraph: PDF, TXT, MD, CSV, DOCX up to 15MB
+    - button "Upload file":
+      - text: Upload file
+  - generic: Campaign ID
+  - textbox "Campaign ID": 148bb5b4-1eb6-4a95-9f43-9ab3e93be668
+  - button "Copy":
+    - text: Copy
+  - region "SMS/MMS/RCS Composer":
+    - heading "SMS/MMS/RCS Composer" [level=2]
+    - heading "Variants" [level=3]
+    - tablist "SMS variants":
+      - tab "Early Access" [selected]:
+        - text: Early Access
+      - button "Add variant":
+    - text: Subscription Group
+    - combobox "Subscription Group": SMS sms_qa_f730215b
+    - button "Toggle Subscription Group":
+    - complementary:
+      - heading "Preview" [level=5]
+      - link "Contact card":
+        - /url: /api/message-assets/res_6079d0cc3d7142cd
+      - text: "Thanks for being a loyal customer, {{${first_name} | default: 'aficionado'}}! Your reward for being so loyal? Early access to our limited edition sale: https://brz.ai/XXXXXXXX Reply STOP to opt-out."
+      - paragraph: Actual rendering may not be identical to this preview depending on the user's environment.
+    - tablist "SMS composer sections":
+      - tab "Compose"
+      - tab "Contact Card Generator" [selected]
+      - tab "Test"
+    - heading "Contact Card Generator" [level=4]
+    - paragraph: Attach a vCard so recipients can save your business as a contact.
+    - text: First name
+    - textbox "First name": Ada
+    - text: Last name
+    - textbox "Last name"
+    - text: Organization
+    - textbox "Organization": SMS QA
+    - text: Phone
+    - textbox "Phone": "+12025550101"
+    - text: Email
+    - textbox "Email"
+    - button "Generate and attach contact card"
+    - status: Contact card attached.
+  - button "Back" [disabled]:
+  - button "✓ Compose":
+    - generic: ✓
+    - text: Compose
+  - button "✓ Schedule":
+    - generic: ✓
+    - text: Schedule
+  - button "✓ Target":
+    - generic: ✓
+    - text: Target
+  - button "✓ Assign":
+    - generic: ✓
+    - text: Assign
+  - button "5 Review":
+    - generic: "5"
+    - text: Review
+  - button "Forward":
+  - button "Save Draft" [active]
+- generic: Draft saved.
+- button "Close":
+- alert

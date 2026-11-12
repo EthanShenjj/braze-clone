@@ -14,7 +14,7 @@ export const campaignColumns = [
 ] as const;
 export type CampaignSort = 'name' | 'stopDate' | 'sent' | 'teams' | 'edited';
 export type CampaignListFilters = {
-  search: string; status: string; channel: string; tag: string; sort: CampaignSort; direction: 1 | -1;
+  search: string; status: string; channel: string; tag: string; tags?: string[]; sort: CampaignSort; direction: 1 | -1;
   start: number; limit: number; createdBy: string; editedBy: string; entrySchedule: string;
   dateField: string; from: string; to: string; expired: string; complexity: string; optimize: string; segment: string;
 };
@@ -29,7 +29,7 @@ export function readCampaignFilters(params: URLSearchParams): CampaignListFilter
   const sort = incomingSort === 'last_edited' ? 'edited' : incomingSort === 'stop_date' ? 'stopDate' : incomingSort;
   const result = { ...emptyCampaignFilters, search: params.get('globalFilter') ?? '',
     status: campaignStatuses.find(value => value.toLowerCase() === status.toLowerCase()) ?? 'All',
-    channel: params.get('channel') ?? 'all', tag: params.get('tag') ?? '',
+    channel: params.get('channel') ?? 'all', tag: params.get('tag') ?? '', ...(params.getAll('tag').filter(Boolean).length>1?{tags:[...new Set(params.getAll('tag').filter(Boolean))]}:{}),
     sort: (['name','stopDate','sent','teams','edited'].includes(sort ?? '') ? sort : 'edited') as CampaignSort,
     direction: params.get('sortdir') === '1' ? 1 as const : -1 as const,
     start: Math.max(0, Math.floor(Number(params.get('start')) || 0)),
@@ -43,8 +43,9 @@ export function writeCampaignFilters(params: URLSearchParams, filters: CampaignL
   const next = new URLSearchParams(params);
   next.set('start', String(filters.start)); next.set('limit', String(filters.limit));
   next.set('sortby', filters.sort); next.set('sortdir', String(filters.direction)); next.set('display','list');
-  const optional = { globalFilter: filters.search, 'columnFilters[status]': filters.status === 'All' ? '' : filters.status.toLowerCase(), channel: filters.channel === 'all' ? '' : filters.channel, tag: filters.tag };
+  const optional = { globalFilter: filters.search, 'columnFilters[status]': filters.status === 'All' ? '' : filters.status.toLowerCase(), channel: filters.channel === 'all' ? '' : filters.channel, tag: '' };
   for (const [key,value] of Object.entries(optional)) value ? next.set(key,value) : next.delete(key);
+  next.delete('tag'); for(const tag of [...new Set(filters.tags??(filters.tag?[filters.tag]:[]))]) next.append('tag',tag);
   for (const key of extraKeys) filters[key] && filters[key] !== 'None' ? next.set(`filter_${key}`,filters[key]) : next.delete(`filter_${key}`);
   return next;
 }
@@ -67,7 +68,8 @@ export function filterCampaigns<T extends CampaignListItem>(campaigns: T[], filt
     if (!campaign.name.toLowerCase().includes(filters.search.toLowerCase())) return false;
     if (filters.status !== 'All' && campaign.status !== filters.status) return false;
     if (filters.channel !== 'all' && campaign.channel !== filters.channel) return false;
-    if (filters.tag && !(Array.isArray(config.tags) && config.tags.includes(filters.tag))) return false;
+    const selectedTags=filters.tags??(filters.tag?[filters.tag]:[]);
+    if (selectedTags.length && !(Array.isArray(config.tags) && selectedTags.some(tag=>(config.tags as unknown[]).includes(tag)))) return false;
     if (filters.createdBy && config.createdBy !== filters.createdBy) return false;
     if (filters.editedBy && config.lastEditedBy !== filters.editedBy) return false;
     if (filters.entrySchedule && campaignEntrySchedule(campaign) !== filters.entrySchedule) return false;

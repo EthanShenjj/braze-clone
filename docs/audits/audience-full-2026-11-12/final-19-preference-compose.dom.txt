@@ -1,0 +1,203 @@
+- alert: Email Preference Center
+- complementary:
+  - button "Minimize menu" [expanded]
+  - button "Select workspace":
+    - generic: Local workspace
+  - navigation "Side navigation":
+    - generic: Quick links
+    - button "Canvas":
+      - generic: Canvas
+    - button "Campaigns":
+      - generic: Campaigns
+    - button "Segments":
+      - generic: Segments
+    - button "Getting Started":
+      - generic: Getting Started
+    - button "Home":
+      - generic: Home
+    - button "AI Decisioning":
+      - generic: AI Decisioning
+    - button "Agents":
+      - generic: Agents
+    - button "Messaging":
+      - generic: Messaging
+    - button "Audience":
+      - generic: Audience
+    - button "Content":
+      - generic: Content
+    - button "Analytics":
+      - generic: Analytics
+    - button "Partner Integrations":
+      - generic: Partner Integrations
+    - button "Data Settings":
+      - generic: Data Settings
+    - button "Settings":
+      - generic: Settings
+  - button "Home":
+    - img "Braze"
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - generic "Community":
+    - img "Community"
+  - button "Language"
+  - button "Notifications"
+  - button "Profile"
+  - button "Open BrazeAI Operator"
+  - navigation:
+    - button "Email Preference Centers"
+    - button "Audience QA preferences":
+      - text: Audience QA preferences
+  - heading "Email Preference Center" [level=1]
+  - article:
+    - heading "Details" [level=2]
+    - text: Name
+    - generic: 23/280 characters
+    - textbox "Name":
+      - /placeholder: Enter preference center name
+      - text: Audience QA preferences
+    - button "Add Description":
+      - text: Add Description
+    - generic: The Liquid tag will be generated after the preference center is launched
+    - button "Close Liquid notice":
+    - generic: Liquid
+    - textbox "Liquid": "{{preference_center.${}}}"
+    - button "Copy Liquid":
+    - generic: API ID
+    - textbox "API ID": pc_997e403412d84bf5
+    - button "Copy API ID":
+  - article:
+    - heading "Page Previews" [level=2]
+    - button "Edit" [active]
+    - radio "Preference Center" [checked]
+    - text: Preference Center
+    - radio "Confirmation Page"
+    - text: Confirmation Page
+    - article:
+      - heading "Update your email preferences" [level=2]
+      - checkbox "Product updates Feature launches, release notes, and product education."
+      - generic: Product updates
+      - generic: Feature launches, release notes, and product education.
+      - button "Save my preferences"
+      - button "Unsubscribe from all emails"
+  - button "Save as draft" [disabled]
+  - button "Launch preference center"
+  - dialog "Preference center editor":
+    - complementary:
+      - tablist:
+        - tab "Compose" [selected]
+        - tab "Settings"
+        - tab "Preview"
+      - button "Pages (2) ⌃" [expanded]:
+        - text: Pages (2)
+        - generic: ⌃
+      - button "Update your email preferences Preference Center":
+        - generic: Update your email preferences
+        - strong: Preference Center
+      - button "Thank you, your preferences have been updated Confirmation Page":
+        - generic: Thank you, your preferences have been updated
+        - strong: Confirmation Page
+      - heading "Rows" [level=3]
+      - paragraph: Drag a row into your message
+      - button "1 Column"
+      - button "2 Columns"
+      - button "3 Columns"
+      - heading "Blocks" [level=3]
+      - paragraph: Drag and drop a block into a row
+      - button "Title":
+        - generic: Title
+      - button "Paragraph":
+        - generic: Paragraph
+      - button "Button":
+        - generic: Button
+      - button "Image":
+        - generic: Image
+      - button "Link":
+        - generic: Link
+      - button "Spacer":
+        - generic: Spacer
+      - button "Collapse sidebar":
+    - main:
+      - article:
+        - heading "Update your email preferences" [level=2]
+        - checkbox "Product updates Feature launches, release notes, and product education." [disabled]
+        - generic: Product updates
+        - generic: Feature launches, release notes, and product education.
+        - button "Save my preferences"
+        - button "Unsubscribe from all emails"
+      - button "Undo" [disabled]:
+      - button "Redo" [disabled]:
+      - button "Phone":
+      - button "Tablet":
+      - button "Desktop" [pressed]:
+      - button "Hide Outlines":
+      - button "Add Personalization":
+    - complementary:
+      - heading "Common styles Copy or paste styles" [level=2]:
+        - text: Common styles
+        - button "Copy or paste styles":
+      - paragraph: All blocks in this page will use these styles, unless overridden at the local level.
+      - heading "Page Copy or paste page styles" [level=2]:
+        - text: Page
+        - button "Copy or paste page styles":
+      - paragraph: Style the entire page
+      - text: Max width
+      - spinbutton "Max width px": "500"
+      - combobox "Max width unit":
+        - option "px" [selected]
+        - option "%"
+      - generic: Background color
+      - textbox "Background color": "#ffffff"
+      - textbox "Background color hex": "#ffffff"
+      - text: Opacity
+      - spinbutton "Background color opacity": "100"
+      - text: "%"
+      - heading "Content Copy or paste content styles" [level=2]:
+        - text: Content
+        - button "Copy or paste content styles":
+      - paragraph: Style the body of the page
+      - text: Default font family
+      - combobox "Default font family":
+        - option "OS Default (Sans Serif)" [selected]
+        - option "Arial"
+        - option "Helvetica"
+        - option "Georgia"
+        - option "OS Default (Serif)"
+      - button "+ Add Custom Font"
+      - text: Content area alignment
+      - button "left" [pressed]:
+      - button "center":
+      - button "right":
+      - generic: Text color
+      - textbox "Text color": "#000000"
+      - textbox "Text color hex": "#000000"
+      - text: Opacity
+      - spinbutton "Text color opacity": "100"
+      - text: "%"
+      - generic: Button color
+      - textbox "Button color": "#008294"
+      - textbox "Button color hex": "#008294"
+      - text: Opacity
+      - spinbutton "Button color opacity": "100"
+      - text: "%"
+      - generic: Button text color
+      - textbox "Button text color": "#ffffff"
+      - textbox "Button text color hex": "#ffffff"
+      - text: Opacity
+      - spinbutton "Button text color opacity": "100"
+      - text: "%"
+      - generic: Link color
+      - textbox "Link color": "#1b78cf"
+      - textbox "Link color hex": "#1b78cf"
+      - text: Opacity
+      - spinbutton "Link color opacity": "100"
+      - text: "%"
+    - button "Send feedback" [disabled]:
+      - text: Send feedback
+    - button "Cancel"
+    - button "Done"
+    - button "BrazeAI Operator" [disabled]:

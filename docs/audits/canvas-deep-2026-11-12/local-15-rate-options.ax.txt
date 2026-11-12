@@ -1,0 +1,138 @@
+Browser tab: 12, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3221/engagement/canvas/beb4295a-d720-458a-8451-18c65ab5d22d?locale=en&workspaceId=local&step=sendSettings&initialConditionsCollapsed=false".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3221/engagement/canvas/beb4295a-d720-458a-8451-18c65ab5d22d?locale=en&workspaceId=local&step=sendSettings&initialConditionsCollapsed=false
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agents
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+	25 container
+		26 text ◷   8 days left in your free trial.
+		27 button Connect with sales
+		28 button Search workspace ⌘K
+			29 image
+			30 text Search workspace
+			31 text ⌘K
+		32 button Take a tour
+		33 image Community
+		34 button (collapsed) Description: Language, Secondary Actions: Expand
+		35 button Notifications
+		36 button (collapsed) Description: Profile, Secondary Actions: Expand
+		37 image
+		38 button Open BrazeAI Operator
+		39 container
+			40 button Canvas
+			41 text › Edit ' canvas_deep_577192b7 action subtype persistence '
+			42 button Close Canvas
+				43 image
+		44 text Limited access
+		45 container Canvas creation steps
+			46 button 1 Basics
+				47 text 1
+				48 text Basics
+			49 button 2 Entry Schedule
+				50 text 2
+				51 text Entry Schedule
+			52 button 3 Target Audience
+				53 text 3
+				54 text Target Audience
+			55 button 4 Send Settings
+				56 text 4
+				57 text Send Settings
+			58 button 5 Build Canvas
+				59 text 5
+				60 text Build Canvas
+			61 button 6 Summary
+				62 text 6
+				63 text Summary
+		64 heading Send Settings, Value: 2
+			65 text Send Settings
+		66 text Set message sending options for all steps within the Canvas.
+		67 heading Subscription Settings, Value: 3
+			68 text Subscription Settings
+		69 text Send to these users:
+		70 container
+			71 combo box (collapsed, settable) Description: Send to these users:, Value: users who are subscribed or opted in, Secondary Actions: Expand
+			72 button Toggle Send to these users:
+				73 image
+		74 heading Rate Limit, Value: 3
+			75 text Rate Limit
+		76 checkbox (settable, integer) Description: Limit the rate at which users will receive messages in this Canvas, Value: 1
+		77 radio button (settable, integer) Description: Set shared rate limit for all messages sent from this Canvas, Value: 1
+		78 radio button (settable, integer) Description: Set separate rate limit for each channel, Value: 0
+		79 text Maximum messages per minute
+		80 container
+			81 combo box (expanded, settable) Description: Maximum messages per minute, Value: 500,000, Secondary Actions: Collapse
+			82 button Toggle Maximum messages per minute
+				83 image
+			84 list Maximum messages per minute options
+				85 10
+				86 25
+				87 50
+				88 100
+				89 250
+				90 500
+				91 1,000
+				92 2,500
+				93 5,000
+				94 10,000
+				95 25,000
+				96 50,000
+				97 100,000
+				98 250,000
+				99 (selected) 500,000
+				100 1,000,000
+				101 Other
+		102 heading Frequency Capping, Value: 3
+			103 text Frequency Capping
+		104 text You have not created any Frequency Capping rules.
+		105 heading Quiet Hours, Value: 3
+			106 text Quiet Hours
+		107 text Messages are not sent during quiet hours. All times are in the recipient's local time zone. Quiet hours cannot exceed 20 hours.
+		108 checkbox (settable, integer) Description: Enforce quiet hours for this Canvas, Value: 0
+		109 button Back
+		110 container Canvas creation steps
+			111 button 1 Basics
+				112 text 1
+				113 text Basics
+			114 button 2 Entry Schedule
+				115 text 2
+				116 text Entry Schedule
+			117 button 3 Target Audience
+				118 text 3
+				119 text Target Audience
+			120 button 4 Send Settings
+				121 text 4
+				122 text Send Settings
+			123 button 5 Build Canvas
+				124 text 5
+				125 text Build Canvas
+			126 button 6 Summary
+				127 text 6
+				128 text Summary
+		129 button Save
+		130 button Forward
+	131 container
+		132 image
+		133 text Canvas draft saved to local SQLite.
+		134 button Close
+			135 image
+
+The focused UI element is 81 combo box (expanded, settable) Description: Maximum messages per minute, Value: 500,000, Secondary Actions: Collapse

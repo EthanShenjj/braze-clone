@@ -74,7 +74,7 @@ const blockOptions: Array<{ type: PreferenceBlockType; label: string; icon: type
   { type: "title", label: "Title", icon: Type }, { type: "paragraph", label: "Paragraph", icon: Text }, { type: "button", label: "Button", icon: MousePointerClick }, { type: "image", label: "Image", icon: ImageIcon }, { type: "divider", label: "Divider", icon: Blocks }, { type: "spacer", label: "Spacer", icon: ListChecks },
 ];
 function defaultBlocks(): PreferenceBlock[] { return preferenceCenterDefaultConfig.blocks.map(block => ({ ...block, style: block.style ? { ...block.style } : undefined })); }
-function newBlock(type: PreferenceBlockType): PreferenceBlock { const copy: Record<PreferenceBlockType, string> = { title: "New heading", paragraph: "Add supporting copy here.", preference: "", button: "Button", divider: "", spacer: "", image: "Image" }; return { id: `${type}_${crypto.randomUUID().slice(0, 8)}`, type, content: copy[type], style: { align: "left" } }; }
+function newBlock(type: PreferenceBlockType): PreferenceBlock { const copy: Record<PreferenceBlockType, string> = { title: "New heading", paragraph: "Add supporting copy here.", link: "Link", preference: "", button: "Button", divider: "", spacer: "", image: "Image" }; return { id: `${type}_${crypto.randomUUID().slice(0, 8)}`, type, content: copy[type], style: { align: "left" } }; }
 
 function PreferenceCenterBuilder({ locale, center, groups, back, notify }: { locale: Locale; center?: Center; groups: Group[]; back: () => void; notify: (message: string) => void }) {
   const emailGroups = useMemo(() => groups.filter(group => group.channel === "Email"), [groups]);

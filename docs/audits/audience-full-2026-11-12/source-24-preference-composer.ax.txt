@@ -1,0 +1,286 @@
+Browser tab: 11, Title: "Data - Overview - Overview", URL: "https://dashboard-09.braze.com/users/subscription_groups/preference_centers/6af4374b46d3080087f1c558/new?locale=en".
+1 AXWebArea Data - Overview - Overview, URL: dashboard-09.braze.com/users/subscription_groups/preference_centers/6af4374b46d3080087f1c558/new?locale=en
+	2 container
+		3 container react-root
+			4 link Description: Skip to main content, Value: dashboard-09.braze.com/users/subscription_groups/preference_centers/6af4374b46d3080087f1c558/new?locale=en#main-container
+			5 container Side navigation
+				6 container
+					7 button Minimize menu
+					8 pop up button (collapsed) Description: Live – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+						9 image
+						10 text Live – ittor
+					11 text Quick links
+					12 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374b46d3080087f1c558?locale=en
+					13 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374b46d3080087f1c558?locale=en
+					14 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374b46d3080087f1c558?locale=en
+					15 button Getting Started
+						16 image
+						17 container
+							18 text Getting Started
+							19 container
+								20 text 8 %
+					21 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374b46d3080087f1c558?locale=en
+					22 button AI Decisioning
+						23 image
+						24 text AI Decisioning
+					25 button Agents
+						26 image
+						27 text Agents
+					28 button Messaging
+						29 image
+						30 text Messaging
+					31 button Audience
+						32 image
+						33 text Audience
+					34 button Content
+						35 image
+						36 text Content
+					37 button Analytics
+						38 image
+						39 text Analytics
+					40 button Partner Integrations
+						41 image
+						42 text Partner Integrations
+					43 button Data Settings
+						44 image
+						45 text Data Settings
+					46 button Settings
+						47 image
+						48 text Settings
+				49 container Footer Logo
+					50 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+			51 text 14 days left in your free trial.
+			52 button Connect with sales
+			53 container Top navigation
+				54 container Left top navigation
+					55 button Search workspace ⌘+K
+						56 image
+						57 text Search workspace
+						58 text ⌘+K
+				59 container Right top navigation
+					60 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						61 image
+					62 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						63 image
+					64 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+						65 image
+					66 container
+						67 button Notifications
+							68 image
+					69 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						70 image
+					71 button BrazeAI Operator™
+						72 image
+			73 container main-container
+				74 container main-content
+					75 tab group
+						76 tab (selectable, settable, boolean) Email Preference Centers, Value: 0, ID: /users/subscription_groups/preference_centers/6af4374b46d3080087f1c558
+						77 tab (selected, settable, boolean) Create Preference Center Close tab, Description: Close tab, ID: /users/subscription_groups/preference_centers/6af4374b46d3080087f1c558/new, Value: 1
+Create Preference Center
+					78 heading Email Preference Center, Value: 2
+						79 text Email Preference Center
+					80 container
+						81 heading Details, Value: 3
+							82 text Details
+						83 container
+							84 text Name 0/280 characters
+						85 text field (disabled) Name 0/280 characters, ID: pf-name-3457251149
+						114 text Description
+						115 text entry area (disabled) Description, ID: pf-description-4044084963
+						86 button (disabled) Remove Description
+						87 text The Liquid tag will be generated after the preference center is launched
+						88 button Close
+						89 text Liquid
+						90 text field (disabled) Liquid, Value: {{preference_center.${}}}, ID: pf-liquid-496321807
+						92 text The API ID will be generated after the preference center is saved
+						93 button Close
+						94 text API ID
+						95 text field (disabled) API ID, ID: pf-api-id-3128871448
+					97 container
+						98 heading Page Previews, Value: 3
+							99 text Page Previews
+						100 button (disabled) Edit
+						136 container
+							137 radio button (disabled, settable, integer) Description: Preference Center, Value: 1, ID: tile-radio-2200320513
+							138 heading Preference Center, Value: 4
+								139 text Preference Center
+						140 container
+							141 radio button (disabled, settable, integer) Description: Confirmation Page, Value: 0, ID: tile-radio-4036325703
+							142 heading Confirmation Page, Value: 4
+								143 text Confirmation Page
+						144 AXWebArea about:blank
+					104 container
+						105 button (disabled) Save as draft
+						106 button (disabled) Launch preference center
+				107 text © Braze 2026
+				108 text Opening in a new tab
+				109 link Description: Opening in a new tab, Value: braze.statuspage.io/
+				110 text Opening in a new tab
+				111 link Description: Opening in a new tab, Value: braze.com/terms
+				112 text Opening in a new tab
+				113 link Description: Opening in a new tab, Value: braze.com/privacy
+		297 container chmln-dom
+			298 container Description: Your demo is here when you need it, ID: chmln-step-dialog-67d9ccd77a7cc2001854e34e
+				299 container
+					300 button  close, 
+						301 image
+					302 text Your demo is here when you need it
+				303 container
+					304 text Need more time with the sample flows and tutorials? Select the 
+					305 text Demo
+					306 text  workspace from this dropdown to switch back at any time.
+				307 button Got it, ID: chmln-button-67d9ccd77a7cc2001854e356
+		145 AXWebArea Grapes Editor, URL: us09.bz-rndr.com/composer_editor/grapes_editor/6af4374b46d3080087f1c558?context_type=email_preference_center&locale=en
+			146 container
+				147 container
+					148 container left-sidebar
+						149 tab group
+							150 tab (selected, settable, boolean) Compose, Value: 1, ID: compose
+							151 tab (selectable, settable, boolean) Settings, Value: 0, ID: settings
+							152 tab (selectable, settable, boolean) Preview, Value: 0, ID: preview
+						153 text Pages (2)
+						154 button Collapse
+						155 container
+							156 AXWebArea Modal Message, URL: about:srcdoc
+								157 container izc2
+									158 heading Update your email preferences, Value: 2
+										159 text Update your email preferences
+									160 button Save my preferences, ID: save-preferences
+									161 button Unsubscribe from all emails, ID: unsubscribe-all
+							162 heading Preference Center, Value: 5
+								163 text Preference Center
+							164 text 1
+						165 container
+							166 AXWebArea Modal Message, URL: about:srcdoc
+								167 container iniat
+									168 heading Thank you, your preferences have been updated, Value: 2
+										169 text Thank you, your preferences have been updated
+									170 button Back to preference center, ID: back-to-pref-center
+							171 heading Confirmation Page, Value: 5
+								172 text Confirmation Page
+						173 container
+							174 text Rows
+							175 text Drag a row into your message
+							176 container 1 Column
+							177 container 2 Columns
+							178 container 3 Columns
+						179 container
+							180 text Blocks
+							181 text Drag and drop a block into a row
+							182 container Add a large heading to your page
+								183 text Title
+							184 container Add a paragraph of text to your message
+								185 text Paragraph
+							186 container Add a clickable button with a link or action
+								187 text Button
+							188 container Add an image from a URL or media library
+								189 text Image
+							190 container Add a clickable hyperlink
+								191 text Link
+							192 container Add vertical space between blocks
+								193 text Spacer
+						194 container
+							195 text Opening in a new tab
+							196 link Description: Opening in a new tab, Value: braze.com/docs/en/create_dnd_iam/
+					197 button Collapse sidebar
+					198 container editor-column
+						199 container
+							200 container
+								201 AXWebArea us09.bz-rndr.com/composer_editor/grapes_editor/6af4374b46d3080087f1c558?context_type=email_preference_center&locale=en
+									202 container
+										203 container isxj
+											204 heading Update your email preferences, Value: 2, ID: i8ib
+												205 text Update your email preferences
+											206 container iebkp
+												207 text No subscription groups yet
+												208 text Add subscription groups to let users control what they receive
+												209 text Add subscription groups
+											210 button Save my preferences, ID: save-preferences
+											211 button Unsubscribe from all emails, ID: unsubscribe-all
+						212 container
+							213 pop up button Undo
+							214 pop up button Redo
+							215 pop up button Phone
+							216 pop up button Tablet
+							217 pop up button Desktop
+							218 pop up button Hide Outlines
+							219 pop up button (collapsed) Description: Add Personalization, Secondary Actions: Expand
+					220 container
+						221 heading Common styles, Value: 3
+							222 text Common styles
+						223 pop up button (collapsed) Description: Copy or paste styles, Secondary Actions: Expand
+						224 text All blocks in this page will use these styles, unless overridden at the local level.
+						225 heading Page, Value: 3
+							226 text Page
+						227 pop up button (collapsed) Description: Copy or paste styles, Secondary Actions: Expand
+						228 text Style the entire page
+						229 text Max width
+						230 container
+							231 stepper (settable, integer) 500
+						232 container
+							233 container
+								234 text px
+								235 combo box (collapsed, settable) Description: Max width unit, ID: react-select-2-input, Secondary Actions: Expand
+						236 text Background color
+						237 container color picker fields container
+							238 button color swatch
+							239 container color display information
+								240 container hex code
+									241 text # FFFFFF
+								242 container opacity
+									243 text Opacity 100%
+						244 heading Content, Value: 3
+							245 text Content
+						246 pop up button (collapsed) Description: Copy or paste styles, Secondary Actions: Expand
+						247 text Style the body of the page
+						248 text Default font family
+						249 container
+							250 container
+								251 text OS Default (Sans Serif)
+								252 combo box (collapsed, settable) Description: Default font family, ID: react-select-3-input, Secondary Actions: Expand
+						253 button + Add Custom Font
+						254 text Content area alignment
+						255 container
+							256 pop up button Left
+							257 pop up button Center
+							258 pop up button Right
+						259 text Text color
+						260 container color picker fields container
+							261 button color swatch
+							262 container color display information
+								263 container hex code
+									264 text # 000000
+								265 container opacity
+									266 text Opacity 100%
+						267 text Button color
+						268 container color picker fields container
+							269 button color swatch
+							270 container color display information
+								271 container hex code
+									272 text # 008294
+								273 container opacity
+									274 text Opacity 100%
+						275 text Button text color
+						276 container color picker fields container
+							277 button color swatch
+							278 container color display information
+								279 container hex code
+									280 text # FFFFFF
+								281 container opacity
+									282 text Opacity 100%
+						283 text Link color
+						284 container color picker fields container
+							285 button color swatch
+							286 container color display information
+								287 container hex code
+									288 text # 1B78CF
+								289 container opacity
+									290 text Opacity 100%
+					291 container db-drag-and-drop-composer-footer
+						292 button Send feedback, ID: feedback-field-popover-trigger
+						293 button Cancel
+						294 button Done
+						295 button BrazeAI Operator™
+							296 image
+
+The focused UI element is 298 container Description: Your demo is here when you need it, ID: chmln-step-dialog-67d9ccd77a7cc2001854e34e

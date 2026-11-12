@@ -10,15 +10,16 @@
     "dev": "next dev",
     "build": "next build",
     "test:iam": "node --experimental-strip-types --test tests/in-app-model.test.mjs tests/in-app-runtime.test.mjs tests/in-app-traditional.test.mjs",
-    "test:tags": "node --experimental-strip-types --test tests/tag-system.test.mjs",
-    "test:canvas": "node --experimental-strip-types --test tests/canvas-model.test.mjs tests/canvas-browser-store.test.mjs",
+    "test:tags": "node --experimental-transform-types --test tests/tag-system.test.mjs tests/tag-fidelity-integrity.test.mjs tests/tag-audience.test.mjs tests/tag-canvas-audience.test.mjs",
+    "test:canvas": "node --experimental-transform-types --test tests/canvas-model.test.mjs tests/canvas-browser-store.test.mjs tests/canvas-wizard-tags.test.mjs tests/canvas-wizard-audience.test.mjs tests/canvas-fidelity.test.mjs tests/canvas-deep.test.mjs",
     "test:i18n": "node --experimental-strip-types --test tests/i18n.test.mjs",
     "test:navigation": "node --experimental-strip-types --test tests/navigation.test.mjs",
     "test:whatsapp": "node --experimental-strip-types --test tests/whatsapp-model.test.mjs",
     "test:sms": "node --experimental-strip-types --test tests/sms-model.test.mjs",
     "test:webhook": "node --experimental-strip-types --test tests/webhook-model.test.mjs",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:audience": "node --experimental-transform-types --test tests/audience-parity.test.mjs tests/audience-rule-schema.test.mjs tests/campaign-interactions.test.mjs tests/canvas-wizard-audience.test.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

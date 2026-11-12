@@ -1,0 +1,6 @@
+- main:
+  - heading "SMS Preview" [level=1]
+  - generic: "Thanks for being a loyal customer, Ada! Your reward for being so loyal? Early access to our limited edition sale: https://brz.ai/XXXXXXXX Reply STOP to opt-out."
+  - paragraph: 161 | 2 Billable Segments
+  - text: Actual rendering may not be identical to this preview depending on the user's environment.
+- alert

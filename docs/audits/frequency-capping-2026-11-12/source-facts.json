@@ -1,0 +1,134 @@
+[
+  {
+    "id": "JS-01",
+    "kind": "manual-static-inspection",
+    "source": "71355.c572042aac2b4126.js",
+    "sha256": "03c61b68fca891dab50da77af8dbc3247f78b1f4b0d085d2c11507b505c8a98d",
+    "utf8_byte_range": {
+      "start": 19891,
+      "end_exclusive": 19950
+    },
+    "matched_text": "/workspaces/{workspace_id}/frequency_capping_rules/v1/rules",
+    "interpretation": "Generated client declares GET and PUT on the workspace rules collection; no live request was captured."
+  },
+  {
+    "id": "JS-02",
+    "kind": "manual-static-inspection",
+    "source": "71355.c572042aac2b4126.js",
+    "sha256": "03c61b68fca891dab50da77af8dbc3247f78b1f4b0d085d2c11507b505c8a98d",
+    "utf8_byte_range": {
+      "start": 27648,
+      "end_exclusive": 27675
+    },
+    "matched_text": "frequency_capping_grape_api",
+    "interpretation": "Feature selector chooses between the newer workspace rules API and the legacy campaign global-frequency-caps API."
+  },
+  {
+    "id": "JS-03",
+    "kind": "manual-static-inspection",
+    "source": "71355.c572042aac2b4126.js",
+    "sha256": "03c61b68fca891dab50da77af8dbc3247f78b1f4b0d085d2c11507b505c8a98d",
+    "utf8_byte_range": {
+      "start": 27403,
+      "end_exclusive": 27426
+    },
+    "matched_text": "===403?{data:[]}:void 0",
+    "interpretation": "The new-query recovery branch maps HTTP 403 to an empty data array; an empty helper result alone cannot prove no server-side rules exist."
+  },
+  {
+    "id": "JS-04",
+    "kind": "manual-static-inspection",
+    "source": "71355.c572042aac2b4126.js",
+    "sha256": "03c61b68fca891dab50da77af8dbc3247f78b1f4b0d085d2c11507b505c8a98d",
+    "utf8_byte_range": {
+      "start": 27056,
+      "end_exclusive": 27105
+    },
+    "matched_text": "type:e.type,messages:e.messages,seconds:e.seconds",
+    "interpretation": "Adapter retains channel/type, message cap, and seconds-based window."
+  },
+  {
+    "id": "JS-05",
+    "kind": "manual-static-inspection",
+    "source": "71355.c572042aac2b4126.js",
+    "sha256": "03c61b68fca891dab50da77af8dbc3247f78b1f4b0d085d2c11507b505c8a98d",
+    "utf8_byte_range": {
+      "start": 27176,
+      "end_exclusive": 27240
+    },
+    "matched_text": "category:e.category?{name:e.category.name,id:e.category.id}:null",
+    "interpretation": "Adapter retains an optional category object; adjacent fields retain nullable tag_name and tag_id."
+  },
+  {
+    "id": "JS-06",
+    "kind": "manual-static-inspection",
+    "source": "99677.8bcf2d9af201666c.js",
+    "sha256": "30fdd57ed9caef7667dbd8d6798e550528984cf2666d2d19643409f9d72980e2",
+    "utf8_byte_range": {
+      "start": 272,
+      "end_exclusive": 314
+    },
+    "matched_text": "e.seconds,[m.yr.Minute,m.yr.Day,m.yr.Week]",
+    "interpretation": "Summary formatter considers minutes, days and weeks; this is not evidence for every editable form option."
+  },
+  {
+    "id": "JS-07",
+    "kind": "manual-static-inspection",
+    "source": "71707.9a9d34fd396bd07b.js",
+    "sha256": "a4cdcca098462ae1732132a4d7487c2eccf00c0120cce5329437b749a3bcc1a3",
+    "utf8_byte_range": {
+      "start": 174881,
+      "end_exclusive": 174917
+    },
+    "matched_text": "\"FREQUENCY_CAPPING\":{\"MAX_RULES\":15}",
+    "interpretation": "The shipped constants include a maximum of 15, which differs from the official documentation value of 10; actual workspace enforcement is unverified."
+  },
+  {
+    "id": "JS-08",
+    "kind": "manual-static-inspection",
+    "source": "71707.9a9d34fd396bd07b.js",
+    "sha256": "a4cdcca098462ae1732132a4d7487c2eccf00c0120cce5329437b749a3bcc1a3",
+    "utf8_byte_range": {
+      "start": 172452,
+      "end_exclusive": 172562
+    },
+    "matched_text": "\"GLOBAL_FREQUENCY_CAPPING_RULES_LIMIT\":{\"TYPE\":\"numerical\",\"LIMIT_KEY\":\"global_frequency_capping_rules_limit\"}",
+    "interpretation": "A separate numerical workspace/plan limit exists; do not hard-code the observed constant as the universal effective quota."
+  },
+  {
+    "id": "JS-09",
+    "kind": "manual-static-inspection",
+    "source": "21394.5803ec6a7c1272aa.js",
+    "sha256": "4ffa5dc0cb8f5e17ff77a210e3fc9efb7ada197fe00f36f8e3be302ba2ca750d",
+    "utf8_byte_range": {
+      "start": 51042,
+      "end_exclusive": 51129
+    },
+    "matched_text": "ignore_global_frequency_capping:i.boolean,exclude_from_global_frequency_count:i.boolean",
+    "interpretation": "Campaign/Canvas data declarations expose independent ignore-cap and exclude-count booleans."
+  },
+  {
+    "id": "JS-10",
+    "kind": "manual-static-inspection",
+    "source": "21394.5803ec6a7c1272aa.js",
+    "sha256": "4ffa5dc0cb8f5e17ff77a210e3fc9efb7ada197fe00f36f8e3be302ba2ca750d",
+    "utf8_byte_range": {
+      "start": 548214,
+      "end_exclusive": 548261
+    },
+    "matched_text": "/engagement/campaigns/set_global_frequency_caps",
+    "interpretation": "Legacy API client declares a PUT update endpoint; it was not invoked."
+  },
+  {
+    "id": "JS-11",
+    "kind": "manual-static-inspection",
+    "source": "71707.9a9d34fd396bd07b.js",
+    "sha256": "a4cdcca098462ae1732132a4d7487c2eccf00c0120cce5329437b749a3bcc1a3",
+    "utf8_byte_range": {
+      "start": 292863,
+      "end_exclusive": 292999
+    },
+    "matched_text": "\"editFrequencyCaps\":{\"value\":139,\"parent_permission\":\"viewFrequencyCaps\",\"prerequisite_permissions\":[\"launchCampaigns\",\"launchCanvases\"]",
+    "interpretation": "Static permission metadata links editing to viewing and the listed campaign/canvas launch prerequisites; actual effective role resolution was not tested."
+  }
+]

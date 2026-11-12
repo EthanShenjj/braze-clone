@@ -1,0 +1,16 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {registerHooks} from 'node:module';
+import {existsSync,mkdtempSync} from 'node:fs';
+import {fileURLToPath} from 'node:url';
+import {join} from 'node:path';
+import {tmpdir} from 'node:os';
+registerHooks({resolve(specifier,context,nextResolve){if(specifier==='server-only')return{url:'data:text/javascript,export {}',shortCircuit:true};if(specifier.startsWith('@/'))return nextResolve(new URL('../'+specifier.slice(2)+'.ts',import.meta.url).href,context);if(specifier.startsWith('.')&&context.parentURL?.startsWith('file:')){const path=new URL(specifier,context.parentURL);if(!/\.[a-z]+$/i.test(path.pathname)&&existsSync(fileURLToPath(path)+'.ts'))return nextResolve(path.href+'.ts',context);}return nextResolve(specifier,context);}});
+process.env.BRAZE_DATABASE_PATH=join(mkdtempSync(join(tmpdir(),'segment-insights-api-')),'test.sqlite');
+const store=await import('../lib/braze-store.ts'),endpoint=await import('../app/api/audience/segments/insights/route.ts');
+store.applyProfileRows([{external_id:'si_a',country:'QA'},{external_id:'si_b',country:'QB'}]);
+const groups=country=>[{id:'g',operator:'AND',exclude:false,rules:[{id:'r',field:'country',operator:'equals',value:country}]}];
+const a=store.createResource({type:'segments',name:'Insights A',status:'Active',data:{workspaceId:'local',audienceGroups:groups('QA')}}),b=store.createResource({type:'segments',name:'Insights B',status:'Active',data:{workspaceId:'local',audienceGroups:groups('QB')}});
+const at=new Date(Date.now()-86400000).toISOString();store.createResource({type:'user-events',name:'session_start',data:{workspaceId:'local',userId:'si_a',createdAt:at}});store.createResource({type:'user-events',name:'purchase',data:{workspaceId:'local',userId:'si_a',createdAt:at,productId:'sku',price:25,quantity:2,currency:'EUR'}});
+test('comparison API returns actual selected membership, custom baseline and measured currency',async()=>{const response=endpoint.GET(new Request(`http://localhost/api/audience/segments/insights?segmentIds=${a.id}&baselineId=${b.id}&workspaceId=local`));assert.equal(response.status,200);const result=await response.json();assert.equal(result.baseline.segment.id,b.id);assert.equal(result.baseline.statistics.matching,1);assert.equal(result.segments[0].statistics.matching,1);assert.equal(result.segments[0].metrics.lifetimeRevenue,50);assert.equal(result.segments[0].metrics.ltvCurrency,'EUR');assert.ok(result.segments[0].metrics.sessionFrequency>0.99&&result.segments[0].metrics.sessionFrequency<=1);});
+test('All Users baseline works with no saved selections and routes enforce workspace and maximum10',async()=>{const response=endpoint.GET(new Request('http://localhost/api/audience/segments/insights?workspaceId=local'));const result=await response.json();assert.equal(result.baseline.segment.id,'__all_users__');assert.deepEqual(result.segments,[]);assert.ok(result.baseline.statistics.matching>=2);assert.equal(endpoint.GET(new Request(`http://localhost/api/audience/segments/insights?workspaceId=remote&segmentIds=${a.id}`)).status,404);assert.equal(endpoint.GET(new Request(`http://localhost/api/audience/segments/insights?segmentIds=${Array.from({length:11},(_,index)=>index).join(',')}`)).status,400);});

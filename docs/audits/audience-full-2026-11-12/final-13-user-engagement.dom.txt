@@ -1,0 +1,159 @@
+- alert: Braze Demo — Thinkingai
+- complementary:
+  - button "Minimize menu" [expanded]
+  - button "Select workspace":
+    - generic: Local workspace
+  - navigation "Side navigation":
+    - generic: Quick links
+    - button "Canvas":
+      - generic: Canvas
+    - button "Campaigns":
+      - generic: Campaigns
+    - button "Segments":
+      - generic: Segments
+    - button "Getting Started":
+      - generic: Getting Started
+    - button "Home":
+      - generic: Home
+    - button "AI Decisioning":
+      - generic: AI Decisioning
+    - button "Agents":
+      - generic: Agents
+    - button "Messaging":
+      - generic: Messaging
+    - button "Audience":
+      - generic: Audience
+    - button "Content":
+      - generic: Content
+    - button "Analytics":
+      - generic: Analytics
+    - button "Partner Integrations":
+      - generic: Partner Integrations
+    - button "Data Settings":
+      - generic: Data Settings
+    - button "Settings":
+      - generic: Settings
+  - button "Home":
+    - img "Braze"
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - generic "Community":
+    - img "Community"
+  - button "Language"
+  - button "Notifications"
+  - button "Profile"
+  - button "Open BrazeAI Operator"
+  - heading "Search users" [level=1]
+  - text: Limited access
+  - textbox "Email address, phone number or External User ID": <redacted>
+  - button "Clear Selection":
+  - button "Search":
+  - paragraph:
+    - text: Search for users by their External User ID
+    - img "The identifier assigned to a user by your company."
+    - text: User Alias
+    - img "Look up a user's alias name, or label:name."
+    - text: email, phone number, or push token.
+  - article:
+    - heading "Customer 1" [level=2]
+    - paragraph: "User ID: user_1"
+    - paragraph: "Braze ID: --"
+    - paragraph:
+      - text: user1@example.test
+    - paragraph:
+      - text: None
+    - button "User aliases" [disabled]
+    - button "Refresh user profile":
+  - tablist "User profile":
+    - tab "Overview"
+    - tab "Engagement" [active] [selected]
+    - tab "Messaging History"
+    - tab "Event History"
+    - tab "Commerce"
+    - tab "Feature Flags Eligibility"
+  - article:
+    - heading "Contact Settings" [level=2]
+    - heading "Email" [level=3]
+    - text: Global subscription state
+    - combobox "Global subscription state": Subscribed
+    - button "Toggle Global subscription state":
+    - heading "Subscription Groups" [level=4]
+    - generic: Product updates
+    - switch "Product updates" [checked]
+    - generic: Promotions
+    - switch "Promotions" [checked]
+    - heading "Email Open/Click Tracking Pixel" [level=4]
+    - term: Open Tracking
+    - definition: Enabled
+    - term: Click Tracking
+    - definition: Enabled
+    - paragraph:
+      - text: Manage this workspace's open/click tracking in
+      - link "Email Preferences":
+        - /url: /email-preferences
+      - text: .
+    - heading "SMS/MMS/RCS" [level=3]
+    - heading "Phone Number" [level=4]
+    - paragraph: "--"
+    - generic: SMS alerts
+    - switch "SMS alerts" [checked]
+    - heading "WhatsApp" [level=3]
+    - heading "Phone Number" [level=4]
+    - paragraph: "--"
+    - generic: WhatsApp updates
+    - switch "WhatsApp updates" [checked]
+    - heading "LINE" [level=3]
+    - term: LINE User ID
+    - definition: "--"
+    - heading "Push" [level=3]
+    - button "Unsubscribed"
+    - button "Subscribed"
+    - button "Opted In"
+  - article:
+    - heading "Communication Stats" [level=2]
+    - term: Last Received Any Campaign
+    - definition: "--"
+    - term: Last Received Push
+    - definition: "--"
+    - term: Last Interacted With Email
+    - definition: "--"
+    - term: Last Received LINE
+    - definition: "--"
+    - term: Last Received SMS/MMS/RCS
+    - definition: "--"
+    - term: Last Received Webhook
+    - definition: "--"
+    - term: Last Received WhatsApp
+    - definition: "--"
+  - article:
+    - heading "Campaigns Received" [level=2]
+    - paragraph: This user has not received any campaigns.
+  - article:
+    - heading "Install Attribution" [level=2]
+    - paragraph: No install attribution information.
+  - article:
+    - heading "Miscellaneous" [level=2]
+    - term: Random Bucket
+    - definition: "4095"
+    - term: Global Control Group
+    - definition: "No"
+  - article:
+    - heading "Segments" [level=2]
+    - combobox "Segment membership check"
+    - button "Toggle Segment membership check":
+    - text: Search by Segment name
+  - article:
+    - heading "Canvas Messages Received" [level=2]
+    - text: Displaying recent messages only
+    - paragraph: This user has not received any messages from any Canvases.
+  - article:
+    - heading "Predictions" [level=2]
+    - heading "Churn Prediction" [level=3]
+    - paragraph: This user has not been assigned any scores.
+    - heading "Event Prediction" [level=3]
+    - paragraph: This user has not been assigned any scores.

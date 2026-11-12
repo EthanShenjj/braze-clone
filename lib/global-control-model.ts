@@ -7,6 +7,7 @@ export type GlobalControlSettings = {
 };
 export type GlobalControlCounts = { total: number; control: number; treatment: number; sample: number };
 export type GlobalControlSnapshot = {
+  capabilities?: {canEdit:boolean};
   settings: Omit<GlobalControlSettings, "seed">;
   counts: GlobalControlCounts;
   availableTags: string[];

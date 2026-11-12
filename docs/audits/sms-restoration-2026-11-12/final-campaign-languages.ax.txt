@@ -1,0 +1,41 @@
+Browser tab: 23, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3216/engagement/campaigns/cmp_sms_qa_f730215b_campaign?step=compose&workspace=sms_qa_f730215b&locale=en".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3216/engagement/campaigns/cmp_sms_qa_f730215b_campaign?step=compose&workspace=sms_qa_f730215b&locale=en
+	1 container Internationalize your message
+		2 button Close language dialog
+			3 image
+		4 heading Internationalize your message, Value: 2
+			5 text Internationalize your message
+		6 text Languages
+		28 container
+			29 text English
+			30 button Remove English
+				31 image
+			32 combo box (collapsed, settable) Description: Languages, Secondary Actions: Expand
+			33 button Toggle Languages
+				34 image
+		18 heading Fields to internationalize, Value: 5
+			19 text Fields to internationalize
+		20 container
+			21 checkbox (settable, integer) Description: Message, Value: 1
+			22 text Message This field has content already
+		23 container
+			24 checkbox (settable, integer) Description: Image, Value: 0
+			25 text Image This field has content already
+		35 container
+			36 text Select a method of insertion or paste the following snippet into the desired location. Learn more about 
+			37 link Description: conditional messaging, Value: braze.com/docs/en/user_guide/personalization_and_dynamic_content/liquid/conditional_logic/
+			38 text .
+		39 text {% if ${language} == 'en' %}
+
+{% else %}
+
+{% endif %}
+		40 button Copy
+			41 image
+			42 text Copy
+		26 container
+			27 button Cancel
+			43 button Replace existing text
+			44 button Add after existing text
+
+The focused UI element is 21 checkbox (settable, integer) Description: Message, Value: 1

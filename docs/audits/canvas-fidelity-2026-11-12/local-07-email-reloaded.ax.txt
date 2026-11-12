@@ -1,0 +1,187 @@
+Browser tab: 6, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3220/engagement/canvas/322ef7c3-bd70-4553-81df-819a884b95cf?locale=en&workspace=local&step=build&workspaceId=local".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3220/engagement/canvas/322ef7c3-bd70-4553-81df-819a884b95cf?locale=en&workspace=local&step=build&workspaceId=local
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agent Console
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+	25 container
+		26 text ◷   8 days left in your free trial.
+		27 button Connect with sales
+		28 button Search workspace ⌘K
+			29 image
+			30 text Search workspace
+			31 text ⌘K
+		32 button Take a tour
+		33 image Community
+		34 button (collapsed) Description: Language, Secondary Actions: Expand
+		35 button Notifications
+		36 button (collapsed) Description: Profile, Secondary Actions: Expand
+		37 image
+		38 button Open BrazeAI Operator
+		39 container
+			40 button Canvas
+			112 text › Edit ' New Canvas - November 12, 2026 '
+			41 button Close Canvas
+				42 image
+		113 container Canvas flow builder
+			114 container
+				115 container Components
+					116 text Components
+					117 text Select components to build your user journey.
+					118 button Collapse components
+						119 image
+					120 container
+						121 heading Message Controls, Value: 3
+							122 text Message Controls
+						123 button Message
+							124 image
+							125 text Message
+						126 button Delay
+							127 image
+							128 text Delay
+						129 heading AI Actions, Value: 3
+							130 text AI Actions
+						131 button Agent Step
+							132 image
+							133 text Agent Step
+						134 button Content Optimizer
+							135 image
+							136 text Content Optimizer
+						137 heading Flow Controls, Value: 3
+							138 text Flow Controls
+						139 button Decision Split
+							140 image
+							141 text Decision Split
+						142 button Audience Paths
+							143 image
+							144 text Audience Paths
+						145 button Action Paths
+							146 image
+							147 text Action Paths
+						148 button Experiment Paths
+							149 image
+							150 text Experiment Paths
+						151 button Send to Destination
+							152 image
+							153 text Send to Destination
+						154 heading Audience Updates, Value: 3
+							155 text Audience Updates
+						156 button Context
+							157 image
+							158 text Context
+						159 button User Update
+							160 image
+							161 text User Update
+						162 button Feature Flag
+							163 image
+							164 text Feature Flag
+						165 button Audience Sync
+							166 image
+							167 text Audience Sync
+					168 button Clean Up Canvas
+						169 image
+						170 text Clean Up Canvas
+				171 button (collapsed) Version history, Secondary Actions: Expand
+				172 button Expand
+					173 text Expand
+					174 image
+				175 container
+					176 button Zoom out
+					177 text 100 %
+					178 button Zoom in
+				179 container
+					180 button Entry Rules
+						181 text Entry Rules
+						182 image
+					183 image
+					184 text Schedule
+					185 text No schedule selected.
+					186 image
+					187 text Audience
+					188 text All eligible users
+					189 image
+					190 text Exit Criteria
+					191 text No exit criteria selected.
+					192 image
+					193 text Controls
+					194 text Users are not eligible to re-enter this Canvas.
+					195 button Add Variant
+						196 image
+						197 text Add Variant
+					198 container
+						199 text 100 % Variant 1
+						200 button Settings for Variant 1
+							201 image
+					202 button Delay Delay After 2 hours
+						203 image
+						204 text Delay
+						205 text Delay
+						206 text After 2 hours
+						207 image
+					208 button Step actions for Delay
+						209 image
+					210 button Message Message
+						211 image
+						212 text Message
+						213 text Message
+						214 image
+					215 button Step actions for Message
+						216 image
+					217 button Add step after Message
+						218 image
+			219 container Message step editor
+				220 container
+					221 text Message Message Email
+					222 button Done
+				223 container
+					224 text Set Up Message
+					225 tab group
+						226 tab (selected, settable, boolean) Messaging channels, Value: 1
+						227 tab (selectable, settable, boolean) Delivery settings, Value: 0
+					228 heading Messaging Channels, Value: 3
+						229 text Messaging Channels
+					230 checkbox Email, Value: 1
+					231 checkbox Push notifications, Value: 0
+					232 checkbox SMS/MMS/RCS, Value: 0
+					233 checkbox In-App Messages, Value: 0
+					234 checkbox Content Cards, Value: 0
+					235 checkbox Webhook, Value: 0
+					236 checkbox WhatsApp, Value: 0
+					237 checkbox LINE, Value: 0
+					238 checkbox Banner, Value: 0
+					239 heading Email, Value: 3
+						240 text Email
+					241 button Edit sending settings
+					242 button Edit email
+					243 button Preview
+					244 text Subject
+					245 text field (settable) Description: Subject, Value: Canvas parity acceptance
+					246 container Email message preview
+						247 AXWebArea about:srcdoc
+							248 heading Canvas acceptance, Value: 1
+								249 text Canvas acceptance
+							250 text Full email editing is available.
+		109 button Back
+		110 button Save
+		111 button Forward
+
+The focused UI element is 210 button Message Message

@@ -1,0 +1,105 @@
+Browser tab: 12, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3221/engagement/canvas/beb4295a-d720-458a-8451-18c65ab5d22d?locale=en&workspaceId=local&step=build".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3221/engagement/canvas/beb4295a-d720-458a-8451-18c65ab5d22d?locale=en&workspaceId=local&step=build
+	2 container Action Paths step editor
+		3 container
+			4 text field (settable) Description: Step name, Value: actions
+			5 text Action Paths
+			6 button Action Settings
+			7 button 1　Group 1
+				8 text 1
+				9 text Group 1
+			10 button 2　Everyone Else
+				11 text 2
+				12 text Everyone Else
+			13 button ＋ Add A New Group
+			14 button Done
+		15 container
+			16 text Action settings Action Group Name
+			17 text field (settable) Description: Action Group Name, Value: Group 1
+			18 checkbox (settable, integer) Description: I want this group to exit the Canvas, Value: 0
+			19 text Please define the trigger events for this action group.
+			20 container
+				21 text Interact With Campaign
+				22 button Remove trigger
+					23 image
+			24 container
+				25 text Interaction
+				26 combo box (collapsed, settable) Description: Interaction, Value: Open email, Secondary Actions: Expand
+				27 button Toggle Interaction
+					28 image
+			29 container
+				30 text for campaign
+				31 combo box (collapsed, settable) Description: for campaign, Secondary Actions: Expand
+				32 button Toggle for campaign
+					33 image
+			34 text Choose a campaign.
+			35 container
+				36 text Update Subscription Group Status
+				37 button Remove trigger
+					38 image
+			39 text Update their
+			40 container
+				41 text Subscription type
+				42 combo box (collapsed, settable) Description: Subscription type, Secondary Actions: Expand
+				43 button Toggle Subscription type
+					44 image
+			45 container
+				46 text Subscription state
+				47 combo box (collapsed, settable) Description: Subscription state, Value: subscribed, Secondary Actions: Expand
+				48 button Toggle Subscription state
+					49 image
+			50 container
+				51 text Subscription group
+				52 combo box (collapsed, settable) Description: Subscription group, Secondary Actions: Expand
+				53 button Toggle Subscription group
+					54 image
+				55 text No options are available in this workspace.
+			56 container
+				57 text Update source
+				58 combo box (collapsed, settable) Description: Update source, Value: REST API, Secondary Actions: Expand
+				59 button Toggle Update source
+					60 image
+			61 text Choose a subscription group.
+			62 container
+				63 text Perform Conversion Event
+				64 button Remove trigger
+					65 image
+			66 text Perform this Canvas's Primary Conversion Event
+			67 container
+				68 text View product
+				69 button Remove trigger
+					70 image
+			71 container
+				72 text Custom event name
+				73 combo box (collapsed, settable) Description: Custom event name, Value: ecommerce.product_viewed, Secondary Actions: Expand
+				74 button Toggle Custom event name
+					75 image
+			76 checkbox (settable, integer) Description: Add property filters, Value: 1
+			77 container
+				78 container Property filter group
+					79 text Filter group
+					80 container
+						81 combo box (collapsed, settable) Description: Property group operator, Value: AND, Secondary Actions: Expand
+						82 button Toggle Property group operator
+							83 image
+					84 button (disabled) Remove property filter group
+					85 container
+						86 text Property
+						87 combo box (settable) Description: Event property, Value: price
+					88 container
+						89 text Comparison
+						90 combo box (collapsed, settable) Description: Property comparison, Value: greater than, Secondary Actions: Expand
+						91 button Toggle Property comparison
+							92 image
+					93 container
+						94 text Value
+						95 text field (settable) Description: Property value, Value: 10
+					96 button Remove property filter
+					97 button ＋ Add property filter
+				98 button ＋ Add filter group
+			99 text Evaluate if user takes specified actions
+			100 combo box (collapsed, settable) Description: Select Trigger, Secondary Actions: Expand
+			101 button Toggle Select Trigger
+			102 button (disabled) Add Trigger
+
+The focused UI element is 7 button 1　Group 1

@@ -1,0 +1,50 @@
+Browser tab: 7, Title: "Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container
+		220 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		221 container Step step editor
+			222 container
+				223 text Step
+				224 button
+				225 text DISCONNECTED Incomplete Messages
+				226 button Content Optimizer Clicks 1 combination
+					227 image
+					228 text Content Optimizer
+					229 text Clicks
+					230 text 1 combination
+				231 text All users who enter this step advance to the next step
+			232 button Done
+			233 container
+				234 text Content Optimizer setup
+				235 button BrazeAI Operator™
+					236 image
+				237 tab group Message step
+					238 tab (selectable, settable, boolean) Description: Messaging channels, Value: 0, ID: content
+					239 tab (selectable, settable, boolean) Description: Delivery settings, Value: 0, ID: settings
+					240 tab (selected, settable, boolean) Description: Content Optimizer settings, ID: content-optimizer-settings, Value: 1
+Content Optimizer settings
+					241 tab (selectable, settable, boolean) Description: Agentic Standards results, Value: 0, ID: message-step-tab-standards-results
+				243 tab group
+					244 tab (selectable, settable, boolean) Description: Components, ID: components, Value: 0
+Components
+1
+					245 tab (selected, settable, boolean) Description: Optimization Event, Value: 1, ID: optimization-event
+				250 container
+					251 container
+						252 text * Select one
+					253 container
+						254 radio button (settable, integer) Description: Opens, Value: 0, ID: radio-button-867847185
+						255 text Opens
+						256 radio button (settable, integer) Description: Clicks, Value: 1, ID: radio-button-432268775
+						257 text Clicks
+					258 text Content Optimizer needs enough data to identify your best-performing variant. Results may be limited if:
+					259 content list
+						260 container
+							261 AXListMarker • 
+							262 text Re-eligibility is off and your estimated audience is under 30,000
+						263 container
+							264 AXListMarker • 
+							265 text This step has 0 combinations. Content Optimizer steps with 5 or more combinations perform meaningfully better.
+				249 button Send feedback, ID: co-settings-feedback-target
+
+The focused UI element is 245 tab (selected, settable, boolean) Description: Optimization Event, Value: 1, ID: optimization-event

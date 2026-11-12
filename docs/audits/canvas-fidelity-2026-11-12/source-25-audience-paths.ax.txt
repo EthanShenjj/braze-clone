@@ -1,0 +1,68 @@
+Browser tab: 4, Title: "Engagement - Canvas - Edit 'New Canvas - November 11, 2026'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'New Canvas - November 11, 2026', URL: dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container
+		171 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		172 container Step 3 step editor
+			173 container
+				174 text Step 3
+				175 button
+				176 text DISCONNECTED
+				177 container
+					178 button 1 1 Group 1
+						179 image
+							180 text 1
+						181 text Group 1
+				182 button 2 2 Everyone Else
+					183 image
+						184 text 2
+					185 text Everyone Else
+				186 button Add A New Group
+			187 button Done
+			188 container
+				189 image
+					190 text 1
+				191 text Group 1
+				192 button BrazeAI Operator™
+					193 image
+				194 tab group Audience Paths step
+					195 tab (selected, settable, boolean) Audience settings, Value: 1, ID: audience-paths-tab-settings
+					196 tab (selectable, settable, boolean) Description: Agentic Standards results, Value: 0, ID: audience-paths-tab-standards-results
+				197 container Description: Audience settings, ID: audience-paths-panel-settings
+					198 container
+						199 text Audience Group Name
+						200 text field (settable) Group 1
+						201 checkbox (settable, integer) Description: I want this group to exit the Canvas, Value: 0, ID: bc-checkbox-3144907642
+						202 text I want this group to exit the Canvas
+						203 container Audience Definition Use segments and filters to define your audience group and funnel users through different paths. Users in multiple audience groups will follow the path of their highest ranked group.
+							204 container
+								205 heading Audience Definition, Value: 4
+									206 text Audience Definition
+								207 text Use segments and filters to define your audience group and funnel users through different paths. Users in multiple audience groups will follow the path of their highest ranked group.
+							208 container
+								209 text Segments
+								210 pop up button (collapsed) Description: Help text available. Tab to view help text, click to open popover, Secondary Actions: Expand
+								211 container
+									212 text Search Segments...
+									213 combo box (collapsed, settable) Description: Segments, ID: react-select-31-input, Secondary Actions: Expand
+							214 container
+								215 heading Filters, Value: 3
+									216 text Filters
+								217 container Filter group
+									218 button
+										219 image
+									220 text Filter group
+									221 pop up button (collapsed) Description: or, Secondary Actions: Expand
+										222 text OR
+									223 container
+										224 container
+											225 text Search filter...
+											226 combo box (collapsed, settable) Description: Select filter, ID: react-select-32-input, Secondary Actions: Expand
+									227 button (disabled) Remove
+								228 button Add filter group
+								229 button Add exclusion group
+						230 heading User Lookup, Value: 4
+							231 text User Lookup
+						232 text Check if a user matches the segment, filter, and app criteria
+						233 button Lookup User
+
+The focused UI element is 172 container Step 3 step editor

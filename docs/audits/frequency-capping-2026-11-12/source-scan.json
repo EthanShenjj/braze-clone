@@ -1,0 +1,938 @@
+[
+  {
+    "name": "77637.0595c9c68f909c2b.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/77637.0595c9c68f909c2b.js",
+    "download_exit": 28,
+    "error": "curl: (28) Connection timed out after 8001 milliseconds\n"
+  },
+  {
+    "name": "95807.56d386f56d2e8276.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/95807.56d386f56d2e8276.js",
+    "download_exit": 28,
+    "error": "curl: (28) Connection timed out after 8002 milliseconds\n"
+  },
+  {
+    "name": "74895.8bc7ea67c05d4383.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/74895.8bc7ea67c05d4383.js",
+    "download_exit": 28,
+    "error": "curl: (28) Connection timed out after 8004 milliseconds\n"
+  },
+  {
+    "name": "26463.db031a93cdfbb6e2.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/26463.db031a93cdfbb6e2.js",
+    "download_exit": 28,
+    "error": "curl: (28) Connection timed out after 8002 milliseconds\n"
+  },
+  {
+    "name": "63503.acd639f6f93604c3.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/63503.acd639f6f93604c3.js",
+    "download_exit": 35,
+    "error": "curl: (35) Recv failure: Connection reset by peer\n"
+  },
+  {
+    "name": "8527.d33a2c3a3fe224b8.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/8527.d33a2c3a3fe224b8.js",
+    "download_exit": 35,
+    "error": "curl: (35) Recv failure: Connection reset by peer\n"
+  },
+  {
+    "name": "87912.00305d9ecf5014c8.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/87912.00305d9ecf5014c8.js",
+    "download_exit": 35,
+    "error": "curl: (35) Recv failure: Connection reset by peer\n"
+  },
+  {
+    "name": "24724.49fc1523079947ee.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/24724.49fc1523079947ee.js",
+    "download_exit": 35,
+    "error": "curl: (35) Recv failure: Connection reset by peer\n"
+  },
+  {
+    "name": "30671.28c97d94e18f6561.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/30671.28c97d94e18f6561.js",
+    "download_exit": 0,
+    "bytes": 137433,
+    "sha256": "27d93afcbe9b7584fd4597ddb188918c6fc4ac34d7b9635a6fd7e7cefe7dd97d",
+    "matches": 0
+  },
+  {
+    "name": "41994.fe1863548c2ba7d4.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/41994.fe1863548c2ba7d4.js",
+    "download_exit": 0,
+    "bytes": 97766,
+    "sha256": "774cd664f7275d7854f2e0a7b7602749431542d3b96e5a5a9ed6ac50024f1b9b",
+    "matches": 0
+  },
+  {
+    "name": "12441.8c640a5fde603a9b.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/12441.8c640a5fde603a9b.js",
+    "download_exit": 0,
+    "bytes": 240513,
+    "sha256": "e09a836d2d900d6c8ee5da8cbd45cf255127b51aad1d76139fa9bb07f4a7474a",
+    "matches": 0
+  },
+  {
+    "name": "27588.9d8170797bc1f2f5.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/27588.9d8170797bc1f2f5.js",
+    "download_exit": 0,
+    "bytes": 219866,
+    "sha256": "6b385051c637910e8fe67d90831fe36958e64ff031354e116ed32621fa2a2aef",
+    "matches": 0
+  },
+  {
+    "name": "64793.6ace0eddbc29a263.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/64793.6ace0eddbc29a263.js",
+    "download_exit": 0,
+    "bytes": 7376,
+    "sha256": "bca4198878b912131190e8e438fce4f12446249c8b983352ec10bdd9f7d90945",
+    "matches": 0
+  },
+  {
+    "name": "13919.d445c5c9b9c36fc4.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/13919.d445c5c9b9c36fc4.js",
+    "download_exit": 0,
+    "bytes": 32537,
+    "sha256": "0bb7c7094d696e1089fc645f22e52b6dc8c51a3db85daf0f31a03bc85ab572e6",
+    "matches": 0
+  },
+  {
+    "name": "21877.811694d9980bf47c.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/21877.811694d9980bf47c.js",
+    "download_exit": 0,
+    "bytes": 32433,
+    "sha256": "aab2ba1ef9bf616220190a8d3030622deb9638a27998b43e3e0d1707f98a9a73",
+    "matches": 0
+  },
+  {
+    "name": "57380.ab08e7dfce30cb94.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/57380.ab08e7dfce30cb94.js",
+    "download_exit": 0,
+    "bytes": 83816,
+    "sha256": "d0a829d26ca99b6fcfe86f9444eabb51fd240d8faee0b632951fb48d1f1b29de",
+    "matches": 0
+  },
+  {
+    "name": "13914.6a7e482cac1b465c.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/13914.6a7e482cac1b465c.js",
+    "download_exit": 0,
+    "bytes": 7745,
+    "sha256": "6989904d8d021d917dd2f908005d64caa27678a0e0d9c2730245557fd17fc26b",
+    "matches": 0
+  },
+  {
+    "name": "175.7adc2e23cdbfdff6.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/175.7adc2e23cdbfdff6.js",
+    "download_exit": 0,
+    "bytes": 14678,
+    "sha256": "fbab7f00ec1e4403774dfcc5bb6bb4dbcc52a9c0015fa6006539c784002ede73",
+    "matches": 0
+  },
+  {
+    "name": "82200.69e74634fc752286.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/82200.69e74634fc752286.js",
+    "download_exit": 0,
+    "bytes": 190861,
+    "sha256": "3eb25bd0ffa357e26d69439c9e1c44e5cad556abcf474b316f8dab98e03c4c2f",
+    "matches": 0
+  },
+  {
+    "name": "14278.30084788046c1bd2.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/14278.30084788046c1bd2.js",
+    "download_exit": 0,
+    "bytes": 42089,
+    "sha256": "3943fa168eba966ebae17f61d6aaed4eb011bee63741851d944574bd708a3d1f",
+    "matches": 0
+  },
+  {
+    "name": "35631.b9c813b55b3bb690.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/35631.b9c813b55b3bb690.js",
+    "download_exit": 0,
+    "bytes": 20965,
+    "sha256": "7f350f2408d3376bb23021b9a642aa2ad6ad22eb792a0c9d8c8ca482ff4f6367",
+    "matches": 0
+  },
+  {
+    "name": "71700.9bd88810e099d8f6.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/71700.9bd88810e099d8f6.js",
+    "download_exit": 0,
+    "bytes": 99560,
+    "sha256": "032405a7ea1334b77f5b63c12e0da99e23deff9de56b293c38bd59a1f304b56f",
+    "matches": 0
+  },
+  {
+    "name": "83571.cf023318fcac0f5b.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/83571.cf023318fcac0f5b.js",
+    "download_exit": 0,
+    "bytes": 771692,
+    "sha256": "e13f314c5544e9f47ce2ee72ee07112655aaf00ed9aeb391d7b07ed1df5b6e0f",
+    "matches": 0
+  },
+  {
+    "name": "90593.27fe6f46b0404fcd.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/90593.27fe6f46b0404fcd.js",
+    "download_exit": 0,
+    "bytes": 476409,
+    "sha256": "15175c11b14df6e80dd43b71b08254905afbe6da6a00c9b9a871a1fcabd90705",
+    "matches": 0
+  },
+  {
+    "name": "99015.65554a2dd64b3548.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/99015.65554a2dd64b3548.js",
+    "download_exit": 0,
+    "bytes": 34133,
+    "sha256": "6b24e6083a62dcc4feea4d3b1d5a99c9319c3145094d5a1addcf198ae1cae5df",
+    "matches": 0
+  },
+  {
+    "name": "33333.b5c50fa76a0fea02.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/33333.b5c50fa76a0fea02.js",
+    "download_exit": 0,
+    "bytes": 77257,
+    "sha256": "4663e5f8313df5ef56c4366a5c5a2954cf05df9d4395771ec90a33d7861e8ca9",
+    "matches": 0
+  },
+  {
+    "name": "34734.2112eda13c04f6a5.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/34734.2112eda13c04f6a5.js",
+    "download_exit": 0,
+    "bytes": 14406,
+    "sha256": "2a26fdd091dc8e0fab73123d33c6d09fcb27bd8c7304e5fb203e2997c4320d96",
+    "matches": 0
+  },
+  {
+    "name": "92524.a7572e6c6a8a4e88.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/92524.a7572e6c6a8a4e88.js",
+    "download_exit": 0,
+    "bytes": 107187,
+    "sha256": "efb8ce4e9a29ec1adde0c8a763ed3e9f7288d85c4a71359412a6f7feabf9235f",
+    "matches": 3,
+    "retained_path": "docs/audits/frequency-capping-2026-11-12/raw/92524.a7572e6c6a8a4e88.js"
+  },
+  {
+    "name": "94298.aa4aa23ce4e3b9b8.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/94298.aa4aa23ce4e3b9b8.js",
+    "download_exit": 0,
+    "bytes": 11922,
+    "sha256": "ca0d7000dbd38df0ec808c3df524b1b7824e76efb15c0ef5a9c7c557c7c00a3e",
+    "matches": 0
+  },
+  {
+    "name": "3275.6288ed9636e6e792.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/3275.6288ed9636e6e792.js",
+    "download_exit": 0,
+    "bytes": 70940,
+    "sha256": "4b590636af966cc19c4721c9f520150e88386b7d8a626eacb9eb5532b515639f",
+    "matches": 0
+  },
+  {
+    "name": "74098.a02393fd468397c5.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/74098.a02393fd468397c5.js",
+    "download_exit": 0,
+    "bytes": 7117,
+    "sha256": "bcb6fcfd92c2b121832d50d7de357e25326cf3a62e136990c0283b6e5e2f73a8",
+    "matches": 0
+  },
+  {
+    "name": "71707.9a9d34fd396bd07b.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/71707.9a9d34fd396bd07b.js",
+    "download_exit": 0,
+    "bytes": 397740,
+    "sha256": "a4cdcca098462ae1732132a4d7487c2eccf00c0120cce5329437b749a3bcc1a3",
+    "matches": 20,
+    "retained_path": "docs/audits/frequency-capping-2026-11-12/raw/71707.9a9d34fd396bd07b.js"
+  },
+  {
+    "name": "60206.60782a5367e7e8d5.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/60206.60782a5367e7e8d5.js",
+    "download_exit": 0,
+    "bytes": 2030496,
+    "sha256": "5945a33a67bec9fa45f58fd79a964b9d7113b5cd9338c7fdaa38a3f37b9a8115",
+    "matches": 0
+  },
+  {
+    "name": "3761.33ba05264f8bc31e.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/3761.33ba05264f8bc31e.js",
+    "download_exit": 0,
+    "bytes": 1635378,
+    "sha256": "b39afa3aff60a61970566cf191ef5f8bce232b3599ea050d01fc53233da79a3b",
+    "matches": 35,
+    "retained_path": "docs/audits/frequency-capping-2026-11-12/raw/3761.33ba05264f8bc31e.js"
+  },
+  {
+    "name": "46884.bbf227912390fe5f.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/46884.bbf227912390fe5f.js",
+    "download_exit": 0,
+    "bytes": 18292,
+    "sha256": "c8a01a976796c7f57367cd309285013ac911d6c80e8c6b5527e92d72e08593e1",
+    "matches": 0
+  },
+  {
+    "name": "6793.91c141ea4ff4ca3f.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/6793.91c141ea4ff4ca3f.js",
+    "download_exit": 0,
+    "bytes": 22282,
+    "sha256": "f81458865930f0ccb013a743a1873b853a49752f7b5300644ec327a1d3f239e2",
+    "matches": 0
+  },
+  {
+    "name": "16868.d27f07f19d0d2231.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/16868.d27f07f19d0d2231.js",
+    "download_exit": 0,
+    "bytes": 21613,
+    "sha256": "11e903a47c5533eb7795542984c223cad242b139622288faa763808aa826cf65",
+    "matches": 0
+  },
+  {
+    "name": "21394.5803ec6a7c1272aa.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/21394.5803ec6a7c1272aa.js",
+    "download_exit": 0,
+    "bytes": 961636,
+    "sha256": "4ffa5dc0cb8f5e17ff77a210e3fc9efb7ada197fe00f36f8e3be302ba2ca750d",
+    "matches": 42,
+    "retained_path": "docs/audits/frequency-capping-2026-11-12/raw/21394.5803ec6a7c1272aa.js"
+  },
+  {
+    "name": "45669.e76cae47f0493f15.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/45669.e76cae47f0493f15.js",
+    "download_exit": 0,
+    "bytes": 43822,
+    "sha256": "b53f0c0f0ff7a835d86c8847f6f5c91d81e6cb94ce1edf1d3879e9256b764ef4",
+    "matches": 0
+  },
+  {
+    "name": "27464.4bdaa336d91d4e73.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/27464.4bdaa336d91d4e73.js",
+    "download_exit": 0,
+    "bytes": 38538,
+    "sha256": "cbc3dd3466799302103b26483b0ec61e2adea42cebcd5628b5cc9403fa941c2a",
+    "matches": 0
+  },
+  {
+    "name": "93005.95ef8c4738c684e1.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/93005.95ef8c4738c684e1.js",
+    "download_exit": 0,
+    "bytes": 9334,
+    "sha256": "edda2c4a0248d23c9735d6c9d1f5abec1db18a165683fc299db4902efc5b25c3",
+    "matches": 0
+  },
+  {
+    "name": "25075.10a819a687042a8b.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/25075.10a819a687042a8b.js",
+    "download_exit": 0,
+    "bytes": 10213,
+    "sha256": "127c987c1be7688459dd126d0fab7eeafae68cd602383ddf057583912b35d5d5",
+    "matches": 0
+  },
+  {
+    "name": "81202.4ff649e64e4b1dec.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/81202.4ff649e64e4b1dec.js",
+    "download_exit": 0,
+    "bytes": 150963,
+    "sha256": "6b79b09d6354cb07a32f53909d8c84b3b46aca5ba51e0f22c88d355a035a2a1a",
+    "matches": 0
+  },
+  {
+    "name": "25645.2a75e99ca30b1f1d.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/25645.2a75e99ca30b1f1d.js",
+    "download_exit": 0,
+    "bytes": 25824,
+    "sha256": "b0fc65c7b2457bc8ba01d9eb72cefa50cddae712ee105806771e8ec95690624d",
+    "matches": 0
+  },
+  {
+    "name": "43844.d612fe1607288d97.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/43844.d612fe1607288d97.js",
+    "download_exit": 0,
+    "bytes": 98786,
+    "sha256": "4717d9c0ab53cbe5c1960ecdcad23aa7b38af23d748da29d46f198b2549cb055",
+    "matches": 0
+  },
+  {
+    "name": "3754.ab1f9c12a8276e21.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/3754.ab1f9c12a8276e21.js",
+    "download_exit": 0,
+    "bytes": 7324,
+    "sha256": "49821ab6b27f1d5e25c721b26c261b88c8e62e4613e23d97456d3c39313d8197",
+    "matches": 0
+  },
+  {
+    "name": "27350.2d9b054dfd9b6276.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/27350.2d9b054dfd9b6276.js",
+    "download_exit": 0,
+    "bytes": 7587,
+    "sha256": "048e6310c52cc05a34940fdb685de7c64d4f92bb90150ba9e2e52f95020cb72b",
+    "matches": 0
+  },
+  {
+    "name": "62266.ddcc6ecdae263521.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/62266.ddcc6ecdae263521.js",
+    "download_exit": 0,
+    "bytes": 71951,
+    "sha256": "7d96250c6df1a8d03a57dde15e7d555b06a2b50a8bb7f067f0d7a96045c77afc",
+    "matches": 0
+  },
+  {
+    "name": "87477.85236f6a1e8ed9f5.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/87477.85236f6a1e8ed9f5.js",
+    "download_exit": 0,
+    "bytes": 90756,
+    "sha256": "df7bed877cf96d2eb156657aa9255951617f2364a46843a920d5710c68f9ca8e",
+    "matches": 0
+  },
+  {
+    "name": "33476.63e8455ebb145f2f.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/33476.63e8455ebb145f2f.js",
+    "download_exit": 0,
+    "bytes": 7870,
+    "sha256": "5de4b8be543936e09977b021c3e3691fa2180adca97f257f9231c57ebd8e9ff4",
+    "matches": 0
+  },
+  {
+    "name": "16741.6cd6f9354f085f05.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/16741.6cd6f9354f085f05.js",
+    "download_exit": 0,
+    "bytes": 37076,
+    "sha256": "8acaa7f15833273138f7c098fd1a4284c54ec01aeb2d4afd314fbdbbe8046fd1",
+    "matches": 0
+  },
+  {
+    "name": "24482.cd009a1bee2b446d.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/24482.cd009a1bee2b446d.js",
+    "download_exit": 0,
+    "bytes": 85975,
+    "sha256": "854c06170ec7247e2c565c3007b143e1e9a5d02a2452943dcbab140fd80a8f01",
+    "matches": 0
+  },
+  {
+    "name": "98449.e9d0723215c53472.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/98449.e9d0723215c53472.js",
+    "download_exit": 0,
+    "bytes": 7958,
+    "sha256": "af1626a2a4e4ce04e635a28ec2eb5196848b4a3c8a9c3ce77f8035bf9903a373",
+    "matches": 0
+  },
+  {
+    "name": "24049.7fd1d9cce776500f.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/24049.7fd1d9cce776500f.js",
+    "download_exit": 0,
+    "bytes": 10787,
+    "sha256": "88b5d61ed664bdaee2d890b2775bdf203c6dc7a1b74f89182334b3f80e5756dd",
+    "matches": 0
+  },
+  {
+    "name": "20840.728ecd2741d6ea08.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/20840.728ecd2741d6ea08.js",
+    "download_exit": 0,
+    "bytes": 96647,
+    "sha256": "2dc106e939446d91435c9ffc5739a15ae5b3a99bb4174be2f39db7c657705cec",
+    "matches": 0
+  },
+  {
+    "name": "92292.fd311c5c08b5e872.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/92292.fd311c5c08b5e872.js",
+    "download_exit": 0,
+    "bytes": 20104,
+    "sha256": "e8d21604e8cfa53ca902044d5c08fd135c15e5732d1450aa94dc9e42ed1e7fd2",
+    "matches": 0
+  },
+  {
+    "name": "75244.3c7cf8aef66de323.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/75244.3c7cf8aef66de323.js",
+    "download_exit": 0,
+    "bytes": 30460,
+    "sha256": "9859d38fdf0714bb04f6b958979947c022266847c1e50795b2ade648eb886795",
+    "matches": 0
+  },
+  {
+    "name": "53411.588e25866120af86.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/53411.588e25866120af86.js",
+    "download_exit": 0,
+    "bytes": 9623,
+    "sha256": "fadd156408093daf3c2dfb922df1378c917b4c8b8d10ec5d0ac4c54525c5c5af",
+    "matches": 0
+  },
+  {
+    "name": "90311.924b426fd65ffaa3.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/90311.924b426fd65ffaa3.js",
+    "download_exit": 0,
+    "bytes": 12365,
+    "sha256": "7864aedc3930a7b9d2546427e52f6c62ebff93e655a1e30f55cc6b1af4552122",
+    "matches": 0
+  },
+  {
+    "name": "4870.78c9f9fc755e27d2.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/4870.78c9f9fc755e27d2.js",
+    "download_exit": 0,
+    "bytes": 16878,
+    "sha256": "6b3a1ac4990e320079a36e350d43ab6b02d376c24f05a3088fa97f0cb067ab44",
+    "matches": 0
+  },
+  {
+    "name": "65807.f3290ecd42d141a9.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/65807.f3290ecd42d141a9.js",
+    "download_exit": 0,
+    "bytes": 118519,
+    "sha256": "aaeb8f314168efc992d7a2549088cb1f3f8e479b761b464011f1913bcf920cda",
+    "matches": 0
+  },
+  {
+    "name": "6135.d130f75cf83a5441.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/6135.d130f75cf83a5441.js",
+    "download_exit": 0,
+    "bytes": 86441,
+    "sha256": "d94e4711b338883bb79e7cf642323da371ff5bfd9ac4ede1339056544f0ae0b0",
+    "matches": 0
+  },
+  {
+    "name": "75969.079cce10398fb442.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/75969.079cce10398fb442.js",
+    "download_exit": 0,
+    "bytes": 12290,
+    "sha256": "62b05de5a5fdca5490e7878b8bef6f71f8cc29b102c4fb3f0f7feed52cf490cc",
+    "matches": 0
+  },
+  {
+    "name": "38124.2d4edd719f68db54.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/38124.2d4edd719f68db54.js",
+    "download_exit": 0,
+    "bytes": 10743,
+    "sha256": "eb7e25ba31b1319eccf304c7558cd92e04239bc1e971b118fa3efa6659586316",
+    "matches": 0
+  },
+  {
+    "name": "65588.45695ad556e093a6.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/65588.45695ad556e093a6.js",
+    "download_exit": 0,
+    "bytes": 6465,
+    "sha256": "d4b41bd759244fe3dac8939531f3c5d24dee3e82297a258bd69db3917a8e3f4d",
+    "matches": 0
+  },
+  {
+    "name": "25941.f5aa5c4baa18cb83.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/25941.f5aa5c4baa18cb83.js",
+    "download_exit": 0,
+    "bytes": 6704,
+    "sha256": "fe8e9d3802606cb3be9f7373f369f3eb883a41855d61fd2a96e06024db0557c1",
+    "matches": 0
+  },
+  {
+    "name": "9022.1136f75b573dfaec.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/9022.1136f75b573dfaec.js",
+    "download_exit": 0,
+    "bytes": 8126,
+    "sha256": "3d6ce806ce90f70c4ce7d84145be86b216836f206e94896f190e70c5a01f63bb",
+    "matches": 0
+  },
+  {
+    "name": "83804.370ff472ce92a054.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/83804.370ff472ce92a054.js",
+    "download_exit": 0,
+    "bytes": 8565,
+    "sha256": "86d63f14139704e6024c4a263a37b663ba6ce67551c60bfce4c3111f025a0fdc",
+    "matches": 0
+  },
+  {
+    "name": "14083.c00fedf358d1efed.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/14083.c00fedf358d1efed.js",
+    "download_exit": 0,
+    "bytes": 154787,
+    "sha256": "45a0499629ac416afae9b1150bd0efdd2fe15feedf90ea87fd7455964de75823",
+    "matches": 0
+  },
+  {
+    "name": "62650.fc7fb6a6031b4cc0.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/62650.fc7fb6a6031b4cc0.js",
+    "download_exit": 0,
+    "bytes": 12729,
+    "sha256": "e19e5699bd40055db37ddf336a81b9f680c211de46c8c28dfda277560fdc5479",
+    "matches": 0
+  },
+  {
+    "name": "42978.03bf3cb4f30fa947.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/42978.03bf3cb4f30fa947.js",
+    "download_exit": 0,
+    "bytes": 62888,
+    "sha256": "b75b3840e4c5d564897e853a44c9ba92544c52fcd354a1a17752cd9a414e7c3a",
+    "matches": 0
+  },
+  {
+    "name": "85039.c1fa14d2500ec79e.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/85039.c1fa14d2500ec79e.js",
+    "download_exit": 0,
+    "bytes": 185891,
+    "sha256": "482695039850aec87327d0886b6798bcf6bec68df338be82b781e498801ab9d6",
+    "matches": 0
+  },
+  {
+    "name": "69809.1f938fe1e68397ee.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/69809.1f938fe1e68397ee.js",
+    "download_exit": 0,
+    "bytes": 10800,
+    "sha256": "3d9ce1f04020466bc2993d729d22074600e24969593a09bad4cb654a5107faa9",
+    "matches": 0
+  },
+  {
+    "name": "1984.9c74321c57290a4b.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/1984.9c74321c57290a4b.js",
+    "download_exit": 0,
+    "bytes": 50263,
+    "sha256": "45ddc95eba86efe51b14a6e7fbe09b8252c5dad464f392dc95917910e3d4c71b",
+    "matches": 0
+  },
+  {
+    "name": "12137.4ba5173bf96a85a9.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/12137.4ba5173bf96a85a9.js",
+    "download_exit": 0,
+    "bytes": 9129,
+    "sha256": "6d942d6a653841eab4433d650345af8d5ce894aecdc40b87e73d675c8df25d2a",
+    "matches": 0
+  },
+  {
+    "name": "55890.4520aa230e537769.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/55890.4520aa230e537769.js",
+    "download_exit": 0,
+    "bytes": 18611,
+    "sha256": "8f8dfec8aa9a139ba4d846978843a1adf8466a1cb95242f68413d93468c184f5",
+    "matches": 0
+  },
+  {
+    "name": "2070.e9f72cb89fd559a0.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/2070.e9f72cb89fd559a0.js",
+    "download_exit": 0,
+    "bytes": 29531,
+    "sha256": "86381bf822967eceb135f54feb36e6856312111c13a7a032a49618db9844767b",
+    "matches": 0
+  },
+  {
+    "name": "71355.c572042aac2b4126.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/71355.c572042aac2b4126.js",
+    "download_exit": 0,
+    "bytes": 28028,
+    "sha256": "03c61b68fca891dab50da77af8dbc3247f78b1f4b0d085d2c11507b505c8a98d",
+    "matches": 9,
+    "retained_path": "docs/audits/frequency-capping-2026-11-12/raw/71355.c572042aac2b4126.js"
+  },
+  {
+    "name": "99677.8bcf2d9af201666c.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/99677.8bcf2d9af201666c.js",
+    "download_exit": 0,
+    "bytes": 27019,
+    "sha256": "30fdd57ed9caef7667dbd8d6798e550528984cf2666d2d19643409f9d72980e2",
+    "matches": 82,
+    "retained_path": "docs/audits/frequency-capping-2026-11-12/raw/99677.8bcf2d9af201666c.js"
+  },
+  {
+    "name": "6133.325a7115c7578145.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/6133.325a7115c7578145.js",
+    "download_exit": 0,
+    "bytes": 7729,
+    "sha256": "3d8d4fe7162b2c2fcae5cbf5bc9e626fc862d4e61a83c383b193ae2ee23edd3f",
+    "matches": 0
+  },
+  {
+    "name": "39948.a7296369edf5aab8.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/39948.a7296369edf5aab8.js",
+    "download_exit": 0,
+    "bytes": 8601,
+    "sha256": "95f9fa7447537535192dec0be15b9f50946b941f345f516de0aa90669865b46f",
+    "matches": 0
+  },
+  {
+    "name": "87285.ffe19a465d049ac1.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/87285.ffe19a465d049ac1.js",
+    "download_exit": 0,
+    "bytes": 8254,
+    "sha256": "c0a472f344151c1306459644db375f73c754e6a9967e204087b0e6894a48e9b6",
+    "matches": 0
+  },
+  {
+    "name": "34884.827f43e91ac4998b.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/34884.827f43e91ac4998b.js",
+    "download_exit": 0,
+    "bytes": 134277,
+    "sha256": "8afca352543c7203a74c97bb5abe5009808a7168d6752350f87c16064d0053fb",
+    "matches": 0
+  },
+  {
+    "name": "77814.21fdfae30ea49fe2.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/77814.21fdfae30ea49fe2.js",
+    "download_exit": 0,
+    "bytes": 7294,
+    "sha256": "a645e4de674d8808538258c8b301474aa72b9650afb0243f89cfd50c8f153a3f",
+    "matches": 0
+  },
+  {
+    "name": "20548.cbe40c8256c137aa.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/20548.cbe40c8256c137aa.js",
+    "download_exit": 0,
+    "bytes": 8412,
+    "sha256": "5b05d932d30b1b673a2bdc901948c976d9b4d8fe4fa89556815d542094d231f3",
+    "matches": 0
+  },
+  {
+    "name": "58876.4748195e117d6d0c.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/58876.4748195e117d6d0c.js",
+    "download_exit": 0,
+    "bytes": 489081,
+    "sha256": "173285a1e2819d27bcaa1af0b4d8c288c7197ecfdeacb1bbac8a5c7f46752218",
+    "matches": 18,
+    "retained_path": "docs/audits/frequency-capping-2026-11-12/raw/58876.4748195e117d6d0c.js"
+  },
+  {
+    "name": "94072.27dffc28f20adb4c.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/94072.27dffc28f20adb4c.js",
+    "download_exit": 28,
+    "error": "curl: (28) Connection timed out after 8002 milliseconds\n"
+  },
+  {
+    "name": "26281.4dc828b443173bf2.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/26281.4dc828b443173bf2.js",
+    "download_exit": 28,
+    "error": "curl: (28) Connection timed out after 8001 milliseconds\n"
+  },
+  {
+    "name": "32074.aa06f91ec85cf71b.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/32074.aa06f91ec85cf71b.js",
+    "download_exit": 0,
+    "bytes": 42080,
+    "sha256": "240325cf6d831f219000e09920aab077c94d1c51cd559df1408bc36ad2bc7066",
+    "matches": 0
+  },
+  {
+    "name": "86876.d2fbc1de576dc355.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/86876.d2fbc1de576dc355.js",
+    "download_exit": 0,
+    "bytes": 9564,
+    "sha256": "b69c3833e60bf1df316599e27c85860e7514bd764d67dd6eab074337900ac475",
+    "matches": 0
+  },
+  {
+    "name": "11148.75dba6881dfeef61.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/11148.75dba6881dfeef61.js",
+    "download_exit": 0,
+    "bytes": 13211,
+    "sha256": "8ac0473855faedfc07125fc5e025f8585bfda30d2443e318e8613911328c75b3",
+    "matches": 0
+  },
+  {
+    "name": "64219.2e408567c12095d6.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/64219.2e408567c12095d6.js",
+    "download_exit": 28,
+    "error": "curl: (28) Connection timed out after 8003 milliseconds\n"
+  },
+  {
+    "name": "26430.b4945e239b915e4f.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/26430.b4945e239b915e4f.js",
+    "download_exit": 28,
+    "error": "curl: (28) Connection timed out after 8002 milliseconds\n"
+  },
+  {
+    "name": "78724.07cb9242d4e35ba4.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/78724.07cb9242d4e35ba4.js",
+    "download_exit": 28,
+    "error": "curl: (28) Connection timed out after 8002 milliseconds\n"
+  },
+  {
+    "name": "23674.3e1896127333d7eb.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/23674.3e1896127333d7eb.js",
+    "download_exit": 0,
+    "bytes": 7207,
+    "sha256": "69e74659cbe7e055392884d35c5f094e8716b067a28ed2db13af8f45364f8710",
+    "matches": 0
+  },
+  {
+    "name": "39955.5784da58669b0858.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/39955.5784da58669b0858.js",
+    "download_exit": 0,
+    "bytes": 377969,
+    "sha256": "99be634e1ef7a5374c011161913dd5e5cba9ef10de365aa573404797d22eb159",
+    "matches": 16,
+    "retained_path": "docs/audits/frequency-capping-2026-11-12/raw/39955.5784da58669b0858.js"
+  },
+  {
+    "name": "79042.73aea2bebbf924b4.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/79042.73aea2bebbf924b4.js",
+    "download_exit": 28,
+    "error": "curl: (28) Connection timed out after 8001 milliseconds\n"
+  },
+  {
+    "name": "28437.353ce9234f876a8b.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/28437.353ce9234f876a8b.js",
+    "download_exit": 0,
+    "bytes": 11161,
+    "sha256": "f6a5811eb16da6d7196498d822f26e3b6c40a5f0af8288949c5c94999ac1ff0a",
+    "matches": 0
+  },
+  {
+    "name": "29824.6a257b33437ffca2.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/29824.6a257b33437ffca2.js",
+    "download_exit": 0,
+    "bytes": 112847,
+    "sha256": "f5130690d6ffe5a73071dd537f4f68863c9e39e7e61329b378749a690cedab2a",
+    "matches": 4,
+    "retained_path": "docs/audits/frequency-capping-2026-11-12/raw/29824.6a257b33437ffca2.js"
+  },
+  {
+    "name": "2633.50ab727fdb3cce54.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/2633.50ab727fdb3cce54.js",
+    "download_exit": 0,
+    "bytes": 14180,
+    "sha256": "cdc8ebe754a451f20702bedb1384171b07c4666dc046a8b908b6aeb4218d83dd",
+    "matches": 0
+  },
+  {
+    "name": "70323.58bc9da6792f8d49.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/70323.58bc9da6792f8d49.js",
+    "download_exit": 28,
+    "error": "curl: (28) Connection timed out after 8002 milliseconds\n"
+  },
+  {
+    "name": "48959.314b77bf5bb4f209.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/48959.314b77bf5bb4f209.js",
+    "download_exit": 28,
+    "error": "curl: (28) Connection timed out after 8001 milliseconds\n"
+  },
+  {
+    "name": "8692.1dddf6923bf19ed4.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/8692.1dddf6923bf19ed4.js",
+    "download_exit": 28,
+    "error": "curl: (28) Connection timed out after 8003 milliseconds\n"
+  },
+  {
+    "name": "76528.c46ed8541d02eebc.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/76528.c46ed8541d02eebc.js",
+    "download_exit": 0,
+    "bytes": 317340,
+    "sha256": "6c8d34c2563075b194bec21e6918aea9b97dd05ee9881b569ca0046c201dd2a2",
+    "matches": 2,
+    "retained_path": "docs/audits/frequency-capping-2026-11-12/raw/76528.c46ed8541d02eebc.js"
+  },
+  {
+    "name": "85087.b8a270f97859b195.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/85087.b8a270f97859b195.js",
+    "download_exit": 28,
+    "error": "curl: (28) Connection timed out after 8001 milliseconds\n"
+  },
+  {
+    "name": "8026.57708e1451304ba6.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/8026.57708e1451304ba6.js",
+    "download_exit": 0,
+    "bytes": 16160,
+    "sha256": "3eef41ac07d09a03098fb6a7d63be94b23be063e7c27f96575bf6a71620d7c3b",
+    "matches": 0
+  },
+  {
+    "name": "5467.d240b6fc45209a9d.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/5467.d240b6fc45209a9d.js",
+    "download_exit": 28,
+    "error": "curl: (28) Connection timed out after 8001 milliseconds\n"
+  },
+  {
+    "name": "57989.0bbc6ffcbe959f85.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/57989.0bbc6ffcbe959f85.js",
+    "download_exit": 0,
+    "bytes": 47797,
+    "sha256": "f583113f7c0fae4a5ca97fad05a409ec6cae99daa557aadd14c16f7fe9cfe905",
+    "matches": 1,
+    "retained_path": "docs/audits/frequency-capping-2026-11-12/raw/57989.0bbc6ffcbe959f85.js"
+  },
+  {
+    "name": "35976.08e1876901228eec.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/35976.08e1876901228eec.js",
+    "download_exit": 0,
+    "bytes": 18571,
+    "sha256": "4fbdf6798282b375d4d8e3472f6ba8530dc3f5a0873c50aa9803ff84bbe423e2",
+    "matches": 0
+  },
+  {
+    "name": "6809.44d975a0a6efebda.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/6809.44d975a0a6efebda.js",
+    "download_exit": 0,
+    "bytes": 24424,
+    "sha256": "96f77d858f2d1157d38f15ea2bfb6eaa51316e83d6f10e9ba6f31a4cc84840a7",
+    "matches": 0
+  },
+  {
+    "name": "73098.cc21da1195bf407a.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/73098.cc21da1195bf407a.js",
+    "download_exit": 0,
+    "bytes": 30889,
+    "sha256": "dc84f22b5e0ce022fffb646d23cc458ecae3bbb671a3eecc60becf5e2a242459",
+    "matches": 0
+  },
+  {
+    "name": "30774.50598bb0a0f76843.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/30774.50598bb0a0f76843.js",
+    "download_exit": 28,
+    "error": "curl: (28) Connection timed out after 8002 milliseconds\n"
+  },
+  {
+    "name": "33990.89373646d622a162.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/33990.89373646d622a162.js",
+    "download_exit": 0,
+    "bytes": 5516,
+    "sha256": "1a3544e2fcca4a45766bd193517f1606d5c3066c89fc89253b96ab829f70bc87",
+    "matches": 0
+  },
+  {
+    "name": "66440.8cb40d39c659d415.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/66440.8cb40d39c659d415.js",
+    "download_exit": 0,
+    "bytes": 20505,
+    "sha256": "9fbc9d8451bb9a55491187a5cf82eeaf1e99b663cea0b61fa77eebea0d7937bf",
+    "matches": 0
+  },
+  {
+    "name": "17482.ae12b524501852f5.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/17482.ae12b524501852f5.js",
+    "download_exit": 0,
+    "bytes": 30024,
+    "sha256": "f7dfb8b95abd7f5205ce7672da061bd6af1e89fa8dc4432515e6d1a579a79131",
+    "matches": 0
+  },
+  {
+    "name": "17309.cc749515b231a79a.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/17309.cc749515b231a79a.js",
+    "download_exit": 0,
+    "bytes": 10181,
+    "sha256": "854d47fcf25558514dcc21e95220126c17102132b9ad64695a5c4e226a9c2dc1",
+    "matches": 0
+  },
+  {
+    "name": "83658.cb9a07d8e18c6509.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/83658.cb9a07d8e18c6509.js",
+    "download_exit": 0,
+    "bytes": 7030,
+    "sha256": "81bb174649afdf835dd2736d4c3d1d4c114c0b8a416b0197f2fb508bc8b02ac1",
+    "matches": 0
+  },
+  {
+    "name": "78232.6235fb928bdcabf5.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/78232.6235fb928bdcabf5.js",
+    "download_exit": 28,
+    "error": "curl: (28) Connection timed out after 8002 milliseconds\n"
+  },
+  {
+    "name": "45004.a860355ef9fd5384.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/45004.a860355ef9fd5384.js",
+    "download_exit": 28,
+    "error": "curl: (28) Connection timed out after 8007 milliseconds\n"
+  },
+  {
+    "name": "94216.8b0b5b600d1e9dbc.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/94216.8b0b5b600d1e9dbc.js",
+    "download_exit": 0,
+    "bytes": 46519,
+    "sha256": "7c19c8f7ed24358b510ad85bfc836054bb6519958cf59f307d4d6069aefe5855",
+    "matches": 0
+  },
+  {
+    "name": "88427.f2c311afbff46b77.js",
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/88427.f2c311afbff46b77.js",
+    "download_exit": 0,
+    "bytes": 33533,
+    "sha256": "88642bd2c3c2e6e5629ad30a5c2a6a7847ac5aea81b9cd530e640f80ee03b96b",
+    "matches": 72,
+    "retained_path": "docs/audits/frequency-capping-2026-11-12/raw/88427.f2c311afbff46b77.js"
+  }
+]

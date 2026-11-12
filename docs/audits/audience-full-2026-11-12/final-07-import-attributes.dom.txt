@@ -1,0 +1,107 @@
+- alert: Import Users
+- complementary:
+  - button "Minimize menu" [expanded]
+  - button "Select workspace":
+    - generic: Local workspace
+  - navigation "Side navigation":
+    - generic: Quick links
+    - button "Canvas":
+      - generic: Canvas
+    - button "Campaigns":
+      - generic: Campaigns
+    - button "Segments":
+      - generic: Segments
+    - button "Getting Started":
+      - generic: Getting Started
+    - button "Home":
+      - generic: Home
+    - button "AI Decisioning":
+      - generic: AI Decisioning
+    - button "Agents":
+      - generic: Agents
+    - button "Messaging":
+      - generic: Messaging
+    - button "Audience":
+      - generic: Audience
+    - button "Content":
+      - generic: Content
+    - button "Analytics":
+      - generic: Analytics
+    - button "Partner Integrations":
+      - generic: Partner Integrations
+    - button "Data Settings":
+      - generic: Data Settings
+    - button "Settings":
+      - generic: Settings
+  - button "Home":
+    - img "Braze"
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - generic "Community":
+    - img "Community"
+  - button "Language"
+  - button "Notifications"
+  - button "Profile"
+  - button "Open BrazeAI Operator"
+  - button "Import Users"
+  - heading "Import Users" [level=1]
+  - button "Send feedback" [disabled]:
+  - button "Import":
+    - text: Import
+  - paragraph: Add or update users in your workspace by uploading a CSV or entering details manually.
+  - button "Refresh table"
+  - table:
+    - rowgroup:
+      - row "DateInformation Uploader File Name Type Targeting Availability RecordsInformation Status":
+        - columnheader "DateInformation":
+          - text: Date
+          - img "Information"
+        - columnheader "Uploader"
+        - columnheader "File Name"
+        - columnheader "Type"
+        - columnheader "Targeting Availability"
+        - columnheader "RecordsInformation":
+          - text: Records
+          - img "Information"
+        - columnheader "Status"
+    - rowgroup:
+      - row "Nov 12, 2026, 12:43 PM — audience_qa_83e337e7 CSV import Attributes Available — Active":
+        - cell "Nov 12, 2026, 12:43 PM"
+        - cell "—"
+        - cell "audience_qa_83e337e7 CSV import"
+        - cell "Attributes"
+        - cell "Available"
+        - cell "—"
+        - cell "Active":
+          - generic: Active
+      - row "Nov 12, 2026, 11:32 AM — audience_qa_9fdd22dd CSV import Attributes Available — Active":
+        - cell "Nov 12, 2026, 11:32 AM"
+        - cell "—"
+        - cell "audience_qa_9fdd22dd CSV import"
+        - cell "Attributes"
+        - cell "Available"
+        - cell "—"
+        - cell "Active":
+          - generic: Active
+  - dialog "Attributes":
+    - heading "Attributes" [level=2]
+    - button "close" [active]:
+    - paragraph:
+      - text: Import default or custom user attributes with a user identifier.
+      - text: Download
+      - link "Sample CSV":
+        - /url: /braze-audience/attributes-csv-example.csv
+      - text: .
+    - heading "Drag and drop a file here" [level=3]
+    - generic: "File type: CSV"
+    - paragraph:
+      - text: Maximum file size is 1MB.
+      - text: CSV files must contain either an external_id or braze_id, or user_alias_label and user_alias_name, or email or phone to help identify imported users.
+    - paragraph: Free trial environments have a limit of 25 files and 250 user profiles. Each file can have up to 250 rows and 10 columns.
+    - button "Cancel"
+    - button "Browse files"

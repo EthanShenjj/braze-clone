@@ -1,11 +1,28 @@
-/** Catalog labels and descriptions verified against the saved live Braze accessibility captures. */
-export type CampaignFilterChoice={label:string;description?:string;field?:string;group?:string;children?:CampaignFilterChoice[];requiresAttribute?:string;unavailable?:string;dynamic?:string};
+/** Catalog labels and descriptions verified against saved live Braze accessibility captures.
+ * Resource IDs are selected in a condition editor; they are never filter types. */
+export type CampaignFilterChoice={label:string;description?:string;field?:string;group?:string;children?:CampaignFilterChoice[]};
 export type CampaignFilterCategory={name:string;description:string;fields:CampaignFilterChoice[]};
 export const audienceFilterCatalog:CampaignFilterCategory[] = [
   {
     "name": "Segment or CSV membership",
     "description": "User membership in other segments, Segment Extension, or imported CSV",
-    "fields": []
+    "fields": [
+      {
+        "label": "Segment Membership",
+        "description": "Users that are included in an existing segment",
+        "field": "membership:segment"
+      },
+      {
+        "label": "Braze Segment Extensions",
+        "description": "Include or exclude an existing segment extension",
+        "field": "membership:extension"
+      },
+      {
+        "label": "Updated/Imported from CSV",
+        "description": "Users who were part of a csv upload",
+        "field": "membership:csv"
+      }
+    ]
   },
   {
     "name": "Custom attributes",
@@ -33,12 +50,12 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
           {
             "label": "Session Count For App",
             "description": "Number of sessions users had in a specific app",
-            "dynamic": "app-session-count"
+            "field": "session_app_count:"
           },
           {
             "label": "X Sessions in Last Y Days",
             "description": "Number of app sessions in the last 1-30 days",
-            "dynamic": "session-recent"
+            "field": "session_recent:7"
           }
         ]
       },
@@ -54,7 +71,7 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
           {
             "label": "First Used Specific App",
             "description": "Users by when they first opened an app in a workspace",
-            "dynamic": "app-first-session"
+            "field": "session_app_first:"
           }
         ]
       },
@@ -70,7 +87,7 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
           {
             "label": "Last Used Specific App",
             "description": "Users by the last time they opened a specific app",
-            "dynamic": "app-last-session"
+            "field": "session_app_last:"
           }
         ]
       },
@@ -93,42 +110,42 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
           {
             "label": "Received Message from Campaign",
             "description": "Received a message from a specific campaign",
-            "dynamic": "campaign-delivered"
+            "field": "receipt_count:delivered:"
           },
           {
             "label": "Received Campaign Variant",
             "description": "Campaign variant users received in an a/b test",
-            "dynamic": "campaign-variants"
+            "field": "receipt_variant::"
           },
           {
             "label": "Received Message from Canvas Step",
             "description": "Users who received a message from a specific Canvas step",
-            "unavailable": "This data source is not connected to this workspace."
+            "field": "canvas_receipt_count:delivered"
           },
           {
             "label": "Received Feature Flag Variant",
             "description": "Feature Flag experiment variant users received in an a/b test",
-            "dynamic": "feature-variants"
+            "field": "feature_variant::"
           },
           {
             "label": "Last Received Message from Specific Canvas Step",
             "description": "When a user last received a specific campaign",
-            "unavailable": "This data source is not connected to this workspace."
+            "field": "canvas_receipt_last:delivered"
           },
           {
             "label": "Last Received Message from Specific Campaign",
             "description": "Last message received was from a specific campaign",
-            "dynamic": "campaign-last-delivered"
+            "field": "receipt_last:delivered:"
           },
           {
             "label": "Received Message from Campaign or Canvas with Tag",
             "description": "Received any message with a specific tag",
-            "unavailable": "This data source is not connected to this workspace."
+            "field": "receipt_tag_count:delivered:"
           },
           {
             "label": "Last Received Message from Campaign or Canvas With Tag",
             "description": "Last message received was from a Campaign or Canvas with a specific tag",
-            "unavailable": "This data source is not connected to this workspace."
+            "field": "receipt_tag_last:delivered:"
           },
           {
             "label": "Has Never Received a Message from Campaign or Canvas Step",
@@ -180,17 +197,17 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
           {
             "label": "Clicked/Opened Campaign",
             "description": "Interaction with a specific campaign",
-            "dynamic": "campaign-engaged"
+            "field": "receipt_count:engaged:"
           },
           {
             "label": "Clicked/Opened Campaign or Canvas With Tag",
             "description": "Interaction with a specific campaign",
-            "unavailable": "This data source is not connected to this workspace."
+            "field": "receipt_tag_count:engaged:"
           },
           {
             "label": "Clicked/Opened Step",
             "description": "Interaction with a specific Canvas component",
-            "unavailable": "This data source is not connected to this workspace."
+            "field": "canvas_receipt_count:engaged"
           }
         ]
       },
@@ -201,42 +218,55 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
           {
             "label": "Clicked Alias in Campaign",
             "description": "",
-            "dynamic": "link-aliases"
+            "field": "receipt_alias:"
           },
           {
             "label": "Clicked Alias in Canvas Step",
             "description": "",
-            "unavailable": "This data source is not connected to this workspace."
+            "field": "canvas_alias"
           },
           {
             "label": "Clicked Alias in any Campaign or Canvas Step",
             "description": "",
-            "dynamic": "link-aliases"
+            "field": "receipt_alias_any:"
           },
           {
             "label": "Hard Bounced",
             "description": "Users with email addresses that have hard bounced",
-            "field": "attr:email_hard_bounced",
-            "requiresAttribute": "email_hard_bounced"
+            "field": "attr:email_hard_bounced"
           },
           {
             "label": "Has Marked You As Spam",
             "description": "Users who marked your messages as spam",
-            "field": "attr:email_marked_spam",
-            "requiresAttribute": "email_marked_spam"
+            "field": "attr:email_marked_spam"
           },
           {
             "label": "Soft Bounced",
             "description": "Users with email addresses that have soft bounced",
-            "field": "attr:email_soft_bounced",
-            "requiresAttribute": "email_soft_bounced"
+            "field": "attr:email_soft_bounced"
           }
         ]
       },
       {
         "label": "SMS",
         "description": "",
-        "unavailable": "This integration data is not connected to this workspace."
+        "children": [
+          {
+            "label": "Invalid Phone Number",
+            "description": "Users with an invalid phone number",
+            "field": "attr:invalid_phone_number"
+          },
+          {
+            "label": "Phone Number",
+            "description": "Users by phone number, in E.164 format",
+            "field": "attr:phone"
+          },
+          {
+            "label": "Last Sent Specific Inbound Keyword Category",
+            "description": "",
+            "field": "inbound_sms_keyword_last"
+          }
+        ]
       },
       {
         "label": "Converted",
@@ -245,12 +275,12 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
           {
             "label": "Converted From Campaign",
             "description": "Users who performed a campaign conversion event",
-            "dynamic": "campaign-conversion"
+            "field": "receipt_count:conversion:"
           },
           {
             "label": "Converted From Canvas",
             "description": "Users who performed a Canvas conversion event",
-            "unavailable": "This data source is not connected to this workspace."
+            "field": "canvas_receipt_count:conversion"
           }
         ]
       },
@@ -261,12 +291,12 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
           {
             "label": "In Campaign Control Group",
             "description": "Users in the control group of an a/b test campaign",
-            "dynamic": "campaign-control"
+            "field": "receipt_count:control:"
           },
           {
             "label": "In Canvas Control Group",
             "description": "Users in the control group of a Canvas",
-            "unavailable": "This data source is not connected to this workspace."
+            "field": "canvas_receipt_count:control"
           },
           {
             "label": "Last Enrolled in Any Control Group",
@@ -282,7 +312,7 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
           {
             "label": "Feature Flags",
             "description": "Users who have a specific feature flag turned on",
-            "dynamic": "feature-flags"
+            "field": "feature_enabled:"
           }
         ]
       },
@@ -293,17 +323,17 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
           {
             "label": "Submitted Survey on Landing Page",
             "description": "Users who last submitted a survey on a specific landing page",
-            "unavailable": "This data source is not connected to this workspace."
+            "field": "survey_submitted:landing"
           },
           {
             "label": "Submitted Survey in Campaign",
             "description": "Users who last submitted a survey in a specific campaign",
-            "unavailable": "This data source is not connected to this workspace."
+            "field": "survey_submitted:campaign"
           },
           {
             "label": "Submitted Survey in Canvas Step",
             "description": "Users who last submitted a survey in a specific canvas step",
-            "unavailable": "This data source is not connected to this workspace."
+            "field": "survey_submitted:canvas"
           }
         ]
       },
@@ -311,7 +341,7 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
         "label": "Entered Canvas Variation",
         "description": "Users by whether they have entered a variation path of a specific canvas",
         "group": "Other Filters",
-        "unavailable": "This integration data is not connected to this workspace."
+        "field": "canvas_entered"
       },
       {
         "label": "Last Received Any Message",
@@ -329,7 +359,7 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
         "label": "Submitted Form on Landing Page",
         "description": "Users who have submitted a form on a specific landing page",
         "group": "Other Filters",
-        "unavailable": "This integration data is not connected to this workspace."
+        "field": "landing_form"
       }
     ]
   },
@@ -349,8 +379,7 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
           {
             "label": "Email Opt In Date",
             "description": "Users by the date on which they opted in for email",
-            "field": "attr:email_opt_in_date",
-            "requiresAttribute": "email_opt_in_date"
+            "field": "attr:email_opt_in_date"
           },
           {
             "label": "Email Subscription Status",
@@ -360,8 +389,7 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
           {
             "label": "Email Unsubscribed Date",
             "description": "Users by the date on which they unsubscribed from future emails",
-            "field": "attr:email_unsubscribed_date",
-            "requiresAttribute": "email_unsubscribed_date"
+            "field": "attr:email_unsubscribed_date"
           }
         ]
       },
@@ -372,37 +400,32 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
           {
             "label": "Foreground Push Enabled",
             "description": "Users who are foreground push enabled and whose push subscription status is not unsubscribed, for any of your apps",
-            "field": "attr:foreground_push_enabled",
-            "requiresAttribute": "foreground_push_enabled"
+            "field": "attr:foreground_push_enabled"
           },
           {
             "label": "Foreground Push Enabled for App",
             "description": "Users who are foreground push enabled for an app. This does not take push subscription status into account.",
-            "unavailable": "This data source is not connected to this workspace."
+            "field": "push_app_enabled"
           },
           {
             "label": "Background or Foreground Push Enabled",
             "description": "Users who are background or foreground push enabled for any of your apps",
-            "field": "attr:push_enabled",
-            "requiresAttribute": "push_enabled"
+            "field": "attr:push_enabled"
           },
           {
             "label": "Push Opt In Date",
             "description": "Date users opted-in for push",
-            "field": "attr:push_opt_in_date",
-            "requiresAttribute": "push_opt_in_date"
+            "field": "attr:push_opt_in_date"
           },
           {
             "label": "Push Subscription Status",
             "description": "Subscription status for push notifications",
-            "field": "attr:push_subscription_status",
-            "requiresAttribute": "push_subscription_status"
+            "field": "attr:push_subscription_status"
           },
           {
             "label": "Push Unsubscribed Date",
             "description": "Date users unsubscribed from push notifications",
-            "field": "attr:push_unsubscribed_date",
-            "requiresAttribute": "push_unsubscribed_date"
+            "field": "attr:push_unsubscribed_date"
           }
         ]
       },
@@ -410,7 +433,7 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
         "label": "Subscription Group",
         "description": "Users by subscription group for channels that require opt-in",
         "group": "Other Filters",
-        "dynamic": "subscription-groups"
+        "field": "subscription_group:"
       }
     ]
   },
@@ -436,8 +459,7 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
       {
         "label": "Shopify Market",
         "description": "",
-        "field": "attr:shopify_market",
-        "requiresAttribute": "shopify_market"
+        "field": "attr:shopify_market"
       },
       {
         "label": "Age",
@@ -478,20 +500,17 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
       {
         "label": "Has App",
         "description": "Users who have ever installed your app",
-        "field": "attr:app_id",
-        "requiresAttribute": "app_id"
+        "field": "attr:app_id"
       },
       {
         "label": "Most Recent App Version Name",
         "description": "Most recent name of the user's app",
-        "field": "attr:app_version_name",
-        "requiresAttribute": "app_version_name"
+        "field": "attr:app_version_name"
       },
       {
         "label": "Most Recent App Version Number",
         "description": "Most recent version number of a user's app",
-        "field": "attr:app_version",
-        "requiresAttribute": "app_version"
+        "field": "attr:app_version"
       }
     ]
   },
@@ -502,14 +521,12 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
       {
         "label": "Uninstalled",
         "description": "Users who uninstalled and didn't reinstall your app",
-        "field": "attr:uninstalled",
-        "requiresAttribute": "uninstalled"
+        "field": "attr:uninstalled"
       },
       {
         "label": "Uninstall Date",
         "description": "Date users uninstalled your app",
-        "field": "attr:uninstall_date",
-        "requiresAttribute": "uninstall_date"
+        "field": "attr:uninstall_date"
       }
     ]
   },
@@ -524,38 +541,32 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
           {
             "label": "Device IDFA",
             "description": "Users by advertising identifier for testing",
-            "field": "attr:idfa",
-            "requiresAttribute": "idfa"
+            "field": "attr:idfa"
           },
           {
             "label": "Device IDFV",
             "description": "Users by identifier for vendor for testing",
-            "field": "attr:idfv",
-            "requiresAttribute": "idfv"
+            "field": "attr:idfv"
           },
           {
             "label": "Device Google Ad ID",
             "description": "Users by Google advertising identifier for testing",
-            "field": "attr:google_ad_id",
-            "requiresAttribute": "google_ad_id"
+            "field": "attr:google_ad_id"
           },
           {
             "label": "Device Roku Ad ID",
             "description": "",
-            "field": "attr:roku_ad_id",
-            "requiresAttribute": "roku_ad_id"
+            "field": "attr:roku_ad_id"
           },
           {
             "label": "Device Windows Ad ID",
             "description": "",
-            "field": "attr:windows_ad_id",
-            "requiresAttribute": "windows_ad_id"
+            "field": "attr:windows_ad_id"
           },
           {
             "label": "Ad Tracking Enabled",
             "description": "Users opted-in to ad tracking on ios",
-            "field": "attr:ad_tracking_enabled",
-            "requiresAttribute": "ad_tracking_enabled"
+            "field": "attr:ad_tracking_enabled"
           }
         ]
       },
@@ -563,71 +574,61 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
         "label": "Device Carrier",
         "description": "Users by device carrier",
         "group": "Other Filters",
-        "field": "attr:device_carrier",
-        "requiresAttribute": "device_carrier"
+        "field": "attr:device_carrier"
       },
       {
         "label": "Device Count",
         "description": "How many devices users have used your app on",
         "group": "Other Filters",
-        "field": "attr:device_count",
-        "requiresAttribute": "device_count"
+        "field": "attr:device_count"
       },
       {
         "label": "Device Model",
         "description": "Users by the model version of their mobile device",
         "group": "Other Filters",
-        "field": "attr:device_model",
-        "requiresAttribute": "device_model"
+        "field": "attr:device_model"
       },
       {
         "label": "Device OS",
         "description": "Users with a device on a specific operating system",
         "group": "Other Filters",
-        "field": "attr:os",
-        "requiresAttribute": "os"
+        "field": "attr:os"
       },
       {
         "label": "Device OS Version Number",
         "description": "Users with a device on a specific operating system version number",
         "group": "Other Filters",
-        "field": "attr:os_version",
-        "requiresAttribute": "os_version"
+        "field": "attr:os_version"
       },
       {
         "label": "Most Recent Device Locale",
         "description": "Users by the locale information from most recently used device",
         "group": "Other Filters",
-        "field": "attr:device_locale",
-        "requiresAttribute": "device_locale"
+        "field": "attr:device_locale"
       },
       {
         "label": "Most Recent Watch Model",
         "description": "Users by their most recent smartwatch model",
         "group": "Other Filters",
-        "field": "attr:watch_model",
-        "requiresAttribute": "watch_model"
+        "field": "attr:watch_model"
       },
       {
         "label": "Live Activity Push To Start Registered For App",
         "description": "Users registered for iOS live activity push to start for an app",
         "group": "Other Filters",
-        "field": "attr:live_activity_push_to_start",
-        "requiresAttribute": "live_activity_push_to_start"
+        "field": "attr:live_activity_push_to_start"
       },
       {
         "label": "Provisionally Authorized on iOS",
         "description": "Users authorized on ios 12",
         "group": "Other Filters",
-        "field": "attr:provisionally_authorized",
-        "requiresAttribute": "provisionally_authorized"
+        "field": "attr:provisionally_authorized"
       },
       {
         "label": "Web Browser",
         "description": "Web browser used to access your website",
         "group": "Other Filters",
-        "field": "attr:web_browser",
-        "requiresAttribute": "web_browser"
+        "field": "attr:web_browser"
       }
     ]
   },
@@ -638,7 +639,7 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
       {
         "label": "Most Recent Location",
         "description": "Users by the last recorded location where they used your app",
-        "unavailable": "This integration data is not connected to this workspace."
+        "field": "location_recent"
       },
       {
         "label": "Location Available",
@@ -652,59 +653,64 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
     "description": "User membership in cohorts from Alloys integrations",
     "fields": [
       {
+        "label": "Decisioning Studio Agent",
+        "description": "Users added directly to a Decisioning Studio agent's audience",
+        "field": "cohort:decisioning_studio_agent"
+      },
+      {
         "label": "Amplitude Cohorts",
         "description": "Users in an existing amplitude cohort",
-        "unavailable": "This integration data is not connected to this workspace."
+        "field": "cohort:amplitude"
       },
       {
         "label": "AppsFlyer Cohorts",
         "description": "",
-        "unavailable": "This integration data is not connected to this workspace."
+        "field": "cohort:appsflyer"
       },
       {
         "label": "Census Cohorts",
         "description": "",
-        "unavailable": "This integration data is not connected to this workspace."
+        "field": "cohort:census"
       },
       {
         "label": "Heap Cohorts",
         "description": "",
-        "unavailable": "This integration data is not connected to this workspace."
+        "field": "cohort:heap"
       },
       {
         "label": "Hightouch Cohorts",
         "description": "",
-        "unavailable": "This integration data is not connected to this workspace."
+        "field": "cohort:hightouch"
       },
       {
         "label": "Kubit Cohorts",
         "description": "",
-        "unavailable": "This integration data is not connected to this workspace."
+        "field": "cohort:kubit"
       },
       {
         "label": "Mixpanel Cohorts",
         "description": "",
-        "unavailable": "This integration data is not connected to this workspace."
+        "field": "cohort:mixpanel"
       },
       {
         "label": "Segment Cohorts",
         "description": "",
-        "unavailable": "This integration data is not connected to this workspace."
+        "field": "cohort:segment"
       },
       {
         "label": "Shopify Cohorts",
         "description": "",
-        "unavailable": "This integration data is not connected to this workspace."
+        "field": "cohort:shopify"
       },
       {
         "label": "Tinyclues Cohorts",
         "description": "",
-        "unavailable": "This integration data is not connected to this workspace."
+        "field": "cohort:tinyclues"
       },
       {
         "label": "Treasure Data Cohorts",
         "description": "",
-        "unavailable": "This integration data is not connected to this workspace."
+        "field": "cohort:treasure_data"
       }
     ]
   },
@@ -715,26 +721,22 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
       {
         "label": "Install Attribution Ad",
         "description": "Users by the ad their install was attributed to",
-        "field": "attr:attribution_ad",
-        "requiresAttribute": "attribution_ad"
+        "field": "attr:attribution_ad"
       },
       {
         "label": "Install Attribution Adgroup",
         "description": "Users by the ad group their install was attributed to",
-        "field": "attr:attribution_adgroup",
-        "requiresAttribute": "attribution_adgroup"
+        "field": "attr:attribution_adgroup"
       },
       {
         "label": "Install Attribution Campaign",
         "description": "Users by the ad campaign their install was attributed to",
-        "field": "attr:attribution_campaign",
-        "requiresAttribute": "attribution_campaign"
+        "field": "attr:attribution_campaign"
       },
       {
         "label": "Install Attribution Source",
         "description": "Users by the source their install was attributed to",
-        "field": "attr:attribution_source",
-        "requiresAttribute": "attribution_source"
+        "field": "attr:attribution_source"
       }
     ]
   },
@@ -745,12 +747,12 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
       {
         "label": "Intelligent Channel",
         "description": "Users by their most active channel in the last 6 months",
-        "unavailable": "This integration data is not connected to this workspace."
+        "field": "intelligent_channel"
       },
       {
         "label": "Message Open Likelihood",
         "description": "Filter users by their likelihood to open messages on a specific channel",
-        "unavailable": "This integration data is not connected to this workspace."
+        "field": "message_open_likelihood"
       }
     ]
   },
@@ -761,26 +763,22 @@ export const audienceFilterCatalog:CampaignFilterCategory[] = [
       {
         "label": "Number of Facebook Friends Using App",
         "description": "",
-        "field": "attr:facebook_friends_count",
-        "requiresAttribute": "facebook_friends_count"
+        "field": "attr:facebook_friends_count"
       },
       {
         "label": "Connected Facebook",
         "description": "",
-        "field": "attr:connected_facebook",
-        "requiresAttribute": "connected_facebook"
+        "field": "attr:connected_facebook"
       },
       {
         "label": "Connected Twitter",
         "description": "",
-        "field": "attr:connected_twitter",
-        "requiresAttribute": "connected_twitter"
+        "field": "attr:connected_twitter"
       },
       {
         "label": "Number of Twitter Followers",
         "description": "",
-        "field": "attr:twitter_followers_count",
-        "requiresAttribute": "twitter_followers_count"
+        "field": "attr:twitter_followers_count"
       }
     ]
   },

@@ -1,0 +1,332 @@
+Browser tab: 3, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3210/audience/segments?locale=en&workspace=local".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3210/audience/segments?locale=en&workspace=local
+	1 container
+		5 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			6 image
+		4 text Segments
+		7 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		8 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			9 text Local workspace
+			10 image
+		11 container Side navigation
+			12 text Quick links
+			13 button Canvas
+			14 button Campaigns
+			15 button Segments
+			16 button Getting Started
+			17 button Home
+			18 button AI Decisioning
+			19 button Agent Console
+			20 button Messaging
+			21 button Audience
+			22 button Content
+			23 button Analytics
+			24 button Partner Integrations
+			25 button Data Settings
+			26 button Settings
+		27 button Home
+			28 image Braze
+		29 container
+			30 text ◷   8 days left in your free trial.
+			31 button Connect with sales
+		32 container
+			33 button Search workspace ⌘K
+				34 image
+				35 text Search workspace
+				36 text ⌘K
+			37 button Take a tour
+			38 image Community
+			39 button (collapsed) Description: Language, Secondary Actions: Expand
+			40 button Notifications
+			41 button (collapsed) Description: Profile, Secondary Actions: Expand
+			42 image
+			43 button Open BrazeAI Operator
+		44 button Segments
+		45 container
+			46 heading Segments, Value: 1
+				47 text Segments
+			48 text Limited access Find and reach the right audience with segments. Group users based on their behaviors, preferences, or past actions to send messages that truly matter to them.
+			49 button Create Segment
+				50 image
+				51 text Create Segment
+			52 heading Create segment, Value: 3
+				53 text Create segment
+			54 button Close builder
+				55 image
+			56 text Segment name
+			57 text field (settable) Segment name, Value: New customers · tag acceptance
+			58 text Description
+			59 text field (settable) Description
+			60 button (expanded) Tags, Secondary Actions: Collapse
+				61 image
+				62 text Tags
+				63 image
+			328 text Lifecycle / Onboarding
+			329 button Remove tag Onboarding
+				330 image
+			64 container
+				65 combo box (expanded, settable) Description: Add tags, Secondary Actions: Collapse
+				66 button Toggle Add tags
+					67 image
+			68 list Add tags options
+				69 Lifecycle
+				70 (selected) Lifecycle / Onboarding
+				71 tag_qa_3274d7cf_launch
+				72 tag_qa_3274d7cf_renamed
+				73 tag_qa_3274d7cf_resource_bulk
+			74 heading Filters, Value: 3
+				75 text Filters
+			76 pop up button (collapsed, settable) Value: Country, Secondary Actions: Expand
+				77 menu
+					78 (selected) Country
+					79 Lifecycle
+					80 Subscribed
+					81 Email contains
+					82 container Custom attributes
+						83 language
+						84 plan
+			85 pop up button (collapsed, settable) Value: equals, Secondary Actions: Expand
+				86 menu
+					87 (selected) equals
+					88 not equal to
+					89 contains
+			90 pop up button (collapsed, settable) Value: US, Secondary Actions: Expand
+				91 menu
+					92 Select…
+					93 (selected) US
+					94 GB
+					95 CN
+					96 SG
+					97 DE
+			98 button (disabled) Remove filter
+				99 image
+			100 button Add filter
+				101 image
+				102 text Add filter
+			103 combo box (collapsed, settable) Description: Select filter, Secondary Actions: Expand
+			104 button (collapsed) Description: Toggle filter catalog, Secondary Actions: Expand
+			105 text 200 Matching users 185 Reachable users 20% Of workspace
+			106 button Create segment
+				107 image
+				108 text Create segment
+			109 button Cancel
+			110 text Status
+			111 pop up button (collapsed, settable) Description: Status, Value: Active, Secondary Actions: Expand
+				112 menu
+					113 (selected) Active
+					114 Draft
+					115 Archived
+					116 All
+			117 text Tags
+			118 combo box (collapsed, settable) Description: Tags, Secondary Actions: Expand
+			119 button Toggle Tags
+				120 image
+			121 image
+			122 text field (settable) Search for segments
+			123 text Status:  Active
+			124 button Remove status filter Active
+				125 image
+			126 heading 13 Results, Value: 3
+				127 text 13  Results
+			128 table
+				129 row
+					130 cell
+						131 checkbox (settable, integer) Description: Select all rows, Value: 0
+					132 cell
+						133 button Segment name ↕
+							134 text Segment name 
+							135 text ↕
+					136 cell
+						137 text Status
+					138 cell
+						139 text Last edited by
+					140 cell
+						141 button Last edited ↓
+							142 text Last edited 
+							143 text ↓
+				144 row
+					145 cell
+						146 checkbox (settable, integer) Description: Select New Users, Value: 0
+					147 cell
+						148 button Quick view: New Users
+							149 image
+						150 button New Users
+					151 cell
+						152 text Active
+					153 cell
+						154 text Local workspace
+					155 cell
+						156 text Nov 11, 2026
+				157 row
+					158 cell
+						159 checkbox (settable, integer) Description: Select Recent Purchasers, Value: 0
+					160 cell
+						161 button Quick view: Recent Purchasers
+							162 image
+						163 button Recent Purchasers
+					164 cell
+						165 text Active
+					166 cell
+						167 text Local workspace
+					168 cell
+						169 text Nov 11, 2026
+				170 row
+					171 cell
+						172 checkbox (settable, integer) Description: Select Active Subscribers, Value: 0
+					173 cell
+						174 button Quick view: Active Subscribers
+							175 image
+						176 button Active Subscribers
+					177 cell
+						178 text Active
+					179 cell
+						180 text Local workspace
+					181 cell
+						182 text Nov 11, 2026
+				183 row
+					184 cell
+						185 checkbox (settable, integer) Description: Select Reachable Users, Value: 0
+					186 cell
+						187 button Quick view: Reachable Users
+							188 image
+						189 button Reachable Users
+					190 cell
+						191 text Active
+					192 cell
+						193 text Local workspace
+					194 cell
+						195 text Nov 11, 2026
+				196 row
+					197 cell
+						198 checkbox (settable, integer) Description: Select Pro Plan Customers, Value: 0
+					199 cell
+						200 button Quick view: Pro Plan Customers
+							201 image
+						202 button Pro Plan Customers
+					203 cell
+						204 text Active
+					205 cell
+						206 text Local workspace
+					207 cell
+						208 text Nov 11, 2026
+				209 row
+					210 cell
+						211 checkbox (settable, integer) Description: Select Free Plan Customers, Value: 0
+					212 cell
+						213 button Quick view: Free Plan Customers
+							214 image
+						215 button Free Plan Customers
+					216 cell
+						217 text Active
+					218 cell
+						219 text Local workspace
+					220 cell
+						221 text Nov 11, 2026
+				222 row
+					223 cell
+						224 checkbox (settable, integer) Description: Select English Speakers, Value: 0
+					225 cell
+						226 button Quick view: English Speakers
+							227 image
+						228 button English Speakers
+					229 cell
+						230 text Active
+					231 cell
+						232 text Local workspace
+					233 cell
+						234 text Nov 11, 2026
+				235 row
+					236 cell
+						237 checkbox (settable, integer) Description: Select Chinese Speakers, Value: 0
+					238 cell
+						239 button Quick view: Chinese Speakers
+							240 image
+						241 button Chinese Speakers
+					242 cell
+						243 text Active
+					244 cell
+						245 text Local workspace
+					246 cell
+						247 text Nov 11, 2026
+				248 row
+					249 cell
+						250 checkbox (settable, integer) Description: Select United States Users, Value: 0
+					251 cell
+						252 button Quick view: United States Users
+							253 image
+						254 button United States Users
+					255 cell
+						256 text Active
+					257 cell
+						258 text Local workspace
+					259 cell
+						260 text Nov 11, 2026
+				261 row
+					262 cell
+						263 checkbox (settable, integer) Description: Select United Kingdom Users, Value: 0
+					264 cell
+						265 button Quick view: United Kingdom Users
+							266 image
+						267 button United Kingdom Users
+					268 cell
+						269 text Active
+					270 cell
+						271 text Local workspace
+					272 cell
+						273 text Nov 11, 2026
+				274 row
+					275 cell
+						276 checkbox (settable, integer) Description: Select China Users, Value: 0
+					277 cell
+						278 button Quick view: China Users
+							279 image
+						280 button China Users
+					281 cell
+						282 text Active
+					283 cell
+						284 text Local workspace
+					285 cell
+						286 text Nov 11, 2026
+				287 row
+					288 cell
+						289 checkbox (settable, integer) Description: Select Singapore Users, Value: 0
+					290 cell
+						291 button Quick view: Singapore Users
+							292 image
+						293 button Singapore Users
+					294 cell
+						295 text Active
+					296 cell
+						297 text Local workspace
+					298 cell
+						299 text Nov 11, 2026
+				300 row
+					301 cell
+						302 checkbox (settable, integer) Description: Select Germany Users, Value: 0
+					303 cell
+						304 button Quick view: Germany Users
+							305 image
+						306 button Germany Users
+					307 cell
+						308 text Active
+					309 cell
+						310 text Local workspace
+					311 cell
+						312 text Nov 11, 2026
+			313 text Showing rows  1  -  13  of  13
+			314 container
+				315 text Rows per page: 
+				316 pop up button (collapsed, settable) Description: Rows per page, Value: 20, Secondary Actions: Expand
+					317 menu
+						318 10
+						319 (selected) 20
+						320 40
+						321 60
+						322 100
+			323 button (disabled) Previous page
+				324 image
+			325 text 1
+			326 button (disabled) Next page
+				327 image
+
+The focused UI element is 65 combo box (expanded, settable) Description: Add tags, Secondary Actions: Collapse

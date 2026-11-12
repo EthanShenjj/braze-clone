@@ -5,6 +5,7 @@
 // here performs real local persistence through /api/resources/[type].
 
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   Bell, Check, ChevronDown, Copy, Eye, FileCode2, Image as ImageIcon, Plus, Search, Sparkles, Tag, Trash2, X, Zap,
 } from "lucide-react";
@@ -13,6 +14,12 @@ import { formatDate, formatNumber, translate, type Locale } from "@/lib/i18n";
 import styles from "./module-workspaces.module.css";
 import TagManagement from "./tag-management";
 import TagPicker from "./tag-picker";
+import SegmentTagsList from "./segment-tags-list";
+import { FilterCatalog } from "./campaign-audience";
+import TaggedReceiptFilter from "./tagged-receipt-filter";
+import { subscribeTagChanges } from "@/lib/tag-client";
+import { hasTaggedReceiptFilters, segmentAudienceSnapshot, type SegmentAudienceFilter } from "@/lib/segment-tag-audience";
+import type { AudienceStatistics, CampaignFormCapabilities } from "@/lib/campaign-audience-model";
 
 const className = (...values: (string | false | undefined)[]) => values.filter(Boolean).join(" ");
 export const field = (label: string, control: ReactNode) => <label className={styles.field}><span>{label}</span>{control}</label>;
@@ -62,7 +69,7 @@ function ResourceCard({ row, onEdit, onDelete }: { row: ResourceRow; onEdit?: ()
 
 // --- Segments ---------------------------------------------------------------
 
-export type SegmentFilter = { field: string; operator: "equals" | "not_equals" | "contains"; value: string };
+export type SegmentFilter = SegmentAudienceFilter;
 const segmentFields = [
   { value: "country", label: "Country", options: ["US", "GB", "CN", "SG", "DE"] },
   { value: "lifecycle", label: "Lifecycle", options: ["New Users", "All Users", "Recent Purchasers", "Loyal Customers"] },
@@ -70,10 +77,11 @@ const segmentFields = [
   { value: "email", label: "Email contains", options: [] },
 ];
 
-export function SegmentBuilderForm({ value, onChange, attributeFields = [] }: { value: SegmentFilter[]; onChange: (filters: SegmentFilter[]) => void; attributeFields?: Array<{ key: string; values: string[] }> }) {
+export function SegmentBuilderForm({ value, onChange, attributeFields = [], tagCapabilities, tagReceipts=false }: { value: SegmentFilter[]; onChange: (filters: SegmentFilter[]) => void; attributeFields?: Array<{ key: string; values: string[] }>;tagCapabilities?:CampaignFormCapabilities|null;tagReceipts?:boolean }) {
   const setRow = (index: number, patch: Partial<SegmentFilter>) => onChange(value.map((row, i) => i === index ? { ...row, ...patch } : row));
   return <div className={styles.rowGrid}>
     {value.map((row, index) => {
+      if(row.field.startsWith("receipt_tag_count:")||row.field.startsWith("receipt_tag_last:"))return <div key={index}><TaggedReceiptFilter rule={{...row,id:`segment-rule-${index}`}} tags={tagCapabilities?.tags??[]} change={patch=>{const {id:_,...filter}=patch;setRow(index,filter);}}/><button type="button" className="secondary small" aria-label="Remove tagged receipt filter" onClick={()=>onChange(value.filter((_,i)=>i!==index))}><X size={14}/>Remove filter</button></div>;
       const meta = segmentFields.find(item => item.value === row.field);
       const attributeMeta = attributeFields.find(item => `attr:${item.key}` === row.field);
       return <div className={styles.builderRow} key={index}>
@@ -93,6 +101,7 @@ export function SegmentBuilderForm({ value, onChange, attributeFields = [] }: { 
       </div>;
     })}
     <button type="button" className="secondary small" onClick={() => onChange([...value, { field: "country", operator: "equals", value: "US" }])}><Plus size={14} /> Add filter</button>
+    {tagReceipts&&<FilterCatalog segments={[]} events={[]} attributes={[]} capabilities={tagCapabilities??null} tagReceiptsOnly select={field=>onChange([...value,{field,operator:"greater_than",value:field.startsWith("receipt_tag_count:")?"0":""}])}/>}
   </div>;
 }
 
@@ -115,7 +124,9 @@ function useSyntheticUsers() {
 }
 
 export function SegmentsWorkspace({ locale, notify, title = translate("en", "Segments"), type = "segments", subtitle }: { locale: Locale; notify: (m: string) => void; title?: string; type?: string; subtitle?: string }) {
-  const { rows, reload, remove } = useResourceList(type);
+  const searchParams = useSearchParams(), workspaceId = searchParams.get("workspace") || searchParams.get("workspaceId") || "local";
+  const { rows: resourceRows, reload, remove } = useResourceList(type);
+  const rows = type === "segments" ? resourceRows.filter(row => String(row.data.workspaceId ?? "local") === workspaceId) : resourceRows;
   const users = useSyntheticUsers();
   const attributeFields = useMemo(() => {
     const counts = new Map<string, Map<string, number>>();
@@ -137,12 +148,31 @@ export function SegmentsWorkspace({ locale, notify, title = translate("en", "Seg
   const [saveError, setSaveError] = useState("");
   const [saving, setSaving] = useState(false);
   const [filters, setFilters] = useState<SegmentFilter[]>([{ field: "country", operator: "equals", value: "US" }]);
-  const estimate = useMemo(() => estimateFromFilters(filters, users), [filters, users]);
+  const [tagCapabilities,setTagCapabilities]=useState<CampaignFormCapabilities|null>(null),[tagRevision,setTagRevision]=useState(0);
+  const [remoteEstimate,setRemoteEstimate]=useState<{signature:string;result?:AudienceStatistics;error?:string}>({signature:""});
+  const tagged=type==="segments"&&hasTaggedReceiptFilters(filters),snapshot=useMemo(()=>segmentAudienceSnapshot(filters,workspaceId),[filters,workspaceId]),previewSignature=JSON.stringify(snapshot);
+  const localEstimate = useMemo(() => estimateFromFilters(filters, users), [filters, users]);
+  const previewCurrent=remoteEstimate.signature===previewSignature,estimate=tagged?(previewCurrent?remoteEstimate.result:undefined):localEstimate;
+  const previewError=tagged&&previewCurrent?remoteEstimate.error:undefined,previewBusy=tagged&&!estimate&&!previewError;
+  useEffect(()=>{
+    if(type!=="segments")return;
+    const controller=new AbortController();let latest=0;
+    const load=()=>{const request=++latest;void fetch(`/api/campaigns/form-capabilities?workspaceId=${encodeURIComponent(workspaceId)}`,{signal:controller.signal,cache:"no-store"}).then(async response=>{if(!response.ok)throw new Error("Could not load tag filters.");return response.json();}).then(result=>{if(request===latest&&!controller.signal.aborted)setTagCapabilities(result);}).catch(()=>{});};
+    setTagCapabilities(null);load();const unsubscribe=subscribeTagChanges(detail=>{if(detail.workspaceId===workspaceId){load();setTagRevision(value=>value+1);}});
+    return()=>{controller.abort();unsubscribe();};
+  },[workspaceId,type]);
+  useEffect(()=>{
+    if(!creating||!tagged)return;
+    const controller=new AbortController();setRemoteEstimate({signature:previewSignature});
+    const timer=setTimeout(()=>{void fetch("/api/campaigns/audience-preview",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({campaign:snapshot}),signal:controller.signal}).then(async response=>{const result=await response.json();if(!response.ok)throw new Error(result.error??"Could not calculate the Segment audience.");return result;}).then(result=>{if(!controller.signal.aborted)setRemoteEstimate({signature:previewSignature,result});}).catch(cause=>{if(!controller.signal.aborted)setRemoteEstimate({signature:previewSignature,error:cause instanceof Error?cause.message:"Could not calculate the Segment audience."});});},200);
+    return()=>{clearTimeout(timer);controller.abort();};
+  },[creating,tagged,previewSignature,snapshot,tagRevision]);
   const reset = () => { setCreating(false); setEditId(null); setName(""); setDescription(""); setTags([]); setSaveError(""); setFilters([{ field: "country", operator: "equals", value: "US" }]); };
+  useEffect(() => { setCreating(false); setEditId(null); setName(""); setDescription(""); setTags([]); setSaveError(""); setFilters([{ field: "country", operator: "equals", value: "US" }]); }, [workspaceId, type]);
   const beginEdit = (row: ResourceRow) => { setEditId(row.id); setCreating(true); setName(row.name); setDescription(row.description); setTags(Array.isArray(row.data.tags) ? row.data.tags as string[] : []); setFilters((row.data.filters as SegmentFilter[] | undefined) ?? [{ field: "country", operator: "equals", value: "US" }]); };
   const save = async () => {
     if (!name.trim()) return;
-    const payload = { name: name.trim(), description, data: { ...rows.find(row => row.id === editId)?.data, filters, tags } };
+    const payload = { name: name.trim(), description, ...(type === "segments" && !editId ? { status: "Active" } : {}), data: { ...rows.find(row => row.id === editId)?.data, filters, tags, ...(type === "segments" ? { workspaceId } : {}) } };
     setSaving(true); setSaveError("");
     try {
     const response = await fetch(`/api/resources/${type}`, { method: editId ? "PATCH" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...payload, ...(editId ? { id: editId, expectedUpdatedAt: rows.find(row => row.id === editId)?.updatedAt } : {}) }) });
@@ -153,27 +183,28 @@ export function SegmentsWorkspace({ locale, notify, title = translate("en", "Seg
     } catch (error) { setSaveError(error instanceof Error ? error.message : "Unable to save Segment."); } finally { setSaving(false); }
   };
   return <section className="page-content module-workspace">
-    <WorkspaceHeading title={title} subtitle={subtitle ?? "Split your audience into targeted groups saved to local SQLite and selectable in campaign targeting."} actions={<button className="primary" onClick={() => { reset(); setCreating(true); }}><Plus size={16} /> Create segment</button>} />
+    <WorkspaceHeading title={title} subtitle={subtitle ?? "Find and reach the right audience with segments. Group users based on their behaviors, preferences, or past actions to send messages that truly matter to them."} actions={<button className="primary" onClick={() => { reset(); setCreating(true); }}><Plus size={16} /> {type === "segments" ? "Create Segment" : "Create segment"}</button>} />
     {creating && <div className={styles.card}>
       <div className={styles.cardHead}><h3>{editId ? "Edit segment" : "Create segment"}</h3><button className={styles.iconBtn} onClick={reset} aria-label="Close builder"><X size={15} /></button></div>
       <div className={styles.grid2}>
         {field("Segment name", <input value={name} onChange={event => setName(event.target.value)} placeholder="e.g. Active US purchasers" autoFocus />)}
         {field("Description", <input value={description} onChange={event => setDescription(event.target.value)} placeholder="Who is this segment for?" />)}
       </div>
-      {type === "segments" && <TagPicker value={tags} onChange={setTags} locale={locale}/>}
+      {type === "segments" && <TagPicker value={tags} onChange={setTags} locale={locale} context="assignment" resourceType="segments" workspaceId={workspaceId}/>}
       {saveError && <p role="alert">{saveError}</p>}
-      <div><h3 style={{ marginBottom: 10 }}>Filters</h3><SegmentBuilderForm value={filters} onChange={setFilters} attributeFields={attributeFields} /></div>
+      <div><h3 style={{ marginBottom: 10 }}>Filters</h3><SegmentBuilderForm value={filters} onChange={setFilters} attributeFields={attributeFields} tagReceipts={type==="segments"} tagCapabilities={tagCapabilities}/></div>
+      {previewBusy&&<p role="status">Calculating audience…</p>}{previewError&&<p role="alert">{previewError}</p>}
       <div className={styles.grid3}>
-        <div className={styles.stat}><b>{formatNumber(locale, estimate.matching)}</b><small>Matching users</small></div>
-        <div className={styles.stat}><b>{formatNumber(locale, estimate.reachable)}</b><small>Reachable users</small></div>
-        <div className={styles.stat}><b>{users.length ? Math.round(estimate.matching / users.length * 100) : 0}%</b><small>Of workspace</small></div>
+        <div className={styles.stat}><b>{estimate?formatNumber(locale, estimate.matching):"—"}</b><small>Matching users</small></div>
+        <div className={styles.stat}><b>{estimate?formatNumber(locale, estimate.reachable):"—"}</b><small>Reachable users</small></div>
+        <div className={styles.stat}><b>{estimate?`${estimate.total?Math.round(estimate.matching/estimate.total*100):0}%`:"—"}</b><small>Of workspace</small></div>
       </div>
-      <div className={styles.toolbar}><button className="primary" disabled={saving || !name.trim()} onClick={() => void save()}><Check size={15} /> {editId ? "Save changes" : "Create segment"}</button><button className="secondary" onClick={reset}>Cancel</button></div>
+      <div className={styles.toolbar}><button className="primary" disabled={saving || !name.trim() || previewBusy || Boolean(previewError)} onClick={() => void save()}><Check size={15} /> {editId ? "Save changes" : "Create segment"}</button><button className="secondary" onClick={reset}>Cancel</button></div>
     </div>}
-    <div className="resource-cards">
+    {type === "segments" ? <SegmentTagsList rows={rows} locale={locale} workspaceId={workspaceId} reload={reload} edit={beginEdit} notify={notify}/> : <div className="resource-cards">
       {rows.length ? rows.map(row => <ResourceCard key={row.id} row={row} onEdit={() => beginEdit(row)} onDelete={() => { void remove(row.id).then(() => notify("Segment archived.")); }} />)
         : !creating && <div className={styles.empty}>No custom segments yet. Create one — it will appear in the campaign targeting dropdown alongside the sample segments.</div>}
-    </div>
+    </div>}
   </section>;
 }
 
@@ -206,6 +237,8 @@ export function SuppressionListsWorkspace({ locale, notify }: { locale: Locale; 
 }
 
 export function ImportUsersWorkspace({ locale, notify }: { locale: Locale; notify: (m: string) => void }) {
+  const importParams=useSearchParams(),workspaceId=importParams.get("workspace")||importParams.get("workspaceId")||"local";
+  const [importError,setImportError]=useState("");
   const { rows, create } = useResourceList("import-users");
   const [csv, setCsv] = useState("id,email,first_name,country\nuser_9001,ada@example.com,Ada,US\nuser_9002,ben@example.com,Ben,GB");
   const [preview, setPreview] = useState<string[][] | null>(null);
@@ -214,18 +247,20 @@ export function ImportUsersWorkspace({ locale, notify }: { locale: Locale; notif
   const runImport = async () => {
     const [header, ...body] = parsed;
     const rowObjects = body.map(row => Object.fromEntries(header.map((key, i) => [key, row[i] ?? ""])));
-    let result: { imported?: number; skipped?: number } = {};
+    let result: { imported?: number; skipped?: number; userIds?:string[] } = {};
+    setImportError("");
     try {
       const response = await fetch("/api/users", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ rows: rowObjects }) });
-      if (response.ok) result = await response.json();
-    } catch {}
-    await create({ name: `Import ${new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" })} (${body.length} users)`, description: `Columns: ${header.join(", ")}`, data: { header, count: body.length, rows: body, imported: result.imported ?? 0, skipped: result.skipped ?? 0 } });
+      result=await response.json();if(!response.ok)throw new Error((result as {error?:string}).error??"Import failed.");
+    } catch (error) {setImportError(error instanceof Error?error.message:"Import failed.");return;}
+    await create({ name: `Import ${new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" })} (${body.length} users)`, description: `Columns: ${header.join(", ")}`, data: { workspaceId, userIds:result.userIds??[], completed:true, header, count: body.length, rows: body, imported: result.imported ?? 0, skipped: result.skipped ?? 0 } });
     setPreview(null);
     notify(result.imported !== undefined ? `Imported ${result.imported} new users (${result.skipped ?? 0} existing IDs skipped) — visible in Search Users and audience estimates.` : `Recorded ${body.length} user rows, but the user store was unavailable.`);
   };
   return <section className="page-content module-workspace">
     <WorkspaceHeading title="Import Users" subtitle="Paste or upload a CSV of user rows. The import is recorded in local SQLite with a row-level preview." />
     <div className={styles.card}>
+      {importError&&<p role="alert">{importError}</p>}
       {field("CSV content", <textarea value={csv} onChange={event => setCsv(event.target.value)} rows={6} className={styles.mono} />)}
       <div className={styles.toolbar}>
         <label className={styles.uploadBox} style={{ padding: "10px 18px", minHeight: 0 }}>Upload CSV<input type="file" accept=".csv,text/csv" hidden onChange={async event => { const file = event.target.files?.[0]; if (file) setCsv(await file.text()); }} /></label>
@@ -528,43 +563,7 @@ export function ApisIdentifiersWorkspace({ locale, notify }: { locale: Locale; n
   </section>;
 }
 
-type CapRule = { id: string; kind: string; limit: number; window: string };
-
-export function FrequencyCappingWorkspace({ locale, notify }: { locale: Locale; notify: (m: string) => void }) {
-  const { rows, create, update } = useResourceList("frequency-capping-rules");
-  const record = rows[0];
-  const rules: CapRule[] = Array.isArray(record?.data.rules) ? record.data.rules as CapRule[] : [];
-  const [enabled, setEnabled] = useState<boolean>(() => Boolean(record?.data.enabled));
-  useEffect(() => { if (record) setEnabled(Boolean(record.data.enabled)); }, [record?.id]);
-  const persist = async (nextRules: CapRule[], nextEnabled = enabled) => {
-    const data = { enabled: nextEnabled, rules: nextRules };
-    if (record) await update(record.id, { data }); else await create({ name: "Workspace frequency capping", description: "Global rules limiting messages per user", data });
-  };
-  const addRule = async () => {
-    const next = [...rules, { id: `rule_${Math.random().toString(36).slice(2, 8)}`, kind: "All channels", limit: 3, window: "per day" }];
-    await persist(next); notify("Frequency capping rule added.");
-  };
-  const setRule = (index: number, patch: Partial<CapRule>) => { void persist(rules.map((rule, i) => i === index ? { ...rule, ...patch } : rule)); };
-  const removeRule = async (index: number) => { await persist(rules.filter((_, i) => i !== index)); notify("Rule removed."); };
-  return <section className="page-content module-workspace">
-    <WorkspaceHeading title="Frequency Capping Rules" subtitle="Limit how often a user can receive messages across campaigns and Canvases." />
-    <div className={styles.card}>
-      <label className={styles.metricPicker}><label className={enabled ? styles.on : ""}><input type="checkbox" hidden checked={enabled} onChange={event => { setEnabled(event.target.checked); void persist(rules, event.target.checked); }} />Frequency capping enabled</label></label>
-      {enabled && <>
-        <table className={styles.table}><thead><tr><th>Applies to</th><th>Max messages</th><th>Window</th><th /></tr></thead><tbody>
-          {rules.map((rule, index) => <tr key={rule.id ?? index}>
-            <td><select value={rule.kind} onChange={event => void setRule(index, { kind: event.target.value })}><option>All channels</option><option>Email</option><option>Push</option><option>In-app message</option><option>SMS</option></select></td>
-            <td><input type="number" min={1} value={rule.limit} onChange={event => void setRule(index, { limit: Math.max(1, Number(event.target.value) || 1) })} style={{ width: 90, minHeight: 32, border: "1px solid #d9d5df", borderRadius: 6, padding: "0 8px" }} /></td>
-            <td><select value={rule.window} onChange={event => void setRule(index, { window: event.target.value })}><option>per day</option><option>per week</option><option>per month</option></select></td>
-            <td><button className={styles.iconBtn} onClick={() => void removeRule(index)}><Trash2 size={13} /></button></td>
-          </tr>)}
-          {!rules.length && <tr><td colSpan={4}>No rules yet.</td></tr>}
-        </tbody></table>
-        <div><button className="secondary" onClick={() => void addRule()}><Plus size={14} /> Add rule</button></div>
-      </>}
-    </div>
-  </section>;
-}
+export { default as FrequencyCappingWorkspace } from "./frequency-capping-workspace";
 
 export function TagManagementWorkspace(props: { locale: Locale; notify: (message: string) => void }) {
   return <TagManagement {...props}/>;

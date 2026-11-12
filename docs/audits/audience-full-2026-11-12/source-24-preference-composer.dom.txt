@@ -1,0 +1,263 @@
+- link "Skip to main content":
+  - /url: "#main-container"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Live – ittor":
+    - generic: Live – ittor
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6af4374b46d3080087f1c558?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6af4374b46d3080087f1c558?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6af4374b46d3080087f1c558?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6af4374b46d3080087f1c558?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agents":
+    - generic: Agents
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 14 days left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- main:
+  - navigation:
+    - tablist:
+      - tab "Email Preference Centers":
+        - generic: Email Preference Centers
+      - tab "Create Preference Center Close tab" [selected]:
+        - text: 
+        - generic: Create Preference Center
+        - button "Close tab":
+  - heading "Email Preference Center" [level=2]
+  - heading "Details" [level=3]
+  - text: Name
+  - generic: 0/280 characters
+  - textbox "Name 0/280 characters" [disabled]:
+    - /placeholder: Enter preference center name
+  - generic: Description
+  - textbox "Description" [disabled]
+  - button "Remove Description" [disabled]:
+    - generic: Remove Description
+  - img: 
+  - generic: The Liquid tag will be generated after the preference center is launched
+  - button "Close":
+  - generic: Liquid
+  - textbox "Liquid" [disabled]: "{{preference_center.${}}}"
+  - button [disabled]:
+    - img: 
+  - img: 
+  - generic: The API ID will be generated after the preference center is saved
+  - button "Close":
+  - generic: API ID
+  - textbox "API ID" [disabled]
+  - button [disabled]:
+    - img: 
+  - heading "Page Previews" [level=3]
+  - button "Edit" [disabled]:
+    - generic: Edit
+  - radiogroup:
+    - radio "Preference Center" [checked] [disabled]
+    - heading "Preference Center" [level=4]
+    - radio "Confirmation Page" [disabled]
+    - heading "Confirmation Page" [level=4]
+  - iframe
+  - button "Save as draft" [disabled]:
+    - generic: Save as draft
+  - button "Launch preference center" [disabled]:
+    - generic: Launch preference center
+- generic: © Braze 2026
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://braze.statuspage.io
+  - text: Status
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/terms
+  - text: Terms
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/privacy
+  - text: Privacy Policy
+- text:     
+- dialog "Your demo is here when you need it" [active]:
+  - button "close,":
+  - text: Your demo is here when you need it
+  - paragraph:
+    - text: Need more time with the sample flows and tutorials? Select the
+    - strong: Demo
+    - text: workspace from this dropdown to switch back at any time.
+  - button "Got it"
+- iframe:
+  - navigation:
+    - tablist:
+      - tab "Compose" [selected]:
+        - text: 
+        - generic: Compose
+      - tab "Settings":
+        - generic: Settings
+      - tab "Preview":
+        - generic: Preview
+  - generic: Pages (2)
+  - button "Collapse":
+    - img: 
+  - iframe:
+    - heading "Update your email preferences" [level=2]
+    - button "Save my preferences"
+    - button "Unsubscribe from all emails"
+  - heading "Preference Center" [level=5]
+  - generic: "1"
+  - iframe:
+    - heading "Thank you, your preferences have been updated" [level=2]
+    - button "Back to preference center"
+  - heading "Confirmation Page" [level=5]
+  - text:  Rows
+  - generic: Drag a row into your message
+  - generic "1 Column":
+  - generic "2 Columns":
+  - generic "3 Columns":
+  - text:  Blocks
+  - generic: Drag and drop a block into a row
+  - generic "Add a large heading to your page":
+    - generic: Title
+  - generic "Add a paragraph of text to your message":
+    - generic: Paragraph
+  - generic "Add a clickable button with a link or action":
+    - generic: Button
+  - generic "Add an image from a URL or media library":
+    - generic: Image
+  - generic "Add a clickable hyperlink":
+    - generic: Link
+  - generic "Add vertical space between blocks":
+    - generic: Spacer
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://www.braze.com/docs/en/create_dnd_iam/
+    - generic: Learn more
+  - button "Collapse sidebar":
+  - iframe:
+    - heading "Update your email preferences" [level=2]
+    - paragraph:
+    - paragraph: No subscription groups yet
+    - paragraph: Add subscription groups to let users control what they receive
+    - paragraph: Add subscription groups
+    - button "Save my preferences"
+    - button "Unsubscribe from all emails"
+  - generic: 
+  - button "Undo":
+  - button "Redo":
+  - button "Phone":
+  - button "Tablet":
+  - button "Desktop":
+    - img: 
+  - button "Hide Outlines":
+    - img: 
+  - button "Add Personalization":
+  - heading "Common styles" [level=3]
+  - button "Copy or paste styles":
+  - generic: All blocks in this page will use these styles, unless overridden at the local level.
+  - heading "Page" [level=3]
+  - button "Copy or paste styles":
+  - generic: Style the entire page
+  - generic: Max width
+  - spinbutton: "500"
+  - img: 
+  - img: 
+  - log
+  - generic: px
+  - combobox "Max width unit"
+  - generic: Background color
+  - generic "color picker fields container":
+    - button "color swatch"
+    - generic "color display information":
+      - generic "hex code": "#FFFFFF"
+      - text: Opacity 100%
+  - heading "Content" [level=3]
+  - button "Copy or paste styles":
+  - generic: Style the body of the page
+  - generic: Default font family
+  - log
+  - generic: OS Default (Sans Serif)
+  - combobox "Default font family"
+  - button "+ Add Custom Font":
+    - generic: + Add Custom Font
+  - generic: Content area alignment
+  - button "Left":
+    - img: 
+  - button "Center":
+    - img: 
+  - button "Right":
+    - img: 
+  - generic: Text color
+  - generic "color picker fields container":
+    - button "color swatch"
+    - generic "color display information":
+      - generic "hex code": "#000000"
+      - text: Opacity 100%
+  - generic: Button color
+  - generic "color picker fields container":
+    - button "color swatch"
+    - generic "color display information":
+      - generic "hex code": "#008294"
+      - text: Opacity 100%
+  - generic: Button text color
+  - generic "color picker fields container":
+    - button "color swatch"
+    - generic "color display information":
+      - generic "hex code": "#FFFFFF"
+      - text: Opacity 100%
+  - generic: Link color
+  - generic "color picker fields container":
+    - button "color swatch"
+    - generic "color display information":
+      - generic "hex code": "#1B78CF"
+      - text: Opacity 100%
+  - button "Send feedback":
+    - img: 
+    - generic: Send feedback
+  - button "Cancel":
+    - generic: Cancel
+  - button "Done":
+    - generic: Done
+  - button "BrazeAI Operator™":
+  - status

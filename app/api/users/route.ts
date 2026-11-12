@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   const input = await request.json().catch(() => null);
   if (!input || !Array.isArray(input.rows)) return Response.json({ error: "Provide a rows array of user objects." }, { status: 400 });
   const clean = input.rows.filter((row: unknown) => row && typeof row === "object" && !Array.isArray(row)) as Array<Record<string, string>>;
-  return Response.json(importUsers(clean));
+  try { return Response.json(importUsers(clean, String(input.workspaceId ?? "local"))); } catch (error) { return Response.json({ error: error instanceof Error ? error.message : "Unable to import users." }, { status: 400 }); }
 }
 
 export async function PATCH(request: Request) {

@@ -1,0 +1,235 @@
+Browser tab: 16, Title: "Engagement - Campaigns - Edit 'Early Access'", URL: "https://dashboard-09.braze.com/engagement/campaigns/6af4375320abdf005fc2ef31/6af4374c46d3080087f1c5d2?locale=en".
+0 AXWebArea Engagement - Campaigns - Edit 'Early Access', URL: dashboard-09.braze.com/engagement/campaigns/6af4375320abdf005fc2ef31/6af4374c46d3080087f1c5d2?locale=en
+	1 container
+		2 container body-wrapper
+			3 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/campaigns/6af4375320abdf005fc2ef31/6af4374c46d3080087f1c5d2?locale=en#main-col
+			4 container
+				5 container Side navigation
+					6 container
+						7 button Minimize menu
+						8 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+							9 image
+							10 text Demo – ittor
+						11 text Quick links
+						12 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+						13 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+						14 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+						15 button Getting Started
+							16 image
+							17 container
+								18 text Getting Started
+								19 container
+									20 text 8 %
+						21 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+						22 button AI Decisioning
+							23 image
+							24 text AI Decisioning
+						25 button Agents
+							26 image
+							27 text Agents
+						28 button Messaging
+							29 image
+							30 text Messaging
+						31 button Audience
+							32 image
+							33 text Audience
+						34 button Content
+							35 image
+							36 text Content
+						37 button Analytics
+							38 image
+							39 text Analytics
+						40 button Partner Integrations
+							41 image
+							42 text Partner Integrations
+						43 button Data Settings
+							44 image
+							45 text Data Settings
+						46 button Settings
+							47 image
+							48 text Settings
+					49 container Footer Logo
+						50 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+				51 text 14 days left in your free trial.
+				52 button Connect with sales
+				53 container Top navigation
+					54 container Left top navigation
+						55 button Search workspace ⌘+K
+							56 image
+							57 text Search workspace
+							58 text ⌘+K
+					59 container Right top navigation
+						60 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							61 image
+						62 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							63 image
+						64 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+							65 image
+						66 container
+							67 button Notifications
+								68 image
+						69 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							70 image
+						71 button BrazeAI Operator™
+							72 image
+			73 container main
+				74 container main-col
+					75 tab group Open page tabs
+						76 tab (selectable, settable, boolean) Campaigns, Value: 0, ID: campaigns
+						445 tab (selected, settable, boolean) Edit 'Early Access' Close tab, Description: Close tab, ID: 6af4375320abdf005fc2ef31, Value: 1
+Edit 'Early Access'
+					446 container
+						447 text Limited access
+						448 container progress
+							449 text Progress Tracker with 5 steps: Compose Messages, Schedule Delivery, Target Audiences, Assign Conversions, Review Summary
+						450 button Step Compose Messages
+							451 text 1
+							452 text Compose Messages
+						453 button Step Schedule Delivery
+						454 button Step Target Audiences
+						455 button Step Assign Conversions
+						456 button Step Review Summary
+						457 container
+							458 heading Campaign Details, Value: 3
+								459 text Campaign Details
+							460 container
+								461 text Campaign Name
+								462 text field (settable) Early Access
+								463 button Add description
+							464 button Tags
+							465 heading Campaign brief, Value: 4
+								466 text Campaign brief
+							467 text Attach a brief so BrazeAI Operator can build your campaign and your Standards can review it against your goals
+							468 container
+								469 heading Attach a campaign brief (optional), Value: 5
+									470 text Attach a campaign brief (optional)
+								471 text PDF, TXT, MD, CSV, DOCX, XLSX up to 15MB
+								472 button Upload file
+							473 container
+								474 text Campaign ID
+								475 pop up button (collapsed) Description: Help text available. Tab to view help text, click to open popover, Secondary Actions: Expand
+							476 text field Campaign ID Help text available. Tab to view help text, click to open popover, Value: 33d163e6-7299-4717-a5b0-c0e45f80bce8, ID: api-sendable-id-copy
+							477 button Copy
+						478 container
+							479 heading SMS/MMS/RCS Composer, Value: 3
+								480 text SMS/MMS/RCS Composer
+							481 heading Variants, Value: 5
+								482 text Variants
+							483 tab group
+								484 tab (selected, settable, boolean) Value: 1, Early Access
+Early Access
+								485 pop up button (collapsed) Description: Add variant, Secondary Actions: Expand
+							486 container messaging-service-selection-area
+								487 container
+									488 text Subscription Group
+									489 pop up button (collapsed) Description: Help text available. Tab to view help text, click to open popover, Secondary Actions: Expand
+								490 container
+									491 container
+										492 text SMS Canvas Subscription Group
+										493 combo box (collapsed, settable) Description: Subscription Group, ID: messaging-service-selection, Secondary Actions: Expand
+							494 heading Preview, Value: 5
+								495 text Preview
+							496 container
+								497 text Thanks for being a loyal customer, {{${first_name} | default: 'aficionado'}}! Your reward for being so loyal? Early access to our limited edition sale: https://brz.ai/XXXXXXXX Reply STOP to opt-out.
+							498 text Actual rendering may not be identical to this preview depending on the user's environment.
+							499 tab group
+								500 tab (selected, settable, boolean) Description: Compose, Value: 1
+								501 tab (selectable, settable, boolean) Description: Contact Card Generator, Value: 0, ID: Contact Card
+								502 tab (selectable, settable, boolean) Description: Test, Value: 0
+							503 container
+								504 heading Language, Value: 4
+									505 text Language
+								506 button Add languages
+								507 container body-section
+									508 heading Content, Value: 4
+										509 text Content
+									510 heading Message, Value: 5
+										511 text Message
+									512 text 158 | 1 Billable Segment
+									513 button BrazeAI Operator
+									514 container
+										515 container
+											516 editor (settable) Description: Message, ID: undefined
+										517 pop up button (expanded) Description: Add Liquid, Secondary Actions: Collapse
+								518 container
+									519 checkbox (settable, integer) Description: Link shortening, Value: 1, ID: sms-link-shortening-checkbox
+									520 text Link shortening
+								521 container
+									522 text Opening in a new tab
+									523 link Description: Opening in a new tab, Value: braze.com/docs/en/user_guide/message_building_by_channel/sms/campaign/link_shortening
+									524 text  contained in your message and better understand message engagement.
+						525 pop up button (disabled) Back
+						526 container
+							527 container progress
+								528 text Progress Tracker with 5 steps: Compose, Schedule, Target, Assign, Review
+							529 button Step Compose
+								530 text 1
+								531 text Compose
+							532 button Step Schedule
+							533 button Step Target
+							534 button Step Assign
+							535 button Step Review
+						536 pop up button Forward
+						537 button Save Draft
+				436 container
+					437 text © Braze 2026
+					438 text Opening in a new tab
+					439 link Description: Opening in a new tab, Value: braze.statuspage.io/
+					440 text Opening in a new tab
+					441 link Description: Opening in a new tab, Value: braze.com/terms
+					442 text Opening in a new tab
+					443 link Description: Opening in a new tab, Value: braze.com/privacy
+		444 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		545 container
+			546 container Add Personalization
+				547 heading Add Personalization, Value: 4
+					548 text Add Personalization
+				549 container
+					550 container Personalization type
+						551 container Description: Personalization type, ID: liquid-composition-panel-section-id-1075
+							552 text Personalization type
+						553 container
+							576 text Default Attributes, 1 of 16.
+							577 text 16 results available.
+							578 text Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+							554 container
+								555 text Default Attributes
+								556 combo box (expanded, settable) Personalization type, ID: liquid-composition-panel-section-child-id1074, Secondary Actions: Collapse
+					557 container Attribute
+						558 container Description: Attribute, ID: liquid-composition-panel-section-id-1077
+							559 text Attribute
+						560 container
+							561 container
+								562 text Search for an attribute
+								563 combo box (collapsed, settable) Attribute, ID: liquid-composition-panel-section-child-id1076, Secondary Actions: Expand
+					564 container Default value
+						565 container Description: Default value, ID: liquid-composition-panel-section-id-1079
+							566 text Default value (Optional)
+							567 pop up button (collapsed) Description: Help text available. Tab to view help text, click to open popover, Secondary Actions: Expand
+						568 text field (settable) Default value, ID: liquid-composition-panel-section-child-id1078
+					569 container Liquid Snippet
+						570 container Description: Liquid Snippet, ID: liquid-composition-panel-section-id-1081
+							571 text Liquid Snippet
+						572 text field Liquid Snippet, ID: liquid-composition-panel-section-child-id1080
+						573 button
+			574 button Cancel
+			575 button (disabled) Insert
+		579 list react-select-5-listbox
+			580 Value: Default Attributes, ID: react-select-5-option-0
+			581 Value: Custom Attributes, ID: react-select-5-option-1
+			582 Value: Nested Custom Attributes, ID: react-select-5-option-2
+			583 Value: Most Recent Device Attributes, ID: react-select-5-option-3
+			584 Value: Content Blocks, ID: react-select-5-option-4
+			585 Value: Preference Center, ID: react-select-5-option-5
+			586 Value: Landing Page, ID: react-select-5-option-6
+			587 Value: Campaign Attributes, ID: react-select-5-option-7
+			588 Value: Event Properties, ID: react-select-5-option-8
+			589 Value: API Trigger Properties, ID: react-select-5-option-9
+			590 Value: SMS Properties, ID: react-select-5-option-10
+			591 Value: WhatsApp Properties, ID: react-select-5-option-11
+			592 Value: Catalog Items, ID: react-select-5-option-12
+			593 Value: Item Recommendation, ID: react-select-5-option-13
+			594 Value: Advanced Event Properties, ID: react-select-5-option-14
+			595 Value: Message Extras, ID: react-select-5-option-15
+
+The focused UI element is 556 combo box (expanded, settable) Personalization type, ID: liquid-composition-panel-section-child-id1074, Secondary Actions: Collapse

@@ -1,0 +1,327 @@
+{
+  "date": "2026-11-11",
+  "screenshotPairs": 28,
+  "sourcePairs": 17,
+  "localPairs": 11,
+  "verification": {
+    "fullTests": {
+      "pass": 376,
+      "fail": 0
+    },
+    "targetedTests": {
+      "pass": 14,
+      "fail": 0,
+      "subsetOfFullSuite": true
+    },
+    "productionBuild": "passed",
+    "productionApi": "passed",
+    "gitDiffCheck": "passed"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 4372,
+      "sha256": "434f11e4c3ae8dbb0049d8a76788e061dc0ebd3a947438cf0fa900b7c64abf83"
+    },
+    {
+      "path": "api.log",
+      "bytes": 202,
+      "sha256": "ac79502be7a2b46faf496cb2eb3c033df39fddbd86b4fb89649fcdc0dedf8ff5"
+    },
+    {
+      "path": "build.log",
+      "bytes": 4831,
+      "sha256": "5fc0c4853003dba818d2c0fe4edf33b603b339acb4a4d9a01d20cac72a2db86e"
+    },
+    {
+      "path": "local-01-canvas-full-catalog.ax.txt",
+      "bytes": 10281,
+      "sha256": "44879ad5aae0461ac54cb269d640af4f66a308371670e5c4a601e8cf35f87f63"
+    },
+    {
+      "path": "local-01-canvas-full-catalog.jpg",
+      "bytes": 61561,
+      "sha256": "a2b6d8732993d5a253037fcce3ccbcf6dc76055856cbdcc22e4d160188beca35"
+    },
+    {
+      "path": "local-02-country-comparisons.ax.txt",
+      "bytes": 8307,
+      "sha256": "27be9dab2d487a3e28e3932bc3aa85eaac452da0e23455e8b30e063504c8fd0a"
+    },
+    {
+      "path": "local-02-country-comparisons.jpg",
+      "bytes": 54453,
+      "sha256": "bf67b036d6518a785bce897ed2cd775596f5c18e2709b79e3a83b4713bce37ee"
+    },
+    {
+      "path": "local-03-country-multiple.ax.txt",
+      "bytes": 8205,
+      "sha256": "9cfca3680c1feb019d86684a216ec7c0324cc2e8e807f702fbd5c132992305ac"
+    },
+    {
+      "path": "local-03-country-multiple.jpg",
+      "bytes": 57284,
+      "sha256": "6792f637af8f9cd719ae6c673b5aa9b567d74ef6c683da8744d71f863fd29383"
+    },
+    {
+      "path": "local-04-date-calendar.ax.txt",
+      "bytes": 14268,
+      "sha256": "7c5d13cfef00eb9648c8a316468e9464f99cbed379e6fb6afbed533b09dc3d19"
+    },
+    {
+      "path": "local-04-date-calendar.jpg",
+      "bytes": 67026,
+      "sha256": "120ddf17f797059a3d5af25a2fc1585ab40715c5aa77993c348da427c3f0ae58"
+    },
+    {
+      "path": "local-05-canvas-reloaded.ax.txt",
+      "bytes": 8896,
+      "sha256": "890f4133de46b6c85cb87c4e681f03012c6f1fa64daff653e752721e70b51bda"
+    },
+    {
+      "path": "local-05-canvas-reloaded.jpg",
+      "bytes": 55362,
+      "sha256": "571ce74a8d1c1d37fccf2bf4889e9bd4bc8e3ff9a3f2bbd22f02cc484dece468"
+    },
+    {
+      "path": "local-06-segment-picker.ax.txt",
+      "bytes": 7152,
+      "sha256": "e68f684fe484845c25ecd5939f73bce808d276717dc095523ca738f168928fd1"
+    },
+    {
+      "path": "local-06-segment-picker.jpg",
+      "bytes": 73507,
+      "sha256": "90e0aa57ccd8459d6d66de722fd42813933c9c0b0bbf87414cee8a01446e609b"
+    },
+    {
+      "path": "local-07-actual-audience.ax.txt",
+      "bytes": 6764,
+      "sha256": "9d4a4d0f51a4fa4eb00213fb7e3f8dd27533c03973689f5ca47d3db2e8620486"
+    },
+    {
+      "path": "local-07-actual-audience.jpg",
+      "bytes": 58660,
+      "sha256": "bf338495baac8c04e10fe90c2784399ed3f9c02917dc49ebc56f5a3d8066092c"
+    },
+    {
+      "path": "local-08-campaign-full-catalog.ax.txt",
+      "bytes": 10294,
+      "sha256": "9f70549811caaf368dc70fa59cc2f243c1a6706903ee7b4a5cbb5da6fb5315e3"
+    },
+    {
+      "path": "local-08-campaign-full-catalog.jpg",
+      "bytes": 62937,
+      "sha256": "6680e1146f11b54d3d53db29572bf1f66b98239b377c11003cb9479f42087ed9"
+    },
+    {
+      "path": "local-09-campaign-csv-membership.ax.txt",
+      "bytes": 7317,
+      "sha256": "22e7e2479543dfcfebbd28dc2c34c32c64612cd2f942d6132c27fd239da29e9b"
+    },
+    {
+      "path": "local-09-campaign-csv-membership.jpg",
+      "bytes": 61132,
+      "sha256": "d14d93708e79b987f0f24a53c90dcf737f18ecb711bfe72b160f3052970e419c"
+    },
+    {
+      "path": "local-10-campaign-interactions.ax.txt",
+      "bytes": 8376,
+      "sha256": "214c8768dce6c6d4eb46593e5fbfa44a15466d38144c73250b115cd47ea178f6"
+    },
+    {
+      "path": "local-10-campaign-interactions.jpg",
+      "bytes": 60377,
+      "sha256": "6dbafb4c2a09c77fd6d166fa6602f443db1d884c16d450572983befa7bb00195"
+    },
+    {
+      "path": "local-11-campaign-push-button.ax.txt",
+      "bytes": 8228,
+      "sha256": "b8685b652f34bbf55c4c0d8d88fb09b70a68f3db4a953bf81a86453f6cd1b4d9"
+    },
+    {
+      "path": "local-11-campaign-push-button.jpg",
+      "bytes": 59670,
+      "sha256": "9e7b0d5a0bdd2391d839b3ba089464d49fed2c3ade310ee2b69ec712c8cf3a5b"
+    },
+    {
+      "path": "source-01-country-comparisons.ax.txt",
+      "bytes": 10908,
+      "sha256": "5993a0ef2df851a0a1bb96d8cdad038ac11f644bdd0c746dabef4b703bda1cdb"
+    },
+    {
+      "path": "source-01-country-comparisons.jpg",
+      "bytes": 69261,
+      "sha256": "24b22e00e5f94952c45652b1aba7d54fa0a3365002152cc8dfb8a89f2e63eefb"
+    },
+    {
+      "path": "source-02-country-multiple.ax.txt",
+      "bytes": 11800,
+      "sha256": "5d7d19d2a461adef372d343992d39b9ca952dbfa671389db60611ae968c43ac6"
+    },
+    {
+      "path": "source-02-country-multiple.jpg",
+      "bytes": 71141,
+      "sha256": "fe2504007b2d26ede7ad99c22c33fb6483af590ea44d22ccaec185463c267323"
+    },
+    {
+      "path": "source-03-age-comparisons.ax.txt",
+      "bytes": 10526,
+      "sha256": "f20c46809ec862b9bab77ccd7e536b22c4e406bc324584c81ce7e88852b2d0d8"
+    },
+    {
+      "path": "source-03-age-comparisons.jpg",
+      "bytes": 67268,
+      "sha256": "da8f7f7ebdb4d325856a9fdc4a177ef459d708b3fb845618928e49e5d9f4eac6"
+    },
+    {
+      "path": "source-04-date-comparisons.ax.txt",
+      "bytes": 10748,
+      "sha256": "c6093b1e69950fd2b01f49959b80d9b281e8cc83e208655c18d7ed60c9d7e442"
+    },
+    {
+      "path": "source-04-date-comparisons.jpg",
+      "bytes": 68438,
+      "sha256": "e2e11580f7e13541214483168994f17275610600aba813c1d505ede7776c0f58"
+    },
+    {
+      "path": "source-05-date-relative-units.ax.txt",
+      "bytes": 10891,
+      "sha256": "ed9e7a8c8fdd7090d975308788e1e0b05f9ddb0f89fb9f006214072506da74c2"
+    },
+    {
+      "path": "source-05-date-relative-units.jpg",
+      "bytes": 71740,
+      "sha256": "55dd367b972beb6eb6523fd20ff9197b34f15228bdbfeed8320a8c24d95f4005"
+    },
+    {
+      "path": "source-06-date-calendar.ax.txt",
+      "bytes": 10139,
+      "sha256": "f748d8200b567405b6a90976719681736f2ea928b140e0aec59bc1e4d130777e"
+    },
+    {
+      "path": "source-06-date-calendar.jpg",
+      "bytes": 78714,
+      "sha256": "f57129323242976659829fa959b37213fdaccba2fe3ea4bc53026648d628ee55"
+    },
+    {
+      "path": "source-07-retargeting-subcategories.ax.txt",
+      "bytes": 11962,
+      "sha256": "2b52a4707af8bd23466577397ab4565a0da8a6826a7812078ce545023cd9cf5a"
+    },
+    {
+      "path": "source-07-retargeting-subcategories.jpg",
+      "bytes": 66556,
+      "sha256": "9b6542e0ae4f879c67e23e44ecf0f0957ddb1d1141cdd5dbea4f7e19431c7d14"
+    },
+    {
+      "path": "source-08-sms-submenu.ax.txt",
+      "bytes": 10448,
+      "sha256": "99fecc4eae9b78f5760e640867c4244bdf38e04bce8b3372ab55084af8829712"
+    },
+    {
+      "path": "source-08-sms-submenu.jpg",
+      "bytes": 63740,
+      "sha256": "8c31e7f6dee7935b526bce1c9d0d2903c0838748b47490d725c856be29634ca2"
+    },
+    {
+      "path": "source-09-inbound-keyword-condition.ax.txt",
+      "bytes": 10385,
+      "sha256": "6868d7cb86b9a79ba89c7b35d4619025ef76271d65e768256cb936af18e4dbb6"
+    },
+    {
+      "path": "source-09-inbound-keyword-condition.jpg",
+      "bytes": 58916,
+      "sha256": "3238ac744c8abb9478e07e2dfc1a544b5cfa27376e07dcc4d4dbab627fe43d0f"
+    },
+    {
+      "path": "source-10-inbound-keyword-categories.ax.txt",
+      "bytes": 10834,
+      "sha256": "5b4d7083cc8a80d3d39bb440e6a02f734d528de7bcabfe21f89d44fd558b7811"
+    },
+    {
+      "path": "source-10-inbound-keyword-categories.jpg",
+      "bytes": 74996,
+      "sha256": "8e779c4f4dd6e2d3b78209b17d8c2d0def93e869a68169c5c5ffdb33edd9b795"
+    },
+    {
+      "path": "source-11-inbound-keyword-date.ax.txt",
+      "bytes": 10761,
+      "sha256": "c67a2179978e6be654927d31083adf55be1412c299f9b4af816149da7da3205e"
+    },
+    {
+      "path": "source-11-inbound-keyword-date.jpg",
+      "bytes": 74348,
+      "sha256": "1736c83eea55ec7f280c305dbcb1626584e787fe79bc513ddbbb41e415d612d3"
+    },
+    {
+      "path": "source-12-segment-membership.ax.txt",
+      "bytes": 10711,
+      "sha256": "cd5471bdec108931005f0ddc1e771df870cfab78a52f53a6cc326e2ca9e94eaa"
+    },
+    {
+      "path": "source-12-segment-membership.jpg",
+      "bytes": 70586,
+      "sha256": "1f6e7a81588bc0962a296e99a11bf2cca4b8d589a9b9dec06fd750f2a0be4edc"
+    },
+    {
+      "path": "source-13-session-count.ax.txt",
+      "bytes": 10543,
+      "sha256": "86e492ffb6a47b2163bce1c22a2ee38ff2db679992d3117f9aa9a84617bfb4ff"
+    },
+    {
+      "path": "source-13-session-count.jpg",
+      "bytes": 67642,
+      "sha256": "d75e315b96c7ace342a306c264b136b74d51c3f9ffd574439f02c5a1aa7adc75"
+    },
+    {
+      "path": "source-14-campaign-receipt.ax.txt",
+      "bytes": 10700,
+      "sha256": "d9a21cc3912adaf0bd9cce60e79a08c7a69d3d308c20ac5d0a2fc3fcd3b5970a"
+    },
+    {
+      "path": "source-14-campaign-receipt.jpg",
+      "bytes": 69949,
+      "sha256": "917645306f6cda793a80e1bb32012f42760dbaa27ad5bf2d201f7ea308c4f6d9"
+    },
+    {
+      "path": "source-15-campaign-interaction.ax.txt",
+      "bytes": 12151,
+      "sha256": "5740fe15c5c8bd4731bc8b64a269f2fc9d558288f38b66fc5eabfb492656cc20"
+    },
+    {
+      "path": "source-15-campaign-interaction.jpg",
+      "bytes": 68618,
+      "sha256": "062772433eb734541b9552edeffcb8018454023a23560d5edc0a363de90efa06"
+    },
+    {
+      "path": "source-16-push-button-interaction.ax.txt",
+      "bytes": 10682,
+      "sha256": "14c9862a53be34fe40cbe03dca028edbd9c12553133a20c0e1faaa81a5a0c207"
+    },
+    {
+      "path": "source-16-push-button-interaction.jpg",
+      "bytes": 73732,
+      "sha256": "2b1740e8691af789c3755ad134dc99b161943b9c8fb4334e91ee7b2a65c88bc7"
+    },
+    {
+      "path": "source-17-restored.ax.txt",
+      "bytes": 9664,
+      "sha256": "91804f5691375bc75fd6cc7d84114e4e92381514bba687241e277f23b6f6bb8c"
+    },
+    {
+      "path": "source-17-restored.jpg",
+      "bytes": 66481,
+      "sha256": "c1a36f435a0b742633c877bbc59f3af08dcf7f4d14ddd7fbb5eb54ea4201ae57"
+    },
+    {
+      "path": "tests-full.log",
+      "bytes": 118421,
+      "sha256": "3164ed9c9b2b55624c4b4027dc40bac0c1cd16fe72051029ad022ff61f27a399"
+    },
+    {
+      "path": "tests-targeted.log",
+      "bytes": 5253,
+      "sha256": "4ca4b2a74af4f7e429cd44874bf381342ffb54eeb843ddbae19d866a50039cb0"
+    }
+  ]
+}

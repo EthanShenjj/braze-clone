@@ -1,0 +1,168 @@
+Browser tab: 2, Title: "Engagement - Canvas - Canvas", URL: "https://dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?status=%22draft%22&tags=%5B%22Onboarding%22%2C%22US%22%5D&locale=en".
+0 AXWebArea Engagement - Canvas - Canvas, URL: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?status=%22draft%22&tags=%5B%22Onboarding%22%2C%22US%22%5D&locale=en
+	1 container
+		259 container body-wrapper
+			260 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?status=%22draft%22&tags=%5B%22Onboarding%22%2C%22US%22%5D&locale=en#main-col
+			261 container
+				262 container Side navigation
+					263 container
+						264 button Minimize menu
+						265 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+							266 image
+							267 text Demo – ittor
+						268 text Quick links
+						269 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+						270 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+						271 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+						272 button Getting Started
+							273 image
+							274 container
+								275 text Getting Started
+								276 container
+									277 text 0 %
+						278 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+						279 button AI Decisioning
+							280 image
+							281 text AI Decisioning
+						282 button Agents
+							283 image
+							284 text Agents
+						285 button Messaging
+							286 image
+							287 text Messaging
+						288 button Audience
+							289 image
+							290 text Audience
+						291 button Content
+							292 image
+							293 text Content
+						294 button Analytics
+							295 image
+							296 text Analytics
+						297 button Partner Integrations
+							298 image
+							299 text Partner Integrations
+						300 button Data Settings
+							301 image
+							302 text Data Settings
+						303 button Settings
+							304 image
+							305 text Settings
+					306 container Footer Logo
+						307 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+				308 text 14 days left in your free trial.
+				309 button Connect with sales
+				310 container Top navigation
+					311 container Left top navigation
+						312 button Search workspace ⌘+K
+							313 image
+							314 text Search workspace
+							315 text ⌘+K
+					316 container Right top navigation
+						317 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							318 image
+						319 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							320 image
+						321 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+							322 image
+						323 container
+							324 button Notifications
+								325 image
+						326 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							327 image
+						328 button BrazeAI Operator™
+							329 image
+			330 container main
+				340 container main-col
+					341 tab group Open page tabs
+						342 tab (selected, settable, boolean) Canvas, Value: 1, ID: canvas
+					343 container
+						344 heading Canvas, Value: 2
+							345 text Canvas
+						346 text Limited access
+						347 text Design and launch customer journeys with Canvas. Drag, drop, and connect messaging across channels to create seamless, automated experiences.
+						348 button Take a tour
+							349 text Take a tour
+						350 pop up button (collapsed) Description: More options, Secondary Actions: Expand
+						351 pop up button (collapsed) Description: Create Canvas, ID: canvas-create-button, Secondary Actions: Expand
+						514 container
+							515 text 1 Selected
+							516 button close
+						517 button Archive
+						518 pop up button (expanded) Description: Tag as, Secondary Actions: Collapse
+						366 text field (settable) Search Canvases
+						367 container Description: Inline Tag 0, ID: db-canvas-digest--badge-status
+							368 text Status: Draft
+							369 button close
+						482 container Description: Inline Tag 1, ID: db-canvas-digest--badge-tag-0
+							483 text Tag: Onboarding
+							484 button close
+						485 container Description: Inline Tag 2, ID: db-canvas-digest--badge-tag-1
+							486 text Tag: US
+							487 button close
+						370 heading 1 Result, Value: 4
+							488 text 1 Result
+						372 table
+							373 row
+								374 cell
+									375 checkbox (settable, integer) Description: Select all Canvas rows, Value: 1, ID: bc-checkbox-562029588
+								376 cell
+									377 button Select to sort by Name in alphabetical order
+								378 cell
+									379 text Status
+								380 cell
+									381 text Description
+								382 cell
+									383 text Last edited by
+								384 cell
+									385 button Sorting by Last Edited date from newest to oldest
+								386 cell
+									387 text Alerts Configured
+							489 row
+								490 cell
+									491 checkbox (settable, integer) Description: Select Canvas Onboarding flow, Value: 1, ID: db-canvas-digest-table--select-row-6af4375920abdf005fc2f151
+								492 cell
+									493 link Description: Onboarding flow, Value: dashboard-09.braze.com/engagement/canvas/6af4375920abdf005fc2f151/6af4374c46d3080087f1c5d2?isEditing=true
+									504 container Inline Tag 0
+										505 text Onboarding
+								506 cell
+									507 text Draft
+								508 cell
+									509 text Create cross-platform onboarding journeys that promote strong initial adoption and encourage lasting relationships with your customers
+								510 cell
+									511 text N/A
+								512 cell
+									513 text 21 minutes ago
+								494 cell
+									495 pop up button (collapsed) Description: More Actions, ID: canvas-row-actions-button-6af4375920abdf005fc2f151, Secondary Actions: Expand
+						435 text Showing rows 1 - 1 of 1 Rows per page:
+						436 pop up button (collapsed, settable) Value: 20, Secondary Actions: Expand
+							437 menu
+								438 10
+								439 (selected) 20
+								440 40
+								441 60
+								442 100
+						443 content list
+							444 button (disabled) Previous page
+							445 button Current Page, Page 1
+							446 button (disabled) Next page
+						447 button Priority Sorter
+				332 container
+					333 text © Braze 2026
+					334 text Opening in a new tab
+					335 link Description: Opening in a new tab, Value: braze.statuspage.io/
+					336 text Opening in a new tab
+					337 link Description: Opening in a new tab, Value: braze.com/terms
+					338 text Opening in a new tab
+					339 link Description: Opening in a new tab, Value: braze.com/privacy
+		258 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		519 container bcl-popper-1218081880
+			520 container
+				521 container
+					522 text Onboarding
+					523 button close
+					524 combo box (collapsed, settable) Description: Add Tag, ID: react-select-11-input, Secondary Actions: Expand
+			525 button Apply tags
+
+The focused UI element is 518 pop up button (expanded) Description: Tag as, Secondary Actions: Collapse

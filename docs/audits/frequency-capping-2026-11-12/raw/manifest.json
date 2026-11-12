@@ -1,0 +1,68 @@
+[
+  {
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/553.6da225f7d7152b3b.js",
+    "path": "docs/audits/frequency-capping-2026-11-12/raw/553.6da225f7d7152b3b.js",
+    "bytes": 14722,
+    "sha256": "69802a992118e013ccbbeac6fd7780efa72cc7c0a40997ce005849ef7198573a"
+  },
+  {
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/58350.9c641f8a7b034cfb.js",
+    "path": "docs/audits/frequency-capping-2026-11-12/raw/58350.9c641f8a7b034cfb.js",
+    "bytes": 2591,
+    "sha256": "3c67d93bcb0109ec0d446b4c544cdb6fa7eed9305bf68f823311961add7ff2f5"
+  },
+  {
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/50653.d13ea2cf32a19303.js",
+    "path": "docs/audits/frequency-capping-2026-11-12/raw/50653.d13ea2cf32a19303.js",
+    "bytes": 12556,
+    "sha256": "fb78c7804e394652c60d448fd711f6f9d320dd6b4fb3cfb3110fa123bff6a42e"
+  },
+  {
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/41903.7ffbd7c6af0693d1.js",
+    "path": "docs/audits/frequency-capping-2026-11-12/raw/41903.7ffbd7c6af0693d1.js",
+    "bytes": 16699,
+    "sha256": "ffa217c194ba7a0344f7852e4529dcdbc8079ed427078f54aabd5ff5d6d07142"
+  },
+  {
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/8070.1cdc47870134ba42.js",
+    "path": "docs/audits/frequency-capping-2026-11-12/raw/8070.1cdc47870134ba42.js",
+    "bytes": 9426,
+    "sha256": "5fde0806913c8c2c4f6a62f2621ea9e38dad889334b1919dfd3416b5fe82cfb3"
+  },
+  {
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/53617.632eca0088984998.js",
+    "path": "docs/audits/frequency-capping-2026-11-12/raw/53617.632eca0088984998.js",
+    "bytes": 10199,
+    "sha256": "41a3a5d64c7289360e4cf4b8cd921ac728465927bcdb3aa5314c68439c87dd86"
+  },
+  {
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/79581.459b820ecc35ca11.js",
+    "path": "docs/audits/frequency-capping-2026-11-12/raw/79581.459b820ecc35ca11.js",
+    "bytes": 22371,
+    "sha256": "86e0a0e9d22526a819cf5aa920df9c442034ae130a2eacb5ab7507824f187db0"
+  },
+  {
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/37406.ce6fd2527177eaeb.js",
+    "path": "docs/audits/frequency-capping-2026-11-12/raw/37406.ce6fd2527177eaeb.js",
+    "bytes": 14879,
+    "sha256": "bb6868620ca217926dfe2bd7c3d6d59630731cb9d643af917529a0f7f5829d41"
+  },
+  {
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/65129.c90b55489214ad83.js",
+    "path": "docs/audits/frequency-capping-2026-11-12/raw/65129.c90b55489214ad83.js",
+    "bytes": 92820,
+    "sha256": "a59080b1a45f75b94c3300eb5cfe7aae5f398422a972e17131729074e2a4d19d"
+  },
+  {
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/89318.f7cd004677210565.js",
+    "path": "docs/audits/frequency-capping-2026-11-12/raw/89318.f7cd004677210565.js",
+    "bytes": 4586,
+    "sha256": "4248d3c73fce4296c18af02c24a73d6c2fa52c328dd84c530f8f8305a7ad7e3d"
+  },
+  {
+    "url": "https://cdn.braze.com/dashboard-frontend-assets/js/braze_dash.4cea4ba9d8b6c30e.js",
+    "path": "docs/audits/frequency-capping-2026-11-12/raw/braze_dash.4cea4ba9d8b6c30e.js",
+    "bytes": 10081,
+    "sha256": "87eb7fdb90b840a754f8ce663cdce1d2732a9efd213ca9d6cd362cb382c37487"
+  }
+]

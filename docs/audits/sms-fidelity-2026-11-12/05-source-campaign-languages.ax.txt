@@ -1,0 +1,22 @@
+Browser tab: 16, Title: "Engagement - Campaigns - Edit 'Early Access'", URL: "https://dashboard-09.braze.com/engagement/campaigns/6af4375320abdf005fc2ef31/6af4374c46d3080087f1c5d2?locale=en".
+0 AXWebArea Engagement - Campaigns - Edit 'Early Access', URL: dashboard-09.braze.com/engagement/campaigns/6af4375320abdf005fc2ef31/6af4374c46d3080087f1c5d2?locale=en
+	1 container close Internationalize your message Languages Select a language or languages Languages Cancel Add text to fields
+		2 button close
+		3 heading Internationalize your message, Value: 2
+			4 text Internationalize your message
+		5 container
+			6 text Languages
+			7 container
+				8 text Select a language or languages
+				9 combo box (collapsed, settable) Description: Languages, ID: languages, Secondary Actions: Expand
+			10 heading Fields to internationalize, Value: 1
+				11 text Fields to internationalize
+			12 checkbox (settable, integer) Description: Message, Value: 0
+			13 text Message
+			14 text This field has content already
+			15 checkbox (settable, integer) Description: Image, Value: 0
+			16 text Image
+		17 button Description: Cancel, ID: cancelButton
+		18 button (disabled) Description: Add text to fields, ID: addButton
+
+The focused UI element is 1 container close Internationalize your message Languages Select a language or languages Languages Cancel Add text to fields

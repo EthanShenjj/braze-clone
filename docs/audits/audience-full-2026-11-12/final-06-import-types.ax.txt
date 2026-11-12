@@ -1,0 +1,120 @@
+Browser tab: 15, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/users/user_import/local?locale=en&workspace=local".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/user_import/local?locale=en&workspace=local
+	1 container
+		2 text Import Users
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agents
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+		25 container
+			26 text ◷   8 days left in your free trial.
+			27 button Connect with sales
+		28 container
+			29 button Search workspace ⌘K
+				30 image
+				31 text Search workspace
+				32 text ⌘K
+			33 button Take a tour
+			34 image Community
+			35 button (collapsed) Description: Language, Secondary Actions: Expand
+			36 button Notifications
+			37 button (collapsed) Description: Profile, Secondary Actions: Expand
+			38 image
+			39 button Open BrazeAI Operator
+		40 button Import Users
+		41 container
+			42 heading Import Users, Value: 1
+				43 text Import Users
+			44 button (disabled) Description: Send feedback, Help: Feedback collection is not configured for this workspace.
+				45 image
+			99 container
+				100 button (expanded) Description: Import, Secondary Actions: Collapse
+					101 text Import
+					102 image
+				103 menu Import
+					104 heading ATTRIBUTES, Value: 3
+						105 text ATTRIBUTES
+					106 User attributes Add or update profile fields, such as email, first name, or loyalty tier
+						107 image
+						108 text User attributes
+						109 text Add or update profile fields, such as email, first name, or loyalty tier
+					110 heading EVENTS, Value: 3
+						111 text EVENTS
+					112 Custom events Log actions your users took, such as completed_onboarding
+						113 image
+						114 text Custom events
+						115 text Log actions your users took, such as completed_onboarding
+					116 eCommerce recommended events Log purchases and browsing in Braze's eCommerce format, such as order_placed
+						117 image
+						118 text eCommerce recommended events
+						119 text Log purchases and browsing in Braze's eCommerce format, such as order_placed
+			49 text Add or update users in your workspace by uploading a CSV or entering details manually.
+			50 button Refresh table
+			51 table
+				52 row
+					53 cell
+						54 text Date
+						55 image Information
+					56 cell
+						57 text Uploader
+					58 cell
+						59 text File Name
+					60 cell
+						61 text Type
+					62 cell
+						63 text Targeting Availability
+					64 cell
+						65 text Records
+						66 image Information
+					67 cell
+						68 text Status
+				69 row
+					70 cell
+						71 text Nov 12, 2026, 12:43 PM
+					72 cell
+						73 text —
+					74 cell
+						75 text audience_qa_83e337e7 CSV import
+					76 cell
+						77 text Attributes
+					78 cell
+						79 text Available
+					80 cell
+						81 text —
+					82 cell
+						83 text Active
+				84 row
+					85 cell
+						86 text Nov 12, 2026, 11:32 AM
+					87 cell
+						88 text —
+					89 cell
+						90 text audience_qa_9fdd22dd CSV import
+					91 cell
+						92 text Attributes
+					93 cell
+						94 text Available
+					95 cell
+						96 text —
+					97 cell
+						98 text Active
+
+The focused UI element is 100 button (expanded) Description: Import, Secondary Actions: Collapse

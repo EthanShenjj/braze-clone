@@ -1,0 +1,130 @@
+Browser tab: 15, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/engagement/segmenter/segment_insights/local?workspace=local&locale=en&segmentIds=seg_new".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/engagement/segmenter/segment_insights/local?workspace=local&locale=en&segmentIds=seg_new
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agents
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+	25 container
+		26 text ◷   8 days left in your free trial.
+		27 button Connect with sales
+		28 button Search workspace ⌘K
+			29 image
+			30 text Search workspace
+			31 text ⌘K
+		32 button Take a tour
+		33 image Community
+		34 button (collapsed) Description: Language, Secondary Actions: Expand
+		35 button Notifications
+		36 button (collapsed) Description: Profile, Secondary Actions: Expand
+		37 image
+		38 button Open BrazeAI Operator
+		39 heading Segment Insights, Value: 1
+			40 text Segment Insights
+		41 text Insight statistics are estimated. Open a Segment to calculate exact numbers.
+		42 text Baseline
+		43 container
+			44 combo box (collapsed, settable) Description: Baseline, Value: All Users, Secondary Actions: Expand
+			45 button (collapsed) Description: Toggle Baseline, Secondary Actions: Expand
+				46 image
+		47 container
+			48 text Segments 1 /10
+		49 container
+			50 text New Users
+			51 button Remove New Users
+				52 image
+			53 combo box (collapsed, settable) Description: Segments, Secondary Actions: Expand
+			54 button (collapsed) Description: Toggle Segments, Secondary Actions: Expand
+				55 image
+		56 button (collapsed) Description: Columns, Secondary Actions: Expand
+			57 image
+			58 text Columns
+		59 table
+			60 row
+				61 cell
+					62 text Segment name
+				63 cell
+					64 button User size column, unsorted. Select to sort descending
+						65 text User size
+						66 text ↕
+				67 cell
+					68 button Sessions per day column, unsorted. Select to sort descending
+						69 text Sessions per day
+						70 text ↕
+				71 cell
+					72 button Days since first session column, unsorted. Select to sort descending
+						73 text Days since first session
+						74 text ↕
+				75 cell
+					76 button Days since last session column, unsorted. Select to sort descending
+						77 text Days since last session
+						78 text ↕
+				79 cell
+					80 button Lifetime revenue in dollars column, unsorted. Select to sort descending
+						81 text Lifetime revenue in dollars
+						82 text ↕
+				83 cell
+					84 button Days since first purchase column, unsorted. Select to sort descending
+						85 text Days since first purchase
+						86 text ↕
+				87 cell
+					88 button Days since last purchase column, unsorted. Select to sort descending
+						89 text Days since last purchase
+						90 text ↕
+			91 row
+				92 cell
+					93 text All Users
+					94 text Baseline
+				95 cell
+					96 text 1,006
+				97 cell
+					98 text —
+				99 cell
+					100 text —
+				101 cell
+					102 text —
+				103 cell
+					104 text —
+				105 cell
+					106 text —
+				107 cell
+					108 text —
+			109 row
+				110 cell
+					111 link Description: New Users, Value: 127.0.0.1:3213/engagement/segmenter/segmenter/local?segmentId=seg_new&workspace=local&locale=en
+				112 cell
+					113 text 200
+					114 container
+						115 text -80.1 % vs baseline
+				116 cell
+					117 text —
+				118 cell
+					119 text —
+				120 cell
+					121 text —
+				122 cell
+					123 text —
+				124 cell
+					125 text —
+				126 cell
+					127 text —
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/engagement/segmenter/segment_insights/local?workspace=local&locale=en&segmentIds=seg_new

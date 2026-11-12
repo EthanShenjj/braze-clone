@@ -1,0 +1,80 @@
+Browser tab: 12, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3221/engagement/canvas/c754785c-fad4-423d-8c9f-7967e2b59389?locale=en&workspaceId=local&step=build&initialConditionsCollapsed=false".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3221/engagement/canvas/c754785c-fad4-423d-8c9f-7967e2b59389?locale=en&workspaceId=local&step=build&initialConditionsCollapsed=false
+	2 container Content Optimizer step editor
+		3 container
+			4 text field (settable) Description: Step name, Value: optimizer
+			5 text Content Optimizer Opens 4  combinations Email Intelligent Timing: ON All users who enter this step  and meet delivery validations  advance to the next step
+			6 button Done
+		7 container
+			8 text Content Optimizer setup
+			9 tab group Message step
+				10 tab (selectable, settable, boolean) Messaging channels, Value: 0
+				11 tab (selected, settable, boolean) Delivery settings, Value: 1
+				12 tab (selectable, settable, boolean) Content Optimizer settings, Value: 0
+				13 tab (selectable, settable, boolean) Agentic Standards results, Value: 0
+			14 heading Delivery Schedule, Value: 3
+				15 text Delivery Schedule
+			16 text Deliver this message 
+			17 container
+				18 text at the optimal time .
+			19 checkbox (settable, integer) Description: Using Intelligent Timing, Value: 1
+			20 text Select a time to send messages when a user's profile does not have enough data to calculate an optimal time:
+			21 radio button (settable, integer) Description: the most popular time to use the app amongst all users, Value: 0
+			22 radio button (settable, integer) Description: a specific custom fallback time (in the user's local time zone), Value: 1
+			23 time field (settable) Description: Intelligent Timing fallback time, Value: 17:00
+				60 container
+					61 stepper
+					62 stepper
+				63 pop up button 显示时间选择器 显示时间选择器
+			24 heading Delivery validations, Value: 3
+				25 text Delivery validations
+			26 text Double-check that your audience meets your delivery criteria at message send. For in-app messages, delivery validations are checked when the user enters the step, not when the message is displayed.
+			27 checkbox (settable, integer) Description: Delivery Validation enabled for this message, Value: 1
+			28 text Validate audience at message send
+			29 text Recommended if you're using quiet hours, Intelligent Timing, or rate limiting.
+			30 text Segments
+			31 combo box (collapsed, settable) Segments, Secondary Actions: Expand
+			32 button (collapsed) Description: Toggle Segments, Secondary Actions: Expand
+				33 image
+			34 heading Additional Filters, Value: 3
+				35 text Additional Filters
+			36 container Filter group
+				37 text Filter group
+				38 pop up button (collapsed, settable) Description: Filter group operator, Value: OR, Secondary Actions: Expand
+					39 menu
+						40 (selected) OR
+						41 AND
+				42 button Remove filter group
+					43 image
+				64 container Country
+					65 heading Country, Value: 4
+						66 text Country
+					67 container
+						68 text Comparison
+						69 combo box (collapsed, settable) Description: Comparison, Value: is, Secondary Actions: Expand
+						70 button Toggle Comparison
+							71 image
+					72 container
+						73 text Country
+						74 combo box (collapsed, settable) Description: Country, Value: United States, Secondary Actions: Expand
+						75 button Toggle Country
+							76 image
+				77 button Remove filter
+				44 container
+					45 combo box (collapsed, settable) Description: Select filter, Secondary Actions: Expand
+					46 button (collapsed) Description: Toggle filter catalog, Secondary Actions: Expand
+			47 button ＋ Add filter group
+				48 text ＋ Add 
+				49 text filter
+				50 text  group
+			51 button ＋ Add exclusion group
+				52 text ＋ Add 
+				53 text exclusion
+				54 text  group
+			55 heading Delivery validations advancement behavior, Value: 3
+				56 text Delivery validations advancement behavior
+			57 text If delivery validations are not met:
+			58 radio button (settable, integer) Description: Exit the user from the Canvas, Value: 0
+			59 radio button (settable, integer) Description: Skip this message send and progress the user to the next step in the Canvas, Value: 1
+
+The focused UI element is 74 combo box (collapsed, settable) Description: Country, Value: United States, Secondary Actions: Expand

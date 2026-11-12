@@ -1,6 +1,6 @@
 export const engagementTagLimit = 175;
 export type WorkspaceTag = { id: string; name: string; parentId: string | null; path: string; updatedAt: string; usages: TagUsage[] };
-export type TagUsage = { id: string; type: string; name: string; status: string };
+export type TagUsage = { id: string; type: string; name: string; status: string; direct?: boolean };
 
 export function tagNames(value: unknown, limited = false): string[] {
   if (value === undefined) return [];

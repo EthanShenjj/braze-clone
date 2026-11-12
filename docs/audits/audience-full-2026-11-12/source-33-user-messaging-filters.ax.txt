@@ -1,0 +1,250 @@
+Browser tab: 12, Title: "Data - Overview - Overview", URL: "https://dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af4378a641a6600597b5b58".
+1 AXWebArea Data - Overview - Overview, URL: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af4378a641a6600597b5b58
+	2 container
+		3 container react-root
+			4 link Description: Skip to main content, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af4378a641a6600597b5b58#main-container
+			5 container Side navigation
+				6 container
+					7 button Minimize menu
+					8 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+						9 image
+						10 text Demo – ittor
+					11 text Quick links
+					12 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+					13 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+					14 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+					15 button Getting Started
+						16 image
+						453 text Getting Started
+						454 container
+							455 text 8 %
+					21 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+					22 button AI Decisioning
+						23 image
+						24 text AI Decisioning
+					25 button Agents
+						26 image
+						27 text Agents
+					28 button Messaging
+						29 image
+						30 text Messaging
+					31 button Audience
+						32 image
+						33 text Audience
+					34 button Content
+						35 image
+						36 text Content
+					37 button Analytics
+						38 image
+						39 text Analytics
+					40 button Partner Integrations
+						41 image
+						42 text Partner Integrations
+					43 button Data Settings
+						44 image
+						45 text Data Settings
+					46 button Settings
+						47 image
+						48 text Settings
+				49 container Footer Logo
+					50 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+			51 text 14 days left in your free trial.
+			52 button Connect with sales
+			53 container Top navigation
+				54 container Left top navigation
+					55 button Search workspace ⌘+K
+						56 image
+						57 text Search workspace
+						58 text ⌘+K
+				59 container Right top navigation
+					60 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						61 image
+					62 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						63 image
+					64 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+						65 image
+					66 container
+						67 button Notifications
+							68 image
+					69 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						70 image
+					71 button BrazeAI Operator™
+						72 image
+			73 container main-container
+				74 container main-content
+					75 heading Search users, Value: 3
+						76 text Search users
+					77 text Limited access
+					78 container
+						79 text field (settable) Description: Email address, phone number or External User ID, Value: <redacted>
+						80 button Clear Selection
+						81 button Search
+					82 text Search for users by their External User ID
+					83 image Information
+					84 text User Alias
+					85 image Information
+					86 text email, phone number, or push token.
+					87 image user profile image of Euna Fadel
+					88 heading Euna Fadel, Value: 2
+						89 text Euna Fadel
+					90 heading User ID: braze-2ee39a80-a79a-49a0-aac9-1d1a25cac87f, Value: 4, ID: user-info-overview-eid
+						91 text User ID :  braze-2ee39a80-a79a-49a0-aac9-1d1a25cac87f
+					92 heading Braze ID: 6af4378a641a6600597b5b58, Value: 4, ID: user-info-overview-braze-id
+						93 text Braze ID :  6af4378a641a6600597b5b58
+					94 container user-contact-info
+						95 text None
+						96 text None
+					97 button (disabled) User aliases, ID: user-aliases-link
+					98 button Refresh user profile
+					99 tab group
+						100 tab (selectable, settable, boolean) Overview, Value: 0
+						101 tab (selectable, settable, boolean) Engagement, Value: 0, ID: 1
+						102 tab (selected, settable, boolean) Messaging History, Value: 1, ID: 2
+						103 tab (selectable, settable, boolean) Event History, Value: 0, ID: 6
+						104 tab (selectable, settable, boolean) Commerce, Value: 0, ID: 3
+						105 tab (selectable, settable, boolean) Feature Flags Eligibility, Value: 0, ID: 4
+					456 container
+						457 text Events are shown for the past 30 days. Please share your comments and suggestions with us at 
+						458 text Opening in a new tab
+						459 link Description: Opening in a new tab, Value: mailto:user-targeting@braze.com
+						460 text .
+						461 text Opening in a new tab
+						462 link Description: Opening in a new tab, Value: braze.com/docs/user_guide/engagement_tools/segments/user_profiles/#messaging-history-tab
+						463 button Filters
+							464 text Filters
+						465 table
+							466 row
+								467 cell
+									468 button Channel column, unsorted. Select to sort descending
+								469 cell
+									470 button Event column, unsorted. Select to sort descending
+								471 cell
+									472 button Time column, sorted descending. Select to sort ascending
+								473 cell
+									474 button Campaign/Canvas column, unsorted. Select to sort descending
+								475 cell
+									476 button Message Sent column, unsorted. Select to sort descending
+								477 cell
+									478 button Destination column, unsorted. Select to sort descending
+						479 image
+						480 heading There are no events for this user in the past 30 days, Value: 3
+							481 text There are no events for this user in the past 30 days
+				446 text © Braze 2026
+				447 text Opening in a new tab
+				448 link Description: Opening in a new tab, Value: braze.statuspage.io/
+				449 text Opening in a new tab
+				450 link Description: Opening in a new tab, Value: braze.com/terms
+				451 text Opening in a new tab
+				452 link Description: Opening in a new tab, Value: braze.com/privacy
+		482 container
+			483 container Filters
+				484 heading Filters, Value: 3
+					485 text Filters
+				486 container
+					487 checkbox Description: Email, Value: 0
+					488 text Email
+					489 checkbox (settable, integer) Description: Abort, Value: 0, ID: bc-checkbox-4147792859
+					490 text Abort
+					491 checkbox (settable, integer) Description: Bounce, Value: 0, ID: bc-checkbox-625112157
+					492 text Bounce
+					493 checkbox (settable, integer) Description: Click, Value: 0, ID: bc-checkbox-1299833513
+					494 text Click
+					495 checkbox (settable, integer) Description: Deferral, Value: 0, ID: bc-checkbox-3653204499
+					496 text Deferral
+					497 checkbox (settable, integer) Description: Delivery, Value: 0, ID: bc-checkbox-356103108
+					498 text Delivery
+					499 checkbox (settable, integer) Description: Frequency capped, Value: 0, ID: bc-checkbox-2189476879
+					500 text Frequency capped
+					501 checkbox (settable, integer) Description: Mark as spam, Value: 0, ID: bc-checkbox-3095620274
+					502 text Mark as spam
+					503 checkbox (settable, integer) Description: Open, Value: 0, ID: bc-checkbox-2503333844
+					504 text Open
+					505 checkbox (settable, integer) Description: Send, Value: 0, ID: bc-checkbox-1476162232
+					506 text Send
+					507 checkbox (settable, integer) Description: Soft bounce, Value: 0, ID: bc-checkbox-1523811114
+					508 text Soft bounce
+					509 checkbox (settable, integer) Description: Unsubscribe, Value: 0, ID: bc-checkbox-2323158411
+					510 text Unsubscribe
+					511 checkbox (settable, integer) Description: SMS/MMS, Value: 0, ID: bc-checkbox-1241958312
+					512 text SMS/MMS
+					513 checkbox (settable, integer) Description: Abort, Value: 0, ID: bc-checkbox-3117833560
+					514 text Abort
+					515 checkbox (settable, integer) Description: Carrier send, Value: 0, ID: bc-checkbox-2419638538
+					516 text Carrier send
+					517 checkbox (settable, integer) Description: Delivery, Value: 0, ID: bc-checkbox-983538219
+					518 text Delivery
+					519 checkbox (settable, integer) Description: Delivery failure, Value: 0, ID: bc-checkbox-2221764652
+					520 text Delivery failure
+					521 checkbox (settable, integer) Description: Frequency capped, Value: 0, ID: bc-checkbox-2459864497
+					522 text Frequency capped
+					523 checkbox (settable, integer) Description: Inbound receive, Value: 0, ID: bc-checkbox-2533514137
+					524 text Inbound receive
+					525 checkbox (settable, integer) Description: Rejection, Value: 0, ID: bc-checkbox-3486917223
+					526 text Rejection
+					527 checkbox (settable, integer) Description: Send, Value: 0, ID: bc-checkbox-294935285
+					528 text Send
+					529 checkbox (settable, integer) Description: Push, Value: 0, ID: bc-checkbox-2634939747
+					530 text Push
+					531 checkbox (settable, integer) Description: Abort, Value: 0, ID: bc-checkbox-385039323
+					532 text Abort
+					533 checkbox (settable, integer) Description: Bounce, Value: 0, ID: bc-checkbox-559868383
+					534 text Bounce
+					535 checkbox (settable, integer) Description: Frequency capped, Value: 0, ID: bc-checkbox-4006277645
+					536 text Frequency capped
+					537 checkbox (settable, integer) Description: Influenced open, Value: 0, ID: bc-checkbox-2392961789
+					538 text Influenced open
+					539 checkbox (settable, integer) Description: iOS Foreground, Value: 0, ID: bc-checkbox-1395947006
+					540 text iOS Foreground
+					541 checkbox (settable, integer) Description: Open, Value: 0, ID: bc-checkbox-3451097600
+					542 text Open
+					543 checkbox (settable, integer) Description: Send, Value: 0, ID: bc-checkbox-162822784
+					544 text Send
+					545 checkbox (settable, integer) Description: In-App Message, Value: 0, ID: bc-checkbox-3765026279
+					546 text In-App Message
+					547 checkbox (settable, integer) Description: Click, Value: 0, ID: bc-checkbox-3682232704
+					548 text Click
+					549 checkbox (settable, integer) Description: Frequency capped, Value: 0, ID: bc-checkbox-917402155
+					550 text Frequency capped
+					551 checkbox (settable, integer) Description: Impression, Value: 0, ID: bc-checkbox-260857399
+					552 text Impression
+					553 checkbox (settable, integer) Description: Content Card, Value: 0, ID: bc-checkbox-788397182
+					554 text Content Card
+					555 checkbox (settable, integer) Description: Click, Value: 0, ID: bc-checkbox-664651531
+					556 text Click
+					557 checkbox (settable, integer) Description: Dismiss, Value: 0, ID: bc-checkbox-2303913361
+					558 text Dismiss
+					559 checkbox (settable, integer) Description: Frequency capped, Value: 0, ID: bc-checkbox-1508331542
+					560 text Frequency capped
+					561 checkbox (settable, integer) Description: Impression, Value: 0, ID: bc-checkbox-3819306393
+					562 text Impression
+					563 checkbox (settable, integer) Description: Send, Value: 0, ID: bc-checkbox-1223193760
+					564 text Send
+					565 checkbox (settable, integer) Description: Webhook, Value: 0, ID: bc-checkbox-3172051499
+					566 text Webhook
+					567 checkbox (settable, integer) Description: Abort, Value: 0, ID: bc-checkbox-789269777
+					568 text Abort
+					569 checkbox (settable, integer) Description: Frequency capped, Value: 0, ID: bc-checkbox-2544482740
+					570 text Frequency capped
+					571 checkbox (settable, integer) Description: Send, Value: 0, ID: bc-checkbox-1203434663
+					572 text Send
+					573 checkbox (settable, integer) Description: WhatsApp, Value: 0, ID: bc-checkbox-2415022329
+					574 text WhatsApp
+					575 checkbox (settable, integer) Description: Abort, Value: 0, ID: bc-checkbox-2591263312
+					576 text Abort
+					577 checkbox (settable, integer) Description: Delivery, Value: 0, ID: bc-checkbox-569970990
+					578 text Delivery
+					579 checkbox (settable, integer) Description: Failure, Value: 0, ID: bc-checkbox-3835775656
+					580 text Failure
+					581 checkbox (settable, integer) Description: Frequency capped, Value: 0, ID: bc-checkbox-957768597
+					582 text Frequency capped
+					583 checkbox (settable, integer) Description: Inbound receive, Value: 0, ID: bc-checkbox-2166553964
+					584 text Inbound receive
+					585 checkbox (settable, integer) Description: Read, Value: 0, ID: bc-checkbox-2536756314
+					586 text Read
+					587 checkbox (settable, integer) Description: Send, Value: 0, ID: bc-checkbox-183853027
+					588 text Send
+				589 button Select All
+				590 button Apply
+				591 pop up button Close drawer
+
+The focused UI element is 487 checkbox Description: Email, Value: 0

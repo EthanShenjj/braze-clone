@@ -1,0 +1,102 @@
+Browser tab: 15, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/engagement/suppression_lists/local?locale=en&workspace=local".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/engagement/suppression_lists/local?locale=en&workspace=local
+	2 container
+		3 text Suppression Lists
+		4 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		5 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			6 text Local workspace
+			7 image
+		8 container Side navigation
+			9 text Quick links
+			10 button Canvas
+			11 button Campaigns
+			12 button Segments
+			13 button Getting Started
+			14 button Home
+			15 button AI Decisioning
+			16 button Agents
+			17 button Messaging
+			18 button Audience
+			19 button Content
+			20 button Analytics
+			21 button Partner Integrations
+			22 button Data Settings
+			23 button Settings
+		24 button Home
+			25 image Braze
+		26 container
+			27 text ◷   8 days left in your free trial.
+			28 button Connect with sales
+		29 container
+			30 button Search workspace ⌘K
+				31 image
+				32 text Search workspace
+				33 text ⌘K
+			34 button Take a tour
+			35 image Community
+			36 button (collapsed) Description: Language, Secondary Actions: Expand
+			37 button Notifications
+			38 button (collapsed) Description: Profile, Secondary Actions: Expand
+			39 image
+			40 button Open BrazeAI Operator
+		41 button Suppression Lists
+		42 container
+			43 button Back to Suppression Lists
+				44 image
+				45 text Back to Suppression Lists
+			46 text Inactive
+			47 heading Audience QA suppression, Value: 1
+				48 text Audience QA suppression
+			49 container
+				50 text Estimated size:  202
+			51 container
+				52 text Suppression List Name
+				53 text field (settable) Suppression List Name, Value: Audience QA suppression
+			54 container
+				55 text Suppression List Description 0 /250 characters
+				56 text entry area (settable) Suppression List Description 0/250 characters
+			57 heading Suppression List Details, Value: 2
+				58 text Suppression List Details
+			59 text Users matching these filters will be excluded from campaigns and Canvases.
+			60 heading Filters, Value: 3
+				61 text Filters
+			62 container
+				63 container
+					64 text Filter group 1
+				65 pop up button (collapsed, settable) Description: Group 1 operator, Value: AND, Secondary Actions: Expand
+					66 menu
+						67 (selected) AND
+						68 OR
+				69 button (disabled) Remove filter group 1
+					70 image
+				71 container Country
+					72 heading Country, Value: 4
+						73 text Country
+					74 container
+						75 text Comparison
+						76 combo box (collapsed, settable) Description: Comparison, Value: is, Secondary Actions: Expand
+						77 button Toggle Comparison
+							78 image
+					79 container
+						80 text Country
+						81 combo box (collapsed, settable) Description: Country, Value: United States, Secondary Actions: Expand
+						82 button Toggle Country
+							83 image
+				84 button Remove filter
+					85 image
+					86 text Remove filter
+				87 combo box (collapsed, settable) Description: Select filter, Secondary Actions: Expand
+				88 button (collapsed) Description: Toggle filter catalog, Secondary Actions: Expand
+			89 button Add filter group
+				90 image
+				91 text Add filter group
+			92 container
+				93 heading Exception Settings, Value: 2
+					94 text Exception Settings
+				95 checkbox (settable, integer) Description: Do not apply this suppression list to campaigns or Canvases with these tags, Value: 0
+			96 container
+				97 button Archive
+				98 button Save
+				99 button Activate
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/engagement/suppression_lists/local?locale=en&workspace=local

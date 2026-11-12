@@ -1,0 +1,123 @@
+Browser tab: 1, Title: "Locations", URL: "https://dashboard-09.braze.com/engagement/locations/create_location_set/6af4374c46d3080087f1c5d2?locale=en".
+0 AXWebArea Locations, URL: dashboard-09.braze.com/engagement/locations/create_location_set/6af4374c46d3080087f1c5d2?locale=en
+	1 container
+		2 container react-root
+			3 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/locations/create_location_set/6af4374c46d3080087f1c5d2?locale=en#main-container
+			4 container Side navigation
+				5 container
+					6 button Minimize menu
+					7 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+						8 image
+						9 text Demo – ittor
+					10 text Quick links
+					11 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+					12 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+					13 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+					14 button Getting Started
+						15 image
+						16 container
+							17 text Getting Started
+							18 container
+								19 text 8 %
+					20 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+					21 button AI Decisioning
+						22 image
+						23 text AI Decisioning
+					24 button Agents
+						25 image
+						26 text Agents
+					27 button Messaging
+						28 image
+						29 text Messaging
+					30 button Audience
+						31 image
+						32 text Audience
+					33 button Content
+						34 image
+						35 text Content
+					36 button Analytics
+						37 image
+						38 text Analytics
+					39 button Partner Integrations
+						40 image
+						41 text Partner Integrations
+					42 button Data Settings
+						43 image
+						44 text Data Settings
+					45 button Settings
+						46 image
+						47 text Settings
+				48 container Footer Logo
+					49 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+			50 text 14 days left in your free trial.
+			51 button Connect with sales
+			52 container Top navigation
+				53 container Left top navigation
+					54 button Search workspace ⌘+K
+						55 image
+						56 text Search workspace
+						57 text ⌘+K
+				58 container Right top navigation
+					59 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						60 image
+					61 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						62 image
+					63 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+						64 image
+					65 container
+						66 button Notifications
+							67 image
+					68 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						69 image
+					70 button BrazeAI Operator™
+						71 image
+			72 container main-container
+				134 container
+					135 text Set name
+					136 text field (settable)
+					137 button Tags
+					138 button (collapsed) Description: Advanced settings, Secondary Actions: Expand
+					139 table
+						140 row Geofence name
+							141 cell
+								142 text Geofence name
+								143 container
+									144 text field (settable) Search by name or ID
+									145 button (disabled) Search
+						146 row No results found
+							147 cell
+								148 image
+								149 text No results found
+					150 container
+						151 container
+							152 link Description: Edit layers, Help: No layers to edit, Value: dashboard-09.braze.com/engagement/locations/create_location_set/6af4374c46d3080087f1c5d2?locale=en#
+							153 link Description: Delete layers, Help: No layers to delete, Value: dashboard-09.braze.com/engagement/locations/create_location_set/6af4374c46d3080087f1c5d2?locale=en#
+						154 container
+							155 button Zoom in
+							156 button Zoom out
+						157 container
+							158 link Description: Leaflet, Help: A JS library for interactive maps, Value: leafletjs.com/
+							159 text  | © 
+							160 link Description: Mapbox, Value: mapbox.com/
+							161 text  © 
+							162 link Description: OpenStreetMap, Value: osm.org/copyright
+						163 container
+							164 text field (settable)
+							165 button Clear search
+						166 button Draw Geofence
+						167 container
+					168 button Back to Locations
+					169 text Opening in a new tab
+					170 link Description: Opening in a new tab, Value: braze.com/docs/user_guide/engagement_tools/locations_and_geofences/creating_geofences/#how-it-works
+					171 button Description: More, ID: geofence-set-details-more-actions-button
+					172 button (disabled) Save Geofence Set
+				126 text © Braze 2026
+				127 text Opening in a new tab
+				128 link Description: Opening in a new tab, Value: braze.statuspage.io/
+				129 text Opening in a new tab
+				130 link Description: Opening in a new tab, Value: braze.com/terms
+				131 text Opening in a new tab
+				132 link Description: Opening in a new tab, Value: braze.com/privacy
+		133 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+
+The focused UI element is 136 text field (settable)

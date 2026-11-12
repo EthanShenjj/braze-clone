@@ -1,0 +1,227 @@
+Browser tab: 5, Title: "Engagement - Campaigns - Edit 'Newsletter Welcome'", URL: "https://dashboard-09.braze.com/engagement/campaigns/6af4375520abdf005fc2efc8/6af4374c46d3080087f1c5d2?locale=en".
+1 AXWebArea Engagement - Campaigns - Edit 'Newsletter Welcome', URL: dashboard-09.braze.com/engagement/campaigns/6af4375520abdf005fc2efc8/6af4374c46d3080087f1c5d2?locale=en
+	2 container
+		3 container body-wrapper
+			4 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/campaigns/6af4375520abdf005fc2efc8/6af4374c46d3080087f1c5d2?locale=en#main-col
+			5 container
+				6 container Side navigation
+					7 container
+						8 button Minimize menu
+						9 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+							10 image
+							11 text Demo – ittor
+						12 text Quick links
+						13 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+						14 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+						15 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+						16 button Getting Started
+							17 image
+							18 container
+								19 text Getting Started
+								20 container
+									21 text 8 %
+						22 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+						23 button AI Decisioning
+							24 image
+							25 text AI Decisioning
+						26 button Agents
+							27 image
+							28 text Agents
+						29 button Messaging
+							30 image
+							31 text Messaging
+						32 button Audience
+							33 image
+							34 text Audience
+						35 button Content
+							36 image
+							37 text Content
+						38 button Analytics
+							39 image
+							40 text Analytics
+						41 button Partner Integrations
+							42 image
+							43 text Partner Integrations
+						44 button Data Settings
+							45 image
+							46 text Data Settings
+						47 button Settings
+							48 image
+							49 text Settings
+					50 container Footer Logo
+						51 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+				52 text 14 days left in your free trial.
+				53 button Connect with sales
+				54 container Top navigation
+					55 container Left top navigation
+						56 button Search workspace ⌘+K
+							57 image
+							58 text Search workspace
+							59 text ⌘+K
+					60 container Right top navigation
+						61 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							62 image
+						63 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							64 image
+						65 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+							66 image
+						67 container
+							68 button Notifications
+								69 image
+						70 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							71 image
+						72 button BrazeAI Operator™
+							73 image
+			74 container main
+				75 container main-col
+					76 tab group Open page tabs
+						77 tab (selectable, settable, boolean) Campaigns, Value: 0, ID: campaigns
+						78 tab (selected, settable, boolean) Edit 'Newsletter Welcome' Close tab, Description: Close tab, ID: 6af4375520abdf005fc2efc8, Value: 1
+Edit 'Newsletter Welcome'
+					79 container
+						80 text Limited access
+						81 container progress
+							82 text Progress Tracker with 5 steps: Compose Messages, Schedule Delivery, Target Audiences, Assign Conversions, Review Summary
+						83 button Step Compose Messages
+						86 button Step Schedule Delivery
+						87 button Step Target Audiences
+							160 text 3
+							161 text Target Audiences
+						88 button Step Assign Conversions
+						89 button Step Review Summary
+							90 text 5
+							91 text Review Summary
+						162 container
+							163 heading Targeting Options, Value: 3
+								164 text Targeting Options
+							165 text Target users by choosing multiple segments they must fall into. Further refine your audience by adding additional filters.
+							166 container
+								167 text Target Users By Segment
+								168 pop up button (collapsed) Description: Help text available. Tab to view help text, click to open popover, Secondary Actions: Expand
+								169 container
+									170 text Search Segments...
+									171 combo box (collapsed, settable) Description: Target Users By Segment, ID: react-select-2-input, Secondary Actions: Expand
+							172 container
+								173 heading Additional Filters, Value: 3
+									174 text Additional Filters
+								175 container Filter group
+									176 button
+										177 image
+									178 text Filter group
+									179 pop up button (collapsed) Description: or, Secondary Actions: Expand
+										180 text OR
+									181 button
+										182 image
+									183 container
+										259 text Email Subscription Status
+										260 text is
+										261 text Opted In
+										184 button Duplicate
+										185 button Remove
+									186 text OR
+									187 container
+										335 text option , selected.
+										262 text , 1 of 3.
+										263 text 3 results available for search term Received Message from Canvas Step.
+										264 text Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+										336 combo box (expanded, settable) Description: Select filter, Value: Received Message from Canvas Step, ID: react-select-3-input, Secondary Actions: Collapse
+										337 text Retargeting
+										338 Value: Received Message from Canvas Step Users who received a message from a specific Canvas step, ID: react-select-3-option-0-0
+											339 text Received Message from Canvas Step
+											340 text Users who received a message from a specific Canvas step
+										341 Value: Last Received Message from Specific Canvas Step When a user last received a specific campaign, ID: react-select-3-option-0-1
+											342 text Last Received Message from Specific Canvas Step
+											343 text When a user last received a specific campaign
+										344 Value: Has Never Received a Message from Campaign or Canvas Step Users who have never received any messages, ID: react-select-3-option-0-2
+											345 text Has Never Received a Message from Campaign or Canvas Step
+											346 text Users who have never received any messages
+								191 button Add filter group
+								192 button Add exclusion group
+							193 heading Audience Summary, Value: 4
+								194 text Audience Summary
+							195 text Email subscription status is opted_in
+							196 heading User Lookup, Value: 4
+								197 text User Lookup
+							198 text Check if a user matches the segment, filter, and app criteria
+							199 button Lookup User
+							200 container
+								201 table
+									202 row
+										203 cell
+											204 text Variant
+										205 cell
+											206 text Domain
+										207 cell
+											208 text IP Pool
+										209 cell
+											210 text Sending Provider
+									211 row
+										212 cell
+											213 text Welcome Newsletter
+										214 cell
+											215 text mta-d580.bftmail.com
+										216 cell
+											217 text PLG_IP_Pool
+										218 cell
+											219 text SparkPost
+								220 text Send to these users:
+								221 container
+									222 text users who are subscribed or opted in
+									223 combo box (collapsed, settable) Description: Send to these users:, ID: subscription-settings-selection, Secondary Actions: Expand
+								224 checkbox (settable, integer) Description: Limit send volume, Value: 0, ID: bc-checkbox-4214001869
+								225 text Limit send volume
+								226 image Information
+								227 checkbox (settable, integer) Description: Limit the rate at which this Campaign will send, Value: 0, ID: bc-checkbox-3864986219
+								228 text Limit the rate at which this Campaign will send
+						229 container
+							230 heading A/B Testing Optimize with BrazeAI™, Value: 3
+								231 text A/B Testing
+								232 container
+									233 checkbox (disabled, settable, integer) Description: Optimize with BrazeAI™, Value: 0, ID: bcl-switch__input-3390454351
+									234 text Optimize with BrazeAI™
+							235 text To use Optimize with BrazeAI™, add at least two variants. 
+							236 button Compose messages
+							237 text Set your own variant split and control group. All variants send at the date and time you set in Schedule delivery.
+							238 container
+								239 stepper (settable, integer) 20
+								240 text %
+							241 text Control Group
+							242 container
+								243 stepper (settable, integer) 80
+								244 text %
+							245 text Welcome Newsletter
+							246 link Remove Control Group
+								247 text Remove Control Group
+							248 link Distribute Variants Evenly
+								249 text Distribute Variants Evenly
+						250 container
+							251 heading Suppression Lists, Value: 3
+								252 text Suppression Lists
+							334 text There are no suppression lists applied To apply a suppression list to this Campaign, visit 
+							255 text Opening in a new tab
+							256 link Description: Opening in a new tab, Value: dashboard-09.braze.com/engagement/suppression_lists/6af4374c46d3080087f1c5d2
+						137 pop up button Back
+						138 container
+							139 container progress
+								140 text Progress Tracker with 5 steps: Compose, Schedule, Target, Assign, Review
+							141 button Step Compose
+							144 button Step Schedule
+							145 button Step Target
+								257 text 3
+								258 text Target
+							146 button Step Assign
+							147 button Step Review
+								148 text 5
+								149 text Review
+						150 pop up button Forward
+						151 button Save Draft
+				152 container
+					153 text © Braze 2026
+					154 text Opening in a new tab
+					155 link Description: Opening in a new tab, Value: braze.statuspage.io/
+					156 text Opening in a new tab
+					157 link Description: Opening in a new tab, Value: braze.com/terms
+					158 text Opening in a new tab
+					159 link Description: Opening in a new tab, Value: braze.com/privacy
+
+The focused UI element is 336 combo box (expanded, settable) Description: Select filter, Value: Received Message from Canvas Step, ID: react-select-3-input, Secondary Actions: Collapse

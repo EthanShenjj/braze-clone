@@ -70,10 +70,12 @@ test("name conflicts do not merge tags or mutate existing task references", t =>
   deepEqual(JSON.parse(db.prepare("SELECT config_json FROM campaigns").get().config_json).tags, ["One"]);
 });
 
-test("deletion guards resources, rules and child tags; deleted names cannot be silently resurrected", t => {
+test("deletion removes direct assignments and control exclusions, guards child tags and prevents stale resurrection", t => {
   const { db, resource } = fixture(t); initializeTags(db);
   const rule = createTag(db, { name: "Critical" }); resource("gcg", "global-control-group", { exclusionTags: [rule.name] });
-  throws(() => changeTag(db, rule.id, { expectedUpdatedAt: rule.updatedAt }, true), /resources/);
+  const removed = changeTag(db, rule.id, { expectedUpdatedAt: rule.updatedAt }, true);
+  equal(removed.usages[0].type, "global-control-group");
+  deepEqual(JSON.parse(db.prepare("SELECT data_json FROM resources WHERE id = 'gcg'").get().data_json).exclusionTags, []);
   const parent = createTag(db, { name: "Parent" }); const child = createTag(db, { name: "Child", parentId: parent.id });
   throws(() => changeTag(db, parent.id, { expectedUpdatedAt: parent.updatedAt }, true), /child/);
   changeTag(db, child.id, { expectedUpdatedAt: child.updatedAt }, true);

@@ -1,0 +1,178 @@
+Browser tab: 12, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3221/engagement/canvas?locale=en&workspaceId=local&initialConditionsCollapsed=false&name=%22optimizer+persistence%22".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3221/engagement/canvas?locale=en&workspaceId=local&initialConditionsCollapsed=false&name=%22optimizer+persistence%22
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agents
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+	25 container
+		26 text ◷   8 days left in your free trial.
+		27 button Connect with sales
+		28 button Search workspace ⌘K
+			29 image
+			30 text Search workspace
+			31 text ⌘K
+		32 button Take a tour
+		33 image Community
+		34 button (collapsed) Description: Language, Secondary Actions: Expand
+		35 button Notifications
+		36 button (collapsed) Description: Profile, Secondary Actions: Expand
+		37 image
+		38 button Open BrazeAI Operator
+		39 button Canvas
+		40 heading Canvas Limited access, Value: 1
+			41 text Canvas Limited access
+		42 text Design and launch customer journeys with Canvas. Drag, drop, and connect messaging across channels to create seamless, automated experiences.
+		43 button (collapsed) Description: More options, Secondary Actions: Expand
+			44 text More options
+			45 image
+		168 container Canvas tutorial
+			169 container
+				170 heading Canvas tutorial, Value: 2
+					171 text Canvas tutorial
+				172 button Close tutorial
+					173 image
+			174 container Canvas Flow tutorial
+				175 AXWebArea Canvas Composition Basics, URL: fast.wistia.net/embed/iframe/wwtdqp32pz
+		46 button Take a tour
+		47 button Create Canvas
+			48 text Create Canvas
+			49 image
+		50 text Status
+		51 container
+			52 combo box (collapsed, settable) Description: Status, Value: Draft, Secondary Actions: Expand
+			53 button Toggle Status
+				54 image
+		55 text Tags
+		56 container
+			57 combo box (collapsed, settable) Description: Tags, Secondary Actions: Expand
+			58 button Toggle Tags
+				59 image
+		60 button (collapsed) Filters, Secondary Actions: Expand
+			61 image
+			62 text Filters
+		63 button (collapsed) Columns, Secondary Actions: Expand
+			64 image
+			65 text Columns
+		66 button Reset filters
+		67 container
+			68 image
+			69 text field (settable) Description: Search Canvases, Value: optimizer persistence
+		70 button Status: Draft
+			71 text Status: 
+			72 text Draft
+			73 image
+		74 container
+			75 text 3 Results
+		76 table
+			77 row
+				78 cell
+					79 checkbox (settable, integer) Description: Select all Canvas rows, Value: 0
+				80 cell
+					81 button Select to sort by Name in alphabetical order
+						82 text Name 
+						83 text ↕
+				84 cell
+					85 text Status
+				86 cell
+					87 text Description
+				88 cell
+					89 text Last edited by
+				90 cell
+					91 button Last edited ↓
+						92 text Last edited 
+						93 text ↓
+				94 cell
+					95 text Alerts Configured
+				96 cell
+					97 text Actions
+			98 row
+				99 cell
+					100 checkbox (settable, integer) Description: Select Canvas canvas_deep_577192b7 optimizer persistence, Value: 0
+				101 cell
+					102 button canvas_deep_577192b7 optimizer persistence
+				103 cell
+					104 text Draft
+				105 cell
+					106 text —
+				107 cell
+					108 text Local workspace
+				109 cell
+					110 text 6 minutes ago
+				111 cell
+					112 text —
+				113 cell
+					114 button Actions for canvas_deep_577192b7 optimizer persistence
+						115 image
+			116 row
+				117 cell
+					118 checkbox (settable, integer) Description: Select Canvas canvas_deep_182992db optimizer persistence, Value: 0
+				119 cell
+					120 button canvas_deep_182992db optimizer persistence
+				121 cell
+					122 text Draft
+				123 cell
+					124 text —
+				125 cell
+					126 text Local workspace
+				127 cell
+					128 text 10 minutes ago
+				129 cell
+					130 text —
+				131 cell
+					132 button Actions for canvas_deep_182992db optimizer persistence
+						133 image
+			134 row
+				135 cell
+					136 checkbox (settable, integer) Description: Select Canvas canvas_deep_a36f2216 optimizer persistence, Value: 0
+				137 cell
+					138 button canvas_deep_a36f2216 optimizer persistence
+				139 cell
+					140 text Draft
+				141 cell
+					142 text —
+				143 cell
+					144 text Local workspace
+				145 cell
+					146 text 18 minutes ago
+				147 cell
+					148 text —
+				149 cell
+					150 button Actions for canvas_deep_a36f2216 optimizer persistence
+						151 image
+		152 text Showing rows  1  -  3  of  3
+		153 container
+			154 text Rows per page:
+			155 pop up button (collapsed, settable) Rows per page:, Value: 20, Secondary Actions: Expand
+				156 menu
+					157 10
+					158 (selected) 20
+					159 40
+					160 60
+					161 100
+		162 button (disabled) Previous page
+			163 image
+		164 button Current Page, Page 1
+		165 button (disabled) Next page
+			166 image
+		167 button Priority Sorter
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3221/engagement/canvas?locale=en&workspaceId=local&initialConditionsCollapsed=false&name=%22optimizer+persistence%22

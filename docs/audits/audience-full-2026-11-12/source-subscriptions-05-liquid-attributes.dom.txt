@@ -1,0 +1,168 @@
+- link "Skip to main content":
+  - /url: "#main-container"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Demo – ittor":
+    - generic: Demo – ittor
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agents":
+    - generic: Agents
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 14 days left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- main:
+  - heading "Add New Keywords for English" [level=3]
+  - generic: Keyword Category
+  - textbox "e.g. \"Promotion\""
+  - generic: Keywords
+  - text: Keywords are case insensitive (i.e. stop and STOP are the same keyword).
+  - textbox "New keyword input":
+    - /placeholder: Enter a keyword
+  - button "Add":
+    - generic: Add
+  - generic: Reply Message
+  - text: 0 | 0 Billable Segments
+  - code:
+    - textbox "Reply Message"
+  - generic: Enter Reply Message
+  - button "Add Liquid" [expanded]:
+  - checkbox "Link Shortening" [checked]
+  - text: Link Shortening
+  - button "Cancel":
+    - generic: Cancel
+  - button "Save" [disabled]:
+    - generic: Save
+- generic: © Braze 2026
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://braze.statuspage.io
+  - text: Status
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/terms
+  - text: Terms
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/privacy
+  - text: Privacy Policy
+- text:          
+- iframe
+- alert
+- alert
+- generic "Add Personalization":
+  - heading "Add Personalization" [level=4]
+  - group "Personalization type":
+    - generic "Personalization type"
+    - log
+    - generic: Default Attributes
+    - combobox "Personalization type"
+  - group "Attribute":
+    - generic "Attribute"
+    - log: first_name, 1 of 19.19 results available.Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+    - generic: Search for an attribute
+    - combobox "Attribute" [expanded] [active]
+  - group "Default value":
+    - generic "Default value":
+      - text: Default value
+      - generic: (Optional)
+      - button "Help text available. Tab to view help text, click to open popover":
+    - textbox "Default value":
+      - /placeholder: Enter default value
+  - group "Liquid Snippet":
+    - generic "Liquid Snippet"
+    - textbox "Liquid Snippet"
+    - button:
+      - img: 
+- button "Cancel":
+  - generic: Cancel
+- button "Insert" [disabled]:
+  - generic: Insert
+- listbox:
+  - option "first_name":
+    - generic: first_name
+  - option "last_name":
+    - generic: last_name
+  - option "email_address":
+    - generic: email_address
+  - option "language":
+    - generic: language
+  - option "country":
+    - generic: country
+  - option "user_id":
+    - generic: user_id
+  - option "most_recent_location":
+    - generic: most_recent_location
+  - option "date_of_birth":
+    - generic: date_of_birth
+  - option "phone_number":
+    - generic: phone_number
+  - option "gender":
+    - generic: gender
+  - option "city":
+    - generic: city
+  - option "created_at":
+    - generic: created_at
+  - option "last_used_app_date":
+    - generic: last_used_app_date
+  - option "most_recent_app_version":
+    - generic: most_recent_app_version
+  - option "time_zone":
+    - generic: time_zone
+  - option "most_recent_locale":
+    - generic: most_recent_locale
+  - option "braze_id":
+    - generic: braze_id
+  - option "random_bucket_number":
+    - generic: random_bucket_number
+  - option "line_id":
+    - generic: line_id

@@ -1,0 +1,84 @@
+- alert: Manage Audience
+- complementary:
+  - button "Minimize menu" [expanded]
+  - button "Select workspace":
+    - generic: Local workspace
+  - navigation "Side navigation":
+    - generic: Quick links
+    - button "Canvas":
+      - generic: Canvas
+    - button "Campaigns":
+      - generic: Campaigns
+    - button "Segments":
+      - generic: Segments
+    - button "Getting Started":
+      - generic: Getting Started
+    - button "Home":
+      - generic: Home
+    - button "AI Decisioning":
+      - generic: AI Decisioning
+    - button "Agents":
+      - generic: Agents
+    - button "Messaging":
+      - generic: Messaging
+    - button "Audience":
+      - generic: Audience
+    - button "Content":
+      - generic: Content
+    - button "Analytics":
+      - generic: Analytics
+    - button "Partner Integrations":
+      - generic: Partner Integrations
+    - button "Data Settings":
+      - generic: Data Settings
+    - button "Settings":
+      - generic: Settings
+  - button "Home":
+    - img "Braze"
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - generic "Community":
+    - img "Community"
+  - button "Language"
+  - button "Notifications"
+  - button "Profile"
+  - button "Open BrazeAI Operator"
+  - heading "Manage Audience" [level=1]
+  - generic: Have feedback on this feature?
+  - button "Send us your thoughts"
+  - tablist "Manage Audience":
+    - tab "Merge users" [selected]
+    - tab "Delete users"
+  - heading "Merge users" [level=2]
+  - paragraph: Merges and previews from the last 30 days are listed
+  - button "Schedule":
+  - button "Edit rules":
+    - text: Edit rules
+  - button "Generate list of duplicates"
+  - button "Merge all duplicates" [disabled]
+  - heading "No Results Found" [level=3]
+  - table:
+    - rowgroup:
+      - row "Run date Requester Type Status Profiles previewed Profiles merged":
+        - columnheader
+        - columnheader "Run date":
+          - text: Run date
+        - columnheader "Requester"
+        - columnheader "Type"
+        - columnheader "Status":
+          - text: Status
+        - columnheader "Profiles previewed":
+          - text: Profiles
+          - text: previewed
+        - columnheader "Profiles merged":
+          - text: Profiles
+          - text: merged
+    - rowgroup:
+      - row "No results found":
+        - cell "No results found":
+          - strong: No results found

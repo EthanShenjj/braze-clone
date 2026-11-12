@@ -1,0 +1,166 @@
+Browser tab: 13, Title: "Segments", URL: "https://dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?start=0&limit=20&globalFilter=&columnFilters%5Bstatus%5D=archived&sortby=last_edited&sortdir=-1&display=list".
+0 AXWebArea Segments, URL: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?start=0&limit=20&globalFilter=&columnFilters%5Bstatus%5D=archived&sortby=last_edited&sortdir=-1&display=list
+	1 container
+		2 container react-root
+			3 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?start=0&limit=20&globalFilter=&columnFilters%5Bstatus%5D=archived&sortby=last_edited&sortdir=-1&display=list#main-container
+			4 container Side navigation
+				5 container
+					6 button Minimize menu
+					7 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+						8 image
+						9 text Demo – ittor
+					10 text Quick links
+					11 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+					12 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+					13 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+					14 button Getting Started
+						15 image
+						16 container
+							17 text Getting Started
+							18 container
+								19 text 8 %
+					20 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+					21 button AI Decisioning
+						22 image
+						23 text AI Decisioning
+					24 button Agents
+						25 image
+						26 text Agents
+					27 button Messaging
+						28 image
+						29 text Messaging
+					30 button Audience
+						31 image
+						32 text Audience
+					33 button Content
+						34 image
+						35 text Content
+					36 button Analytics
+						37 image
+						38 text Analytics
+					39 button Partner Integrations
+						40 image
+						41 text Partner Integrations
+					42 button Data Settings
+						43 image
+						44 text Data Settings
+					45 button Settings
+						46 image
+						47 text Settings
+				48 container Footer Logo
+					49 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+			50 text 14 days left in your free trial.
+			51 button Connect with sales
+			52 container Top navigation
+				53 container Left top navigation
+					54 button Search workspace ⌘+K
+						55 image
+						56 text Search workspace
+						57 text ⌘+K
+				58 container Right top navigation
+					59 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						60 image
+					61 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						62 image
+					63 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+						64 image
+					65 container
+						66 button Notifications
+							67 image
+					68 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						69 image
+					70 button BrazeAI Operator™
+						71 image
+			72 container main-container
+				73 container main-content
+					74 tab group
+						75 tab (selected, settable, boolean) Segments, Value: 1, ID: /engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2
+						76 tab (selectable, settable, boolean) Edit (unnamed) Close tab, Description: Close tab, ID: /engagement/segmenter/edit/6af5250fd8512f008c15c8b7/6af4374c46d3080087f1c5d2, Value: 0
+Edit (unnamed)
+					77 container segments-list
+						78 heading Segments, Value: 2
+							79 text Segments
+						80 text Find and reach the right audience with segments. Group users based on their behaviors, preferences, or past actions to send messages that truly matter to them.
+						81 button Description: Send feedback, ID: feedback-button-trigger
+						82 button Take a tour
+							83 text Take a tour
+						84 pop up button (collapsed) Description: More options, Secondary Actions: Expand
+						85 pop up button (collapsed) Description: Create Segment, Secondary Actions: Expand
+						86 text Status
+						87 container segments-status
+							278 container
+								279 text option Archived, selected.
+							88 container
+								89 text Archived
+								90 combo box (collapsed, settable) Description: Status, ID: react-select-9-input, Secondary Actions: Expand
+						91 text Tags
+						92 container segments-tags
+							93 container
+								94 text All Tags
+								95 combo box (collapsed, settable) Description: Tags, ID: react-select-10-input, Secondary Actions: Expand
+						96 pop up button (collapsed) Filters, Secondary Actions: Expand
+						97 pop up button (collapsed) Description: Columns, Secondary Actions: Expand
+						98 checkbox (settable, integer) Description: Show starred only, Value: 0, ID: bc-checkbox-83003610
+						99 text Show starred only
+						280 pop up button Reset filters
+						100 container
+							101 text field (settable) Search for segments
+							102 button (disabled) Search
+						103 heading 1 Result, Value: 4
+							281 text 1 Result
+						105 container Description: Inline Tag 0, ID: status
+							106 text Status: Archived
+							107 button close
+						108 table
+							109 row Select all rows Segment name column, unsorted. Select to sort ascending Status Last edited by Last edited column, sorted descending. Select to sort ascending
+								110 cell
+									111 checkbox (settable, integer) Description: Select all rows, Value: 0, ID: bc-checkbox-717794776
+								112 cell
+									113 button Segment name column, unsorted. Select to sort ascending
+								114 cell
+									115 text Status
+								116 cell
+									117 text Last edited by
+								118 cell
+									119 button Last edited column, sorted descending. Select to sort ascending
+										120 text Last edited
+										121 image Information
+							282 row Select row Quick view: (unnamed) (unnamed) Archived tor dom Nov 11, 2026 Unarchive More Actions
+								283 cell
+									284 checkbox (settable, integer) Description: Select row, Value: 0, ID: bc-checkbox-3761292152
+								285 cell
+									286 button Quick view: (unnamed)
+								287 cell
+									288 link Description: (unnamed), Value: dashboard-09.braze.com/engagement/segmenter/edit/6af5250fd8512f008c15c8b7/6af4374c46d3080087f1c5d2?locale=en
+								289 cell
+									290 text Archived
+								291 cell
+									292 text tor dom
+								293 cell
+									294 text Nov 11, 2026
+								295 cell
+									296 content list
+										297 pop up button Unarchive
+										298 pop up button (collapsed) Description: More Actions, ID: data-table-row-action-menu-button-1729327888, Secondary Actions: Expand
+						299 text Showing rows 1 - 1 of 1 Rows per page:
+						300 pop up button (collapsed, settable) Value: 20, Secondary Actions: Expand
+							301 menu
+								302 10
+								303 (selected) 20
+								304 40
+								305 60
+								306 100
+						307 content list
+							308 button (disabled) Previous page
+							309 button Current Page, Page 1
+							310 button (disabled) Next page
+				270 text © Braze 2026
+				271 text Opening in a new tab
+				272 link Description: Opening in a new tab, Value: braze.statuspage.io/
+				273 text Opening in a new tab
+				274 link Description: Opening in a new tab, Value: braze.com/terms
+				275 text Opening in a new tab
+				276 link Description: Opening in a new tab, Value: braze.com/privacy
+		277 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+
+The focused UI element is 90 combo box (collapsed, settable) Description: Status, ID: react-select-9-input, Secondary Actions: Expand

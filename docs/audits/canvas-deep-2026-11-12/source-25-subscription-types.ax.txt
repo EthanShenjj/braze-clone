@@ -1,0 +1,120 @@
+Browser tab: 7, Title: "Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build&initialConditionsCollapsed=true".
+0 AXWebArea Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build&initialConditionsCollapsed=true
+	1 container
+		193 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		194 container Step 2 step editor
+			195 container
+				196 text Step 2
+				197 button
+				198 text DISCONNECTED
+				199 button Window: 1 day Ranking: Off Advance: Immediately
+					200 container
+						201 text Window : 1 day
+					202 container
+						203 text Ranking : Off
+					204 container
+						205 text Advance : Immediately
+				206 container
+					207 button 1 1 Group 1
+						208 image
+							209 text 1
+						210 text Group 1
+				211 button 2 2 Everyone Else
+					212 image
+						213 text 2
+					214 text Everyone Else
+				215 button Add Action Group
+			216 button Done
+			217 container action-path-step-editor1482
+				218 container
+					219 image
+						220 text 1
+					221 text Group 1
+					222 button BrazeAI Operator™
+						223 image
+				224 container
+					225 text Action Group Name
+					226 text field (settable) Group 1
+					227 checkbox (settable, integer) Description: I want this group to exit the Canvas, Value: 0, ID: bc-checkbox-798465175
+					228 text I want this group to exit the Canvas
+					229 text Interact With Campaign
+					230 container
+						231 container
+							246 text Open email
+							233 combo box (collapsed, settable) Description: Interaction, ID: react-select-15-input, Secondary Actions: Expand
+						247 text for campaign
+						248 container
+							249 text Choose Campaign...
+							250 combo box (collapsed, settable) Description: for campaign, ID: react-select-17-input, Secondary Actions: Expand
+						238 text Please select a campaign
+					239 button close
+					251 text Start Session
+					252 text OR
+					253 container radio-button--884923464
+						254 container
+							255 radio button (settable, integer) Description: Start session in any app, Value: 1, ID: radio-button-111764248
+							256 text Start session in any app
+						257 container
+							258 radio button (settable, integer) Description: Start session in a specific app, Value: 0, ID: radio-button-158168601
+							259 text Start session in a specific app
+					260 button close
+					261 text Change Custom Attribute Value
+					262 text OR
+					263 container
+						264 container
+							269 text account_type
+							266 combo box (collapsed, settable) Description: Choose An Attribute..., ID: react-select-18-input, Secondary Actions: Expand
+						270 text to
+						271 container
+							272 text any new value
+							273 combo box (collapsed, settable) Description: to, ID: react-select-19-input, Secondary Actions: Expand
+					268 button close
+					274 text Update Subscription Status
+					275 text OR
+					276 container
+						277 text Update their
+						309 container
+							310 text push subscription status, 1 of 2.
+							311 text 2 results available.
+							312 text Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+						278 container
+							279 text Select...
+							280 combo box (expanded, settable) Description: Subscription type, ID: react-select-20-input, Secondary Actions: Collapse
+						313 list react-select-20-listbox
+							314 Value: push subscription status, ID: react-select-20-option-0
+							315 Value: email subscription status, ID: react-select-20-option-1
+						281 text Please select a subscription type to
+						282 container
+							283 text Select...
+							284 combo box (collapsed, settable) Description: Subscription state, ID: react-select-21-input, Secondary Actions: Expand
+						285 text Please select a subscription state
+					286 button close
+					287 text Update Subscription Group Status
+					288 text OR
+					289 container
+						290 text Update their
+						291 container
+							292 text email subscription group status
+							293 combo box (collapsed, settable) Description: Subscription type, ID: react-select-22-input, Secondary Actions: Expand
+						294 text to
+						295 container
+							296 text Select...
+							297 combo box (collapsed, settable) Description: Subscription state, ID: react-select-23-input, Secondary Actions: Expand
+						298 text Please select a subscription state for subscription group
+						299 container
+							300 text Select Subscription Group
+							301 combo box (collapsed, settable) Description: Subscription group, ID: react-select-24-input, Secondary Actions: Expand
+						302 text Please select a subscription group where update source is
+						303 container
+							304 text Select...
+							305 combo box (collapsed, settable) Description: Update source, ID: react-select-25-input, Secondary Actions: Expand
+						306 text Please select an update source
+					307 button close
+					240 text Evaluate if user takes specified actions
+					241 container
+						242 container
+							308 text Select Trigger
+							244 combo box (collapsed, settable) Description: Select Trigger, ID: react-select-14-input, Secondary Actions: Expand
+					245 button (disabled) Add Trigger
+
+The focused UI element is 280 combo box (expanded, settable) Description: Subscription type, ID: react-select-20-input, Secondary Actions: Collapse

@@ -1,6 +1,8 @@
-export async function resolveBrowserTags(tags: string[]): Promise<string[]> {
-  const response = await fetch("/api/tags/resolve", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tags }) });
-  const result = await response.json();
-  if (!response.ok) throw new Error(result.error ?? "Unable to validate tags.");
-  return result.tags;
-}
+import type { WorkspaceTag } from './tag-model';
+export type TagChangeDetail={workspaceId:string;aliases?:Record<string,string|null>};
+export const tagChangeEvent='braze:tags-changed';
+export function publishTagChanges(detail:TagChangeDetail){if(typeof window!=='undefined'){window.dispatchEvent(new CustomEvent<TagChangeDetail>(tagChangeEvent,{detail}));try{localStorage.setItem(tagChangeEvent,JSON.stringify({...detail,nonce:crypto.randomUUID()}));}catch{}}}
+export function subscribeTagChanges(listener:(detail:TagChangeDetail)=>void){if(typeof window==='undefined')return()=>{};const handler=(event:Event)=>{const detail=(event as CustomEvent<TagChangeDetail>).detail;if(detail&&typeof detail.workspaceId==='string')listener(detail);};const storage=(event:StorageEvent)=>{if(event.key!==tagChangeEvent||!event.newValue)return;try{const detail=JSON.parse(event.newValue);if(typeof detail.workspaceId==='string')listener(detail);}catch{}};window.addEventListener(tagChangeEvent,handler);window.addEventListener('storage',storage);return()=>{window.removeEventListener(tagChangeEvent,handler);window.removeEventListener('storage',storage);};}
+export function currentTagWorkspace(){if(typeof window==='undefined')return 'local';const params=new URLSearchParams(window.location.search);return params.get('workspace')||params.get('workspaceId')||(window.location.pathname.match(/^\/app_settings\/app_settings\/tags\/([^/]+)\/?$/)?.[1])||'local';}
+export async function loadWorkspaceTags(workspaceId='local',context='assignment'):Promise<{data:WorkspaceTag[];aliases:Record<string,string|null>}>{const response=await fetch(`/api/tags?workspaceId=${encodeURIComponent(workspaceId)}&context=${encodeURIComponent(context)}`,{cache:'no-store'});const result=await response.json();if(!response.ok)throw new Error(result.error??'Could not load tags.');return result;}
+export async function resolveBrowserTags(tags:string[],workspaceId='local'):Promise<string[]>{const response=await fetch(`/api/tags/resolve?workspaceId=${encodeURIComponent(workspaceId)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tags,workspaceId})});const result=await response.json();if(!response.ok)throw new Error(result.error??'Unable to validate tags.');return result.tags;}

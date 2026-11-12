@@ -1,0 +1,257 @@
+Browser tab: 3, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3211/engagement/canvas/f216ee2a-4db7-4d57-9e52-1fafce349f8a?locale=en&workspace=local&step=audience".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3211/engagement/canvas/f216ee2a-4db7-4d57-9e52-1fafce349f8a?locale=en&workspace=local&step=audience
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agent Console
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+	25 container
+		26 text ◷   8 days left in your free trial.
+		27 button Connect with sales
+		28 button Search workspace ⌘K
+			29 image
+			30 text Search workspace
+			31 text ⌘K
+		32 button Take a tour
+		33 image Community
+		34 button (collapsed) Description: Language, Secondary Actions: Expand
+		35 button Notifications
+		36 button (collapsed) Description: Profile, Secondary Actions: Expand
+		37 image
+		38 button Open BrazeAI Operator
+		39 button Canvas
+		40 button Canvas
+		41 text ›
+		42 container
+			43 text Edit ' Tagged welcome journey '
+		44 button Close Canvas
+			45 image
+		46 text ♙ Limited access
+		47 container Canvas creation steps
+			48 button 1 Basics
+				49 text 1
+				50 text Basics
+			51 button 2 Entry Schedule
+				52 text 2
+				53 text Entry Schedule
+			54 button 3 Target Audience
+				55 text 3
+				56 text Target Audience
+			57 button 4 Send Settings
+				58 text 4
+				59 text Send Settings
+			60 button 5 Build Canvas
+				61 text 5
+				62 text Build Canvas
+			63 button 6 Summary
+				64 text 6
+				65 text Summary
+		66 heading Entry Audience, Value: 2
+			67 text Entry Audience
+		68 text Determine who will enter this Canvas. Conditions will not be re-evaluated at each step. Target users by choosing multiple segments they must fall into. Further refine your audience by adding additional filters.
+		69 container
+			70 text Target Users By Segment
+			71 list Target Users By Segment
+				72 tag_qa_083e6329_retargeting
+				73 tag_qa_083e6329
+				74 New Users
+				75 Recent Purchasers
+				76 Active Subscribers
+				77 Reachable Users
+				78 Pro Plan Customers
+				79 Free Plan Customers
+				80 English Speakers
+				81 Chinese Speakers
+				82 United States Users
+				83 United Kingdom Users
+				84 China Users
+				85 Singapore Users
+				86 Germany Users
+				87 New customers · tag acceptance
+				88 tag_qa_3274d7cf
+		89 text Hold Command or Control to select multiple segments.
+		90 heading Additional Filters, Value: 3
+			91 text Additional Filters
+		92 container
+			93 text Match filters
+			94 pop up button (collapsed, settable) Match filters, Value: OR, Secondary Actions: Expand
+				95 menu
+					96 (selected) OR
+					97 AND
+		98 heading Filter group, Value: 4
+			99 text Filter group
+		100 container Clicked/Opened Campaign or Canvas With Tag
+			101 heading Clicked/Opened Campaign or Canvas With Tag, Value: 4
+				102 text Clicked/Opened Campaign or Canvas With Tag
+			103 container
+				104 text Interaction
+				105 combo box (expanded) Description: Interaction, Secondary Actions: Collapse
+				106 button Toggle Interaction
+					107 image
+				108 list Interaction options
+					109 clicked banner
+					110 clicked content card
+					111 (selected) clicked email
+					112 clicked in-app message
+					113 clicked in-app message button 1
+					114 clicked in-app message button 2
+					115 clicked shortened sms link
+					116 clicked tracked KakaoTalk link
+					117 clicked tracked LINE link
+					118 clicked tracked WhatsApp link
+					119 directly opened push notification
+					120 dismissed banner
+					121 dismissed content card
+					122 opened email
+					123 opened email (machine opens)
+					124 opened email (other opens)
+					125 read WhatsApp message
+					126 replied to sms
+					127 viewed banner
+					128 viewed content card
+					129 viewed in-app message
+			130 container
+				131 text Performed interaction
+				132 combo box (collapsed, settable) Description: Performed interaction, Value: true, Secondary Actions: Expand
+				133 button Toggle Performed interaction
+					134 image
+			135 container
+				136 text Clicked/Opened Campaign or Canvas With Tag
+				137 combo box (collapsed, settable) Description: Clicked/Opened Campaign or Canvas With Tag, Value: Lifecycle / Welcome, Secondary Actions: Expand
+				138 button Toggle Clicked/Opened Campaign or Canvas With Tag
+					139 image
+			140 text Some tags may include messaging with expired interaction data. 
+			141 link Description: Learn about retargeting by tag, Value: braze.com/docs/en/messaging_interaction_data/#retargeting-by-tag
+		142 button Remove filter
+		143 container
+			144 combo box (collapsed, settable) Description: Select filter, Secondary Actions: Expand
+			145 button (collapsed) Description: Toggle filter catalog, Secondary Actions: Expand
+		146 button Add profile filter
+			147 image
+			148 text Add profile filter
+		149 heading Exclusion group, Value: 4
+			150 text Exclusion group
+		151 container
+			152 combo box (collapsed, settable) Description: Select filter, Secondary Actions: Expand
+			153 button (collapsed) Description: Toggle filter catalog, Secondary Actions: Expand
+		154 button Add profile filter
+			155 image
+			156 text Add profile filter
+		157 heading Audience Summary, Value: 4
+			158 text Audience Summary
+		159 text 0 segment(s) and 1 filter(s) selected
+		160 heading User Lookup, Value: 4
+			161 text User Lookup
+		162 text Check if a user matches the segment, filter, and app criteria
+		163 text field (settable) Look up user
+		164 button (disabled) Lookup User
+		165 heading Entry Controls, Value: 4
+			166 text Entry Controls
+		167 checkbox (settable, integer) Description: Allow users to re-enter this Canvas, Value: 0
+		168 checkbox (settable, integer) Description: Limit entrance volume, Value: 0
+		169 heading Exit Criteria, Value: 2
+			170 text Exit Criteria
+		171 text Users will exit the Canvas if they perform an exception event or if they match the segments and filters. These users won't receive any further messages.
+		172 heading Exceptions, Value: 4
+			173 text Exceptions
+		174 pop up button (collapsed, settable) Description: Add Exception, Value: Select Trigger, Secondary Actions: Expand
+			175 menu
+				176 (selected) Select Trigger
+				177 Perform Custom Event
+				178 Start Session
+				179 Interact With Campaign
+				180 Interact with Landing Page
+				181 Perform Exception Event For Campaign
+				182 Change Custom Attribute Value
+				183 Update Subscription Status
+				184 Update Subscription Group Status
+				185 Add an Email Address
+				186 View product
+				187 Update cart
+				188 Start checkout
+				189 Place order
+				190 Cancel order
+				191 Refund order
+				192 Perform Back in Stock Event
+				193 Perform Price Drop Event
+				194 Send an SMS inbound message
+				195 Send a WhatsApp inbound message
+				196 Send a LINE inbound message
+				197 Enter a Location
+				198 Trigger a Geofence
+		199 container
+			200 text Segments
+			201 list Segments
+				202 tag_qa_083e6329_retargeting
+				203 tag_qa_083e6329
+				204 New Users
+				205 Recent Purchasers
+				206 Active Subscribers
+				207 Reachable Users
+				208 Pro Plan Customers
+				209 Free Plan Customers
+				210 English Speakers
+				211 Chinese Speakers
+				212 United States Users
+				213 United Kingdom Users
+				214 China Users
+				215 Singapore Users
+				216 Germany Users
+				217 New customers · tag acceptance
+				218 tag_qa_3274d7cf
+		219 heading Filters, Value: 4
+			220 text Filters
+		221 container
+			222 combo box (collapsed, settable) Description: Select filter, Secondary Actions: Expand
+			223 button (collapsed) Description: Toggle filter catalog, Secondary Actions: Expand
+		224 button Add profile filter
+			225 image
+			226 text Add profile filter
+		227 heading Suppression Lists, Value: 2
+			228 text Suppression Lists
+		229 text There are no suppression lists applied. Manage them in the workspace suppression-list settings.
+		230 heading Total Population, Value: 2
+			231 text Total Population
+		232 button Calculate audience
+		233 button Back
+		234 container Canvas creation steps
+			235 button 1 Basics
+				236 text 1
+				237 text Basics
+			238 button 2 Entry Schedule
+				239 text 2
+				240 text Entry Schedule
+			241 button 3 Target Audience
+				242 text 3
+				243 text Target Audience
+			244 button 4 Send Settings
+				245 text 4
+				246 text Send Settings
+			247 button 5 Build Canvas
+				248 text 5
+				249 text Build Canvas
+			250 button 6 Summary
+				251 text 6
+				252 text Summary
+		253 button Save
+		254 button Forward
+
+The focused UI element is 105 combo box (expanded) Description: Interaction, Secondary Actions: Collapse

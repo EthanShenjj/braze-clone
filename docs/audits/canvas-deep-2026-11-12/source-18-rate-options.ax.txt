@@ -1,0 +1,217 @@
+Browser tab: 7, Title: "Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=sendSettings&initialConditionsCollapsed=false".
+0 AXWebArea Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=sendSettings&initialConditionsCollapsed=false
+	1 container
+		221 container body-wrapper
+			222 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=sendSettings&initialConditionsCollapsed=false#main-col
+			223 container
+				224 container Side navigation
+					225 container
+						226 button Minimize menu
+						227 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+							228 image
+							229 text Demo – ittor
+						230 text Quick links
+						231 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+						232 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+						233 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+						234 button Getting Started
+							235 image
+							236 container
+								237 text Getting Started
+								238 container
+									239 text 8 %
+						240 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+						241 button AI Decisioning
+							242 image
+							243 text AI Decisioning
+						244 button Agents
+							245 image
+							246 text Agents
+						247 button Messaging
+							248 image
+							249 text Messaging
+						250 button Audience
+							251 image
+							252 text Audience
+						253 button Content
+							254 image
+							255 text Content
+						256 button Analytics
+							257 image
+							258 text Analytics
+						259 button Partner Integrations
+							260 image
+							261 text Partner Integrations
+						262 button Data Settings
+							263 image
+							264 text Data Settings
+						265 button Settings
+							266 image
+							267 text Settings
+					268 container Footer Logo
+						269 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+				270 text 14 days left in your free trial.
+				271 button Connect with sales
+				272 container Top navigation
+					273 container Left top navigation
+						274 button Search workspace ⌘+K
+							275 image
+							276 text Search workspace
+							277 text ⌘+K
+					278 container Right top navigation
+						279 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							280 image
+						281 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							282 image
+						283 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+							284 image
+						285 container
+							286 button Notifications
+								287 image
+						288 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							289 image
+						290 button BrazeAI Operator™
+							291 image
+			292 container main
+				293 container main-col
+					294 tab group Open page tabs
+						295 tab (selectable, settable, boolean) Canvas, Value: 0, ID: canvas
+						296 tab (selected, settable, boolean) Edit 'Canvas fidelity audit - 2026-11-12 (temporary)' Close tab, Description: Close tab, ID: 6af5503cd8512f008c15c8bd, Value: 1
+Edit 'Canvas fidelity audit - 2026-11-12 (temporary)'
+					423 container
+						424 text Limited access
+						425 container progress
+							426 text Progress Tracker with 6 steps: Basics, Entry Schedule, Target Audience, Send Settings, Build Canvas, Summary
+						427 button Step Basics
+							428 text 1
+							429 text Basics
+						430 button Step Entry Schedule
+							431 text 2
+							432 text Entry Schedule
+						433 button Step Target Audience
+							434 text 3
+							435 text Target Audience
+						436 button Step Send Settings
+							437 text 4
+							438 text Send Settings
+						439 button Step Build Canvas
+							440 text 5
+							441 text Build Canvas
+						442 button Step Summary
+							443 text 6
+							444 text Summary
+						445 container
+							446 heading Send Settings Set message sending options for all steps within the Canvas., Value: 3
+								447 heading Send Settings, Value: 3
+									448 text Send Settings
+								449 text Set message sending options for all steps within the Canvas.
+							450 heading Subscription Settings, Value: 4
+								451 text Subscription Settings
+							452 text Send to these users:
+							453 container
+								454 text users who are subscribed or opted in
+								455 combo box (collapsed, settable) Description: Send to these users:, ID: subscription-settings-selection, Secondary Actions: Expand
+							456 heading Rate Limit, Value: 4
+								457 text Rate Limit
+							458 checkbox (settable, integer) Description: Limit the rate at which users will receive messages in this Canvas, Value: 1, ID: bc-checkbox-2411957116
+							459 text Limit the rate at which users will receive messages in this Canvas
+							495 container
+								496 radio button (settable, integer) Description: Set shared rate limit for all messages sent from this Canvas, Value: 1, ID: radio-button-540157985
+								497 text Set shared rate limit for all messages sent from this Canvas
+							498 container
+								499 radio button (settable, integer) Description: Set separate rate limit for each channel, Value: 0, ID: radio-button-588704959
+								500 text Set separate rate limit for each channel
+							501 text Maximum messages per minute
+							527 container
+								528 text 500,000 selected, 15 of 17.
+								529 text 17 results available.
+								530 text Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+							502 container
+								503 text 500,000
+								504 combo box (expanded, settable) Description: Maximum messages per minute, ID: react-select-13-input, Secondary Actions: Collapse
+							531 list react-select-13-listbox
+								532 Value: 10, ID: react-select-13-option-0
+								533 Value: 25, ID: react-select-13-option-1
+								534 Value: 50, ID: react-select-13-option-2
+								535 Value: 100, ID: react-select-13-option-3
+								536 Value: 250, ID: react-select-13-option-4
+								537 Value: 500, ID: react-select-13-option-5
+								538 Value: 1,000, ID: react-select-13-option-6
+								539 Value: 2,500, ID: react-select-13-option-7
+								540 Value: 5,000, ID: react-select-13-option-8
+								541 Value: 10,000, ID: react-select-13-option-9
+								542 Value: 25,000, ID: react-select-13-option-10
+								543 Value: 50,000, ID: react-select-13-option-11
+								544 Value: 100,000, ID: react-select-13-option-12
+								545 Value: 250,000, ID: react-select-13-option-13
+								546 Value: 500,000, ID: react-select-13-option-14
+								547 Value: 1,000,000, ID: react-select-13-option-15
+								548 Value: Other, ID: react-select-13-option-16
+							460 heading Frequency Capping, Value: 4
+								461 text Frequency Capping
+							462 text You have not created any Frequency Capping rules.
+							463 container
+								464 text Opening in a new tab
+								465 link Description: Opening in a new tab, Value: dashboard-09.braze.com/engagement/global_message_settings/global-message-settings/6af4374c46d3080087f1c5d2?locale=en
+							466 heading Quiet Hours, Value: 4
+								467 text Quiet Hours
+							468 text Messages are not sent during quiet hours. All times are in the recipient's local time zone. Quiet hours cannot exceed 20 hours.
+							469 checkbox (settable, integer) Description: Enforce quiet hours for this Canvas, Value: 1, ID: bc-checkbox-1436481526
+							470 text Enforce quiet hours for this Canvas
+							505 container
+								506 radio button (settable, integer) Description: Use workspace quiet hours, Value: 1, ID: radio-button-240190895
+								507 text Use workspace quiet hours
+							508 text Set quiet hours once for your whole workspace
+							509 container
+								510 text Set up workspace quiet hours in 
+								511 text Opening in a new tab
+								512 link Description: Opening in a new tab, Value: dashboard-09.braze.com/app_settings/app_settings/quiet_hours/6af4374c46d3080087f1c5d2?locale=en
+								513 text , and any campaign or Canvas that uses them stays up to date when they change. Requires the "Edit Quiet Hours" permission.
+							514 button Close
+							515 container
+								516 radio button (settable, integer) Description: Use custom quiet hours, Value: 0, ID: radio-button-820746610
+								517 text Use custom quiet hours
+							518 container Fallback behavior
+								519 text Fallback behavior
+								520 text Do this if a message triggers during quiet hours
+								521 container
+									522 radio button (settable, integer) Description: Abort message, Value: 0, ID: radio-button-577567886
+									523 text Abort message
+								524 container
+									525 radio button (settable, integer) Description: Send at next available time, Value: 1, ID: radio-button-406479521
+									526 text Send at next available time
+						471 pop up button Back
+						472 container
+							473 container progress
+								474 text Progress Tracker with 6 steps: Basics, Entry Schedule, Target Audience, Send Settings, Build Canvas, Summary
+							475 button Step Basics
+								476 text 1
+								477 text Basics
+							478 button Step Entry Schedule
+								479 text 2
+								480 text Entry Schedule
+							481 button Step Target Audience
+								482 text 3
+								483 text Target Audience
+							484 button Step Send Settings
+								485 text 4
+								486 text Send Settings
+							487 button Step Build Canvas
+								488 text 5
+								489 text Build Canvas
+							490 button Step Summary
+								491 text 6
+								492 text Summary
+						493 pop up button Forward
+						494 button Save
+				415 container
+					416 text © Braze 2026
+					417 text Opening in a new tab
+					418 link Description: Opening in a new tab, Value: braze.statuspage.io/
+					419 text Opening in a new tab
+					420 link Description: Opening in a new tab, Value: braze.com/terms
+					421 text Opening in a new tab
+					422 link Description: Opening in a new tab, Value: braze.com/privacy
+		220 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+
+The focused UI element is 504 combo box (expanded, settable) Description: Maximum messages per minute, ID: react-select-13-input, Secondary Actions: Collapse

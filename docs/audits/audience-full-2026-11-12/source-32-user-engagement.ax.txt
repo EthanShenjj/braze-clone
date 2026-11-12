@@ -1,0 +1,219 @@
+Browser tab: 12, Title: "Data - Overview - Overview", URL: "https://dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af4378a641a6600597b5b58".
+1 AXWebArea Data - Overview - Overview, URL: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af4378a641a6600597b5b58
+	2 container
+		3 container react-root
+			4 link Description: Skip to main content, Value: dashboard-09.braze.com/users/user_search/user-search/6af4374c46d3080087f1c5d2?query=6af4378a641a6600597b5b58#main-container
+			5 container Side navigation
+				6 container
+					7 button Minimize menu
+					8 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+						9 image
+						10 text Demo – ittor
+					11 text Quick links
+					12 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+					13 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+					14 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+					15 button Getting Started
+						16 image
+						453 text Getting Started
+						454 container
+							455 text 8 %
+					21 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+					22 button AI Decisioning
+						23 image
+						24 text AI Decisioning
+					25 button Agents
+						26 image
+						27 text Agents
+					28 button Messaging
+						29 image
+						30 text Messaging
+					31 button Audience
+						32 image
+						33 text Audience
+					34 button Content
+						35 image
+						36 text Content
+					37 button Analytics
+						38 image
+						39 text Analytics
+					40 button Partner Integrations
+						41 image
+						42 text Partner Integrations
+					43 button Data Settings
+						44 image
+						45 text Data Settings
+					46 button Settings
+						47 image
+						48 text Settings
+				49 container Footer Logo
+					50 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+			51 text 14 days left in your free trial.
+			52 button Connect with sales
+			53 container Top navigation
+				54 container Left top navigation
+					55 button Search workspace ⌘+K
+						56 image
+						57 text Search workspace
+						58 text ⌘+K
+				59 container Right top navigation
+					60 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						61 image
+					62 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						63 image
+					64 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+						65 image
+					66 container
+						67 button Notifications
+							68 image
+					69 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						70 image
+					71 button BrazeAI Operator™
+						72 image
+			73 container main-container
+				74 container main-content
+					75 heading Search users, Value: 3
+						76 text Search users
+					77 text Limited access
+					78 container
+						79 text field (settable) Description: Email address, phone number or External User ID, Value: <redacted>
+						80 button Clear Selection
+						81 button Search
+					82 text Search for users by their External User ID
+					83 image Information
+					84 text User Alias
+					85 image Information
+					86 text email, phone number, or push token.
+					87 image user profile image of Euna Fadel
+					88 heading Euna Fadel, Value: 2
+						89 text Euna Fadel
+					90 heading User ID: braze-2ee39a80-a79a-49a0-aac9-1d1a25cac87f, Value: 4, ID: user-info-overview-eid
+						91 text User ID :  braze-2ee39a80-a79a-49a0-aac9-1d1a25cac87f
+					92 heading Braze ID: 6af4378a641a6600597b5b58, Value: 4, ID: user-info-overview-braze-id
+						93 text Braze ID :  6af4378a641a6600597b5b58
+					94 container user-contact-info
+						95 text None
+						96 text None
+					97 button (disabled) User aliases, ID: user-aliases-link
+					98 button Refresh user profile
+					99 tab group
+						100 tab (selectable, settable, boolean) Overview, Value: 0
+						101 tab (selected, settable, boolean) Engagement, Value: 1
+						102 tab (selectable, settable, boolean) Messaging History, Value: 0, ID: 2
+						103 tab (selectable, settable, boolean) Event History, Value: 0, ID: 6
+						104 tab (selectable, settable, boolean) Commerce, Value: 0, ID: 3
+						105 tab (selectable, settable, boolean) Feature Flags Eligibility, Value: 0, ID: 4
+					456 container
+						457 text Contact Settings
+						458 container
+							459 text Email Global subscription state
+							460 image Information
+							461 container
+								462 text Subscribed
+							463 container
+								464 text Subscription Groups
+								465 image Information
+							467 text Email Open/Click Tracking Pixel
+							468 image Information
+							469 text Open Tracking Enabled Click Tracking Enabled Manage this workspace's open/click tracking in 
+							470 text Opening in a new tab
+							471 link Description: Opening in a new tab, Value: dashboard-09.braze.com/app_settings/app_settings/email_settings/6af4374c46d3080087f1c5d2?locale=en
+							472 text . SMS/MMS/RCS
+							555 container
+								556 text Subscription Groups
+								557 image Information
+							558 text SMS Canvas Subscription Group
+							559 checkbox (disabled, settable, integer) Description: SMS Canvas Subscription Group, Value: 0, ID: bcl-switch__input-4205158394
+							474 text Phone Number
+							475 image Information
+							476 text -- WhatsApp Phone Number
+							477 image Information
+							478 text --
+							479 container
+								480 text Subscription Groups
+								481 image Information
+							560 container
+								561 text WhatsApp Fake Messaging Service A
+								562 checkbox (disabled, settable, integer) Description: WhatsApp Fake Messaging Service A, Value: 0, ID: bcl-switch__input-2997609944
+								563 text WhatsApp Fake Messaging Service B
+								564 checkbox (disabled, settable, integer) Description: WhatsApp Fake Messaging Service B, Value: 0, ID: bcl-switch__input-2248982758
+							483 text LINE
+							484 container
+								485 text Subscription Groups
+								486 image Information
+							565 container
+								566 text LINE Messaging Service 0A Unsubscribed LINE Messaging Service 0B Unsubscribed
+							488 text LINE User ID -- Push
+							489 button Unsubscribed
+							490 button Subscribed
+							491 text Opted In
+							492 text 17 hours ago
+						567 text Campaigns Received
+						568 text This user has not received any campaigns.
+						495 text Segments
+						496 container
+							497 container
+								498 text Select...
+								499 combo box (collapsed, settable) Description: Segment membership check, ID: user-segment-match-selector, Secondary Actions: Expand
+						500 container
+							501 text Search by Segment name
+						502 text Communication Stats
+						503 container
+							504 container Last Received Any Campaign
+								505 text Last Received Any Campaign
+							506 container --
+								507 text --
+							508 container Last Received Push
+								509 text Last Received Push
+							510 container --
+								511 text --
+							512 container Last Interacted With Email
+								513 text Last Interacted With Email
+							514 container --
+								515 text --
+							516 container Last Received LINE
+								517 text Last Received LINE
+							518 container --
+								519 text --
+							520 container Last Received SMS/MMS/RCS
+								521 text Last Received SMS/MMS/RCS
+							522 container --
+								523 text --
+							524 container Last Received Webhook
+								525 text Last Received Webhook
+							526 container --
+								527 text --
+							528 container Last Received WhatsApp
+								529 text Last Received WhatsApp
+							530 container --
+								531 text --
+						532 text Install Attribution
+						533 text No install attribution information.
+						534 text Miscellaneous
+						569 container
+							570 container Random Bucket Help text available. Tab to view help text, click to open popover
+								571 container
+									572 text Random Bucket
+									573 pop up button (collapsed) Description: Help text available. Tab to view help text, click to open popover, Secondary Actions: Expand
+							574 container 2387
+								575 text 2387
+						544 text Canvas Messages Received
+						545 text Displaying recent messages only
+						546 image Information
+						547 text This user has not received any messages from any Canvases.
+						548 text Predictions
+						549 heading Churn Prediction, Value: 4
+							550 text Churn Prediction
+						551 text This user has not been assigned any scores.
+						552 heading Event Prediction, Value: 4
+							553 text Event Prediction
+						554 text This user has not been assigned any scores.
+				446 text © Braze 2026
+				447 text Opening in a new tab
+				448 link Description: Opening in a new tab, Value: braze.statuspage.io/
+				449 text Opening in a new tab
+				450 link Description: Opening in a new tab, Value: braze.com/terms
+				451 text Opening in a new tab
+				452 link Description: Opening in a new tab, Value: braze.com/privacy
+
+The focused UI element is 101 tab (selected, settable, boolean) Engagement, Value: 1

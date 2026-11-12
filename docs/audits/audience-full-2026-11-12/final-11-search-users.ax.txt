@@ -1,0 +1,56 @@
+Browser tab: 15, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/users/user_search/user-search/local?locale=en&workspace=local".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/user_search/user-search/local?locale=en&workspace=local
+	2 container
+		3 text Look up user info
+		4 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		5 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			6 text Local workspace
+			7 image
+		8 container Side navigation
+			9 text Quick links
+			10 button Canvas
+			11 button Campaigns
+			12 button Segments
+			13 button Getting Started
+			14 button Home
+			15 button AI Decisioning
+			16 button Agents
+			17 button Messaging
+			18 button Audience
+			19 button Content
+			20 button Analytics
+			21 button Partner Integrations
+			22 button Data Settings
+			23 button Settings
+		24 button Home
+			25 image Braze
+		26 container
+			27 text ◷   8 days left in your free trial.
+			28 button Connect with sales
+		29 container
+			30 button Search workspace ⌘K
+				31 image
+				32 text Search workspace
+				33 text ⌘K
+			34 button Take a tour
+			35 image Community
+			36 button (collapsed) Description: Language, Secondary Actions: Expand
+			37 button Notifications
+			38 button (collapsed) Description: Profile, Secondary Actions: Expand
+			39 image
+			40 button Open BrazeAI Operator
+		41 container
+			42 heading Look up user info, Value: 1
+				43 text Look up user info
+			44 image
+			45 text Limited access
+			46 text field (settable) Email address, phone number or External User ID
+			47 button (disabled) Search
+				48 image
+			49 text Search for users by their External User ID
+			50 image The identifier assigned to a user by your company.
+			51 text User Alias
+			52 image Look up a user's alias name, or label:name.
+			53 text email, phone number, or push token.
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/user_search/user-search/local?locale=en&workspace=local

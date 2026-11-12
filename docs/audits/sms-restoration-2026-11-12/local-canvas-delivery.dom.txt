@@ -1,0 +1,176 @@
+- button "Open Next.js Dev Tools":
+- alert
+- complementary:
+  - button "Minimize menu" [expanded]
+  - button "Select workspace":
+    - generic: Demo – Thinkingai
+  - navigation "Side navigation":
+    - generic: Quick links
+    - button "Canvas":
+      - generic: Canvas
+    - button "Campaigns":
+      - generic: Campaigns
+    - button "Segments":
+      - generic: Segments
+    - button "Getting Started":
+      - generic: Getting Started
+    - button "Home":
+      - generic: Home
+    - button "AI Decisioning":
+      - generic: AI Decisioning
+    - button "Agents":
+      - generic: Agents
+    - button "Messaging":
+      - generic: Messaging
+    - button "Audience":
+      - generic: Audience
+    - button "Content":
+      - generic: Content
+    - button "Analytics":
+      - generic: Analytics
+    - button "Partner Integrations":
+      - generic: Partner Integrations
+    - button "Data Settings":
+      - generic: Data Settings
+    - button "Settings":
+      - generic: Settings
+  - button "Home":
+    - img "Braze"
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - generic "Community":
+    - img "Community"
+  - button "Language"
+  - button "Notifications"
+  - button "Profile"
+  - button "Open BrazeAI Operator"
+  - button "Canvas"
+  - generic: ›
+  - strong: Edit 'SMS runtime QA'
+  - button "Close Canvas":
+  - region "Canvas flow builder":
+    - complementary "Components":
+      - strong: Components
+      - paragraph: Select components to build your user journey.
+      - button "Collapse components":
+      - heading "Message Controls" [level=3]
+      - button "Message":
+        - generic: Message
+      - button "Delay":
+        - generic: Delay
+      - heading "AI Actions" [level=3]
+      - button "Agent Step":
+        - generic: Agent Step
+      - button "Content Optimizer":
+        - generic: Content Optimizer
+      - heading "Flow Controls" [level=3]
+      - button "Decision Split":
+        - generic: Decision Split
+      - button "Audience Paths":
+        - generic: Audience Paths
+      - button "Action Paths":
+        - generic: Action Paths
+      - button "Experiment Paths":
+        - generic: Experiment Paths
+      - button "Send to Destination":
+        - generic: Send to Destination
+      - heading "Audience Updates" [level=3]
+      - button "Context":
+        - generic: Context
+      - button "User Update":
+        - generic: User Update
+      - button "Feature Flag":
+        - generic: Feature Flag
+      - button "Audience Sync":
+        - generic: Audience Sync
+      - button "Clean Up Canvas":
+        - text: Clean Up Canvas
+    - button "Version history"
+    - button "Expand":
+      - text: Expand
+    - button "Entry Rules":
+      - text: Entry Rules
+    - strong: Schedule
+    - paragraph: As soon as Canvas is launched
+    - strong: Audience
+    - paragraph: 0 segments, 1 filter
+    - strong: Exit Criteria
+    - paragraph: No exit criteria selected.
+    - strong: Controls
+    - paragraph: Users are not eligible to re-enter this Canvas.
+    - button "Add Variant":
+      - text: Add Variant
+    - generic: 100%
+    - strong: Variant 1
+    - button "Settings for Variant 1":
+    - button "Message SMS Message":
+      - generic: Message
+      - strong: SMS Message
+    - button "Step actions for SMS Message":
+    - button "Add step after SMS Message":
+    - button "Run evaluation"
+    - button "Canvas zoom and view":
+      - text: Detailed View, 100%
+      - generic: ⌃
+    - button "Enter full screen":
+    - button "Maximum Duration":
+    - button "Test Canvas" [disabled]
+    - button "Save"
+    - button "Save and continue"
+- dialog "SMS Message step editor":
+  - complementary:
+    - generic: SMS Message
+    - button "Messages":
+      - text: Messages
+    - paragraph:
+      - generic: All users who enter this step advance to the next step
+    - button "Done"
+  - main:
+    - text: Set up Messages
+    - button "BrazeAI Operator":
+    - tablist "Message step":
+      - tab "Messaging channels"
+      - tab "Delivery settings" [selected]
+    - heading "Delivery Schedule" [level=3]
+    - paragraph:
+      - text: Deliver this message
+      - strong: at the optimal time.
+    - checkbox "Using Intelligent Timing" [checked]
+    - text: Using Intelligent Timing
+    - strong: "Select a time to send messages when a user's profile does not have enough data to calculate an optimal time:"
+    - radio "the most popular time to use the app amongst all users"
+    - text: the most popular time to use the app amongst all users
+    - radio "a specific custom fallback time (in the user's local time zone)" [checked]
+    - text: a specific custom fallback time (in the user's local time zone)
+    - textbox "Intelligent Timing fallback time" [active]: 15:30
+    - separator
+    - heading "Delivery validations" [level=3]
+    - paragraph: Double-check that your audience meets your delivery criteria at message send. For in-app messages, delivery validations are checked when the user enters the step, not when the message is displayed.
+    - checkbox "Delivery Validation enabled for this message" [checked]
+    - text: Validate audience at message send
+    - generic: Recommended if you're using quiet hours, Intelligent Timing, or rate limiting.
+    - generic: Segments
+    - combobox "Segments"
+    - button "Toggle Segments":
+    - heading "Additional Filters" [level=3]
+    - region "Filter group":
+      - strong: Filter group
+      - combobox "Filter group operator":
+        - option "OR" [selected]
+        - option "AND"
+      - button "Remove filter group" [disabled]:
+      - combobox "Select filter"
+      - button "Toggle filter catalog": ⌄
+    - button "＋ Add filter group"
+    - button "＋ Add exclusion group"
+    - heading "Delivery validations advancement behavior" [level=3]
+    - strong: "If delivery validations are not met:"
+    - radio "Exit the user from the Canvas" [checked]
+    - text: Exit the user from the Canvas
+    - radio "Skip this message send and progress the user to the next step in the Canvas"
+    - text: Skip this message send and progress the user to the next step in the Canvas

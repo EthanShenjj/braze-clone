@@ -1,0 +1,246 @@
+- link "Skip to main content":
+  - /url: "#main-container"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Demo – ittor":
+    - generic: Demo – ittor
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agents":
+    - generic: Agents
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 14 days left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- main:
+  - heading "Search users" [level=3]
+  - img: 
+  - generic: Limited access
+  - textbox "Email address, phone number or External User ID": <redacted>
+  - button "Clear Selection":
+  - button "Search":
+  - text: Search for users by their External User ID
+  - img "Information":
+  - text: User Alias
+  - img "Information":
+  - text: email, phone number, or push token.
+  - img "user profile image of Euna Fadel"
+  - heading "Euna Fadel" [level=2]
+  - 'heading "User ID: braze-2ee39a80-a79a-49a0-aac9-1d1a25cac87f" [level=4]':
+    - generic: "User ID:"
+    - text: braze-2ee39a80-a79a-49a0-aac9-1d1a25cac87f
+  - 'heading "Braze ID: 6af4378a641a6600597b5b58" [level=4]':
+    - generic: "Braze ID:"
+    - text: 6af4378a641a6600597b5b58
+  - img: 
+  - generic: None
+  - img: 
+  - generic: None
+  - button "User aliases" [disabled]
+  - button "Refresh user profile":
+  - navigation:
+    - tablist:
+      - tab "Overview":
+        - generic: Overview
+      - tab "Engagement" [selected]:
+        - text: 
+        - generic: Engagement
+      - tab "Messaging History":
+        - generic: Messaging History
+      - tab "Event History":
+        - generic: Event History
+      - tab "Commerce":
+        - generic: Commerce
+      - tab "Feature Flags Eligibility":
+        - generic: Feature Flags Eligibility
+  - tabpanel:
+    - generic: Contact Settings
+    - img: 
+    - strong: Email
+    - text: Global subscription state
+    - img "Information":
+    - log
+    - generic: Subscribed
+    - text: Subscription Groups
+    - img "Information":
+    - text: Email Open/Click Tracking Pixel
+    - img "Information":
+    - generic: Open Tracking
+    - generic: Enabled
+    - generic: Click Tracking
+    - generic: Enabled
+    - text: Manage this workspace's open/click tracking in
+    - generic: Opening in a new tab
+    - link "Opening in a new tab":
+      - /url: /app_settings/app_settings/email_settings/6af4374c46d3080087f1c5d2?locale=en
+      - text: email preferences
+    - text: .
+    - img: 
+    - strong: SMS/MMS/RCS
+    - text: Subscription Groups
+    - img "Information":
+    - generic: SMS Canvas Subscription Group
+    - checkbox "SMS Canvas Subscription Group" [disabled]
+    - text: Phone Number
+    - img "Information":
+    - generic: "--"
+    - img: 
+    - strong: WhatsApp
+    - text: Phone Number
+    - img "Information":
+    - generic: "--"
+    - text: Subscription Groups
+    - img "Information":
+    - generic: WhatsApp Fake Messaging Service A
+    - checkbox "WhatsApp Fake Messaging Service A" [disabled]
+    - generic: WhatsApp Fake Messaging Service B
+    - checkbox "WhatsApp Fake Messaging Service B" [disabled]
+    - img: 
+    - strong: LINE
+    - text: Subscription Groups
+    - img "Information":
+    - generic: LINE Messaging Service 0A
+    - generic: Unsubscribed
+    - generic: LINE Messaging Service 0B
+    - generic: Unsubscribed
+    - generic: LINE User ID
+    - generic: "--"
+    - strong: Push
+    - button "Unsubscribed"
+    - button "Subscribed"
+    - generic: Opted In
+    - generic: 17 hours ago
+    - generic: Campaigns Received
+    - generic: This user has not received any campaigns.
+    - generic: Segments
+    - log: option New Users, selected.
+    - generic: New Users
+    - combobox "Segment membership check" [active]
+    - status:
+      - text: Search by Segment name
+    - strong: Euna F.
+    - text: is not in
+    - generic: Opening in a new tab
+    - link "Opening in a new tab":
+      - /url: /engagement/segmenter/edit/6af4375220abdf005fc2eef4/6af4374c46d3080087f1c5d2?locale=en
+      - text: New Users
+    - generic: Communication Stats
+    - table:
+      - rowgroup:
+        - row "Last Received Any Campaign --":
+          - cell "Last Received Any Campaign":
+            - generic: Last Received Any Campaign
+          - cell "--":
+            - generic: "--"
+        - row "Last Received Push --":
+          - cell "Last Received Push":
+            - generic: Last Received Push
+          - cell "--":
+            - generic: "--"
+        - row "Last Interacted With Email --":
+          - cell "Last Interacted With Email":
+            - generic: Last Interacted With Email
+          - cell "--":
+            - generic: "--"
+        - row "Last Received LINE --":
+          - cell "Last Received LINE":
+            - generic: Last Received LINE
+          - cell "--":
+            - generic: "--"
+        - row "Last Received SMS/MMS/RCS --":
+          - cell "Last Received SMS/MMS/RCS":
+            - generic: Last Received SMS/MMS/RCS
+          - cell "--":
+            - generic: "--"
+        - row "Last Received Webhook --":
+          - cell "Last Received Webhook":
+            - generic: Last Received Webhook
+          - cell "--":
+            - generic: "--"
+        - row "Last Received WhatsApp --":
+          - cell "Last Received WhatsApp":
+            - generic: Last Received WhatsApp
+          - cell "--":
+            - generic: "--"
+    - generic: Install Attribution
+    - generic: No install attribution information.
+    - generic: Miscellaneous
+    - table:
+      - rowgroup:
+        - row "Random Bucket Help text available. Tab to view help text, click to open popover 2387":
+          - cell "Random Bucket Help text available. Tab to view help text, click to open popover":
+            - text: Random Bucket
+            - button "Help text available. Tab to view help text, click to open popover":
+          - cell "2387":
+            - generic: "2387"
+    - generic: Canvas Messages Received
+    - text: Displaying recent messages only
+    - img "Information":
+    - generic: This user has not received any messages from any Canvases.
+    - generic: Predictions
+    - heading "Churn Prediction" [level=4]
+    - text: This user has not been assigned any scores.
+    - heading "Event Prediction" [level=4]
+    - text: This user has not been assigned any scores.
+- generic: © Braze 2026
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://braze.statuspage.io
+  - text: Status
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/terms
+  - text: Terms
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/privacy
+  - text: Privacy Policy
+- text:          

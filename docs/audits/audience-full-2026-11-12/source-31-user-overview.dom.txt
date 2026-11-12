@@ -1,0 +1,412 @@
+- link "Skip to main content":
+  - /url: "#main-container"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Demo – ittor":
+    - generic: Demo – ittor
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agents":
+    - generic: Agents
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 14 days left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- main:
+  - heading "Search users" [level=3]
+  - img: 
+  - generic: Limited access
+  - textbox "Email address, phone number or External User ID": <redacted>
+  - button "Clear Selection":
+  - button "Search":
+  - text: Search for users by their External User ID
+  - img "Information":
+  - text: User Alias
+  - img "Information":
+  - text: email, phone number, or push token.
+  - img "user profile image of Euna Fadel"
+  - heading "Euna Fadel" [level=2]
+  - 'heading "User ID: braze-2ee39a80-a79a-49a0-aac9-1d1a25cac87f" [level=4]':
+    - generic: "User ID:"
+    - text: braze-2ee39a80-a79a-49a0-aac9-1d1a25cac87f
+  - 'heading "Braze ID: 6af4378a641a6600597b5b58" [level=4]':
+    - generic: "Braze ID:"
+    - text: 6af4378a641a6600597b5b58
+  - img: 
+  - generic: None
+  - img: 
+  - generic: None
+  - button "User aliases" [disabled]
+  - button "Refresh user profile":
+  - navigation:
+    - tablist:
+      - tab "Overview" [selected]:
+        - text: 
+        - generic: Overview
+      - tab "Engagement":
+        - generic: Engagement
+      - tab "Messaging History":
+        - generic: Messaging History
+      - tab "Event History":
+        - generic: Event History
+      - tab "Commerce":
+        - generic: Commerce
+      - tab "Feature Flags Eligibility":
+        - generic: Feature Flags Eligibility
+  - tabpanel:
+    - generic: Profile
+    - table:
+      - rowgroup:
+        - row "Gender Female":
+          - cell "Gender":
+            - generic: Gender
+          - cell "Female":
+            - generic: Female
+        - row "Age Group --":
+          - cell "Age Group":
+            - generic: Age Group
+          - cell "--":
+            - generic: "--"
+        - row "Country FR":
+          - cell "Country":
+            - generic: Country
+          - cell "FR":
+            - generic: FR
+        - row "City Paris":
+          - cell "City":
+            - generic: City
+          - cell "Paris":
+            - generic: Paris
+        - row "Language French (\"fr\")":
+          - cell "Language":
+            - generic: Language
+          - cell "French (\"fr\")":
+            - generic: French ("fr")
+        - row "Most Recent Device Locale fr_FR":
+          - cell "Most Recent Device Locale":
+            - generic: Most Recent Device Locale
+          - cell "fr_FR":
+            - generic: fr_FR
+        - row "Time Zone Paris":
+          - cell "Time Zone":
+            - generic: Time Zone
+          - cell "Paris":
+            - generic: Paris
+        - row "Birthday --":
+          - cell "Birthday":
+            - generic: Birthday
+          - cell "--":
+            - generic: "--"
+    - generic: Sessions Overview
+    - table:
+      - rowgroup:
+        - row "Sessions 12":
+          - cell "Sessions":
+            - generic: Sessions
+          - cell "12":
+            - generic: "12"
+        - row "Last Used 9 days ago":
+          - cell "Last Used":
+            - generic: Last Used
+          - cell "9 days ago":
+            - generic: 9 days ago
+        - row "First Used Sep 23 at 10:48":
+          - cell "First Used":
+            - generic: First Used
+          - cell "Sep 23 at 10:48":
+            - generic: Sep 23 at 10:48
+    - generic: Custom Attributes
+    - table:
+      - rowgroup:
+        - row "account_anniversary_date Jun 26 2024 5:38 am -04:00":
+          - cell "account_anniversary_date":
+            - generic: account_anniversary_date
+          - cell "Jun 26 2024 5:38 am -04:00":
+            - generic: Jun 26 2024 5:38 am -04:00
+        - row "account_type Free":
+          - cell "account_type":
+            - generic: account_type
+          - cell "Free":
+            - generic: Free
+        - row "app_downloaded false":
+          - cell "app_downloaded":
+            - generic: app_downloaded
+          - cell "false":
+            - generic: "false"
+        - row "closest_physical_location Midcity":
+          - cell "closest_physical_location":
+            - generic: closest_physical_location
+          - cell "Midcity":
+            - generic: Midcity
+        - row "daily_streak_count 5":
+          - cell "daily_streak_count":
+            - generic: daily_streak_count
+          - cell "5":
+            - generic: "5"
+        - row "favorite_product My product 1":
+          - cell "favorite_product":
+            - generic: favorite_product
+          - cell "My product 1":
+            - generic: My product 1
+        - row "favorite_product_type My product type 3":
+          - cell "favorite_product_type":
+            - generic: favorite_product_type
+          - cell "My product type 3":
+            - generic: My product type 3
+        - row "free_trial_end_date Jan 04 2024 4:38 am -05:00":
+          - cell "free_trial_end_date":
+            - generic: free_trial_end_date
+          - cell "Jan 04 2024 4:38 am -05:00":
+            - generic: Jan 04 2024 4:38 am -05:00
+        - row "free_trial_start_date Sep 15 2026 5:38 am -04:00":
+          - cell "free_trial_start_date":
+            - generic: free_trial_start_date
+          - cell "Sep 15 2026 5:38 am -04:00":
+            - generic: Sep 15 2026 5:38 am -04:00
+        - row "language Spanish":
+          - cell "language":
+            - generic: language
+          - cell "Spanish":
+            - generic: Spanish
+        - row "last_purchase_satisfaction_rating 0":
+          - cell "last_purchase_satisfaction_rating":
+            - generic: last_purchase_satisfaction_rating
+          - cell "0":
+            - generic: "0"
+        - row "loyalty_points_count 7188":
+          - cell "loyalty_points_count":
+            - generic: loyalty_points_count
+          - cell "7188":
+            - generic: "7188"
+        - row "loyalty_tier None":
+          - cell "loyalty_tier":
+            - generic: loyalty_tier
+          - cell "None":
+            - generic: None
+        - row "preferred_service_mode In store pickup":
+          - cell "preferred_service_mode":
+            - generic: preferred_service_mode
+          - cell "In store pickup":
+            - generic: In store pickup
+        - row "sms_subscribed true":
+          - cell "sms_subscribed":
+            - generic: sms_subscribed
+          - cell "true":
+            - generic: "true"
+        - row "subscription_end_date Mar 29 2025 5:38 am -04:00":
+          - cell "subscription_end_date":
+            - generic: subscription_end_date
+          - cell "Mar 29 2025 5:38 am -04:00":
+            - generic: Mar 29 2025 5:38 am -04:00
+        - row "subscription_expiration_date Apr 26 2023 5:38 am -04:00":
+          - cell "subscription_expiration_date":
+            - generic: subscription_expiration_date
+          - cell "Apr 26 2023 5:38 am -04:00":
+            - generic: Apr 26 2023 5:38 am -04:00
+        - row "subscription_membership true":
+          - cell "subscription_membership":
+            - generic: subscription_membership
+          - cell "true":
+            - generic: "true"
+        - row "subscription_start_date Aug 17 2025 5:38 am -04:00":
+          - cell "subscription_start_date":
+            - generic: subscription_start_date
+          - cell "Aug 17 2025 5:38 am -04:00":
+            - generic: Aug 17 2025 5:38 am -04:00
+        - row "yearly_purchase_count 77":
+          - cell "yearly_purchase_count":
+            - generic: yearly_purchase_count
+          - cell "77":
+            - generic: "77"
+    - generic: Recent Devices
+    - table:
+      - rowgroup:
+        - row "Number of Devices 1":
+          - cell "Number of Devices":
+            - generic: Number of Devices
+          - cell "1":
+            - generic: "1"
+    - table:
+      - rowgroup:
+        - row "iOS":
+          - columnheader "iOS":
+            - img: 
+            - generic: iOS
+      - rowgroup:
+        - row "App Version 99.99.99":
+          - cell "App Version":
+            - generic: App Version
+          - cell "99.99.99":
+            - generic: 99.99.99
+        - row "Device iPad Pro 3":
+          - cell "Device":
+            - generic: Device
+          - cell "iPad Pro 3":
+            - generic: iPad Pro 3
+        - row "Device OS iOS 13":
+          - cell "Device OS":
+            - generic: Device OS
+          - cell "iOS 13":
+            - generic: iOS 13
+    - generic: Custom Events
+    - grid:
+      - rowgroup:
+        - row "Name column, unsorted. Select to sort ascending Count column, unsorted. Select to sort descending last_did column, sorted descending. Select to sort ascending":
+          - columnheader "Name column, unsorted. Select to sort ascending":
+            - button "Name column, unsorted. Select to sort ascending": Name
+          - columnheader "Count column, unsorted. Select to sort descending":
+            - button "Count column, unsorted. Select to sort descending": Count
+          - columnheader "last_did column, sorted descending. Select to sort ascending":
+            - button "last_did column, sorted descending. Select to sort ascending":
+              - generic: Last Time
+      - rowgroup:
+        - row "removed_item_from_cart 5 9 days ago":
+          - gridcell "removed_item_from_cart"
+          - gridcell "5"
+          - gridcell "9 days ago"
+        - row "started_free_trial 4 11 days ago":
+          - gridcell "started_free_trial"
+          - gridcell "4"
+          - gridcell "11 days ago"
+        - row "ended_subscription 5 11 days ago":
+          - gridcell "ended_subscription"
+          - gridcell "5"
+          - gridcell "11 days ago"
+        - row "rated_service 3 12 days ago":
+          - gridcell "rated_service"
+          - gridcell "3"
+          - gridcell "12 days ago"
+        - row "created_loyalty_account 4 12 days ago":
+          - gridcell "created_loyalty_account"
+          - gridcell "4"
+          - gridcell "12 days ago"
+        - row "canceled_order 4 12 days ago":
+          - gridcell "canceled_order"
+          - gridcell "4"
+          - gridcell "12 days ago"
+        - row "ended_free_trial 3 12 days ago":
+          - gridcell "ended_free_trial"
+          - gridcell "3"
+          - gridcell "12 days ago"
+        - row "mc_watched_movie 5 13 days ago":
+          - gridcell "mc_watched_movie"
+          - gridcell "5"
+          - gridcell "13 days ago"
+        - row "viewed_premium_feature 4 14 days ago":
+          - gridcell "viewed_premium_feature"
+          - gridcell "4"
+          - gridcell "14 days ago"
+        - row "order_completed 2 15 days ago":
+          - gridcell "order_completed"
+          - gridcell "2"
+          - gridcell "15 days ago"
+        - row "completed_checkout 2 16 days ago":
+          - gridcell "completed_checkout"
+          - gridcell "2"
+          - gridcell "16 days ago"
+        - row "activated_feature 5 16 days ago":
+          - gridcell "activated_feature"
+          - gridcell "5"
+          - gridcell "16 days ago"
+        - row "viewed_cart 2 16 days ago":
+          - gridcell "viewed_cart"
+          - gridcell "2"
+          - gridcell "16 days ago"
+        - row "adopted_feature 4 17 days ago":
+          - gridcell "adopted_feature"
+          - gridcell "4"
+          - gridcell "17 days ago"
+        - row "browsed_product_category 5 18 days ago":
+          - gridcell "browsed_product_category"
+          - gridcell "5"
+          - gridcell "18 days ago"
+        - row "visited_physical_location 4 18 days ago":
+          - gridcell "visited_physical_location"
+          - gridcell "4"
+          - gridcell "18 days ago"
+        - row "took_feature_tour 4 20 days ago":
+          - gridcell "took_feature_tour"
+          - gridcell "4"
+          - gridcell "20 days ago"
+        - row "completed_account_signup 4 20 days ago":
+          - gridcell "completed_account_signup"
+          - gridcell "4"
+          - gridcell "20 days ago"
+        - row "completed_app_onboarding 4 22 days ago":
+          - gridcell "completed_app_onboarding"
+          - gridcell "4"
+          - gridcell "22 days ago"
+        - row "viewed_loyalty_feature 1 Oct 14 at 06:32":
+          - gridcell "viewed_loyalty_feature"
+          - gridcell "1"
+          - gridcell "Oct 14 at 06:32"
+        - row "sent_referral 5 Oct 13 at 14:31":
+          - gridcell "sent_referral"
+          - gridcell "5"
+          - gridcell "Oct 13 at 14:31"
+        - row "started_subscription 2 Sep 30 at 09:36":
+          - gridcell "started_subscription"
+          - gridcell "2"
+          - gridcell "Sep 30 at 09:36"
+- generic: © Braze 2026
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://braze.statuspage.io
+  - text: Status
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/terms
+  - text: Terms
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/privacy
+  - text: Privacy Policy
+- text:          

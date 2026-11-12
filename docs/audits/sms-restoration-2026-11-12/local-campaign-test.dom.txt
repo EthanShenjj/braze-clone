@@ -1,0 +1,164 @@
+- complementary:
+  - button "Minimize menu" [expanded]
+  - button "Select workspace":
+    - generic: Demo – Thinkingai
+  - navigation "Side navigation":
+    - generic: Quick links
+    - button "Canvas":
+      - generic: Canvas
+    - button "Campaigns":
+      - generic: Campaigns
+    - button "Segments":
+      - generic: Segments
+    - button "Getting Started":
+      - generic: Getting Started
+    - button "Home":
+      - generic: Home
+    - button "AI Decisioning":
+      - generic: AI Decisioning
+    - button "Agents":
+      - generic: Agents
+    - button "Messaging":
+      - generic: Messaging
+    - button "Audience":
+      - generic: Audience
+    - button "Content":
+      - generic: Content
+    - button "Analytics":
+      - generic: Analytics
+    - button "Partner Integrations":
+      - generic: Partner Integrations
+    - button "Data Settings":
+      - generic: Data Settings
+    - button "Settings":
+      - generic: Settings
+  - button "Home":
+    - img "Braze"
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - generic "Community":
+    - img "Community"
+  - button "Language"
+  - button "Notifications"
+  - button "Profile"
+  - button "Open BrazeAI Operator"
+  - button "Campaigns"
+  - button "Edit 'Early Access'":
+    - text: Edit 'Early Access'
+  - text: Limited access
+  - navigation "Campaign steps":
+    - button "✓ Compose Messages":
+      - generic: ✓
+      - generic: Compose Messages
+    - button "✓ Schedule Delivery":
+      - generic: ✓
+      - generic: Schedule Delivery
+    - button "✓ Target Audiences":
+      - generic: ✓
+      - generic: Target Audiences
+    - button "✓ Assign Conversions":
+      - generic: ✓
+      - generic: Assign Conversions
+    - button "5 Review Summary":
+      - generic: "5"
+      - generic: Review Summary
+  - heading "Campaign Details" [level=2]
+  - generic: Campaign Name
+  - textbox "Campaign Name":
+    - /placeholder: Enter Campaign Name
+    - text: Early Access
+  - text: Teams
+  - combobox "Teams":
+    - option "Select…" [selected]
+  - button "Add description":
+    - text: Add description
+  - button "Tags":
+    - text: Tags
+  - region "Campaign brief":
+    - heading "Campaign brief" [level=3]
+    - paragraph: Attach a brief so BrazeAI Operator can build your campaign and your Standards can review it against your goals
+    - strong: Attach a campaign brief (optional)
+    - paragraph: PDF, TXT, MD, CSV, DOCX up to 15MB
+    - button "Upload file":
+      - text: Upload file
+  - generic: Campaign ID
+  - textbox "Campaign ID": 148bb5b4-1eb6-4a95-9f43-9ab3e93be668
+  - button "Copy":
+    - text: Copy
+  - region "SMS/MMS/RCS Composer":
+    - heading "SMS/MMS/RCS Composer" [level=2]
+    - heading "Variants" [level=3]
+    - tablist "SMS variants":
+      - tab "Early Access" [selected]:
+        - text: Early Access
+      - button "Add variant":
+    - text: Subscription Group
+    - combobox "Subscription Group": SMS sms_qa_f730215b
+    - button "Toggle Subscription Group":
+    - complementary:
+      - heading "Preview" [level=5]
+      - generic: "Thanks for being a loyal customer, Ada! Your reward for being so loyal? Early access to our limited edition sale: https://brz.ai/XXXXXXXX Reply STOP to opt-out."
+      - generic "Character count excludes Liquid. The rendered message may use more billable segments.":
+        - text: 158 | 1 Billable Segment
+      - paragraph: Actual rendering may not be identical to this preview depending on the user's environment.
+    - tablist "SMS composer sections":
+      - tab "Compose"
+      - tab "Contact Card Generator"
+      - tab "Test" [selected]
+    - heading "Content Review with Operator" [level=5]
+    - paragraph:
+      - text: Use Operator to review your message's formatting, content, grammar, and style.
+      - link "See our documentation for more information":
+        - /url: https://www.braze.com/docs/en/user_guide/brazeai/operator/capabilities/#review-content-quality
+        - text: See our documentation for more information
+      - text: .
+    - button "Review with Operator":
+      - text: Review with Operator
+    - heading "Test Recipients" [level=5]
+    - paragraph: Select at least one Content Test Group or individual user to receive this test message. Messages will be customized with recipients' attributes by default.
+    - generic: Add content test group
+    - combobox "Add content test group"
+    - button "Toggle Add content test group":
+    - text: SMS Testers
+    - button "Remove test group SMS Testers":
+    - text: Add individual users
+    - textbox "Add individual users":
+      - /placeholder: External ids, emails, or phone numbers
+    - checkbox "Override recipients' attributes with current preview user's attributes"
+    - text: Override recipients' attributes with current preview user's attributes
+    - button "Send Test"
+    - separator
+    - button "Copy preview link":
+      - text: Copy preview link
+    - generic: Preview message as user
+    - combobox "Preview message as user": Random user
+    - button "Toggle Preview message as user":
+    - button "Get random user":
+      - text: Get random user
+    - paragraph: Ada · sms_qa_f730215b_ada
+    - status: 1 test message(s) prepared. Connect an SMS provider to deliver tests.
+  - button "Back" [disabled]:
+  - button "✓ Compose":
+    - generic: ✓
+    - text: Compose
+  - button "✓ Schedule":
+    - generic: ✓
+    - text: Schedule
+  - button "✓ Target":
+    - generic: ✓
+    - text: Target
+  - button "✓ Assign":
+    - generic: ✓
+    - text: Assign
+  - button "5 Review":
+    - generic: "5"
+    - text: Review
+  - button "Forward":
+  - button "Save Draft"
+- button "Open Next.js Dev Tools":
+- alert

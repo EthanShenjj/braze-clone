@@ -1,0 +1,228 @@
+Browser tab: 4, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3210/app_settings/app_settings/tags/local?locale=en".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3210/app_settings/app_settings/tags/local?locale=en
+	1 container
+		2 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		3 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			4 text Local workspace
+			5 image
+		6 container Side navigation
+			7 text Quick links
+			8 button Canvas
+			9 button Campaigns
+			10 button Segments
+			11 button Getting Started
+			12 button Home
+			13 button AI Decisioning
+			14 button Agent Console
+			15 button Messaging
+			16 button Audience
+			17 button Content
+			18 button Analytics
+			19 button Partner Integrations
+			20 button Data Settings
+			21 button Settings
+		22 button Home
+			23 image Braze
+	24 container
+		25 text ◷   8 days left in your free trial.
+		26 button Connect with sales
+		27 button Search workspace ⌘K
+			28 image
+			29 text Search workspace
+			30 text ⌘K
+		31 button Take a tour
+		32 image Community
+		33 button (collapsed) Description: Language, Secondary Actions: Expand
+		34 button Notifications
+		35 button (collapsed) Description: Profile, Secondary Actions: Expand
+		36 image
+		37 button Open BrazeAI Operator
+		38 container Tag Management
+			39 container
+				40 heading Manage Tags, Value: 1
+					41 text Manage Tags
+				42 button Add New Tag
+			43 container
+				44 text field (settable) Search
+				45 button (disabled) Search tags
+					46 image
+			47 heading 5Results, Value: 2
+				48 text 5 Results
+			49 table
+				50 row
+					51 cell
+						52 button Name column, sorted descending. Select to sort ascending
+							53 text Name
+							225 image
+					55 cell
+						56 button Canvases column, unsorted. Select to sort descending
+							57 text Canvases
+							58 image
+					59 cell
+						60 button Campaigns column, unsorted. Select to sort descending
+							61 text Campaigns
+							62 image
+					63 cell
+						64 button Segments column, unsorted. Select to sort descending
+							65 text Segments
+							66 image
+					67 cell
+						68 button Cards column, unsorted. Select to sort descending
+							69 text Cards
+							70 image
+					71 cell
+						72 button Templates column, unsorted. Select to sort descending
+							73 text Templates
+							74 image
+					75 cell
+						76 button Engagement Reports column, unsorted. Select to sort descending
+							77 text Engagement Reports
+							78 image
+					79 cell
+						80 button Geofences column, unsorted. Select to sort descending
+							81 text Geofences
+							82 image
+					83 cell
+						84 button Agents column, unsorted. Select to sort descending
+							85 text Agents
+							86 image
+					87 cell Tag actions
+				184 row
+					185 cell
+						186 text tag_qa_3274d7cf_resource_bulk
+					187 cell
+						188 text 0
+					189 cell
+						190 text 0
+					191 cell
+						192 text 0
+					193 cell
+						194 text 0
+					195 cell
+						196 text 0
+					197 cell
+						198 text 0
+					199 cell
+						200 text 0
+					201 cell
+						202 text 0
+					203 cell
+						204 button Edit tag
+							205 image
+						206 button Delete tag
+							207 image
+				226 row
+					227 cell
+						228 text tag_qa_3274d7cf_renamed
+					229 cell
+						230 text 0
+					231 cell
+						232 text 1
+					233 cell
+						234 text 0
+					235 cell
+						236 text 0
+					237 cell
+						238 text 0
+					239 cell
+						240 text 0
+					241 cell
+						242 text 0
+					243 cell
+						244 text 0
+					245 cell
+						246 button Edit tag
+							247 image
+						248 button Delete tag
+							249 image
+				250 row
+					251 cell
+						252 text tag_qa_3274d7cf_launch
+					253 cell
+						254 text 0
+					255 cell
+						256 text 1
+					257 cell
+						258 text 0
+					259 cell
+						260 text 0
+					261 cell
+						262 text 0
+					263 cell
+						264 text 0
+					265 cell
+						266 text 0
+					267 cell
+						268 text 0
+					269 cell
+						270 button Edit tag
+							271 image
+						272 button Delete tag
+							273 image
+				274 row
+					275 cell
+						276 text Lifecycle / Welcome
+					277 cell
+						278 text 1
+					279 cell
+						280 text 2
+					281 cell
+						282 text 1
+					283 cell
+						284 text 0
+					285 cell
+						286 text 0
+					287 cell
+						288 text 0
+					289 cell
+						290 text 0
+					291 cell
+						292 text 0
+					293 cell
+						294 button Edit tag
+							295 image
+						296 button Delete tag
+							297 image
+				298 row
+					299 cell
+						300 text Lifecycle
+					301 cell
+						302 text 0
+					303 cell
+						304 text 0
+					305 cell
+						306 text 1
+					307 cell
+						308 text 0
+					309 cell
+						310 text 0
+					311 cell
+						312 text 0
+					313 cell
+						314 text 0
+					315 cell
+						316 text 0
+					317 cell
+						318 button Edit tag
+							319 image
+						320 button Delete tag
+							321 image
+			208 container
+				209 text Showing rows  1  -  5  of  5 Rows per page:
+				210 pop up button (collapsed, settable) Description: Rows per page, Value: 10, Secondary Actions: Expand
+					211 menu
+						212 (selected) 10
+						213 20
+						214 40
+						215 60
+						216 100
+				217 container Tag pages
+					218 button (disabled) Previous page
+						219 image
+					220 button Current Page, Page 1
+					221 button (disabled) Next page
+						222 image
+	223 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+		224 image
+
+The focused UI element is 52 button Name column, sorted descending. Select to sort ascending

@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import type { CSSProperties, Dispatch, ReactNode, SetStateAction } from "react";
 import { CheckCircle2, CircleAlert, LoaderCircle, Mail } from "lucide-react";
 import type { PreferenceBlockConfig, PreferenceCenterConfig } from "@/lib/preference-center-model";
+import { preferenceAccessibilityLanguage, preferencePages, safePreferenceUrl } from "@/lib/preference-center-model";
+import { PreferencePageView } from "./preference-page-view";
 import styles from "./preference-center-public.module.css";
 
 type Group = { id: string; name: string; description: string; state: "subscribed" | "unsubscribed" };
@@ -22,17 +24,19 @@ export default function PreferenceCenterPublic({ centerId, userId, token, locale
     return () => controller.abort();
   }, [centerId, token, userId]);
   const copy = useMemo(() => data ? { ...data.center.config.copy, ...(data.center.config.locales[locale] ?? {}) } : null, [data, locale]);
+  useEffect(()=>{if(!data)return;const previous=document.documentElement.lang;document.documentElement.lang=preferenceAccessibilityLanguage(data.center.config,{...data.user,language:(data.user as {language?:string}).language??locale});return()=>{document.documentElement.lang=previous;};},[data,locale]);
   const submit = async (action: "groups" | "global_unsubscribe" = "groups") => {
     if (!data) return; setPhase("saving");
     try {
       const response = await fetch(`/api/preference-centers/${centerId}/public`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId, token, states, action }) });
-      if (!response.ok) throw new Error("save failed"); setLastAction(action); setPhase("success");
+      if (!response.ok) throw new Error("save failed"); if(action === "global_unsubscribe"){setStates(Object.fromEntries(data.groups.map(group=>[group.id,false])));setData(current=>current?{...current,user:{...current.user,emailSubscriptionStatus:"unsubscribed"}}:current);} setLastAction(action); setPhase("success");
     } catch { setPhase("error"); }
   };
   if (phase === "loading") return <PageShell><div className={styles.state}><LoaderCircle className={styles.spin} size={24}/><p>Loading your preferences…</p></div></PageShell>;
   if (phase === "unavailable") return <PageShell><div className={styles.state}><CircleAlert size={28}/><h1>This preference center link is unavailable</h1><p>It may be expired, inactive, or missing recipient information.</p></div></PageShell>;
   if (!data || !copy) return null;
   const style = { "--pc-page": data.center.config.design.pageBackground, "--pc-surface": data.center.config.design.surfaceBackground, "--pc-accent": data.center.config.design.accentColor, "--pc-text": data.center.config.design.textColor, "--pc-width": `${data.center.config.design.contentWidth}px`, fontFamily: data.center.config.design.fontFamily } as CSSProperties;
+  if(data.center.config.pages?.length){const config=data.center.config,page=preferencePages(config).find(page=>page.id===(phase==='success'?'confirmation':'preferences'))!;return <main className={styles.modernPage} style={{background:config.design.pageBackground}}>{data.user.emailSubscriptionStatus==='unsubscribed'&&phase!=='success'&&<p className={styles.notice}>Email is globally unsubscribed. Selecting groups will not resume email delivery.</p>}<PreferencePageView page={page} config={config} groups={data.groups} states={states} changeStates={setStates} disabled={phase==='saving'} user={{...data.user,first_name:data.user.firstName,email:data.user.email,email_address:data.user.email,language:(data.user as {language?:string}).language??locale}} action={action=>{if(action==='back')setPhase('ready');else void submit(action==='unsubscribe_all'?'global_unsubscribe':'groups');}}/>{phase==='error'&&<p className={styles.error} role="alert">{copy.errorBody}</p>}</main>;}
   if (phase === "success") return <PageShell style={style}><div className={styles.state}><CheckCircle2 size={34}/><h1>{lastAction === "global_unsubscribe" ? locale === "zh-CN" ? "已退订所有邮件" : "Unsubscribed from all emails" : copy.successTitle}</h1><p>{lastAction === "global_unsubscribe" ? locale === "zh-CN" ? "此后不会再收到本工作区的邮件。" : "You will no longer receive email from this workspace." : copy.successBody}</p><small>Updated for {data.user.email}</small></div></PageShell>;
   return <PageShell style={style}><article className={styles.document}>
     {data.user.emailSubscriptionStatus === "unsubscribed" && <p className={styles.notice}>{locale === "zh-CN" ? "您已全局退订邮件。选择订阅组不会恢复邮件发送。" : "Email is globally unsubscribed. Selecting groups will not resume email delivery."}</p>}
@@ -46,9 +50,10 @@ export default function PreferenceCenterPublic({ centerId, userId, token, locale
 function PageShell({ children, style }: { children: ReactNode; style?: CSSProperties }) { return <main className={styles.page} style={style}>{children}</main>; }
 function PublicBlock({ block, groups, states, setStates, config, copy, disabled, submit }: { block: PreferenceBlockConfig; groups: Group[]; states: Record<string, boolean>; setStates: Dispatch<SetStateAction<Record<string, boolean>>>; config: PreferenceCenterConfig; copy: PreferenceCenterConfig["copy"]; disabled: boolean; submit: (action?: "groups" | "global_unsubscribe") => void }) {
   const style = { textAlign: block.style?.align, color: block.style?.color, background: block.style?.background, paddingBlock: block.style?.paddingY ? `${block.style.paddingY}px` : undefined, fontSize: block.style?.fontSize ? `${block.style.fontSize}px` : undefined } as CSSProperties;
-  if (block.type === "image") return <div className={styles.brand} style={style}><span>t</span><b>{block.content}</b></div>;
+  if (block.type === "image") return block.src?<div className={styles.brand} style={style}><img src={block.src} alt={block.alt??block.content} style={{maxWidth:'100%',height:'auto'}}/></div>:null;
   if (block.type === "title") return <h1 className={styles.title} style={style}>{block.content}</h1>;
   if (block.type === "paragraph") return <p className={styles.copy} style={style}>{block.content}</p>;
+  if (block.type === "link") return <a href={safePreferenceUrl(block.href)||undefined} style={style}>{block.content}</a>;
   if (block.type === "divider") return <hr className={styles.divider}/>;
   if (block.type === "spacer") return <div className={styles.spacer} aria-hidden/>;
   if (block.type === "button") return <div className={styles.buttonWrap} style={style}><button onClick={() => submit()} disabled={disabled}>{disabled ? <LoaderCircle className={styles.spin} size={17}/> : block.content || copy.submitLabel}</button></div>;

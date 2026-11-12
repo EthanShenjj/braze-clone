@@ -1,0 +1,261 @@
+Browser tab: 2, Title: "Segments", URL: "https://dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?start=0&limit=20&globalFilter=&columnFilters%5Bstatus%5D=active&sortby=last_edited&sortdir=-1&display=list".
+0 AXWebArea Segments, URL: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?start=0&limit=20&globalFilter=&columnFilters%5Bstatus%5D=active&sortby=last_edited&sortdir=-1&display=list
+	1 container
+		259 container react-root
+			260 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?start=0&limit=20&globalFilter=&columnFilters%5Bstatus%5D=active&sortby=last_edited&sortdir=-1&display=list#main-container
+			261 container Side navigation
+				262 container
+					263 button Minimize menu
+					264 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+						265 image
+						266 text Demo – ittor
+					267 text Quick links
+					268 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+					269 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+					270 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+					271 button Getting Started
+						272 image
+						273 container
+							274 text Getting Started
+							275 container
+								276 text 0 %
+					277 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+					278 button AI Decisioning
+						279 image
+						280 text AI Decisioning
+					281 button Agents
+						282 image
+						283 text Agents
+					284 button Messaging
+						285 image
+						286 text Messaging
+					287 button Audience
+						288 image
+						289 text Audience
+					290 button Content
+						291 image
+						292 text Content
+					293 button Analytics
+						294 image
+						295 text Analytics
+					296 button Partner Integrations
+						297 image
+						298 text Partner Integrations
+					299 button Data Settings
+						300 image
+						301 text Data Settings
+					302 button Settings
+						303 image
+						304 text Settings
+				305 container Footer Logo
+					306 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+			307 text 14 days left in your free trial.
+			308 button Connect with sales
+			309 container Top navigation
+				310 container Left top navigation
+					311 button Search workspace ⌘+K
+						312 image
+						313 text Search workspace
+						314 text ⌘+K
+				315 container Right top navigation
+					316 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						317 image
+					318 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						319 image
+					320 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+						321 image
+					322 container
+						323 button Notifications
+							324 image
+					325 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						326 image
+					327 button BrazeAI Operator™
+						328 image
+			329 container main-container
+				330 container main-content
+					331 tab group
+						332 tab (selected, settable, boolean) Segments, Value: 1, ID: /engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2
+					341 container segments-list
+						342 heading Segments, Value: 2
+							343 text Segments
+						344 text Find and reach the right audience with segments. Group users based on their behaviors, preferences, or past actions to send messages that truly matter to them.
+						345 button Description: Send feedback, ID: feedback-button-trigger
+						346 button Take a tour
+							347 text Take a tour
+						348 pop up button (collapsed) Description: More options, Secondary Actions: Expand
+						349 pop up button (collapsed) Description: Create Segment, Secondary Actions: Expand
+						364 container
+							365 text field (settable) Search for segments
+							366 button (disabled) Search
+						518 container
+							519 text 8 Selected
+							520 button close
+						521 button Archive
+						522 pop up button (expanded) Description: Tag as, Secondary Actions: Collapse
+						367 heading 8 Results, Value: 4
+							368 text 8 Results
+						369 container Description: Inline Tag 0, ID: status
+							370 text Status: Active
+							371 button close
+						372 table
+							373 row Select all rows Segment name column, unsorted. Select to sort ascending Status Last edited by Last edited column, sorted descending. Select to sort ascending
+								374 cell
+									375 checkbox (settable, integer) Description: Select all rows, Value: 1, ID: bc-checkbox-4209252890
+								376 cell
+									377 button Segment name column, unsorted. Select to sort ascending
+								378 cell
+									379 text Status
+								380 cell
+									381 text Last edited by
+								382 cell
+									383 button Last edited column, sorted descending. Select to sort ascending
+										384 text Last edited
+										385 image Information
+							386 row Select row Quick view: Non-Adopters Non-Adopters Active Braze Demo Nov 11, 2026 More Actions
+								387 cell
+									388 checkbox (settable, integer) Description: Select row, Value: 1, ID: bc-checkbox-4127392528
+								389 cell
+									390 button Quick view: Non-Adopters
+								391 cell
+									392 link Description: Non-Adopters, Value: dashboard-09.braze.com/engagement/segmenter/edit/6af4375220abdf005fc2eef9/6af4374c46d3080087f1c5d2?locale=en
+								393 cell
+									394 text Active
+								395 cell
+									396 text Braze Demo
+								397 cell
+									398 text Nov 11, 2026
+								399 cell
+									400 content list
+										401 pop up button (collapsed) Description: More Actions, ID: data-table-row-action-menu-button-3354201527, Secondary Actions: Expand
+							402 row Select row Quick view: New Users New Users Active Braze Demo Nov 11, 2026 More Actions
+								403 cell
+									404 checkbox (settable, integer) Description: Select row, Value: 1, ID: bc-checkbox-3882465038
+								405 cell
+									406 button Quick view: New Users
+								407 cell
+									408 link Description: New Users, Value: dashboard-09.braze.com/engagement/segmenter/edit/6af4375220abdf005fc2eef4/6af4374c46d3080087f1c5d2?locale=en
+								409 cell
+									410 text Active
+								411 cell
+									412 text Braze Demo
+								413 cell
+									414 text Nov 11, 2026
+								415 cell
+									416 content list
+										417 pop up button (collapsed) Description: More Actions, ID: data-table-row-action-menu-button-1605851825, Secondary Actions: Expand
+							418 row Select row Quick view: Lapsed Users Lapsed Users Active Braze Demo Nov 11, 2026 More Actions
+								419 cell
+									420 checkbox (settable, integer) Description: Select row, Value: 1, ID: bc-checkbox-1924726106
+								421 cell
+									422 button Quick view: Lapsed Users
+								423 cell
+									424 link Description: Lapsed Users, Value: dashboard-09.braze.com/engagement/segmenter/edit/6af4375220abdf005fc2eef3/6af4374c46d3080087f1c5d2?locale=en
+								425 cell
+									426 text Active
+								427 cell
+									428 text Braze Demo
+								429 cell
+									430 text Nov 11, 2026
+								431 cell
+									432 content list
+										433 pop up button (collapsed) Description: More Actions, ID: data-table-row-action-menu-button-3581157320, Secondary Actions: Expand
+							434 row Select row Quick view: Active Frequent Users Active Frequent Users Active Braze Demo Nov 11, 2026 More Actions
+								435 cell
+									436 checkbox (settable, integer) Description: Select row, Value: 1, ID: bc-checkbox-3322076436
+								437 cell
+									438 button Quick view: Active Frequent Users
+								439 cell
+									440 link Description: Active Frequent Users, Value: dashboard-09.braze.com/engagement/segmenter/edit/6af4375220abdf005fc2eef2/6af4374c46d3080087f1c5d2?locale=en
+								441 cell
+									442 text Active
+								443 cell
+									444 text Braze Demo
+								445 cell
+									446 text Nov 11, 2026
+								447 cell
+									448 content list
+										449 pop up button (collapsed) Description: More Actions, ID: data-table-row-action-menu-button-1141954659, Secondary Actions: Expand
+							450 row Select row Quick view: All Users (iOS Demo App) All Users (iOS Demo App) Active More Actions
+								451 cell
+									452 checkbox (settable, integer) Description: Select row, Value: 1, ID: bc-checkbox-2695149426
+								453 cell
+									454 button Quick view: All Users (iOS Demo App)
+								455 cell
+									456 link Description: All Users (iOS Demo App), Value: dashboard-09.braze.com/engagement/segmenter/edit/6af4375120abdf005fc2ee80/6af4374c46d3080087f1c5d2?locale=en
+								457 cell
+									458 text Active
+								459 cell
+								460 cell
+								461 cell
+									462 content list
+										463 pop up button (collapsed) Description: More Actions, ID: data-table-row-action-menu-button-3345225750, Secondary Actions: Expand
+							464 row Select row Quick view: All Users (Android Demo App) All Users (Android Demo App) Active More Actions
+								465 cell
+									466 checkbox (settable, integer) Description: Select row, Value: 1, ID: bc-checkbox-3594055749
+								467 cell
+									468 button Quick view: All Users (Android Demo App)
+								469 cell
+									470 link Description: All Users (Android Demo App), Value: dashboard-09.braze.com/engagement/segmenter/edit/6af4375120abdf005fc2ee81/6af4374c46d3080087f1c5d2?locale=en
+								471 cell
+									472 text Active
+								473 cell
+								474 cell
+								475 cell
+									476 content list
+										477 pop up button (collapsed) Description: More Actions, ID: data-table-row-action-menu-button-681422211, Secondary Actions: Expand
+							478 row Select row Quick view: All Users (Web Demo App) All Users (Web Demo App) Active More Actions
+								479 cell
+									480 checkbox (settable, integer) Description: Select row, Value: 1, ID: bc-checkbox-1533216844
+								481 cell
+									482 button Quick view: All Users (Web Demo App)
+								483 cell
+									484 link Description: All Users (Web Demo App), Value: dashboard-09.braze.com/engagement/segmenter/edit/6af4375120abdf005fc2ee82/6af4374c46d3080087f1c5d2?locale=en
+								485 cell
+									486 text Active
+								487 cell
+								488 cell
+								489 cell
+									490 content list
+										491 pop up button (collapsed) Description: More Actions, ID: data-table-row-action-menu-button-3343495884, Secondary Actions: Expand
+							492 row Select row Quick view: All Users (Landing Page - Landing Page) All Users (Landing Page - Landing Page) Active More Actions
+								493 cell
+									494 checkbox (settable, integer) Description: Select row, Value: 1, ID: bc-checkbox-4199425885
+								495 cell
+									496 button Quick view: All Users (Landing Page - Landing Page)
+								497 cell
+									498 link Description: All Users (Landing Page - Landing Page), Value: dashboard-09.braze.com/engagement/segmenter/edit/6af4376820abdf005fc2f5af/6af4374c46d3080087f1c5d2?locale=en
+								499 cell
+									500 text Active
+								501 cell
+								502 cell
+								503 cell
+									504 content list
+										505 pop up button (collapsed) Description: More Actions, ID: data-table-row-action-menu-button-3849796983, Secondary Actions: Expand
+						506 text Showing rows 1 - 8 of 8 Rows per page:
+						507 pop up button (collapsed, settable) Value: 20, Secondary Actions: Expand
+							508 menu
+								509 10
+								510 (selected) 20
+								511 40
+								512 60
+								513 100
+						514 content list
+							515 button (disabled) Previous page
+							516 button Current Page, Page 1
+							517 button (disabled) Next page
+				334 text © Braze 2026
+				335 text Opening in a new tab
+				336 link Description: Opening in a new tab, Value: braze.statuspage.io/
+				337 text Opening in a new tab
+				338 link Description: Opening in a new tab, Value: braze.com/terms
+				339 text Opening in a new tab
+				340 link Description: Opening in a new tab, Value: braze.com/privacy
+		258 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		523 container bcl-popper-1815584876
+			524 container
+				525 container
+					526 text Add tags
+					527 combo box (collapsed, settable) Description: Add tags, ID: react-select-14-input, Secondary Actions: Expand
+			528 button (disabled) Apply tags
+
+The focused UI element is 522 pop up button (expanded) Description: Tag as, Secondary Actions: Collapse

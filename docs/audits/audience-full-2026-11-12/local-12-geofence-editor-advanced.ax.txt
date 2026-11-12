@@ -1,0 +1,106 @@
+Browser tab: 14, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/engagement/locations/create_location_set/local?locale=en".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/engagement/locations/create_location_set/local?locale=en
+	1 container
+		80 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			81 image
+		5 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		6 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			7 text Local workspace
+			8 image
+		9 container Side navigation
+			10 text Quick links
+			11 button Canvas
+			12 button Campaigns
+			13 button Segments
+			14 button Getting Started
+			15 button Home
+			16 button AI Decisioning
+			17 button Agent Console
+			18 button Messaging
+			19 button Audience
+			20 button Content
+			21 button Analytics
+			22 button Partner Integrations
+			23 button Data Settings
+			24 button Settings
+		25 button Home
+			26 image Braze
+		27 container
+			28 text ◷   8 days left in your free trial.
+			29 button Connect with sales
+		30 container
+			31 button Search workspace ⌘K
+				32 image
+				33 text Search workspace
+				34 text ⌘K
+			35 button Take a tour
+			36 image Community
+			37 button (collapsed) Description: Language, Secondary Actions: Expand
+			38 button Notifications
+			39 button (collapsed) Description: Profile, Secondary Actions: Expand
+			40 image
+			41 button Open BrazeAI Operator
+		42 container
+			43 container
+				44 text Set name
+				45 text field (settable) Set name, Value: Audience QA geofences
+			46 button (collapsed) Tags, Secondary Actions: Expand
+				47 image
+				48 text Tags
+				49 image
+			50 button Advanced settings
+				51 text Advanced settings
+				52 image
+			53 heading Geofence name, Value: 3
+				54 text Geofence name
+			55 container
+				56 text field (settable)
+				57 image
+			82 button 14.96km around 40.98, -74.03
+			83 button Delete 14.96km around 40.98, -74.03
+				84 image
+			59 container
+				85 button Select geofence 14.96km around 40.98, -74.03
+				60 button Draw Geofence
+				61 text field (settable) Search map
+				62 button Clear search
+				63 button Zoom in
+					64 image
+				65 button Zoom out
+					66 image
+				67 link Description: Leaflet, Value: leafletjs.com/
+				68 text  | © 
+				69 link Description: Mapbox, Value: mapbox.com/
+				70 text  © 
+				71 link Description: OpenStreetMap, Value: osm.org/copyright
+			86 container
+				87 text field (settable) Description: Geofence name, Value: 14.96km around 40.98, -74.03
+				88 button Done
+				89 text Radius (meters)
+				90 stepper (settable, integer) Description: Radius (meters), Value: 14963
+				91 text Latitude
+				92 stepper (settable, float) Description: Latitude, Value: 40.9792594909668, Details: 40.9792578125
+				93 text Longitude
+				94 stepper (settable, float) Description: Longitude, Value: -74.02901458740234, Details: -74.029013671875
+				95 button Hide Advanced Settings
+					96 text Hide
+					97 text  Advanced Settings
+				98 checkbox (settable, integer) Description: Enable Analytics for Enter, Value: 0
+				99 checkbox (settable, integer) Description: Enable Analytics for Exit, Value: 0
+				100 text Cooldown for Enter
+				101 stepper (settable, integer) Cooldown for Enter sec, Value: 0
+				102 text sec Cooldown for Exit
+				103 stepper (settable, integer) Cooldown for Exit sec, Value: 0
+				104 text sec Android Notification Responsiveness
+				105 stepper (settable, integer) Android Notification Responsiveness ms, Value: 0
+				106 text ms
+			72 button Back to Locations
+				73 image
+				74 text Back to Locations
+			75 link Description: Learn more about Locations ↗, Value: braze.com/docs/user_guide/engagement_tools/locations_and_geofences/creating_geofences/#how-it-works
+			76 button More
+				77 text More
+				78 image
+			79 button Save Geofence Set
+
+The focused UI element is 95 button Hide Advanced Settings

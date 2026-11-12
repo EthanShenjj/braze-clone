@@ -1,0 +1,48 @@
+Browser tab: 4, Title: "Engagement - Canvas - Edit 'New Canvas - November 11, 2026'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'New Canvas - November 11, 2026', URL: dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container
+		171 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		172 container Step 11 step editor
+			173 container
+				174 text Step 11
+				175 button
+				176 text DISCONNECTED
+				177 button Window: 1 day Ranking: Off Advance: Immediately
+					178 container
+						179 text Window : 1 day
+					180 container
+						181 text Ranking : Off
+					182 container
+						183 text Advance : Immediately
+				199 container
+					200 button 1 1 Group 1
+						201 image
+							202 text 1
+						203 text Group 1
+				188 button 2 2 Everyone Else
+					189 image
+						190 text 2
+					191 text Everyone Else
+				192 button Add Action Group
+			193 button Done
+			194 container action-path-step-editor1138
+				195 container
+					204 image
+						205 text 1
+					196 text Group 1
+					197 button BrazeAI Operator™
+						198 image
+				206 container
+					207 text Action Group Name
+					208 text field (settable) Group 1
+					209 checkbox (settable, integer) Description: I want this group to exit the Canvas, Value: 0, ID: bc-checkbox-333234500
+					210 text I want this group to exit the Canvas
+					211 text Please define the trigger events for this action group.
+					212 text Evaluate if user takes specified actions
+					213 container
+						214 container
+							215 text Select Trigger
+							216 combo box (collapsed, settable) Description: Select Trigger, ID: react-select-40-input, Secondary Actions: Expand
+					217 button (disabled) Add Trigger
+
+The focused UI element is 200 button 1 1 Group 1

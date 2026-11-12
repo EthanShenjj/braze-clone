@@ -1,0 +1,1 @@
+Audience full HTTP checks passed: scoped imports, profile/contact state, subscription membership, versioned preferences, geofences, dynamic suppression/tag exceptions, reviewed merge confirmation, stale snapshot rejection and conservative subscription migration.

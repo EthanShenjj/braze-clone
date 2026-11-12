@@ -1,0 +1,217 @@
+Browser tab: 10, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3212/engagement/campaigns/cmp_banner?step=audience&workspace=local&locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3212/engagement/campaigns/cmp_banner?step=audience&workspace=local&locale=en
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agent Console
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+	25 container
+		26 text ◷   8 days left in your free trial.
+		27 button Connect with sales
+		28 button Search workspace ⌘K
+			29 image
+			30 text Search workspace
+			31 text ⌘K
+		32 button Take a tour
+		33 image Community
+		34 button (collapsed) Description: Language, Secondary Actions: Expand
+		35 button Notifications
+		36 button (collapsed) Description: Profile, Secondary Actions: Expand
+		37 image
+		38 button Open BrazeAI Operator
+		39 button Campaigns
+		40 button Edit 'Referral Banner'
+			41 text Edit
+			42 text  '
+			43 text Referral Banner
+			44 text '
+			45 image
+		46 image
+		47 text Limited access
+		48 container Campaign steps
+			49 button 1 Compose Messages
+				50 text 1
+				51 text Compose Messages
+			52 button ✓ Schedule Delivery
+				53 text ✓
+				54 text Schedule Delivery
+			55 button ✓ Target Audiences
+				56 text ✓
+				57 text Target Audiences
+			58 button ✓ Assign Conversions
+				59 text ✓
+				60 text Assign Conversions
+			61 button 5 Review Summary
+				62 text 5
+				63 text Review Summary
+		64 container
+			65 heading Targeting Options, Value: 2
+				66 text Targeting Options
+			67 text Target users by choosing multiple segments they must fall into. Further refine your audience by adding additional filters.
+			68 heading Target Users By Segment, Value: 3
+				69 text Target Users By Segment
+			70 button Remove segment Recent Purchasers
+				71 text Recent Purchasers
+				72 text  ×
+			73 combo box (collapsed, settable) Description: Target Users By Segment, Secondary Actions: Expand
+			74 button (collapsed) Description: Toggle segments, Secondary Actions: Expand
+			75 heading Additional Filters, Value: 3
+				76 text Additional Filters
+			77 container Filter group
+				78 container Description: Drag filter group, Help: Drag to reorder groups
+					79 text ⠿
+				80 text field (settable) Description: Filter group title, Value: Filter group
+				81 button (disabled) Move group up
+				82 button (disabled) Move group down
+				83 pop up button (collapsed, settable) Description: Filter group operator, Value: OR, Secondary Actions: Expand
+					84 menu
+						85 (selected) OR
+						86 AND
+				176 container Updated/Imported from CSV
+					177 heading Updated/Imported from CSV, Value: 4
+						178 text Updated/Imported from CSV
+					179 container
+						180 text Comparison
+						181 combo box (collapsed, settable) Description: Comparison, Value: Included, Secondary Actions: Expand
+						182 button Toggle Comparison
+							183 image
+					184 container
+						185 text CSV import
+						186 combo box (collapsed, settable) Description: CSV import, Value: audience_qa_1297cd67 CSV import, Secondary Actions: Expand
+						187 button Toggle CSV import
+							188 image
+				189 button Remove filter
+				190 container Clicked/Opened Campaign
+					191 heading Clicked/Opened Campaign, Value: 4
+						192 text Clicked/Opened Campaign
+					193 container
+						194 text Interaction
+						195 combo box (collapsed, settable) Description: Interaction, Value: clicked push notification button, Secondary Actions: Expand
+						196 button Toggle Interaction
+							197 image
+					223 container
+						224 text Performed interaction
+						225 combo box (collapsed, settable) Description: Performed interaction, Value: true, Secondary Actions: Expand
+						226 button Toggle Performed interaction
+							227 image
+					228 container
+						229 text Campaign
+						230 combo box (collapsed, settable) Description: Campaign, Secondary Actions: Expand
+						231 button Toggle Campaign
+							232 image
+					233 container
+						234 text Button
+						235 combo box (collapsed, settable) Description: Button, Secondary Actions: Expand
+						236 button Toggle Button
+							237 image
+						238 text No button options are available in this workspace.
+				222 button Remove filter
+				87 container
+					88 combo box (collapsed, settable) Description: Select filter, Secondary Actions: Expand
+					89 button (collapsed) Description: Toggle filter catalog, Secondary Actions: Expand
+				90 button Remove filter group
+			91 button ＋ Add filter group
+				92 text ＋ Add 
+				93 text filter
+				94 text  group
+			95 button ＋ Add exclusion group
+				96 text ＋ Add 
+				97 text exclusion
+				98 text  group
+			99 heading Audience Summary, Value: 3
+				100 text Audience Summary
+			101 text Recent Purchasers  ·  2  filters
+			102 heading User Lookup, Value: 3
+				103 text User Lookup
+			104 text Check if a user matches the segment, filter, and app criteria.
+			105 button Lookup User
+			106 text Send to these users
+			107 pop up button (collapsed, settable) Send to these users, Value: users who are subscribed or opted in, Secondary Actions: Expand
+				108 menu
+					109 (selected) users who are subscribed or opted in
+					110 users who are opted in
+					111 all eligible users (excludes global unsubscribes)
+			112 checkbox (settable, integer) Description: Limit the number of people who will receive this Campaign, Value: 0
+			113 checkbox (settable, integer) Description: Limit the rate at which this Campaign sends, Value: 0
+		114 container
+			115 heading A/B Testing, Value: 2
+				116 text A/B Testing
+			117 checkbox (disabled, settable, integer) Description: Optimize with BrazeAI™, Value: 0
+			118 text To use Optimize with BrazeAI™, add at least two variants.
+			119 button Compose messages
+			120 text Set your own variant split and control group.  All variants send at the date and time you set in Schedule delivery. % Control Group
+			121 stepper (settable, integer) % Control Group, Value: 20
+			122 text % Variant 1
+			123 stepper (settable, integer) % Variant 1, Value: 80
+			124 text Total:  100.00 %
+			125 button Remove Control Group
+			126 button Distribute Variants Evenly
+		127 container
+			128 heading Suppression Lists, Value: 2
+				129 text Suppression Lists
+			130 text There are no suppression lists applied. To manage suppression for this Campaign, visit 
+			131 link Description: Suppression Lists, Value: 127.0.0.1:3212/suppression-lists?locale=en
+			132 text .
+		133 container
+			134 heading Total Population, Value: 2
+				135 text Total Population
+			136 text Exact users 0 0.00 %  of total users
+			137 progress indicator Description: Percent of total users, Value: 0
+			138 text Last calculated:  2026/11/11 19:44:19
+			139 button ↻ Refresh exact statistics
+			140 button ☷ View calculation queue
+			141 heading Channel breakdown, Value: 4
+				142 text Channel breakdown
+			143 table
+				144 row
+					145 cell
+						146 text Banners
+				147 row
+					148 cell
+						149 text Reachable Users
+					150 cell
+						151 text 0
+			152 button (collapsed) ⊕ Show Additional Statistics, Secondary Actions: Expand
+				153 text ⊕ Show
+				154 text  Additional Statistics
+		155 container
+			156 button Back
+				157 image
+			158 button 1 Compose
+				159 text 1
+				160 text Compose
+			161 button ✓ Schedule
+				162 text ✓
+				163 text Schedule
+			164 button ✓ Target
+				165 text ✓
+				166 text Target
+			167 button ✓ Assign
+				168 text ✓
+				169 text Assign
+			170 button 5 Review
+				171 text 5
+				172 text Review
+			173 button Forward
+				174 image
+			175 button Save Draft
+
+The focused UI element is 195 combo box (collapsed, settable) Description: Interaction, Value: clicked push notification button, Secondary Actions: Expand

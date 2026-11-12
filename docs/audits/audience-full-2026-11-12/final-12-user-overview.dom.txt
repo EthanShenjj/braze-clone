@@ -1,0 +1,131 @@
+- alert: Braze Demo — Thinkingai
+- complementary:
+  - button "Minimize menu" [expanded]
+  - button "Select workspace":
+    - generic: Local workspace
+  - navigation "Side navigation":
+    - generic: Quick links
+    - button "Canvas":
+      - generic: Canvas
+    - button "Campaigns":
+      - generic: Campaigns
+    - button "Segments":
+      - generic: Segments
+    - button "Getting Started":
+      - generic: Getting Started
+    - button "Home":
+      - generic: Home
+    - button "AI Decisioning":
+      - generic: AI Decisioning
+    - button "Agents":
+      - generic: Agents
+    - button "Messaging":
+      - generic: Messaging
+    - button "Audience":
+      - generic: Audience
+    - button "Content":
+      - generic: Content
+    - button "Analytics":
+      - generic: Analytics
+    - button "Partner Integrations":
+      - generic: Partner Integrations
+    - button "Data Settings":
+      - generic: Data Settings
+    - button "Settings":
+      - generic: Settings
+  - button "Home":
+    - img "Braze"
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - generic "Community":
+    - img "Community"
+  - button "Language"
+  - button "Notifications"
+  - button "Profile"
+  - button "Open BrazeAI Operator"
+  - heading "Search users" [level=1]
+  - text: Limited access
+  - textbox "Email address, phone number or External User ID": <redacted>
+  - button "Clear Selection":
+  - button "Search":
+  - paragraph:
+    - text: Search for users by their External User ID
+    - img "The identifier assigned to a user by your company."
+    - text: User Alias
+    - img "Look up a user's alias name, or label:name."
+    - text: email, phone number, or push token.
+  - article:
+    - heading "Customer 1" [level=2]
+    - paragraph: "User ID: user_1"
+    - paragraph: "Braze ID: --"
+    - paragraph:
+      - text: user1@example.test
+    - paragraph:
+      - text: None
+    - button "User aliases" [disabled]
+    - button "Refresh user profile":
+  - tablist "User profile":
+    - tab "Overview" [selected]
+    - tab "Engagement"
+    - tab "Messaging History"
+    - tab "Event History"
+    - tab "Commerce"
+    - tab "Feature Flags Eligibility"
+  - article:
+    - heading "Profile" [level=2]
+    - term: Gender
+    - definition: "--"
+    - term: Age Group
+    - definition: "--"
+    - term: Country
+    - definition: GB
+    - term: City
+    - definition: "--"
+    - term: Language
+    - definition: en
+    - term: Most Recent Device Locale
+    - definition: "--"
+    - term: Time Zone
+    - definition: "--"
+    - term: Birthday
+    - definition: "--"
+  - article:
+    - heading "Recent Devices" [level=2]
+    - term: Number of Devices
+    - definition: "0"
+  - article:
+    - heading "Sessions Overview" [level=2]
+    - term: Sessions
+    - definition: "0"
+    - term: Last Used
+    - definition: "--"
+    - term: First Used
+    - definition: "--"
+  - article:
+    - heading "Custom Events" [level=2]
+    - table:
+      - rowgroup:
+        - row "Name Count Last Time":
+          - columnheader "Name":
+            - button "Name":
+              - text: Name
+          - columnheader "Count":
+            - button "Count":
+              - text: Count
+          - columnheader "Last Time":
+            - button "Last Time":
+              - text: Last Time
+      - rowgroup
+    - paragraph: No custom events recorded.
+  - article:
+    - heading "Custom Attributes" [level=2]
+    - table:
+      - rowgroup:
+        - row "plan pro":
+          - rowheader "plan"
+          - cell "pro"

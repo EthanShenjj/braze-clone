@@ -1,0 +1,96 @@
+Browser tab: 7, Title: "Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container
+		220 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		221 container Step step editor
+			222 container
+				223 text Step
+				224 button
+				225 text DISCONNECTED Incomplete Messages
+				226 button Content Optimizer Clicks 1 combination
+					227 image
+					228 text Content Optimizer
+					229 text Clicks
+					230 text 1 combination
+				266 button Intelligent Timing:ON Delivery Validations:ON 
+					267 definition list
+						268 container Intelligent Timing:
+							269 text Intelligent Timing :
+						270 container
+							271 text ON
+						272 container Delivery Validations:
+							273 text Delivery Validations :
+						274 container
+							275 text ON
+				231 text All users who enter this step and meet delivery validations will advance to the next step
+			232 button Done
+			233 container
+				234 text Content Optimizer setup
+				235 button BrazeAI Operator™
+					236 image
+				237 tab group Message step
+					238 tab (selectable, settable, boolean) Description: Messaging channels, Value: 0, ID: content
+					239 tab (selected, settable, boolean) Description: Delivery settings, Value: 1, ID: settings
+					240 tab (selectable, settable, boolean) Description: Content Optimizer settings, ID: content-optimizer-settings, Value: 0
+Content Optimizer settings
+					241 tab (selectable, settable, boolean) Description: Agentic Standards results, Value: 0, ID: message-step-tab-standards-results
+				242 heading Delivery Schedule, Value: 3
+					243 text Delivery Schedule
+				244 container
+					245 text Deliver this message  at the optimal time.
+				246 container
+					247 checkbox (settable, integer) Description: Using Intelligent Timing, Value: 1, ID: bc-checkbox-3990568266
+					248 text Using Intelligent Timing 
+					249 image Information
+					250 container Select a time to send messages when a user's profile does not have enough data to calculate an optimal time:
+						251 text Select a time to send messages when a user's profile does not have enough data to calculate an optimal time:
+						252 container
+							253 radio button (settable, integer) Description: Fallback to the most popular time to use the app amongst all users, Value: 1, ID: radio-button-503912867
+							254 text the most popular time to use the app amongst all users
+						255 container
+							256 radio button (settable, integer) Description: Fallback to a specific custom time (in the user's local time zone), Value: 0, ID: radio-button-832550718
+							257 text a specific custom fallback time (in the user's local time zone)
+							258 container
+								259 text field (disabled) 5:00 pm
+				260 heading Delivery validations, Value: 3
+					261 text Delivery validations
+				262 text Double-check that your audience meets your delivery criteria at message send. For in-app messages, delivery validations are checked when the user enters the step, not when the message is displayed.
+				263 checkbox (settable, integer) Description: Delivery Validation enabled for this message, Value: 1, ID: bcl-switch__input-3078669305
+				264 text Validate audience at message send
+				265 text Recommended if you're using quiet hours, Intelligent Timing, or rate limiting.
+				276 container
+					277 container
+						278 text Segments
+						279 pop up button (collapsed) Description: Help text available. Tab to view help text, click to open popover, Secondary Actions: Expand
+					280 container
+						281 container
+							282 text Search Segments...
+							283 combo box (collapsed, settable) Description: Segments, ID: react-select-10-input, Secondary Actions: Expand
+					284 heading Additional Filters, Value: 3
+						285 text Additional Filters
+					286 container Filter group
+						287 button
+							288 image
+						289 text Filter group
+						290 pop up button (collapsed) Description: or, Secondary Actions: Expand
+							291 text OR
+						292 container
+							293 container
+								294 text Search filter...
+								295 combo box (collapsed, settable) Description: Select filter, ID: react-select-11-input, Secondary Actions: Expand
+						296 button (disabled) Remove
+					297 button Add filter group
+					298 button Add exclusion group
+				299 container
+					300 heading Delivery validations advancement behavior, Value: 3
+						301 text Delivery validations advancement behavior
+					302 container If delivery validations are not met:
+						303 text If delivery validations are not met:
+						304 container
+							305 radio button (settable, integer) Description: Exit the user from the Canvas, Value: 1, ID: radio-button-984597918
+							306 text Exit the user from the Canvas
+						307 container
+							308 radio button (settable, integer) Description: Skip this message send and progress the user to the next step in the Canvas, Value: 0, ID: radio-button-762944372
+							309 text Skip this message send and progress the user to the next step in the Canvas
+
+The focused UI element is 263 checkbox (settable, integer) Description: Delivery Validation enabled for this message, Value: 1, ID: bcl-switch__input-3078669305

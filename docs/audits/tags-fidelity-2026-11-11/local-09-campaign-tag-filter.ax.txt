@@ -1,0 +1,179 @@
+Browser tab: 3, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3210/engagement/campaigns/campaigns?start=0&limit=12&sortby=edited&sortdir=-1&display=list&locale=en&workspace=local&tag=Onboarding".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3210/engagement/campaigns/campaigns?start=0&limit=12&sortby=edited&sortdir=-1&display=list&locale=en&workspace=local&tag=Onboarding
+	1 container
+		5 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			6 image
+		4 text Braze Demo — Thinkingai
+		7 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		8 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			9 text Local workspace
+			10 image
+		11 container Side navigation
+			12 text Quick links
+			13 button Canvas
+			14 button Campaigns
+			15 button Segments
+			16 button Getting Started
+			17 button Home
+			18 button AI Decisioning
+			19 button Agent Console
+			20 button Messaging
+			21 button Audience
+			22 button Content
+			23 button Analytics
+			24 button Partner Integrations
+			25 button Data Settings
+			26 button Settings
+		27 button Home
+			28 image Braze
+		29 container
+			30 text ◷   8 days left in your free trial.
+			31 button Connect with sales
+		32 container
+			33 button Search workspace ⌘K
+				34 image
+				35 text Search workspace
+				36 text ⌘K
+			37 button Take a tour
+			38 image Community
+			39 button (collapsed) Description: Language, Secondary Actions: Expand
+			40 button Notifications
+			41 button (collapsed) Description: Profile, Secondary Actions: Expand
+			42 image
+			43 button Open BrazeAI Operator
+		44 button Campaigns
+		45 container Campaigns
+			46 container
+				47 heading Campaigns, Value: 1
+					48 text Campaigns
+				49 image
+				50 text Limited access Campaigns let you send a single, targeted message through email, push, SMS, and more, ensuring timely communication with your audience
+				51 button Send feedback
+					52 image
+				53 button Take a tour
+					54 text Take a tour
+					55 image
+				56 button Create campaign
+					57 text Create campaign
+					58 image
+			59 container
+				313 text Status
+				314 pop up button (collapsed, settable) Description: Status, Value: All, Secondary Actions: Expand
+					315 menu
+						316 (selected) All
+						317 Active
+						318 Draft
+						319 Archived
+						320 Stopped
+						321 Idle
+				322 text Tag
+				323 combo box (collapsed, settable) Description: Tag, Secondary Actions: Expand
+				324 button Toggle Tag
+					325 image
+				326 button (collapsed) Filters, Secondary Actions: Expand
+					327 image
+					328 text Filters
+				329 button (collapsed) Columns, Secondary Actions: Expand
+					330 image
+					331 text Columns
+				332 button Reset filters
+				81 text field (settable) Search campaigns
+				82 button (disabled) Search
+					83 image
+			333 text Tag: Onboarding
+			334 button Remove Tag: Onboarding filter
+				335 image
+			84 container
+				85 text 2 Results
+			86 table
+				87 row
+					88 cell
+						89 checkbox (settable, integer) Description: Select all rows, Value: 0
+					90 cell
+						91 button Name column, unsorted. Select to sort ascending
+					92 cell
+						93 text Status
+					94 cell
+						95 button Stop date column, unsorted. Select to sort descending
+					96 cell
+						97 text Campaign type
+					98 cell
+						99 text Entry schedule
+					100 cell
+						101 button Sent column, unsorted. Select to sort descending
+					102 cell
+						103 button Teams column, unsorted. Select to sort descending
+					104 cell
+						105 text Last edited by
+					106 cell
+						107 button Last edited column, sorted descending. Select to sort ascending
+					108 cell
+						109 text Created by
+					110 cell Actions
+				181 row
+					182 cell
+						183 checkbox (settable, integer) Description: Select Referral Banner, Value: 0
+					184 cell
+						185 link Description: Referral Banner, Value: 127.0.0.1:3210/engagement/campaigns/cmp_banner?locale=en
+						336 text Onboarding
+					186 cell
+						187 text Draft
+					188 cell
+						189 image
+						190 text Banner
+					191 cell
+						192 text One Time
+					193 cell
+						194 text 0
+					195 cell
+						196 text Local user
+					197 cell
+						198 text Nov 11, 2026
+					199 cell
+						200 text Local user
+					201 cell
+						202 pop up button (collapsed) Description: More Actions for Referral Banner, Help: More Actions, Secondary Actions: Expand
+							203 image
+				273 row
+					274 cell
+						275 checkbox (settable, integer) Description: Select Early Access, Value: 0
+					276 cell
+						277 link Description: Early Access, Value: 127.0.0.1:3210/engagement/campaigns/cmp_sms_early_access?locale=en
+						337 text Onboarding
+					278 cell
+						279 text Draft
+					280 cell
+						281 image
+						282 text SMS/MMS/RCS
+					283 cell
+						284 text One Time
+					285 cell
+						286 text 0
+					287 cell
+						288 text Local user
+					289 cell
+						290 text Nov 11, 2026
+					291 cell
+						292 text Local user
+					293 cell
+						294 pop up button (collapsed) Description: More Actions for Early Access, Help: More Actions, Secondary Actions: Expand
+							295 image
+			296 container
+				297 text Showing rows  1  -  2  of  2 Rows per page:
+				298 pop up button (collapsed, settable) Description: Rows per page, Value: 12, Secondary Actions: Expand
+					299 menu
+						300 (selected) 12
+						301 24
+						302 48
+						303 96
+				304 container Campaign pages
+					305 button (disabled) Previous page
+						306 image
+					307 button Current Page, Page 1
+					308 button (disabled) Next page
+						309 image
+			310 button Priority Sorter
+				311 image
+				312 text Priority Sorter
+
+The focused UI element is 323 combo box (collapsed, settable) Description: Tag, Secondary Actions: Expand

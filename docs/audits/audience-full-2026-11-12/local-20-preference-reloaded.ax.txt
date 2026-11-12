@@ -1,0 +1,88 @@
+Browser tab: 14, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/users/subscription_groups/preference_centers/6aa75e37db69160082adb7ae?locale=en&workspace=local&centerId=pc_997e403412d84bf5".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/subscription_groups/preference_centers/6aa75e37db69160082adb7ae?locale=en&workspace=local&centerId=pc_997e403412d84bf5
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agent Console
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+	25 container
+		26 text ◷   8 days left in your free trial.
+		27 button Connect with sales
+		28 button Search workspace ⌘K
+			29 image
+			30 text Search workspace
+			31 text ⌘K
+		32 button Take a tour
+		33 image Community
+		34 button (collapsed) Description: Language, Secondary Actions: Expand
+		35 button Notifications
+		36 button (collapsed) Description: Profile, Secondary Actions: Expand
+		37 image
+		38 button Open BrazeAI Operator
+		39 container
+			40 button Email Preference Centers
+			41 button Audience QA preferences
+				42 text Audience QA preferences
+				43 image
+		44 heading Email Preference Center, Value: 1
+			45 text Email Preference Center
+		46 container
+			47 heading Details, Value: 2
+				48 text Details
+			49 text Name
+			50 container
+				51 text 23 /280 characters
+			52 text field (settable) Description: Name, Value: Audience QA preferences
+			53 button Add Description
+				54 image
+				55 text Add Description
+			56 image
+			57 text The Liquid tag will be generated after the preference center is launched
+			58 button Close Liquid notice
+				59 image
+			60 text Liquid
+			61 text field Description: Liquid, Value: {{preference_center.${}}}
+			62 button Copy Liquid
+				63 image
+			64 text API ID
+			65 text field Description: API ID, Value: pc_997e403412d84bf5
+			66 button Copy API ID
+				67 image
+		68 container
+			69 heading Page Previews, Value: 2
+				70 text Page Previews
+			71 button Edit
+			72 radio button (settable, integer) Description: Preference Center, Value: 1
+			73 radio button (settable, integer) Description: Confirmation Page, Value: 0
+			74 heading Update your email preferences, Value: 2
+				75 text Update your email preferences
+			86 container
+				87 checkbox (settable, integer) Description: Product updates Feature launches, release notes, and product education., Value: 0
+				88 text Product updates Feature launches, release notes, and product education.
+			79 button Save my preferences
+			80 button Unsubscribe from all emails
+		81 container
+			82 button (disabled) Save as draft
+			83 button Launch preference center
+	84 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+		85 image
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/subscription_groups/preference_centers/6aa75e37db69160082adb7ae?locale=en&workspace=local&centerId=pc_997e403412d84bf5

@@ -1,0 +1,14 @@
+Browser tab: 11, Title: "Data - Overview - Overview", URL: "https://dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?start=0&limit=20&globalFilter=&columnFilters%5Bstatus%5D=active&sortby=last_edited&sortdir=-1&display=list".
+0 AXWebArea Data - Overview - Overview, URL: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?start=0&limit=20&globalFilter=&columnFilters%5Bstatus%5D=active&sortby=last_edited&sortdir=-1&display=list
+	1 container Create Segment Define user segments by combining filters based on behavioral, demographic, and social criteria as well as custom events and attributes. These segments will be targetable by your messaging campaigns. Cancel Create Segment
+		2 heading Create Segment, Value: 2
+			3 text Create Segment
+		4 container
+			5 text Define user segments by combining filters based on behavioral, demographic, and social criteria as well as custom events and attributes. These segments will be targetable by your messaging campaigns.
+			6 text Segment Name
+			7 text field (settable)
+			8 button Add description
+		9 button Cancel
+		10 button Create Segment
+
+The focused UI element is 1 container Create Segment Define user segments by combining filters based on behavioral, demographic, and social criteria as well as custom events and attributes. These segments will be targetable by your messaging campaigns. Cancel Create Segment

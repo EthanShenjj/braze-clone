@@ -1,0 +1,261 @@
+Browser tab: 1, Title: "Data - Overview - Overview", URL: "https://dashboard-09.braze.com/users/subscription_groups/subscription_groups/6af4374c46d3080087f1c5d2?locale=en".
+0 AXWebArea Data - Overview - Overview, URL: dashboard-09.braze.com/users/subscription_groups/subscription_groups/6af4374c46d3080087f1c5d2?locale=en
+	1 container
+		2 container react-root
+			3 link Description: Skip to main content, Value: dashboard-09.braze.com/users/subscription_groups/subscription_groups/6af4374c46d3080087f1c5d2?locale=en#main-container
+			4 container Side navigation
+				5 container
+					6 button Minimize menu
+					7 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+						8 image
+						9 text Demo – ittor
+					10 text Quick links
+					11 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+					12 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+					13 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+					14 button Getting Started
+						15 image
+						16 container
+							17 text Getting Started
+							18 container
+								19 text 8 %
+					20 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+					21 button AI Decisioning
+						22 image
+						23 text AI Decisioning
+					24 button Agents
+						25 image
+						26 text Agents
+					27 button Messaging
+						28 image
+						29 text Messaging
+					30 button Audience
+						31 image
+						32 text Audience
+					33 button Content
+						34 image
+						35 text Content
+					36 button Analytics
+						37 image
+						38 text Analytics
+					39 button Partner Integrations
+						40 image
+						41 text Partner Integrations
+					42 button Data Settings
+						43 image
+						44 text Data Settings
+					45 button Settings
+						46 image
+						47 text Settings
+				48 container Footer Logo
+					49 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+			50 text 14 days left in your free trial.
+			51 button Connect with sales
+			52 container Top navigation
+				53 container Left top navigation
+					54 button Search workspace ⌘+K
+						55 image
+						56 text Search workspace
+						57 text ⌘+K
+				58 container Right top navigation
+					59 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						60 image
+					61 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						62 image
+					63 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+						64 image
+					65 container
+						66 button Notifications
+							67 image
+					68 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						69 image
+					70 button BrazeAI Operator™
+						71 image
+			72 container main-container
+				82 container main-content
+					83 container
+						84 heading Build email preference centers on Landing Pages, Value: 4
+							85 text Build email preference centers on Landing Pages
+						86 text Use your own branded domain and drag-and-drop editor to design email preference pages. Add form blocks to collect subscriber interests, frequency, and more, then track how subscribers engage.
+						87 button Create landing page
+						88 button Close
+					89 container
+						90 heading Subscription group timeseries, Value: 3
+							91 text Subscription group timeseries
+						92 text Subscription group
+						93 container
+							94 text LINE Messaging Service 0A
+							95 combo box (collapsed, settable) Description: Subscription group, ID: subscription-group-selection, Secondary Actions: Expand
+						96 container date-input-3917124980
+							97 text Date range
+							234 container Date range
+								235 text field (settable) Description: Start Date, Value: 2026/10/13
+								236 text field (settable) Description: End Date, Value: 2026/11/12
+							237 text Type a date month/day/year, or use arrow keys or page up/page down to choose a date
+						101 button Calculate today’s statistics
+						102 image
+						103 text You don’t have any subscription group timeseries data yet
+					104 container
+						105 heading Subscription groups, Value: 3
+							106 text Subscription groups
+						107 button Create email subscription group
+						108 text Status
+						109 container status
+							110 container
+								111 text Active
+								112 combo box (collapsed, settable) Description: Status, ID: react-select-3-input, Secondary Actions: Expand
+						113 text Channel
+						114 container channel
+							115 container
+								116 text All Channels
+								117 combo box (collapsed, settable) Description: Channel, ID: react-select-4-input, Secondary Actions: Expand
+						118 container Description: Inline Tag 0, ID: is_archived
+							119 text Status: Active
+							120 button close
+						121 heading 5 Results, Value: 4
+							122 text 5 Results
+						123 text field (settable) Search subscription group name
+						124 button (disabled) Search
+						125 table
+							126 row Name column, unsorted. Select to sort ascending Channel column, unsorted. Select to sort descending ID Description Status column, unsorted. Select to sort descending
+								127 cell
+									128 button Name column, unsorted. Select to sort ascending
+								129 cell
+									130 button Channel column, unsorted. Select to sort descending
+								131 cell
+									132 text ID
+								133 cell
+									134 text Description
+								135 cell
+									136 button Status column, unsorted. Select to sort descending
+							137 row LINE Messaging Service 0A LINE 412f30ed-647c-4780-8636-c57893bda1d6 Users must be subscribed to this group to receive LINE messages from "LINE Messaging Service 0A" Active Archive Edit
+								138 cell
+									139 button LINE Messaging Service 0A
+										140 text LINE Messaging Service 0A
+								141 cell
+									142 text LINE
+								143 cell
+									144 text field 412f30ed-647c-4780-8636-c57893bda1d6
+									145 button
+								146 cell
+									147 text Users must be subscribed to this group to receive LINE messages from "LINE Messaging Service 0A"
+								148 cell
+									149 text Active
+								150 cell
+									151 content list
+										152 pop up button Archive
+										153 pop up button Edit
+							154 row LINE Messaging Service 0B LINE edf004ee-1b2b-437f-af35-291497fc0535 Users must be subscribed to this group to receive LINE messages from "LINE Messaging Service 0B" Active Archive Edit
+								155 cell
+									156 button LINE Messaging Service 0B
+										157 text LINE Messaging Service 0B
+								158 cell
+									159 text LINE
+								160 cell
+									161 text field edf004ee-1b2b-437f-af35-291497fc0535
+									162 button
+								163 cell
+									164 text Users must be subscribed to this group to receive LINE messages from "LINE Messaging Service 0B"
+								165 cell
+									166 text Active
+								167 cell
+									168 content list
+										169 pop up button Archive
+										170 pop up button Edit
+							171 row SMS Canvas Subscription Group SMS/MMS/RCS d1d038f7-75c9-4bff-bed2-2b9f6698b65c Users must be subscribed to this group to receive SMS from "SMS Canvas Subscription Group" Active Archive Edit
+								172 cell
+									173 button SMS Canvas Subscription Group
+										174 text SMS Canvas Subscription Group
+								175 cell
+									176 text SMS/MMS/RCS
+								177 cell
+									178 text field d1d038f7-75c9-4bff-bed2-2b9f6698b65c
+									179 button
+								180 cell
+									181 text Users must be subscribed to this group to receive SMS from "SMS Canvas Subscription Group"
+								182 cell
+									183 text Active
+								184 cell
+									185 content list
+										186 pop up button Archive
+										187 pop up button Edit
+							188 row WhatsApp Fake Messaging Service A WhatsApp 52556f48-9865-421d-b174-880a5aad347e Users must be subscribed to this group to receive WhatsApp messages from "WhatsApp Fake Messaging Service A" Active Archive Edit
+								189 cell
+									190 button WhatsApp Fake Messaging Service A
+										191 text WhatsApp Fake Messaging Service A
+								192 cell
+									193 text WhatsApp
+								194 cell
+									195 text field 52556f48-9865-421d-b174-880a5aad347e
+									196 button
+								197 cell
+									198 text Users must be subscribed to this group to receive WhatsApp messages from "WhatsApp Fake Messaging Service A"
+								199 cell
+									200 text Active
+								201 cell
+									202 content list
+										203 pop up button Archive
+										204 pop up button Edit
+							205 row WhatsApp Fake Messaging Service B WhatsApp 36eb2660-f089-4f04-83e8-bdc5593ac9fa Users must be subscribed to this group to receive WhatsApp messages from "WhatsApp Fake Messaging Service B" Active Archive Edit
+								206 cell
+									207 button WhatsApp Fake Messaging Service B
+										208 text WhatsApp Fake Messaging Service B
+								209 cell
+									210 text WhatsApp
+								211 cell
+									212 text field 36eb2660-f089-4f04-83e8-bdc5593ac9fa
+									213 button
+								214 cell
+									215 text Users must be subscribed to this group to receive WhatsApp messages from "WhatsApp Fake Messaging Service B"
+								216 cell
+									217 text Active
+								218 cell
+									219 content list
+										220 pop up button Archive
+										221 pop up button Edit
+						222 text Showing rows 1 - 5 of 5 Rows per page:
+						223 pop up button (collapsed, settable) Value: 10, Secondary Actions: Expand
+							224 menu
+								225 (selected) 10
+								226 20
+								227 40
+								228 60
+								229 100
+						230 content list
+							231 button (disabled) Previous page
+							232 button Current Page, Page 1
+							233 button (disabled) Next page
+				74 text © Braze 2026
+				75 text Opening in a new tab
+				76 link Description: Opening in a new tab, Value: braze.statuspage.io/
+				77 text Opening in a new tab
+				78 link Description: Opening in a new tab, Value: braze.com/terms
+				79 text Opening in a new tab
+				80 link Description: Opening in a new tab, Value: braze.com/privacy
+		81 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		238 container
+			239 menu Shortcuts menu: custom range or pre-configured date ranges
+				240 Custom Range
+					241 text Custom Range
+				242 Today Nov 12, 2026
+					243 text Today
+					244 text Nov 12, 2026
+				245 Yesterday Nov 11, 2026
+					246 text Yesterday
+					247 text Nov 11, 2026
+				248 Last 7 Days Nov 5, 2026 - Nov 12, 2026
+					249 text Last 7 Days
+					250 text Nov 5, 2026 - Nov 12, 2026
+				251 Last 30 Days Oct 13, 2026 - Nov 12, 2026
+					252 text Last 30 Days
+					253 text Oct 13, 2026 - Nov 12, 2026
+				254 This Month to Date Nov 1, 2026 - Nov 12, 2026
+					255 text This Month to Date
+					256 text Nov 1, 2026 - Nov 12, 2026
+				257 All Time Mar 29, 2011 - Nov 12, 2026
+					258 text All Time
+					259 text Mar 29, 2011 - Nov 12, 2026
+			260 button Cancel
+			261 button Apply
+
+The focused UI element is 240 Custom Range

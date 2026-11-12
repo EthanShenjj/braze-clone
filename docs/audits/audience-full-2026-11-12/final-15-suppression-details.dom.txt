@@ -1,0 +1,89 @@
+- alert: Suppression Lists
+- complementary:
+  - button "Minimize menu" [expanded]
+  - button "Select workspace":
+    - generic: Local workspace
+  - navigation "Side navigation":
+    - generic: Quick links
+    - button "Canvas":
+      - generic: Canvas
+    - button "Campaigns":
+      - generic: Campaigns
+    - button "Segments":
+      - generic: Segments
+    - button "Getting Started":
+      - generic: Getting Started
+    - button "Home":
+      - generic: Home
+    - button "AI Decisioning":
+      - generic: AI Decisioning
+    - button "Agents":
+      - generic: Agents
+    - button "Messaging":
+      - generic: Messaging
+    - button "Audience":
+      - generic: Audience
+    - button "Content":
+      - generic: Content
+    - button "Analytics":
+      - generic: Analytics
+    - button "Partner Integrations":
+      - generic: Partner Integrations
+    - button "Data Settings":
+      - generic: Data Settings
+    - button "Settings":
+      - generic: Settings
+  - button "Home":
+    - img "Braze"
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - generic "Community":
+    - img "Community"
+  - button "Language"
+  - button "Notifications"
+  - button "Profile"
+  - button "Open BrazeAI Operator"
+  - button "Suppression Lists"
+  - button "Back to Suppression Lists":
+    - text: Back to Suppression Lists
+  - generic: Inactive
+  - heading "Audience QA suppression" [level=1]
+  - strong: "Estimated size: 202"
+  - text: Suppression List Name
+  - textbox "Suppression List Name": Audience QA suppression
+  - text: Suppression List Description
+  - generic: 0/250 characters
+  - textbox "Suppression List Description 0/250 characters"
+  - heading "Suppression List Details" [level=2]
+  - paragraph: Users matching these filters will be excluded from campaigns and Canvases.
+  - heading "Filters" [level=3]
+  - strong: Filter group 1
+  - combobox "Group 1 operator":
+    - option "AND" [selected]
+    - option "OR"
+  - button "Remove filter group 1" [disabled]:
+  - region "Country":
+    - heading "Country" [level=4]
+    - generic: Comparison
+    - combobox "Comparison": is
+    - button "Toggle Comparison":
+    - generic: Country
+    - combobox "Country": United States
+    - button "Toggle Country":
+  - button "Remove filter":
+    - text: Remove filter
+  - combobox "Select filter"
+  - button "Toggle filter catalog": ⌄
+  - button "Add filter group":
+    - text: Add filter group
+  - heading "Exception Settings" [level=2]
+  - checkbox "Do not apply this suppression list to campaigns or Canvases with these tags"
+  - text: Do not apply this suppression list to campaigns or Canvases with these tags
+  - button "Archive"
+  - button "Save"
+  - button "Activate"

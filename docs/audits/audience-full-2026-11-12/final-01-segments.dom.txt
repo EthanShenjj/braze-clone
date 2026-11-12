@@ -1,0 +1,270 @@
+- complementary:
+  - button "Minimize menu" [expanded]
+  - button "Select workspace":
+    - generic: Local workspace
+  - navigation "Side navigation":
+    - generic: Quick links
+    - button "Canvas":
+      - generic: Canvas
+    - button "Campaigns":
+      - generic: Campaigns
+    - button "Segments":
+      - generic: Segments
+    - button "Getting Started":
+      - generic: Getting Started
+    - button "Home":
+      - generic: Home
+    - button "AI Decisioning":
+      - generic: AI Decisioning
+    - button "Agents":
+      - generic: Agents
+    - button "Messaging":
+      - generic: Messaging
+    - button "Audience":
+      - generic: Audience
+    - button "Content":
+      - generic: Content
+    - button "Analytics":
+      - generic: Analytics
+    - button "Partner Integrations":
+      - generic: Partner Integrations
+    - button "Data Settings":
+      - generic: Data Settings
+    - button "Settings":
+      - generic: Settings
+  - button "Home":
+    - img "Braze"
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - generic "Community":
+    - img "Community"
+  - button "Language"
+  - button "Notifications"
+  - button "Profile"
+  - button "Open BrazeAI Operator"
+  - button "Segments"
+  - heading "Segments" [level=1]
+  - paragraph:
+    - text: Find and reach the right audience with segments.
+    - text: Group users based on their behaviors, preferences, or
+    - text: past actions to send messages that truly matter to
+    - text: them.
+  - button "Send feedback" [disabled]:
+  - button "Take a tour"
+  - button "More options":
+  - button "Create Segment":
+    - text: Create Segment
+  - text: Status
+  - combobox "Status":
+    - option "Active" [selected]
+    - option "Draft"
+    - option "Archived"
+    - option "All"
+  - generic: Tags
+  - combobox "Tags"
+  - button "Toggle Tags":
+  - button "Filters":
+    - text: Filters
+  - button "Columns":
+    - text: Columns
+  - checkbox "Show starred only"
+  - text: Show starred only
+  - textbox "Search for segments"
+  - text: "Status: Active"
+  - button "Remove status filter Active":
+  - heading "15 Results" [level=3]
+  - table:
+    - rowgroup:
+      - row "Select all rows Segment name ↕ Status Last edited by Last edited ↓":
+        - columnheader "Select all rows":
+          - checkbox "Select all rows"
+        - columnheader "Segment name ↕":
+          - button "Segment name ↕"
+        - columnheader "Status"
+        - columnheader "Last edited by"
+        - columnheader "Last edited ↓":
+          - button "Last edited ↓"
+        - columnheader
+    - rowgroup:
+      - 'row "Select audience_qa_83e337e7 imported US and GB Quick view: audience_qa_83e337e7 imported US and GB audience_qa_83e337e7 imported US and GB Active Local user Nov 12, 2026 More Actions: audience_qa_83e337e7 imported US and GB"':
+        - cell "Select audience_qa_83e337e7 imported US and GB":
+          - checkbox "Select audience_qa_83e337e7 imported US and GB"
+        - 'cell "Quick view: audience_qa_83e337e7 imported US and GB audience_qa_83e337e7 imported US and GB"':
+          - 'button "Quick view: audience_qa_83e337e7 imported US and GB"':
+          - button "audience_qa_83e337e7 imported US and GB"
+        - cell "Active"
+        - cell "Local user"
+        - cell "Nov 12, 2026"
+        - 'cell "More Actions: audience_qa_83e337e7 imported US and GB"':
+          - 'button "More Actions: audience_qa_83e337e7 imported US and GB"':
+      - 'row "Select New Users Quick view: New Users New Users Active — Nov 12, 2026 More Actions: New Users"':
+        - cell "Select New Users":
+          - checkbox "Select New Users"
+        - 'cell "Quick view: New Users New Users"':
+          - 'button "Quick view: New Users"':
+          - button "New Users"
+        - cell "Active"
+        - cell "—"
+        - cell "Nov 12, 2026"
+        - 'cell "More Actions: New Users"':
+          - 'button "More Actions: New Users"':
+      - 'row "Select Recent Purchasers Quick view: Recent Purchasers Recent Purchasers Active — Nov 12, 2026 More Actions: Recent Purchasers"':
+        - cell "Select Recent Purchasers":
+          - checkbox "Select Recent Purchasers"
+        - 'cell "Quick view: Recent Purchasers Recent Purchasers"':
+          - 'button "Quick view: Recent Purchasers"':
+          - button "Recent Purchasers"
+        - cell "Active"
+        - cell "—"
+        - cell "Nov 12, 2026"
+        - 'cell "More Actions: Recent Purchasers"':
+          - 'button "More Actions: Recent Purchasers"':
+      - 'row "Select Active Subscribers Quick view: Active Subscribers Active Subscribers Active — Nov 12, 2026 More Actions: Active Subscribers"':
+        - cell "Select Active Subscribers":
+          - checkbox "Select Active Subscribers"
+        - 'cell "Quick view: Active Subscribers Active Subscribers"':
+          - 'button "Quick view: Active Subscribers"':
+          - button "Active Subscribers"
+        - cell "Active"
+        - cell "—"
+        - cell "Nov 12, 2026"
+        - 'cell "More Actions: Active Subscribers"':
+          - 'button "More Actions: Active Subscribers"':
+      - 'row "Select Reachable Users Quick view: Reachable Users Reachable Users Active — Nov 12, 2026 More Actions: Reachable Users"':
+        - cell "Select Reachable Users":
+          - checkbox "Select Reachable Users"
+        - 'cell "Quick view: Reachable Users Reachable Users"':
+          - 'button "Quick view: Reachable Users"':
+          - button "Reachable Users"
+        - cell "Active"
+        - cell "—"
+        - cell "Nov 12, 2026"
+        - 'cell "More Actions: Reachable Users"':
+          - 'button "More Actions: Reachable Users"':
+      - 'row "Select Pro Plan Customers Quick view: Pro Plan Customers Pro Plan Customers Active — Nov 12, 2026 More Actions: Pro Plan Customers"':
+        - cell "Select Pro Plan Customers":
+          - checkbox "Select Pro Plan Customers"
+        - 'cell "Quick view: Pro Plan Customers Pro Plan Customers"':
+          - 'button "Quick view: Pro Plan Customers"':
+          - button "Pro Plan Customers"
+        - cell "Active"
+        - cell "—"
+        - cell "Nov 12, 2026"
+        - 'cell "More Actions: Pro Plan Customers"':
+          - 'button "More Actions: Pro Plan Customers"':
+      - 'row "Select Free Plan Customers Quick view: Free Plan Customers Free Plan Customers Active — Nov 12, 2026 More Actions: Free Plan Customers"':
+        - cell "Select Free Plan Customers":
+          - checkbox "Select Free Plan Customers"
+        - 'cell "Quick view: Free Plan Customers Free Plan Customers"':
+          - 'button "Quick view: Free Plan Customers"':
+          - button "Free Plan Customers"
+        - cell "Active"
+        - cell "—"
+        - cell "Nov 12, 2026"
+        - 'cell "More Actions: Free Plan Customers"':
+          - 'button "More Actions: Free Plan Customers"':
+      - 'row "Select English Speakers Quick view: English Speakers English Speakers Active — Nov 12, 2026 More Actions: English Speakers"':
+        - cell "Select English Speakers":
+          - checkbox "Select English Speakers"
+        - 'cell "Quick view: English Speakers English Speakers"':
+          - 'button "Quick view: English Speakers"':
+          - button "English Speakers"
+        - cell "Active"
+        - cell "—"
+        - cell "Nov 12, 2026"
+        - 'cell "More Actions: English Speakers"':
+          - 'button "More Actions: English Speakers"':
+      - 'row "Select Chinese Speakers Quick view: Chinese Speakers Chinese Speakers Active — Nov 12, 2026 More Actions: Chinese Speakers"':
+        - cell "Select Chinese Speakers":
+          - checkbox "Select Chinese Speakers"
+        - 'cell "Quick view: Chinese Speakers Chinese Speakers"':
+          - 'button "Quick view: Chinese Speakers"':
+          - button "Chinese Speakers"
+        - cell "Active"
+        - cell "—"
+        - cell "Nov 12, 2026"
+        - 'cell "More Actions: Chinese Speakers"':
+          - 'button "More Actions: Chinese Speakers"':
+      - 'row "Select United States Users Quick view: United States Users United States Users Active — Nov 12, 2026 More Actions: United States Users"':
+        - cell "Select United States Users":
+          - checkbox "Select United States Users"
+        - 'cell "Quick view: United States Users United States Users"':
+          - 'button "Quick view: United States Users"':
+          - button "United States Users"
+        - cell "Active"
+        - cell "—"
+        - cell "Nov 12, 2026"
+        - 'cell "More Actions: United States Users"':
+          - 'button "More Actions: United States Users"':
+      - 'row "Select United Kingdom Users Quick view: United Kingdom Users United Kingdom Users Active — Nov 12, 2026 More Actions: United Kingdom Users"':
+        - cell "Select United Kingdom Users":
+          - checkbox "Select United Kingdom Users"
+        - 'cell "Quick view: United Kingdom Users United Kingdom Users"':
+          - 'button "Quick view: United Kingdom Users"':
+          - button "United Kingdom Users"
+        - cell "Active"
+        - cell "—"
+        - cell "Nov 12, 2026"
+        - 'cell "More Actions: United Kingdom Users"':
+          - 'button "More Actions: United Kingdom Users"':
+      - 'row "Select China Users Quick view: China Users China Users Active — Nov 12, 2026 More Actions: China Users"':
+        - cell "Select China Users":
+          - checkbox "Select China Users"
+        - 'cell "Quick view: China Users China Users"':
+          - 'button "Quick view: China Users"':
+          - button "China Users"
+        - cell "Active"
+        - cell "—"
+        - cell "Nov 12, 2026"
+        - 'cell "More Actions: China Users"':
+          - 'button "More Actions: China Users"':
+      - 'row "Select Singapore Users Quick view: Singapore Users Singapore Users Active — Nov 12, 2026 More Actions: Singapore Users"':
+        - cell "Select Singapore Users":
+          - checkbox "Select Singapore Users"
+        - 'cell "Quick view: Singapore Users Singapore Users"':
+          - 'button "Quick view: Singapore Users"':
+          - button "Singapore Users"
+        - cell "Active"
+        - cell "—"
+        - cell "Nov 12, 2026"
+        - 'cell "More Actions: Singapore Users"':
+          - 'button "More Actions: Singapore Users"':
+      - 'row "Select Germany Users Quick view: Germany Users Germany Users Active — Nov 12, 2026 More Actions: Germany Users"':
+        - cell "Select Germany Users":
+          - checkbox "Select Germany Users"
+        - 'cell "Quick view: Germany Users Germany Users"':
+          - 'button "Quick view: Germany Users"':
+          - button "Germany Users"
+        - cell "Active"
+        - cell "—"
+        - cell "Nov 12, 2026"
+        - 'cell "More Actions: Germany Users"':
+          - 'button "More Actions: Germany Users"':
+      - 'row "Select audience_qa_9fdd22dd imported US and GB Quick view: audience_qa_9fdd22dd imported US and GB audience_qa_9fdd22dd imported US and GB Active Local user Nov 12, 2026 More Actions: audience_qa_9fdd22dd imported US and GB"':
+        - cell "Select audience_qa_9fdd22dd imported US and GB":
+          - checkbox "Select audience_qa_9fdd22dd imported US and GB"
+        - 'cell "Quick view: audience_qa_9fdd22dd imported US and GB audience_qa_9fdd22dd imported US and GB"':
+          - 'button "Quick view: audience_qa_9fdd22dd imported US and GB"':
+          - button "audience_qa_9fdd22dd imported US and GB"
+        - cell "Active"
+        - cell "Local user"
+        - cell "Nov 12, 2026"
+        - 'cell "More Actions: audience_qa_9fdd22dd imported US and GB"':
+          - 'button "More Actions: audience_qa_9fdd22dd imported US and GB"':
+  - generic: Showing rows 1 - 15 of 15
+  - text: "Rows per page:"
+  - combobox "Rows per page":
+    - option "10"
+    - option "20" [selected]
+    - option "40"
+    - option "60"
+    - option "100"
+  - button "Previous page" [disabled]:
+  - generic: "1"
+  - button "Next page" [disabled]:
+- alert

@@ -1,0 +1,324 @@
+Browser tab: 10, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3212/engagement/canvas/f216ee2a-4db7-4d57-9e52-1fafce349f8a?locale=en&workspace=local&step=audience".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3212/engagement/canvas/f216ee2a-4db7-4d57-9e52-1fafce349f8a?locale=en&workspace=local&step=audience
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agent Console
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+		25 container
+			26 text ◷   8 days left in your free trial.
+			27 button Connect with sales
+		28 container
+			29 button Search workspace ⌘K
+				30 image
+				31 text Search workspace
+				32 text ⌘K
+			33 button Take a tour
+			34 image Community
+			35 button (collapsed) Description: Language, Secondary Actions: Expand
+			36 button Notifications
+			37 button (collapsed) Description: Profile, Secondary Actions: Expand
+			38 image
+			39 button Open BrazeAI Operator
+		40 button Canvas
+		41 container
+			42 button Canvas
+			43 text › Edit ' Tagged welcome journey '
+			44 button Close Canvas
+				45 image
+			46 text ♙ Limited access
+			47 container Canvas creation steps
+				48 button 1 Basics
+					49 text 1
+					50 text Basics
+				51 button 2 Entry Schedule
+					52 text 2
+					53 text Entry Schedule
+				54 button 3 Target Audience
+					55 text 3
+					56 text Target Audience
+				57 button 4 Send Settings
+					58 text 4
+					59 text Send Settings
+				60 button 5 Build Canvas
+					61 text 5
+					62 text Build Canvas
+				63 button 6 Summary
+					64 text 6
+					65 text Summary
+			66 heading Entry Audience, Value: 2
+				67 text Entry Audience
+			68 text Determine who will enter this Canvas. Conditions will not be re-evaluated at each step. Target users by choosing multiple segments they must fall into. Further refine your audience by adding additional filters.
+			69 text Target Users By Segment
+			70 combo box (collapsed, settable) Target Users By Segment, Secondary Actions: Expand
+			71 button (collapsed) Description: Toggle Target Users By Segment, Secondary Actions: Expand
+				72 image
+			73 heading Additional Filters, Value: 3
+				74 text Additional Filters
+			75 text Match filters
+			76 pop up button (collapsed, settable) Match filters, Value: OR, Secondary Actions: Expand
+				77 menu
+					78 (selected) OR
+					79 AND
+			80 container Filter group
+				81 heading Filter group, Value: 4
+					82 text Filter group
+				83 container Clicked/Opened Campaign or Canvas With Tag
+					84 heading Clicked/Opened Campaign or Canvas With Tag, Value: 4
+						85 text Clicked/Opened Campaign or Canvas With Tag
+					86 container
+						87 text Interaction
+						88 combo box (collapsed, settable) Description: Interaction, Value: clicked email, Secondary Actions: Expand
+						89 button Toggle Interaction
+							90 image
+					91 container
+						92 text Performed interaction
+						93 combo box (collapsed, settable) Description: Performed interaction, Value: true, Secondary Actions: Expand
+						94 button Toggle Performed interaction
+							95 image
+					96 container
+						97 text Clicked/Opened Campaign or Canvas With Tag
+						98 combo box (collapsed, settable) Description: Clicked/Opened Campaign or Canvas With Tag, Value: Lifecycle / Welcome, Secondary Actions: Expand
+						99 button Toggle Clicked/Opened Campaign or Canvas With Tag
+							100 image
+					101 text Some tags may include messaging with expired interaction data. 
+					102 link Description: Learn about retargeting by tag, Value: braze.com/docs/en/messaging_interaction_data/#retargeting-by-tag
+				103 button Remove Filter group filter
+				104 container Country
+					105 heading Country, Value: 4
+						106 text Country
+					107 container
+						108 text Comparison
+						109 combo box (collapsed, settable) Description: Comparison, Value: is any of, Secondary Actions: Expand
+						110 button Toggle Comparison
+							111 image
+					112 text Country
+					113 button Remove United States
+					114 button Remove United Kingdom
+					115 container
+						116 combo box (collapsed, settable) Description: Add Country, Secondary Actions: Expand
+						117 button Toggle Country
+				118 button Remove Filter group filter
+				119 container Created At
+					120 heading Created At, Value: 4
+						121 text Created At
+					122 container
+						123 text Comparison
+						124 combo box (collapsed, settable) Description: Comparison, Value: after, Secondary Actions: Expand
+						125 button Toggle Comparison
+							126 image
+					127 container
+						128 text Date
+						129 text field (settable) Description: Date, Value: 2026/11/10
+						130 button Open Date calendar
+							131 image
+				132 button Remove Filter group filter
+				133 container
+					134 combo box (collapsed, settable) Description: Select filter, Secondary Actions: Expand
+					135 button (collapsed) Description: Toggle filter catalog, Secondary Actions: Expand
+			136 container Exclusion group
+				137 heading Exclusion group, Value: 4
+					138 text Exclusion group
+				139 container
+					140 combo box (collapsed, settable) Description: Select filter, Secondary Actions: Expand
+					141 button (collapsed) Description: Toggle filter catalog, Secondary Actions: Expand
+			142 heading Audience Summary, Value: 4
+				143 text Audience Summary
+			144 text 0 segment(s) and 3 filter(s) selected
+			145 heading User Lookup, Value: 4
+				146 text User Lookup
+			147 text Check if a user matches the segment, filter, and app criteria
+			148 text field (settable) Look up user
+			149 button (disabled) Lookup User
+			150 heading Entry Controls, Value: 4
+				151 text Entry Controls
+			152 checkbox (settable, integer) Description: Allow users to re-enter this Canvas, Value: 0
+			153 checkbox (settable, integer) Description: Limit entrance volume, Value: 0
+			154 heading Exit Criteria, Value: 2
+				155 text Exit Criteria
+			156 text Users will exit the Canvas if they perform an exception event or if they match the segments and filters. These users won't receive any further messages.
+			157 heading Exceptions, Value: 4
+				158 text Exceptions
+			159 pop up button (collapsed, settable) Description: Add Exception, Value: Select Trigger, Secondary Actions: Expand
+				160 menu
+					161 (selected) Select Trigger
+					162 Perform Custom Event
+					163 Start Session
+					164 Interact With Campaign
+					165 Interact with Landing Page
+					166 Perform Exception Event For Campaign
+					167 Change Custom Attribute Value
+					168 Update Subscription Status
+					169 Update Subscription Group Status
+					170 Add an Email Address
+					171 View product
+					172 Update cart
+					173 Start checkout
+					174 Place order
+					175 Cancel order
+					176 Refund order
+					177 Perform Back in Stock Event
+					178 Perform Price Drop Event
+					179 Send an SMS inbound message
+					180 Send a WhatsApp inbound message
+					181 Send a LINE inbound message
+					182 Enter a Location
+					183 Trigger a Geofence
+			184 text Exit Segments
+			185 combo box (collapsed, settable) Exit Segments, Secondary Actions: Expand
+			186 button (collapsed) Description: Toggle Exit Segments, Secondary Actions: Expand
+				187 image
+			188 container Filters
+				189 heading Filters, Value: 4
+					190 text Filters
+				191 container
+					192 combo box (collapsed, settable) Description: Select filter, Secondary Actions: Expand
+					193 button (collapsed) Description: Toggle filter catalog, Secondary Actions: Expand
+			194 heading Suppression Lists, Value: 2
+				195 text Suppression Lists
+			196 text There are no suppression lists applied. Manage them in the workspace suppression-list settings.
+			197 heading Total Population, Value: 2
+				198 text Total Population
+			199 button Calculate audience
+			200 button Back
+			201 container Canvas creation steps
+				202 button 1 Basics
+					203 text 1
+					204 text Basics
+				205 button 2 Entry Schedule
+					206 text 2
+					207 text Entry Schedule
+				208 button 3 Target Audience
+					209 text 3
+					210 text Target Audience
+				211 button 4 Send Settings
+					212 text 4
+					213 text Send Settings
+				214 button 5 Build Canvas
+					215 text 5
+					216 text Build Canvas
+				217 button 6 Summary
+					218 text 6
+					219 text Summary
+			220 button Save
+			221 button Forward
+		222 container Date calendar
+			223 button Previous month
+				224 image
+			225 button Next month
+				226 image
+			227 heading November 2026, Value: 3
+				228 text November 2026
+			229 table November 2026
+				230 cell
+					231 text S
+				232 cell
+					233 text M
+				234 cell
+					235 text T
+				236 cell
+					237 text W
+				238 cell
+					239 text T
+				240 cell
+					241 text F
+				242 cell
+					243 text S
+				244 cell (selectable) Description: Sunday, November 1, 2026, Value: 1
+				245 cell (selectable) Description: Monday, November 2, 2026, Value: 2
+				246 cell (selectable) Description: Tuesday, November 3, 2026, Value: 3
+				247 cell (selectable) Description: Wednesday, November 4, 2026, Value: 4
+				248 cell (selectable) Description: Thursday, November 5, 2026, Value: 5
+				249 cell (selectable) Description: Friday, November 6, 2026, Value: 6
+				250 cell (selectable) Description: Saturday, November 7, 2026, Value: 7
+				251 cell (selectable) Description: Sunday, November 8, 2026, Value: 8
+				252 cell (selectable) Description: Monday, November 9, 2026, Value: 9
+				253 cell (selected) Description: Tuesday, November 10, 2026, Value: 10
+				254 cell (selectable) Description: Wednesday, November 11, 2026, Value: 11
+				255 cell (selectable) Description: Thursday, November 12, 2026, Value: 12
+				256 cell (selectable) Description: Friday, November 13, 2026, Value: 13
+				257 cell (selectable) Description: Saturday, November 14, 2026, Value: 14
+				258 cell (selectable) Description: Sunday, November 15, 2026, Value: 15
+				259 cell (selectable) Description: Monday, November 16, 2026, Value: 16
+				260 cell (selectable) Description: Tuesday, November 17, 2026, Value: 17
+				261 cell (selectable) Description: Wednesday, November 18, 2026, Value: 18
+				262 cell (selectable) Description: Thursday, November 19, 2026, Value: 19
+				263 cell (selectable) Description: Friday, November 20, 2026, Value: 20
+				264 cell (selectable) Description: Saturday, November 21, 2026, Value: 21
+				265 cell (selectable) Description: Sunday, November 22, 2026, Value: 22
+				266 cell (selectable) Description: Monday, November 23, 2026, Value: 23
+				267 cell (selectable) Description: Tuesday, November 24, 2026, Value: 24
+				268 cell (selectable) Description: Wednesday, November 25, 2026, Value: 25
+				269 cell (selectable) Description: Thursday, November 26, 2026, Value: 26
+				270 cell (selectable) Description: Friday, November 27, 2026, Value: 27
+				271 cell (selectable) Description: Saturday, November 28, 2026, Value: 28
+				272 cell (selectable) Description: Sunday, November 29, 2026, Value: 29
+				273 cell (selectable) Description: Monday, November 30, 2026, Value: 30
+			274 heading December 2026, Value: 3
+				275 text December 2026
+			276 table December 2026
+				277 cell
+					278 text S
+				279 cell
+					280 text M
+				281 cell
+					282 text T
+				283 cell
+					284 text W
+				285 cell
+					286 text T
+				287 cell
+					288 text F
+				289 cell
+					290 text S
+				291 cell (selectable) Description: Tuesday, December 1, 2026, Value: 1
+				292 cell (selectable) Description: Wednesday, December 2, 2026, Value: 2
+				293 cell (selectable) Description: Thursday, December 3, 2026, Value: 3
+				294 cell (selectable) Description: Friday, December 4, 2026, Value: 4
+				295 cell (selectable) Description: Saturday, December 5, 2026, Value: 5
+				296 cell (selectable) Description: Sunday, December 6, 2026, Value: 6
+				297 cell (selectable) Description: Monday, December 7, 2026, Value: 7
+				298 cell (selectable) Description: Tuesday, December 8, 2026, Value: 8
+				299 cell (selectable) Description: Wednesday, December 9, 2026, Value: 9
+				300 cell (selectable) Description: Thursday, December 10, 2026, Value: 10
+				301 cell (selectable) Description: Friday, December 11, 2026, Value: 11
+				302 cell (selectable) Description: Saturday, December 12, 2026, Value: 12
+				303 cell (selectable) Description: Sunday, December 13, 2026, Value: 13
+				304 cell (selectable) Description: Monday, December 14, 2026, Value: 14
+				305 cell (selectable) Description: Tuesday, December 15, 2026, Value: 15
+				306 cell (selectable) Description: Wednesday, December 16, 2026, Value: 16
+				307 cell (selectable) Description: Thursday, December 17, 2026, Value: 17
+				308 cell (selectable) Description: Friday, December 18, 2026, Value: 18
+				309 cell (selectable) Description: Saturday, December 19, 2026, Value: 19
+				310 cell (selectable) Description: Sunday, December 20, 2026, Value: 20
+				311 cell (selectable) Description: Monday, December 21, 2026, Value: 21
+				312 cell (selectable) Description: Tuesday, December 22, 2026, Value: 22
+				313 cell (selectable) Description: Wednesday, December 23, 2026, Value: 23
+				314 cell (selectable) Description: Thursday, December 24, 2026, Value: 24
+				315 cell (selectable) Description: Friday, December 25, 2026, Value: 25
+				316 cell (selectable) Description: Saturday, December 26, 2026, Value: 26
+				317 cell (selectable) Description: Sunday, December 27, 2026, Value: 27
+				318 cell (selectable) Description: Monday, December 28, 2026, Value: 28
+				319 cell (selectable) Description: Tuesday, December 29, 2026, Value: 29
+				320 cell (selectable) Description: Wednesday, December 30, 2026, Value: 30
+				321 cell (selectable) Description: Thursday, December 31, 2026, Value: 31
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3212/engagement/canvas/f216ee2a-4db7-4d57-9e52-1fafce349f8a?locale=en&workspace=local&step=audience

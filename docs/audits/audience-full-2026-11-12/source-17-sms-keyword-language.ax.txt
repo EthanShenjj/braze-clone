@@ -1,0 +1,164 @@
+Browser tab: 11, Title: "Subscription Group Details", URL: "https://dashboard-09.braze.com/users/subscription_groups/6af4375120abdf005fc2ee85/6af4374c46d3080087f1c5d2".
+0 AXWebArea Subscription Group Details, URL: dashboard-09.braze.com/users/subscription_groups/6af4375120abdf005fc2ee85/6af4374c46d3080087f1c5d2
+	1 container
+		2 container react-root
+			3 link Description: Skip to main content, Value: dashboard-09.braze.com/users/subscription_groups/6af4375120abdf005fc2ee85/6af4374c46d3080087f1c5d2#main-container
+			4 container Side navigation
+				5 container
+					6 button Minimize menu
+					7 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+						8 image
+						9 text Demo – ittor
+					10 text Quick links
+					11 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+					12 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+					13 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+					14 button Getting Started
+						15 image
+						16 container
+							17 text Getting Started
+							18 container
+								19 text 8 %
+					20 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+					21 button AI Decisioning
+						22 image
+						23 text AI Decisioning
+					24 button Agents
+						25 image
+						26 text Agents
+					27 button Messaging
+						28 image
+						29 text Messaging
+					30 button Audience
+						31 image
+						32 text Audience
+					33 button Content
+						34 image
+						35 text Content
+					36 button Analytics
+						37 image
+						38 text Analytics
+					39 button Partner Integrations
+						40 image
+						41 text Partner Integrations
+					42 button Data Settings
+						43 image
+						44 text Data Settings
+					45 button Settings
+						46 image
+						47 text Settings
+				48 container Footer Logo
+					49 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+			50 text 14 days left in your free trial.
+			51 button Connect with sales
+			52 container Top navigation
+				53 container Left top navigation
+					54 button Search workspace ⌘+K
+						55 image
+						56 text Search workspace
+						57 text ⌘+K
+				58 container Right top navigation
+					59 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						60 image
+					61 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						62 image
+					63 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+						64 image
+					65 container
+						66 button Notifications
+							67 image
+					68 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						69 image
+					70 button BrazeAI Operator™
+						71 image
+			72 container main-container
+				233 container main-content
+					234 container
+						235 heading Subscription Group Details, Value: 3
+							236 text Subscription Group Details
+						237 text Name
+						238 text field (settable) Name, Value: SMS Canvas Subscription Group, ID: sub-group-name
+						239 container
+							240 text Subscription Group Description 90 / 250 characters
+						241 text entry area (settable) Subscription Group Description 90 / 250 characters, Value: Users must be subscribed to this group to receive SMS from "SMS Canvas Subscription Group", ID: sub-group-description
+						242 button Remove Description
+						243 text ID
+						244 text field (disabled) ID, Value: d1d038f7-75c9-4bff-bed2-2b9f6698b65c, ID: sub-group-extid
+						245 container
+							246 text Link Shortening Domain
+							247 pop up button (collapsed) Description: Help text available. Tab to view help text, click to open popover, Secondary Actions: Expand
+						248 container
+							249 container
+								250 text brz.ai
+								251 combo box (collapsed, settable) Description: Link Shortening Domain, ID: react-select-14-input, Secondary Actions: Expand
+						252 text Short Codes
+						253 text No short codes Long Code +15005550006
+					254 container
+						255 heading Geographic Permissions, Value: 3
+							256 text Geographic Permissions
+						257 text To protect against traffic pumping, Braze will send SMS/MMS/RCS messages only to the countries on your allowlist. If you need to make changes to your allowlist, please contact your customer success manager.
+						258 container sms-traffic-pumping-warning-banner
+							259 text Protect against traffic pumping SMS traffic pumping occurs when fraudsters exploit vulnerable touchpoints—such as web forms or authentication flows—to generate increased message volumes and collect a cut of the resulting fees. Because all transmitted messages count toward account usage or billing, and your company will be financially responsible for such usage, we recommend restricting the geographic permissions allowlist to countries where your intended recipients reside.
+							260 text Opening in a new tab
+							261 link Description: Opening in a new tab, Value: braze.com/docs/en/user_guide/channels/sms_mms_and_rcs/compliance_and_delivery/sms_traffic_pumping_fraud
+						262 text Country allowlist The allowlist is empty; SMS/MMS/RCS messages for this subscription group will not send.
+					263 button (disabled) Save
+					264 container
+						265 heading Global Keywords, Value: 3
+							266 text Global Keywords
+						267 text The use of SMS is subject to specific legal requirements. To ensure that you are using the SMS Services in compliance with all applicable laws, you should seek the advice of your legal counsel.
+						268 link Description: Learn More, Value: braze.com/docs/en/user_guide/onboarding_with_braze/sms_setup/sms_laws_and_regulations/
+						269 button Close
+						270 tab group Keyword languages
+							271 tab (selected, settable, boolean) English, Value: 1, ID: 0
+						309 container
+							310 text Select...
+							311 combo box (collapsed, settable) Description: Language, ID: react-select-15-input, Secondary Actions: Expand
+						312 button Cancel
+						313 button Add
+						273 text Keyword Category
+						274 text Keywords
+						275 text Response
+						276 text Opt-In
+						277 container
+							278 text Opt-In
+							279 text (Required)
+							280 text START
+							281 text UNSTOP
+							282 text YES
+							283 text You have been re-subscribed to messages from this number. Reply HELP for help. Reply STOP to unsubscribe. Msg&Data Rates May Apply.
+							284 text Double Opt-In
+							285 text Consent verification requiring users to reply to a text message opt-in prompt before becoming subscribed
+						286 text Opt-Out
+						287 container
+							288 text Opt-Out
+							289 text (Required)
+							290 text STOP
+							291 text STOPALL
+							292 text UNSUBSCRIBE
+							293 text CANCEL
+							294 text END
+							295 text QUIT
+							296 text OPT OUT
+							297 text REVOKE
+							298 text You have successfully been unsubscribed. You will not receive any more messages from this number. Reply START to resubscribe.
+							299 text Fuzzy Opt-Out
+							300 text Intelligent processing that handles misspelled message responses that represent opt-out intent
+						301 text Help
+						302 container
+							303 text Help
+							304 text (Required)
+							305 text HELP
+							306 text INFO
+							307 text Reply STOP to unsubscribe. Msg&Data Rates May Apply.
+						308 button Add custom keyword
+				225 text © Braze 2026
+				226 text Opening in a new tab
+				227 link Description: Opening in a new tab, Value: braze.statuspage.io/
+				228 text Opening in a new tab
+				229 link Description: Opening in a new tab, Value: braze.com/terms
+				230 text Opening in a new tab
+				231 link Description: Opening in a new tab, Value: braze.com/privacy
+		232 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+
+The focused UI element is 0 AXWebArea Subscription Group Details, URL: dashboard-09.braze.com/users/subscription_groups/6af4375120abdf005fc2ee85/6af4374c46d3080087f1c5d2

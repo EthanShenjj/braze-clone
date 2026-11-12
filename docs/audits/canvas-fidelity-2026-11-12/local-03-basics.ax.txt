@@ -1,0 +1,123 @@
+Browser tab: 5, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3220/engagement/canvas/322ef7c3-bd70-4553-81df-819a884b95cf?locale=en&workspace=local&step=basics&workspaceId=local".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3220/engagement/canvas/322ef7c3-bd70-4553-81df-819a884b95cf?locale=en&workspace=local&step=basics&workspaceId=local
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agent Console
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+		25 container
+			26 text ◷   8 days left in your free trial.
+			27 button Connect with sales
+		28 container
+			29 button Search workspace ⌘K
+				30 image
+				31 text Search workspace
+				32 text ⌘K
+			33 button Take a tour
+			34 image Community
+			35 button (collapsed) Description: Language, Secondary Actions: Expand
+			36 button Notifications
+			37 button (collapsed) Description: Profile, Secondary Actions: Expand
+			38 image
+			39 button Open BrazeAI Operator
+		40 button Canvas
+		41 container
+			42 button Canvas
+			43 text › Edit ' New Canvas - November 12, 2026 '
+			44 button Close Canvas
+				45 image
+			46 text Limited access
+			47 container Canvas creation steps
+				48 button 1 Basics
+					49 text 1
+					50 text Basics
+				51 button 2 Entry Schedule
+					52 text 2
+					53 text Entry Schedule
+				54 button 3 Target Audience
+					55 text 3
+					56 text Target Audience
+				57 button 4 Send Settings
+					58 text 4
+					59 text Send Settings
+				60 button 5 Build Canvas
+					61 text 5
+					62 text Build Canvas
+				63 button 6 Summary
+					64 text 6
+					65 text Summary
+			66 heading Set Up Canvas Details, Value: 2
+				67 text Set Up Canvas Details
+			68 text Canvas Name
+			69 text field (settable) Description: Canvas Name, Value: New Canvas - November 12, 2026
+			70 button Add description
+				71 image
+				72 text Add description
+			73 button (collapsed) Tags, Secondary Actions: Expand
+				74 image
+				75 text Tags
+				76 image
+			77 container Canvas brief
+				78 heading Canvas brief, Value: 3
+					79 text Canvas brief
+				80 text Attach a brief so BrazeAI Operator can build your Canvas and your Standards can review it against your goals
+				81 heading Attach a Canvas brief (optional), Value: 4
+					82 text Attach a Canvas brief (optional)
+				83 text PDF, TXT, MD, CSV, DOCX, XLSX up to 15MB
+				84 button Upload file
+					85 image
+					86 text Upload file
+			87 text Canvas ID
+			88 text field Canvas ID Copy, Value: 322ef7c3-bd70-4553-81df-819a884b95cf
+			89 button Copy
+				90 image
+				91 text Copy
+			92 text This is the unique key for this Canvas. Use it to identify which Canvas to send in a request to the Canvas Trigger API.
+			93 heading Assign Conversion Events, Value: 2
+				94 text Assign Conversion Events
+			95 text Define up to 4 conversion events to track for this Canvas. The conversion events must be assigned during Canvas creation, and cannot be changed once a Canvas has launched.
+			96 button Add Conversion Event
+				97 image
+				98 text Add Conversion Event
+			99 button (disabled) Back
+			100 container Canvas creation steps
+				101 button 1 Basics
+					102 text 1
+					103 text Basics
+				104 button 2 Entry Schedule
+					105 text 2
+					106 text Entry Schedule
+				107 button 3 Target Audience
+					108 text 3
+					109 text Target Audience
+				110 button 4 Send Settings
+					111 text 4
+					112 text Send Settings
+				113 button 5 Build Canvas
+					114 text 5
+					115 text Build Canvas
+				116 button 6 Summary
+					117 text 6
+					118 text Summary
+			119 button Save
+			120 button Forward
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3220/engagement/canvas/322ef7c3-bd70-4553-81df-819a884b95cf?locale=en&workspace=local&step=basics&workspaceId=local

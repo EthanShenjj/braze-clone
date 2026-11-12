@@ -1,0 +1,228 @@
+Browser tab: 15, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/users/subscription_groups/preference_centers/6aa75e37db69160082adb7ae?locale=en&workspace=local&centerId=pc_997e403412d84bf5".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/subscription_groups/preference_centers/6aa75e37db69160082adb7ae?locale=en&workspace=local&centerId=pc_997e403412d84bf5
+	2 container
+		3 text Email Preference Center
+		4 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		5 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			6 text Local workspace
+			7 image
+		8 container Side navigation
+			9 text Quick links
+			10 button Canvas
+			11 button Campaigns
+			12 button Segments
+			13 button Getting Started
+			14 button Home
+			15 button AI Decisioning
+			16 button Agents
+			17 button Messaging
+			18 button Audience
+			19 button Content
+			20 button Analytics
+			21 button Partner Integrations
+			22 button Data Settings
+			23 button Settings
+		24 button Home
+			25 image Braze
+		26 container
+			27 text ◷   8 days left in your free trial.
+			28 button Connect with sales
+		29 container
+			30 button Search workspace ⌘K
+				31 image
+				32 text Search workspace
+				33 text ⌘K
+			34 button Take a tour
+			35 image Community
+			36 button (collapsed) Description: Language, Secondary Actions: Expand
+			37 button Notifications
+			38 button (collapsed) Description: Profile, Secondary Actions: Expand
+			39 image
+			40 button Open BrazeAI Operator
+		41 container
+			42 button Email Preference Centers
+			43 button Audience QA preferences
+				44 text Audience QA preferences
+				45 image
+			46 heading Email Preference Center, Value: 1
+				47 text Email Preference Center
+			48 heading Details, Value: 2
+				49 text Details
+			50 container
+				51 text Name 23 /280 characters
+				52 text field (settable) Description: Name, Value: Audience QA preferences
+			53 button Add Description
+				54 image
+				55 text Add Description
+			56 image
+			57 text The Liquid tag will be generated after the preference center is launched
+			58 button Close Liquid notice
+				59 image
+			60 container
+				61 text Liquid
+				62 text field Description: Liquid, Value: {{preference_center.${}}}
+				63 button Copy Liquid
+					64 image
+			65 container
+				66 text API ID
+				67 text field Description: API ID, Value: pc_997e403412d84bf5
+				68 button Copy API ID
+					69 image
+			70 container
+				71 heading Page Previews, Value: 2
+					72 text Page Previews
+				73 button Edit
+			74 radio button (settable, integer) Description: Preference Center, Value: 1
+			75 radio button (settable, integer) Description: Confirmation Page, Value: 0
+			76 container
+				77 heading Update your email preferences, Value: 2
+					78 text Update your email preferences
+				79 container
+					80 checkbox (settable, integer) Description: Product updates Feature launches, release notes, and product education., Value: 0
+					81 text Product updates Feature launches, release notes, and product education.
+				82 button Save my preferences
+				83 button Unsubscribe from all emails
+			84 button (disabled) Save as draft
+			85 button Launch preference center
+			86 container Preference center editor
+				87 container
+					88 tab group
+						89 tab (selected, settable, boolean) Compose, Value: 1
+						90 tab (selectable, settable, boolean) Settings, Value: 0
+						91 tab (selectable, settable, boolean) Preview, Value: 0
+					92 button (expanded) Pages (2) ⌃, Secondary Actions: Collapse
+						93 text Pages (2)
+						94 text ⌃
+					95 button Update your email preferences Preference Center
+						96 text Update your email preferences
+						97 text Preference Center
+					98 button Thank you, your preferences have been updated Confirmation Page
+						99 text Thank you, your preferences have been updated
+						100 text Confirmation Page
+					101 heading Rows, Value: 3
+						102 text Rows
+					103 text Drag a row into your message
+					104 button 1 Column
+					105 button 2 Columns
+					106 button 3 Columns
+					107 heading Blocks, Value: 3
+						108 text Blocks
+					109 text Drag and drop a block into a row
+					110 button Title
+						111 image
+						112 text Title
+					113 button Paragraph
+						114 image
+						115 text Paragraph
+					116 button Button
+						117 image
+						118 text Button
+					119 button Image
+						120 image
+						121 text Image
+					122 button Link
+						123 image
+						124 text Link
+					125 button Spacer
+						126 image
+						127 text Spacer
+					128 button Collapse sidebar
+						129 image
+				130 container
+					131 heading Update your email preferences, Value: 2
+						132 text Update your email preferences
+					133 container
+						134 checkbox (disabled, settable, integer) Description: Product updates Feature launches, release notes, and product education., Value: 0
+						135 text Product updates Feature launches, release notes, and product education.
+					136 button Save my preferences
+					137 button Unsubscribe from all emails
+					138 button (disabled) Undo
+						139 image
+					140 button (disabled) Redo
+						141 image
+					142 checkbox Description: Phone, Value: 0
+						143 image
+					144 checkbox Description: Tablet, Value: 0
+						145 image
+					146 checkbox Description: Desktop, Value: 1
+						147 image
+					148 button Hide Outlines
+						149 image
+					150 button Add Personalization
+						151 image
+				152 container
+					153 heading Common styles Copy or paste styles, Value: 2
+						154 text Common styles
+						155 button (collapsed) Description: Copy or paste styles, Secondary Actions: Expand
+							156 image
+					157 text All blocks in this page will use these styles, unless overridden at the local level.
+					158 heading Page Copy or paste page styles, Value: 2
+						159 text Page 
+						160 button Copy or paste page styles
+							161 image
+					162 text Style the entire page Max width
+					163 stepper (settable, integer) Max width px, Value: 500
+					164 pop up button (collapsed, settable) Description: Max width unit, Value: px, Secondary Actions: Expand
+						165 menu
+							166 (selected) px
+							167 %
+					168 text Background color
+					169 color well (settable) Description: Background color, Value: #ffffff
+					170 text field (settable) Description: Background color hex, Value: #ffffff
+					171 text Opacity
+					172 stepper (settable, integer) Description: Background color opacity, Value: 100
+					173 text %
+					174 heading Content Copy or paste content styles, Value: 2
+						175 text Content 
+						176 button Copy or paste content styles
+							177 image
+					178 text Style the body of the page Default font family
+					179 pop up button (collapsed, settable) Default font family, Value: OS Default (Sans Serif), Secondary Actions: Expand
+						180 menu
+							181 (selected) OS Default (Sans Serif)
+							182 Arial
+							183 Helvetica
+							184 Georgia
+							185 OS Default (Serif)
+					186 button + Add Custom Font
+					187 text Content area alignment
+					188 checkbox Description: left, Value: 1
+						189 image
+					190 checkbox Description: center, Value: 0
+						191 image
+					192 checkbox Description: right, Value: 0
+						193 image
+					194 text Text color
+					195 color well (settable) Description: Text color, Value: #000000
+					196 text field (settable) Description: Text color hex, Value: #000000
+					197 text Opacity
+					198 stepper (settable, integer) Description: Text color opacity, Value: 100
+					199 text %
+					200 text Button color
+					201 color well (settable) Description: Button color, Value: #008294
+					202 text field (settable) Description: Button color hex, Value: #008294
+					203 text Opacity
+					204 stepper (settable, integer) Description: Button color opacity, Value: 100
+					205 text %
+					206 text Button text color
+					207 color well (settable) Description: Button text color, Value: #ffffff
+					208 text field (settable) Description: Button text color hex, Value: #ffffff
+					209 text Opacity
+					210 stepper (settable, integer) Description: Button text color opacity, Value: 100
+					211 text %
+					212 text Link color
+					213 color well (settable) Description: Link color, Value: #1b78cf
+					214 text field (settable) Description: Link color hex, Value: #1b78cf
+					215 text Opacity
+					216 stepper (settable, integer) Description: Link color opacity, Value: 100
+					217 text %
+				218 container
+					219 button (disabled) Send feedback, Help: Feedback collection is not configured for this workspace.
+						220 image
+						221 text Send feedback
+					222 button Cancel
+					223 button Done
+					224 button (disabled) Description: BrazeAI Operator, Help: BrazeAI Operator does not support preference center editing in this workspace.
+						225 image
+
+The focused UI element is 73 button Edit

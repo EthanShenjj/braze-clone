@@ -70,7 +70,55 @@ api("/api/tags/" + unused["id"] + "?expectedUpdatedAt=" + quote(unused["updatedA
 api("/api/tags/resolve", "POST", {"tags": [unused["name"]]}, 400)
 assert api("/api/tags/resolve", "POST", {"tags": [root["name"]]})["tags"] == [renamed_name]
 
+# Source-confirmed global deletion removes an in-use leaf tag from every task.
+deleted_child = api("/api/tags/" + child["id"] + "?expectedUpdatedAt=" + quote(child["updatedAt"]), "DELETE")
+assert len(deleted_child["usages"]) == 2
+for suffix in ["one", "two"]:
+    assert child["name"] not in api("/api/campaigns/cmp_" + prefix + suffix)["config"]["tags"]
+api("/api/tags/resolve", "POST", {"tags": [child["name"]]}, 400)
+
+# Full Tag As replacement supports removals and clearing Campaign/Canvas/Segment tags.
+for resource_type, resource_id in [("canvas", canvas["id"]), ("segments", segment["id"])]:
+    replaced = api("/api/tags/resources", "POST", {"resourceType": resource_type, "ids": [resource_id], "tags": [renamed_name, prefix + "_resource_bulk"]})
+    assert replaced["tags"] == [renamed_name, prefix + "_resource_bulk"]
+    assert api("/api/tags/resources", "POST", {"resourceType": resource_type, "ids": [resource_id], "tags": []})["tags"] == []
+assert api("/api/canvases/" + canvas["id"])["canvas"]["tags"] == []
+assert next(row for row in api("/api/resources/segments")["data"] if row["id"] == segment["id"])["data"]["tags"] == []
+assert api("/api/tags/campaigns", "POST", {"ids": [old_draft["id"]], "tags": [], "mode": "replace"})["tags"] == []
+assert api("/api/campaigns/" + old_draft["id"])["config"]["tags"] == []
+api("/api/tags/resources", "POST", {"resourceType": "canvas", "ids": [canvas["id"]]}, 400)
+
 # Restore the control-group settings changed by this test, leaving its data fixtures isolated.
 snapshot = api("/api/global-control-group")
 api("/api/global-control-group", "PATCH", {"action": "update-exclusions", "exclusionTags": original_exclusions, "expectedUpdatedAt": snapshot["updatedAt"]})
-print("Tag API checks passed: hierarchy, conflicts, cross-resource rename, GCG stability, aliases, bulk union, limits, deletion and legacy-route guards.")
+# Scoped Canvas/Segment retargeting uses saved rules and actual receipt records.
+scope = prefix + "_workspace"
+scoped_query = "?workspaceId=" + quote(scope)
+scoped_tag = api("/api/tags" + scoped_query, "POST", {"name": prefix + "_scoped"}, 201)
+local_journey = api("/api/canvases", "POST", {"name": prefix + "_scope_journey"}, 201)
+other_journey = api("/api/canvases", "POST", {"name": local_journey["name"], "workspaceId": scope, "tags": [scoped_tag["name"]]}, 201)
+assert other_journey["id"] in [row["id"] for row in api("/api/canvases" + scoped_query)["data"]]
+assert other_journey["id"] not in [row["id"] for row in api("/api/canvases")["data"]]
+api("/api/canvases/" + other_journey["id"] + "?workspaceId=local", status=404)
+api("/api/tags" + scoped_query, "POST", {"name": prefix + "_invalid_parent", "parentId": root["id"]}, 400)
+member = api("/api/users?limit=1")["data"][0]["id"]
+source_id = "cmp_" + prefix + "_interaction"
+api("/api/campaigns", "POST", {"id": source_id, "name": prefix + "_interaction", "channel": "email", "config": {"workspaceId": scope, "tags": [scoped_tag["name"]]}}, 201)
+rule = {"id": "clicked", "field": "receipt_tag_count:engaged:" + scoped_tag["id"], "operator": "greater_than", "value": "0", "tagInteraction": "clicked_email"}
+scoped_segment = api("/api/resources/segments", "POST", {"name": prefix + "_retargeting", "status": "Active", "data": {"workspaceId": scope, "filters": [rule]}}, 201)
+assert scoped_segment["id"] not in [row["id"] for row in api("/api/resources/segments?workspaceId=local")["data"]]
+assert scoped_segment["id"] in [row["id"] for row in api("/api/resources/segments" + scoped_query)["data"]]
+criteria = {"workspaceId": scope, "audience": {"segmentIds": [scoped_segment["id"]]}, "lookup": member}
+assert api("/api/canvases/audience-preview", "POST", criteria)["matching"] == 0
+api("/api/campaigns/" + source_id + "/events", "POST", {"userId": member, "event": "clicked"})
+preview = api("/api/canvases/audience-preview", "POST", criteria)
+assert preview["matching"] == 1 and preview["lookup"]["matchesFilters"] is True
+scoped_tag = api("/api/tags/" + scoped_tag["id"] + scoped_query, "PATCH", {"name": prefix + "_scoped_renamed", "expectedUpdatedAt": scoped_tag["updatedAt"]})
+assert api("/api/canvases/audience-preview", "POST", criteria)["matching"] == 1
+wrong_scope = {**criteria, "workspaceId": "local"}
+api("/api/canvases/audience-preview", "POST", wrong_scope, 400)
+api("/api/tags/" + scoped_tag["id"] + scoped_query + "&expectedUpdatedAt=" + quote(scoped_tag["updatedAt"]), "DELETE")
+assert api("/api/canvases/" + other_journey["id"] + scoped_query)["canvas"]["tags"] == []
+api("/api/canvases/audience-preview", "POST", criteria, 400)
+api("/api/resources/segments", "PATCH", {"id": scoped_segment["id"], "expectedUpdatedAt": scoped_segment["updatedAt"], "data": scoped_segment["data"]}, 409)
+print("Tag API checks passed: CRUD, hierarchy, conflicts, rename, aliases, bulk merge/replace/clear, limits, cascading deletion, workspace isolation, specific interactions, Segment targeting, Canvas population/lookup and stale-rule rejection.")

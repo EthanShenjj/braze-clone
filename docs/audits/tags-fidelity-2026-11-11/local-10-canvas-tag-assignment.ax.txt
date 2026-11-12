@@ -1,0 +1,119 @@
+Browser tab: 3, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3210/engagement/canvas/f216ee2a-4db7-4d57-9e52-1fafce349f8a?locale=en&workspace=local&step=basics&workspaceId=local".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3210/engagement/canvas/f216ee2a-4db7-4d57-9e52-1fafce349f8a?locale=en&workspace=local&step=basics&workspaceId=local
+	1 container
+		5 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			6 image
+		45 text Braze Demo — Thinkingai
+		7 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		8 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			9 text Local workspace
+			10 image
+		11 container Side navigation
+			12 text Quick links
+			13 button Canvas
+			14 button Campaigns
+			15 button Segments
+			16 button Getting Started
+			17 button Home
+			18 button AI Decisioning
+			19 button Agent Console
+			20 button Messaging
+			21 button Audience
+			22 button Content
+			23 button Analytics
+			24 button Partner Integrations
+			25 button Data Settings
+			26 button Settings
+		27 button Home
+			28 image Braze
+		29 container
+			30 text ◷   8 days left in your free trial.
+			31 button Connect with sales
+		32 container
+			33 button Search workspace ⌘K
+				34 image
+				35 text Search workspace
+				36 text ⌘K
+			37 button Take a tour
+			38 image Community
+			39 button (collapsed) Description: Language, Secondary Actions: Expand
+			40 button Notifications
+			41 button (collapsed) Description: Profile, Secondary Actions: Expand
+			42 image
+			43 button Open BrazeAI Operator
+		44 button Canvas
+		46 container
+			47 button Canvas
+			48 text › Edit ' New Canvas - November 11, 2026 '
+			49 button Close Canvas
+				50 image
+			51 text ♙ Limited access
+			52 container Canvas creation steps
+				53 button 1 Basics
+					54 text 1
+					55 text Basics
+				56 button 2 Entry Schedule
+					57 text 2
+					58 text Entry Schedule
+				59 button 3 Target Audience
+					60 text 3
+					61 text Target Audience
+				62 button 4 Send Settings
+					63 text 4
+					64 text Send Settings
+				65 button 5 Build Canvas
+					66 text 5
+					67 text Build Canvas
+				68 button 6 Summary
+					69 text 6
+					70 text Summary
+			71 heading Set Up Canvas Details, Value: 2
+				72 text Set Up Canvas Details
+			73 text Canvas Name
+			74 text field (settable) Description: Canvas Name, Value: Tagged welcome journey
+			75 button Add description
+				76 image
+				77 text Add description
+			78 button (collapsed) Tags, Secondary Actions: Expand
+				79 image
+				80 text Tags
+				81 image
+			116 text Lifecycle / Onboarding
+			117 button Remove tag Onboarding
+				118 image
+			82 text Canvas ID
+			83 text field Canvas ID Copy, Value: f216ee2a-4db7-4d57-9e52-1fafce349f8a
+			84 button Copy
+				85 image
+				86 text Copy
+			87 text This is the unique key for this Canvas. Use it to identify which Canvas to send in a request to the Canvas Trigger API.
+			88 heading Assign Conversion Events, Value: 2
+				89 text Assign Conversion Events
+			90 text Define up to 4 conversion events to track for this Canvas. The conversion events must be assigned during Canvas creation, and cannot be changed once a Canvas has launched.
+			91 button Add Conversion Event
+				92 image
+				93 text Add Conversion Event
+			94 button (disabled) Back
+			95 container Canvas creation steps
+				96 button 1 Basics
+					97 text 1
+					98 text Basics
+				99 button 2 Entry Schedule
+					100 text 2
+					101 text Entry Schedule
+				102 button 3 Target Audience
+					103 text 3
+					104 text Target Audience
+				105 button 4 Send Settings
+					106 text 4
+					107 text Send Settings
+				108 button 5 Build Canvas
+					109 text 5
+					110 text Build Canvas
+				111 button 6 Summary
+					112 text 6
+					113 text Summary
+			114 button Save
+			115 button Forward
+
+The focused UI element is 0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3210/engagement/canvas/f216ee2a-4db7-4d57-9e52-1fafce349f8a?locale=en&workspace=local&step=basics&workspaceId=local

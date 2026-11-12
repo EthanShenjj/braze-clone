@@ -1,0 +1,205 @@
+- complementary:
+  - button "Minimize menu" [expanded]
+  - button "Select workspace":
+    - generic: Local workspace
+  - navigation "Side navigation":
+    - generic: Quick links
+    - button "Canvas":
+      - generic: Canvas
+    - button "Campaigns":
+      - generic: Campaigns
+    - button "Segments":
+      - generic: Segments
+    - button "Getting Started":
+      - generic: Getting Started
+    - button "Home":
+      - generic: Home
+    - button "AI Decisioning":
+      - generic: AI Decisioning
+    - button "Agent Console":
+      - generic: Agent Console
+    - button "Messaging":
+      - generic: Messaging
+    - button "Audience" [active]:
+      - generic: Audience
+    - button "Content":
+      - generic: Content
+    - button "Analytics":
+      - generic: Analytics
+    - button "Partner Integrations":
+      - generic: Partner Integrations
+    - button "Data Settings":
+      - generic: Data Settings
+    - button "Settings":
+      - generic: Settings
+  - button "Home":
+    - img "Braze"
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - generic "Community":
+    - img "Community"
+  - button "Language"
+  - button "Notifications"
+  - button "Profile"
+  - button "Open BrazeAI Operator"
+  - button "Segments"
+  - button "Edit New Users":
+    - text: Edit New Users
+  - heading "Edit segment" [level=1]
+  - article:
+    - heading "Segment Details" [level=2]
+    - button "User Data":
+      - text: User Data
+    - button "Create campaign":
+      - text: Create campaign
+    - text: Segment Name
+    - textbox "Segment Name": New Users
+    - text: Description
+    - textbox "Description": Users in the new-user lifecycle stage
+    - button "Tags":
+      - text: Tags
+    - text: Apps and websites targeted
+    - combobox "Apps and websites targeted":
+      - option "Users from all apps" [selected]
+      - option "Users from specific apps"
+    - switch "Analytics Tracking"
+    - text: Analytics Tracking
+  - article:
+    - heading "Segment Builder" [level=2]
+    - paragraph: Users will be included in this segment if they match your filter groups, and omitted if they match your exclusion groups.
+    - button "Show more":
+      - text: Show more
+    - region "Filter group":
+      - button "Drag filter group":
+      - strong: Filter group
+      - combobox "Filter group operator":
+        - option "OR"
+        - option "AND" [selected]
+      - button "Remove filter group":
+      - region "lifecycle":
+        - heading "lifecycle" [level=4]
+        - generic: Comparison
+        - combobox "Comparison": is
+        - button "Toggle Comparison":
+        - generic: Value
+        - textbox "Value": New Users
+      - button "Duplicate":
+        - text: Duplicate
+      - button "Remove":
+        - text: Remove
+      - generic: AND
+      - combobox "Select filter"
+      - button "Toggle filter catalog": ⌄
+    - button "Add filter group":
+      - text: Add filter group
+    - button "Add exclusion group":
+      - text: Add exclusion group
+    - generic: "200"
+    - text: Matching users
+    - generic: "185"
+    - text: Reachable users
+    - generic: 20%
+    - text: Of workspace
+  - article:
+    - heading "User Lookup" [level=2]
+    - paragraph: Check if a user matches the segment, filter, and app criteria
+    - textbox "Search by External User ID or Braze ID"
+    - button "Search" [disabled]
+  - article:
+    - heading "Messaging Use" [level=2]
+    - table:
+      - rowgroup:
+        - row "Campaigns Newsletter Welcome, Welcome Offer IAM":
+          - rowheader "Campaigns"
+          - cell "Newsletter Welcome, Welcome Offer IAM"
+        - row "Segments Not used by any Segments":
+          - rowheader "Segments"
+          - cell "Not used by any Segments"
+        - row "Canvases Not used by any Canvases":
+          - rowheader "Canvases"
+          - cell "Not used by any Canvases"
+  - article:
+    - heading "Segment Insights Information" [level=2]:
+      - text: Segment Insights
+      - img "Information"
+    - paragraph: "New Users / Baseline: All Users"
+    - heading "Usage" [level=3]
+    - table:
+      - rowgroup:
+        - row "Session Frequency — / —":
+          - rowheader "Session Frequency"
+          - cell "— / —"
+        - row "Time since First Session — / —":
+          - rowheader "Time since First Session"
+          - cell "— / —"
+        - row "Time since Last Session — / —":
+          - rowheader "Time since Last Session"
+          - cell "— / —"
+    - heading "Purchases" [level=3]
+    - table:
+      - rowgroup:
+        - row "Lifetime Revenue — / —":
+          - rowheader "Lifetime Revenue"
+          - cell "— / —"
+        - row "Time to First Purchase — / —":
+          - rowheader "Time to First Purchase"
+          - cell "— / —"
+        - row "Time since Last Purchase — / —":
+          - rowheader "Time since Last Purchase"
+          - cell "— / —"
+    - link "View Segment Insights":
+      - /url: /engagement/segmenter/segment_insights/local?segmentIds=seg_new&baselineSegmentId=&workspace=local&locale=en
+      - text: View Segment Insights
+  - article:
+    - heading "API Identifier" [level=2]
+    - paragraph: "Segment API Identifier :"
+    - textbox "Segment API Identifier": seg_new
+    - button "Copy":
+      - text: Copy
+    - paragraph:
+      - text: Use this identifier to access your Segment from Braze's external API. A full list of your API identifiers is available at the
+      - link "API settings":
+        - /url: /apis-and-identifiers
+      - text: page.
+  - button "Revert" [disabled]:
+    - text: Revert
+  - button "Save" [disabled]
+- heading "Audience" [level=2]
+- button "Close navigation":
+- button "Segments Split your audience into segments to target a specific list of users":
+  - generic: Segments
+  - generic: Split your audience into segments to target a specific list of users
+- button "Segment Extensions Target audiences based on specific behaviors over longer periods of time":
+  - generic: Segment Extensions
+  - generic: Target audiences based on specific behaviors over longer periods of time
+- button "Global Control Group Exclude a percentage of your audience from receiving messages":
+  - generic: Global Control Group
+  - generic: Exclude a percentage of your audience from receiving messages
+- button "Suppression Lists Exclude specific users from receiving messages":
+  - generic: Suppression Lists
+  - generic: Exclude specific users from receiving messages
+- button "Subscription Group Management Manage your subscription groups for applicable channels":
+  - generic: Subscription Group Management
+  - generic: Manage your subscription groups for applicable channels
+- button "Email Preference Centers Create preference centers to help users manage communications":
+  - generic: Email Preference Centers
+  - generic: Create preference centers to help users manage communications
+- button "Search Users View user profiles to find information about specific users":
+  - generic: Search Users
+  - generic: View user profiles to find information about specific users
+- button "Manage Audience Take actions to manage the health of your userbase":
+  - generic: Manage Audience
+  - generic: Take actions to manage the health of your userbase
+- button "Import Users Import a CSV of user information to add or update user profiles":
+  - generic: Import Users
+  - generic: Import a CSV of user information to add or update user profiles
+- button "Locations Create geofences to trigger messages when a user enters or exits an area":
+  - generic: Locations
+  - generic: Create geofences to trigger messages when a user enters or exits an area
+- button "Open Next.js Dev Tools":
+- alert: Braze Demo — Thinkingai

@@ -1,0 +1,7 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {parseSegmentOperatorProposal} from '../lib/segment-operator-model.ts';
+const proposal=()=>({message:'Review this audience.',segment:{name:'Active US',description:'Users from the US.',audienceGroups:[{id:'g',operator:'AND',exclude:false,rules:[{id:'r',field:'country',operator:'equals',value:'US'}]}],segmentOptions:{appIds:[],analyticsTracking:false,groupOperator:'AND'}}});
+test('Operator accepts provider structured response and returns unsaved proposal',()=>{const result=parseSegmentOperatorProposal({choices:[{message:{content:JSON.stringify(proposal())}}]});assert.equal(result.draft.name,'Active US');assert.equal(result.draft.apiIdentifier,'');assert.deepEqual(result.draft.tags,[]);});
+test('Operator rejects malformed JSON and invalid audience operators',()=>{assert.throws(()=>parseSegmentOperatorProposal('broken'),/valid segment JSON/);const invalid=proposal();invalid.segment.audienceGroups[0].rules[0].operator='execute';assert.throws(()=>parseSegmentOperatorProposal(invalid),/operator|Invalid|supported/i);});
+test('Operator rejects empty names and invalid app targeting options',()=>{const invalid=proposal();invalid.segment.name='';assert.throws(()=>parseSegmentOperatorProposal(invalid));const app=proposal();app.segment.segmentOptions.appIds=[1];assert.throws(()=>parseSegmentOperatorProposal(app),/targeting options/);});

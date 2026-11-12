@@ -1,0 +1,119 @@
+Browser tab: 6, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3220/engagement/canvas/322ef7c3-bd70-4553-81df-819a884b95cf?locale=en&workspace=local&step=sendSettings&workspaceId=local".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3220/engagement/canvas/322ef7c3-bd70-4553-81df-819a884b95cf?locale=en&workspace=local&step=sendSettings&workspaceId=local
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agent Console
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+	25 container
+		26 text ◷   8 days left in your free trial.
+		27 button Connect with sales
+		28 button Search workspace ⌘K
+			29 image
+			30 text Search workspace
+			31 text ⌘K
+		32 button Take a tour
+		33 image Community
+		34 button (collapsed) Description: Language, Secondary Actions: Expand
+		35 button Notifications
+		36 button (collapsed) Description: Profile, Secondary Actions: Expand
+		37 image
+		38 button Open BrazeAI Operator
+		39 container
+			40 button Canvas
+			41 text › Edit ' New Canvas - November 12, 2026 '
+			42 button Close Canvas
+				43 image
+		44 text Limited access
+		45 container Canvas creation steps
+			46 button 1 Basics
+				47 text 1
+				48 text Basics
+			49 button 2 Entry Schedule
+				50 text 2
+				51 text Entry Schedule
+			52 button 3 Target Audience
+				53 text 3
+				54 text Target Audience
+			55 button 4 Send Settings
+				56 text 4
+				57 text Send Settings
+			58 button 5 Build Canvas
+				59 text 5
+				60 text Build Canvas
+			61 button 6 Summary
+				62 text 6
+				63 text Summary
+		64 heading Send Settings, Value: 2
+			65 text Send Settings
+		66 text Set message sending options for all steps within the Canvas.
+		67 heading Subscription Settings, Value: 3
+			68 text Subscription Settings
+		69 text Send to these users:
+		70 container
+			71 combo box (collapsed, settable) Description: Send to these users:, Value: users who are subscribed or opted in, Secondary Actions: Expand
+			72 button Toggle Send to these users:
+				73 image
+		74 heading Rate Limit, Value: 3
+			75 text Rate Limit
+		76 checkbox (settable, integer) Description: Limit the rate at which users will receive messages in this Canvas, Value: 0
+		77 heading Frequency Capping, Value: 3
+			78 text Frequency Capping
+		79 text You have not created any Frequency Capping rules.
+		80 heading Quiet Hours, Value: 3
+			81 text Quiet Hours
+		82 text Messages are not sent during quiet hours. All times are in the recipient's local time zone. Quiet hours cannot exceed 20 hours.
+		83 checkbox (settable, integer) Description: Enforce quiet hours for this Canvas, Value: 1
+		84 radio button (settable, integer) Description: Use workspace quiet hours, Value: 1
+		85 container
+			86 text Set quiet hours once for your whole workspace. 
+			87 button Set up workspace quiet hours
+			88 text . Any campaign or Canvas that uses them stays up to date when they change.
+		89 radio button (settable, integer) Description: Use custom quiet hours, Value: 0
+		90 heading Fallback behavior, Value: 4
+			91 text Fallback behavior
+		92 text Do this if a message triggers during quiet hours
+		93 radio button (settable, integer) Description: Abort message, Value: 0
+		94 radio button (settable, integer) Description: Send at next available time, Value: 1
+		95 button Back
+		96 container Canvas creation steps
+			97 button 1 Basics
+				98 text 1
+				99 text Basics
+			100 button 2 Entry Schedule
+				101 text 2
+				102 text Entry Schedule
+			103 button 3 Target Audience
+				104 text 3
+				105 text Target Audience
+			106 button 4 Send Settings
+				107 text 4
+				108 text Send Settings
+			109 button 5 Build Canvas
+				110 text 5
+				111 text Build Canvas
+			112 button 6 Summary
+				113 text 6
+				114 text Summary
+		115 button Save
+		116 button Forward
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3220/engagement/canvas/322ef7c3-bd70-4553-81df-819a884b95cf?locale=en&workspace=local&step=sendSettings&workspaceId=local

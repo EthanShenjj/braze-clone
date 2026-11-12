@@ -1,0 +1,13 @@
+Browser tab: 7, Title: "Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container Run Agentic Standards
+		2 container close Run Agentic Standards Check this Canvas against the rulesets from one or more Agentic Standards before you launch. You'll see the complete results on the Summary step, including any steps flagged directly on the Canvas so they're easy to find. No Standard set up yet. Create one in Agent Console Cancel
+			3 button close
+			4 heading Run Agentic Standards, Value: 3
+				5 text Run Agentic Standards
+			6 container
+				7 text Check this Canvas against the rulesets from one or more Agentic Standards before you launch. You'll see the complete results on the Summary step, including any steps flagged directly on the Canvas so they're easy to find.
+				14 link dashboard-09.braze.com/agent_console/agents/create/6af4374c46d3080087f1c5d2?interaction_site=3&locale=en
+			13 button Cancel
+
+The focused UI element is 2 container close Run Agentic Standards Check this Canvas against the rulesets from one or more Agentic Standards before you launch. You'll see the complete results on the Summary step, including any steps flagged directly on the Canvas so they're easy to find. No Standard set up yet. Create one in Agent Console Cancel

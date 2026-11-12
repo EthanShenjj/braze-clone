@@ -1,0 +1,1 @@
+Audience API checks passed: actual CSV membership, scoped candidates, typed conditions, Campaign/Canvas parity, Segment reuse, saved/reloaded configuration, exclusions/exits and invalid-rule rejection.

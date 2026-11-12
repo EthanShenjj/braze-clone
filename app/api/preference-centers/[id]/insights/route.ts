@@ -1,8 +1,3 @@
-import { createPreferenceCenterLink, listPreferenceCenterVersions, preferenceCenterAnalytics } from "@/lib/braze-store";
-
-export const runtime = "nodejs";
-
-export async function GET(request: Request, context: RouteContext<"/api/preference-centers/[id]/insights">) {
-  const { id } = await context.params; const { searchParams } = new URL(request.url); const userId = searchParams.get("user") ?? "user_1";
-  return Response.json({ analytics: preferenceCenterAnalytics(id), versions: listPreferenceCenterVersions(id), link: createPreferenceCenterLink(id, userId) });
-}
+import { createPreferenceCenterLink, getPreferenceCenter, listPreferenceCenterVersions, preferenceCenterAnalytics } from '@/lib/braze-store';
+export const runtime='nodejs';
+export async function GET(request:Request,context:RouteContext<'/api/preference-centers/[id]/insights'>){const {id}=await context.params,params=new URL(request.url).searchParams,center=getPreferenceCenter(id),workspaceId=params.get('workspaceId')??params.get('workspace')??'local';if(!center||String(center.config.workspaceId??'local')!==workspaceId)return Response.json({error:'Preference center not found.'},{status:404});return Response.json({analytics:preferenceCenterAnalytics(id),versions:listPreferenceCenterVersions(id),link:createPreferenceCenterLink(id,params.get('user')??'user_1')},{headers:{'Cache-Control':'no-store'}});}

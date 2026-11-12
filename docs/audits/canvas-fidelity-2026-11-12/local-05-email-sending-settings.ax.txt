@@ -1,0 +1,232 @@
+Browser tab: 6, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3220/engagement/canvas/322ef7c3-bd70-4553-81df-819a884b95cf?locale=en&workspace=local&step=build&workspaceId=local".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3220/engagement/canvas/322ef7c3-bd70-4553-81df-819a884b95cf?locale=en&workspace=local&step=build&workspaceId=local
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agent Console
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+	25 container
+		26 text ◷   8 days left in your free trial.
+		27 button Connect with sales
+		28 button Search workspace ⌘K
+			29 image
+			30 text Search workspace
+			31 text ⌘K
+		32 button Take a tour
+		33 image Community
+		34 button (collapsed) Description: Language, Secondary Actions: Expand
+		35 button Notifications
+		36 button (collapsed) Description: Profile, Secondary Actions: Expand
+		37 image
+		38 button Open BrazeAI Operator
+		39 container
+			40 button Canvas
+			112 text › Edit ' New Canvas - November 12, 2026 '
+			41 button Close Canvas
+				42 image
+		113 container Canvas flow builder
+			114 container
+				115 container Components
+					116 text Components
+					117 text Select components to build your user journey.
+					118 button Collapse components
+						119 image
+					120 container
+						121 heading Message Controls, Value: 3
+							122 text Message Controls
+						123 button Message
+							124 image
+							125 text Message
+						126 button Delay
+							127 image
+							128 text Delay
+						129 heading AI Actions, Value: 3
+							130 text AI Actions
+						131 button Agent Step
+							132 image
+							133 text Agent Step
+						134 button Content Optimizer
+							135 image
+							136 text Content Optimizer
+						137 heading Flow Controls, Value: 3
+							138 text Flow Controls
+						139 button Decision Split
+							140 image
+							141 text Decision Split
+						142 button Audience Paths
+							143 image
+							144 text Audience Paths
+						145 button Action Paths
+							146 image
+							147 text Action Paths
+						148 button Experiment Paths
+							149 image
+							150 text Experiment Paths
+						151 button Send to Destination
+							152 image
+							153 text Send to Destination
+						154 heading Audience Updates, Value: 3
+							155 text Audience Updates
+						156 button Context
+							157 image
+							158 text Context
+						159 button User Update
+							160 image
+							161 text User Update
+						162 button Feature Flag
+							163 image
+							164 text Feature Flag
+						165 button Audience Sync
+							166 image
+							167 text Audience Sync
+					168 button Clean Up Canvas
+						169 image
+						170 text Clean Up Canvas
+				171 button (collapsed) Version history, Secondary Actions: Expand
+				172 button Expand
+					173 text Expand
+					174 image
+				175 container
+					176 button Zoom out
+					177 text 100 %
+					178 button Zoom in
+				179 container
+					180 button Entry Rules
+						181 text Entry Rules
+						182 image
+					183 image
+					184 text Schedule
+					185 text No schedule selected.
+					186 image
+					187 text Audience
+					188 text All eligible users
+					189 image
+					190 text Exit Criteria
+					191 text No exit criteria selected.
+					192 image
+					193 text Controls
+					194 text Users are not eligible to re-enter this Canvas.
+					195 button Add Variant
+						196 image
+						197 text Add Variant
+					198 container
+						199 text 100 % Variant 1
+						200 button Settings for Variant 1
+							201 image
+					202 button Delay Delay After 2 hours
+						203 image
+						204 text Delay
+						205 text Delay
+						206 text After 2 hours
+						207 image
+					208 button Step actions for Delay
+						209 image
+					210 button Message Message
+						211 image
+						212 text Message
+						213 text Message
+						214 image
+					215 button Step actions for Message
+						216 image
+					217 button Add step after Message
+						218 image
+			219 container Email sending settings
+				220 container
+					221 text Message
+					222 button BrazeAI Operator
+						223 image
+				224 container Email editor sections
+					225 button Sending settings
+						226 image
+					227 button Content
+						228 image
+					229 button Preview & Test
+						230 image
+				231 container
+					232 text SENDING SETTINGS
+					233 button Back to campaign
+						234 image
+					235 button Sending Info
+					236 button Advanced
+					237 button + Personalization
+						238 text +
+						239 text Personalization
+					240 button Languages
+						241 image
+						242 text Languages
+					243 link Description: Style Settings ↗, Value: 127.0.0.1:3220/app_settings/app_settings/email_settings/drag_and_drop_email/6ad0b98fe4b4110085216601?locale=en
+				244 container
+					245 heading Sending Info, Value: 2
+						246 text Sending Info
+					247 text You can update the default value of your sending information from 
+					248 link Description: Email Settings, Value: 127.0.0.1:3220/app_settings/app_settings/email_settings/sending_configuration/6ad0b98fe4b4110085216601?locale=en
+					249 text . Subject
+					250 button Subject 1 Canvas parity acceptance Personalize subject, Help: BrazeAI Operator
+					251 text 1
+					252 text entry area (settable) Canvas parity acceptance
+					253 button Description: Personalize subject, Help: Add Liquid
+					254 text Preheader
+					255 text (Optional)
+					256 text 1
+					257 text entry area (settable) Preheader (Optional) 1 Personalize preheader, Value: Sending settings persist with this step
+					258 button Description: Personalize preheader, Help: Add Liquid
+					259 checkbox (settable, integer) Value: 0, Description: Add whitespace after preheader Prevents most email clients from pulling additional content from your email to fill the remaining preview space
+					260 text Add whitespace after preheader
+					261 text Prevents most email clients from pulling additional content from your email to fill the remaining preview space
+					262 heading From display name + address, Value: 3
+						263 text From display name + address
+					264 text Powered by Braze  < braze@mta-a348.bftmail.com > |  PLG_IP_Pool IP pool: PLG_IP_Pool Reply-to address
+					265 pop up button (collapsed, settable) Reply-to address, Value: Exclude reply-to and send replies to "from" address, Secondary Actions: Expand
+						266 menu
+							267 (selected) Exclude reply-to and send replies to "from" address
+							268 braze@mta-h466.bftmail.com
+							269 marketing@thinkingai.com
+							270 support@thinkingai.com
+							271 Exclude reply-to and send replies to "from" address
+					272 checkbox (disabled, settable, integer) Description: Customize reply-to address, Value: 0
+					273 text BCC address
+					274 pop up button (collapsed, settable) BCC address, Value: No BCC address, Secondary Actions: Expand
+						275 menu
+							276 (selected) No BCC address
+					277 text One-click list-unsubscribe setting
+					278 pop up button (collapsed, settable) One-click list-unsubscribe setting, Value: Use workspace default, Secondary Actions: Expand
+						279 menu
+							280 (selected) Use workspace default
+							281 Enabled
+							282 Disabled
+				283 container
+					284 heading Preview, Value: 2
+						285 text Preview
+					286 text From: Powered by Braze  < braze@mta-a348.bftmail.com > Subject: Canvas parity acceptance Preheader: Sending settings persist with this step
+					287 container Email message preview
+						288 AXWebArea about:srcdoc
+							289 heading Canvas acceptance, Value: 1
+								290 text Canvas acceptance
+							291 text Full email editing is available.
+					292 text Actual rendering may not be identical to this preview depending on the user's environment
+				293 container
+					294 button Download file
+					295 button Done
+		109 button Back
+		110 button Save
+		111 button Forward
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3220/engagement/canvas/322ef7c3-bd70-4553-81df-819a884b95cf?locale=en&workspace=local&step=build&workspaceId=local

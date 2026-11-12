@@ -1,0 +1,474 @@
+Browser tab: 2, Title: "Engagement - Campaigns - Campaigns", URL: "https://dashboard-09.braze.com/engagement/campaigns/6af4374c46d3080087f1c5d2?start=0&limit=12&globalFilter=&columnFilters%5Bstatus%5D=active&sortby=last_edited&sortdir=-1&display=list".
+0 AXWebArea Engagement - Campaigns - Campaigns, URL: dashboard-09.braze.com/engagement/campaigns/6af4374c46d3080087f1c5d2?start=0&limit=12&globalFilter=&columnFilters%5Bstatus%5D=active&sortby=last_edited&sortdir=-1&display=list
+	1 container
+		2 container body-wrapper
+			3 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/campaigns/6af4374c46d3080087f1c5d2?start=0&limit=12&globalFilter=&columnFilters%5Bstatus%5D=active&sortby=last_edited&sortdir=-1&display=list#main-col
+			4 container
+				5 container Side navigation
+					6 container
+						7 button Minimize menu
+						8 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+							9 image
+							10 text Demo – ittor
+						11 text Quick links
+						12 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+						13 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+						14 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+						15 button Getting Started
+							16 image
+							17 container
+								18 text Getting Started
+								19 container
+									20 text 8 %
+						21 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+						22 button AI Decisioning
+							23 image
+							24 text AI Decisioning
+						25 button Agents
+							26 image
+							27 text Agents
+						28 button Messaging
+							29 image
+							30 text Messaging
+						31 button Audience
+							32 image
+							33 text Audience
+						34 button Content
+							35 image
+							36 text Content
+						37 button Analytics
+							38 image
+							39 text Analytics
+						40 button Partner Integrations
+							41 image
+							42 text Partner Integrations
+						43 button Data Settings
+							44 image
+							45 text Data Settings
+						46 button Settings
+							47 image
+							48 text Settings
+					49 container Footer Logo
+						50 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+				51 text 14 days left in your free trial.
+				52 button Connect with sales
+				53 container Top navigation
+					54 container Left top navigation
+						55 button Search workspace ⌘+K
+							56 image
+							57 text Search workspace
+							58 text ⌘+K
+					59 container Right top navigation
+						60 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							61 image
+						62 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							63 image
+						64 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+							65 image
+						66 container
+							67 button Notifications
+								68 image
+						69 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							70 image
+						71 button BrazeAI Operator™
+							72 image
+			73 container main
+				84 container main-col
+					85 tab group Open page tabs
+						86 tab (selected, settable, boolean) Campaigns, Value: 1, ID: campaigns
+					87 container
+						88 container campaigns-api-data-table
+							89 heading Campaigns, Value: 2
+								90 text Campaigns
+							91 text Limited access
+							92 text Campaigns let you send a single, targeted message through email, push, SMS, and more, ensuring timely communication with your audience
+							93 button Description: Send feedback, ID: feedback-button-trigger
+							94 button Take a tour
+								95 text Take a tour
+							96 pop up button (collapsed) Description: More options, Secondary Actions: Expand
+							97 pop up button (collapsed) Description: Create campaign, Secondary Actions: Expand
+							98 heading 11 Results, Value: 4
+								99 text 11 Results
+							100 container
+								101 text field (settable) Search
+								102 button (disabled) Search
+							103 container
+								104 text Status
+								105 pop up button (collapsed) Description: Help text available. Tab to view help text, click to open popover, Secondary Actions: Expand
+							106 container status
+								107 container
+									108 text Draft
+									109 combo box (collapsed, settable) Description: Status, ID: react-select-26-input, Secondary Actions: Expand
+							110 text Tag
+							111 container tag
+								446 container
+									447 text DE, 1 of 7.
+									448 text 7 results available.
+									449 text Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+								112 container
+									113 text Select...
+									114 combo box (expanded, settable) Description: Tag, ID: react-select-27-input, Secondary Actions: Collapse
+							115 pop up button (collapsed) Filters, Secondary Actions: Expand
+							116 pop up button (collapsed) Description: Columns, Secondary Actions: Expand
+							117 pop up button Reset filters
+							118 container Description: Inline Tag 0, ID: status
+								119 text Status: Draft
+								120 button close
+							121 table
+								122 row Select all rows Name column, unsorted. Select to sort ascending Status Stop date column, unsorted. Select to sort descending Campaign type Entry schedule Sent column, unsorted. Select to sort descending Teams column, unsorted. Select to sort descending Last edited by Last edited column, sorted descending. Select to sort ascending Created by
+									123 cell
+										124 checkbox (settable, integer) Description: Select all rows, Value: 0, ID: bc-checkbox-3886658921
+									125 cell
+										126 button Name column, unsorted. Select to sort ascending
+									127 cell
+										128 text Status
+									129 cell
+										130 button Stop date column, unsorted. Select to sort descending
+											131 text Stop date
+											132 image Information
+									133 cell
+										134 text Campaign type
+									135 cell
+										136 text Entry schedule
+									137 cell
+										138 button Sent column, unsorted. Select to sort descending
+									139 cell
+										140 button Teams column, unsorted. Select to sort descending
+									141 cell
+										142 text Last edited by
+									143 cell
+										144 button Last edited column, sorted descending. Select to sort ascending
+											145 text Last edited
+											146 image Information
+									147 cell
+										148 text Created by
+								149 row Select row Referral Banner Draft Banner One Time — Braze Demo Nov 11, 2026 Braze Demo More Actions
+									150 cell
+										151 checkbox (settable, integer) Description: Select row, Value: 0, ID: bc-checkbox-2739800079
+									152 cell
+										153 link Description: Referral Banner, Value: dashboard-09.braze.com/engagement/campaigns/6af4375720abdf005fc2f060/6af4374c46d3080087f1c5d2?locale=en
+									154 cell
+									155 cell
+										156 text Draft
+									157 cell
+									158 cell
+										159 container
+											160 image
+											161 text Banner
+									162 cell
+										163 text One Time
+									164 cell
+										165 text —
+									166 cell
+									167 cell
+										168 text Braze Demo
+									169 cell
+										170 text Nov 11, 2026
+									171 cell
+										172 text Braze Demo
+									173 cell
+										174 content list
+											175 pop up button (collapsed) Description: More Actions, ID: data-table-row-action-menu-button-892656863, Secondary Actions: Expand
+								176 row Select row Abandoned Onboarding Draft WhatsApp One Time 0 Braze Demo Nov 11, 2026 Braze Demo More Actions
+									177 cell
+										178 checkbox (settable, integer) Description: Select row, Value: 0, ID: bc-checkbox-1188384620
+									179 cell
+										180 link Description: Abandoned Onboarding, Value: dashboard-09.braze.com/engagement/campaigns/6af4375520abdf005fc2efd9/6af4374c46d3080087f1c5d2?locale=en
+									181 cell
+									182 cell
+										183 text Draft
+									184 cell
+									185 cell
+										186 text WhatsApp
+									187 cell
+										188 text One Time
+									189 cell
+										190 text 0
+									191 cell
+									192 cell
+										193 text Braze Demo
+									194 cell
+										195 text Nov 11, 2026
+									196 cell
+										197 text Braze Demo
+									198 cell
+										199 content list
+											200 pop up button (collapsed) Description: More Actions, ID: data-table-row-action-menu-button-1094591380, Secondary Actions: Expand
+								201 row Select row Newsletter Welcome Draft Email Action-Based 0 Braze Demo Nov 11, 2026 Braze Demo More Actions
+									202 cell
+										203 checkbox (settable, integer) Description: Select row, Value: 0, ID: bc-checkbox-1645059668
+									204 cell
+										205 link Description: Newsletter Welcome, Value: dashboard-09.braze.com/engagement/campaigns/6af4375520abdf005fc2efc8/6af4374c46d3080087f1c5d2?locale=en
+									206 cell
+									207 cell
+										208 text Draft
+									209 cell
+									210 cell
+										211 text Email
+									212 cell
+										213 text Action-Based
+									214 cell
+										215 text 0
+									216 cell
+									217 cell
+										218 text Braze Demo
+									219 cell
+										220 text Nov 11, 2026
+									221 cell
+										222 text Braze Demo
+									223 cell
+										224 content list
+											225 pop up button (collapsed) Description: More Actions, ID: data-table-row-action-menu-button-3270750121, Secondary Actions: Expand
+								226 row Select row Welcome Offer IAM Draft In-App Message Action-Based 0 Braze Demo Nov 11, 2026 Braze Demo More Actions
+									227 cell
+										228 checkbox (settable, integer) Description: Select row, Value: 0, ID: bc-checkbox-1072814828
+									229 cell
+										230 link Description: Welcome Offer IAM, Value: dashboard-09.braze.com/engagement/campaigns/6af4375520abdf005fc2efb0/6af4374c46d3080087f1c5d2?locale=en
+									231 cell
+									232 cell
+										233 text Draft
+									234 cell
+									235 cell
+										236 container
+											237 image
+											238 text In-App Message
+									239 cell
+										240 text Action-Based
+									241 cell
+										242 text 0
+									243 cell
+									244 cell
+										245 text Braze Demo
+									246 cell
+										247 text Nov 11, 2026
+									248 cell
+										249 text Braze Demo
+									250 cell
+										251 content list
+											252 pop up button (collapsed) Description: More Actions, ID: data-table-row-action-menu-button-1239757086, Secondary Actions: Expand
+								253 row Select row Push Primer Draft In-App Message Action-Based 0 Braze Demo Nov 11, 2026 Braze Demo More Actions
+									254 cell
+										255 checkbox (settable, integer) Description: Select row, Value: 0, ID: bc-checkbox-1436710145
+									256 cell
+										257 link Description: Push Primer, Value: dashboard-09.braze.com/engagement/campaigns/6af4375420abdf005fc2ef99/6af4374c46d3080087f1c5d2?locale=en
+									258 cell
+									259 cell
+										260 text Draft
+									261 cell
+									262 cell
+										263 container
+											264 image
+											265 text In-App Message
+									266 cell
+										267 text Action-Based
+									268 cell
+										269 text 0
+									270 cell
+									271 cell
+										272 text Braze Demo
+									273 cell
+										274 text Nov 11, 2026
+									275 cell
+										276 text Braze Demo
+									277 cell
+										278 content list
+											279 pop up button (collapsed) Description: More Actions, ID: data-table-row-action-menu-button-495097081, Secondary Actions: Expand
+								280 row Select row Product Recommendations Draft Email One Time 0 Braze Demo Nov 11, 2026 Braze Demo More Actions
+									281 cell
+										282 checkbox (settable, integer) Description: Select row, Value: 0, ID: bc-checkbox-3824366245
+									283 cell
+										284 link Description: Product Recommendations, Value: dashboard-09.braze.com/engagement/campaigns/6af4375420abdf005fc2ef6d/6af4374c46d3080087f1c5d2?locale=en
+									285 cell
+									286 cell
+										287 text Draft
+									288 cell
+									289 cell
+										290 text Email
+									291 cell
+										292 text One Time
+									293 cell
+										294 text 0
+									295 cell
+									296 cell
+										297 text Braze Demo
+									298 cell
+										299 text Nov 11, 2026
+									300 cell
+										301 text Braze Demo
+									302 cell
+										303 content list
+											304 pop up button (collapsed) Description: More Actions, ID: data-table-row-action-menu-button-619676677, Secondary Actions: Expand
+								305 row Select row New Feature Showcase with Mobile Push Draft Push Notification One Time 0 Braze Demo Nov 11, 2026 Braze Demo More Actions
+									306 cell
+										307 checkbox (settable, integer) Description: Select row, Value: 0, ID: bc-checkbox-3773450770
+									308 cell
+										309 link Description: New Feature Showcase with Mobile Push, Value: dashboard-09.braze.com/engagement/campaigns/6af4375320abdf005fc2ef5e/6af4374c46d3080087f1c5d2?locale=en
+									310 cell
+									311 cell
+										312 text Draft
+									313 cell
+									314 cell
+										315 text Push Notification
+									316 cell
+										317 text One Time
+									318 cell
+										319 text 0
+									320 cell
+									321 cell
+										322 text Braze Demo
+									323 cell
+										324 text Nov 11, 2026
+									325 cell
+										326 text Braze Demo
+									327 cell
+										328 content list
+											329 pop up button (collapsed) Description: More Actions, ID: data-table-row-action-menu-button-4170730312, Secondary Actions: Expand
+								330 row Select row Email Drag & Drop Tour Draft Email Action-Based 0 Braze Demo Nov 11, 2026 Braze Demo More Actions
+									331 cell
+										332 checkbox (settable, integer) Description: Select row, Value: 0, ID: bc-checkbox-4012767093
+									333 cell
+										334 link Description: Email Drag & Drop Tour, Value: dashboard-09.braze.com/engagement/campaigns/6af4375320abdf005fc2ef47/6af4374c46d3080087f1c5d2?locale=en
+									335 cell
+									336 cell
+										337 text Draft
+									338 cell
+									339 cell
+										340 text Email
+									341 cell
+										342 text Action-Based
+									343 cell
+										344 text 0
+									345 cell
+									346 cell
+										347 text Braze Demo
+									348 cell
+										349 text Nov 11, 2026
+									350 cell
+										351 text Braze Demo
+									352 cell
+										353 content list
+											354 pop up button (collapsed) Description: More Actions, ID: data-table-row-action-menu-button-1095486909, Secondary Actions: Expand
+								355 row Select row Early Access Draft SMS/MMS/RCS One Time 0 Braze Demo Nov 11, 2026 Braze Demo More Actions
+									356 cell
+										357 checkbox (settable, integer) Description: Select row, Value: 0, ID: bc-checkbox-900660878
+									358 cell
+										359 link Description: Early Access, Value: dashboard-09.braze.com/engagement/campaigns/6af4375320abdf005fc2ef31/6af4374c46d3080087f1c5d2?locale=en
+									360 cell
+									361 cell
+										362 text Draft
+									363 cell
+									364 cell
+										365 text SMS/MMS/RCS
+									366 cell
+										367 text One Time
+									368 cell
+										369 text 0
+									370 cell
+									371 cell
+										372 text Braze Demo
+									373 cell
+										374 text Nov 11, 2026
+									375 cell
+										376 text Braze Demo
+									377 cell
+										378 content list
+											379 pop up button (collapsed) Description: More Actions, ID: data-table-row-action-menu-button-920568626, Secondary Actions: Expand
+								380 row Select row New Feature Showcase with Content Cards Draft Content Card One Time 0 Braze Demo Nov 11, 2026 Braze Demo More Actions
+									381 cell
+										382 checkbox (settable, integer) Description: Select row, Value: 0, ID: bc-checkbox-3357085474
+									383 cell
+										384 link Description: New Feature Showcase with Content Cards, Value: dashboard-09.braze.com/engagement/campaigns/6af4375220abdf005fc2ef22/6af4374c46d3080087f1c5d2?locale=en
+									385 cell
+									386 cell
+										387 text Draft
+									388 cell
+									389 cell
+										390 container
+											391 image
+											392 text Content Card
+									393 cell
+										394 text One Time
+									395 cell
+										396 text 0
+									397 cell
+									398 cell
+										399 text Braze Demo
+									400 cell
+										401 text Nov 11, 2026
+									402 cell
+										403 text Braze Demo
+									404 cell
+										405 content list
+											406 pop up button (collapsed) Description: More Actions, ID: data-table-row-action-menu-button-1612513373, Secondary Actions: Expand
+								407 row Select row Custom IAM Examples Draft In-App Message Action-Based 0 Braze Demo Nov 11, 2026 Braze Demo More Actions
+									408 cell
+										409 checkbox (settable, integer) Description: Select row, Value: 0, ID: bc-checkbox-879405229
+									410 cell
+										411 link Description: Custom IAM Examples, Value: dashboard-09.braze.com/engagement/campaigns/6af4375220abdf005fc2ef07/6af4374c46d3080087f1c5d2?locale=en
+									412 cell
+									413 cell
+										414 text Draft
+									415 cell
+									416 cell
+										417 container
+											418 image
+											419 text In-App Message
+									420 cell
+										421 text Action-Based
+									422 cell
+										423 text 0
+									424 cell
+									425 cell
+										426 text Braze Demo
+									427 cell
+										428 text Nov 11, 2026
+									429 cell
+										430 text Braze Demo
+									431 cell
+										432 content list
+											433 pop up button (collapsed) Description: More Actions, ID: data-table-row-action-menu-button-1910427389, Secondary Actions: Expand
+							434 text Showing rows 1 - 11 of 11 Rows per page:
+							435 pop up button (collapsed, settable) Value: 12, Secondary Actions: Expand
+								436 menu
+									437 (selected) 12
+									438 24
+									439 48
+									440 96
+							441 content list
+								442 button (disabled) Previous page
+								443 button Current Page, Page 1
+								444 button (disabled) Next page
+						445 button Priority Sorter
+				75 container
+					76 text © Braze 2026
+					77 text Opening in a new tab
+					78 link Description: Opening in a new tab, Value: braze.statuspage.io/
+					79 text Opening in a new tab
+					80 link Description: Opening in a new tab, Value: braze.com/terms
+					81 text Opening in a new tab
+					82 link Description: Opening in a new tab, Value: braze.com/privacy
+		83 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		450 list react-select-27-listbox
+			451 Value: DE, ID: react-select-27-option-0
+				452 text DE
+				453 checkbox (settable, integer) Value: 0, ID: bc-checkbox-2562290888
+			454 Value: FR, ID: react-select-27-option-1
+				455 text FR
+				456 checkbox (settable, integer) Value: 0, ID: bc-checkbox-3955245235
+			457 Value: JOB_RECOMMEND, ID: react-select-27-option-2
+				458 text JOB_RECOMMEND
+				459 checkbox (settable, integer) Value: 0, ID: bc-checkbox-3101942226
+			460 Value: Onboarding, ID: react-select-27-option-3
+				461 text Onboarding
+				462 checkbox (settable, integer) Value: 0, ID: bc-checkbox-4073420348
+			463 Value: UK, ID: react-select-27-option-4
+				464 text UK
+				465 checkbox (settable, integer) Value: 0, ID: bc-checkbox-4067266734
+			466 Value: US, ID: react-select-27-option-5
+				467 text US
+				468 checkbox (settable, integer) Value: 0, ID: bc-checkbox-3049924873
+			469 Value: promotional, ID: react-select-27-option-6
+				470 text promotional
+				471 checkbox (settable, integer) Value: 0, ID: bc-checkbox-43462367
+
+The focused UI element is 114 combo box (expanded, settable) Description: Tag, ID: react-select-27-input, Secondary Actions: Collapse

@@ -1,0 +1,15 @@
+Browser tab: 7, Title: "Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=sendSettings&initialConditionsCollapsed=false".
+0 AXWebArea Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=sendSettings&initialConditionsCollapsed=false
+	1 container close Set custom rate limit Maximum messages per minute Cancel Save
+		2 button close
+		3 heading Set custom rate limit, Value: 2
+			4 text Set custom rate limit
+		5 container
+			6 text Maximum messages per minute
+			7 container
+				8 stepper (settable) Maximum messages per minute, ID: new-rate-limit-input
+			9 text Enter a whole number
+		10 button Cancel
+		11 button (disabled) Save
+
+The focused UI element is 1 container close Set custom rate limit Maximum messages per minute Cancel Save

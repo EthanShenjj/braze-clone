@@ -1,0 +1,32 @@
+Browser tab: 1, Title: "Locations", URL: "https://dashboard-09.braze.com/engagement/locations/6af4374c46d3080087f1c5d2?start=0&limit=10&globalFilter=&columnFilters%5Bstatus%5D=active&sortby=name&sortdir=1&display=list".
+0 AXWebArea Locations, URL: dashboard-09.braze.com/engagement/locations/6af4374c46d3080087f1c5d2?start=0&limit=10&globalFilter=&columnFilters%5Bstatus%5D=active&sortby=name&sortdir=1&display=list
+	1 container close Manage Geofence Enablement Geofences must be enabled for each App whose users you want to target with the Locations feature. Learn more in our Opening in a new tab Opening in a new tab and Opening in a new tab Opening in a new tab Done
+		2 button close
+		3 heading Manage Geofence Enablement, Value: 3
+			4 text Manage Geofence Enablement
+		5 container
+			6 text Geofences must be enabled for each App whose users you want to target with the Locations feature. Learn more in our 
+			7 text Opening in a new tab
+			8 link Description: Opening in a new tab, Value: braze.com/docs/en/developer_guide/platform_integration_guides/ios/advanced_use_cases/locations_and_geofences/
+			9 text  and 
+			10 text Opening in a new tab
+			11 link Description: Opening in a new tab, Value: braze.com/docs/en/developer_guide/platform_integration_guides/android/advanced_use_cases/locations_and_geofences/#locations--geofences
+			12 container
+				13 checkbox (settable, integer) Description: Android Demo App Android disabled, Value: 0, ID: tile-radio-3395635309
+				14 image
+				15 heading Android Demo App, Value: 4
+					16 text Android Demo App
+				17 container
+					18 text Android
+					19 text disabled
+			20 container
+				21 checkbox (settable, integer) Description: iOS Demo App iOS disabled, Value: 0, ID: tile-radio-35339547
+				22 image
+				23 heading iOS Demo App, Value: 4
+					24 text iOS Demo App
+				25 container
+					26 text iOS
+					27 text disabled
+		28 button Done
+
+The focused UI element is 1 container close Manage Geofence Enablement Geofences must be enabled for each App whose users you want to target with the Locations feature. Learn more in our Opening in a new tab Opening in a new tab and Opening in a new tab Opening in a new tab Done

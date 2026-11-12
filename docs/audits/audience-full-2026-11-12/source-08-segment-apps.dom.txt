@@ -1,0 +1,254 @@
+- link "Skip to main content":
+  - /url: "#main-container"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Demo – ittor":
+    - generic: Demo – ittor
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agents":
+    - generic: Agents
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 14 days left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- main:
+  - navigation:
+    - tablist:
+      - tab "Segments":
+        - generic: Segments
+      - tab "Edit New Users Close tab" [selected]:
+        - text: 
+        - generic: Edit New Users
+        - button "Close tab":
+  - heading "Edit segment" [level=2]
+  - heading "Segment Details User Data Create campaign" [level=3]:
+    - generic: Segment Details
+    - button "User Data":
+      - generic: User Data
+      - img: 
+    - button "Create campaign":
+      - generic: Create campaign
+      - img: 
+  - generic: Segment Name
+  - textbox "Enter Segment Name": New Users
+  - button "Add description":
+    - img: 
+    - generic: Add description
+  - button "Tags":
+    - img: 
+    - generic: Tags
+    - img: 
+  - button "0 Changes Since Last Viewed":
+    - img: 
+    - generic: 0 Changes Since Last Viewed
+  - generic: Apps and websites targeted
+  - log: Users from all apps selected, 1 of 2.2 results available.Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+  - generic: Users from all apps
+  - combobox "Apps and websites targeted" [expanded] [active]
+  - listbox:
+    - option "Users from all apps Current and future, including users with no apps":
+      - heading "Users from all apps" [level=5]
+      - generic: Current and future, including users with no apps
+    - option "Users from specific apps Select specific apps from list":
+      - heading "Users from specific apps" [level=5]
+      - generic: Select specific apps from list
+  - checkbox "Analytics Tracking"
+  - generic: Analytics Tracking
+  - heading "Segment Builder" [level=3]
+  - generic: Users will be included in this segment if they match your filter groups, and omitted if they match your exclusion groups.
+  - button "Show more":
+    - generic: Show more
+    - img: 
+  - group "Filter group":
+    - button:
+    - generic: Filter group
+    - button "or":
+      - generic: or
+      - img: 
+    - button:
+    - generic: First Used App
+    - generic: less than
+    - generic: 1 week ago
+    - button "Duplicate":
+      - img: 
+    - button "Remove":
+      - img: 
+    - generic: OR
+    - log
+    - generic: Search filter...
+    - combobox "Select filter"
+  - button "Add filter group":
+    - img: 
+    - generic: Add filter group
+  - button "Add exclusion group":
+    - img: 
+    - generic: Add exclusion group
+  - heading "User Lookup" [level=3]
+  - heading "Check if a user matches the segment, filter, and app criteria" [level=6]
+  - textbox "Search by External User ID or Braze ID"
+  - button "Search" [disabled]:
+  - heading "Messaging Use" [level=3]
+  - table:
+    - rowgroup:
+      - row "Campaigns Not used by any Campaigns":
+        - rowheader "Campaigns"
+        - cell "Not used by any Campaigns"
+    - rowgroup
+    - rowgroup:
+      - row "Segments Not used by any Segments":
+        - rowheader "Segments"
+        - cell "Not used by any Segments"
+    - rowgroup
+    - rowgroup:
+      - row "Canvases Not used by any Canvases":
+        - rowheader "Canvases"
+        - cell "Not used by any Canvases"
+    - rowgroup
+  - heading "Segment Insights Information" [level=3]:
+    - text: Segment Insights
+    - img "Information":
+  - generic: New Users
+  - generic: "/ Baseline: All Users"
+  - generic: usage
+  - table:
+    - rowgroup:
+      - row "Session Frequency Information 1.34 sessions per day / 0 sessions per day --":
+        - cell "Session Frequency Information":
+          - generic: Session Frequency
+          - img "Information":
+        - cell "1.34 sessions per day / 0 sessions per day":
+          - text: 1.34 sessions per day
+          - generic: / 0 sessions per day
+        - cell "--"
+      - row "Time since First Session Information 4.24 days / 0 days --":
+        - cell "Time since First Session Information":
+          - generic: Time since First Session
+          - img "Information":
+        - cell "4.24 days / 0 days":
+          - text: 4.24 days
+          - generic: / 0 days
+        - cell "--"
+      - row "Time since Last Session Information 2.23 days / 0 days --":
+        - cell "Time since Last Session Information":
+          - generic: Time since Last Session
+          - img "Information":
+        - cell "2.23 days / 0 days":
+          - text: 2.23 days
+          - generic: / 0 days
+        - cell "--"
+  - generic: purchases
+  - table:
+    - rowgroup:
+      - row "Lifetime Revenue Information $0.00 / -- --":
+        - cell "Lifetime Revenue Information":
+          - generic: Lifetime Revenue
+          - img "Information":
+        - cell "$0.00 / --":
+          - text: $0.00
+          - generic: / --
+        - cell "--"
+      - row "Time to First Purchase Information 0 days / 0 days --":
+        - cell "Time to First Purchase Information":
+          - generic: Time to First Purchase
+          - img "Information":
+        - cell "0 days / 0 days":
+          - text: 0 days
+          - generic: / 0 days
+        - cell "--"
+      - row "Time since Last Purchase Information 0 days / 0 days --":
+        - cell "Time since Last Purchase Information":
+          - generic: Time since Last Purchase
+          - img "Information":
+        - cell "0 days / 0 days":
+          - text: 0 days
+          - generic: / 0 days
+        - cell "--"
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: /engagement/segmenter/segment_insights/6af4374c46d3080087f1c5d2?segmentIds=6af4375220abdf005fc2eef4&baselineSegmentId=
+    - generic: Compare Against More Segments
+  - heading "API Identifier" [level=3]
+  - generic: "Segment API Identifier:"
+  - textbox: 4b2e84dd-d787-46f5-a94f-a953f1cd32c4
+  - button "Copy":
+    - img: 
+    - generic: Copy
+  - text: Use this identifier to access your Segment from Braze's external API. A full list of your API identifiers is available at the
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: /app_settings/developer_console/apisettings
+    - text: API Keys
+  - text: page.
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://www.braze.com/docs/en/developer_guide/rest_api/user_data/
+    - text: Learn more
+    - text: ⁠
+  - button "Revert" [disabled]:
+    - generic: Revert
+  - button "Save" [disabled]:
+    - generic: Save
+- generic: © Braze 2026
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://braze.statuspage.io
+  - text: Status
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/terms
+  - text: Terms
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/privacy
+  - text: Privacy Policy
+- text:          
+- iframe

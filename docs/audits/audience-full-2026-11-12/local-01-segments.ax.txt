@@ -1,0 +1,320 @@
+Browser tab: 14, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/engagement/segmenter/segmenter/local?locale=en".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/engagement/segmenter/segmenter/local?locale=en
+	1 container
+		2 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		3 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			4 text Local workspace
+			5 image
+		6 container Side navigation
+			7 text Quick links
+			8 button Canvas
+			9 button Campaigns
+			10 button Segments
+			11 button Getting Started
+			12 button Home
+			13 button AI Decisioning
+			14 button Agent Console
+			15 button Messaging
+			16 button Audience
+			17 button Content
+			18 button Analytics
+			19 button Partner Integrations
+			20 button Data Settings
+			21 button Settings
+		22 button Home
+			23 image Braze
+	24 container
+		25 text ◷   8 days left in your free trial.
+		26 button Connect with sales
+		27 button Search workspace ⌘K
+			28 image
+			29 text Search workspace
+			30 text ⌘K
+		31 button Take a tour
+		32 image Community
+		33 button (collapsed) Description: Language, Secondary Actions: Expand
+		34 button Notifications
+		35 button (collapsed) Description: Profile, Secondary Actions: Expand
+		36 image
+		37 button Open BrazeAI Operator
+		38 button Segments
+		39 heading Segments, Value: 1
+			40 text Segments
+		41 container
+			42 text Find and reach the right audience with segments.
+			43 text Group users based on their behaviors, preferences, or
+			44 text past actions to send messages that truly matter to
+			45 text them.
+		46 button (collapsed) Create Segment, Secondary Actions: Expand
+			47 text Create Segment
+			48 image
+		49 container
+			50 text Status
+			51 pop up button (collapsed, settable) Description: Status, Value: Active, Secondary Actions: Expand
+				52 menu
+					53 (selected) Active
+					54 Draft
+					55 Archived
+					56 All
+		57 text Tags
+		58 container
+			59 combo box (collapsed, settable) Description: Tags, Secondary Actions: Expand
+			60 button Toggle Tags
+				61 image
+		62 button (collapsed) Filters, Secondary Actions: Expand
+			63 image
+			64 text Filters
+		65 button (collapsed) Columns, Secondary Actions: Expand
+			66 image
+			67 text Columns
+		68 checkbox (settable, integer) Description: Show starred only, Value: 0
+		69 image
+		70 text field (settable) Search for segments
+		71 text Status:  Active
+		72 button Remove status filter Active
+			73 image
+		74 heading 13 Results, Value: 3
+			75 text 13  Results
+		76 table
+			77 row
+				78 cell
+					79 checkbox (settable, integer) Description: Select all rows, Value: 0
+				80 cell
+					81 button Segment name ↕
+						82 text Segment name 
+						83 text ↕
+				84 cell
+					85 text Status
+				86 cell
+					87 text Last edited by
+				88 cell
+					89 button Last edited ↓
+						90 text Last edited
+						91 text ↓
+			92 row
+				93 cell
+					94 checkbox (settable, integer) Description: Select New Users, Value: 0
+				95 cell
+					96 button Quick view: New Users
+						97 image
+					98 button New Users
+				99 cell
+					100 text Active
+				101 cell
+					102 text —
+				103 cell
+					104 text Nov 12, 2026
+				105 cell
+					106 button (collapsed) Description: More Actions: New Users, Secondary Actions: Expand
+						107 image
+			108 row
+				109 cell
+					110 checkbox (settable, integer) Description: Select Recent Purchasers, Value: 0
+				111 cell
+					112 button Quick view: Recent Purchasers
+						113 image
+					114 button Recent Purchasers
+				115 cell
+					116 text Active
+				117 cell
+					118 text —
+				119 cell
+					120 text Nov 12, 2026
+				121 cell
+					122 button (collapsed) Description: More Actions: Recent Purchasers, Secondary Actions: Expand
+						123 image
+			124 row
+				125 cell
+					126 checkbox (settable, integer) Description: Select Active Subscribers, Value: 0
+				127 cell
+					128 button Quick view: Active Subscribers
+						129 image
+					130 button Active Subscribers
+				131 cell
+					132 text Active
+				133 cell
+					134 text —
+				135 cell
+					136 text Nov 12, 2026
+				137 cell
+					138 button (collapsed) Description: More Actions: Active Subscribers, Secondary Actions: Expand
+						139 image
+			140 row
+				141 cell
+					142 checkbox (settable, integer) Description: Select Reachable Users, Value: 0
+				143 cell
+					144 button Quick view: Reachable Users
+						145 image
+					146 button Reachable Users
+				147 cell
+					148 text Active
+				149 cell
+					150 text —
+				151 cell
+					152 text Nov 12, 2026
+				153 cell
+					154 button (collapsed) Description: More Actions: Reachable Users, Secondary Actions: Expand
+						155 image
+			156 row
+				157 cell
+					158 checkbox (settable, integer) Description: Select Pro Plan Customers, Value: 0
+				159 cell
+					160 button Quick view: Pro Plan Customers
+						161 image
+					162 button Pro Plan Customers
+				163 cell
+					164 text Active
+				165 cell
+					166 text —
+				167 cell
+					168 text Nov 12, 2026
+				169 cell
+					170 button (collapsed) Description: More Actions: Pro Plan Customers, Secondary Actions: Expand
+						171 image
+			172 row
+				173 cell
+					174 checkbox (settable, integer) Description: Select Free Plan Customers, Value: 0
+				175 cell
+					176 button Quick view: Free Plan Customers
+						177 image
+					178 button Free Plan Customers
+				179 cell
+					180 text Active
+				181 cell
+					182 text —
+				183 cell
+					184 text Nov 12, 2026
+				185 cell
+					186 button (collapsed) Description: More Actions: Free Plan Customers, Secondary Actions: Expand
+						187 image
+			188 row
+				189 cell
+					190 checkbox (settable, integer) Description: Select English Speakers, Value: 0
+				191 cell
+					192 button Quick view: English Speakers
+						193 image
+					194 button English Speakers
+				195 cell
+					196 text Active
+				197 cell
+					198 text —
+				199 cell
+					200 text Nov 12, 2026
+				201 cell
+					202 button (collapsed) Description: More Actions: English Speakers, Secondary Actions: Expand
+						203 image
+			204 row
+				205 cell
+					206 checkbox (settable, integer) Description: Select Chinese Speakers, Value: 0
+				207 cell
+					208 button Quick view: Chinese Speakers
+						209 image
+					210 button Chinese Speakers
+				211 cell
+					212 text Active
+				213 cell
+					214 text —
+				215 cell
+					216 text Nov 12, 2026
+				217 cell
+					218 button (collapsed) Description: More Actions: Chinese Speakers, Secondary Actions: Expand
+						219 image
+			220 row
+				221 cell
+					222 checkbox (settable, integer) Description: Select United States Users, Value: 0
+				223 cell
+					224 button Quick view: United States Users
+						225 image
+					226 button United States Users
+				227 cell
+					228 text Active
+				229 cell
+					230 text —
+				231 cell
+					232 text Nov 12, 2026
+				233 cell
+					234 button (collapsed) Description: More Actions: United States Users, Secondary Actions: Expand
+						235 image
+			236 row
+				237 cell
+					238 checkbox (settable, integer) Description: Select United Kingdom Users, Value: 0
+				239 cell
+					240 button Quick view: United Kingdom Users
+						241 image
+					242 button United Kingdom Users
+				243 cell
+					244 text Active
+				245 cell
+					246 text —
+				247 cell
+					248 text Nov 12, 2026
+				249 cell
+					250 button (collapsed) Description: More Actions: United Kingdom Users, Secondary Actions: Expand
+						251 image
+			252 row
+				253 cell
+					254 checkbox (settable, integer) Description: Select China Users, Value: 0
+				255 cell
+					256 button Quick view: China Users
+						257 image
+					258 button China Users
+				259 cell
+					260 text Active
+				261 cell
+					262 text —
+				263 cell
+					264 text Nov 12, 2026
+				265 cell
+					266 button (collapsed) Description: More Actions: China Users, Secondary Actions: Expand
+						267 image
+			268 row
+				269 cell
+					270 checkbox (settable, integer) Description: Select Singapore Users, Value: 0
+				271 cell
+					272 button Quick view: Singapore Users
+						273 image
+					274 button Singapore Users
+				275 cell
+					276 text Active
+				277 cell
+					278 text —
+				279 cell
+					280 text Nov 12, 2026
+				281 cell
+					282 button (collapsed) Description: More Actions: Singapore Users, Secondary Actions: Expand
+						283 image
+			284 row
+				285 cell
+					286 checkbox (settable, integer) Description: Select Germany Users, Value: 0
+				287 cell
+					288 button Quick view: Germany Users
+						289 image
+					290 button Germany Users
+				291 cell
+					292 text Active
+				293 cell
+					294 text —
+				295 cell
+					296 text Nov 12, 2026
+				297 cell
+					298 button (collapsed) Description: More Actions: Germany Users, Secondary Actions: Expand
+						299 image
+		300 container
+			301 text Showing rows  1  -  13  of  13 Rows per page: 
+			302 pop up button (collapsed, settable) Description: Rows per page, Value: 20, Secondary Actions: Expand
+				303 menu
+					304 10
+					305 (selected) 20
+					306 40
+					307 60
+					308 100
+			309 button (disabled) Previous page
+				310 image
+			311 text 1
+			312 button (disabled) Next page
+				313 image
+	314 button Open Next.js Dev Tools
+		315 container
+			316 text Compiling . . .
+
+The focused UI element is 0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/engagement/segmenter/segmenter/local?locale=en

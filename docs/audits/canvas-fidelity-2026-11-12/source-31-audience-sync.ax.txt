@@ -1,0 +1,31 @@
+Browser tab: 4, Title: "Engagement - Canvas - Edit 'New Canvas - November 11, 2026'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'New Canvas - November 11, 2026', URL: dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container
+		171 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		172 container Step 8 step editor
+			173 container
+				174 text Step 8
+				175 button
+				176 text DISCONNECTED
+				177 button Audience Sync
+					178 text Audience Sync
+				179 text All users who enter this step advance to the next step
+			180 button Done
+			181 container
+				182 text Set up Audience Sync
+				183 button BrazeAI Operator™
+					184 image
+				185 image
+				186 text Choose a Partner to start Audience Sync
+				187 button Google Ads
+					188 image
+					189 text Google Ads
+				190 button Facebook
+					191 image
+					192 text Facebook
+				193 text Note: All partners will process requests from Braze and attempt to match users to their audience. This process can take anywhere from 6-48 hours on the partner's platform to update their audience match size.
+				194 heading Additional partners are available when you upgrade to Audience Sync Pro., Value: 6
+					195 text Additional partners are available when you upgrade to Audience Sync Pro.
+				196 link Description: View in Technology Partners, Value: dashboard-09.braze.com/integrations/technology_partners/6af4374c46d3080087f1c5d2
+
+The focused UI element is 172 container Step 8 step editor

@@ -1,0 +1,92 @@
+Browser tab: 7, Title: "Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build&initialConditionsCollapsed=true".
+0 AXWebArea Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build&initialConditionsCollapsed=true
+	1 container
+		193 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		194 container Step 2 step editor
+			195 container
+				196 text Step 2
+				197 button
+				198 text DISCONNECTED
+				199 button Window: 1 day Ranking: Off Advance: Immediately
+					200 container
+						201 text Window : 1 day
+					202 container
+						203 text Ranking : Off
+					204 container
+						205 text Advance : Immediately
+				206 container
+					207 button 1 1 Group 1
+						208 image
+							209 text 1
+						210 text Group 1
+				211 button 2 2 Everyone Else
+					212 image
+						213 text 2
+					214 text Everyone Else
+				215 button Add Action Group
+			216 button Done
+			217 container action-path-step-editor1482
+				218 container
+					219 image
+						220 text 1
+					221 text Group 1
+					222 button BrazeAI Operator™
+						223 image
+				224 container
+					225 text Action Group Name
+					226 text field (settable) Group 1
+					227 checkbox (settable, integer) Description: I want this group to exit the Canvas, Value: 0, ID: bc-checkbox-798465175
+					228 text I want this group to exit the Canvas
+					229 text Interact With Campaign
+					230 container
+						246 container
+							247 text View in-app message, 1 of 29.
+							248 text 29 results available.
+							249 text Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+						231 container
+							232 text Choose an Interaction...
+							233 combo box (expanded, settable) Description: Interaction, ID: react-select-15-input, Secondary Actions: Collapse
+						250 list react-select-15-listbox
+							251 Value: View in-app message, ID: react-select-15-option-0
+							252 Value: Click in-app message, ID: react-select-15-option-1
+							253 Value: Click in-app message button 1, ID: react-select-15-option-2
+							254 Value: Click in-app message button 2, ID: react-select-15-option-3
+							255 Value: Click email, ID: react-select-15-option-4
+							256 Value: Open email, ID: react-select-15-option-5
+							257 Value: Open email (machine opens), ID: react-select-15-option-6
+							258 Value: Open email (other opens), ID: react-select-15-option-7
+							259 Value: Directly open push notification, ID: react-select-15-option-8
+							260 Value: Click push notification button, ID: react-select-15-option-9
+							261 Value: Click push story page, ID: react-select-15-option-10
+							262 Value: Perform conversion event, ID: react-select-15-option-11
+							263 Value: Receive email, ID: react-select-15-option-12
+							264 Value: Receive push notification, ID: react-select-15-option-13
+							265 Value: Receive webhook, ID: react-select-15-option-14
+							266 Value: Are enrolled in control group, ID: react-select-15-option-15
+							267 Value: Click alias in email, ID: react-select-15-option-16
+							268 Value: Clicked Alias in any campaign or canvas step, ID: react-select-15-option-17
+							269 Value: Receive SMS, ID: react-select-15-option-18
+							270 Value: Click shortened SMS link, ID: react-select-15-option-19
+							271 Value: View content card, ID: react-select-15-option-20
+							272 Value: Click content card, ID: react-select-15-option-21
+							273 Value: Dismiss content card, ID: react-select-15-option-22
+							274 Value: View banner, ID: react-select-15-option-23
+							275 Value: Click banner, ID: react-select-15-option-24
+							276 Value: Dismiss banner, ID: react-select-15-option-25
+							277 Value: Click tracked WhatsApp link, ID: react-select-15-option-26
+							278 Value: Click tracked LINE link, ID: react-select-15-option-27
+							279 Value: Submit in-app message survey, ID: react-select-15-option-28
+						234 text Please select an interaction for campaign
+						235 container
+							236 text Choose Campaign...
+							237 combo box (collapsed, settable) Description: for campaign, ID: react-select-16-input, Secondary Actions: Expand
+						238 text Please select a campaign
+					239 button close
+					240 text Evaluate if user takes specified actions
+					241 container
+						242 container
+							243 text Select Trigger
+							244 combo box (collapsed, settable) Description: Select Trigger, ID: react-select-14-input, Secondary Actions: Expand
+					245 button (disabled) Add Trigger
+
+The focused UI element is 233 combo box (expanded, settable) Description: Interaction, ID: react-select-15-input, Secondary Actions: Collapse

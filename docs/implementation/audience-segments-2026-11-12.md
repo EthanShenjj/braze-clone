@@ -1,0 +1,9 @@
+# Segments implementation and evidence notes — 2026-11-12
+
+The dedicated Segments workspace preserves shared tags and uses the shared full filter catalog and typed rule editor. It supports saved inclusion/exclusion groups, linked group operators, app targeting (including no-app users), analytics tracking, preview and user lookup, actual messaging-use/insight data, API identifiers, source-evidenced list filters/columns/stars/quick view/actions, and native source edit paths as well as query IDs. Existing seeded flat filters migrate missing operators, attribute fields and numeric booleans when opened in the new editor.
+
+Source inspection incident: clicking **Create with Operator** unexpectedly created an initial unnamed source segment automatically. No prompt was sent and no subsequent Save was clicked; the disabled Save/Revert controls were initially mistaken for evidence that the editor was unsaved. A later source selector exposed the additional row. Its ID is `6af5250fd8512f008c15c8b7`. The root agent was informed immediately and separately handled user notification and the pending recovery decision. This source artifact was not archived or deleted by this worker. Other source inspection actions remained read/select-only after discovering the behavior.
+
+The local Segment Operator uses the configured existing workspace AI service to propose validated unsaved changes. It reports an unavailable service truthfully when no AI endpoint/key is configured. Source report metric rows could not be verified because Segment Insights failed in both Demo and Live; see the separate Insights implementation note.
+
+No claim is made that the overall source inspection was free of writes. Preference-center inspection remained capture-only, and source Preference Preview was blocked by browser security and was not retried.

@@ -1,0 +1,54 @@
+Browser tab: 7, Title: "Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container
+		220 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		221 container Step step editor
+			222 container
+				223 text Step
+				224 button
+				225 text DISCONNECTED Incomplete Messages
+				226 button Content Optimizer Clicks 1 combination
+					227 image
+					228 text Content Optimizer
+					229 text Clicks
+					230 text 1 combination
+				231 text All users who enter this step advance to the next step
+			232 button Done
+			233 container
+				234 text Content Optimizer setup
+				235 button BrazeAI Operator™
+					236 image
+				237 tab group Message step
+					238 tab (selected, settable, boolean) Description: Messaging channels, Value: 1, ID: content
+					239 tab (selectable, settable, boolean) Description: Delivery settings, Value: 0, ID: settings
+					240 tab (selectable, settable, boolean) Description: Content Optimizer settings, ID: content-optimizer-settings, Value: 0
+Content Optimizer settings
+					241 tab (selectable, settable, boolean) Description: Agentic Standards results, Value: 0, ID: message-step-tab-standards-results
+				242 text You're using the free version of Content Optimizer
+				243 container
+					244 text Each workspace can have one active Content Optimizer step. You can continue editing this Canvas, but launching another active step isn't available until you stop or archive an existing one.
+					245 button Request an upgrade
+				246 heading Channels, Value: 5
+					247 text Channels
+				248 tab group
+					249 tab (selected, settable, boolean) Email
+Email, Value: 1
+Email
+				250 heading Create new email, Value: 3
+					251 text Create new email
+				252 text How would you like to start?
+				253 button Create with Operator Generate a custom email
+					254 text Create with Operator
+					255 text Generate a custom email
+				256 button Drag-and-drop editor Start from scratch
+					257 text Drag-and-drop editor
+					258 text Start from scratch
+				259 button HTML code editor Start from scratch
+					260 text HTML code editor
+					261 text Start from scratch
+				262 button Templates Choose a template
+					263 text Templates
+					264 text Choose a template
+				265 button Description: Upload file, ID: upload-html-button
+
+The focused UI element is 0 AXWebArea Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build

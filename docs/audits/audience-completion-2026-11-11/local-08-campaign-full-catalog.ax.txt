@@ -1,0 +1,247 @@
+Browser tab: 10, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3212/engagement/campaigns/cmp_banner?step=audience&workspace=local&locale=en".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3212/engagement/campaigns/cmp_banner?step=audience&workspace=local&locale=en
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agent Console
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+	25 container
+		26 text ◷   8 days left in your free trial.
+		27 button Connect with sales
+		28 button Search workspace ⌘K
+			29 image
+			30 text Search workspace
+			31 text ⌘K
+		32 button Take a tour
+		33 image Community
+		34 button (collapsed) Description: Language, Secondary Actions: Expand
+		35 button Notifications
+		36 button (collapsed) Description: Profile, Secondary Actions: Expand
+		37 image
+		38 button Open BrazeAI Operator
+		39 button Campaigns
+		40 button Edit 'Referral Banner'
+			41 text Edit
+			42 text  '
+			43 text Referral Banner
+			44 text '
+			45 image
+		46 image
+		47 text Limited access
+		48 container Campaign steps
+			49 button 1 Compose Messages
+				50 text 1
+				51 text Compose Messages
+			52 button ✓ Schedule Delivery
+				53 text ✓
+				54 text Schedule Delivery
+			55 button ✓ Target Audiences
+				56 text ✓
+				57 text Target Audiences
+			58 button ✓ Assign Conversions
+				59 text ✓
+				60 text Assign Conversions
+			61 button 5 Review Summary
+				62 text 5
+				63 text Review Summary
+		64 container
+			65 heading Targeting Options, Value: 2
+				66 text Targeting Options
+			67 text Target users by choosing multiple segments they must fall into. Further refine your audience by adding additional filters.
+			68 heading Target Users By Segment, Value: 3
+				69 text Target Users By Segment
+			70 button Remove segment Recent Purchasers
+				71 text Recent Purchasers
+				72 text  ×
+			73 combo box (collapsed, settable) Description: Target Users By Segment, Secondary Actions: Expand
+			74 button (collapsed) Description: Toggle segments, Secondary Actions: Expand
+			75 heading Additional Filters, Value: 3
+				76 text Additional Filters
+			77 container Filter group
+				78 container Description: Drag filter group, Help: Drag to reorder groups
+					79 text ⠿
+				80 text field (settable) Description: Filter group title, Value: Filter group
+				81 button (disabled) Move group up
+				82 button (disabled) Move group down
+				83 pop up button (collapsed, settable) Description: Filter group operator, Value: OR, Secondary Actions: Expand
+					84 menu
+						85 (selected) OR
+						86 AND
+				87 container
+					88 combo box (expanded, settable) Description: Select filter, Secondary Actions: Collapse
+					89 button (expanded) Description: Toggle filter catalog, Secondary Actions: Collapse
+					176 list Audience filters
+						177 text All Categories
+						178 (selected) Segment or CSV membership User membership in other segments, Segment Extension, or imported CSV
+							179 text Segment or CSV membership
+							180 text User membership in other segments, Segment Extension, or imported CSV
+						181 Custom attributes User characteristics that your company has set up
+							182 text Custom attributes
+							183 text User characteristics that your company has set up
+						184 Custom events User actions that your company has set up
+							185 text Custom events
+							186 text User actions that your company has set up
+						187 Sessions Session count, first and last session, and median session duration
+							188 text Sessions
+							189 text Session count, first and last session, and median session duration
+						190 Retargeting Past interactions with messages and channels
+							191 text Retargeting
+							192 text Past interactions with messages and channels
+						193 Channel subscription behavior User subscription behavior for specific messaging channels
+							194 text Channel subscription behavior
+							195 text User subscription behavior for specific messaging channels
+						196 Demographic attributes User demographic information including country, city, language, birthday, and more
+							197 text Demographic attributes
+							198 text User demographic information including country, city, language, birthday, and more
+						199 App Usage behavior for specific apps and app versions
+							200 text App
+							201 text Usage behavior for specific apps and app versions
+						202 Uninstall App uninstall behavior and date
+							203 text Uninstall
+							204 text App uninstall behavior and date
+						205 Devices User device information, including model, OS, ad tracking, and more
+							206 text Devices
+							207 text User device information, including model, OS, ad tracking, and more
+						208 Location User location data
+							209 text Location
+							210 text User location data
+						211 Cohort membership User membership in cohorts from Alloys integrations
+							212 text Cohort membership
+							213 text User membership in cohorts from Alloys integrations
+						214 Install attribution App uninstall behavior and date
+							215 text Install attribution
+							216 text App uninstall behavior and date
+						217 Intelligence and Predictive App uninstall behavior and date
+							218 text Intelligence and Predictive
+							219 text App uninstall behavior and date
+						220 Social activity Connection to Facebook and Twitter
+							221 text Social activity
+							222 text Connection to Facebook and Twitter
+						223 eCommerce eCommerce behavioral data
+							224 text eCommerce
+							225 text eCommerce behavioral data
+						226 text Other Filters
+						227 Email Address Individual email addresses for testing
+							228 text Email Address
+							229 text Individual email addresses for testing
+						230 External User ID Campaign recipients by user ids for testing
+							231 text External User ID
+							232 text Campaign recipients by user ids for testing
+						233 Random Bucket # Users within a range of random bucket numbers
+							234 text Random Bucket #
+							235 text Users within a range of random bucket numbers
+						236 Created At When the user record was created in Braze
+							237 text Created At
+							238 text When the user record was created in Braze
+						239 Created From Source of the user record created in Braze
+							240 text Created From
+							241 text Source of the user record created in Braze
+						242 Pending Deletion Users that are marked for deletion
+							243 text Pending Deletion
+							244 text Users that are marked for deletion
+				90 button (disabled) Remove filter group
+			91 button ＋ Add filter group
+				92 text ＋ Add 
+				93 text filter
+				94 text  group
+			95 button ＋ Add exclusion group
+				96 text ＋ Add 
+				97 text exclusion
+				98 text  group
+			99 heading Audience Summary, Value: 3
+				100 text Audience Summary
+			101 text Recent Purchasers  ·  0  filters
+			102 heading User Lookup, Value: 3
+				103 text User Lookup
+			104 text Check if a user matches the segment, filter, and app criteria.
+			105 button Lookup User
+			106 text Send to these users
+			107 pop up button (collapsed, settable) Send to these users, Value: users who are subscribed or opted in, Secondary Actions: Expand
+				108 menu
+					109 (selected) users who are subscribed or opted in
+					110 users who are opted in
+					111 all eligible users (excludes global unsubscribes)
+			112 checkbox (settable, integer) Description: Limit the number of people who will receive this Campaign, Value: 0
+			113 checkbox (settable, integer) Description: Limit the rate at which this Campaign sends, Value: 0
+		114 container
+			115 heading A/B Testing, Value: 2
+				116 text A/B Testing
+			117 checkbox (disabled, settable, integer) Description: Optimize with BrazeAI™, Value: 0
+			118 text To use Optimize with BrazeAI™, add at least two variants.
+			119 button Compose messages
+			120 text Set your own variant split and control group.  All variants send at the date and time you set in Schedule delivery. % Control Group
+			121 stepper (settable, integer) % Control Group, Value: 20
+			122 text % Variant 1
+			123 stepper (settable, integer) % Variant 1, Value: 80
+			124 text Total:  100.00 %
+			125 button Remove Control Group
+			126 button Distribute Variants Evenly
+		127 container
+			128 heading Suppression Lists, Value: 2
+				129 text Suppression Lists
+			130 text There are no suppression lists applied. To manage suppression for this Campaign, visit 
+			131 link Description: Suppression Lists, Value: 127.0.0.1:3212/suppression-lists?locale=en
+			132 text .
+		133 container
+			134 heading Total Population, Value: 2
+				135 text Total Population
+			136 text Exact users 267 26.54 %  of total users
+			137 progress indicator Description: Percent of total users, Value: 26.540756225585938
+			138 text Last calculated:  2026/11/11 19:42:56
+			139 button ↻ Refresh exact statistics
+			140 button ☷ View calculation queue
+			141 heading Channel breakdown, Value: 4
+				142 text Channel breakdown
+			143 table
+				144 row
+					145 cell
+						146 text Banners
+				147 row
+					148 cell
+						149 text Reachable Users
+					150 cell
+						151 text 247
+			152 button (collapsed) ⊕ Show Additional Statistics, Secondary Actions: Expand
+				153 text ⊕ Show
+				154 text  Additional Statistics
+		155 container
+			156 button Back
+				157 image
+			158 button 1 Compose
+				159 text 1
+				160 text Compose
+			161 button ✓ Schedule
+				162 text ✓
+				163 text Schedule
+			164 button ✓ Target
+				165 text ✓
+				166 text Target
+			167 button ✓ Assign
+				168 text ✓
+				169 text Assign
+			170 button 5 Review
+				171 text 5
+				172 text Review
+			173 button Forward
+				174 image
+			175 button Save Draft
+
+The focused UI element is 88 combo box (expanded, settable) Description: Select filter, Secondary Actions: Collapse

@@ -1,0 +1,124 @@
+- link "Skip to main content":
+  - /url: "#main-container"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Live – ittor":
+    - generic: Live – ittor
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6af4374b46d3080087f1c558?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6af4374b46d3080087f1c558?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6af4374b46d3080087f1c558?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6af4374b46d3080087f1c558?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agents":
+    - generic: Agents
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 14 days left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- main:
+  - heading "Import Users" [level=2]
+  - button "Send feedback":
+    - img: 
+  - button "Import":
+    - generic: Import
+    - img: 
+  - generic: Add or update users in your workspace by uploading a CSV or entering details manually.
+  - button "Refresh table":
+    - generic: Refresh table
+  - table:
+    - rowgroup:
+      - row "Date Information Uploader File Name Type Targeting Availability Records Information Status":
+        - columnheader "Date Information":
+          - text: Date
+          - img "Information":
+        - columnheader "Uploader"
+        - columnheader "File Name"
+        - columnheader "Type"
+        - columnheader "Targeting Availability"
+        - columnheader "Records Information":
+          - text: Records
+          - img "Information":
+        - columnheader "Status"
+        - columnheader
+    - rowgroup:
+      - row "No results found":
+        - cell "No results found":
+          - generic: No results found
+- generic: © Braze 2026
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://braze.statuspage.io
+  - text: Status
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/terms
+  - text: Terms
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/privacy
+  - text: Privacy Policy
+- text:     
+- dialog:
+  - button "close":
+  - heading "Attributes" [level=2]
+  - generic: Import default or custom user attributes with a user identifier.
+  - text: Download
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://cdn.braze.com/dashboard-assets/dashboard/attributes-csv-example.csv
+    - text: Sample CSV
+  - text: .
+  - heading "Drag and drop a file here" [level=5]
+  - text: "File type: CSV"
+  - text: Maximum file size is 1MB.
+  - text: CSV files must contain either an external_id or braze_id, or user_alias_label and user_alias_name, or email or phone to help identify imported users.
+  - text: Free trial environments have a limit of 25 files and 250 user profiles. Each file can have up to 250 rows and 10 columns.
+  - button "Cancel":
+    - generic: Cancel
+  - button "Browse files":
+    - generic: Browse files

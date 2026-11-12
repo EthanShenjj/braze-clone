@@ -1,0 +1,205 @@
+Browser tab: 15, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/engagement/segmenter/edit/seg_new/local?workspace=local&locale=en&segmentIds=seg_new&segmentId=seg_new".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/engagement/segmenter/edit/seg_new/local?workspace=local&locale=en&segmentIds=seg_new&segmentId=seg_new
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agents
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+	25 container
+		26 text ◷   8 days left in your free trial.
+		27 button Connect with sales
+		28 button Search workspace ⌘K
+			29 image
+			30 text Search workspace
+			31 text ⌘K
+		32 button Take a tour
+		33 image Community
+		34 button (collapsed) Description: Language, Secondary Actions: Expand
+		35 button Notifications
+		36 button (collapsed) Description: Profile, Secondary Actions: Expand
+		37 image
+		38 button Open BrazeAI Operator
+		39 button Segments
+		40 button Edit New Users
+			41 text Edit 
+			42 text New Users
+			43 image
+		44 heading Edit segment, Value: 1
+			45 text Edit segment
+		46 container
+			47 heading Segment Details, Value: 2
+				48 text Segment Details
+			49 button (collapsed) User Data, Secondary Actions: Expand
+				50 text User Data
+				51 image
+			52 button (collapsed) Create campaign, Secondary Actions: Expand
+				53 text Create campaign
+				54 image
+			55 text Segment Name
+			56 text field (settable) Segment Name, Value: New Users
+			57 text Description
+			58 text entry area (settable) Description, Value: Users in the new-user lifecycle stage
+			59 button (collapsed) Tags, Secondary Actions: Expand
+				60 image
+				61 text Tags
+				62 image
+			63 text Apps and websites targeted
+			64 pop up button (collapsed, settable) Description: Apps and websites targeted, Value: Users from all apps, Secondary Actions: Expand
+				65 menu
+					66 (selected) Users from all apps
+					67 Users from specific apps
+			68 switch (settable, boolean) Description: Analytics Tracking, Value: 0
+		69 container
+			70 heading Segment Builder, Value: 2
+				71 text Segment Builder
+			72 text Users will be included in this segment if they match your filter groups, and omitted if they match your exclusion groups.
+			73 button (collapsed) Show more, Secondary Actions: Expand
+				74 text Show more
+				75 image
+			76 container Filter group
+				77 container
+					78 button Drag filter group
+						79 image
+					80 text Filter group
+					81 pop up button (collapsed, settable) Description: Filter group operator, Value: AND, Secondary Actions: Expand
+						82 menu
+							83 OR
+							84 (selected) AND
+					85 button Remove filter group
+						86 image
+				87 container lifecycle
+					88 heading lifecycle, Value: 4
+						89 text lifecycle
+					90 container
+						91 text Comparison
+						92 combo box (collapsed, settable) Description: Comparison, Value: is, Secondary Actions: Expand
+						93 button Toggle Comparison
+							94 image
+					95 container
+						96 text Value
+						97 text field (settable) Description: Value, Value: New Users
+				98 button Duplicate
+					99 image
+					100 text Duplicate
+				101 button Remove
+					102 image
+					103 text Remove
+				104 text AND
+				105 container
+					106 combo box (collapsed, settable) Description: Select filter, Secondary Actions: Expand
+					107 button (collapsed) Description: Toggle filter catalog, Secondary Actions: Expand
+			108 button Add filter group
+				109 image
+				110 text Add filter group
+			111 button Add exclusion group
+				112 image
+				113 text Add exclusion group
+			114 text 200
+			115 text Matching users
+			116 text 185
+			117 text Reachable users
+			118 text 20%
+			119 text Of workspace
+		120 container
+			121 heading User Lookup, Value: 2
+				122 text User Lookup
+			123 text Check if a user matches the segment, filter, and app criteria
+			124 text field (settable) Search by External User ID or Braze ID
+			125 button (disabled) Search
+		126 container
+			127 heading Messaging Use, Value: 2
+				128 text Messaging Use
+			129 table
+				130 row
+					131 cell
+						132 text Campaigns
+					133 cell
+						134 text Newsletter Welcome, Welcome Offer IAM
+				135 row
+					136 cell
+						137 text Segments
+					138 cell
+						139 text Not used by any Segments
+				140 row
+					141 cell
+						142 text Canvases
+					143 cell
+						144 text Not used by any Canvases
+		145 container
+			146 heading Segment Insights Information, Value: 2
+				147 text Segment Insights 
+				148 image Information
+			149 text New Users  / Baseline: All Users
+			150 heading Usage, Value: 3
+				151 text Usage
+			152 table
+				153 row
+					154 cell
+						155 text Session Frequency
+					156 cell
+						157 text —  /  —
+				158 row
+					159 cell
+						160 text Time since First Session
+					161 cell
+						162 text —  /  —
+				163 row
+					164 cell
+						165 text Time since Last Session
+					166 cell
+						167 text —  /  —
+			168 heading Purchases, Value: 3
+				169 text Purchases
+			170 table
+				171 row
+					172 cell
+						173 text Lifetime Revenue
+					174 cell
+						175 text —  /  —
+				176 row
+					177 cell
+						178 text Time to First Purchase
+					179 cell
+						180 text —  /  —
+				181 row
+					182 cell
+						183 text Time since Last Purchase
+					184 cell
+						185 text —  /  —
+			186 link Description: View Segment Insights, Value: 127.0.0.1:3213/engagement/segmenter/segment_insights/local?segmentIds=seg_new&baselineSegmentId=&workspace=local&locale=en
+		187 container
+			188 heading API Identifier, Value: 2
+				189 text API Identifier
+			190 text Segment API Identifier :
+			191 text field Description: Segment API Identifier, Value: seg_new
+			192 button Copy
+				193 image
+				194 text Copy
+			195 text Use this identifier to access your Segment from Braze's external API. A full list of your API identifiers is available at the 
+			196 link Description: API settings, Value: 127.0.0.1:3213/apis-and-identifiers
+			197 text  page.
+		198 container
+			199 button (disabled) Revert
+				200 image
+				201 text Revert
+			202 button (disabled) Save
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/engagement/segmenter/edit/seg_new/local?workspace=local&locale=en&segmentIds=seg_new&segmentId=seg_new

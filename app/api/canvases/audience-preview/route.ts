@@ -1,0 +1,3 @@
+import {previewCanvasAudience} from '@/lib/braze-store';
+export const runtime='nodejs';
+export async function POST(request:Request){try{const input=await request.json();if(!input.audience||typeof input.audience!=='object'||Array.isArray(input.audience))throw new Error('Provide Canvas audience criteria.');return Response.json(previewCanvasAudience(input.audience,typeof input.workspaceId==='string'?input.workspaceId:'local',typeof input.lookup==='string'?input.lookup.trim():undefined));}catch(error){return Response.json({error:error instanceof Error?error.message:'Could not calculate Canvas audience.'},{status:400});}}

@@ -1,0 +1,9 @@
+external_id,name,time,order_id,cart_id,total_value,subtotal_value,tax,shipping,currency,total_discounts,source,product_id,product_name,variant_id,image_url,product_url,quantity,price
+123,ecommerce.order_placed,2026-05-26T12:00:00.000Z,A10001,C_12345,1234.56,1200.00,30.00,4.56,USD,5.00,web,SKU-AABMWG87,Cotton T-Shirt,C6E,https://www.url.com,https://www.url.com,1,300.00
+123,ecommerce.order_placed,2026-05-26T12:00:00.000Z,,,,,,,,,,SKU-AAMAZND,Cotton Hoodie,21D,https://www.url.com,https://www.url.com,1,300.00
+123,ecommerce.order_placed,2026-05-26T12:00:00.000Z,,,,,,,,,,SKU-AAAMVAL,Cotton Sweatshirt,G86,https://www.url.com,https://www.url.com,1,595.44
+456,ecommerce.order_placed,2026-06-08T15:30:00.000Z,A10002,C_23456,2345.67,2300.00,40.00,5.67,USD,10.00,ios,SKU-WYCN25,Men's Hemsworth Leather Shoes,BLK,https://www.url.com,https://www.url.com,1,150.00
+456,ecommerce.order_placed,2026-06-08T15:30:00.000Z,,,,,,,,,,SKU-WYCN26,Men's Sneakers,BLU,https://www.url.com,https://www.url.com,1,560.00
+456,ecommerce.order_placed,2026-06-08T15:30:00.000Z,,,,,,,,,,SKU-WYSEARHL,Women's Sneakers,RED,https://www.url.com,https://www.url.com,1,1584.33
+123,ecommerce.order_placed,2026-06-10T08:15:00.000Z,A10003,C_34567,3456.78,3400.00,50.00,6.78,USD,3.00,android,SKU-WLJPJL392,Dry-Fit Running Shorts,001PL,https://www.url.com,https://www.url.com,1,1750.00
+123,ecommerce.order_placed,2026-06-10T08:15:00.000Z,,,,,,,,,,SKU-WLTSLMY,Dry-Fit Running Shirt,002PL,https://www.url.com,https://www.url.com,1,1643.22

@@ -1,0 +1,47 @@
+Browser tab: 4, Title: "Engagement - Canvas - Edit 'New Canvas - November 11, 2026'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'New Canvas - November 11, 2026', URL: dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container
+		171 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		172 container Step 4 step editor
+			173 container
+				174 text Step 4
+				175 button
+				176 text DISCONNECTED
+				177 button Experiment Path Type: Off
+					178 text Experiment
+					179 container
+						180 text Path Type:  Off
+			181 button Done
+			182 container
+				183 text Experiment Settings
+				184 button BrazeAI Operator™
+					185 image
+				186 tab group
+					187 tab (selected, settable, boolean) Description: Experiment, Value: 1, ID: experiment
+					188 tab (selectable, settable, boolean) Description: Additional settings, Value: 0, ID: additional-settings
+				189 text Path distribution
+				190 text Users in your audience are randomly distributed across these paths
+				191 container
+					192 stepper (settable, integer) 50
+					193 text %
+					194 text Path 1
+				195 container
+					196 stepper (settable, integer) 50
+					197 text %
+					198 text Path 2
+				199 button Add a Path
+				200 button Add a Control Group
+				201 button Distribute Paths Evenly
+				202 container
+					203 checkbox (settable, integer) Description: Winning Path, Value: 0, ID: bcl-switch__input-557240786
+					204 text Winning Path
+				205 container
+					206 text After a specified experiment window, send all subsequent users to the path with the highest conversion rate.
+					207 text Opening in a new tab
+					208 link Description: Opening in a new tab, Value: braze.com/docs/user_guide/engagement_tools/canvas/canvas_components/experiment_step/winning_path
+				209 container
+					210 checkbox (settable, integer) Description: Randomized Paths, Value: 0, ID: bcl-switch__input-130945214
+					211 text Randomized Paths
+				212 text Always randomize the path assignments for users who re-enter this Canvas and Experiment Step. When randomized paths are turned off, users are assigned the same path they previously went through.
+
+The focused UI element is 172 container Step 4 step editor

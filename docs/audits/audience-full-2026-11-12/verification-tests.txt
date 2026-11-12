@@ -1,0 +1,3051 @@
+TAP version 13
+# (node:65371) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65371) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/braze-store.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# (node:65371) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# Subtest: attribute import creates scoped users and upserts existing profiles with actual CSV membership
+ok 1 - attribute import creates scoped users and upserts existing profiles with actual CSV membership
+  ---
+  duration_ms: 928.458833
+  type: 'test'
+  ...
+# Subtest: email and alias identities resolve existing users; idempotent requests avoid duplicate history and writes
+ok 2 - email and alias identities resolve existing users; idempotent requests avoid duplicate history and writes
+  ---
+  duration_ms: 84.302375
+  type: 'test'
+  ...
+# Subtest: custom and recommended imports record scoped real events and group order item rows
+ok 3 - custom and recommended imports record scoped real events and group order item rows
+  ---
+  duration_ms: 93.580667
+  type: 'test'
+  ...
+# Subtest: validation and workspace failures roll back all rows and create no successful history
+ok 4 - validation and workspace failures roll back all rows and create no successful history
+  ---
+  duration_ms: 4.905959
+  type: 'test'
+  ...
+# Subtest: API exposes scoped import history and returns real validation errors
+ok 5 - API exposes scoped import history and returns real validation errors
+  ---
+  duration_ms: 215.871083
+  type: 'test'
+  ...
+# (node:65372) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65372) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/audience-import-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: CSV parser preserves BOM headers, quoted commas/newlines and escaped quotes
+ok 6 - CSV parser preserves BOM headers, quoted commas/newlines and escaped quotes
+  ---
+  duration_ms: 3.664417
+  type: 'test'
+  ...
+# Subtest: CSV rejects malformed quotes, duplicate/unsafe headers, uneven columns and trial limits
+ok 7 - CSV rejects malformed quotes, duplicate/unsafe headers, uneven columns and trial limits
+  ---
+  duration_ms: 253.533875
+  type: 'test'
+  ...
+# Subtest: attribute imports accept source identifier choices and preserve typed custom values
+ok 8 - attribute imports accept source identifier choices and preserve typed custom values
+  ---
+  duration_ms: 8.931583
+  type: 'test'
+  ...
+# Subtest: event properties use only the matching source event namespace
+ok 9 - event properties use only the matching source event namespace
+  ---
+  duration_ms: 2.322666
+  type: 'test'
+  ...
+# Subtest: recommended events require one supported event name per file
+ok 10 - recommended events require one supported event name per file
+  ---
+  duration_ms: 0.847375
+  type: 'test'
+  ...
+# (node:65373) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65373) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (node:65373) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/braze-store.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: saved segments share typed AND/OR/exclusion behavior with direct preview and Canvas membership
+ok 11 - saved segments share typed AND/OR/exclusion behavior with direct preview and Canvas membership
+  ---
+  duration_ms: 1695.015916
+  type: 'test'
+  ...
+# Subtest: app targeting uses actual scoped sessions or profile apps and rejects unavailable app IDs
+ok 12 - app targeting uses actual scoped sessions or profile apps and rejects unavailable app IDs
+  ---
+  duration_ms: 60.02925
+  type: 'test'
+  ...
+# Subtest: linked inclusion groups support OR while exclusions always omit matching users
+ok 13 - linked inclusion groups support OR while exclusions always omit matching users
+  ---
+  duration_ms: 33.027083
+  type: 'test'
+  ...
+# Subtest: group configuration rejects bad shapes and circular edits atomically while preserving legacy filters
+ok 14 - group configuration rejects bad shapes and circular edits atomically while preserving legacy filters
+  ---
+  duration_ms: 14.032833
+  type: 'test'
+  ...
+# Subtest: insights and user preview read real members, events and message references and enforce workspace
+ok 15 - insights and user preview read real members, events and message references and enforce workspace
+  ---
+  duration_ms: 416.170625
+  type: 'test'
+  ...
+# Subtest: subscription groups, keywords and calculated history stay scoped and preserve member state
+ok 16 - subscription groups, keywords and calculated history stay scoped and preserve member state
+  ---
+  duration_ms: 75.109541
+  type: 'test'
+  ...
+# Subtest: geofence sets validate every coordinate and scoped app settings without partial writes
+ok 17 - geofence sets validate every coordinate and scoped app settings without partial writes
+  ---
+  duration_ms: 2.10025
+  type: 'test'
+  ...
+# Subtest: preference revisions enforce scoped Email groups and preserve signed published snapshots
+ok 18 - preference revisions enforce scoped Email groups and preserve signed published snapshots
+  ---
+  duration_ms: 97.419375
+  type: 'test'
+  ...
+# Subtest: subscription eligibility and test snapshots reject cross-workspace groups before sending
+ok 19 - subscription eligibility and test snapshots reject cross-workspace groups before sending
+  ---
+  duration_ms: 317.415208
+  type: 'test'
+  ...
+# Subtest: Global Control Group generations, tags, Campaigns and Canvases remain isolated by workspace
+ok 20 - Global Control Group generations, tags, Campaigns and Canvases remain isolated by workspace
+  ---
+  duration_ms: 867.774125
+  type: 'test'
+  ...
+# Subtest: profile populations, imports, unknown emails and duplicate previews use the selected workspace
+ok 21 - profile populations, imports, unknown emails and duplicate previews use the selected workspace
+  ---
+  duration_ms: 49.235916
+  type: 'test'
+  ...
+# Subtest: duplicate merge migrates actual associations, preserves opt-outs and records completed history
+ok 22 - duplicate merge migrates actual associations, preserves opt-outs and records completed history
+  ---
+  duration_ms: 27.246041
+  type: 'test'
+  ...
+# Subtest: stale previews and a late audit error roll back every merge mutation
+ok 23 - stale previews and a late audit error roll back every merge mutation
+  ---
+  duration_ms: 53.271792
+  type: 'test'
+  ...
+# Subtest: scheduled merging runs actual due groups once per workspace and day
+ok 24 - scheduled merging runs actual due groups once per workspace and day
+  ---
+  duration_ms: 41.5135
+  type: 'test'
+  ...
+# Subtest: merge ties remain unresolved and anonymous duplicates can join a single identified profile
+ok 25 - merge ties remain unresolved and anonymous duplicates can join a single identified profile
+  ---
+  duration_ms: 46.176291
+  type: 'test'
+  ...
+# Subtest: active audience suppression uses real filters, scope, tag aliases, Feature Flag exemptions and message rechecks
+ok 26 - active audience suppression uses real filters, scope, tag aliases, Feature Flag exemptions and message rechecks
+  ---
+  duration_ms: 1303.513042
+  type: 'test'
+  ...
+# (node:65374) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65374) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/audience-map-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: Mercator projection round-trips worldwide coordinates at multiple zooms
+ok 27 - Mercator projection round-trips worldwide coordinates at multiple zooms
+  ---
+  duration_ms: 1.846
+  type: 'test'
+  ...
+# Subtest: world wrapping, polar clamp and tiles remain bounded
+ok 28 - world wrapping, polar clamp and tiles remain bounded
+  ---
+  duration_ms: 0.952709
+  type: 'test'
+  ...
+# Subtest: circle scale changes with latitude and zoom, distance uses geographic coordinates
+ok 29 - circle scale changes with latitude and zoom, distance uses geographic coordinates
+  ---
+  duration_ms: 0.222292
+  type: 'test'
+  ...
+# (node:65375) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65375) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/audience-navigation.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: observed native Segment editor restores identity and workspace in source order
+ok 30 - observed native Segment editor restores identity and workspace in source order
+  ---
+  duration_ms: 1.765542
+  type: 'test'
+  ...
+# Subtest: observed subscription details and Preference New resolve without inventing edit paths
+ok 31 - observed subscription details and Preference New resolve without inventing edit paths
+  ---
+  duration_ms: 0.522708
+  type: 'test'
+  ...
+# Subtest: native list routes preserve actual scopes while existing clone local route stays local
+ok 32 - native list routes preserve actual scopes while existing clone local route stays local
+  ---
+  duration_ms: 0.424458
+  type: 'test'
+  ...
+# Subtest: explicit query workspace overrides native scope and unknown paths are ignored
+ok 33 - explicit query workspace overrides native scope and unknown paths are ignored
+  ---
+  duration_ms: 0.548875
+  type: 'test'
+  ...
+# Subtest: observed Global Control Group path preserves workspace
+ok 34 - observed Global Control Group path preserves workspace
+  ---
+  duration_ms: 0.545667
+  type: 'test'
+  ...
+# (node:65376) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65376) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (node:65376) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/braze-store.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: all comparison types share SQLite, Campaign and Canvas semantics
+ok 35 - all comparison types share SQLite, Campaign and Canvas semantics
+  ---
+  duration_ms: 5956.74525
+  type: 'test'
+  ...
+# Subtest: membership uses saved Segment filters and actual extension, CSV and cohort user lists
+ok 36 - membership uses saved Segment filters and actual extension, CSV and cohort user lists
+  ---
+  duration_ms: 1801.302541
+  type: 'test'
+  ...
+# Subtest: the actual CSV importer returns persisted IDs and exposes successful import logs as scoped membership
+ok 37 - the actual CSV importer returns persisted IDs and exposes successful import logs as scoped membership
+  ---
+  duration_ms: 993.081666
+  type: 'test'
+  ...
+# Subtest: Canvas retargeting respects message step, variation, real event flags and actual entry history
+ok 38 - Canvas retargeting respects message step, variation, real event flags and actual entry history
+  ---
+  duration_ms: 1978.028875
+  type: 'test'
+  ...
+# Subtest: surveys and forms query persisted submissions and reject cross-workspace sources
+ok 39 - surveys and forms query persisted submissions and reject cross-workspace sources
+  ---
+  duration_ms: 1384.299833
+  type: 'test'
+  ...
+# Subtest: app push permissions, recorded location and intelligence use actual user measurements
+ok 40 - app push permissions, recorded location and intelligence use actual user measurements
+  ---
+  duration_ms: 777.620333
+  type: 'test'
+  ...
+# Subtest: all history filters exclude other workspaces and reject invalid scoped references
+ok 41 - all history filters exclude other workspaces and reject invalid scoped references
+  ---
+  duration_ms: 1510.346625
+  type: 'test'
+  ...
+# Subtest: inbound SMS keyword category dates combine real inbound events, replies and recorded profile timestamps
+ok 42 - inbound SMS keyword category dates combine real inbound events, replies and recorded profile timestamps
+  ---
+  duration_ms: 3458.782125
+  type: 'test'
+  ...
+# Subtest: capabilities expose scoped resource identities, observed attribute types and event candidates without message content
+ok 43 - capabilities expose scoped resource identities, observed attribute types and event candidates without message content
+  ---
+  duration_ms: 75.149292
+  type: 'test'
+  ...
+# (node:65377) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65377) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/audience-personalization-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: source personalization choices and generated SMS/default/nested snippets render their actual context
+ok 44 - source personalization choices and generated SMS/default/nested snippets render their actual context
+  ---
+  duration_ms: 25.420334
+  type: 'test'
+  ...
+# (node:65379) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65379) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/campaign-filter-catalog.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: every static catalog condition is selectable and no resource becomes a condition type
+ok 45 - every static catalog condition is selectable and no resource becomes a condition type
+  ---
+  duration_ms: 656.107083
+  type: 'test'
+  ...
+# Subtest: SMS exposes the current source conditions rather than a generic attribute
+ok 46 - SMS exposes the current source conditions rather than a generic attribute
+  ---
+  duration_ms: 0.378916
+  type: 'test'
+  ...
+# Subtest: membership comparisons express included semantics without an editable boolean value
+ok 47 - membership comparisons express included semantics without an editable boolean value
+  ---
+  duration_ms: 0.308833
+  type: 'test'
+  ...
+# Subtest: Session Count uses the source count comparison, label and default
+ok 48 - Session Count uses the source count comparison, label and default
+  ---
+  duration_ms: 0.097708
+  type: 'test'
+  ...
+# Subtest: campaign received condition uses Received boolean semantics over a real receipt count
+ok 49 - campaign received condition uses Received boolean semantics over a real receipt count
+  ---
+  duration_ms: 0.788084
+  type: 'test'
+  ...
+# Subtest: source verified Country options have 250 stable codes and the exact six comparisons
+ok 50 - source verified Country options have 250 stable codes and the exact six comparisons
+  ---
+  duration_ms: 1.785875
+  type: 'test'
+  ...
+# Subtest: source verified age and date conditions have their own comparisons and defaults
+ok 51 - source verified age and date conditions have their own comparisons and defaults
+  ---
+  duration_ms: 0.889125
+  type: 'test'
+  ...
+# Subtest: resource conditions retain semantic types even before any resources are selected
+ok 52 - resource conditions retain semantic types even before any resources are selected
+  ---
+  duration_ms: 0.782791
+  type: 'test'
+  ...
+# Subtest: multivalues preserve embedded commas and roundtrip structured selections
+ok 53 - multivalues preserve embedded commas and roundtrip structured selections
+  ---
+  duration_ms: 1.180625
+  type: 'test'
+  ...
+# (node:65380) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65380) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/audience-suppression-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: empty draft saves but activation requires a valid filter
+ok 54 - empty draft saves but activation requires a valid filter
+  ---
+  duration_ms: 17.539541
+  type: 'test'
+  ...
+# Subtest: suppression requires current workspace, active status and live membership
+ok 55 - suppression requires current workspace, active status and live membership
+  ---
+  duration_ms: 11.195833
+  type: 'test'
+  ...
+# Subtest: exception tags exempt only matching messages and feature flags are exempt
+ok 56 - exception tags exempt only matching messages and feature flags are exempt
+  ---
+  duration_ms: 4.518417
+  type: 'test'
+  ...
+# (node:65381) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65381) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/braze-store.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# (node:65381) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# Subtest: lookup uses actual identifiers, aliases, phones and push tokens and enforces workspace
+ok 57 - lookup uses actual identifiers, aliases, phones and push tokens and enforces workspace
+  ---
+  duration_ms: 96.569875
+  type: 'test'
+  ...
+# Subtest: profile data aggregates actual scoped activity without mixing currencies or same-name flags
+ok 58 - profile data aggregates actual scoped activity without mixing currencies or same-name flags
+  ---
+  duration_ms: 62.165625
+  type: 'test'
+  ...
+# Subtest: message history scopes and filters before pagination or global event volume
+ok 59 - message history scopes and filters before pagination or global event volume
+  ---
+  duration_ms: 89.137292
+  type: 'test'
+  ...
+# Subtest: contact updates persist actual states, exact membership and valid segment checks
+ok 60 - contact updates persist actual states, exact membership and valid segment checks
+  ---
+  duration_ms: 28.174125
+  type: 'test'
+  ...
+# (node:65382) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65382) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/campaign-analytics-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: delivery metrics exclude tests, simulations, bots, filtered clicks and provider acceptance
+ok 61 - delivery metrics exclude tests, simulations, bots, filtered clicks and provider acceptance
+  ---
+  duration_ms: 0.876583
+  type: 'test'
+  ...
+# Subtest: unique users and event counts differ; duplicated input row IDs are counted once
+ok 62 - unique users and event counts differ; duplicated input row IDs are counted once
+  ---
+  duration_ms: 0.151416
+  type: 'test'
+  ...
+# Subtest: conversion index and revenue currencies remain independent without summing mixed currencies
+ok 63 - conversion index and revenue currencies remain independent without summing mixed currencies
+  ---
+  duration_ms: 1.107458
+  type: 'test'
+  ...
+# Subtest: variant rows keep configured splits and visibly retain unattributed events
+ok 64 - variant rows keep configured splits and visibly retain unattributed events
+  ---
+  duration_ms: 0.484667
+  type: 'test'
+  ...
+# Subtest: date range validates real dates, order, leap years and inclusive 366-day boundary
+ok 65 - date range validates real dates, order, leap years and inclusive 366-day boundary
+  ---
+  duration_ms: 1.363792
+  type: 'test'
+  ...
+# Subtest: history uses UTC dates, filters variants, preserves empty days and excludes events out of range
+ok 66 - history uses UTC dates, filters variants, preserves empty days and excludes events out of range
+  ---
+  duration_ms: 0.270583
+  type: 'test'
+  ...
+# Subtest: click details use nested tracking alias, count repeat clicks and ignore simulated rows
+ok 67 - click details use nested tracking alias, count repeat clicks and ignore simulated rows
+  ---
+  duration_ms: 0.167625
+  type: 'test'
+  ...
+# Subtest: change filters intersect category and user, sort newest first and do not mutate input
+ok 68 - change filters intersect category and user, sort newest first and do not mutate input
+  ---
+  duration_ms: 44.886417
+  type: 'test'
+  ...
+# Subtest: monitoring requires enabled criteria, whole thresholds, duration/channel and coherent limits
+ok 69 - monitoring requires enabled criteria, whole thresholds, duration/channel and coherent limits
+  ---
+  duration_ms: 1.467
+  type: 'test'
+  ...
+# Subtest: CSV correctly quotes commas/newlines and prevents formulas in user controlled text
+ok 70 - CSV correctly quotes commas/newlines and prevents formulas in user controlled text
+  ---
+  duration_ms: 0.882042
+  type: 'test'
+  ...
+# Subtest: production filter accepts provider receipts and treats nested test flags consistently
+ok 71 - production filter accepts provider receipts and treats nested test flags consistently
+  ---
+  duration_ms: 0.16325
+  type: 'test'
+  ...
+# Subtest: unconfigured monitoring starts blank with both channels off, while saved zero thresholds survive
+ok 72 - unconfigured monitoring starts blank with both channels off, while saved zero thresholds survive
+  ---
+  duration_ms: 0.269791
+  type: 'test'
+  ...
+# (node:65387) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65387) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/braze-store.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# (node:65387) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# Subtest: audience-only snapshots omit message content/credentials but retain actual channel criteria
+ok 73 - audience-only snapshots omit message content/credentials but retain actual channel criteria
+  ---
+  duration_ms: 21.293417
+  type: 'test'
+  ...
+# Subtest: queue is SQLite-persisted, observable while running, deduplicated and cached by criteria
+ok 74 - queue is SQLite-persisted, observable while running, deduplicated and cached by criteria
+  ---
+  duration_ms: 1804.2955
+  type: 'test'
+  ...
+# Subtest: actual validation failures and worker interruptions persist failed states without invented results
+ok 75 - actual validation failures and worker interruptions persist failed states without invented results
+  ---
+  duration_ms: 10.420334
+  type: 'test'
+  ...
+# Subtest: queue cancellation prevents calculation and workspace queue/history is shared across requests
+ok 76 - queue cancellation prevents calculation and workspace queue/history is shared across requests
+  ---
+  duration_ms: 10.571083
+  type: 'test'
+  ...
+# Subtest: HTTP requests return202 before real after-response work and another request sees persisted completion
+ok 77 - HTTP requests return202 before real after-response work and another request sees persisted completion
+  ---
+  duration_ms: 189.293125
+  type: 'test'
+  ...
+# Subtest: delivery preview uses actual profile times/activity fallback, eligible users and quiet hours
+ok 78 - delivery preview uses actual profile times/activity fallback, eligible users and quiet hours
+  ---
+  duration_ms: 132.474083
+  type: 'test'
+  ...
+# Subtest: all six Other Filters and session dates have actual SQL implementations
+ok 79 - all six Other Filters and session dates have actual SQL implementations
+  ---
+  duration_ms: 257.243084
+  type: 'test'
+  ...
+# Subtest: Median Session Duration filters recorded durations and leaves absent measurements unknown
+ok 80 - Median Session Duration filters recorded durations and leaves absent measurements unknown
+  ---
+  duration_ms: 222.384875
+  type: 'test'
+  ...
+# Subtest: source Campaign receipt, profile, subscription and eCommerce leaves query recorded data
+ok 81 - source Campaign receipt, profile, subscription and eCommerce leaves query recorded data
+  ---
+  duration_ms: 136.30725
+  type: 'test'
+  ...
+# Subtest: specific-app sessions, recent session windows and feature status use actual local records
+ok 82 - specific-app sessions, recent session windows and feature status use actual local records
+  ---
+  duration_ms: 200.116708
+  type: 'test'
+  ...
+# (node:65388) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65388) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/braze-store.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# (node:65388) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# Subtest: public IDs and creation metadata are stable and archives cannot be resurrected by stale editors
+ok 83 - public IDs and creation metadata are stable and archives cannot be resurrected by stale editors
+  ---
+  duration_ms: 1690.437875
+  type: 'test'
+  ...
+# Subtest: copying to an existing local workspace makes an independent Draft with new identifiers
+ok 84 - copying to an existing local workspace makes an independent Draft with new identifiers
+  ---
+  duration_ms: 16.352042
+  type: 'test'
+  ...
+# Subtest: subscription transport capabilities persist independently of the seven-column group table
+ok 85 - subscription transport capabilities persist independently of the seven-column group table
+  ---
+  duration_ms: 16.244834
+  type: 'test'
+  ...
+# Subtest: SQL audience catalogs execute against attributes, sessions, events, purchases, segments and receipts
+ok 86 - SQL audience catalogs execute against attributes, sessions, events, purchases, segments and receipts
+  ---
+  duration_ms: 273.91325
+  type: 'test'
+  ...
+# Subtest: new conversion aliases attribute once per exposure and respect properties, app and deadlines
+ok 87 - new conversion aliases attribute once per exposure and respect properties, app and deadlines
+  ---
+  duration_ms: 109.810166
+  type: 'test'
+  ...
+# Subtest: actual Campaign audits include redacted before/after metadata
+ok 88 - actual Campaign audits include redacted before/after metadata
+  ---
+  duration_ms: 7.815708
+  type: 'test'
+  ...
+# Subtest: local monitoring records real receipt breaches and never claims external delivery
+ok 89 - local monitoring records real receipt breaches and never claims external delivery
+  ---
+  duration_ms: 4.548041
+  type: 'test'
+  ...
+# Subtest: managed credential references resolve only on the server and scrub transport echoes from responses/history
+ok 90 - managed credential references resolve only on the server and scrub transport echoes from responses/history
+  ---
+  duration_ms: 172.508792
+  type: 'test'
+  ...
+# Subtest: canonical Feature Flag experiments assign weighted variants and preserve shared Flag settings
+ok 91 - canonical Feature Flag experiments assign weighted variants and preserve shared Flag settings
+  ---
+  duration_ms: 10.703791
+  type: 'test'
+  ...
+# Subtest: action dispatch reuses actual audience SQL and respects the saved company-time duration
+ok 92 - action dispatch reuses actual audience SQL and respects the saved company-time duration
+  ---
+  duration_ms: 36.935042
+  type: 'test'
+  ...
+# Subtest: subscription capability APIs validate and persist explicit mode booleans
+ok 93 - subscription capability APIs validate and persist explicit mode booleans
+  ---
+  duration_ms: 33.010458
+  type: 'test'
+  ...
+# Subtest: embedded test snapshots use the selected saved child channel and variant without changing the parent
+ok 94 - embedded test snapshots use the selected saved child channel and variant without changing the parent
+  ---
+  duration_ms: 32.540375
+  type: 'test'
+  ...
+# Subtest: test endpoints reject cross-campaign snapshots, unselected channels, unknown variants and aggregate dispatch before side effects
+ok 95 - test endpoints reject cross-campaign snapshots, unselected channels, unknown variants and aggregate dispatch before side effects
+  ---
+  duration_ms: 16.745542
+  type: 'test'
+  ...
+# Subtest: multichannel launch uses shared parent delivery/conversions/holdout rather than obsolete hidden child settings
+ok 96 - multichannel launch uses shared parent delivery/conversions/holdout rather than obsolete hidden child settings
+  ---
+  duration_ms: 21.786458
+  type: 'test'
+  ...
+# (node:65389) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65389) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/campaign-brief-text.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: actual compressed PDF text is extracted locally and the source bytes remain intact
+ok 97 - actual compressed PDF text is extracted locally and the source bytes remain intact
+  ---
+  duration_ms: 253.599292
+  type: 'test'
+  ...
+# Subtest: actual Word OOXML DOCX extracts paragraph text and non-Latin requirements
+ok 98 - actual Word OOXML DOCX extracts paragraph text and non-Latin requirements
+  ---
+  duration_ms: 675.146291
+  type: 'test'
+  ...
+# Subtest: image-only and password-protected PDFs retain their attachment and report honest limitations
+ok 99 - image-only and password-protected PDFs retain their attachment and report honest limitations
+  ---
+  duration_ms: 291.920583
+  type: 'test'
+  ...
+# Subtest: PDF page and real Flate stream expansion limits are enforced before returning text
+ok 100 - PDF page and real Flate stream expansion limits are enforced before returning text
+  ---
+  duration_ms: 265.707583
+  type: 'test'
+  ...
+# Subtest: large real PDF text is clipped to the same prompt bound as text briefs
+ok 101 - large real PDF text is clipped to the same prompt bound as text briefs
+  ---
+  duration_ms: 352.025458
+  type: 'test'
+  ...
+# Subtest: DOCX decompression bombs, XML entities, traversal and CRC corruption are rejected
+ok 102 - DOCX decompression bombs, XML entities, traversal and CRC corruption are rejected
+  ---
+  duration_ms: 361.270584
+  type: 'test'
+  ...
+# Subtest: TXT, Markdown, CSV and BOM-marked UTF16 are decoded with a visible truncation notice
+ok 103 - TXT, Markdown, CSV and BOM-marked UTF16 are decoded with a visible truncation notice
+  ---
+  duration_ms: 2.454917
+  type: 'test'
+  ...
+# Subtest: invalid, unsupported, empty and oversized inputs return a notice without replacing the upload
+ok 104 - invalid, unsupported, empty and oversized inputs return a notice without replacing the upload
+  ---
+  duration_ms: 307.062583
+  type: 'test'
+  ...
+# Subtest: Operator awaits real binary extraction before providing requirements to the configured service
+ok 105 - Operator awaits real binary extraction before providing requirements to the configured service
+  ---
+  duration_ms: 894.33075
+  type: 'test'
+  ...
+# Subtest: the exact route trace can be relocated and run both native parsers without the project node_modules
+ok 106 - the exact route trace can be relocated and run both native parsers without the project node_modules
+  ---
+  duration_ms: 7748.250917
+  type: 'test'
+  ...
+# (node:65399) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65399) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/campaign-validation.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: the seven audit validation probes are rejected by the shared validator
+ok 107 - the seven audit validation probes are rejected by the shared validator
+  ---
+  duration_ms: 10.110334
+  type: 'test'
+  ...
+# Subtest: weighted variants preserve content and per-channel configuration
+ok 108 - weighted variants preserve content and per-channel configuration
+  ---
+  duration_ms: 1.282792
+  type: 'test'
+  ...
+# Subtest: LINE launch validation checks edited message variants instead of legacy root content
+ok 109 - LINE launch validation checks edited message variants instead of legacy root content
+  ---
+  duration_ms: 3.004416
+  type: 'test'
+  ...
+# Subtest: push validation rejects an empty secondary variant and permits a silent notification
+ok 110 - push validation rejects an empty secondary variant and permits a silent notification
+  ---
+  duration_ms: 0.782041
+  type: 'test'
+  ...
+# Subtest: Banner launch validation checks destinations and event names inside edited blocks
+ok 111 - Banner launch validation checks destinations and event names inside edited blocks
+  ---
+  duration_ms: 1.614041
+  type: 'test'
+  ...
+# Subtest: AND, OR and exclusion groups evaluate actual conditions
+ok 112 - AND, OR and exclusion groups evaluate actual conditions
+  ---
+  duration_ms: 1.699042
+  type: 'test'
+  ...
+# Subtest: all fourteen IAM catalog entries contain valid usable page definitions
+ok 113 - all fourteen IAM catalog entries contain valid usable page definitions
+  ---
+  duration_ms: 28.458292
+  type: 'test'
+  ...
+# Subtest: SMS metrics and maximum length apply after personalization and opt-out text
+ok 114 - SMS metrics and maximum length apply after personalization and opt-out text
+  ---
+  duration_ms: 214.589875
+  type: 'test'
+  ...
+# Subtest: vCard output escapes field separators and cannot inject a new property
+ok 115 - vCard output escapes field separators and cannot inject a new property
+  ---
+  duration_ms: 0.58675
+  type: 'test'
+  ...
+# Subtest: push rendering resolves language and independent platform content
+ok 116 - push rendering resolves language and independent platform content
+  ---
+  duration_ms: 6.57125
+  type: 'test'
+  ...
+# Subtest: LINE supports ten cards, three actions and bounded rich-message click areas
+ok 117 - LINE supports ten cards, three actions and bounded rich-message click areas
+  ---
+  duration_ms: 58.112416
+  type: 'test'
+  ...
+# Subtest: email MIME includes independent plaintext, AMP and binary attachments
+ok 118 - email MIME includes independent plaintext, AMP and binary attachments
+  ---
+  duration_ms: 46.330292
+  type: 'test'
+  ...
+# Subtest: time-zone scheduling handles UTC, user local time and recurring dates
+ok 119 - time-zone scheduling handles UTC, user local time and recurring dates
+  ---
+  duration_ms: 2.429833
+  type: 'test'
+  ...
+# Subtest: action triggers honor custom event names and property filter groups
+ok 120 - action triggers honor custom event names and property filter groups
+  ---
+  duration_ms: 1.146833
+  type: 'test'
+  ...
+# (node:65402) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65402) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/campaign-form-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: unconfigured timing is immediately sent in the form, summary, scheduler and validation
+ok 121 - unconfigured timing is immediately sent in the form, summary, scheduler and validation
+  ---
+  duration_ms: 2.35625
+  type: 'test'
+  ...
+# Subtest: explicit designated and intelligent schedules retain their meaning
+ok 122 - explicit designated and intelligent schedules retain their meaning
+  ---
+  duration_ms: 0.240541
+  type: 'test'
+  ...
+# Subtest: legacy purchase conversion normalizes consistently without mutating the draft
+ok 123 - legacy purchase conversion normalizes consistently without mutating the draft
+  ---
+  duration_ms: 0.513042
+  type: 'test'
+  ...
+# Subtest: saved conversion definitions take precedence and preserve parameters
+ok 124 - saved conversion definitions take precedence and preserve parameters
+  ---
+  duration_ms: 0.645958
+  type: 'test'
+  ...
+# Subtest: all nine source conversion categories and saved legacy types are accepted
+ok 125 - all nine source conversion categories and saved legacy types are accepted
+  ---
+  duration_ms: 0.64525
+  type: 'test'
+  ...
+# Subtest: all-apps legacy label becomes the empty app selector value
+ok 126 - all-apps legacy label becomes the empty app selector value
+  ---
+  duration_ms: 0.076333
+  type: 'test'
+  ...
+# Subtest: custom Intelligent Timing fallback controls scheduling without best-hour profile data
+ok 127 - custom Intelligent Timing fallback controls scheduling without best-hour profile data
+  ---
+  duration_ms: 45.372
+  type: 'test'
+  ...
+# Subtest: local Intelligent Timing fallback honors profile timezone
+ok 128 - local Intelligent Timing fallback honors profile timezone
+  ---
+  duration_ms: 4.296083
+  type: 'test'
+  ...
+# Subtest: quiet-hour preview and queued delivery resume at the exact local end minute
+ok 129 - quiet-hour preview and queued delivery resume at the exact local end minute
+  ---
+  duration_ms: 18.730875
+  type: 'test'
+  ...
+# Subtest: trigger catalog maps recorded canonical events instead of silently never matching
+ok 130 - trigger catalog maps recorded canonical events instead of silently never matching
+  ---
+  duration_ms: 6.155125
+  type: 'test'
+  ...
+# Subtest: ordinary trigger labels match all22 options captured from the live source
+ok 131 - ordinary trigger labels match all22 options captured from the live source
+  ---
+  duration_ms: 1.933792
+  type: 'test'
+  ...
+# Subtest: delay and reentry unit selectors persist the execution engine units
+ok 132 - delay and reentry unit selectors persist the execution engine units
+  ---
+  duration_ms: 0.132333
+  type: 'test'
+  ...
+# Subtest: campaign duration respects a non-UTC company timezone and exclusive end
+ok 133 - campaign duration respects a non-UTC company timezone and exclusive end
+  ---
+  duration_ms: 1.145916
+  type: 'test'
+  ...
+# Subtest: invalid action schedules, trigger filters, reentry and end times yield actionable issues
+ok 134 - invalid action schedules, trigger filters, reentry and end times yield actionable issues
+  ---
+  duration_ms: 0.410959
+  type: 'test'
+  ...
+# Subtest: source audience categories remain discoverable with explicit supported identifiers
+ok 135 - source audience categories remain discoverable with explicit supported identifiers
+  ---
+  duration_ms: 0.081208
+  type: 'test'
+  ...
+# Subtest: hierarchical filter names and descriptions match the complete saved source catalogs
+ok 136 - hierarchical filter names and descriptions match the complete saved source catalogs
+  ---
+  duration_ms: 161.36075
+  type: 'test'
+  ...
+# Subtest: Feature and API editors do not validate hidden legacy delivery settings
+ok 137 - Feature and API editors do not validate hidden legacy delivery settings
+  ---
+  duration_ms: 755.215291
+  type: 'test'
+  ...
+# Subtest: API campaigns can track zero optional conversions without inventing a default
+ok 138 - API campaigns can track zero optional conversions without inventing a default
+  ---
+  duration_ms: 0.275042
+  type: 'test'
+  ...
+# (node:65403) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65403) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (node:65403) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/braze-store.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: Campaign interaction catalog adds exactly two Push choices while tag filters retain the verified 21
+ok 139 - Campaign interaction catalog adds exactly two Push choices while tag filters retain the verified 21
+  ---
+  duration_ms: 1.290375
+  type: 'test'
+  ...
+# Subtest: every concrete Campaign and Canvas interaction filters recorded channels, event types, selectors and machines
+ok 140 - every concrete Campaign and Canvas interaction filters recorded channels, event types, selectors and machines
+  ---
+  duration_ms: 7839.792875
+  type: 'test'
+  ...
+# Subtest: optional Push selectors narrow actual metadata and blank selectors mean any recorded button or story page
+ok 141 - optional Push selectors narrow actual metadata and blank selectors mean any recorded button or story page
+  ---
+  duration_ms: 41.810834
+  type: 'test'
+  ...
+# Subtest: incomplete new choices fail, saved aggregate rules remain compatible and all-Campaign interactions stay scoped
+ok 142 - incomplete new choices fail, saved aggregate rules remain compatible and all-Campaign interactions stay scoped
+  ---
+  duration_ms: 23.719375
+  type: 'test'
+  ...
+# Subtest: Push selector candidates use saved action IDs and recorded receipt IDs without inventing story page identities
+ok 143 - Push selector candidates use saved action IDs and recorded receipt IDs without inventing story page identities
+  ---
+  duration_ms: 121.225792
+  type: 'test'
+  ...
+# (node:65408) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65408) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/campaign-management-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: the complete audited status and management column catalogs are available
+ok 144 - the complete audited status and management column catalogs are available
+  ---
+  duration_ms: 2.7895
+  type: 'test'
+  ...
+# Subtest: query state reads old and new sort URLs and supports 96 rows
+ok 145 - query state reads old and new sort URLs and supports 96 rows
+  ---
+  duration_ms: 0.617334
+  type: 'test'
+  ...
+# Subtest: malformed pagination and date mode cannot produce an infinite or fractional offset
+ok 146 - malformed pagination and date mode cannot produce an infinite or fractional offset
+  ---
+  duration_ms: 0.22175
+  type: 'test'
+  ...
+# Subtest: query serialization preserves workspace and locale while removing cleared filter chips
+ok 147 - query serialization preserves workspace and locale while removing cleared filter chips
+  ---
+  duration_ms: 1.056083
+  type: 'test'
+  ...
+# Subtest: search status channel and tag filters evaluate the stored campaigns together
+ok 148 - search status channel and tag filters evaluate the stored campaigns together
+  ---
+  duration_ms: 0.911833
+  type: 'test'
+  ...
+# Subtest: creator editor entry schedule and target segment use actual metadata
+ok 149 - creator editor entry schedule and target segment use actual metadata
+  ---
+  duration_ms: 0.651917
+  type: 'test'
+  ...
+# Subtest: show-only filters support saved optimization and explicit complexity thresholds
+ok 150 - show-only filters support saved optimization and explicit complexity thresholds
+  ---
+  duration_ms: 2.643208
+  type: 'test'
+  ...
+# Subtest: date created and edited ranges include the whole last day and reject missing creation metadata
+ok 151 - date created and edited ranges include the whole last day and reject missing creation metadata
+  ---
+  duration_ms: 50.9035
+  type: 'test'
+  ...
+# Subtest: each semantic sortable column sorts its corresponding field without mutating input
+ok 152 - each semantic sortable column sorts its corresponding field without mutating input
+  ---
+  duration_ms: 77.799
+  type: 'test'
+  ...
+# Subtest: team and stop-date presentation accepts existing resource and string forms
+ok 153 - team and stop-date presentation accepts existing resource and string forms
+  ---
+  duration_ms: 5.037042
+  type: 'test'
+  ...
+# Subtest: numbered pagination stays bounded and includes adjacent and first/last pages
+ok 154 - numbered pagination stays bounded and includes adjacent and first/last pages
+  ---
+  duration_ms: 1.462625
+  type: 'test'
+  ...
+# Subtest: multi-tag filters use OR and round-trip without losing workspace or literal commas
+ok 155 - multi-tag filters use OR and round-trip without losing workspace or literal commas
+  ---
+  duration_ms: 0.666208
+  type: 'test'
+  ...
+# (node:65409) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65409) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/campaign-operator-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: strict supported channels map to matching messages and existing schedule values
+ok 156 - strict supported channels map to matching messages and existing schedule values
+  ---
+  duration_ms: 2.800125
+  type: 'test'
+  ...
+# Subtest: plans reject executable top-level fields, unknown messages and missing selected content
+ok 157 - plans reject executable top-level fields, unknown messages and missing selected content
+  ---
+  duration_ms: 0.585125
+  type: 'test'
+  ...
+# Subtest: message limits and unsafe configuration prototypes are rejected
+ok 158 - message limits and unsafe configuration prototypes are rejected
+  ---
+  duration_ms: 0.653375
+  type: 'test'
+  ...
+# Subtest: provider code-fenced JSON is validated and model-provided brief references are discarded
+ok 159 - provider code-fenced JSON is validated and model-provided brief references are discarded
+  ---
+  duration_ms: 2.167375
+  type: 'test'
+  ...
+# Subtest: history context drops unsupported roles and keeps bounded recent conversation turns
+ok 160 - history context drops unsupported roles and keeps bounded recent conversation turns
+  ---
+  duration_ms: 1.381
+  type: 'test'
+  ...
+# Subtest: unconfigured Operator reports capability failure without provider calls or saved generated plans
+ok 161 - unconfigured Operator reports capability failure without provider calls or saved generated plans
+  ---
+  duration_ms: 55.735709
+  type: 'test'
+  ...
+# Subtest: invalid input and insecure provider endpoints never call the AI service
+ok 162 - invalid input and insecure provider endpoints never call the AI service
+  ---
+  duration_ms: 1.531875
+  type: 'test'
+  ...
+# Subtest: configured endpoint transmits actual prompt and brief text then persists a reviewable plan
+ok 163 - configured endpoint transmits actual prompt and brief text then persists a reviewable plan
+  ---
+  duration_ms: 4.108541
+  type: 'test'
+  ...
+# Subtest: invalid provider plans and failed requests cannot be recorded as generated plans
+ok 164 - invalid provider plans and failed requests cannot be recorded as generated plans
+  ---
+  duration_ms: 2.51175
+  type: 'test'
+  ...
+# Subtest: follow-up requests reuse saved turns and preserve the history revision for conflict checks
+ok 165 - follow-up requests reuse saved turns and preserve the history revision for conflict checks
+  ---
+  duration_ms: 2.79225
+  type: 'test'
+  ...
+# Subtest: missing briefs and cross-workspace conversations are rejected before generation
+ok 166 - missing briefs and cross-workspace conversations are rejected before generation
+  ---
+  duration_ms: 0.828459
+  type: 'test'
+  ...
+# Subtest: history list and clear operate on persisted records in the selected workspace
+ok 167 - history list and clear operate on persisted records in the selected workspace
+  ---
+  duration_ms: 0.382666
+  type: 'test'
+  ...
+# Subtest: binary brief limitations are explicit while retaining the actual attachment
+ok 168 - binary brief limitations are explicit while retaining the actual attachment
+  ---
+  duration_ms: 0.456666
+  type: 'test'
+  ...
+# Subtest: async brief extraction is awaited and read failures stop generation
+ok 169 - async brief extraction is awaited and read failures stop generation
+  ---
+  duration_ms: 0.617042
+  type: 'test'
+  ...
+# (node:65410) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65410) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/campaign-preview-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: multichannel previews resolve the active channel and its selected variation
+ok 170 - multichannel previews resolve the active channel and its selected variation
+  ---
+  duration_ms: 1.137584
+  type: 'test'
+  ...
+# Subtest: missing child fields never inherit stale parent mirrors
+ok 171 - missing child fields never inherit stale parent mirrors
+  ---
+  duration_ms: 0.088167
+  type: 'test'
+  ...
+# Subtest: removed channels cannot remain selected in public previews
+ok 172 - removed channels cannot remain selected in public previews
+  ---
+  duration_ms: 4.052833
+  type: 'test'
+  ...
+# Subtest: legacy per-channel copy still previews without parent content leakage
+ok 173 - legacy per-channel copy still previews without parent content leakage
+  ---
+  duration_ms: 0.284167
+  type: 'test'
+  ...
+# Subtest: empty multichannel requires channel selection instead of fabricating a push
+ok 174 - empty multichannel requires channel selection instead of fabricating a push
+  ---
+  duration_ms: 6.820958
+  type: 'test'
+  ...
+# Subtest: secondary email variation has its own identity, annotations, CSS and content
+ok 175 - secondary email variation has its own identity, annotations, CSS and content
+  ---
+  duration_ms: 0.385334
+  type: 'test'
+  ...
+# (node:65411) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65411) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/campaign-progress.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: badge validation assigns content, schedule, allocation and conversions to their actual steps
+ok 176 - badge validation assigns content, schedule, allocation and conversions to their actual steps
+  ---
+  duration_ms: 2.083
+  type: 'test'
+  ...
+# Subtest: multichannel Compose and Review ignore obsolete child-only later-step state but validate actual content
+ok 177 - multichannel Compose and Review ignore obsolete child-only later-step state but validate actual content
+  ---
+  duration_ms: 1.100083
+  type: 'test'
+  ...
+# Subtest: multichannel launch validation checks shared parent conversions
+ok 178 - multichannel launch validation checks shared parent conversions
+  ---
+  duration_ms: 1.049875
+  type: 'test'
+  ...
+# Subtest: Audience badge and launch reject values the actual SQL evaluator cannot execute
+ok 179 - Audience badge and launch reject values the actual SQL evaluator cannot execute
+  ---
+  duration_ms: 0.605041
+  type: 'test'
+  ...
+# Subtest: Feature and API badges skip hidden ordinary schedule fields
+ok 180 - Feature and API badges skip hidden ordinary schedule fields
+  ---
+  duration_ms: 0.1415
+  type: 'test'
+  ...
+# Subtest: IAM schema-v2 schedule errors do not contaminate Compose validation
+ok 181 - IAM schema-v2 schedule errors do not contaminate Compose validation
+  ---
+  duration_ms: 0.898167
+  type: 'test'
+  ...
+# Subtest: Compose flags an explicitly empty secondary email subject or body
+ok 182 - Compose flags an explicitly empty secondary email subject or body
+  ---
+  duration_ms: 0.316208
+  type: 'test'
+  ...
+# (node:65414) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65414) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/canvas-browser-store.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: browser Canvas drafts survive reads, edits, graph saves, and duplication
+ok 183 - browser Canvas drafts survive reads, edits, graph saves, and duplication
+  ---
+  duration_ms: 4.980917
+  type: 'test'
+  ...
+# Subtest: duplicate active names are rejected without losing existing drafts
+ok 184 - duplicate active names are rejected without losing existing drafts
+  ---
+  duration_ms: 0.344292
+  type: 'test'
+  ...
+# Subtest: registry renames update persisted browser draft tags and future duplicates without editing journey data
+ok 185 - registry renames update persisted browser draft tags and future duplicates without editing journey data
+  ---
+  duration_ms: 0.740458
+  type: 'test'
+  ...
+# Subtest: deleted registry names remain removable and no-op reconciliation does not write storage
+ok 186 - deleted registry names remain removable and no-op reconciliation does not write storage
+  ---
+  duration_ms: 0.461791
+  type: 'test'
+  ...
+# Subtest: in-progress Canvas tag changes follow renames without removing unknown or deleted selections
+ok 187 - in-progress Canvas tag changes follow renames without removing unknown or deleted selections
+  ---
+  duration_ms: 0.102334
+  type: 'test'
+  ...
+# Subtest: Canvas Tag as replaces the full set for selected browser drafts and supports removing all tags
+ok 188 - Canvas Tag as replaces the full set for selected browser drafts and supports removing all tags
+  ---
+  duration_ms: 0.616166
+  type: 'test'
+  ...
+# Subtest: Canvas Tag as validates every selected draft and the tag limit before one storage write
+ok 189 - Canvas Tag as validates every selected draft and the tag limit before one storage write
+  ---
+  duration_ms: 1.486875
+  type: 'test'
+  ...
+# Subtest: browser Canvas lists, same-name drafts, edits and duplicates stay in their workspace
+ok 190 - browser Canvas lists, same-name drafts, edits and duplicates stay in their workspace
+  ---
+  duration_ms: 13.281625
+  type: 'test'
+  ...
+# Subtest: browser tag renames and bulk replacement cannot cross workspace boundaries
+ok 191 - browser tag renames and bulk replacement cannot cross workspace boundaries
+  ---
+  duration_ms: 2.108625
+  type: 'test'
+  ...
+# Subtest: legacy browser drafts without a workspace remain local
+ok 192 - legacy browser drafts without a workspace remain local
+  ---
+  duration_ms: 1.942541
+  type: 'test'
+  ...
+# (node:65415) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65415) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/canvas-step-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: legacy delay and attribute drafts retain their settings in the new editor
+ok 193 - legacy delay and attribute drafts retain their settings in the new editor
+  ---
+  duration_ms: 2.260708
+  type: 'test'
+  ...
+# Subtest: duration, calendar, weekday and late-entry delay modes use the requested timezone
+ok 194 - duration, calendar, weekday and late-entry delay modes use the requested timezone
+  ---
+  duration_ms: 21.639625
+  type: 'test'
+  ...
+# Subtest: invalid calendar dates do not throw while validating a draft
+ok 195 - invalid calendar dates do not throw while validating a draft
+  ---
+  duration_ms: 0.705917
+  type: 'test'
+  ...
+# Subtest: user update UI and Braze attributes JSON apply changes without replacing unrelated data
+ok 196 - user update UI and Braze attributes JSON apply changes without replacing unrelated data
+  ---
+  duration_ms: 2.271875
+  type: 'test'
+  ...
+# Subtest: audience groups and experimental paths retain their independent configurations
+ok 197 - audience groups and experimental paths retain their independent configurations
+  ---
+  duration_ms: 0.75425
+  type: 'test'
+  ...
+# Subtest: Context variables require complete typed values and unique names
+ok 198 - Context variables require complete typed values and unique names
+  ---
+  duration_ms: 1.02175
+  type: 'test'
+  ...
+# Subtest: brief and quiet-hour modes survive normalization; legacy custom times are retained
+ok 199 - brief and quiet-hour modes survive normalization; legacy custom times are retained
+  ---
+  duration_ms: 1.197042
+  type: 'test'
+  ...
+# Subtest: Canvas list advanced filters evaluate actual flags, Segment IDs and date ranges
+ok 200 - Canvas list advanced filters evaluate actual flags, Segment IDs and date ranges
+  ---
+  duration_ms: 0.30825
+  type: 'test'
+  ...
+# Subtest: named branch routes can merge and deleting their destination preserves variants
+ok 201 - named branch routes can merge and deleting their destination preserves variants
+  ---
+  duration_ms: 1.33
+  type: 'test'
+  ...
+# Subtest: path connection IDs survive rank changes and target deletion
+ok 202 - path connection IDs survive rank changes and target deletion
+  ---
+  duration_ms: 0.526916
+  type: 'test'
+  ...
+# (node:65416) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65416) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/canvas-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: seed journey is launchable
+ok 203 - seed journey is launchable
+  ---
+  duration_ms: 9.358833
+  type: 'test'
+  ...
+# Subtest: unconnected action path cannot launch
+ok 204 - unconnected action path cannot launch
+  ---
+  duration_ms: 1.914084
+  type: 'test'
+  ...
+# Subtest: cycle and missing message content are rejected
+ok 205 - cycle and missing message content are rejected
+  ---
+  duration_ms: 0.670667
+  type: 'test'
+  ...
+# Subtest: only action paths can fan out
+ok 206 - only action paths can fan out
+  ---
+  duration_ms: 0.136958
+  type: 'test'
+  ...
+# Subtest: global subscription updates accept only explicit booleans
+ok 207 - global subscription updates accept only explicit booleans
+  ---
+  duration_ms: 0.529041
+  type: 'test'
+  ...
+# Subtest: Braze-style draft components are valid graph data but cannot launch locally
+ok 208 - Braze-style draft components are valid graph data but cannot launch locally
+  ---
+  duration_ms: 0.413292
+  type: 'test'
+  ...
+# (node:65417) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65417) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/canvas-wizard-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: every category and Other Filters leaf survives Canvas entry, exclusion and exit save snapshots
+ok 209 - every category and Other Filters leaf survives Canvas entry, exclusion and exit save snapshots
+  ---
+  duration_ms: 15.001209
+  type: 'test'
+  ...
+# Subtest: expanded operators, second bounds, multi values, relative dates and family parameters remain intact
+ok 210 - expanded operators, second bounds, multi values, relative dates and family parameters remain intact
+  ---
+  duration_ms: 2.959
+  type: 'test'
+  ...
+# Subtest: incomplete generic drafts are retained and use the same validation in all Canvas groups
+ok 211 - incomplete generic drafts are retained and use the same validation in all Canvas groups
+  ---
+  duration_ms: 1.169209
+  type: 'test'
+  ...
+# Subtest: legacy profile drafts remain compatible while generic profile operators are preserved
+ok 212 - legacy profile drafts remain compatible while generic profile operators are preserved
+  ---
+  duration_ms: 0.500791
+  type: 'test'
+  ...
+# Subtest: normalization creates independent parameter objects and ignores non-rule input
+ok 213 - normalization creates independent parameter objects and ignores non-rule input
+  ---
+  duration_ms: 0.356416
+  type: 'test'
+  ...
+# Subtest: browser draft save, reload and duplicate retain complete generic audience snapshots
+ok 214 - browser draft save, reload and duplicate retain complete generic audience snapshots
+  ---
+  duration_ms: 1.100959
+  type: 'test'
+  ...
+# (node:65418) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65418) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/canvas-wizard-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: Canvas normalization retains mixed profile and tagged rules in entry, exclusion and exit groups
+ok 215 - Canvas normalization retains mixed profile and tagged rules in entry, exclusion and exit groups
+  ---
+  duration_ms: 1.948042
+  type: 'test'
+  ...
+# Subtest: incomplete tagged drafts survive normalization and produce actionable Canvas validation
+ok 216 - incomplete tagged drafts survive normalization and produce actionable Canvas validation
+  ---
+  duration_ms: 1.682
+  type: 'test'
+  ...
+# Subtest: all source interaction choices are valid and missing interactions remain invalid for existence comparisons
+ok 217 - all source interaction choices are valid and missing interactions remain invalid for existence comparisons
+  ---
+  duration_ms: 1.778625
+  type: 'test'
+  ...
+# Subtest: Canvas tagged filters reject unsupported events, operators, invalid counts and relative time configurations
+ok 218 - Canvas tagged filters reject unsupported events, operators, invalid counts and relative time configurations
+  ---
+  duration_ms: 0.413042
+  type: 'test'
+  ...
+# (node:65419) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65419) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/catalog-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: selection accepts no filters and enforces the results limit
+ok 219 - selection accepts no filters and enforces the results limit
+  ---
+  duration_ms: 8.240292
+  type: 'test'
+  ...
+# Subtest: selection operators are constrained by the field type
+ok 220 - selection operators are constrained by the field type
+  ---
+  duration_ms: 0.957458
+  type: 'test'
+  ...
+# Subtest: catalog values and geo filters are evaluated with their native types
+ok 221 - catalog values and geo filters are evaluated with their native types
+  ---
+  duration_ms: 10.22925
+  type: 'test'
+  ...
+# Subtest: selection Liquid resolves standard and custom user attributes
+ok 222 - selection Liquid resolves standard and custom user attributes
+  ---
+  duration_ms: 0.92475
+  type: 'test'
+  ...
+# (node:65423) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65423) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/channel-message-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: push platform payloads preserve advanced settings and resolve notification IDs
+ok 223 - push platform payloads preserve advanced settings and resolve notification IDs
+  ---
+  duration_ms: 119.375042
+  type: 'test'
+  ...
+# Subtest: invalid relevance and enabled missing expiration cannot launch
+ok 224 - invalid relevance and enabled missing expiration cannot launch
+  ---
+  duration_ms: 1.158833
+  type: 'test'
+  ...
+# Subtest: content cards resolve translations, accessibility and independent platform destinations
+ok 225 - content cards resolve translations, accessibility and independent platform destinations
+  ---
+  duration_ms: 21.680792
+  type: 'test'
+  ...
+# Subtest: new card action defaults to None while legacy destinations remain reversible
+ok 226 - new card action defaults to None while legacy destinations remain reversible
+  ---
+  duration_ms: 20.378833
+  type: 'test'
+  ...
+# Subtest: Banner localized text renders for recipients and retains its English fallback
+ok 227 - Banner localized text renders for recipients and retains its English fallback
+  ---
+  duration_ms: 6.356208
+  type: 'test'
+  ...
+# Subtest: Banner capture/subscription blocks invoke connected SDK user setters
+ok 228 - Banner capture/subscription blocks invoke connected SDK user setters
+  ---
+  duration_ms: 4.691833
+  type: 'test'
+  ...
+# Subtest: IAM runtime selects platform behavior and dark appearance without modifying saved light style
+ok 229 - IAM runtime selects platform behavior and dark appearance without modifying saved light style
+  ---
+  duration_ms: 9.987709
+  type: 'test'
+  ...
+# Subtest: IAM rejects an invalid platform-specific URL before persistence
+ok 230 - IAM rejects an invalid platform-specific URL before persistence
+  ---
+  duration_ms: 1.165292
+  type: 'test'
+  ...
+# Subtest: WhatsApp persisted response translations and URL preview reach prepared provider message
+ok 231 - WhatsApp persisted response translations and URL preview reach prepared provider message
+  ---
+  duration_ms: 14.150167
+  type: 'test'
+  ...
+# Subtest: webhook managed credential references survive normalization without exposing secrets
+ok 232 - webhook managed credential references survive normalization without exposing secrets
+  ---
+  duration_ms: 1.585084
+  type: 'test'
+  ...
+# Subtest: fresh WhatsApp setup requires layout selection while legacy response drafts retain their chosen layout
+ok 233 - fresh WhatsApp setup requires layout selection while legacy response drafts retain their chosen layout
+  ---
+  duration_ms: 0.801416
+  type: 'test'
+  ...
+# Subtest: IAM dark styles are validated before persistence
+ok 234 - IAM dark styles are validated before persistence
+  ---
+  duration_ms: 0.432083
+  type: 'test'
+  ...
+# Subtest: Copywriter channel text responses and existing email contract share the configured provider
+ok 235 - Copywriter channel text responses and existing email contract share the configured provider
+  ---
+  duration_ms: 157.813625
+  type: 'test'
+  ...
+# (node:65424) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65424) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/email-fidelity-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: Gmail setup emits all enabled annotations, including deal and multiple promotion cards
+ok 236 - Gmail setup emits all enabled annotations, including deal and multiple promotion cards
+  ---
+  duration_ms: 3.814417
+  type: 'test'
+  ...
+# Subtest: Gmail disabled switches omit dormant offer and cards without losing their stored values
+ok 237 - Gmail disabled switches omit dormant offer and cards without losing their stored values
+  ---
+  duration_ms: 0.270542
+  type: 'test'
+  ...
+# Subtest: Gmail annotations escape script termination and replacement remains idempotent
+ok 238 - Gmail annotations escape script termination and replacement remains idempotent
+  ---
+  duration_ms: 0.555583
+  type: 'test'
+  ...
+# Subtest: header validation rejects duplicate names, line breaks and delivery header overrides
+ok 239 - header validation rejects duplicate names, line breaks and delivery header overrides
+  ---
+  duration_ms: 0.761833
+  type: 'test'
+  ...
+# Subtest: extras preserve literal keys, render values, and reject duplicate and empty keys
+ok 240 - extras preserve literal keys, render values, and reject duplicate and empty keys
+  ---
+  duration_ms: 0.215
+  type: 'test'
+  ...
+# Subtest: headers, extras, reply-to, preheader whitespace and annotation Liquid reach compiled message
+ok 241 - headers, extras, reply-to, preheader whitespace and annotation Liquid reach compiled message
+  ---
+  duration_ms: 135.714709
+  type: 'test'
+  ...
+# Subtest: attachment size is enforced by actual base64 bytes as well as metadata
+ok 242 - attachment size is enforced by actual base64 bytes as well as metadata
+  ---
+  duration_ms: 24.239083
+  type: 'test'
+  ...
+# Subtest: serialized variant settings compile independently after reopening
+ok 243 - serialized variant settings compile independently after reopening
+  ---
+  duration_ms: 122.014042
+  type: 'test'
+  ...
+# (node:65425) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65425) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/app/ui/email-grapes-drag.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: palette drop translates outer coordinates into iframe coordinates and inserts at the right sibling
+ok 244 - palette drop translates outer coordinates into iframe coordinates and inserts at the right sibling
+  ---
+  duration_ms: 3.380709
+  type: 'test'
+  ...
+# Subtest: a drop above the first block inserts at index zero
+ok 245 - a drop above the first block inserts at index zero
+  ---
+  duration_ms: 0.343708
+  type: 'test'
+  ...
+# Subtest: row tiles insert at body level instead of inside a column
+ok 246 - row tiles insert at body level instead of inside a column
+  ---
+  duration_ms: 0.339083
+  type: 'test'
+  ...
+# Subtest: clicks, outside drops, and Escape do not insert or leave pointer listeners behind
+ok 247 - clicks, outside drops, and Escape do not insert or leave pointer listeners behind
+  ---
+  duration_ms: 0.722041
+  type: 'test'
+  ...
+# (node:65426) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65426) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/email-grapes-template.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: vendor migrations preserve Liquid, CSS, and original exported HTML without loading a stale Grapes project
+ok 248 - vendor migrations preserve Liquid, CSS, and original exported HTML without loading a stale Grapes project
+  ---
+  duration_ms: 3.890792
+  type: 'test'
+  ...
+# Subtest: Grapes projects and legacy native rows are never replaced by a generated HTML preview
+ok 249 - Grapes projects and legacy native rows are never replaced by a generated HTML preview
+  ---
+  duration_ms: 0.201667
+  type: 'test'
+  ...
+# Subtest: vendor JSON without exported HTML blocks migration instead of creating an empty design
+ok 250 - vendor JSON without exported HTML blocks migration instead of creating an empty design
+  ---
+  duration_ms: 0.2935
+  type: 'test'
+  ...
+# Subtest: every row preset keeps its width total and malformed widths are rejected
+ok 251 - every row preset keeps its width total and malformed widths are rejected
+  ---
+  duration_ms: 0.5985
+  type: 'test'
+  ...
+# Subtest: saving a second variant cannot overwrite the primary Grapes design or migration archive
+ok 252 - saving a second variant cannot overwrite the primary Grapes design or migration archive
+  ---
+  duration_ms: 0.522125
+  type: 'test'
+  ...
+# (node:65430) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65430) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/email-editor-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: catalog_items resolves requested rows and never substitutes a missing item
+ok 253 - catalog_items resolves requested rows and never substitutes a missing item
+  ---
+  duration_ms: 44.395916
+  type: 'test'
+  ...
+# Subtest: catalog_selection_items filters live catalog rows with preview user data
+ok 254 - catalog_selection_items filters live catalog rows with preview user data
+  ---
+  duration_ms: 3.980791
+  type: 'test'
+  ...
+# Subtest: catalog output remains empty when a selection has no matches
+ok 255 - catalog output remains empty when a selection has no matches
+  ---
+  duration_ms: 1.397625
+  type: 'test'
+  ...
+# Subtest: catalog preview resolves bracket fields generated for non-identifier names
+ok 256 - catalog preview resolves bracket fields generated for non-identifier names
+  ---
+  duration_ms: 1.549584
+  type: 'test'
+  ...
+# (node:65431) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65431) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/email-mjml.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: normalizes HTML void elements for the XML MJML parser
+ok 257 - normalizes HTML void elements for the XML MJML parser
+  ---
+  duration_ms: 0.664292
+  type: 'test'
+  ...
+# Subtest: keeps already self-closing void elements stable
+ok 258 - keeps already self-closing void elements stable
+  ---
+  duration_ms: 0.074625
+  type: 'test'
+  ...
+# Subtest: repairs legacy MJML line breaks before compilation
+ok 259 - repairs legacy MJML line breaks before compilation
+  ---
+  duration_ms: 0.384667
+  type: 'test'
+  ...
+# Subtest: removes browser XML parser errors accidentally persisted in legacy MJML
+ok 260 - removes browser XML parser errors accidentally persisted in legacy MJML
+  ---
+  duration_ms: 0.162875
+  type: 'test'
+  ...
+# (node:65433) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65433) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/email-preferences.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: workspace defaults pass validation and do not share mutable theme objects
+ok 261 - workspace defaults pass validation and do not share mutable theme objects
+  ---
+  duration_ms: 4.541916
+  type: 'test'
+  ...
+# Subtest: migrates legacy From fields and keeps explicit false values
+ok 262 - migrates legacy From fields and keeps explicit false values
+  ---
+  duration_ms: 0.849041
+  type: 'test'
+  ...
+# Subtest: older block themes acquire independent button and mobile padding defaults
+ok 263 - older block themes acquire independent button and mobile padding defaults
+  ---
+  duration_ms: 3.82875
+  type: 'test'
+  ...
+# Subtest: rejects malformed API payloads without crashing
+ok 264 - rejects malformed API payloads without crashing
+  ---
+  duration_ms: 3.185417
+  type: 'test'
+  ...
+# Subtest: BCC requirement needs an existing default address
+ok 265 - BCC requirement needs an existing default address
+  ---
+  duration_ms: 1.60875
+  type: 'test'
+  ...
+# Subtest: custom unsubscribe validates HTTPS and accepts Liquid email addresses
+ok 266 - custom unsubscribe validates HTTPS and accepts Liquid email addresses
+  ---
+  duration_ms: 46.077541
+  type: 'test'
+  ...
+# Subtest: footer validates unsubscribe link and HTML byte size
+ok 267 - footer validates unsubscribe link and HTML byte size
+  ---
+  duration_ms: 1.976792
+  type: 'test'
+  ...
+# Subtest: rejects invalid theme colors, widths and numeric types
+ok 268 - rejects invalid theme colors, widths and numeric types
+  ---
+  duration_ms: 0.747417
+  type: 'test'
+  ...
+# Subtest: new campaign defaults include the saved identity and global theme
+ok 269 - new campaign defaults include the saved identity and global theme
+  ---
+  duration_ms: 0.84075
+  type: 'test'
+  ...
+# (node:65434) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65434) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/email-preferences.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: conditional HTTPS Liquid validates all literal branches and resolves at compilation
+ok 270 - conditional HTTPS Liquid validates all literal branches and resolves at compilation
+  ---
+  duration_ms: 188.119458
+  type: 'test'
+  ...
+# Subtest: footer, personalized plaintext, TEST/SEED prefixes, CSS inlining, headers and pixel placement
+ok 271 - footer, personalized plaintext, TEST/SEED prefixes, CSS inlining, headers and pixel placement
+  ---
+  duration_ms: 23.47475
+  type: 'test'
+  ...
+# Subtest: address and BCC policies reject unlisted values while allowing configured defaults
+ok 272 - address and BCC policies reject unlisted values while allowing configured defaults
+  ---
+  duration_ms: 0.408375
+  type: 'test'
+  ...
+# Subtest: Liquid supports custom attributes, branching and filters; catalog loops use correctly sorted values
+ok 273 - Liquid supports custom attributes, branching and filters; catalog loops use correctly sorted values
+  ---
+  duration_ms: 1.745666
+  type: 'test'
+  ...
+# Subtest: bot classifications include explicit flags and security scanners
+ok 274 - bot classifications include explicit flags and security scanners
+  ---
+  duration_ms: 0.349375
+  type: 'test'
+  ...
+# Subtest: rendered header line breaks are rejected before producing a MIME message
+ok 275 - rendered header line breaks are rejected before producing a MIME message
+  ---
+  duration_ms: 1.825958
+  type: 'test'
+  ...
+# Subtest: localized subject and preheader use exact/region/base locale fallbacks before Liquid rendering
+ok 276 - localized subject and preheader use exact/region/base locale fallbacks before Liquid rendering
+  ---
+  duration_ms: 87.779167
+  type: 'test'
+  ...
+# Subtest: GA parameters resolve Liquid, preserve query/fragments, and reach tracking destinations before rewriting
+ok 277 - GA parameters resolve Liquid, preserve query/fragments, and reach tracking destinations before rewriting
+  ---
+  duration_ms: 8.233209
+  type: 'test'
+  ...
+# Subtest: GA can work independently of click tracking and disabling GA leaves links untouched
+ok 278 - GA can work independently of click tracking and disabling GA leaves links untouched
+  ---
+  duration_ms: 10.768375
+  type: 'test'
+  ...
+# Subtest: workspace fallback metadata follows the explicitly selected listed identity
+ok 279 - workspace fallback metadata follows the explicitly selected listed identity
+  ---
+  duration_ms: 14.388209
+  type: 'test'
+  ...
+# (node:65435) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65435) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/email-sending-access.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: limited campaigns retain listed reply/BCC choice while identities and custom reply are readonly
+ok 280 - limited campaigns retain listed reply/BCC choice while identities and custom reply are readonly
+  ---
+  duration_ms: 2.780625
+  type: 'test'
+  ...
+# Subtest: full access and field-specific capabilities resolve independently
+ok 281 - full access and field-specific capabilities resolve independently
+  ---
+  duration_ms: 0.166875
+  type: 'test'
+  ...
+# Subtest: listed-address policy and disabled reply editing cannot be bypassed by custom-reply capability
+ok 282 - listed-address policy and disabled reply editing cannot be bypassed by custom-reply capability
+  ---
+  duration_ms: 0.136625
+  type: 'test'
+  ...
+# (node:65438) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65438) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/braze-store.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# (node:65438) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# Subtest: upsert rejects an unlisted identity on a secondary variant with the variant name
+ok 283 - upsert rejects an unlisted identity on a secondary variant with the variant name
+  ---
+  duration_ms: 478.089375
+  type: 'test'
+  ...
+# Subtest: required BCC cannot be disabled on a secondary variant
+ok 284 - required BCC cannot be disabled on a secondary variant
+  ---
+  duration_ms: 1.057291
+  type: 'test'
+  ...
+# Subtest: new isolated secondary variants inherit workspace defaults rather than primary sending configuration
+ok 285 - new isolated secondary variants inherit workspace defaults rather than primary sending configuration
+  ---
+  duration_ms: 323.3275
+  type: 'test'
+  ...
+# Subtest: launch revalidates every existing variation after workspace policy becomes stricter
+ok 286 - launch revalidates every existing variation after workspace policy becomes stricter
+  ---
+  duration_ms: 13.862709
+  type: 'test'
+  ...
+# Subtest: multichannel launch also checks every embedded email variation
+ok 287 - multichannel launch also checks every embedded email variation
+  ---
+  duration_ms: 23.47475
+  type: 'test'
+  ...
+# (node:65439) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65439) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/global-control-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: control and treatment sample are disjoint and equally sized bucket intervals
+ok 288 - control and treatment sample are disjoint and equally sized bucket intervals
+  ---
+  duration_ms: 0.563
+  type: 'test'
+  ...
+# Subtest: any matching task tag grants an exemption, while an unrelated tag does not
+ok 289 - any matching task tag grants an exemption, while an unrelated tag does not
+  ---
+  duration_ms: 0.109875
+  type: 'test'
+  ...
+# Subtest: percentage requires a whole number from 1 through 15, including on direct API calls
+ok 290 - percentage requires a whole number from 1 through 15, including on direct API calls
+  ---
+  duration_ms: 0.273042
+  type: 'test'
+  ...
+# (node:65441) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65441) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/i18n.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: normalizes supported and unsupported locales
+ok 291 - normalizes supported and unsupported locales
+  ---
+  duration_ms: 1.141791
+  type: 'test'
+  ...
+# Subtest: translates interface copy and keeps business data unchanged
+ok 292 - translates interface copy and keeps business data unchanged
+  ---
+  duration_ms: 0.234709
+  type: 'test'
+  ...
+# Subtest: preserves route state while replacing locale
+ok 293 - preserves route state while replacing locale
+  ---
+  duration_ms: 0.280708
+  type: 'test'
+  ...
+# Subtest: formats numbers and dates with the selected locale
+ok 294 - formats numbers and dates with the selected locale
+  ---
+  duration_ms: 231.743125
+  type: 'test'
+  ...
+# (node:65442) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65442) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/in-app-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: an explicitly empty button list stays empty after legacy migration
+ok 295 - an explicitly empty button list stays empty after legacy migration
+  ---
+  duration_ms: 1.643792
+  type: 'test'
+  ...
+# Subtest: copying a multi-page template remaps all internal links without mutating its source
+ok 296 - copying a multi-page template remaps all internal links without mutating its source
+  ---
+  duration_ms: 0.267792
+  type: 'test'
+  ...
+# Subtest: page limit accepts ten pages and rejects adding eleven atomically
+ok 297 - page limit accepts ten pages and rejects adding eleven atomically
+  ---
+  duration_ms: 0.410292
+  type: 'test'
+  ...
+# Subtest: deleting a page repairs incoming links and preserves unrelated actions
+ok 298 - deleting a page repairs incoming links and preserves unrelated actions
+  ---
+  duration_ms: 0.529125
+  type: 'test'
+  ...
+# Subtest: validation checks every page, destination and metadata key
+ok 299 - validation checks every page, destination and metadata key
+  ---
+  duration_ms: 2.695458
+  type: 'test'
+  ...
+# Subtest: malformed snapshots and nonfinite styles are rejected
+ok 300 - malformed snapshots and nonfinite styles are rejected
+  ---
+  duration_ms: 0.407375
+  type: 'test'
+  ...
+# Subtest: custom HTML conversion preserves all page navigation and escapes text
+ok 301 - custom HTML conversion preserves all page navigation and escapes text
+  ---
+  duration_ms: 30.118125
+  type: 'test'
+  ...
+# Subtest: legacy campaign content and platform survive migration
+ok 302 - legacy campaign content and platform survive migration
+  ---
+  duration_ms: 2.893042
+  type: 'test'
+  ...
+# (node:65443) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65443) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/in-app-runtime.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: preview renders every page, accessibility, buttons and metadata with the selected profile
+ok 303 - preview renders every page, accessibility, buttons and metadata with the selected profile
+  ---
+  duration_ms: 180.806833
+  type: 'test'
+  ...
+# Subtest: an invalid Liquid expression on a later page fails the whole message
+ok 304 - an invalid Liquid expression on a later page fails the whole message
+  ---
+  duration_ms: 4.919709
+  type: 'test'
+  ...
+# Subtest: Liquid syntax is handled by the actual engine including conditions and filters
+ok 305 - Liquid syntax is handled by the actual engine including conditions and filters
+  ---
+  duration_ms: 2.93
+  type: 'test'
+  ...
+# Subtest: duplicate keys created by Liquid fail before preparing a test
+ok 306 - duplicate keys created by Liquid fail before preparing a test
+  ---
+  duration_ms: 2.545875
+  type: 'test'
+  ...
+# Subtest: custom HTML keeps supported styles and removes active scripts, handlers and unsafe URLs
+ok 307 - custom HTML keeps supported styles and removes active scripts, handlers and unsafe URLs
+  ---
+  duration_ms: 5.987375
+  type: 'test'
+  ...
+# Subtest: Liquid destinations are checked again after rendering
+ok 308 - Liquid destinations are checked again after rendering
+  ---
+  duration_ms: 2.691083
+  type: 'test'
+  ...
+# Subtest: snapshot validation parses Liquid without requiring runtime attribute values
+ok 309 - snapshot validation parses Liquid without requiring runtime attribute values
+  ---
+  duration_ms: 2.0805
+  type: 'test'
+  ...
+# Subtest: multi-page HTML conversion preserves quoted Liquid filters and renders them before HTML parsing
+ok 310 - multi-page HTML conversion preserves quoted Liquid filters and renders them before HTML parsing
+  ---
+  duration_ms: 11.255709
+  type: 'test'
+  ...
+# (node:65444) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65444) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/in-app-schedule.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: legacy session settings migrate per trigger without reviving an explicitly empty list
+ok 311 - legacy session settings migrate per trigger without reviving an explicitly empty list
+  ---
+  duration_ms: 1.146708
+  type: 'test'
+  ...
+# Subtest: delay units retain seconds precision and migrate old minutes
+ok 312 - delay units retain seconds precision and migrate old minutes
+  ---
+  duration_ms: 0.17075
+  type: 'test'
+  ...
+# Subtest: incomplete triggers and property groups cannot pass launch validation
+ok 313 - incomplete triggers and property groups cannot pass launch validation
+  ---
+  duration_ms: 0.604916
+  type: 'test'
+  ...
+# Subtest: disabled filters preserve draft conditions without affecting validation
+ok 314 - disabled filters preserve draft conditions without affecting validation
+  ---
+  duration_ms: 0.17
+  type: 'test'
+  ...
+# Subtest: duration and delay reject invalid execution intervals
+ok 315 - duration and delay reject invalid execution intervals
+  ---
+  duration_ms: 1.391125
+  type: 'test'
+  ...
+# (node:65447) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65447) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/in-app-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: traditional variant preserves its source graph and repairs copied page navigation
+ok 316 - traditional variant preserves its source graph and repairs copied page navigation
+  ---
+  duration_ms: 2.262375
+  type: 'test'
+  ...
+# Subtest: all five traditional types switch with consistent native layout and custom HTML flags
+ok 317 - all five traditional types switch with consistent native layout and custom HTML flags
+  ---
+  duration_ms: 1.377833
+  type: 'test'
+  ...
+# Subtest: traditional invariants reject multipage, three buttons, invalid close delay and missing image
+ok 318 - traditional invariants reject multipage, three buttons, invalid close delay and missing image
+  ---
+  duration_ms: 1.008916
+  type: 'test'
+  ...
+# Subtest: SDK action configuration validates required payloads and actual Liquid before test preparation
+ok 319 - SDK action configuration validates required payloads and actual Liquid before test preparation
+  ---
+  duration_ms: 86.877959
+  type: 'test'
+  ...
+# Subtest: traditional terms links and body destinations are revalidated after Liquid rendering
+ok 320 - traditional terms links and body destinations are revalidated after Liquid rendering
+  ---
+  duration_ms: 12.87425
+  type: 'test'
+  ...
+# Subtest: custom HTML requires a dismiss control and preview strips active scripts
+ok 321 - custom HTML requires a dismiss control and preview strips active scripts
+  ---
+  duration_ms: 10.592833
+  type: 'test'
+  ...
+# Subtest: unknown on-click behaviors cannot be persisted as working actions
+ok 322 - unknown on-click behaviors cannot be persisted as working actions
+  ---
+  duration_ms: 0.36575
+  type: 'test'
+  ...
+# Subtest: email capture replaces native buttons with one submit control and preserves its text mode
+ok 323 - email capture replaces native buttons with one submit control and preserves its text mode
+  ---
+  duration_ms: 0.13275
+  type: 'test'
+  ...
+# Subtest: creating a traditional variant retains effective first-page colors without sharing mutable state
+ok 324 - creating a traditional variant retains effective first-page colors without sharing mutable state
+  ---
+  duration_ms: 0.409875
+  type: 'test'
+  ...
+# (node:65448) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65448) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/line-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: LINE image-only stacks validate without a text body
+ok 325 - LINE image-only stacks validate without a text body
+  ---
+  duration_ms: 144.213916
+  type: 'test'
+  ...
+# Subtest: LINE rejects malformed flex and renders personalized structured payloads
+ok 326 - LINE rejects malformed flex and renders personalized structured payloads
+  ---
+  duration_ms: 3.454083
+  type: 'test'
+  ...
+# (node:65449) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65449) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/liquid-autocomplete.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: typing double braces opens and filters Braze Liquid suggestions
+ok 327 - typing double braces opens and filters Braze Liquid suggestions
+  ---
+  duration_ms: 11.527667
+  type: 'test'
+  ...
+# Subtest: selecting a suggestion replaces the active Liquid fragment and preserves surrounding text
+ok 328 - selecting a suggestion replaces the active Liquid fragment and preserves surrounding text
+  ---
+  duration_ms: 15.961042
+  type: 'test'
+  ...
+# (node:65451) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65451) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/message-delivery.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: native delivery rejects unsupported IP pools instead of silently dropping routing
+ok 329 - native delivery rejects unsupported IP pools instead of silently dropping routing
+  ---
+  duration_ms: 1.803459
+  type: 'test'
+  ...
+# Subtest: native delivery rejects unsupported extras and unverified URL attachments
+ok 330 - native delivery rejects unsupported extras and unverified URL attachments
+  ---
+  duration_ms: 0.1835
+  type: 'test'
+  ...
+# Subtest: verified native message forwards display name, headers and attachment bytes
+ok 331 - verified native message forwards display name, headers and attachment bytes
+  ---
+  duration_ms: 203.77925
+  type: 'test'
+  ...
+# (node:65453) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65453) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/navigation.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: every Messaging drawer item resolves to its own route and page
+ok 332 - every Messaging drawer item resolves to its own route and page
+  ---
+  duration_ms: 1.010583
+  type: 'test'
+  ...
+# Subtest: Canvas templates do not resolve to the Canvas editor
+ok 333 - Canvas templates do not resolve to the Canvas editor
+  ---
+  duration_ms: 0.137625
+  type: 'test'
+  ...
+# Subtest: known deep links restore their intended page
+ok 334 - known deep links restore their intended page
+  ---
+  duration_ms: 0.106125
+  type: 'test'
+  ...
+# (node:65454) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65454) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/preference-center-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# (node:65454) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# Subtest: two-page layout styles, images, actions and accessibility survive normalization and version reload
+ok 335 - two-page layout styles, images, actions and accessibility survive normalization and version reload
+  ---
+  duration_ms: 3503.835292
+  type: 'test'
+  ...
+# Subtest: public page markup honors real images, columns, language, custom width and links
+ok 336 - public page markup honors real images, columns, language, custom width and links
+  ---
+  duration_ms: 303.33075
+  type: 'test'
+  ...
+# Subtest: unsafe destinations and invalid colors are sanitized while ordinary relative URLs remain
+ok 337 - unsafe destinations and invalid colors are sanitized while ordinary relative URLs remain
+  ---
+  duration_ms: 1.304291
+  type: 'test'
+  ...
+# Subtest: legacy one-page centers migrate to editable pages without losing existing blocks
+ok 338 - legacy one-page centers migrate to editable pages without losing existing blocks
+  ---
+  duration_ms: 0.13375
+  type: 'test'
+  ...
+# Subtest: language Liquid supports recipient conditionals and publish checks catch unfinished actions
+ok 339 - language Liquid supports recipient conditionals and publish checks catch unfinished actions
+  ---
+  duration_ms: 116.372542
+  type: 'test'
+  ...
+# (node:65455) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65455) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/braze-store.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# (node:65455) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# Subtest: comparison API returns actual selected membership, custom baseline and measured currency
+ok 340 - comparison API returns actual selected membership, custom baseline and measured currency
+  ---
+  duration_ms: 42.3705
+  type: 'test'
+  ...
+# Subtest: All Users baseline works with no saved selections and routes enforce workspace and maximum10
+ok 341 - All Users baseline works with no saved selections and routes enforce workspace and maximum10
+  ---
+  duration_ms: 24.224834
+  type: 'test'
+  ...
+# (node:65456) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65456) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/segment-insights-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: source metric labels preserve their observed internal field mappings
+ok 342 - source metric labels preserve their observed internal field mappings
+  ---
+  duration_ms: 0.62975
+  type: 'test'
+  ...
+# Subtest: comparison selection deduplicates repeated query values and respects source maximum10
+ok 343 - comparison selection deduplicates repeated query values and respects source maximum10
+  ---
+  duration_ms: 0.49475
+  type: 'test'
+  ...
+# Subtest: numeric sorting keeps unknown metrics last in both directions
+ok 344 - numeric sorting keeps unknown metrics last in both directions
+  ---
+  duration_ms: 0.232625
+  type: 'test'
+  ...
+# Subtest: formatting uses recorded currency and keeps missing currency or metrics unknown
+ok 345 - formatting uses recorded currency and keeps missing currency or metrics unknown
+  ---
+  duration_ms: 42.552708
+  type: 'test'
+  ...
+# (node:65457) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65457) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/segment-operator-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: Operator accepts provider structured response and returns unsaved proposal
+ok 346 - Operator accepts provider structured response and returns unsaved proposal
+  ---
+  duration_ms: 2.291709
+  type: 'test'
+  ...
+# Subtest: Operator rejects malformed JSON and invalid audience operators
+ok 347 - Operator rejects malformed JSON and invalid audience operators
+  ---
+  duration_ms: 0.419041
+  type: 'test'
+  ...
+# Subtest: Operator rejects empty names and invalid app targeting options
+ok 348 - Operator rejects empty names and invalid app targeting options
+  ---
+  duration_ms: 0.104875
+  type: 'test'
+  ...
+# (node:65459) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65459) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/segment-workspace-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: legacy filters migrate to one AND group without silently changing targeting
+ok 349 - legacy filters migrate to one AND group without silently changing targeting
+  ---
+  duration_ms: 2.226667
+  type: 'test'
+  ...
+# Subtest: complex groups, exclusions, app targeting and tracked options survive save/reload
+ok 350 - complex groups, exclusions, app targeting and tracked options survive save/reload
+  ---
+  duration_ms: 0.866666
+  type: 'test'
+  ...
+# Subtest: new segments target all users until filters are added and omit empty editor groups
+ok 351 - new segments target all users until filters are added and omit empty editor groups
+  ---
+  duration_ms: 0.098375
+  type: 'test'
+  ...
+# Subtest: duplicating complex rules creates independent parameters and a distinct identity
+ok 352 - duplicating complex rules creates independent parameters and a distinct identity
+  ---
+  duration_ms: 0.116458
+  type: 'test'
+  ...
+# Subtest: seeded sample segments migrate missing operators, attributes and boolean values faithfully
+ok 353 - seeded sample segments migrate missing operators, attributes and boolean values faithfully
+  ---
+  duration_ms: 0.222583
+  type: 'test'
+  ...
+# (node:65462) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65462) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/sms-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: GSM basic, extension, accented and empty messages use correct encoding and boundaries
+ok 354 - GSM basic, extension, accented and empty messages use correct encoding and boundaries
+  ---
+  duration_ms: 3.403667
+  type: 'test'
+  ...
+# Subtest: Unicode counts UTF-16 units without splitting emoji across multipart segments
+ok 355 - Unicode counts UTF-16 units without splitting emoji across multipart segments
+  ---
+  duration_ms: 0.551458
+  type: 'test'
+  ...
+# Subtest: personalization, language branching and link shortening reflect the rendered user
+ok 356 - personalization, language branching and link shortening reflect the rendered user
+  ---
+  duration_ms: 189.850542
+  type: 'test'
+  ...
+# Subtest: required SMS fields are validated
+ok 357 - required SMS fields are validated
+  ---
+  duration_ms: 0.153625
+  type: 'test'
+  ...
+# (node:65464) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65464) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/special-campaign-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: API channel catalog contains nine distinct entries with separate push platforms
+ok 358 - API channel catalog contains nine distinct entries with separate push platforms
+  ---
+  duration_ms: 1.113708
+  type: 'test'
+  ...
+# Subtest: new API campaigns generate UUID identifiers once and retain them on JSON roundtrip
+ok 359 - new API campaigns generate UUID identifiers once and retain them on JSON roundtrip
+  ---
+  duration_ms: 0.6295
+  type: 'test'
+  ...
+# Subtest: API variations preserve legacy identities and metadata rather than regenerating external references
+ok 360 - API variations preserve legacy identities and metadata rather than regenerating external references
+  ---
+  duration_ms: 0.240042
+  type: 'test'
+  ...
+# Subtest: reference and real local receipt JSON preserve the chosen variation and do not pretend to send
+ok 361 - reference and real local receipt JSON preserve the chosen variation and do not pretend to send
+  ---
+  duration_ms: 0.855833
+  type: 'test'
+  ...
+# Subtest: API validation accepts source zero-minute re-entry and rejects duplicate IDs/bad limits
+ok 362 - API validation accepts source zero-minute re-entry and rejects duplicate IDs/bad limits
+  ---
+  duration_ms: 0.249125
+  type: 'test'
+  ...
+# Subtest: legacy feature flag/body properties migrate without altering unrelated config
+ok 363 - legacy feature flag/body properties migrate without altering unrelated config
+  ---
+  duration_ms: 2.302
+  type: 'test'
+  ...
+# Subtest: an unselected one-variant draft can be represented and saved, but readiness remains invalid
+ok 364 - an unselected one-variant draft can be represented and saved, but readiness remains invalid
+  ---
+  duration_ms: 3.585959
+  type: 'test'
+  ...
+# Subtest: property JSON constraints match the actual flag property object contract
+ok 365 - property JSON constraints match the actual flag property object contract
+  ---
+  duration_ms: 2.011042
+  type: 'test'
+  ...
+# Subtest: feature readiness checks flag availability/global rollout, IDs, names and distribution
+ok 366 - feature readiness checks flag availability/global rollout, IDs, names and distribution
+  ---
+  duration_ms: 1.10875
+  type: 'test'
+  ...
+# Subtest: canonical feature config roundtrips and mirrors treatment percentages with a separate control group
+ok 367 - canonical feature config roundtrips and mirrors treatment percentages with a separate control group
+  ---
+  duration_ms: 1.520583
+  type: 'test'
+  ...
+# Subtest: flag properties are merged for experiment assignments without mutating the flag resource
+ok 368 - flag properties are merged for experiment assignments without mutating the flag resource
+  ---
+  duration_ms: 1.627292
+  type: 'test'
+  ...
+# Subtest: multiple legacy feature variants migrate without losing identities, property overrides or treatment ratios
+ok 369 - multiple legacy feature variants migrate without losing identities, property overrides or treatment ratios
+  ---
+  duration_ms: 0.176917
+  type: 'test'
+  ...
+# (node:65466) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65466) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (node:65466) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/subscription-group-migration.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: opening an old database removes only global name uniqueness and preserves foreign keys, rows and metadata
+ok 370 - opening an old database removes only global name uniqueness and preserves foreign keys, rows and metadata
+  ---
+  duration_ms: 1326.294916
+  type: 'test'
+  ...
+# Subtest: same names persist independently across workspaces while default-local create/update reject local duplicates
+ok 371 - same names persist independently across workspaces while default-local create/update reject local duplicates
+  ---
+  duration_ms: 228.604167
+  type: 'test'
+  ...
+# Subtest: migration rolls back on invalid child references and restores connection pragma settings
+ok 372 - migration rolls back on invalid child references and restores connection pragma settings
+  ---
+  duration_ms: 3.083917
+  type: 'test'
+  ...
+# (node:65467) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65467) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (node:65467) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/braze-store.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: Segment tags persist as resource metadata without changing audience membership or user attributes
+ok 373 - Segment tags persist as resource metadata without changing audience membership or user attributes
+  ---
+  duration_ms: 3394.754583
+  type: 'test'
+  ...
+# Subtest: tagged receipt references preserve stable tag identity and use receipt types rather than profile types
+ok 374 - tagged receipt references preserve stable tag identity and use receipt types rather than profile types
+  ---
+  duration_ms: 1.481542
+  type: 'test'
+  ...
+# Subtest: tag receipt rules query actual Campaign and Canvas message events while excluding previews and unrelated resources
+ok 375 - tag receipt rules query actual Campaign and Canvas message events while excluding previews and unrelated resources
+  ---
+  duration_ms: 484.320459
+  type: 'test'
+  ...
+# Subtest: same-name tags and message receipts stay isolated by task workspace
+ok 376 - same-name tags and message receipts stay isolated by task workspace
+  ---
+  duration_ms: 57.558542
+  type: 'test'
+  ...
+# Subtest: unsupported tagged receipt event/type combinations fail explicitly
+ok 377 - unsupported tagged receipt event/type combinations fail explicitly
+  ---
+  duration_ms: 7.579958
+  type: 'test'
+  ...
+# Subtest: tagged last-receipt relative comparisons use real elapsed hours, days and weeks with required units
+ok 378 - tagged last-receipt relative comparisons use real elapsed hours, days and weeks with required units
+  ---
+  duration_ms: 159.311833
+  type: 'test'
+  ...
+# Subtest: Segment tagged-receipt builder snapshots, HTTP previews and saved Campaign targeting share actual receipt results
+ok 379 - Segment tagged-receipt builder snapshots, HTTP previews and saved Campaign targeting share actual receipt results
+  ---
+  duration_ms: 262.5455
+  type: 'test'
+  ...
+# Subtest: tag interaction rules require a specific source choice and match its channel, event and selector
+ok 380 - tag interaction rules require a specific source choice and match its channel, event and selector
+  ---
+  duration_ms: 403.847875
+  type: 'test'
+  ...
+# (node:65468) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65468) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/braze-store.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# (node:65468) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# Subtest: Canvas saved Segment evaluates every filter including tagged receipts and keeps same-name Segment workspaces separate
+ok 381 - Canvas saved Segment evaluates every filter including tagged receipts and keeps same-name Segment workspaces separate
+  ---
+  duration_ms: 2611.219792
+  type: 'test'
+  ...
+# Subtest: Canvas entry, exclusion and exit tag filters preserve comparisons and use the same real receipt evaluation
+ok 382 - Canvas entry, exclusion and exit tag filters preserve comparisons and use the same real receipt evaluation
+  ---
+  duration_ms: 679.079375
+  type: 'test'
+  ...
+# Subtest: invalid/deleted Segment tag references fail on save with resource and new definitions rolled back
+ok 383 - invalid/deleted Segment tag references fail on save with resource and new definitions rolled back
+  ---
+  duration_ms: 27.381541
+  type: 'test'
+  ...
+# Subtest: Canvas metadata creates, duplicates and lists scoped definitions and same-name journeys independently
+ok 384 - Canvas metadata creates, duplicates and lists scoped definitions and same-name journeys independently
+  ---
+  duration_ms: 10.486042
+  type: 'test'
+  ...
+# (node:65473) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65473) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (node:65473) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/tag-store.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: tag creation and assignment roll back definitions when their audit cannot be saved
+ok 385 - tag creation and assignment roll back definitions when their audit cannot be saved
+  ---
+  duration_ms: 23.931292
+  type: 'test'
+  ...
+# Subtest: rename and bulk tagging compose with a surrounding resource transaction
+ok 386 - rename and bulk tagging compose with a surrounding resource transaction
+  ---
+  duration_ms: 6.600166
+  type: 'test'
+  ...
+# Subtest: a failed tag operation rolls back only its savepoint and leaves the parent transaction usable
+ok 387 - a failed tag operation rolls back only its savepoint and leaves the parent transaction usable
+  ---
+  duration_ms: 1.598583
+  type: 'test'
+  ...
+# Subtest: bulk tag limits count canonical identities after a rename
+ok 388 - bulk tag limits count canonical identities after a rename
+  ---
+  duration_ms: 10.361708
+  type: 'test'
+  ...
+# Subtest: bulk updates advance resource versions even when the previous clock is ahead
+ok 389 - bulk updates advance resource versions even when the previous clock is ahead
+  ---
+  duration_ms: 2.730667
+  type: 'test'
+  ...
+# Subtest: workspace dictionaries, aliases, references and bulk writes remain isolated
+ok 390 - workspace dictionaries, aliases, references and bulk writes remain isolated
+  ---
+  duration_ms: 1.716542
+  type: 'test'
+  ...
+# Subtest: stable audience rule IDs survive rename and count as usage without becoming direct assignments
+ok 391 - stable audience rule IDs survive rename and count as usage without becoming direct assignments
+  ---
+  duration_ms: 1.092
+  type: 'test'
+  ...
+# Subtest: legacy alias migration scopes names to local and initialization does not resurrect stale aliases
+ok 392 - legacy alias migration scopes names to local and initialization does not resurrect stale aliases
+  ---
+  duration_ms: 1.502959
+  type: 'test'
+  ...
+# Subtest: migration imports names independently per workspace and repairs duplicate parent IDs
+ok 393 - migration imports names independently per workspace and repairs duplicate parent IDs
+  ---
+  duration_ms: 14.299458
+  type: 'test'
+  ...
+# Subtest: multi-tag assignment and cross-resource rename roll back every prior write on a late audit failure
+ok 394 - multi-tag assignment and cross-resource rename roll back every prior write on a late audit failure
+  ---
+  duration_ms: 1.598916
+  type: 'test'
+  ...
+# Subtest: source-confirmed global deletion cascades direct assignments and GCG exclusions only within its workspace
+ok 395 - source-confirmed global deletion cascades direct assignments and GCG exclusions only within its workspace
+  ---
+  duration_ms: 2.865625
+  type: 'test'
+  ...
+# Subtest: failed deletion audit rolls back every direct unassignment, version and tombstone
+ok 396 - failed deletion audit rolls back every direct unassignment, version and tombstone
+  ---
+  duration_ms: 0.989375
+  type: 'test'
+  ...
+# Subtest: Campaign Tag As explicit replace supports removing tags and clearing the complete selected set
+ok 397 - Campaign Tag As explicit replace supports removing tags and clearing the complete selected set
+  ---
+  duration_ms: 0.9765
+  type: 'test'
+  ...
+# Subtest: canvas Tag As replaces only the selected resources and preserves unrelated content
+ok 398 - canvas Tag As replaces only the selected resources and preserves unrelated content
+  ---
+  duration_ms: 1.267334
+  type: 'test'
+  ...
+# Subtest: canvas Tag As rejects stale selections, cross-workspace IDs, wrong types and overflow atomically
+ok 399 - canvas Tag As rejects stale selections, cross-workspace IDs, wrong types and overflow atomically
+  ---
+  duration_ms: 2.00825
+  type: 'test'
+  ...
+# Subtest: segments Tag As replaces only the selected resources and preserves unrelated content
+ok 400 - segments Tag As replaces only the selected resources and preserves unrelated content
+  ---
+  duration_ms: 0.819584
+  type: 'test'
+  ...
+# Subtest: segments Tag As rejects stale selections, cross-workspace IDs, wrong types and overflow atomically
+ok 401 - segments Tag As rejects stale selections, cross-workspace IDs, wrong types and overflow atomically
+  ---
+  duration_ms: 1.684875
+  type: 'test'
+  ...
+# Subtest: resource Tag As and new definitions roll back on audit failure inside a surrounding transaction
+ok 402 - resource Tag As and new definitions roll back on audit failure inside a surrounding transaction
+  ---
+  duration_ms: 1.786
+  type: 'test'
+  ...
+# (node:65476) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65476) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (node:65476) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/tag-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: tag assignment deduplicates and enforces the 175-tag boundary
+ok 403 - tag assignment deduplicates and enforces the 175-tag boundary
+  ---
+  duration_ms: 45.339708
+  type: 'test'
+  ...
+# Subtest: migration imports legacy task and exclusion names once with stable registry IDs
+ok 404 - migration imports legacy task and exclusion names once with stable registry IDs
+  ---
+  duration_ms: 138.93075
+  type: 'test'
+  ...
+# Subtest: rename updates Campaign, Canvas, Segment and control exclusions atomically and preserves unrelated fields
+ok 405 - rename updates Campaign, Canvas, Segment and control exclusions atomically and preserves unrelated fields
+  ---
+  duration_ms: 6.462208
+  type: 'test'
+  ...
+# Subtest: nesting rejects self, descendant and missing parent without changing direct associations
+ok 406 - nesting rejects self, descendant and missing parent without changing direct associations
+  ---
+  duration_ms: 12.607542
+  type: 'test'
+  ...
+# Subtest: name conflicts do not merge tags or mutate existing task references
+ok 407 - name conflicts do not merge tags or mutate existing task references
+  ---
+  duration_ms: 7.46475
+  type: 'test'
+  ...
+# Subtest: deletion removes direct assignments and control exclusions, guards child tags and prevents stale resurrection
+ok 408 - deletion removes direct assignments and control exclusions, guards child tags and prevents stale resurrection
+  ---
+  duration_ms: 4.812417
+  type: 'test'
+  ...
+# Subtest: Campaign Tag As shares the complete union and updates all selected Campaigns
+ok 409 - Campaign Tag As shares the complete union and updates all selected Campaigns
+  ---
+  duration_ms: 2.967333
+  type: 'test'
+  ...
+# Subtest: bulk overflow or a missing Campaign rolls back every task and registry change
+ok 410 - bulk overflow or a missing Campaign rolls back every task and registry change
+  ---
+  duration_ms: 71.637
+  type: 'test'
+  ...
+# Subtest: template and Content Block assignments require existing tags and never partially create unknown names
+ok 411 - template and Content Block assignments require existing tags and never partially create unknown names
+  ---
+  duration_ms: 3.544875
+  type: 'test'
+  ...
+# Subtest: legacy malformed JSON does not prevent loading or migrating other tags
+ok 412 - legacy malformed JSON does not prevent loading or migrating other tags
+  ---
+  duration_ms: 2.302708
+  type: 'test'
+  ...
+# (node:65483) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65483) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/unlayer-template.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: new designs and loaded designs have independent mutable data
+ok 413 - new designs and loaded designs have independent mutable data
+  ---
+  duration_ms: 3.658958
+  type: 'test'
+  ...
+# Subtest: legacy HTML preserves Liquid and head CSS without nesting complete documents
+ok 414 - legacy HTML preserves Liquid and head CSS without nesting complete documents
+  ---
+  duration_ms: 3.326542
+  type: 'test'
+  ...
+# Subtest: invalid saved designs and legacy designs without HTML cannot silently overwrite content
+ok 415 - invalid saved designs and legacy designs without HTML cannot silently overwrite content
+  ---
+  duration_ms: 1.708833
+  type: 'test'
+  ...
+# Subtest: save export keeps the original design and settings, and rejects partial SDK exports
+ok 416 - save export keeps the original design and settings, and rejects partial SDK exports
+  ---
+  duration_ms: 0.691709
+  type: 'test'
+  ...
+# Subtest: saving variant 2 cannot replace the primary mirrored design or leak its engine into primary
+ok 417 - saving variant 2 cannot replace the primary mirrored design or leak its engine into primary
+  ---
+  duration_ms: 1.268708
+  type: 'test'
+  ...
+# (node:65485) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65485) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/webhook-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: normalizes legacy webhook campaign values
+ok 418 - normalizes legacy webhook campaign values
+  ---
+  duration_ms: 1.631042
+  type: 'test'
+  ...
+# Subtest: renders personalization defaults and translations
+ok 419 - renders personalization defaults and translations
+  ---
+  duration_ms: 40.556541
+  type: 'test'
+  ...
+# Subtest: validates URL ports, defaults, GET bodies, and rendered JSON
+ok 420 - validates URL ports, defaults, GET bodies, and rendered JSON
+  ---
+  duration_ms: 4.610083
+  type: 'test'
+  ...
+# Subtest: redacts authorization and token headers
+ok 421 - redacts authorization and token headers
+  ---
+  duration_ms: 0.366834
+  type: 'test'
+  ...
+# (node:65486) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65486) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/whatsapp-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: new WhatsApp setup follows subscription, type, layout, editor and remains independent of credentials
+ok 422 - new WhatsApp setup follows subscription, type, layout, editor and remains independent of credentials
+  ---
+  duration_ms: 2.790083
+  type: 'test'
+  ...
+# Subtest: saved legacy content remains selected and editable without rewriting template or response data
+ok 423 - saved legacy content remains selected and editable without rewriting template or response data
+  ---
+  duration_ms: 0.738916
+  type: 'test'
+  ...
+# Subtest: response delivery requires stored inbound activity strictly inside 24 hours
+ok 424 - response delivery requires stored inbound activity strictly inside 24 hours
+  ---
+  duration_ms: 1.965917
+  type: 'test'
+  ...
+# Subtest: legacy open-window flag and unrelated outbound events cannot open a response window
+ok 425 - legacy open-window flag and unrelated outbound events cannot open a response window
+  ---
+  duration_ms: 0.636458
+  type: 'test'
+  ...
+# Subtest: latest stored inbound event or explicit profile activity wins, future events are rejected
+ok 426 - latest stored inbound event or explicit profile activity wins, future events are rejected
+  ---
+  duration_ms: 0.614125
+  type: 'test'
+  ...
+# Subtest: actual saved business account references validate without a sample-account whitelist
+ok 427 - actual saved business account references validate without a sample-account whitelist
+  ---
+  duration_ms: 2.352333
+  type: 'test'
+  ...
+# (node:65490) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65490) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/whatsapp-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: the default WhatsApp template variant is launch-ready
+ok 428 - the default WhatsApp template variant is launch-ready
+  ---
+  duration_ms: 3.522541
+  type: 'test'
+  ...
+# Subtest: template variables require either a value or a fallback
+ok 429 - template variables require either a value or a fallback
+  ---
+  duration_ms: 0.555042
+  type: 'test'
+  ...
+# Subtest: response authoring does not fabricate recipient conversation eligibility
+ok 430 - response authoring does not fabricate recipient conversation eligibility
+  ---
+  duration_ms: 0.159417
+  type: 'test'
+  ...
+# Subtest: template preview resolves mapped values and fallbacks
+ok 431 - template preview resolves mapped values and fallbacks
+  ---
+  duration_ms: 0.227083
+  type: 'test'
+  ...
+# Subtest: unknown templates cannot fall back to approved sample content for validation
+ok 432 - unknown templates cannot fall back to approved sample content for validation
+  ---
+  duration_ms: 1.963334
+  type: 'test'
+  ...
+# Subtest: all required template variables are validated even if removed from saved mappings
+ok 433 - all required template variables are validated even if removed from saved mappings
+  ---
+  duration_ms: 1.012042
+  type: 'test'
+  ...
+# Subtest: custom templates render their own content and respect pending status
+ok 434 - custom templates render their own content and respect pending status
+  ---
+  duration_ms: 359.681625
+  type: 'test'
+  ...
+# Subtest: response option labels reject blanks, duplicates and overlong labels
+ok 435 - response option labels reject blanks, duplicates and overlong labels
+  ---
+  duration_ms: 8.707709
+  type: 'test'
+  ...
+# Subtest: test payloads render Liquid values with recipient fallbacks and preserve URL variables
+ok 436 - test payloads render Liquid values with recipient fallbacks and preserve URL variables
+  ---
+  duration_ms: 25.928875
+  type: 'test'
+  ...
+# Subtest: malformed persisted variants are normalized without crashing the composer
+ok 437 - malformed persisted variants are normalized without crashing the composer
+  ---
+  duration_ms: 5.222666
+  type: 'test'
+  ...
+# Subtest: carousel payloads render each card and validate counts and button types
+ok 438 - carousel payloads render each card and validate counts and button types
+  ---
+  duration_ms: 19.630958
+  type: 'test'
+  ...
+# Subtest: response headers, footers and labels are resolved per recipient
+ok 439 - response headers, footers and labels are resolved per recipient
+  ---
+  duration_ms: 13.150417
+  type: 'test'
+  ...
+# Subtest: source templates retain both quick replies and local media URLs
+ok 440 - source templates retain both quick replies and local media URLs
+  ---
+  duration_ms: 1.537625
+  type: 'test'
+  ...
+# Subtest: unconfigured layouts and unavailable provider assets cannot launch
+ok 441 - unconfigured layouts and unavailable provider assets cannot launch
+  ---
+  duration_ms: 7.312084
+  type: 'test'
+  ...
+# (node:65550) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65550) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (node:65550) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/braze-store.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: preview override cannot fabricate stored recipient eligibility and standalone tests never deliver
+ok 442 - preview override cannot fabricate stored recipient eligibility and standalone tests never deliver
+  ---
+  duration_ms: 53.9605
+  type: 'test'
+  ...
+# Subtest: production campaign rejects response delivery despite a saved simulated-open flag
+ok 443 - production campaign rejects response delivery despite a saved simulated-open flag
+  ---
+  duration_ms: 18.53025
+  type: 'test'
+  ...
+# Subtest: stored inbound event opens eligibility and disabled delivery remains prepared only
+ok 444 - stored inbound event opens eligibility and disabled delivery remains prepared only
+  ---
+  duration_ms: 13.381292
+  type: 'test'
+  ...
+# (node:65655) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:65655) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/workspace-modules.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: CSV supports quoted commas and newlines and rejects duplicate identities
+ok 445 - CSV supports quoted commas and newlines and rejects duplicate identities
+  ---
+  duration_ms: 1.617625
+  type: 'test'
+  ...
+# Subtest: ordered rollout rules and stable assignments survive repeated evaluation
+ok 446 - ordered rollout rules and stable assignments survive repeated evaluation
+  ---
+  duration_ms: 71.797791
+  type: 'test'
+  ...
+# Subtest: transformations map nested data and reject prototype traversal or unidentified payloads
+ok 447 - transformations map nested data and reject prototype traversal or unidentified payloads
+  ---
+  duration_ms: 0.549083
+  type: 'test'
+  ...
+# Subtest: flag identifiers are immutable and published slugs are validated
+ok 448 - flag identifiers are immutable and published slugs are validated
+  ---
+  duration_ms: 3.404708
+  type: 'test'
+  ...
+# Subtest: message filters isolate channels and unique conversion rates use user counts
+ok 449 - message filters isolate channels and unique conversion rates use user counts
+  ---
+  duration_ms: 1.698416
+  type: 'test'
+  ...
+# Subtest: revenue never mixes currencies or custom events with purchases
+ok 450 - revenue never mixes currencies or custom events with purchases
+  ---
+  duration_ms: 1.538458
+  type: 'test'
+  ...
+1..450
+# tests 450
+# suites 0
+# pass 450
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 25387.872333

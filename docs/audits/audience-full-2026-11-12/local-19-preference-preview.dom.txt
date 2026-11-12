@@ -1,0 +1,109 @@
+- button "Open Next.js Dev Tools":
+- alert: Braze Demo — Thinkingai
+- complementary:
+  - button "Minimize menu" [expanded]
+  - button "Select workspace":
+    - generic: Local workspace
+  - navigation "Side navigation":
+    - generic: Quick links
+    - button "Canvas":
+      - generic: Canvas
+    - button "Campaigns":
+      - generic: Campaigns
+    - button "Segments":
+      - generic: Segments
+    - button "Getting Started":
+      - generic: Getting Started
+    - button "Home":
+      - generic: Home
+    - button "AI Decisioning":
+      - generic: AI Decisioning
+    - button "Agent Console":
+      - generic: Agent Console
+    - button "Messaging":
+      - generic: Messaging
+    - button "Audience":
+      - generic: Audience
+    - button "Content":
+      - generic: Content
+    - button "Analytics":
+      - generic: Analytics
+    - button "Partner Integrations":
+      - generic: Partner Integrations
+    - button "Data Settings":
+      - generic: Data Settings
+    - button "Settings":
+      - generic: Settings
+  - button "Home":
+    - img "Braze"
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - generic "Community":
+    - img "Community"
+  - button "Language"
+  - button "Notifications"
+  - button "Profile"
+  - button "Open BrazeAI Operator"
+  - navigation:
+    - button "Email Preference Centers"
+    - button "Create Preference Center":
+      - text: Create Preference Center
+  - heading "Email Preference Center" [level=1]
+  - article:
+    - heading "Details" [level=2]
+    - text: Name
+    - generic: 23/280 characters
+    - textbox "Name":
+      - /placeholder: Enter preference center name
+      - text: Audience QA preferences
+    - button "Add Description":
+      - text: Add Description
+    - generic: The Liquid tag will be generated after the preference center is launched
+    - button "Close Liquid notice":
+    - generic: Liquid
+    - textbox "Liquid": "{{preference_center.${}}}"
+    - button "Copy Liquid":
+    - generic: The API ID will be generated after the preference center is saved
+    - button "Close API ID notice":
+    - generic: API ID
+    - textbox "API ID"
+    - button "Copy API ID":
+  - article:
+    - heading "Page Previews" [level=2]
+    - button "Edit"
+    - heading "Begin building your preference center" [level=3]
+    - button "Launch Editor"
+  - button "Save as draft"
+  - button "Launch preference center" [disabled]
+  - dialog "Preference center editor":
+    - complementary:
+      - tablist:
+        - tab "Compose"
+        - tab "Settings"
+        - tab "Preview" [active] [selected]
+      - button "Collapse sidebar":
+    - main:
+      - article:
+        - heading "Update your email preferences" [level=2]
+        - checkbox "Product updates Feature launches, release notes, and product education."
+        - generic: Product updates
+        - generic: Feature launches, release notes, and product education.
+        - button "Save my preferences"
+        - button "Unsubscribe from all emails"
+      - button "Undo":
+      - button "Redo" [disabled]:
+      - button "Phone":
+      - button "Tablet":
+      - button "Desktop" [pressed]:
+      - button "Hide Outlines":
+      - button "Add Personalization":
+    - button "Send feedback" [disabled]:
+      - text: Send feedback
+    - button "Cancel"
+    - button "Done"
+    - button "BrazeAI Operator" [disabled]:

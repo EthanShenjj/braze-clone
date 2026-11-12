@@ -1,0 +1,262 @@
+Browser tab: 2, Title: "Tag Management", URL: "https://dashboard-09.braze.com/app_settings/app_settings/tags/6af4374c46d3080087f1c5d2?locale=en".
+0 AXWebArea Tag Management, URL: dashboard-09.braze.com/app_settings/app_settings/tags/6af4374c46d3080087f1c5d2?locale=en
+	1 container
+		2 container react-root
+			3 link Description: Skip to main content, Value: dashboard-09.braze.com/app_settings/app_settings/tags/6af4374c46d3080087f1c5d2?locale=en#main-container
+			4 container Side navigation
+				5 container
+					6 button Minimize menu
+					7 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+						8 image
+						9 text Demo – ittor
+					10 text Quick links
+					11 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+					12 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+					13 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+					14 button Getting Started
+						15 image
+						16 container
+							17 text Getting Started
+							18 container
+								19 text 0 %
+					20 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+					21 button AI Decisioning
+						22 image
+						23 text AI Decisioning
+					24 button Agents
+						25 image
+						26 text Agents
+					27 button Messaging
+						28 image
+						29 text Messaging
+					30 button Audience
+						31 image
+						32 text Audience
+					33 button Content
+						34 image
+						35 text Content
+					36 button Analytics
+						37 image
+						38 text Analytics
+					39 button Partner Integrations
+						40 image
+						41 text Partner Integrations
+					42 button Data Settings
+						43 image
+						44 text Data Settings
+					45 button Settings
+						46 image
+						47 text Settings
+				48 container Footer Logo
+					49 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+			50 text 14 days left in your free trial.
+			51 button Connect with sales
+			52 container Top navigation
+				53 container Left top navigation
+					54 button Search workspace ⌘+K
+						55 image
+						56 text Search workspace
+						57 text ⌘+K
+				58 container Right top navigation
+					59 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						60 image
+					61 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						62 image
+					63 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+						64 image
+					65 container
+						66 button Notifications
+							67 image
+					68 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						69 image
+					70 button BrazeAI Operator™
+						71 image
+			72 container main-container
+				82 container
+					83 heading Manage Tags, Value: 2
+						84 text Manage Tags
+					85 button Add New Tag
+					86 heading 6 Results, Value: 4
+						87 text 6 Results
+					88 text field (settable) Search
+					89 button (disabled) Search
+					90 table
+						91 row Name column, sorted ascending. Select to sort descending Canvases column, unsorted. Select to sort descending Campaigns column, unsorted. Select to sort descending Segments column, unsorted. Select to sort descending Cards column, unsorted. Select to sort descending Templates column, unsorted. Select to sort descending Engagement Reports column, unsorted. Select to sort descending Geofences column, unsorted. Select to sort descending Agents column, unsorted. Select to sort descending
+							92 cell
+								93 button Name column, sorted ascending. Select to sort descending
+							94 cell
+								95 button Canvases column, unsorted. Select to sort descending
+							96 cell
+								97 button Campaigns column, unsorted. Select to sort descending
+							98 cell
+								99 button Segments column, unsorted. Select to sort descending
+							100 cell
+								101 button Cards column, unsorted. Select to sort descending
+							102 cell
+								103 button Templates column, unsorted. Select to sort descending
+							104 cell
+								105 button Engagement Reports column, unsorted. Select to sort descending
+							106 cell
+								107 button Geofences column, unsorted. Select to sort descending
+							108 cell
+								109 button Agents column, unsorted. Select to sort descending
+						110 row DE 0 1 0 0 0 0 0 0 Edit tag Delete tag
+							111 cell
+								112 text DE
+							113 cell
+								114 text 0
+							115 cell
+								116 text 1
+							117 cell
+								118 text 0
+							119 cell
+								120 text 0
+							121 cell
+								122 text 0
+							123 cell
+								124 text 0
+							125 cell
+								126 text 0
+							127 cell
+								128 text 0
+							129 cell
+								130 content list
+									131 pop up button Edit tag
+									132 pop up button Delete tag
+						133 row FR 1 0 0 0 0 0 0 0 Edit tag Delete tag
+							134 cell
+								135 text FR
+							136 cell
+								137 text 1
+							138 cell
+								139 text 0
+							140 cell
+								141 text 0
+							142 cell
+								143 text 0
+							144 cell
+								145 text 0
+							146 cell
+								147 text 0
+							148 cell
+								149 text 0
+							150 cell
+								151 text 0
+							152 cell
+								153 content list
+									154 pop up button Edit tag
+									155 pop up button Delete tag
+						156 row Onboarding 2 0 0 0 0 0 0 0 Edit tag Delete tag
+							157 cell
+								158 text Onboarding
+							159 cell
+								160 text 2
+							161 cell
+								162 text 0
+							163 cell
+								164 text 0
+							165 cell
+								166 text 0
+							167 cell
+								168 text 0
+							169 cell
+								170 text 0
+							171 cell
+								172 text 0
+							173 cell
+								174 text 0
+							175 cell
+								176 content list
+									177 pop up button Edit tag
+									178 pop up button Delete tag
+						179 row UK 1 1 0 0 0 0 0 0 Edit tag Delete tag
+							180 cell
+								181 text UK
+							182 cell
+								183 text 1
+							184 cell
+								185 text 1
+							186 cell
+								187 text 0
+							188 cell
+								189 text 0
+							190 cell
+								191 text 0
+							192 cell
+								193 text 0
+							194 cell
+								195 text 0
+							196 cell
+								197 text 0
+							198 cell
+								199 content list
+									200 pop up button Edit tag
+									201 pop up button Delete tag
+						202 row US 1 1 0 0 0 0 0 0 Edit tag Delete tag
+							203 cell
+								204 text US
+							205 cell
+								206 text 1
+							207 cell
+								208 text 1
+							209 cell
+								210 text 0
+							211 cell
+								212 text 0
+							213 cell
+								214 text 0
+							215 cell
+								216 text 0
+							217 cell
+								218 text 0
+							219 cell
+								220 text 0
+							221 cell
+								222 content list
+									223 pop up button Edit tag
+									224 pop up button Delete tag
+						225 row promotional 3 3 0 0 0 0 0 0 Edit tag Delete tag
+							226 cell
+								227 text promotional
+							228 cell
+								229 text 3
+							230 cell
+								231 text 3
+							232 cell
+								233 text 0
+							234 cell
+								235 text 0
+							236 cell
+								237 text 0
+							238 cell
+								239 text 0
+							240 cell
+								241 text 0
+							242 cell
+								243 text 0
+							244 cell
+								245 content list
+									246 pop up button Edit tag
+									247 pop up button Delete tag
+					248 text Showing rows 1 - 6 of 6 Rows per page:
+					249 pop up button (collapsed, settable) Value: 10, Secondary Actions: Expand
+						250 menu
+							251 (selected) 10
+							252 20
+							253 40
+							254 60
+							255 100
+					256 content list
+						257 button (disabled) Previous page
+						258 button Current Page, Page 1
+						259 button (disabled) Next page
+				74 text © Braze 2026
+				75 text Opening in a new tab
+				76 link Description: Opening in a new tab, Value: braze.statuspage.io/
+				77 text Opening in a new tab
+				78 link Description: Opening in a new tab, Value: braze.com/terms
+				79 text Opening in a new tab
+				80 link Description: Opening in a new tab, Value: braze.com/privacy
+		81 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+
+The focused UI element is 45 button Settings

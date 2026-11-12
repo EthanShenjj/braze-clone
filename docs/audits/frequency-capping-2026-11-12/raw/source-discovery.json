@@ -1,0 +1,60 @@
+{
+  "files": [
+    {
+      "name": "16807.4dfecda4ac109872.js",
+      "url": "https://cdn.braze.com/dashboard-frontend-assets/js/16807.4dfecda4ac109872.js",
+      "path": "/Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/docs/audits/frequency-capping-2026-11-12/raw/16807.4dfecda4ac109872.js",
+      "exit_code": 28,
+      "error": "curl: (28) Operation timed out after 45001 milliseconds with 917414 out of 6870218 bytes received",
+      "download_attempts": 1,
+      "curl_compression": false,
+      "partial_retained": false,
+      "search": {
+        "scope": "not searched: complete source was not acquired",
+        "match_count": null
+      }
+    },
+    {
+      "name": "29546.092a7378f2d1448b.js",
+      "url": "https://cdn.braze.com/dashboard-frontend-assets/js/29546.092a7378f2d1448b.js",
+      "path": "/Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/docs/audits/frequency-capping-2026-11-12/raw/29546.092a7378f2d1448b.js",
+      "exit_code": 28,
+      "error": "curl: (28) Operation timed out after 45002 milliseconds with 2729 out of 6730 bytes received",
+      "download_attempts": 1,
+      "curl_compression": false,
+      "partial_retained": false,
+      "search": {
+        "scope": "not searched: complete source was not acquired",
+        "match_count": null
+      }
+    },
+    {
+      "name": "2845.cbd73e334a44be16.js",
+      "url": "https://cdn.braze.com/dashboard-frontend-assets/js/2845.cbd73e334a44be16.js",
+      "path": "/Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/docs/audits/frequency-capping-2026-11-12/raw/2845.cbd73e334a44be16.js",
+      "exit_code": 0,
+      "bytes": 17908,
+      "sha256": "b1057f495e758b0dc9f9870e1e844d9f6303547c7f6a086a0d01864737f8a38d",
+      "download_attempts": 1,
+      "curl_compression": false,
+      "partial_retained": false,
+      "search": {
+        "scope": "complete downloaded file",
+        "case_sensitive": false,
+        "patterns": [
+          "frequency.?cap",
+          "frequency_cap",
+          "global.?message.?settings"
+        ],
+        "matches": [],
+        "match_count": 0,
+        "limitation": "No matching string does not establish the absence of the feature from Braze or from other scripts."
+      }
+    }
+  ],
+  "notes": [
+    "Read-only acquisition of the three browser-observed CDN URLs; scripts were not executed.",
+    "Each URL was attempted once in sequence; failed temporary downloads were removed before the later request to retain .partial files arrived.",
+    "No application files or shared manifest were modified."
+  ]
+}

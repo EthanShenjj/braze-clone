@@ -1,0 +1,3 @@
+import {mergeAudienceDuplicates} from '@/lib/braze-store';
+export const runtime='nodejs';
+export async function POST(request:Request){try{const input=await request.json();if(input.confirmed!==true)return Response.json({error:'Confirm merging the reviewed duplicate profiles before continuing.'},{status:400});return Response.json(mergeAudienceDuplicates(typeof input.workspaceId==='string'?input.workspaceId:'local',input.expectedFingerprint,typeof input.previewId==='string'?input.previewId:undefined));}catch(error){return Response.json({error:error instanceof Error?error.message:'Unable to merge duplicate profiles.'},{status:error&&typeof error==='object'&&'status' in error&&error.status===409?409:400});}}

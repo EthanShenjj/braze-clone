@@ -1,0 +1,314 @@
+- link "Skip to main content":
+  - /url: "#main-col"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Demo – ittor":
+    - generic: Demo – ittor
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agents":
+    - generic: Agents
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 14 days left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- navigation:
+  - tablist "Open page tabs":
+    - tab "Canvas":
+      - generic: Canvas
+    - tab "Edit 'Abandoned intent flow' Close tab" [selected]:
+      - text: 
+      - generic: Edit 'Abandoned intent flow'
+      - button "Close tab":
+- heading "Abandoned intent flow" [level=4]
+- img: 
+- text: View Only
+- generic: Engage with users in real-time to encourage them to complete purchases while products are still top of mind.
+- text: more
+- img: 
+- text: Send Settings
+- list:
+  - listitem: No limitations on the rate at which users will receive messages.
+  - listitem: Workspace Messaging Rate Limits OFF
+  - generic: Quiet hours OFF
+- text: Conversion Events
+- generic: Made Purchase within 3 days
+- button "Expand":
+  - generic: Expand
+- text: Entry Rules
+- img: 
+- img: 
+- generic: Schedule
+- strong: Send Canvas
+- list:
+  - text: "Schedule delay:"
+  - strong: immediately after trigger criteria are met
+  - text: "Canvas start:"
+  - strong: October 4, 2023 at 9:10 AM
+- img: 
+- generic: Audience
+- generic: Has used these apps more than 0 times
+- generic: Exit Criteria
+- generic: Make Purchase (Any product)
+- generic: Controls
+- generic: Users are not eligible to re-enter this Canvas.
+- button "Add Variant" [disabled]:
+  - img: 
+  - generic: Add Variant
+- generic: 100%
+- generic: Variant 1
+- button [disabled]:
+  - img: 
+- generic: Made purchase (2)?
+- generic: draft
+- 'button "Window: 1 day Ranking: Off Advance: Immediately"':
+  - img: 
+  - strong: "Window:"
+  - text: 1 day
+  - img: 
+  - strong: "Ranking:"
+  - text: "Off"
+  - img: 
+  - strong: "Advance:"
+  - text: Immediately
+- button "Made purchase":
+  - generic "Made purchase"
+- button "Everyone Else":
+  - generic "Everyone Else"
+- generic: Made purchase
+- generic: Everyone Else
+- button [disabled]
+- button [disabled]:
+  - img: 
+- button [disabled]:
+  - img: 
+- generic: Ad retargeting
+- generic: draft
+- button "Audience Sync":
+  - generic: Audience Sync
+- img: 
+- generic: All users who enter this step advance to the next step
+- button [disabled]
+- generic: Intelligent Channel split
+- generic: draft
+- button "Email":
+  - generic "Email"
+- button "SMS":
+  - generic "SMS"
+- button "Everyone Else":
+  - generic "Everyone Else"
+- generic: Email
+- generic: SMS
+- generic: Everyone Else
+- button [disabled]
+- button [disabled]:
+  - img: 
+- button [disabled]:
+  - img: 
+- button [disabled]:
+  - img: 
+- generic: Made purchase?
+- generic: draft
+- 'button "Window: 2 hours Ranking: Off Advance: Immediately"':
+  - img: 
+  - strong: "Window:"
+  - text: 2 hours
+  - img: 
+  - strong: "Ranking:"
+  - text: "Off"
+  - img: 
+  - strong: "Advance:"
+  - text: Immediately
+- button "Made purchase":
+  - generic "Made purchase"
+- button "Everyone Else":
+  - generic "Everyone Else"
+- generic: Made purchase
+- generic: Everyone Else
+- button [disabled]
+- button [disabled]:
+  - img: 
+- button [disabled]:
+  - img: 
+- generic: Thank you! (2)
+- generic: draft
+- button "Messages Your order has been received":
+  - img: 
+  - generic: Messages
+  - img: 
+  - generic: Your order has been received
+- img: 
+- generic: All users who enter this step advance to the next step
+- button [disabled]
+- generic: Abandoned cart in-app message + Content Card
+- generic: draft
+- 'button "Messages 10% Off Your Order 👋 Hey {{${first_name} | default: ''there''}}, You Left Something Behind! Expires: 1 day"':
+  - img: 
+  - generic: Messages
+  - generic: 10% Off Your Order
+  - generic: "👋 Hey {{${first_name} | default: 'there'}}, You Left Something Behind!"
+  - generic: "Expires: 1 day"
+- img: 
+- generic: All users who enter this step advance to the next step
+- button [disabled]
+- button [disabled]:
+  - img: 
+- generic: Abandoned cart SMS + Content Card
+- generic: draft
+- generic: Incomplete Messages
+- 'button "Messages 10% Off Your Order 👋 Hi {{${first_name} | default: ''there''}}, You Left Something Behind! Don''t forget about the stylish {{canvas_entry_properties.${item_name}}} in your cart! Complete your purchase now and step up your fashion game. Plus, enjoy free shipping on us! Tap to"':
+  - img: 
+  - generic: Messages
+  - generic: 10% Off Your Order
+  - img: 
+  - generic: "👋 Hi {{${first_name} | default: 'there'}}, You Left Something Behind! Don't forget about the stylish {{canvas_entry_properties.${item_name}}} in your cart! Complete your purchase now and step up your fashion game. Plus, enjoy free shipping on us! Tap to"
+- img: 
+- generic: All users who enter this step advance to the next step
+- button [disabled]
+- button [disabled]:
+  - img: 
+- generic: Thank you!
+- generic: draft
+- button "Messages Your order has been received":
+  - img: 
+  - generic: Messages
+  - img: 
+  - generic: Your order has been received
+- img: 
+- generic: All users who enter this step advance to the next step
+- button [disabled]
+- generic: Abandoned cart email + Content Card
+- generic: draft
+- button "Messages 10% Off Your Order Looks like you forgot something, complete your purchase":
+  - img: 
+  - generic: Messages
+  - generic: 10% Off Your Order
+  - img: 
+  - generic: Looks like you forgot something, complete your purchase
+- img: 
+- generic: All users who enter this step advance to the next step
+- button [disabled]
+- button [disabled]:
+  - img: 
+- button "Canvas zoom and view":
+  - img: 
+  - text: Detailed View, 100%
+  - img: 
+- button "Enter full screen":
+- heading "Maximum Duration" [level=4]:
+  - button "Maximum Duration":
+    - img: 
+- button "View Analytics":
+  - img: 
+  - generic: View Analytics
+  - img: 
+- text: 
+- contentinfo:
+  - generic: © Braze 2026
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://braze.statuspage.io
+    - text: Status
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://www.braze.com/terms
+    - text: Terms
+  - generic: Opening in a new tab
+  - link "Opening in a new tab":
+    - /url: https://www.braze.com/privacy
+    - text: Privacy Policy
+- iframe
+- alert
+- alert
+- dialog "Abandoned cart SMS + Content Card step editor":
+  - generic: Abandoned cart SMS + Content Card
+  - generic: draft
+  - generic: Incomplete Messages
+  - 'button "Messages 10% Off Your Order 👋 Hi {{${first_name} | default: ''there''}}, You Left Something Behind! Don''t forget about the stylish {{canvas_entry_properties.${item_name}}} in your cart! Complete your purchase now and step up your fashion game. Plus, enjoy free shipping on us! Tap to"':
+    - img: 
+    - generic: Messages
+    - generic: 10% Off Your Order
+    - img: 
+    - generic: "👋 Hi {{${first_name} | default: 'there'}}, You Left Something Behind! Don't forget about the stylish {{canvas_entry_properties.${item_name}}} in your cart! Complete your purchase now and step up your fashion game. Plus, enjoy free shipping on us! Tap to"
+  - img: 
+  - generic: All users who enter this step advance to the next step
+  - button "Done":
+    - generic: Done
+  - text: Set up Messages
+  - button "BrazeAI Operator™":
+  - navigation:
+    - tablist "Message step":
+      - tab "Messaging channels":
+        - generic: Messaging channels
+      - tab "Delivery settings" [active] [selected]:
+        - text: 
+        - generic: Delivery settings
+  - tabpanel:
+    - heading "Delivery Schedule" [level=3]
+    - paragraph:
+      - text: Deliver this message
+      - strong: when users enter this step.
+    - checkbox "Using Intelligent Timing"
+    - text: Using Intelligent Timing
+    - img "Information":
+    - group "Select a time to send messages when a user's profile does not have enough data to calculate an optimal time:":
+      - generic: "Select a time to send messages when a user's profile does not have enough data to calculate an optimal time:"
+      - radio "Fallback to the most popular time to use the app amongst all users" [checked] [disabled]
+      - generic: the most popular time to use the app amongst all users
+      - radio "Fallback to a specific custom time (in the user's local time zone)" [disabled]
+      - text: a specific custom fallback time (in the user's local time zone)
+      - textbox "h:mm am" [disabled]: 5:00 pm
+      - img: 
+    - heading "Delivery validations" [level=3]
+    - paragraph: Double-check that your audience meets your delivery criteria at message send. For in-app messages, delivery validations are checked when the user enters the step, not when the message is displayed.
+    - checkbox "Delivery Validation enabled for this message"
+    - generic: Validate audience at message send
+    - generic: Recommended if you're using quiet hours, Intelligent Timing, or rate limiting.

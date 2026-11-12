@@ -1,0 +1,171 @@
+Browser tab: 1, Title: "Locations", URL: "https://dashboard-09.braze.com/engagement/locations/create_location_set/6af4374c46d3080087f1c5d2?locale=en".
+0 AXWebArea Locations, URL: dashboard-09.braze.com/engagement/locations/create_location_set/6af4374c46d3080087f1c5d2?locale=en
+	1 container
+		2 container react-root
+			3 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/locations/create_location_set/6af4374c46d3080087f1c5d2?locale=en#main-container
+			4 container Side navigation
+				5 container
+					6 button Minimize menu
+					7 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+						8 image
+						9 text Demo – ittor
+					10 text Quick links
+					11 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+					12 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+					13 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+					14 button Getting Started
+						15 image
+						16 container
+							17 text Getting Started
+							18 container
+								19 text 8 %
+					20 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+					21 button AI Decisioning
+						22 image
+						23 text AI Decisioning
+					24 button Agents
+						25 image
+						26 text Agents
+					27 button Messaging
+						28 image
+						29 text Messaging
+					30 button Audience
+						31 image
+						32 text Audience
+					33 button Content
+						34 image
+						35 text Content
+					36 button Analytics
+						37 image
+						38 text Analytics
+					39 button Partner Integrations
+						40 image
+						41 text Partner Integrations
+					42 button Data Settings
+						43 image
+						44 text Data Settings
+					45 button Settings
+						46 image
+						47 text Settings
+				48 container Footer Logo
+					49 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+			50 text 14 days left in your free trial.
+			51 button Connect with sales
+			52 container Top navigation
+				53 container Left top navigation
+					54 button Search workspace ⌘+K
+						55 image
+						56 text Search workspace
+						57 text ⌘+K
+				58 container Right top navigation
+					59 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						60 image
+					61 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						62 image
+					63 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+						64 image
+					65 container
+						66 button Notifications
+							67 image
+					68 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						69 image
+					70 button BrazeAI Operator™
+						71 image
+			72 container main-container
+				134 container
+					135 text Set name
+					136 text field (settable)
+					201 container
+						202 text You must enter a name
+					137 button Tags
+					138 button (expanded) Description: Advanced settings, Secondary Actions: Collapse
+					173 container geofence-set-analytics-settings
+						174 heading Analytics, Value: 5
+							175 text Analytics
+						176 text Applies to all geofences in this set. You can also turn analytics on for individual geofences.
+						177 checkbox (settable, integer) Description: Turn on entry analytics, Value: 0, ID: bc-checkbox-3975382175
+						178 text Turn on entry analytics
+						179 text 0 of 1 geofences on
+						180 checkbox (settable, integer) Description: Turn on exit analytics, Value: 0, ID: bc-checkbox-1582419092
+						181 text Turn on exit analytics
+						182 text 0 of 1 geofences on
+					139 table
+						140 row Geofence name
+							141 cell
+								203 text Geofence name
+								204 container
+									205 text field (settable) Search by name or ID
+									206 button (disabled) Search
+						207 row 16.32km around 40.95, -74.04 Delete
+							208 cell
+								209 button 16.32km around 40.95, -74.04
+							210 cell
+								211 content list
+									212 pop up button Delete
+					213 text Showing rows 1 - 1 of 1
+					214 content list
+						215 button (disabled) Previous page
+						216 button Current Page, Page 1
+						217 button (disabled) Next page
+					150 container
+						221 container
+							222 link Description: Edit layers, Value: dashboard-09.braze.com/engagement/locations/create_location_set/6af4374c46d3080087f1c5d2?locale=en#
+							223 link Description: Delete layers, Value: dashboard-09.braze.com/engagement/locations/create_location_set/6af4374c46d3080087f1c5d2?locale=en#
+						224 container
+							225 button Zoom in
+							226 button Zoom out
+						227 container
+							228 link Description: Leaflet, Help: A JS library for interactive maps, Value: leafletjs.com/
+							229 text  | © 
+							230 link Description: Mapbox, Value: mapbox.com/
+							231 text  © 
+							232 link Description: OpenStreetMap, Value: osm.org/copyright
+						233 container
+							234 text field (settable)
+							235 button Clear search
+						166 button Draw Geofence
+						167 container
+					218 container
+						236 text field (settable) Value: 16.32km around 40.95, -74.04, ID: geofence-name-input
+						220 button Done
+						237 text Radius (meters)
+						238 stepper (settable, integer) Radius (meters), Value: 16323, ID: geofence-radius-input
+						239 text Latitude
+						240 stepper (settable, float) Latitude, Value: 40.952938079833984, Details: 40.95293701189727, ID: geofence-latitude-input
+						241 text Longitude
+						242 stepper (settable, float) Longitude, Value: -74.036865234375, Details: -74.03686523437501, ID: geofence-longitude-input
+						243 button Hide Advanced Settings
+						244 checkbox (settable, integer) Description: Enable Analytics for Enter, Value: 0, ID: bc-checkbox-1161363556
+						245 text Enable Analytics for Enter
+						246 checkbox (settable, integer) Description: Enable Analytics for Exit, Value: 0, ID: bc-checkbox-3369085308
+						247 text Enable Analytics for Exit Cooldown for Enter
+						248 stepper (settable) Cooldown for Enter, ID: cooldown-enter-input
+						249 text sec
+						250 text Cooldown for Exit
+						251 stepper (settable) Cooldown for Exit, ID: cooldown-exit-input
+						252 text sec
+						253 text Android Notification Responsiveness
+						254 stepper (settable) Android Notification Responsiveness, ID: notification-responsiveness-input
+						255 text ms
+					168 button Back to Locations
+					169 text Opening in a new tab
+					170 link Description: Opening in a new tab, Value: braze.com/docs/user_guide/engagement_tools/locations_and_geofences/creating_geofences/#how-it-works
+					171 pop up button (expanded) Description: More, ID: geofence-set-details-more-actions-button, Secondary Actions: Collapse
+					172 button (disabled) Save Geofence Set
+				126 text © Braze 2026
+				127 text Opening in a new tab
+				128 link Description: Opening in a new tab, Value: braze.statuspage.io/
+				129 text Opening in a new tab
+				130 link Description: Opening in a new tab, Value: braze.com/terms
+				131 text Opening in a new tab
+				132 link Description: Opening in a new tab, Value: braze.com/privacy
+		133 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		256 menu More, ID: geofence-set-details-more-actions-menu
+			257 Archive
+				258 text • 
+				259 button Description: Archive, ID: footer-archive-button
+			260 Upload JSON
+				261 text • 
+				262 button (disabled) Upload JSON
+
+The focused UI element is 171 pop up button (expanded) Description: More, ID: geofence-set-details-more-actions-button, Secondary Actions: Collapse

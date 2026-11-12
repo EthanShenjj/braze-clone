@@ -1,0 +1,131 @@
+Browser tab: 4, Title: "Data - Overview - Overview", URL: "https://dashboard-09.braze.com/engagement/segmenter/segment_insights/6af4374c46d3080087f1c5d2?segmentIds=6af4375220abdf005fc2eef4&baselineSegmentId=".
+0 AXWebArea Data - Overview - Overview, URL: dashboard-09.braze.com/engagement/segmenter/segment_insights/6af4374c46d3080087f1c5d2?segmentIds=6af4375220abdf005fc2eef4&baselineSegmentId=
+	1 container
+		2 container react-root
+			3 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/segmenter/segment_insights/6af4374c46d3080087f1c5d2?segmentIds=6af4375220abdf005fc2eef4&baselineSegmentId=#main-container
+			4 container Side navigation
+				5 container
+					6 button Minimize menu
+					7 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+						8 image
+						9 text Demo – ittor
+					10 text Quick links
+					11 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+					12 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+					13 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+					14 button Getting Started
+						15 image
+						16 text Getting Started
+						17 container
+							18 text 8 %
+					19 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+					20 button AI Decisioning
+						21 image
+						22 text AI Decisioning
+					23 button Agents
+						24 image
+						25 text Agents
+					26 button Messaging
+						27 image
+						28 text Messaging
+					29 button Audience
+						30 image
+						31 text Audience
+					32 button Content
+						33 image
+						34 text Content
+					35 button Analytics
+						36 image
+						37 text Analytics
+					38 button Partner Integrations
+						39 image
+						40 text Partner Integrations
+					41 button Data Settings
+						42 image
+						43 text Data Settings
+					44 button Settings
+						45 image
+						46 text Settings
+				47 container Footer Logo
+					48 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+			49 text 14 days left in your free trial.
+			50 button Connect with sales
+			51 container Top navigation
+				52 container Left top navigation
+					53 button Search workspace ⌘+K
+						54 image
+						55 text Search workspace
+						56 text ⌘+K
+				57 container Right top navigation
+					58 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						59 image
+					60 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						61 image
+					62 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+						63 image
+					64 container
+						65 button Notifications
+							66 image
+					67 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+						68 image
+					69 button BrazeAI Operator™
+						70 image
+			71 container main-container
+				72 container segment-insights
+					73 heading Segment Insights, Value: 2
+						74 text Segment Insights
+					75 text Insight statistics are estimated. Open a Segment to calculate exact numbers.
+					76 text Baseline
+					77 container
+						114 text All Users (iOS Demo App), 1 of 10.
+						115 text 10 results available.
+						116 text Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+						78 container
+							79 text All Users
+							80 combo box (expanded, settable) Description: Baseline, ID: react-select-5-input, Secondary Actions: Collapse
+						117 list react-select-5-listbox
+							118 Value: All Users (iOS Demo App), ID: react-select-5-option-0
+							119 Value: All Users (Android Demo App), ID: react-select-5-option-1
+							120 Value: All Users (Web Demo App), ID: react-select-5-option-2
+							121 Value: Active Frequent Users, ID: react-select-5-option-3
+							122 Value: Lapsed Users, ID: react-select-5-option-4
+							123 Value: New Users, ID: react-select-5-option-5
+							124 Value: Non-Adopters, ID: react-select-5-option-6
+							125 Value: All Users (Landing Page - Landing Page), ID: react-select-5-option-7
+							126 Value: test, ID: react-select-5-option-8
+							127 Value: (unnamed), ID: react-select-5-option-9
+					81 container
+						82 text Segments 0/10
+					83 container
+						84 container
+							85 text Search Segments...
+							86 combo box (collapsed, settable) Description: Segments, ID: react-select-6-input, Secondary Actions: Expand
+					87 pop up button (collapsed) Description: Columns, Secondary Actions: Expand
+					88 table
+						89 row Segment name User size column, unsorted. Select to sort descending Sessions per day column, unsorted. Select to sort descending Days since first session column, unsorted. Select to sort descending Days since last session column, unsorted. Select to sort descending Lifetime revenue in dollars column, unsorted. Select to sort descending Days since first purchase column, unsorted. Select to sort descending Days since last purchase column, unsorted. Select to sort descending
+							90 cell
+								91 text Segment name
+							92 cell
+								93 button User size column, unsorted. Select to sort descending
+							94 cell
+								95 button Sessions per day column, unsorted. Select to sort descending
+							96 cell
+								97 button Days since first session column, unsorted. Select to sort descending
+							98 cell
+								99 button Days since last session column, unsorted. Select to sort descending
+							100 cell
+								101 button Lifetime revenue in dollars column, unsorted. Select to sort descending
+							102 cell
+								103 button Days since first purchase column, unsorted. Select to sort descending
+							104 cell
+								105 button Days since last purchase column, unsorted. Select to sort descending
+				106 text © Braze 2026
+				107 text Opening in a new tab
+				108 link Description: Opening in a new tab, Value: braze.statuspage.io/
+				109 text Opening in a new tab
+				110 link Description: Opening in a new tab, Value: braze.com/terms
+				111 text Opening in a new tab
+				112 link Description: Opening in a new tab, Value: braze.com/privacy
+		113 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+
+The focused UI element is 80 combo box (expanded, settable) Description: Baseline, ID: react-select-5-input, Secondary Actions: Collapse

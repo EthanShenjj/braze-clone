@@ -1,0 +1,104 @@
+Browser tab: 15, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/engagement/suppression_lists/local?locale=en&workspace=local".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/engagement/suppression_lists/local?locale=en&workspace=local
+	2 container
+		3 text Suppression Lists
+		4 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		5 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			6 text Local workspace
+			7 image
+		8 container Side navigation
+			9 text Quick links
+			10 button Canvas
+			11 button Campaigns
+			12 button Segments
+			13 button Getting Started
+			14 button Home
+			15 button AI Decisioning
+			16 button Agents
+			17 button Messaging
+			18 button Audience
+			19 button Content
+			20 button Analytics
+			21 button Partner Integrations
+			22 button Data Settings
+			23 button Settings
+		24 button Home
+			25 image Braze
+		26 container
+			27 text ◷   8 days left in your free trial.
+			28 button Connect with sales
+		29 container
+			30 button Search workspace ⌘K
+				31 image
+				32 text Search workspace
+				33 text ⌘K
+			34 button Take a tour
+			35 image Community
+			36 button (collapsed) Description: Language, Secondary Actions: Expand
+			37 button Notifications
+			38 button (collapsed) Description: Profile, Secondary Actions: Expand
+			39 image
+			40 button Open BrazeAI Operator
+		41 button Suppression Lists
+		42 container
+			43 heading Suppression Lists, Value: 1
+				44 text Suppression Lists
+			45 text Keep your marketing list clean and compliant by excluding users who should no longer receive messages. Use exception tags to make sure important messages still send.
+			46 button Send feedback
+				47 image
+			48 button Create Suppression List
+			49 text Status
+			50 pop up button (collapsed, settable) Status, Value: All status, Secondary Actions: Expand
+				51 menu
+					52 (selected) All status
+					53 Active
+					54 Inactive
+					55 Archived
+			56 text Created by
+			57 pop up button (collapsed, settable) Created by, Value: All users, Secondary Actions: Expand
+				58 menu
+					59 (selected) All users
+					60 You
+			61 button Columns
+				62 image
+				63 text Columns
+			64 text field (settable)
+			65 button (disabled) Search
+				66 image
+			67 heading 1 Suppression List, Value: 3
+				68 text 1 Suppression List
+			69 table
+				70 row
+					71 cell
+						72 checkbox (settable, integer) Description: Select all rows, Value: 0
+					73 cell
+						74 button Name
+					75 cell
+						76 text Status
+					77 cell
+						78 text Exception tags
+					79 cell
+						80 text Estimated size
+					81 cell
+						82 text Last edited by
+					83 cell
+						84 button Last edited
+							85 text Last edited
+							86 image
+				87 row
+					88 cell
+						89 checkbox (settable, integer) Description: Select Audience QA suppression, Value: 0
+					90 cell
+						91 button Audience QA suppression
+					92 cell
+						93 text Inactive
+					94 cell
+						95 text —
+					96 cell
+						97 text 202
+					98 cell
+						99 text You
+					100 cell
+						101 text 2026/11/12 12:54:13
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/engagement/suppression_lists/local?locale=en&workspace=local

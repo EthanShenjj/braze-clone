@@ -1,0 +1,87 @@
+Browser tab: 15, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/users/manage_audience/local?locale=en&workspace=local".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/manage_audience/local?locale=en&workspace=local
+	1 container
+		2 text Manage Audience
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agents
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+		25 container
+			26 text ◷   8 days left in your free trial.
+			27 button Connect with sales
+		28 container
+			29 button Search workspace ⌘K
+				30 image
+				31 text Search workspace
+				32 text ⌘K
+			33 button Take a tour
+			34 image Community
+			35 button (collapsed) Description: Language, Secondary Actions: Expand
+			36 button Notifications
+			37 button (collapsed) Description: Profile, Secondary Actions: Expand
+			38 image
+			39 button Open BrazeAI Operator
+		40 container
+			41 heading Manage Audience, Value: 1
+				42 text Manage Audience
+			43 image
+			44 text Have feedback on this feature?
+			45 button Send us your thoughts
+			46 tab group Manage Audience
+				47 tab (selected, settable, boolean) Merge users, Value: 1
+				48 tab (selectable, settable, boolean) Delete users, Value: 0
+			49 heading Merge users, Value: 2
+				50 text Merge users
+			51 text Merges and previews from the last 30 days are listed
+			52 button Schedule
+				53 image
+			54 button Edit rules
+				55 image
+				56 text Edit rules
+			57 button Generate list of duplicates
+			58 button (disabled) Merge all duplicates
+			59 heading No Results Found, Value: 3
+				60 text No Results Found
+			61 table
+				62 row
+					63 cell
+						64 text Run date 
+						65 image
+					66 cell
+						67 text Requester
+					68 cell
+						69 text Type
+					70 cell
+						71 text Status 
+						72 image
+					73 cell
+						74 text Profiles
+						75 text previewed 
+						76 image
+					77 cell
+						78 text Profiles
+						79 text merged 
+						80 image
+				81 row
+					82 cell
+						83 text No results found
+
+The focused UI element is 0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/manage_audience/local?locale=en&workspace=local

@@ -1,0 +1,226 @@
+Browser tab: 2, Title: "Engagement - Canvas - Canvas", URL: "https://dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en".
+0 AXWebArea Engagement - Canvas - Canvas, URL: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+	1 container
+		259 container body-wrapper
+			260 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en#main-col
+			261 container
+				262 container Side navigation
+					263 container
+						264 button Minimize menu
+						265 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+							266 image
+							267 text Demo – ittor
+						268 text Quick links
+						269 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+						270 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+						271 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+						272 button Getting Started
+							273 image
+							274 container
+								275 text Getting Started
+								276 container
+									277 text 0 %
+						278 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+						279 button AI Decisioning
+							280 image
+							281 text AI Decisioning
+						282 button Agents
+							283 image
+							284 text Agents
+						285 button Messaging
+							286 image
+							287 text Messaging
+						288 button Audience
+							289 image
+							290 text Audience
+						291 button Content
+							292 image
+							293 text Content
+						294 button Analytics
+							295 image
+							296 text Analytics
+						297 button Partner Integrations
+							298 image
+							299 text Partner Integrations
+						300 button Data Settings
+							301 image
+							302 text Data Settings
+						303 button Settings
+							304 image
+							305 text Settings
+					306 container Footer Logo
+						307 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+				308 text 14 days left in your free trial.
+				309 button Connect with sales
+				310 container Top navigation
+					311 container Left top navigation
+						312 button Search workspace ⌘+K
+							313 image
+							314 text Search workspace
+							315 text ⌘+K
+					316 container Right top navigation
+						317 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							318 image
+						319 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							320 image
+						321 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+							322 image
+						323 container
+							324 button Notifications
+								325 image
+						326 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							327 image
+						328 button BrazeAI Operator™
+							329 image
+			330 container main
+				340 container main-col
+					341 tab group Open page tabs
+						342 tab (selected, settable, boolean) Canvas, Value: 1, ID: canvas
+					343 container
+						344 heading Canvas, Value: 2
+							345 text Canvas
+						346 text Limited access
+						347 text Design and launch customer journeys with Canvas. Drag, drop, and connect messaging across channels to create seamless, automated experiences.
+						348 button Take a tour
+							349 text Take a tour
+						350 pop up button (collapsed) Description: More options, Secondary Actions: Expand
+						351 pop up button (collapsed) Description: Create Canvas, ID: canvas-create-button, Secondary Actions: Expand
+						352 text Status
+						353 pop up button (collapsed) Description: Help text available. Tab to view help text, click to open popover, Secondary Actions: Expand
+						354 container db-canvas-digest--status-select
+							355 container
+								356 text Draft
+								357 combo box (collapsed, settable) Description: Status, ID: react-select-9-input, Secondary Actions: Expand
+						358 text Tags
+						359 container db-canvas-digest--tags-select
+							460 container
+								461 text [object Object], 1 of 5.
+								462 text 5 results available.
+								463 text Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+							360 container
+								361 text All Tags
+								362 combo box (expanded, settable) Description: Tags, ID: react-select-10-input, Secondary Actions: Collapse
+						363 pop up button (collapsed) Filters, Secondary Actions: Expand
+						364 pop up button (collapsed) Description: Columns, Secondary Actions: Expand
+						365 pop up button Reset filters
+						366 text field (settable) Search Canvases
+						367 container Description: Inline Tag 0, ID: db-canvas-digest--badge-status
+							368 text Status: Draft
+							369 button close
+						370 heading 3 Results, Value: 4
+							371 text 3 Results
+						372 table
+							373 row
+								374 cell
+									375 checkbox (settable, integer) Description: Select all Canvas rows, Value: 0, ID: bc-checkbox-562029588
+								376 cell
+									377 button Select to sort by Name in alphabetical order
+								378 cell
+									379 text Status
+								380 cell
+									381 text Description
+								382 cell
+									383 text Last edited by
+								384 cell
+									385 button Sorting by Last Edited date from newest to oldest
+								386 cell
+									387 text Alerts Configured
+							388 row
+								389 cell
+									390 checkbox (settable, integer) Description: Select Canvas Abandoned intent flow, Value: 0, ID: db-canvas-digest-table--select-row-6af4375b20abdf005fc2f215
+								391 cell
+									392 link Description: Abandoned intent flow, Value: dashboard-09.braze.com/engagement/canvas/6af4375b20abdf005fc2f215/6af4374c46d3080087f1c5d2?isEditing=true
+								393 cell
+									394 text Draft
+								395 cell
+									396 text Engage with users in real-time to encourage them to complete purchases while products are still top of mind.
+								397 cell
+									398 text N/A
+								399 cell
+									400 text 20 minutes ago
+								401 cell
+									402 pop up button (collapsed) Description: More Actions, ID: canvas-row-actions-button-6af4375b20abdf005fc2f215, Secondary Actions: Expand
+							403 row
+								404 cell
+									405 checkbox (settable, integer) Description: Select Canvas Onboarding flow, Value: 0, ID: db-canvas-digest-table--select-row-6af4375920abdf005fc2f151
+								406 cell
+									407 link Description: Onboarding flow, Value: dashboard-09.braze.com/engagement/canvas/6af4375920abdf005fc2f151/6af4374c46d3080087f1c5d2?isEditing=true
+									408 container Inline Tag 0
+										409 text Onboarding
+								410 cell
+									411 text Draft
+								412 cell
+									413 text Create cross-platform onboarding journeys that promote strong initial adoption and encourage lasting relationships with your customers
+								414 cell
+									415 text N/A
+								416 cell
+									417 text 20 minutes ago
+								418 cell
+									419 pop up button (collapsed) Description: More Actions, ID: canvas-row-actions-button-6af4375920abdf005fc2f151, Secondary Actions: Expand
+							420 row
+								421 cell
+									422 checkbox (settable, integer) Description: Select Canvas Feature Adoption, Value: 0, ID: db-canvas-digest-table--select-row-6af4375820abdf005fc2f095
+								423 cell
+									424 link Description: Feature Adoption, Value: dashboard-09.braze.com/engagement/canvas/6af4375820abdf005fc2f095/6af4374c46d3080087f1c5d2?isEditing=true
+								425 cell
+									426 text Draft
+								427 cell
+									428 text Boost feature adoption by delivering timely, personalized messages that highlight the benefits, usage tips and collects feedback.
+								429 cell
+									430 text N/A
+								431 cell
+									432 text 20 minutes ago
+								433 cell
+									434 pop up button (collapsed) Description: More Actions, ID: canvas-row-actions-button-6af4375820abdf005fc2f095, Secondary Actions: Expand
+						435 text Showing rows 1 - 3 of 3 Rows per page:
+						436 pop up button (collapsed, settable) Value: 20, Secondary Actions: Expand
+							437 menu
+								438 10
+								439 (selected) 20
+								440 40
+								441 60
+								442 100
+						443 content list
+							444 button (disabled) Previous page
+							445 button Current Page, Page 1
+							446 button (disabled) Next page
+						447 button Priority Sorter
+				332 container
+					333 text © Braze 2026
+					334 text Opening in a new tab
+					335 link Description: Opening in a new tab, Value: braze.statuspage.io/
+					336 text Opening in a new tab
+					337 link Description: Opening in a new tab, Value: braze.com/terms
+					338 text Opening in a new tab
+					339 link Description: Opening in a new tab, Value: braze.com/privacy
+		258 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		448 container bcl-popper-2757953471
+			449 heading Copy Canvas to Workspaces is now available!, Value: 6
+				450 text Copy Canvas to Workspaces is now available!
+			451 text Click here and select "Copy to workspace" to copy Canvas to another workspace!
+			452 button Next
+			453 button close
+		454 container bcl-popper-3983263987
+			455 heading Copy Canvas to Workspaces is now available!, Value: 6
+				456 text Copy Canvas to Workspaces is now available!
+			457 text Select "copy to workspace" to quickly transport your canvas setup and content to another workspaces.
+			458 button Done
+			459 button close
+		464 list react-select-10-listbox
+			465 Value: FR, ID: react-select-10-option-0
+				466 text FR
+				467 checkbox (settable, integer) Value: 0, ID: bc-checkbox-2033875576
+			468 Value: Onboarding, ID: react-select-10-option-1
+				469 text Onboarding
+				470 checkbox (settable, integer) Value: 0, ID: bc-checkbox-1090959559
+			471 Value: UK, ID: react-select-10-option-2
+				472 text UK
+				473 checkbox (settable, integer) Value: 0, ID: bc-checkbox-1750566698
+			474 Value: US, ID: react-select-10-option-3
+				475 text US
+				476 checkbox (settable, integer) Value: 0, ID: bc-checkbox-989781962
+			477 Value: promotional, ID: react-select-10-option-4
+				478 text promotional
+				479 checkbox (settable, integer) Value: 0, ID: bc-checkbox-1754703214
+
+The focused UI element is 362 combo box (expanded, settable) Description: Tags, ID: react-select-10-input, Secondary Actions: Collapse

@@ -1,0 +1,160 @@
+Browser tab: 6, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3220/engagement/canvas/322ef7c3-bd70-4553-81df-819a884b95cf?locale=en&workspace=local&step=build&workspaceId=local".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3220/engagement/canvas/322ef7c3-bd70-4553-81df-819a884b95cf?locale=en&workspace=local&step=build&workspaceId=local
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agent Console
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+	25 container
+		26 text ◷   8 days left in your free trial.
+		27 button Connect with sales
+		28 button Search workspace ⌘K
+			29 image
+			30 text Search workspace
+			31 text ⌘K
+		32 button Take a tour
+		33 image Community
+		34 button (collapsed) Description: Language, Secondary Actions: Expand
+		35 button Notifications
+		36 button (collapsed) Description: Profile, Secondary Actions: Expand
+		37 image
+		38 button Open BrazeAI Operator
+		39 container
+			40 button Canvas
+			41 text › Edit ' New Canvas - November 12, 2026 '
+			42 button Close Canvas
+				43 image
+		117 container Canvas flow builder
+			118 container
+				119 container Components
+					120 text Components
+					121 text Select components to build your user journey.
+					122 button Collapse components
+						123 image
+					124 container
+						125 heading Message Controls, Value: 3
+							126 text Message Controls
+						127 button Message
+							128 image
+							129 text Message
+						130 button Delay
+							131 image
+							132 text Delay
+						133 heading AI Actions, Value: 3
+							134 text AI Actions
+						135 button Agent Step
+							136 image
+							137 text Agent Step
+						138 button Content Optimizer
+							139 image
+							140 text Content Optimizer
+						141 heading Flow Controls, Value: 3
+							142 text Flow Controls
+						143 button Decision Split
+							144 image
+							145 text Decision Split
+						146 button Audience Paths
+							147 image
+							148 text Audience Paths
+						149 button Action Paths
+							150 image
+							151 text Action Paths
+						152 button Experiment Paths
+							153 image
+							154 text Experiment Paths
+						155 button Send to Destination
+							156 image
+							157 text Send to Destination
+						158 heading Audience Updates, Value: 3
+							159 text Audience Updates
+						160 button Context
+							161 image
+							162 text Context
+						163 button User Update
+							164 image
+							165 text User Update
+						166 button Feature Flag
+							167 image
+							168 text Feature Flag
+						169 button Audience Sync
+							170 image
+							171 text Audience Sync
+					172 button Clean Up Canvas
+						173 image
+						174 text Clean Up Canvas
+				175 button (expanded) Version history, Secondary Actions: Collapse
+				223 container
+					224 text Saved Canvas versions 2026/11/12 12:26:14
+					225 button Restore
+					226 text 2026/11/12 12:08:06
+					227 button Restore
+				176 button Expand
+					177 text Expand
+					178 image
+				179 container
+					180 button Zoom out
+					181 text 100 %
+					182 button Zoom in
+				183 container
+					184 button Entry Rules
+						185 text Entry Rules
+						186 image
+					187 image
+					188 text Schedule
+					189 text No schedule selected.
+					190 image
+					191 text Audience
+					192 text All eligible users
+					193 image
+					194 text Exit Criteria
+					195 text No exit criteria selected.
+					196 image
+					197 text Controls
+					198 text Users are not eligible to re-enter this Canvas.
+					199 button Add Variant
+						200 image
+						201 text Add Variant
+					202 container
+						203 text 100 % Variant 1
+						204 button Settings for Variant 1
+							205 image
+					206 button Delay Delay After 2 hours
+						207 image
+						208 text Delay
+						209 text Delay
+						210 text After 2 hours
+						211 image
+					212 button Step actions for Delay
+						213 image
+					214 button Message Message
+						215 image
+						216 text Message
+						217 text Message
+						218 image
+					219 button Step actions for Message
+						220 image
+					221 button Add step after Message
+						222 image
+		95 button Back
+		115 button Save
+		116 button Forward
+
+The focused UI element is 175 button (expanded) Version history, Secondary Actions: Collapse

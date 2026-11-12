@@ -1,0 +1,66 @@
+Browser tab: 12, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3221/engagement/canvas/c754785c-fad4-423d-8c9f-7967e2b59389?locale=en&workspaceId=local&step=build&initialConditionsCollapsed=false".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3221/engagement/canvas/c754785c-fad4-423d-8c9f-7967e2b59389?locale=en&workspaceId=local&step=build&initialConditionsCollapsed=false
+	2 container Content Optimizer step editor
+		3 container
+			4 text field (settable) Description: Step name, Value: optimizer
+			5 text Content Optimizer Opens 4  combinations Email Intelligent Timing: ON All users who enter this step  and meet delivery validations  advance to the next step
+			6 button Done
+		7 container
+			8 text Content Optimizer setup
+			9 tab group Message step
+				10 tab (selectable, settable, boolean) Messaging channels, Value: 0
+				11 tab (selectable, settable, boolean) Delivery settings, Value: 0
+				12 tab (selected, settable, boolean) Content Optimizer settings, Value: 1
+				13 tab (selectable, settable, boolean) Agentic Standards results, Value: 0
+			14 tab group Content Optimizer settings
+				15 tab (selected, settable, boolean) Components 2, Value: 1
+				16 tab (selectable, settable, boolean) Optimization Event, Value: 0
+			17 link Description: Subject 2, Value: 127.0.0.1:3221/engagement/canvas/c754785c-fad4-423d-8c9f-7967e2b59389?locale=en&workspaceId=local&step=build&initialConditionsCollapsed=false#optimizer-subject
+			18 link Description: Preheader 2, Value: 127.0.0.1:3221/engagement/canvas/c754785c-fad4-423d-8c9f-7967e2b59389?locale=en&workspaceId=local&step=build&initialConditionsCollapsed=false#optimizer-0521c42a-920c-42c3-8992-0e6e8d87c7b5
+			19 button (collapsed) Add component, Secondary Actions: Expand
+				20 image
+				21 text Add component
+			22 container optimizer-subject
+				23 container
+					24 heading Subject, Value: 3
+						25 text Subject
+					26 button Remove Subject component
+						27 image
+				28 text entry area (settable) Description: Subject variant 1, Value: Hello {{first_name}}
+				29 button Add Liquid to Subject variant 1
+				30 button (disabled) Delete variable 1
+					31 image
+				32 text entry area (settable) Description: Subject variant 2, Value: Welcome
+				33 button Add Liquid to Subject variant 2
+				34 button (disabled) Delete variable 2
+					35 image
+				36 button Add variant
+				37 button (disabled) Generate suggestions, Help: Suggestions require a configured generation provider.
+				38 container
+					39 text Liquid Snippet
+					40 text field Description: Subject Liquid Snippet, Value: {% message_component 'Subject' %}
+					41 button Copy Subject Liquid Snippet
+						42 image
+			43 container optimizer-0521c42a-920c-42c3-8992-0e6e8d87c7b5
+				44 container
+					45 heading Preheader, Value: 3
+						46 text Preheader
+					47 button Remove Preheader component
+						48 image
+				49 text entry area (settable) Description: Preheader variant 1, Value: A short preview
+				50 button Add Liquid to Preheader variant 1
+				51 button (disabled) Delete variable 1
+					52 image
+				53 text entry area (settable) Description: Preheader variant 2, Value: Your next step
+				54 button Add Liquid to Preheader variant 2
+				55 button (disabled) Delete variable 2
+					56 image
+				57 button Add variant
+				58 button (disabled) Generate suggestions, Help: Suggestions require a configured generation provider.
+				59 container
+					60 text Liquid Snippet
+					61 text field Description: Preheader Liquid Snippet, Value: {% message_component 'Preheader' %}
+					62 button Copy Preheader Liquid Snippet
+						63 image
+
+The focused UI element is 12 tab (selected, settable, boolean) Content Optimizer settings, Value: 1

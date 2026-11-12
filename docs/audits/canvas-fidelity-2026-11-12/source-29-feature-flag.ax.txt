@@ -1,0 +1,23 @@
+Browser tab: 4, Title: "Engagement - Canvas - Edit 'New Canvas - November 11, 2026'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'New Canvas - November 11, 2026', URL: dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container
+		171 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		172 container Step 6 step editor
+			173 container
+				174 text Step 6
+				175 button
+				176 text DISCONNECTED
+				177 text Select a Feature Flag
+				178 button Feature Flag
+					179 text Feature Flag
+			180 button Done
+			181 container
+				182 text Set up Feature Flag
+				183 button BrazeAI Operator™
+					184 image
+				185 text You don't have any feature flags to assign. 
+				186 link Description: Create a feature flag, Value: dashboard-09.braze.com/engagement/feature_flags/6af4374c46d3080087f1c5d2
+				187 text . Feature Flag
+				188 text Select...
+
+The focused UI element is 172 container Step 6 step editor

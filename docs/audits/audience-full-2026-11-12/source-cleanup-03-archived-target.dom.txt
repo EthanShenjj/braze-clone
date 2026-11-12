@@ -1,0 +1,170 @@
+- link "Skip to main content":
+  - /url: "#main-container"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Demo – ittor":
+    - generic: Demo – ittor
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agents":
+    - generic: Agents
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 14 days left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- main:
+  - navigation:
+    - tablist:
+      - tab "Segments" [selected]:
+        - text: 
+        - generic: Segments
+      - tab "Edit (unnamed) Close tab":
+        - generic: Edit (unnamed)
+        - button "Close tab":
+  - heading "Segments" [level=2]
+  - generic: Find and reach the right audience with segments. Group users based on their behaviors, preferences, or past actions to send messages that truly matter to them.
+  - button "Send feedback":
+    - img: 
+  - button "Take a tour":
+    - generic: Take a tour
+  - button "More options":
+    - img: 
+  - button "Create Segment":
+    - generic: Create Segment
+    - img: 
+  - generic: Status
+  - log: option Archived, selected.
+  - generic: Archived
+  - combobox "Status" [active]
+  - generic: Tags
+  - log
+  - generic: All Tags
+  - combobox "Tags"
+  - button "Filters":
+    - generic: Filters
+  - button "Columns":
+    - generic: Columns
+  - checkbox "Show starred only"
+  - generic: Show starred only
+  - button "Reset filters":
+  - textbox "Search for segments"
+  - button "Search" [disabled]:
+  - heading "1 Result" [level=4]:
+    - generic: 1 Result
+  - generic "Inline Tag 0":
+    - generic: "Status: Archived"
+    - button "close":
+  - grid:
+    - rowgroup:
+      - row "Select all rows Segment name column, unsorted. Select to sort ascending Status Last edited by Last edited column, sorted descending. Select to sort ascending":
+        - columnheader "Select all rows":
+          - checkbox "Select all rows"
+        - columnheader
+        - columnheader "Segment name column, unsorted. Select to sort ascending":
+          - button "Segment name column, unsorted. Select to sort ascending": Segment name
+        - columnheader "Status"
+        - columnheader "Last edited by"
+        - columnheader "Last edited column, sorted descending. Select to sort ascending":
+          - button "Last edited column, sorted descending. Select to sort ascending":
+            - text: Last edited
+            - img "Information":
+        - columnheader
+    - rowgroup:
+      - 'row "Select row Quick view: (unnamed) (unnamed) Archived tor dom Nov 11, 2026 Unarchive More Actions"':
+        - gridcell "Select row":
+          - checkbox "Select row"
+        - 'gridcell "Quick view: (unnamed)"':
+          - 'button "Quick view: (unnamed)"':
+            - img: 
+        - gridcell "(unnamed)":
+          - link "(unnamed)":
+            - /url: /engagement/segmenter/edit/6af5250fd8512f008c15c8b7/6af4374c46d3080087f1c5d2?locale=en
+            - generic: (unnamed)
+        - gridcell "Archived":
+          - generic: Archived
+        - gridcell "tor dom"
+        - gridcell "Nov 11, 2026"
+        - gridcell "Unarchive More Actions":
+          - list:
+            - button "Unarchive":
+              - img: 
+            - button "More Actions":
+  - generic: Showing rows 1 - 1 of 1
+  - generic: "Rows per page:"
+  - combobox:
+    - option "10"
+    - option "20" [selected]
+    - option "40"
+    - option "60"
+    - option "100"
+  - navigation:
+    - list:
+      - button "Previous page" [disabled]:
+        - img: 
+      - button "Current Page, Page 1":
+        - generic: "1"
+      - button "Next page" [disabled]:
+        - img: 
+- generic: © Braze 2026
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://braze.statuspage.io
+  - text: Status
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/terms
+  - text: Terms
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/privacy
+  - text: Privacy Policy
+- text:          
+- iframe

@@ -1,10 +1,13 @@
-import { getPublicPreferenceCenter, submitPublicPreferenceCenter } from "@/lib/braze-store";
+import { getPublicPreferenceCenter, getUser, submitPublicPreferenceCenter } from "@/lib/braze-store";
+
+import { renderPreferenceCenterForUser } from "@/lib/preference-center-model";
 
 export const runtime = "nodejs";
 
 export async function GET(request: Request, context: RouteContext<"/api/preference-centers/[id]/public">) {
   const { id } = await context.params; const { searchParams } = new URL(request.url);
   const user = searchParams.get("user") ?? ""; const result = getPublicPreferenceCenter(id, user, searchParams.get("token"));
+  if(result){const profile=getUser(user);try{result.center.config=renderPreferenceCenterForUser(result.center.config,{...profile?.attributes,id:profile?.id,first_name:profile?.firstName,email_address:profile?.email,email:profile?.email});}catch{return Response.json({error:"This preference center could not be rendered."},{status:400,headers:{"Cache-Control":"no-store"}});}}
   return result ? Response.json(result, { headers: { "Cache-Control": "no-store", "Referrer-Policy": "no-referrer" } }) : Response.json({ error: "This preference center link is unavailable." }, { status: 404, headers: { "Cache-Control": "no-store" } });
 }
 

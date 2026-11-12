@@ -1,0 +1,195 @@
+Browser tab: 15, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/users/subscription_groups/6aa75e37db69160082adb7ae?locale=en&workspace=local".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/subscription_groups/6aa75e37db69160082adb7ae?locale=en&workspace=local
+	2 container
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agents
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+		25 container
+			26 text ◷   8 days left in your free trial.
+			27 button Connect with sales
+		28 container
+			29 button Search workspace ⌘K
+				30 image
+				31 text Search workspace
+				32 text ⌘K
+			33 button Take a tour
+			34 image Community
+			35 button (collapsed) Description: Language, Secondary Actions: Expand
+			36 button Notifications
+			37 button (collapsed) Description: Profile, Secondary Actions: Expand
+			38 image
+			39 button Open BrazeAI Operator
+		40 container
+			41 heading Build email preference centers on Landing Pages, Value: 2
+				42 text Build email preference centers on Landing Pages
+			43 text Use your own branded domain and drag-and-drop editor to design email preference pages. Add form blocks to collect subscriber interests, frequency, and more, then track how subscribers engage.
+			44 button Create landing page
+			45 button Close
+				46 image
+			47 heading Subscription group timeseries, Value: 2
+				48 text Subscription group timeseries
+			49 container
+				50 text Subscription group
+				51 pop up button (collapsed, settable) Subscription group, Value: Product updates, Secondary Actions: Expand
+					52 menu
+						53 (disabled) Select subscription group
+						54 (selected) Product updates
+						55 Promotions
+						56 SMS alerts
+						57 WhatsApp updates
+			58 container
+				59 text Date range
+				60 pop up button (collapsed) Description: Date range, Secondary Actions: Expand
+					61 text Last 30 Days
+					62 image
+			63 button Calculate today’s statistics
+				64 image
+				65 text Calculate today’s statistics
+			66 container
+				67 text You don’t have any subscription group timeseries
+				68 text data yet
+			69 container
+				70 heading Subscription groups, Value: 2
+					71 text Subscription groups
+				72 button Create email subscription group
+			73 container
+				74 text Status
+				75 pop up button (collapsed, settable) Status, Value: Active, Secondary Actions: Expand
+					76 menu
+						77 (selected) Active
+						78 Archived
+						79 All Statuses
+			80 container
+				81 text Channel
+				82 pop up button (collapsed, settable) Channel, Value: All Channels, Secondary Actions: Expand
+					83 menu
+						84 (selected) All Channels
+						85 Email
+						86 SMS/MMS/RCS
+						87 WhatsApp
+						88 LINE
+			89 container
+				90 text field (settable) Search subscription group name
+				91 button (disabled) Search
+					92 image
+			93 button Status: Active
+				94 text Status: 
+				95 text Active
+				96 image
+			97 heading 4 Results, Value: 3
+				98 text 4 Results
+			99 table
+				100 row
+					101 cell
+						102 button Name
+							103 text Name
+							104 image
+					105 cell
+						106 button Channel
+							107 text Channel
+							108 image
+					109 cell
+						110 text ID
+					111 cell
+						112 text Description
+					113 cell
+						114 button Status
+							115 text Status
+							116 image
+				117 row
+					118 cell
+						119 button Product updates
+					120 cell
+						121 text Email
+					122 cell
+						123 text field Description: Product updates ID, Value: sg_product_updates
+						124 button Copy Product updates ID
+							125 image
+					126 cell
+						127 text Feature launches, release notes, and product education.
+					128 cell
+						129 text Active
+					130 cell
+						131 button Archive
+						132 button Edit
+				133 row
+					134 cell
+						135 button Promotions
+					136 cell
+						137 text Email
+					138 cell
+						139 text field Description: Promotions ID, Value: sg_promotions
+						140 button Copy Promotions ID
+							141 image
+					142 cell
+						143 text Offers, seasonal campaigns, and member-only savings.
+					144 cell
+						145 text Active
+					146 cell
+						147 button Archive
+						148 button Edit
+				149 row
+					150 cell
+						151 button SMS alerts
+					152 cell
+						153 text SMS/MMS/RCS
+					154 cell
+						155 text field Description: SMS alerts ID, Value: sg_sms_alerts
+						156 button Copy SMS alerts ID
+							157 image
+					158 cell
+						159 text Time-sensitive order and account notifications.
+					160 cell
+						161 text Active
+					162 cell
+						163 button Archive
+						164 button Edit
+				165 row
+					166 cell
+						167 button WhatsApp updates
+					168 cell
+						169 text WhatsApp
+					170 cell
+						171 text field Description: WhatsApp updates ID, Value: sg_whatsapp_updates
+						172 button Copy WhatsApp updates ID
+							173 image
+					174 cell
+						175 text Approved WhatsApp template updates.
+					176 cell
+						177 text Active
+					178 cell
+						179 button Archive
+						180 button Edit
+			181 container
+				182 text Showing rows  1  -  4  of  4 Rows per page: 
+				183 pop up button (collapsed, settable) Description: Rows per page, Value: 10, Secondary Actions: Expand
+					184 menu
+						185 (selected) 10
+						186 20
+						187 40
+						188 60
+						189 100
+				190 button (disabled) Previous page
+				191 button Current Page, Page 1
+				192 button (disabled) Next page
+
+The focused UI element is 1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/subscription_groups/6aa75e37db69160082adb7ae?locale=en&workspace=local

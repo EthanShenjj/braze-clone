@@ -1,9 +1,3 @@
-import { publishPreferenceCenter } from "@/lib/braze-store";
-
-export const runtime = "nodejs";
-
-export async function POST(_request: Request, context: { params: Promise<{ id: string }> }) {
-  const { id } = await context.params;
-  const result = publishPreferenceCenter(id);
-  return result ? Response.json(result) : Response.json({ error: "Preference center not found" }, { status: 404 });
-}
+import { getPreferenceCenter, publishPreferenceCenter } from '@/lib/braze-store';
+export const runtime='nodejs';
+export async function POST(request:Request,context:{params:Promise<{id:string}>}){const {id}=await context.params,params=new URL(request.url).searchParams,center=getPreferenceCenter(id);if(!center||String(center.config.workspaceId??'local')!==(params.get('workspaceId')??params.get('workspace')??'local'))return Response.json({error:'Preference center not found.'},{status:404});try{const input=await request.json().catch(()=>({}));return Response.json(publishPreferenceCenter(id,input.expectedVersion));}catch(cause){return Response.json({error:cause instanceof Error?cause.message:'Unable to publish preference center.'},{status:(cause as {status?:number})?.status??400});}}

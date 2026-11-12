@@ -1,5 +1,5 @@
 import { conversionConfigurationIssues } from "./campaign-form-model.ts";
-import {campaignAudienceFieldKind} from "./campaign-audience-model.ts";
+import {findTagInteraction} from "./tag-interactions.ts";
 import { deliveryScheduleIssues } from "./campaign-scheduling.ts";
 import { variantsFor as inAppVariants, validateInAppVariant } from "./in-app-model.ts";
 import { normalizeWebhookVariants, validateWebhookVariant } from "./webhook-model.ts";
@@ -102,11 +102,8 @@ export function campaignAudienceIssues(campaign:{channel:string;config?:Record<s
  if(config.limitVolume===true&&(!Number.isSafeInteger(Number(config.maxUsers??100))||Number(config.maxUsers??100)<=0))issues.push("Enter a maximum audience size greater than zero.");
  if(config.rateLimitEnabled===true&&(!Number.isSafeInteger(Number(config.rateLimit??100))||Number(config.rateLimit??100)<=0))issues.push("Enter a message rate greater than zero.");
  if(Array.isArray(config.audienceGroups))for(const group of config.audienceGroups){if(!Array.isArray(group?.rules))continue;for(const rule of group.rules){
-  if(!rule||typeof rule.field!=="string"||typeof rule.value!=="string"||["exists","not_exists"].includes(rule.operator))continue;
-  const kind=campaignAudienceFieldKind(rule.field),comparison=["greater_than","less_than"].includes(rule.operator);
-  if(kind==="date"&&(comparison||["equals","not_equals"].includes(rule.operator))&&rule.value.trim()&&!Number.isFinite(Date.parse(rule.value)))issues.push("Enter a valid date for the audience filter.");
-  if((kind==="number"||comparison&&kind!=="date")&&rule.value.trim()&&!Number.isFinite(Number(rule.value)))issues.push("Enter a numeric audience filter value.");
-  if(kind==="boolean"&&rule.value.trim()&&!["true","false","0","1"].includes(rule.value.toLowerCase()))issues.push("Use true or false for a boolean audience filter.");
+  if(!rule||typeof rule.field!=="string")continue;
+  if(rule.field.startsWith("receipt_tag_count:engaged:")&&!findTagInteraction(rule.tagInteraction))issues.push("Choose an Interaction for the tagged message filter.");
  }}
  return [...new Set(issues)];
 }

@@ -1,0 +1,167 @@
+Browser tab: 12, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3221/engagement/canvas?locale=en&workspaceId=local&initialConditionsCollapsed=false&name=%22optimizer+persistence%22".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3221/engagement/canvas?locale=en&workspaceId=local&initialConditionsCollapsed=false&name=%22optimizer+persistence%22
+	2 container
+		3 text Canvas Limited access
+		4 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		5 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			6 text Local workspace
+			7 image
+		8 container Side navigation
+			9 text Quick links
+			10 button Canvas
+			11 button Campaigns
+			12 button Segments
+			13 button Getting Started
+			14 button Home
+			15 button AI Decisioning
+			16 button Agents
+			17 button Messaging
+			18 button Audience
+			19 button Content
+			20 button Analytics
+			21 button Partner Integrations
+			22 button Data Settings
+			23 button Settings
+		24 button Home
+			25 image Braze
+		26 container
+			27 text ◷   8 days left in your free trial.
+			28 button Connect with sales
+		29 container
+			30 button Search workspace ⌘K
+				31 image
+				32 text Search workspace
+				33 text ⌘K
+			34 button Take a tour
+			35 image Community
+			36 button (collapsed) Description: Language, Secondary Actions: Expand
+			37 button Notifications
+			38 button (collapsed) Description: Profile, Secondary Actions: Expand
+			39 image
+			40 button Open BrazeAI Operator
+		41 button Canvas
+		42 container
+			43 heading Canvas Limited access, Value: 1
+				44 text Canvas Limited access
+			45 text Design and launch customer journeys with Canvas. Drag, drop, and connect messaging across channels to create seamless, automated experiences.
+			46 button (collapsed) Description: More options, Secondary Actions: Expand
+				47 text More options
+				48 image
+			49 button Take a tour
+			50 button Create Canvas
+				51 text Create Canvas
+				52 image
+			53 text Status
+			54 combo box (collapsed, settable) Description: Status, Value: Draft, Secondary Actions: Expand
+			55 button Toggle Status
+				56 image
+			57 text Tags
+			58 combo box (collapsed, settable) Description: Tags, Secondary Actions: Expand
+			59 button Toggle Tags
+				60 image
+			61 button (collapsed) Filters, Secondary Actions: Expand
+				62 image
+				63 text Filters
+			64 button (collapsed) Columns, Secondary Actions: Expand
+				65 image
+				66 text Columns
+			67 button Reset filters
+			68 image
+			69 text field (settable) Description: Search Canvases, Value: optimizer persistence
+			70 button Status: Draft
+				71 text Status: 
+				72 text Draft
+				73 image
+			74 text 3 Results
+			75 table
+				76 row
+					77 cell
+						78 checkbox (settable, integer) Description: Select all Canvas rows, Value: 0
+					79 cell
+						80 button Select to sort by Name in alphabetical order
+							81 text Name 
+							82 text ↕
+					83 cell
+						84 text Status
+					85 cell
+						86 text Description
+					87 cell
+						88 text Last edited by
+					89 cell
+						90 button Last edited ↓
+							91 text Last edited 
+							92 text ↓
+					93 cell
+						94 text Alerts Configured
+					95 cell
+						96 text Actions
+				97 row
+					98 cell
+						99 checkbox (settable, integer) Description: Select Canvas canvas_deep_577192b7 optimizer persistence, Value: 0
+					100 cell
+						101 button canvas_deep_577192b7 optimizer persistence
+					102 cell
+						103 text Draft
+					104 cell
+						105 text —
+					106 cell
+						107 text Local workspace
+					108 cell
+						109 text 6 minutes ago
+					110 cell
+						111 text —
+					112 cell
+						113 button Actions for canvas_deep_577192b7 optimizer persistence
+							114 image
+				115 row
+					116 cell
+						117 checkbox (settable, integer) Description: Select Canvas canvas_deep_182992db optimizer persistence, Value: 0
+					118 cell
+						119 button canvas_deep_182992db optimizer persistence
+					120 cell
+						121 text Draft
+					122 cell
+						123 text —
+					124 cell
+						125 text Local workspace
+					126 cell
+						127 text 10 minutes ago
+					128 cell
+						129 text —
+					130 cell
+						131 button Actions for canvas_deep_182992db optimizer persistence
+							132 image
+				133 row
+					134 cell
+						135 checkbox (settable, integer) Description: Select Canvas canvas_deep_a36f2216 optimizer persistence, Value: 0
+					136 cell
+						137 button canvas_deep_a36f2216 optimizer persistence
+					138 cell
+						139 text Draft
+					140 cell
+						141 text —
+					142 cell
+						143 text Local workspace
+					144 cell
+						145 text 17 minutes ago
+					146 cell
+						147 text —
+					148 cell
+						149 button Actions for canvas_deep_a36f2216 optimizer persistence
+							150 image
+			151 text Showing rows  1  -  3  of  3 Rows per page:
+			152 pop up button (collapsed, settable) Rows per page:, Value: 20, Secondary Actions: Expand
+				153 menu
+					154 10
+					155 (selected) 20
+					156 40
+					157 60
+					158 100
+			159 button (disabled) Previous page
+				160 image
+			161 button Current Page, Page 1
+			162 button (disabled) Next page
+				163 image
+			164 button Priority Sorter
+
+The focused UI element is 69 text field (settable) Description: Search Canvases, Value: optimizer persistence

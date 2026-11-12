@@ -1,0 +1,187 @@
+Browser tab: 1, Title: "Data - Overview - Overview", URL: "https://dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en".
+0 AXWebArea Data - Overview - Overview, URL: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+	1 container
+		2 container react-root
+			3 link Description: Skip to main content, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en#main-container
+			4 text 14 days left in your free trial.
+			5 button Connect with sales
+			6 button Open navigation menu
+			7 button BrazeAI Operator™
+				8 image
+			9 button Notifications
+			140 container
+				141 pop up button Go back
+				142 text Audience
+				143 button Close menu
+				144 Split your audience into segments to target a specific list of users
+					154 image
+					155 text Segments
+					156 text Split your audience into segments to target a specific list of users
+				145 Target audiences based on specific behaviors over longer periods of time
+					157 image
+					158 text Segment Extensions
+					159 text Target audiences based on specific behaviors over longer periods of time
+				146 Exclude a percentage of your audience from receiving messages
+					160 image
+					161 text Global Control Group
+					162 text Exclude a percentage of your audience from receiving messages
+				147 Exclude specific users from receiving messages
+					163 image
+					164 text Suppression Lists
+					165 text Exclude specific users from receiving messages
+				148 Manage your subscription groups for applicable channels
+					166 image
+					167 text Subscription Group Management
+					168 text Manage your subscription groups for applicable channels
+				149 Create preference centers to help users manage communications
+					169 image
+					170 text Email Preference Centers
+					171 text Create preference centers to help users manage communications
+				150 View user profiles to find information about specific users
+					172 image
+					173 text Search Users
+					174 text View user profiles to find information about specific users
+				151 Take actions to manage the health of your userbase
+					175 image
+					176 text Manage Audience
+					177 text Take actions to manage the health of your userbase
+				152 Import a CSV of user information to add or update user profiles
+					178 image
+					179 text Import Users
+					180 text Import a CSV of user information to add or update user profiles
+				153 Create geofences to trigger messages when a user enters or exits an area
+					181 image
+					182 text Locations
+					183 text Create geofences to trigger messages when a user enters or exits an area
+			10 container main-container
+				11 container main-content
+					12 heading Hello, tor dom, Value: 2
+						13 text Hello, tor dom
+					14 text Nov 11, 2026, 4:53 AM Eastern Time (US & Canada)
+					15 image Information
+					16 heading Get the most out of your trial, Value: 4
+						17 text Get the most out of your trial
+					18 link Description: Run experiments with Canvas Video Run experiments with Canvas Learn how Braze makes testing and adjusting your tactics simple, Value: dashboard-09.braze.com/deeplink?asset_type=page&path=%2Fdashboard%2Fapp_usage%2Fapp_group_id&workspace=demo&extra_params=chmln%3Dc-6896547c3a4b9900134ca001
+					19 link Description: Step into the user experience Product demo Step into the user experience Try our demo app and see what it's like to receive Braze-powered messages, Value: dashboard-09.braze.com/engagement/campaigns/6af4375520abdf005fc2eff1/6af4374c46d3080087f1c5d2?page=0&source=ftcarousel
+					20 link Description: Target the right users Segmentation Target the right users Make sure your messages reach the right audience with segments, Value: dashboard-09.braze.com/engagement/segmenter/6af4374c46d3080087f1c5d2?chmln=c-66cf64071d3165001bfcb4b7
+					21 link Description: Create your first email Email composition Create your first email Designing stunning emails is just a drag-and-drop away, Value: dashboard-09.braze.com/engagement/campaigns/6af4375320abdf005fc2ef47/6af4374c46d3080087f1c5d2?page=0&chmln=c-66e064530e684b0028314f03
+					22 heading Performance overview, Value: 4
+						23 text Performance overview
+					24 container
+						25 text Users 1,000
+					26 container
+						27 text Lifetime Sessions 20,970
+					28 button (collapsed) Show Breakdown, Secondary Actions: Expand
+					29 container date-input-3405349365
+						30 text Date Range
+						31 container Date Range
+							32 text field (settable) Description: Start Date, Value: 2026/10/12
+							33 text field (settable) Description: End Date, Value: 2026/11/11
+						34 text Type a date month/day/year, or use arrow keys or page up/page down to choose a date
+					35 text App
+					36 container
+						37 container
+							38 text All Apps
+							39 combo box (collapsed, settable) Description: App, ID: apps-selector, Secondary Actions: Expand
+					40 container
+						41 text Monthly Active Users (ON 2026-11-11)
+						42 heading 698, Value: 1
+							43 text 698
+						44 text --
+					45 container
+						46 text Daily Active Users (AVERAGE)
+						47 heading 181, Value: 1
+							48 text 181
+						49 text 18.1%
+					50 container
+						51 text New Users (TOTAL)
+						52 heading 5,633, Value: 1
+							53 text 5,633
+						54 text 18.1%
+					55 button (collapsed) Show Breakdown, Secondary Actions: Expand
+					56 container
+						57 text Stickiness (AVERAGE)
+						58 heading 0.22%, Value: 1
+							59 text 0.22%
+						60 text 22.2%
+					61 container
+						62 text Daily Sessions (AVERAGE)
+						63 heading 181.466, Value: 1
+							64 text 181.466
+						65 text 18.1%
+					66 container
+						67 text Daily Sessions Per MAU (AVERAGE)
+						68 heading 0, Value: 1
+							69 text 0
+						70 text 0.2%
+					71 button (collapsed) Show Breakdown, Secondary Actions: Expand
+					72 container
+						73 text Performance Over Time Statistics For
+						74 container select-metric-id
+							75 container
+								76 text Sessions
+								77 combo box (collapsed, settable) Description: Statistics For, ID: select-metric, Secondary Actions: Expand
+						78 text Breakdown
+						79 container select-breakdown-id
+							80 container
+								81 text All
+								82 combo box (collapsed, settable) Description: Breakdown, ID: select-breakdown, Secondary Actions: Expand
+						83 checkbox (settable, integer) Description: Select all, Value: 1, ID: select-all-series
+						84 text Select all
+						85 image Information
+						86 container Chart. Highcharts interactive chart.
+							87 container
+								88 heading Chart, Value: 6
+									89 text Chart
+								90 text Combination chart with 2 data series.
+								91 button (collapsed) View as data table, Chart, ID: hc-linkto-highcharts-data-table-6, Secondary Actions: Expand
+								92 text The chart has 1 X axis displaying Time. Data ranges from 2026-10-12 00:00:00 to 2026-11-11 00:00:00. The chart has 2 Y axes displaying values, and values.
+							93 container highcharts-187ma6q-228
+								94 image Description: Interactive chart, Help: Created with Highcharts 12.6.2
+									95 container Sessions, series 2 of 2. Line with 31 data points. Y axis, values.
+										96 image Monday, Oct 12, 2026, 150. Sessions.
+										97 image Tuesday, Oct 13, 2026, 171. Sessions.
+										98 image Wednesday, Oct 14, 2026, 180. Sessions.
+										99 image Thursday, Oct 15, 2026, 180. Sessions.
+										100 image Friday, Oct 16, 2026, 166. Sessions.
+										101 image Saturday, Oct 17, 2026, 159. Sessions.
+										102 image Sunday, Oct 18, 2026, 158. Sessions.
+										103 image Monday, Oct 19, 2026, 177. Sessions.
+										104 image Tuesday, Oct 20, 2026, 170. Sessions.
+										105 image Wednesday, Oct 21, 2026, 165. Sessions.
+										106 image Thursday, Oct 22, 2026, 193. Sessions.
+										107 image Friday, Oct 23, 2026, 163. Sessions.
+										108 image Saturday, Oct 24, 2026, 180. Sessions.
+										109 image Sunday, Oct 25, 2026, 186. Sessions.
+										110 image Monday, Oct 26, 2026, 177. Sessions.
+										111 image Tuesday, Oct 27, 2026, 196. Sessions.
+										112 image Wednesday, Oct 28, 2026, 167. Sessions.
+										113 image Thursday, Oct 29, 2026, 210. Sessions.
+										114 image Friday, Oct 30, 2026, 182. Sessions.
+										115 image Saturday, Oct 31, 2026, 172. Sessions.
+										116 image Sunday, Nov 1, 2026, 189. Sessions.
+										117 image Monday, Nov 2, 2026, 213. Sessions.
+										118 image Tuesday, Nov 3, 2026, 190. Sessions.
+										119 image Wednesday, Nov 4, 2026, 168. Sessions.
+										120 image Thursday, Nov 5, 2026, 221. Sessions.
+										121 image Friday, Nov 6, 2026, 196. Sessions.
+										122 image Saturday, Nov 7, 2026, 208. Sessions.
+										123 image Sunday, Nov 8, 2026, 222. Sessions.
+										124 image Monday, Nov 9, 2026, 238. Sessions.
+										125 image Tuesday, Nov 10, 2026, 238. Sessions.
+										126 image Wednesday, Nov 11, 2026, 48. Sessions.
+								127 container
+									128 content list Toggle series visibility, Chart
+										129 checkbox Description: Show Sessions, Value: 1
+									130 button (collapsed) Description: View chart menu, Chart, Help: Chart context menu, Secondary Actions: Expand
+							131 text End of interactive chart
+				132 text © Braze 2026
+				133 text Opening in a new tab
+				134 link Description: Opening in a new tab, Value: braze.statuspage.io/
+				135 text Opening in a new tab
+				136 link Description: Opening in a new tab, Value: braze.com/terms
+				137 text Opening in a new tab
+				138 link Description: Opening in a new tab, Value: braze.com/privacy
+		139 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+
+The focused UI element is 0 AXWebArea Data - Overview - Overview, URL: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en

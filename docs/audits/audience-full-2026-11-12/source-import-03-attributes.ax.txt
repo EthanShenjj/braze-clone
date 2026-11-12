@@ -1,0 +1,21 @@
+Browser tab: 5, Title: "Data - Overview - Overview", URL: "https://dashboard-09.braze.com/users/user_import/6af4374b46d3080087f1c558?locale=en".
+1 AXWebArea Data - Overview - Overview, URL: dashboard-09.braze.com/users/user_import/6af4374b46d3080087f1c558?locale=en
+	2 container close Attributes Import default or custom user attributes with a user identifier. Download Opening in a new tab Opening in a new tab . Drag and drop a file here File type: CSV Maximum file size is 1MB. CSV files must contain either an external_id or braze_id, or user_alias_label and user_alias_name, or email or phone to help identify imported users. Free trial environments have a limit of 25 files and 250 user profiles. Each file can have up to 250 rows and 10 columns. Cancel Browse files
+		3 button close
+		4 heading Attributes, Value: 2
+			5 text Attributes
+		6 container
+			7 text Import default or custom user attributes with a user identifier. Download 
+			8 text Opening in a new tab
+			9 link Description: Opening in a new tab, Value: cdn.braze.com/dashboard-assets/dashboard/attributes-csv-example.csv
+			10 text .
+			11 heading Drag and drop a file here, Value: 5
+				12 text Drag and drop a file here
+			13 text File type: CSV
+			14 text Maximum file size is 1MB.
+			15 text CSV files must contain either an external_id or braze_id, or user_alias_label and user_alias_name, or email or phone to help identify imported users.
+			16 text Free trial environments have a limit of 25 files and 250 user profiles. Each file can have up to 250 rows and 10 columns.
+		17 button Cancel
+		18 button Browse files
+
+The focused UI element is 2 container close Attributes Import default or custom user attributes with a user identifier. Download Opening in a new tab Opening in a new tab . Drag and drop a file here File type: CSV Maximum file size is 1MB. CSV files must contain either an external_id or braze_id, or user_alias_label and user_alias_name, or email or phone to help identify imported users. Free trial environments have a limit of 25 files and 250 user profiles. Each file can have up to 250 rows and 10 columns. Cancel Browse files

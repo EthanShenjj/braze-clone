@@ -1,18 +1,25 @@
 import "server-only";
+import {frequencyPolicy} from "./frequency-capping-model";
+import {frequencySnapshot,saveFrequencySettings,validateFrequencyResource,validateFrequencyAssignment,reserveDispatch,finishDispatch,type FrequencyDispatch} from "./frequency-capping-store";
+import {compareAudienceValue,audienceComparisonIssues,type AudienceValueKind} from "./audience-rule-model";
 import { validateModule, workspaceModules, objectValue, evaluateFlag, stableBucket } from "./workspace-modules";
 import { prepareInAppPreview, validateInAppSnapshot } from "./in-app-runtime";
 import { variantsFor as inAppVariants } from "./in-app-model";
-import { initializeTags, assignTags, listTags, listTagAliases, createTag, changeTag, tagCampaigns } from "./tag-store";
+import {findTagInteraction,findCampaignInteraction,type TaggedInteraction} from "./tag-interactions";
+import { initializeTags, assignTags, listTags, listTagAliases, createTag, changeTag, tagCampaigns, tagResources } from "./tag-store";
 
-import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, randomBytes, randomUUID, timingSafeEqual } from "node:crypto";
 import { globalControlCohort, hasGlobalControlExemption, normalizeGlobalControl, validateGlobalControlCommand, type GlobalControlSettings, type GlobalControlSnapshot } from "./global-control-model";
 import { mkdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
+import { migrateSubscriptionGroupNames } from "./subscription-group-migration";
 import { emailPreferenceCampaignDefaults, normalizeEmailPreferences, validateEmailPreferences, type EmailPreferences } from "./email-preferences";
 import { renderBrazeLiquid,workspaceContentBlockHtml } from "./email-liquid";
 import { smsIssues, smsMetrics, smsPreview } from "./sms-model";
+import {canvasSmsDeliveryTime,popularCanvasSmsTime} from './canvas-sms-runtime';
+import {compileSmsSnapshot,smsCapabilityIssues,smsProfile,normalizeSmsSnapshot,smsSnapshotDraft} from './sms-composer-model';
 import { latestWhatsAppInbound, whatsAppResponseEligibility, normalizeWhatsAppVariants, customWhatsAppTemplates, prepareWhatsAppMessage, validateWhatsAppCampaign } from "./whatsapp-model";
 import { compileWorkspaceEmail, emailSendingIssues, emailVariantSendingIssues, extractEmailLinks, isBotClick } from "./email-runtime";
 import { resolveLiquidPreview, type WorkspaceLiquid } from "./email-editor-model";
@@ -21,20 +28,24 @@ import { campaignAudienceFieldKind,intelligentTimingRequirements,type DeliveryTi
 import { conversionCatalog, resolveConversionEvents, conversionConfigurationIssues } from "./campaign-form-model";
 import { campaignValidationIssues, campaignComposeIssues, campaignAudienceIssues, subscriptionCapabilityIssues } from "./campaign-validation";
 import { compileLineMessages } from "./line-model";
-import { allocation, campaignVariants, variantDraft, variantKey, pickVariant, multichannelChannels, audienceConfigurationIssues, type MessageDraft, type AudienceGroup } from "./campaign-shared";
-import { dispatchPreparedMessage } from "./message-delivery";
+import { allocation, campaignVariants, variantDraft, variantKey, pickVariant, multichannelChannels, audienceConfigurationIssues, type MessageDraft, type AudienceGroup, type AudienceRule } from "./campaign-shared";
+import { dispatchPreparedMessage, messageDeliveryCapability } from "./message-delivery";
 import { creativeHtml,type CreativeRow } from "./creative-model";
-import { compileSms,compilePush,compileContentCard } from "./channel-message-model";
+import { compileSms,compilePush,compileContentCard,channelConfigurationIssues } from "./channel-message-model";
 import { campaignTriggeredBy,nextScheduledTime,nextAllowedDeliveryTime,inQuietHours,isWithinCampaignDuration } from "./campaign-scheduling";
-import { initialCanvasGraph, isCanvasGraph, type CanvasGraph, type CanvasRun, type CanvasTrace, validateCanvasGraph } from "./canvas-model";
+import { initialCanvasGraph, isCanvasGraph, type CanvasGraph, type CanvasNode, type CanvasRun, type CanvasTrace, validateCanvasGraph } from "./canvas-model";
+import {canvasDeliverySettings} from './canvas-builder-model';
+import {canvasDelayDue,canvasStepIssues,canvasUpdatedProfile,type CanvasContextVariable} from './canvas-step-model';
 import { canvasWizardIssues, defaultCanvasWizard, normalizeCanvasWizard, type CanvasFilter, type CanvasWizardConfig } from "./canvas-wizard-model";
 import { sampleCatalogId, sampleCatalogRows, sampleRecommendationId } from "./sample-catalog";
 import { sampleSegmentByName, sampleSegments } from "./sample-segments";
 import { deliverWebhook, webhookDeliveryCapability, type WebhookDeliveryResult } from "./webhook-delivery";
 import { webhookRetryDelay } from "./webhook-retry";
 import { normalizeWebhookVariants, redactHeaders, renderWebhookText, webhookPreviewUser, type WebhookVariant } from "./webhook-model";
-import { normalizePreferenceCenterConfig, preferenceCenterDefaultConfig, type PreferenceCenterConfig } from "./preference-center-model";
+import { normalizePreferenceCenterConfig, preferenceCenterDefaultConfig, preferenceConfigIssues,type PreferenceCenterConfig } from "./preference-center-model";
 import { CatalogValidationError, catalogFields, selectionMatches, selectCatalogRows, validateCatalogItem, validateCatalogName, validateFields, validateSelection, type CatalogField, type CatalogFilter, type CatalogSelectionInput } from "./catalog-model";
+import { segmentGroups, segmentOptions,validateGeofenceSet,validateAudienceMergeSettings,validateAudienceSuppressionList,audienceMergeRules,duplicateProfileGroups } from "./audience-management-model";
+import {audienceSuppressionIssues,matchingAudienceSuppressions,type SuppressionContext} from './audience-suppression-model';
 
 export type Channel = "email" | "push" | "iam" | "content" | "banner" | "sms" | "webhook" | "whatsapp" | "line" | "multichannel" | "operator" | "feature" | "api";
 export type CampaignStatus = "Draft" | "Active" | "Stopped" | "Archived" | "Idle";
@@ -70,6 +81,7 @@ let database: DatabaseSync | undefined;
 
 function now() { return new Date().toISOString(); }
 export function messagePublicOrigin(){const host=process.env.VERCEL_PROJECT_PRODUCTION_URL??process.env.VERCEL_URL;return (process.env.BRAZE_PUBLIC_URL??(host?`https://${host}`:"http://localhost:3100")).replace(/\/$/,"");}
+export function messageShortLinkPlaceholder(){return `${messagePublicOrigin()}/api/message-links/res_0000000000000000`;}
 export function shortenMessageLink(url:string,campaignId:string,userId:string){
   if(!/^https?:\/\//i.test(url))throw new Error("Only HTTP and HTTPS links can be shortened.");
   const existing=listResources("message-links").find(r=>r.data.campaignId===campaignId&&r.data.userId===userId&&r.data.url===url);
@@ -84,6 +96,8 @@ function db() {
   if (database) return database;
   mkdirSync(dirname(databasePath), { recursive: true });
   database = new DatabaseSync(databasePath);
+  database.function("audience_compare",(actual,serialized,kind)=>{let value:unknown=actual;if(typeof value==="string"&&value.startsWith("["))value=parseJson(value,value);return Number(compareAudienceValue(value,JSON.parse(String(serialized)),String(kind) as AudienceValueKind));});
+  database.function("audience_distance",(lat,lon,centerLat,centerLon)=>{if([lat,lon,centerLat,centerLon].some(v=>v===null||!Number.isFinite(Number(v))))return null;const radians=(v:unknown)=>Number(v)*Math.PI/180,a=Math.sin((radians(centerLat)-radians(lat))/2)**2+Math.cos(radians(lat))*Math.cos(radians(centerLat))*Math.sin((radians(centerLon)-radians(lon))/2)**2;return 6371*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));});
   database.function("campaign_random_bucket",{deterministic:true},value=>Math.floor(stableBucket(String(value))*100));
   database.function("campaign_flag_enabled",{deterministic:true},(flag,id,country,lifecycle,attributes)=>Number(evaluateFlag(parseJson(String(flag),{}),{id:String(id),country:String(country),lifecycle:String(lifecycle),attributes:parseJson(String(attributes),{})}).enabled));
   database.function("campaign_median",{deterministic:true},value=>{
@@ -92,6 +106,7 @@ function db() {
   });
   database.exec(`
     PRAGMA journal_mode = WAL;
+    PRAGMA busy_timeout = 5000;
     CREATE TABLE IF NOT EXISTS campaigns (
       id TEXT PRIMARY KEY, name TEXT NOT NULL, channel TEXT NOT NULL, status TEXT NOT NULL,
       schedule TEXT NOT NULL, sent INTEGER NOT NULL DEFAULT 0, edited_at TEXT NOT NULL,
@@ -119,7 +134,7 @@ function db() {
       created_at TEXT NOT NULL, PRIMARY KEY (catalog_id, user_id, item_id, subscription_type)
     );
     CREATE TABLE IF NOT EXISTS subscription_groups (
-      id TEXT PRIMARY KEY, name TEXT NOT NULL UNIQUE, description TEXT NOT NULL, channel TEXT NOT NULL,
+      id TEXT PRIMARY KEY, name TEXT NOT NULL, description TEXT NOT NULL, channel TEXT NOT NULL,
       status TEXT NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL
     );
     CREATE TABLE IF NOT EXISTS subscription_group_memberships (
@@ -174,6 +189,7 @@ function db() {
       created_at TEXT NOT NULL, detail_json TEXT NOT NULL DEFAULT '{}'
     );
   `);
+  migrateSubscriptionGroupNames(database);
   const preferenceColumns = database.prepare("PRAGMA table_info(preference_centers)").all() as Array<{ name: string }>;
   if (!preferenceColumns.some(column => column.name === "config_json")) database.exec("ALTER TABLE preference_centers ADD COLUMN config_json TEXT NOT NULL DEFAULT '{}'");
   if (!preferenceColumns.some(column => column.name === "version")) database.exec("ALTER TABLE preference_centers ADD COLUMN version INTEGER NOT NULL DEFAULT 1");
@@ -332,14 +348,16 @@ function campaignAuditSnapshot(campaign:CampaignRecord|null){
  const redact=(value:unknown,key=""):unknown=>{if(/authorization|password|api.?key|secret|bearer|token|base64|content$/i.test(key))return "[redacted]";if(Array.isArray(value))return value.map(v=>redact(v));if(value&&typeof value==="object"&&"key" in value&&/authorization|password|api.?key|secret|bearer|token/i.test(String((value as Record<string,unknown>).key)))return{...(value as object),value:"[redacted]"};if(value&&typeof value==="object")return Object.fromEntries(Object.entries(value).map(([k,v])=>[k,redact(v,k)]));return typeof value==="string"&&value.length>2000?`${value.slice(0,2000)}…`:value;};
  return redact({name:campaign.name,channel:campaign.channel,status:campaign.status,schedule:campaign.schedule,audience:campaign.audience,subject:campaign.subject,body:campaign.body,conversion:campaign.conversion,config:campaign.config});
 }
-export function upsertCampaign(input:Partial<CampaignRecord>&Pick<CampaignRecord,"id"|"name"|"channel">){
+export function upsertCampaign(input:Partial<CampaignRecord>&Pick<CampaignRecord,"id"|"name"|"channel">){ return workspaceTransaction(()=>upsertCampaignRecord(input)); }
+function upsertCampaignRecord(input:Partial<CampaignRecord>&Pick<CampaignRecord,"id"|"name"|"channel">){
  const conn=db(),current=getCampaign(input.id);
  if(current?.status==="Archived"&&input.status!==undefined&&input.status!=="Archived")throw new Error("Archived Campaigns cannot be restored by saving an editor snapshot. Copy to a new Draft instead.");
  if(input.status!==undefined&&!["Draft","Active","Stopped","Archived","Idle"].includes(input.status))throw new Error("Choose a valid Campaign status.");
  if(current&&(current.status==="Active"||Boolean(conn.prepare("SELECT id FROM execution_runs WHERE campaign_id=? LIMIT 1").get(current.id)))&&(input.conversion!==undefined&&input.conversion!==current.conversion||input.config!==undefined&&Object.hasOwn(input.config,"conversionEvents")&&JSON.stringify(input.config.conversionEvents??[])!==JSON.stringify(current.config.conversionEvents??[])))throw new Error("Conversion events cannot be changed after a Campaign has launched.");
  const timestamp=now(),record:CampaignRecord={id:input.id,name:input.name,channel:input.channel,status:input.status??current?.status??"Draft",schedule:input.schedule??current?.schedule??"One time",sent:input.sent??current?.sent??0,edited:timestamp,subject:input.subject??current?.subject,body:input.body??current?.body,audience:input.audience??current?.audience??"All Users",conversion:input.conversion??current?.conversion??"Start Session",config:{...current?.config,...input.config,apiIdentifier:current?.config.apiIdentifier??(typeof input.config?.apiIdentifier==="string"&&/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(input.config.apiIdentifier)?input.config.apiIdentifier:crypto.randomUUID()),createdAt:current?.config.createdAt??timestamp,createdBy:current?.config.createdBy??"Local user",lastEditedBy:"Local user",workspaceId:current?.config.workspaceId??input.config?.workspaceId??"local"}};
  if(record.channel==="email"){const preferences=getEmailPreferences().data;if(!current)record.config={...emailPreferenceCampaignDefaults(preferences),...record.config};const issues=emailVariantSendingIssues(record,preferences);if(issues.length)throw new Error(issues.join(" "));}
- record.config={...record.config,tags:assignTags(conn,record.config.tags,"campaign")};
+ validateFrequencyAssignment(conn,String(record.config.workspaceId??"local"),{...record.config,...objectValue(record.config.delivery)});
+ record.config={...record.config,tags:assignTags(conn,record.config.tags,"campaign",String(record.config.workspaceId??"local"))};
  conn.prepare(`INSERT INTO campaigns (id,name,channel,status,schedule,sent,edited_at,subject,body,audience,conversion_event,config_json,archived_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,channel=excluded.channel,status=excluded.status,schedule=excluded.schedule,sent=excluded.sent,edited_at=excluded.edited_at,subject=excluded.subject,body=excluded.body,audience=excluded.audience,conversion_event=excluded.conversion_event,config_json=excluded.config_json,archived_at=CASE WHEN excluded.status='Archived' THEN COALESCE(campaigns.archived_at,excluded.archived_at) ELSE campaigns.archived_at END`).run(record.id,record.name,record.channel,record.status,record.schedule,record.sent,record.edited,record.subject??null,record.body??null,record.audience??null,record.conversion??null,JSON.stringify(record.config),record.status==="Archived"?timestamp:null);
  if(record.channel==="email")syncEmailLinkAliases(record);
  audit("campaign",record.id,current?"updated":"created",{channel:record.channel,user:"Local user",category:"Campaign settings",before:campaignAuditSnapshot(current),after:campaignAuditSnapshot(record)});return record;
@@ -359,13 +377,14 @@ function audienceCondition(audience: string) {
   return { sql: `${columns[rule.field]} = ?`, values: [rule.value] };
 }
 
-export type AudienceFilter = { field: string; operator: string; value: string };
+export type AudienceFilter = { field: string; operator: string; value: string;value2?:string;params?:Record<string,string|number|boolean>;timeUnit?:string;tagInteraction?:string };
 
 // Translates saved segment filters into SQL clauses shared by estimates and launches.
-function audienceFilterClauses(filters: AudienceFilter[]) {
+function audienceFilterClauses(filters: AudienceFilter[],workspaceId="local") {
   const clauses: string[] = [];
   const values: (string | number)[] = [];
   for (const filter of filters) {
+    if(filter.operator&&!["is","is_not"].includes(filter.operator)){clauses.push(configuredAudienceRuleSQL(filter,values,workspaceId));continue;}
     if (!filter.value) continue;
     const operator = filter.operator;
     const columns: Record<string, string> = { country: "u.country", lifecycle: "u.lifecycle", email: "u.email" };
@@ -380,37 +399,37 @@ function audienceFilterClauses(filters: AudienceFilter[]) {
   return { clauses, values };
 }
 
-export function savedSegmentFilters(name?: string | null): AudienceFilter[] {
+export function savedSegmentFilters(name?: string | null,workspaceId="local"): AudienceFilter[] {
   if (!name) return [];
-  const saved = listResources("segments").find(row => row.name.toLowerCase() === name.toLowerCase());
+  const saved = listResources("segments").find(row => row.name.toLowerCase() === name.toLowerCase() && String(row.data.workspaceId??"local")===workspaceId);
   const data = (saved?.data ?? {}) as Record<string, unknown>;
   return (Array.isArray(data.filters) ? data.filters : []) as AudienceFilter[];
 }
 
-function subscriptionGroupForChannel(groupId: string | undefined, channel: Channel) {
+function subscriptionGroupForChannel(groupId: string | undefined, channel: Channel,workspaceId='local') {
   if (!groupId) return null;
   const group = getSubscriptionGroup(groupId);
   const expected = channel === "email" ? "Email" : channel === "sms" ? "SMS" : channel === "whatsapp" ? "WhatsApp" : channel === "line" ? "LINE" : null;
-  if (!group || group.status !== "Active" || group.channel !== expected) throw new Error("Select an active subscription group for this channel.");
+  if (!group || group.status !== "Active" || group.channel !== expected||audienceSubscriptionGroupWorkspace(groupId)!==workspaceId) throw new Error("Select an active subscription group for this channel from this workspace.");
   return group;
 }
 
 function subscriptionCondition(channel: Channel, eligibility: string, groupId?: string) {
   if (channel === "email") {
     const status = eligibility === "opted-in" ? "u.email_subscription_status = 'opted_in'" : "u.email_subscription_status != 'unsubscribed'";
-    return `${status}${groupId ? " AND m.state = 'subscribed'" : ""}`;
+    return `trim(u.email)!='' AND ${status}${groupId ? " AND m.state = 'subscribed'" : ""}`;
   }
   if (channel === "sms" || channel === "whatsapp" || channel === "line") return groupId ? "m.state = 'subscribed'" : "0 = 1";
   return "1 = 1";
 }
 
-function globalControlRecord() {
-  const records = listResources("global-control-group");
+function globalControlRecord(workspaceId='local') {
+  const records = listResources("global-control-group").filter(record=>String(record.data.workspaceId??'local')===workspaceId);
   return records.find(record => record.id === "workspace_global_control") ?? records[0];
 }
 
-function globalControlSettings() {
-  const record = globalControlRecord();
+function globalControlSettings(workspaceId='local') {
+  const record = globalControlRecord(workspaceId);
   return normalizeGlobalControl(record?.data, record ? `legacy:${record.id}` : undefined);
 }
 
@@ -423,17 +442,17 @@ function heldByGlobalControl(userId: string, settings: GlobalControlSettings, ta
   return !hasGlobalControlExemption(settings, tags, channel) && userGlobalCohort(userId, settings) === "control";
 }
 
-function activeEngagementTags() {
-  const campaigns = (db().prepare("SELECT * FROM campaigns WHERE status = 'Active' AND archived_at IS NULL").all() as Record<string, unknown>[]).map(mapCampaign);
+function activeEngagementTags(workspaceId='local') {
+  const campaigns = (db().prepare("SELECT * FROM campaigns WHERE status = 'Active' AND archived_at IS NULL").all() as Record<string, unknown>[]).map(mapCampaign).filter(campaign=>String(campaign.config.workspaceId??'local')===workspaceId);
   const tags = campaigns.flatMap(campaign => Array.isArray(campaign.config.tags) ? campaign.config.tags.filter((tag): tag is string => typeof tag === "string") : []);
-  tags.push(...listResources("canvas").filter(canvas => canvas.status === "Active").flatMap(canvas => Array.isArray(canvas.data.tags) ? canvas.data.tags.filter((tag): tag is string => typeof tag === "string") : []));
+  tags.push(...listResources("canvas").filter(canvas => canvas.status === "Active"&&String(canvas.data.workspaceId??'local')===workspaceId).flatMap(canvas => Array.isArray(canvas.data.tags) ? canvas.data.tags.filter((tag): tag is string => typeof tag === "string") : []));
   return [...new Set(tags)].sort((a, b) => a.localeCompare(b));
 }
 
-export function getGlobalControlSnapshot(): GlobalControlSnapshot {
-  const record = globalControlRecord();
+export function getGlobalControlSnapshot(workspaceId='local'): GlobalControlSnapshot {
+  const record = globalControlRecord(workspaceId);
   const settings = normalizeGlobalControl(record?.data, record ? `legacy:${record.id}` : undefined);
-  const users = db().prepare("SELECT id FROM users").all() as { id: string }[];
+  const users = db().prepare("SELECT id FROM users WHERE COALESCE(json_extract(attributes_json,'$.workspaceId'),json_extract(attributes_json,'$.workspace_id'),'local')=?").all(workspaceId) as { id: string }[];
   let control = 0; let sample = 0;
   for (const user of users) {
     const cohort = userGlobalCohort(user.id, settings);
@@ -441,15 +460,16 @@ export function getGlobalControlSnapshot(): GlobalControlSnapshot {
     if (cohort === "sample") sample++;
   }
   const { seed: _seed, ...publicSettings } = settings;
-  return { settings: publicSettings, counts: { total: users.length, control, treatment: users.length - control, sample }, availableTags: activeEngagementTags(), updatedAt: record?.updatedAt ?? null };
+  return { settings: publicSettings, counts: { total: users.length, control, treatment: users.length - control, sample }, availableTags: activeEngagementTags(workspaceId), updatedAt: record?.updatedAt ?? null,capabilities:{canEdit:record?.data.canEdit!==false} };
 }
 
-export function saveGlobalControl(command: unknown, expectedUpdatedAt: unknown) {
+export function saveGlobalControl(command: unknown, expectedUpdatedAt: unknown,workspaceId='local') {
   validateGlobalControlCommand(command);
   const conn = db();
   conn.exec("BEGIN IMMEDIATE");
   try {
-    const record = globalControlRecord();
+    const record = globalControlRecord(workspaceId);
+    if(record?.data.canEdit===false)throw Object.assign(new Error('You need Edit Global Control Group permission to change these settings.'),{status:403});
     if ((record?.updatedAt ?? null) !== expectedUpdatedAt) throw new Error("Global Control Group changed in another tab. Reload before saving.");
     const current = normalizeGlobalControl(record?.data, record ? `legacy:${record.id}` : undefined);
     let settings = { ...current };
@@ -459,30 +479,30 @@ export function saveGlobalControl(command: unknown, expectedUpdatedAt: unknown) 
     } else if (command.action === "disable") {
       settings = { ...current, enabled: false, percentage: null, seed: null, enabledAt: null };
     } else {
-      const available = new Set([...activeEngagementTags(), ...current.exclusionTags]);
-      const tags = [...new Set(command.exclusionTags.map(tag => tag.trim()))];
+      const available = new Set([...activeEngagementTags(workspaceId), ...current.exclusionTags]),aliases=workspaceTagAliases(workspaceId);
+      const tags = [...new Set(command.exclusionTags.map(tag => {const name=tag.trim();if(Object.hasOwn(aliases,name)){if(aliases[name]===null)throw new Error('This exclusion tag was deleted.');return aliases[name]!;}return name;}))];
       if (tags.some(tag => !available.has(tag))) throw new Error("Exclusion tags must be applied to an active campaign or Canvas first.");
       settings.exclusionTags = tags;
     }
     // A monotonic revision prevents two same-millisecond updates sharing a token.
     const updatedAt = new Date(Math.max(Date.now(), new Date(record?.updatedAt ?? 0).getTime() + 1)).toISOString();
     conn.prepare("INSERT INTO resources VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET status=excluded.status, updated_at=excluded.updated_at, data_json=excluded.data_json")
-      .run("workspace_global_control", "global-control-group", "Global Control Group", settings.enabled ? "Active" : "Draft", "Workspace Global Control Group", updatedAt, JSON.stringify(settings));
-    audit("global_control_group", "workspace_global_control", command.action, { percentage: settings.percentage, exclusionTags: settings.exclusionTags });
+      .run(record?.id??(workspaceId==='local'?"workspace_global_control":`workspace_global_control:${workspaceId}`), "global-control-group", "Global Control Group", settings.enabled ? "Active" : "Draft", "Workspace Global Control Group", updatedAt, JSON.stringify({...record?.data,...settings,workspaceId}));
+    audit("global_control_group", record?.id??(workspaceId==='local'?"workspace_global_control":`workspace_global_control:${workspaceId}`), command.action, { percentage: settings.percentage, exclusionTags: settings.exclusionTags,workspaceId });
     conn.exec("COMMIT");
-    return getGlobalControlSnapshot();
+    return getGlobalControlSnapshot(workspaceId);
   } catch (error) { conn.exec("ROLLBACK"); throw error; }
 }
 
-export function exportGlobalControlMembers() {
-  const settings = globalControlSettings();
+export function exportGlobalControlMembers(workspaceId='local') {
+  const settings = globalControlSettings(workspaceId);
   if (!settings.enabled) throw new Error("Enable a Global Control Group before exporting members.");
-  return (db().prepare("SELECT id FROM users ORDER BY id").all() as { id: string }[]).filter(user => userGlobalCohort(user.id, settings) === "control").map(user => user.id);
+  return (db().prepare("SELECT id FROM users WHERE COALESCE(json_extract(attributes_json,'$.workspaceId'),json_extract(attributes_json,'$.workspace_id'),'local')=? ORDER BY id").all(workspaceId) as { id: string }[]).filter(user => userGlobalCohort(user.id, settings) === "control").map(user => user.id);
 }
 
-export function globalControlReport(days = 30) {
-  const snapshot = getGlobalControlSnapshot();
-  const settings = globalControlSettings();
+export function globalControlReport(days = 30,workspaceId='local') {
+  const snapshot = getGlobalControlSnapshot(workspaceId);
+  const settings = globalControlSettings(workspaceId);
   const deliveries = { control: 0, treatment: 0, sample: 0 };
   if (settings.enabled) {
     const since = new Date(Date.now() - Math.max(1, Math.min(365, Number.isFinite(days) ? days : 30)) * 86400000).toISOString();
@@ -495,12 +515,14 @@ export function globalControlReport(days = 30) {
   return { ...snapshot, deliveries };
 }
 
-export function estimateAudience(audience = "All Users", country?: string, excludeCountry?: string, eligibility = "subscribed", subscriptionGroupId?: string, filters: AudienceFilter[] = [], channel: Channel = "email", engagement?: { tags?: unknown }) {
-  subscriptionGroupForChannel(subscriptionGroupId, channel);
+export function estimateAudience(audience = "All Users", country?: string, excludeCountry?: string, eligibility = "subscribed", subscriptionGroupId?: string, filters: AudienceFilter[] = [], channel: Channel = "email", engagement?: { tags?: unknown },workspaceId='local') {
+  subscriptionGroupForChannel(subscriptionGroupId, channel,workspaceId);
   const audienceRule = audienceCondition(audience);
-  const clauses: string[] = audienceRule.sql === "1 = 1" ? [] : [audienceRule.sql];
-  const values: (string | number)[] = [...audienceRule.values];
-  const filterClauses = audienceFilterClauses(filters);
+  const clauses: string[] = [audienceProfileWorkspaceSQL('u')+'=?',...(audienceRule.sql === "1 = 1" ? [] : [audienceRule.sql])];
+  const values: (string | number)[] = [workspaceId,...audienceRule.values];
+  const saved=listResources('segments').find(row=>row.name.toLowerCase()===audience.toLowerCase()&&row.status!=='Archived'&&String(row.data.workspaceId??'local')===workspaceId);
+  if(saved){clauses.push(audienceSegmentExpression(saved,values,workspaceId)+'=1');}
+  const filterClauses = audienceFilterClauses(filters,workspaceId);
   clauses.push(...filterClauses.clauses);
   values.push(...filterClauses.values);
   if (country && ["US", "GB", "CN", "SG", "DE"].includes(country)) { clauses.push("u.country = ?"); values.push(country); }
@@ -509,17 +531,228 @@ export function estimateAudience(audience = "All Users", country?: string, exclu
   const eligible = `u.reachable = 1 AND ${subscriptionCondition(channel, eligibility, subscriptionGroupId)}`;
   const membership = subscriptionGroupId ? "LEFT JOIN subscription_group_memberships m ON m.user_id = u.id AND m.group_id = ?" : "";
   const result = db().prepare(`SELECT count(*) AS matching, sum(CASE WHEN ${eligible} THEN 1 ELSE 0 END) AS reachable FROM users u ${membership} ${where}`).get(...(subscriptionGroupId ? [subscriptionGroupId] : []), ...values) as { matching: number; reachable: number | null };
-  const workspace = db().prepare("SELECT count(*) AS total FROM users").get() as { total: number };
-  const settings = globalControlSettings();
+  const workspace = db().prepare(`SELECT count(*) AS total FROM users u WHERE ${audienceProfileWorkspaceSQL('u')}=?`).get(workspaceId) as { total: number };
+  const settings = globalControlSettings(workspaceId);
   const excluded = engagement && settings.enabled ? (db().prepare(`SELECT u.id FROM users u ${membership} ${where}${where ? " AND" : "WHERE"} ${eligible}`).all(...(subscriptionGroupId ? [subscriptionGroupId] : []), ...values) as { id: string }[]).filter(user => heldByGlobalControl(user.id, settings, engagement.tags, channel)).length : 0;
   return { matching: result.matching, reachable: (result.reachable ?? 0) - excluded, total: workspace.total, globalControlExcluded: excluded };
 }
 
-function configuredAudienceRuleSQL(rule:{field:string;operator:string;value:string},values:(string|number)[]){
+/** References are resolved before SQL execution, including empty and short-circuited audiences. */
+function audienceScopedResource(id:unknown,types:string[],workspaceId:string){
+ const resource=typeof id==='string'?getResource(id):null;
+ if(!resource||!types.includes(resource.type)||resource.status==='Archived'||String(resource.data.workspaceId??'local')!==workspaceId){
+  const label=types.some(type=>['csv-imports','profile-imports','import-users'].includes(type))?'CSV import':types.includes('segments')?'segment':types.includes('segment-extensions')?'Segment Extension':types.includes('canvas')?'Canvas':types.includes('landing-pages')?'landing page':types.includes('cohorts')?'cohort':'item';
+  throw new Error('Choose an available '+label+' from this workspace.');
+ }
+ return resource;
+}
+const audienceSegmentStack=new Set<string>();
+function audienceSegmentExpression(resource:ResourceRecord,values:(string|number)[],workspaceId:string){
+ if(audienceSegmentStack.has(resource.id))throw new Error('Audience segments cannot reference themselves or contain circular membership rules.');
+ audienceSegmentStack.add(resource.id);
+ try{
+  if(resource.data.audienceGroups!==undefined){const clauses=segmentGroupClauses(resource.data,values,workspaceId);return `CASE WHEN ${clauses.length?clauses.join(' AND '):'1 = 1'} THEN 1 ELSE 0 END`;}
+  const filters=Array.isArray(resource.data.filters)?resource.data.filters as AudienceFilter[]:[],base=audienceCondition(resource.name),extra=audienceFilterClauses(filters,workspaceId);values.push(...base.values,...extra.values);const apps=segmentAppClause(resource.data.segmentOptions,values,workspaceId);return `CASE WHEN ${[base.sql,...extra.clauses,...(apps?[apps]:[])].map(sql=>'('+sql+')').join(' AND ')} THEN 1 ELSE 0 END`;
+ }finally{audienceSegmentStack.delete(resource.id);}
+}
+function segmentAppClause(input:unknown,values:(string|number)[],workspaceId:string){
+ const options=segmentOptions(input);if(!options.appIds.length)return '';
+ const ids=options.appIds.filter(id=>id!=='__no_apps__');for(const id of ids)audienceScopedResource(id,['app-settings'],workspaceId);
+ const profileApps="CASE WHEN json_type(u.attributes_json,'$.appIds')='array' THEN json_extract(u.attributes_json,'$.appIds') WHEN json_type(u.attributes_json,'$.app_ids')='array' THEN json_extract(u.attributes_json,'$.app_ids') WHEN json_type(u.attributes_json,'$.apps')='array' THEN json_extract(u.attributes_json,'$.apps') ELSE '[]' END";
+ const eventWhere="app_event.type='user-events' AND app_event.name IN ('session_start','Start Session') AND json_extract(app_event.data_json,'$.userId')=u.id AND COALESCE(json_extract(app_event.data_json,'$.workspaceId'),'local')=?";
+ const clauses:string[]=[];
+ if(ids.length){values.push(JSON.stringify(ids),workspaceId);clauses.push(`EXISTS(SELECT 1 FROM json_each(?) selected WHERE CAST(selected.value AS TEXT) IN (CAST(json_extract(u.attributes_json,'$.appId') AS TEXT),CAST(json_extract(u.attributes_json,'$.app_id') AS TEXT)) OR EXISTS(SELECT 1 FROM json_each(${profileApps}) app WHERE CAST(CASE WHEN app.type='object' THEN json_extract(app.value,'$.id') ELSE app.value END AS TEXT)=CAST(selected.value AS TEXT)) OR EXISTS(SELECT 1 FROM resources app_event WHERE ${eventWhere} AND CAST(COALESCE(json_extract(app_event.data_json,'$.properties.appId'),json_extract(app_event.data_json,'$.properties.app_id')) AS TEXT)=CAST(selected.value AS TEXT)))`);}
+ if(options.appIds.includes('__no_apps__')){values.push(workspaceId);clauses.push(`(COALESCE(json_extract(u.attributes_json,'$.appId'),json_extract(u.attributes_json,'$.app_id'),'')='' AND json_array_length(${profileApps})=0 AND NOT EXISTS(SELECT 1 FROM resources app_event WHERE ${eventWhere} AND COALESCE(json_extract(app_event.data_json,'$.properties.appId'),json_extract(app_event.data_json,'$.properties.app_id'),'')!=''))`);}
+ return '('+clauses.join(' OR ')+')';
+}
+function segmentGroupClauses(data:Record<string,unknown>,values:(string|number)[],workspaceId:string){
+ const groups=segmentGroups(data.audienceGroups),options=segmentOptions(data.segmentOptions),includes:string[]=[],excludes:string[]=[];
+ // Compile in SQL output order so bound values retain their intended rule.
+ for(const group of groups.filter(group=>!group.exclude))includes.push('('+group.rules.map(rule=>configuredAudienceRuleSQL(rule,values,workspaceId)).join(group.operator==='OR'?' OR ':' AND ')+')');
+ for(const group of groups.filter(group=>group.exclude))excludes.push('NOT ('+group.rules.map(rule=>configuredAudienceRuleSQL(rule,values,workspaceId)).join(group.operator==='OR'?' OR ':' AND ')+')');
+ const clauses=[...(includes.length?['('+includes.join(options.groupOperator==='OR'?' OR ':' AND ')+')']:[]),...excludes];
+ const apps=segmentAppClause(data.segmentOptions,values,workspaceId);if(apps)clauses.push(apps);return clauses;
+}
+function canonicalAudienceTags(value:unknown,workspaceId:string,strict=false){
+ const registry=listWorkspaceTags(workspaceId),aliases=workspaceTagAliases(workspaceId),names:string[]=[];
+ for(const item of Array.isArray(value)?value:[]){if(typeof item!=='string')continue;const name=item.trim(),tag=registry.find(tag=>tag.id===name||tag.name===name),canonical=tag?.name??(Object.hasOwn(aliases,name)?aliases[name]:undefined);if(!canonical){if(strict)throw new Error('Choose available exception tags from this workspace.');continue;}if(!names.includes(canonical))names.push(canonical);}
+ return names;
+}
+function audienceSuppressionConfig(data:Record<string,unknown>,workspaceId:string){return{workspaceId,audienceGroups:data.audienceGroups??[],segmentOptions:{appIds:[],analyticsTracking:false,...objectValue(data.segmentOptions),groupOperator:data.groupOperator??objectValue(data.segmentOptions).groupOperator??'AND'}};}
+function normalizeAudienceSuppressionData(data:Record<string,unknown>,status:string){
+ const issues=audienceSuppressionIssues(status,data);if(issues.length)throw new Error(issues.join(' '));const workspaceId=String(data.workspaceId??'local'),normalized={...data,exceptionTags:canonicalAudienceTags(data.exceptionTags,workspaceId,status==='Active')};
+ if(status==='Active'&&Array.isArray(data.audienceGroups))configuredAudienceSQL({channel:'push',config:audienceSuppressionConfig(normalized,workspaceId)});
+ return normalized;
+}
+function audienceSuppressionMatcher(context:SuppressionContext){
+ const workspaceId=context.workspaceId??'local',source=listResources('audience-suppression-lists').filter(row=>row.status==='Active'&&String(row.data.workspaceId??'local')===workspaceId);if(context.channel==='feature'||!source.length)return(_userId:string)=>[] as ResourceRecord[];
+ const rows=source.map(row=>({...row,data:{...row.data,exceptionTags:canonicalAudienceTags(row.data.exceptionTags,workspaceId)}}));
+ const applicable=matchingAudienceSuppressions(rows,{...context,tags:canonicalAudienceTags(context.tags,workspaceId)},()=>true);
+ // Build independent membership sets; criteria evaluation never calls eligibility.
+ const sets=applicable.map(row=>{const query=configuredAudienceSQL({channel:'push',config:audienceSuppressionConfig(row.data,workspaceId)});return{row,ids:new Set((db().prepare(`SELECT id FROM users u WHERE ${query.sql}`).all(...query.values) as {id:string}[]).map(user=>user.id))};});
+ return(userId:string)=>sets.filter(item=>item.ids.has(userId)).map(item=>item.row);
+}
+export function audienceSuppressionMatches(userId:string,context:SuppressionContext){
+ const workspaceId=context.workspaceId??'local',source=listResources('audience-suppression-lists').filter(row=>row.status==='Active'&&String(row.data.workspaceId??'local')===workspaceId);if(context.channel==='feature'||!source.length)return [] as ResourceRecord[];
+ const rows=source.map(row=>({...row,data:{...row.data,exceptionTags:canonicalAudienceTags(row.data.exceptionTags,workspaceId)}}));
+ return matchingAudienceSuppressions(rows,{...context,tags:canonicalAudienceTags(context.tags,workspaceId)},(_groups,data)=>{const query=configuredAudienceSQL({channel:'push',config:audienceSuppressionConfig(data,workspaceId)});return Boolean(db().prepare(`SELECT 1 FROM users u WHERE u.id=? AND ${query.sql}`).get(userId,...query.values));});
+}
+function legacySuppressionEntries(workspaceId='local'){return listResources('suppression-lists').filter(row=>row.status!=='Archived'&&String(row.data.workspaceId??'local')===workspaceId).map(row=>row.name.toLowerCase().replace(/^@/,''));}
+function audienceRealEventSQL(alias='e'){
+ return ['test','attributes.test','simulated','attributes.simulated','bot','attributes.bot','filtered','attributes.filtered'].map(path=>`lower(CAST(COALESCE(json_extract(${alias}.data_json,'$.${path}'),0) AS TEXT)) NOT IN ('1','true')`).join(' AND ');
+}
+function audienceInteractionSQL(interaction:TaggedInteraction,values:(string|number)[],params:AudienceFilter['params']={}):string{
+ let sql:string;
+ if(interaction.id.startsWith('viewed_')){sql="(e.event_type IN ('impression','impressed') OR (e.event_type='delivered' AND json_extract(e.data_json,'$.sdkMessageId') IS NOT NULL)) AND e.channel=?";values.push(interaction.channel);}else{sql='e.event_type=? AND e.channel=?';values.push(interaction.event,interaction.channel);}
+ const button="COALESCE(json_extract(e.data_json,'$.buttonId'),json_extract(e.data_json,'$.attributes.buttonId'),json_extract(e.data_json,'$.button_id'),json_extract(e.data_json,'$.attributes.button_id'),json_extract(e.data_json,'$.button'),json_extract(e.data_json,'$.attributes.button'),json_extract(e.data_json,'$.actionId'),json_extract(e.data_json,'$.attributes.actionId'))";
+ if(interaction.button!==undefined){sql+=` AND CAST(${button} AS TEXT)=?`;values.push(String(interaction.button));}
+ if(interaction.selector){
+  const selector=interaction.selector==='button'?button:"COALESCE(json_extract(e.data_json,'$.pageId'),json_extract(e.data_json,'$.attributes.pageId'),json_extract(e.data_json,'$.page_id'),json_extract(e.data_json,'$.attributes.page_id'),json_extract(e.data_json,'$.storyPageId'),json_extract(e.data_json,'$.attributes.storyPageId'),json_extract(e.data_json,'$.story_page_id'),json_extract(e.data_json,'$.attributes.story_page_id'))",key=interaction.selector==='button'?'buttonId':'pageId';
+  sql+=` AND COALESCE(CAST(${selector} AS TEXT),'')!=''`;
+  if(params[key]!==undefined&&String(params[key]).trim()){const value=String(params[key]);if(value.length>200)throw new Error('Choose a valid Push interaction '+key+'.');sql+=` AND CAST(${selector} AS TEXT)=?`;values.push(value);}
+ }
+ if(interaction.machine!==undefined){const machine="(lower(CAST(COALESCE(json_extract(e.data_json,'$.machine'),0) AS TEXT)) IN ('1','true') OR lower(CAST(COALESCE(json_extract(e.data_json,'$.attributes.machine'),0) AS TEXT)) IN ('1','true') OR lower(CAST(COALESCE(json_extract(e.data_json,'$.machineOpen'),0) AS TEXT)) IN ('1','true') OR lower(CAST(COALESCE(json_extract(e.data_json,'$.attributes.machineOpen'),0) AS TEXT)) IN ('1','true') OR lower(CAST(COALESCE(json_extract(e.data_json,'$.machine_open'),0) AS TEXT)) IN ('1','true') OR lower(CAST(COALESCE(json_extract(e.data_json,'$.attributes.machine_open'),0) AS TEXT)) IN ('1','true'))";sql+=' AND '+(interaction.machine?machine:'NOT '+machine);}
+ return sql;
+}
+function audienceEngagedSQL(rule:AudienceFilter,values:(string|number)[]){
+ if(rule.tagInteraction===undefined)return "e.event_type IN ('opened','clicked')";
+ const interaction=findCampaignInteraction(rule.tagInteraction);if(!interaction)throw new Error('Choose an Interaction for the Campaign or Canvas filter.');
+ return audienceInteractionSQL(interaction,values,rule.params);
+}
+function audienceCampaignVariants(campaign:MessageDraft&{id?:string}){
+ const declared=campaignVariants(campaign).map(({id,name})=>({id,name}));
+ if(campaign.id){const rows=db().prepare("SELECT DISTINCT COALESCE(json_extract(data_json,'$.variantId'),json_extract(data_json,'$.attributes.variantId')) AS id FROM message_events e WHERE campaign_id=? AND "+audienceRealEventSQL()+" AND COALESCE(json_extract(data_json,'$.variantId'),json_extract(data_json,'$.attributes.variantId')) IS NOT NULL").all(campaign.id) as Array<{id:string}>;for(const row of rows)if(!declared.some(v=>v.id===row.id))declared.push({id:row.id,name:row.id});}
+ return declared;
+}
+function audienceCampaignInteractionTargets(campaign:MessageDraft&{id?:string},stepId?:string){
+ const buttons=new Map<string,{id:string;name:string}>(),pages=new Map<string,{id:string;name:string}>();
+ const add=(items:unknown,target:Map<string,{id:string;name:string}>,page=false)=>{if(!Array.isArray(items))return;for(const value of items){const item=objectValue(value),id=String(item.id??item[page?'pageId':'buttonId']??'').trim();if(id)target.set(id,{id,name:String(item.label??item.name??item.title??id)});}};
+ if(campaign.channel==='push')for(const [index] of campaignVariants(campaign).entries()){const values=objectValue(variantDraft(campaign,index).config?.channelValues);for(const key of ['actions','actionButtons','buttons'])add(values[key],buttons);for(const key of ['stories','pages'])add(values[key],pages,true);}
+ if(campaign.id){const rows=db().prepare("SELECT e.data_json FROM message_events e WHERE e.campaign_id=? AND e.channel='push' AND e.event_type='clicked' AND "+audienceRealEventSQL()+(stepId?" AND COALESCE(json_extract(e.data_json,'$.nodeId'),json_extract(e.data_json,'$.attributes.nodeId'))=?":"")).all(campaign.id,...(stepId?[stepId]:[])) as Array<{data_json:string}>;
+  for(const row of rows){const data=parseJson<Record<string,unknown>>(row.data_json,{}),attrs=objectValue(data.attributes),button=data.buttonId??attrs.buttonId??data.button_id??attrs.button_id??data.button??attrs.button??data.actionId??attrs.actionId,page=data.pageId??attrs.pageId??data.page_id??attrs.page_id??data.storyPageId??attrs.storyPageId??data.story_page_id??attrs.story_page_id;for(const [id,target] of [[button,buttons],[page,pages]] as const)if(id!==undefined&&id!==null&&String(id).trim()&&!target.has(String(id)))target.set(String(id),{id:String(id),name:String(id)});}
+ }
+ return {buttons:[...buttons.values()],pages:[...pages.values()]};
+}
+function audienceCanvasStepTargets(canvas:ResourceRecord,node:CanvasGraph['nodes'][number]){
+ const linked=node.config?.linkedCampaignId?getCampaign(node.config.linkedCampaignId):null,source=linked&&String(linked.config.workspaceId??'local')===String(canvas.data.workspaceId??'local')?linked:null;
+ return audienceCampaignInteractionTargets({id:canvas.id,channel:String(node.config?.channel??source?.channel??''),config:{...source?.config,...node.config,channelValues:{...objectValue(source?.config.channelValues),...objectValue(node.config?.channelValues)}}},node.id);
+}
+function audienceCanvasVariants(resource:ResourceRecord){
+ const wizard=normalizeCanvasWizard(resource.data.wizard),rows=objectValue(wizard as unknown as Record<string,unknown>);
+ const candidates=[rows.variants,objectValue(rows.entry).variants,resource.data.variants].find(Array.isArray) as Array<Record<string,unknown>>|undefined;
+ return (candidates??[]).filter(row=>typeof row.id==='string').map(row=>({id:String(row.id),name:String(row.name??row.id)}));
+}
+/** CSV log rows predate explicit membership IDs; only successful imports can supply legacy IDs. */
+function audienceCsvImportUsers(resource:ResourceRecord):string[]|null{
+ const data=resource.data;
+ if(resource.type!=='import-users')return null;
+ const imported=Number(data.imported??0),skipped=Number(data.skipped??0);
+ if(['Failed','Cancelled'].includes(resource.status)||![imported,skipped].every(count=>Number.isSafeInteger(count)&&count>=0)||imported+skipped<=0)return null;
+ if(Array.isArray(data.userIds))return [...new Set(data.userIds.filter((id):id is string=>typeof id==='string'&&Boolean(getUser(id))))];
+ if(!Array.isArray(data.header)||!Array.isArray(data.rows))return null;
+ const header=data.header.map(value=>String(value).trim()),column=['id','user_id','external_id'].map(key=>header.indexOf(key)).find(index=>index>=0);
+ if(column===undefined)return null;
+ return [...new Set(data.rows.flatMap(row=>{const id=Array.isArray(row)?String(row[column]??'').trim():'';return id&&getUser(id)?[id]:[];}))];
+}
+function audienceSubscriptionGroupWorkspace(id:string){
+ return String(listResources('subscription-group-metadata').find(resource=>resource.data.groupId===id)?.data.workspaceId??'local');
+}
+const inboundSMSKeywordCategories=[{id:'opt_in',name:'Opt-in'},{id:'opt_out',name:'Opt-out'},{id:'help',name:'Help'}];
+function extendedAudienceExpression(rule:AudienceFilter,values:(string|number)[],workspaceId:string):string|undefined{
+ const params=rule.params??{},field=rule.field;
+ if(field==='inbound_sms_keyword_last'){
+  const groupId=String(params.subscriptionGroupId??''),group=getSubscriptionGroup(groupId);if(!group||group.channel!=='SMS'||group.status!=='Active'||audienceSubscriptionGroupWorkspace(groupId)!==workspaceId)throw new Error('Choose an active SMS subscription group from this workspace.');
+  const groupExpression=(alias:string)=>`CAST(COALESCE(json_extract(${alias}.data_json,'$.properties.subscriptionGroupId'),json_extract(${alias}.data_json,'$.properties.subscription_group_id'),json_extract(${alias}.data_json,'$.properties.groupId'),json_extract(${alias}.data_json,'$.subscriptionGroupId'),json_extract(${alias}.data_json,'$.subscription_group_id'),json_extract(${alias}.data_json,'$.groupId'),json_extract(${alias}.data_json,'$.attributes.subscriptionGroupId'),json_extract(${alias}.data_json,'$.attributes.subscription_group_id'),json_extract(${alias}.data_json,'$.attributes.groupId')) AS TEXT)=?`;
+  const category=String(params.category??'').trim().toLowerCase().replace(/[- ]/g,'_');if(!inboundSMSKeywordCategories.some(choice=>choice.id===category))throw new Error('Choose an inbound SMS keyword category.');
+  const categoryExpression=(alias:string)=>`replace(replace(lower(CAST(COALESCE(json_extract(${alias}.data_json,'$.properties.keywordCategory'),json_extract(${alias}.data_json,'$.properties.keyword_category'),json_extract(${alias}.data_json,'$.properties.category'),json_extract(${alias}.data_json,'$.keywordCategory'),json_extract(${alias}.data_json,'$.keyword_category'),json_extract(${alias}.data_json,'$.category'),json_extract(${alias}.data_json,'$.attributes.keywordCategory'),json_extract(${alias}.data_json,'$.attributes.keyword_category'),json_extract(${alias}.data_json,'$.attributes.category')) AS TEXT)),'-','_'),' ','_')=?`;
+  values.push(workspaceId,groupId,category,workspaceId,workspaceId,groupId,category);
+  const records=[`SELECT COALESCE(json_extract(inbound.data_json,'$.createdAt'),inbound.updated_at) AS at FROM resources inbound WHERE inbound.type='user-events' AND json_extract(inbound.data_json,'$.userId')=u.id AND inbound.name IN ('inbound_sms','Send Inbound SMS','Send an SMS inbound message') AND COALESCE(json_extract(inbound.data_json,'$.workspaceId'),'local')=? AND ${groupExpression('inbound')} AND ${categoryExpression('inbound')} AND ${audienceRealEventSQL('inbound')}`,
+  `SELECT inbound.created_at AS at FROM message_events inbound WHERE inbound.user_id=u.id AND inbound.channel='sms' AND inbound.event_type IN ('replied','inbound_sms') AND (EXISTS(SELECT 1 FROM campaigns source WHERE source.id=inbound.campaign_id AND COALESCE(json_extract(source.config_json,'$.workspaceId'),'local')=?) OR EXISTS(SELECT 1 FROM resources source WHERE source.id=inbound.campaign_id AND source.type='canvas' AND COALESCE(json_extract(source.data_json,'$.workspaceId'),'local')=?)) AND ${groupExpression('inbound')} AND ${categoryExpression('inbound')} AND ${audienceRealEventSQL('inbound')}`];
+  records.push('SELECT profile.value AS at FROM json_each(u.attributes_json,?) profile WHERE replace(replace(lower(profile.key),\'-\',\'_\'),\' \',\'_\')=?');values.push('$.'+JSON.stringify('inbound_sms_keyword_last_by_group')+'.'+JSON.stringify(groupId),category);
+  return `(SELECT strftime('%Y-%m-%dT%H:%M:%fZ',max(julianday(at))) FROM (${records.join(' UNION ALL ')}))`;
+ }
+ if(field.startsWith('membership:')){
+  const family=field.slice(11);if(!['segment','extension','csv'].includes(family))throw new Error('Choose a supported membership filter.');
+  const resource=audienceScopedResource(params[family==='segment'?'segmentId':family==='extension'?'extensionId':'importId'],family==='segment'?['segments']:family==='extension'?['segment-extensions']:['csv-imports','profile-imports','import-users'],workspaceId);
+  if(family==='segment')return audienceSegmentExpression(resource,values,workspaceId);
+  if(resource.type==='import-users'){const members=audienceCsvImportUsers(resource);if(members===null)throw new Error('Choose a completed CSV import with recorded user memberships.');values.push(JSON.stringify(members));return 'EXISTS(SELECT 1 FROM json_each(?) member WHERE CAST(member.value AS TEXT)=u.id)';}
+  if(!Array.isArray(resource.data.userIds??resource.data.members))throw new Error('The selected membership source does not contain a user membership list.');
+  values.push(JSON.stringify(resource.data.userIds??resource.data.members));
+  return "EXISTS(SELECT 1 FROM json_each(?) member WHERE CAST(CASE WHEN member.type='object' THEN COALESCE(json_extract(member.value,'$.userId'),json_extract(member.value,'$.external_id')) ELSE member.value END AS TEXT)=u.id)";
+ }
+ if(field.startsWith('cohort:')){
+  const provider=field.slice(7).toLowerCase().replace(/[- ]/g,'_'),allowed=['amplitude','appsflyer','census','heap','hightouch','kubit','mixpanel','segment','shopify','tinyclues','treasure_data','decisioning_studio_agent'];
+  if(!allowed.includes(provider))throw new Error('Choose a supported cohort provider.');
+  const resource=audienceScopedResource(params.cohortId,provider==='decisioning_studio_agent'?['cohorts','ai-decisioning']:['cohorts'],workspaceId);if(resource.type!=='ai-decisioning'&&String(resource.data.provider).toLowerCase().replace(/[- ]/g,'_')!==provider)throw new Error('Choose a cohort from the selected provider.');
+  if(!Array.isArray(resource.data.userIds??resource.data.members))throw new Error('The selected membership source does not contain a user membership list.');
+  values.push(JSON.stringify(resource.data.userIds??resource.data.members));return "EXISTS(SELECT 1 FROM json_each(?) member WHERE CAST(CASE WHEN member.type='object' THEN COALESCE(json_extract(member.value,'$.userId'),json_extract(member.value,'$.external_id')) ELSE member.value END AS TEXT)=u.id)";
+ }
+ if(field.startsWith('canvas_receipt_')||field==='canvas_alias'||field==='canvas_entered'){
+  const canvas=audienceScopedResource(params.canvasId,['canvas'],workspaceId),steps=canvasGraph(canvas).nodes;
+  if(params.stepId&&!steps.some(step=>step.id===params.stepId&&step.kind==='message'))throw new Error('Choose an available message step from this Canvas.');
+  if(params.variantId&&!audienceCanvasVariants(canvas).some(variant=>variant.id===params.variantId))throw new Error('Choose an available variant from this Canvas.');
+  if(field==='canvas_entered'){
+   if(params.variantId){values.push(canvas.id,String(params.variantId));return "EXISTS(SELECT 1 FROM canvas_runs run,json_each(run.traces_json) trace WHERE run.canvas_id=? AND json_extract(trace.value,'$.userId')=u.id AND json_extract(trace.value,'$.variantId')=?)";}
+   values.push(canvas.id);return 'EXISTS(SELECT 1 FROM canvas_entry_history history WHERE history.canvas_id=? AND history.user_id=u.id)';
+  }
+  const [kind,event]=field.split(':');if(field!=='canvas_alias'&&(!['delivered','engaged','conversion','control'].includes(event)||kind==='canvas_receipt_last'&&event!=='delivered'))throw new Error('Choose a supported Canvas receipt.');
+  let where='e.user_id=u.id AND e.campaign_id=? AND '+audienceRealEventSQL();values.push(canvas.id);
+  if(params.stepId){where+=" AND COALESCE(json_extract(e.data_json,'$.nodeId'),json_extract(e.data_json,'$.attributes.nodeId'))=?";values.push(String(params.stepId));}
+  if(params.variantId){where+=" AND COALESCE(json_extract(e.data_json,'$.variantId'),json_extract(e.data_json,'$.attributes.variantId'))=?";values.push(String(params.variantId));}
+  if(field==='canvas_alias'){if(!params.stepId||!String(params.alias??'').trim())throw new Error('Choose a Canvas step and link alias.');where+=" AND e.event_type='clicked' AND COALESCE(json_extract(e.data_json,'$.alias'),json_extract(e.data_json,'$.attributes.alias'))=?";values.push(String(params.alias));}
+  else if(event==='engaged')where+=' AND '+audienceEngagedSQL(rule,values);
+  else {where+=' AND e.event_type=?';values.push(event);}
+  return `(SELECT ${kind==='canvas_receipt_last'?'max(e.created_at)':'count(*)'} FROM message_events e WHERE ${where})`;
+ }
+ if(field==='landing_form'||field.startsWith('survey_submitted:')){
+  const source=field==='landing_form'?'landing':field.slice(17);if(!['landing','campaign','canvas'].includes(source))throw new Error('Choose a supported survey source.');
+  const id=String(params.resourceId??'');
+  if(params.surveyId)audienceScopedResource(params.surveyId,['surveys'],workspaceId);
+  if(source==='landing'){
+   const resource=audienceScopedResource(id,['landing-pages','surveys'],workspaceId);values.push(resource.id);
+   let predicate=resource.type==='surveys'?"json_extract(e.data_json,'$.surveyId')=?":"json_extract(e.data_json,'$.pageId')=?";if(params.surveyId){predicate+=" AND json_extract(e.data_json,'$.surveyId')=?";values.push(String(params.surveyId));}
+   if(field==='landing_form')return `EXISTS(SELECT 1 FROM resources e WHERE e.type='landing-page-submissions' AND json_extract(e.data_json,'$.userId')=u.id AND ${predicate})`;
+   return `(SELECT count(*) FROM resources e WHERE e.type='landing-page-submissions' AND json_extract(e.data_json,'$.userId')=u.id AND json_extract(e.data_json,'$.surveyId') IS NOT NULL AND ${predicate})`;
+  }
+  if(source==='campaign'){const campaign=getCampaign(id);if(!campaign||String(campaign.config.workspaceId??'local')!==workspaceId)throw new Error('Choose an available survey Campaign from this workspace.');}
+  else {const canvas=audienceScopedResource(id,['canvas'],workspaceId);if(params.stepId&&!canvasGraph(canvas).nodes.some(step=>step.id===params.stepId))throw new Error('Choose an available Canvas survey step.');}
+  values.push(id);let step='';if(params.stepId){step=" AND json_extract(e.data_json,'$.nodeId')=?";values.push(String(params.stepId));}
+  if(params.surveyId){step+=" AND json_extract(e.data_json,'$.surveyId')=?";values.push(String(params.surveyId));}
+  return `(SELECT count(*) FROM resources e WHERE e.type IN ('nps-responses','survey-responses') AND json_extract(e.data_json,'$.userId')=u.id AND json_extract(e.data_json,'$.${source==='campaign'?'campaignId':'canvasId'}')=?${step} AND ${audienceRealEventSQL()})`;
+ }
+ if(field==='attr:live_activity_push_to_start'&&params.appId){const app=audienceScopedResource(params.appId,['app-settings'],workspaceId);values.push('$.'+JSON.stringify('live_activity_push_to_start_by_app')+'.'+JSON.stringify(app.id));return 'json_extract(u.attributes_json,?)';}
+ if(field==='push_app_enabled'){
+  const app=audienceScopedResource(params.appId,['app-settings'],workspaceId);values.push('$.'+JSON.stringify('push_enabled_by_app')+'.'+JSON.stringify(app.id));return 'json_extract(u.attributes_json,?)';
+ }
+ if(field==='location_recent'){
+  const latitude=Number(params.latitude),longitude=Number(params.longitude),radius=Number(params.radius);if(params.latitude===undefined||params.longitude===undefined||params.radius===undefined||!Number.isFinite(latitude)||Math.abs(latitude)>90||!Number.isFinite(longitude)||Math.abs(longitude)>180||!Number.isFinite(radius)||radius<0||!['km','mi','miles','kilometers'].includes(String(params.unit)))throw new Error('Enter a valid latitude, longitude, radius and distance unit.');
+  values.push(latitude,longitude,radius*(['mi','miles'].includes(String(params.unit))?1.609344:1));
+  return "(audience_distance(COALESCE(json_extract(u.attributes_json,'$.location.latitude'),json_extract(u.attributes_json,'$.latitude')),COALESCE(json_extract(u.attributes_json,'$.location.longitude'),json_extract(u.attributes_json,'$.longitude')),?,?)<=?)";
+ }
+ if(field==='intelligent_channel')return "json_extract(u.attributes_json,'$.intelligent_channel')";
+ if(field==='message_open_likelihood'){if(params.channel&&!['email','push','sms','whatsapp','iam','content','banner','line','webhook'].includes(String(params.channel)))throw new Error('Choose a supported likelihood channel.');if(params.channel){values.push('$.'+JSON.stringify('message_open_likelihood')+'.'+JSON.stringify(String(params.channel)));return 'json_extract(u.attributes_json,?)';}return "json_extract(u.attributes_json,'$.message_open_likelihood')";}
+}
+
+function configuredAudienceRuleSQL(rule:AudienceFilter,values:(string|number)[],workspaceId="local"){
+ const parameterStart=values.length;
  const columns:Record<string,string>={id:"u.id",country:"u.country",lifecycle:"u.lifecycle",email:"u.email",first_name:"u.first_name",subscribed:"u.subscribed",reachable:"u.reachable",emailSubscriptionStatus:"u.email_subscription_status",created_at:"COALESCE(json_extract(u.attributes_json,'$.created_at'),(SELECT min(a.created_at) FROM audit_log a WHERE a.entity_type='user' AND a.entity_id=u.id AND a.action IN ('created','imported')))"};
  let expression=columns[rule.field];
+ if(rule.field.startsWith('receipt_tag_count:')||rule.field.startsWith('receipt_tag_last:')){
+  const [kind,event,...parts]=rule.field.split(':'),tagId=parts.join(':'),tag=getResource(tagId);
+  if(!tag||tag.type!=='tag-management'||String(tag.data.workspaceId??'local')!==workspaceId)throw new Error('The selected tag is no longer available in this workspace. Choose another tag or remove the filter.');
+  if(!['delivered','engaged'].includes(event)||(kind==='receipt_tag_last'&&event!=='delivered'))throw new Error('Choose a supported tagged message receipt.');
+  const real=['test','attributes.test','simulated','attributes.simulated','bot','attributes.bot','filtered','attributes.filtered'].map(path=>`lower(CAST(COALESCE(json_extract(e.data_json,'$.${path}'),0) AS TEXT)) NOT IN ('1','true')`).join(' AND ');
+  let interactionSQL="e.event_type='delivered'";
+  if(event==='engaged'){
+   const interaction=findTagInteraction(rule.tagInteraction);if(!interaction)throw new Error('Select a supported tagged message interaction.');
+   interactionSQL=audienceInteractionSQL(interaction,values,rule.params);
+  }
+  expression=`(SELECT ${kind==='receipt_tag_last'?'max(e.created_at)':'count(*)'} FROM message_events e WHERE e.user_id=u.id AND ${interactionSQL} AND ${real} AND (EXISTS(SELECT 1 FROM campaigns c JOIN json_each(c.config_json,'$.tags') t WHERE c.id=e.campaign_id AND COALESCE(json_extract(c.config_json,'$.workspaceId'),'local')=? AND t.value=?) OR EXISTS(SELECT 1 FROM resources r JOIN json_each(r.data_json,'$.tags') t WHERE r.id=e.campaign_id AND r.type='canvas' AND COALESCE(json_extract(r.data_json,'$.workspaceId'),'local')=? AND t.value=?)))`;
+  values.push(workspaceId,tag.name,workspaceId,tag.name);
+ }
+
  if(rule.field==="random_bucket")expression="campaign_random_bucket(u.id)";
- if(rule.field==="created_from")expression="COALESCE(json_extract(u.attributes_json,'$.created_from'),CASE (SELECT action FROM audit_log a WHERE a.entity_type='user' AND a.entity_id=u.id AND a.action IN ('created','imported') ORDER BY a.created_at LIMIT 1) WHEN 'imported' THEN 'Import' WHEN 'created' THEN 'API' END)";
+ if(rule.field==="created_from")expression="COALESCE(json_extract(u.attributes_json,'$.created_from'),CASE (SELECT action FROM audit_log a WHERE a.entity_type='user' AND a.entity_id=u.id AND a.action IN ('created','imported') ORDER BY a.created_at LIMIT 1) WHEN 'imported' THEN 'CSV Import' WHEN 'created' THEN 'REST API' END)";
  if(rule.field==="pending_deletion")expression="COALESCE(json_extract(u.attributes_json,'$.pending_deletion'),0)";
  if(rule.field==="first_session_at"||rule.field==="last_session_at")expression=`(SELECT ${rule.field==="first_session_at"?"min":"max"}(COALESCE(json_extract(e.data_json,'$.createdAt'),e.updated_at)) FROM resources e WHERE e.type='user-events' AND json_extract(e.data_json,'$.userId')=u.id AND e.name IN ('session_start','Start Session'))`;
  if(rule.field==="median_session_duration_seconds")expression="(SELECT campaign_median(json_group_array(COALESCE(json_extract(e.data_json,'$.properties.session_duration_seconds'),json_extract(e.data_json,'$.properties.duration_seconds'),json_extract(e.data_json,'$.properties.duration_ms')/1000.0))) FROM resources e WHERE e.type='user-events' AND json_extract(e.data_json,'$.userId')=u.id AND e.name IN ('session_start','Start Session'))";
@@ -529,69 +762,203 @@ function configuredAudienceRuleSQL(rule:{field:string;operator:string;value:stri
  if(rule.field==="email_available")expression="CASE WHEN instr(u.email,'@')>1 AND instr(substr(u.email,instr(u.email,'@')+1),'.')>1 THEN 1 ELSE 0 END";
  if(rule.field==="location_available")expression="CASE WHEN json_type(u.attributes_json,'$.location')='object' OR (json_extract(u.attributes_json,'$.latitude') IS NOT NULL AND json_extract(u.attributes_json,'$.longitude') IS NOT NULL) THEN 1 ELSE 0 END";
  if(["ecommerce_order_count","ecommerce_revenue","ecommerce_refund_total"].includes(rule.field))expression=`(SELECT ${rule.field==="ecommerce_order_count"?"count(*)":"COALESCE(sum(COALESCE(json_extract(e.data_json,'$.properties.total_price'),json_extract(e.data_json,'$.properties.total'),json_extract(e.data_json,'$.properties.revenue'),json_extract(e.data_json,'$.price')*COALESCE(json_extract(e.data_json,'$.quantity'),1),0)),0)"} FROM resources e WHERE e.type='user-events' AND json_extract(e.data_json,'$.userId')=u.id AND e.name='${rule.field==="ecommerce_refund_total"?"ecommerce.order_refunded":"ecommerce.order_placed"}')`;
- if(rule.field.startsWith("subscription_group:")){const id=rule.field.slice(19);if(!getSubscriptionGroup(id))throw new Error("Choose an available subscription group.");expression="(SELECT m.state FROM subscription_group_memberships m WHERE m.user_id=u.id AND m.group_id=?)";values.push(id);}
+ if(rule.field.startsWith("subscription_group:")){const id=rule.field.slice(19);if(!getSubscriptionGroup(id)||audienceSubscriptionGroupWorkspace(id)!==workspaceId)throw new Error("Choose an available subscription group from this workspace.");expression="(SELECT m.state FROM subscription_group_memberships m WHERE m.user_id=u.id AND m.group_id=?)";values.push(id);}
  if(["last_received_message_at","last_engaged_message_at","last_control_at"].includes(rule.field))expression=`(SELECT max(e.created_at) FROM message_events e WHERE e.user_id=u.id AND e.event_type IN (${rule.field==="last_received_message_at"?"'delivered'":rule.field==="last_control_at"?"'control','global_control'":"'clicked','opened'"}) AND COALESCE(json_extract(e.data_json,'$.test'),json_extract(e.data_json,'$.attributes.test'),0)!=1 AND COALESCE(json_extract(e.data_json,'$.simulated'),json_extract(e.data_json,'$.attributes.simulated'),0)!=1)`;
  if(rule.field.startsWith("receipt_channel_last:")){const channel=rule.field.slice(21);if(!["email","push","iam","sms","webhook","whatsapp"].includes(channel))throw new Error("Choose a supported receipt channel.");expression="(SELECT max(e.created_at) FROM message_events e WHERE e.user_id=u.id AND e.channel=? AND e.event_type='delivered' AND COALESCE(json_extract(e.data_json,'$.test'),json_extract(e.data_json,'$.attributes.test'),0)!=1 AND COALESCE(json_extract(e.data_json,'$.simulated'),json_extract(e.data_json,'$.attributes.simulated'),0)!=1)";values.push(channel);}
- if(["receipt_count:","receipt_last:"].some(prefix=>rule.field.startsWith(prefix))){const [kind,event,...idParts]=rule.field.split(":"),id=idParts.join(":");if(!["delivered","conversion","control","engaged"].includes(event)||!getCampaign(id))throw new Error("Choose an available Campaign and receipt.");expression=`(SELECT ${kind==="receipt_last"?"max(e.created_at)":"count(*)"} FROM message_events e WHERE e.user_id=u.id AND e.campaign_id=? AND ${event==="engaged"?"e.event_type IN ('opened','clicked')":"e.event_type=?"} AND COALESCE(json_extract(e.data_json,'$.test'),json_extract(e.data_json,'$.attributes.test'),0)!=1 AND COALESCE(json_extract(e.data_json,'$.simulated'),json_extract(e.data_json,'$.attributes.simulated'),0)!=1)`;values.push(id);if(event!=="engaged")values.push(event);}
- if(rule.field.startsWith("receipt_variant:")){const [,id,...variantParts]=rule.field.split(":"),variant=variantParts.join(":");if(!getCampaign(id)||!variant)throw new Error("Choose an available Campaign variant.");expression="(SELECT count(*) FROM message_events e WHERE e.user_id=u.id AND e.campaign_id=? AND e.event_type='delivered' AND COALESCE(json_extract(e.data_json,'$.variantId'),json_extract(e.data_json,'$.attributes.variantId'))=? AND COALESCE(json_extract(e.data_json,'$.test'),json_extract(e.data_json,'$.attributes.test'),0)!=1 AND COALESCE(json_extract(e.data_json,'$.simulated'),json_extract(e.data_json,'$.attributes.simulated'),0)!=1)";values.push(id,variant);}
+ if(["receipt_count:","receipt_last:"].some(prefix=>rule.field.startsWith(prefix))){
+  const [kind,event,...idParts]=rule.field.split(":"),id=idParts.join(":"),campaign=id?getCampaign(id):null,allCampaigns=!id&&kind==='receipt_count'&&event==='engaged'&&rule.tagInteraction!==undefined;
+  if(!["delivered","conversion","control","engaged"].includes(event)||!allCampaigns&&(!campaign||String(campaign.config.workspaceId??"local")!==workspaceId))throw new Error("Choose an available Campaign and receipt from this workspace.");
+  if(id)values.push(id);let receipt:string;if(event==='engaged')receipt=audienceEngagedSQL(rule,values);else{receipt='e.event_type=?';values.push(event);}
+  if(allCampaigns){receipt+=" AND EXISTS(SELECT 1 FROM campaigns source WHERE source.id=e.campaign_id AND COALESCE(json_extract(source.config_json,'$.workspaceId'),'local')=?)";values.push(workspaceId);}
+  expression=`(SELECT ${kind==="receipt_last"?"max(e.created_at)":"count(*)"} FROM message_events e WHERE e.user_id=u.id ${id?'AND e.campaign_id=?':''} AND ${receipt} AND ${audienceRealEventSQL()})`;
+ }
+
+ if(rule.field.startsWith("receipt_variant:")||rule.field.startsWith("feature_variant:")){const [,id,...variantParts]=rule.field.split(":"),variant=variantParts.join(":");const campaign=getCampaign(id);if(!campaign||String(campaign.config.workspaceId??"local")!==workspaceId||!audienceCampaignVariants(campaign).some(v=>v.id===variant)||rule.field.startsWith("feature_variant:")&&campaign.channel!=="feature")throw new Error("Choose an available Campaign variant from this workspace.");expression="(SELECT count(*) FROM message_events e WHERE e.user_id=u.id AND e.campaign_id=? AND e.event_type='delivered' AND COALESCE(json_extract(e.data_json,'$.variantId'),json_extract(e.data_json,'$.attributes.variantId'))=? AND COALESCE(json_extract(e.data_json,'$.test'),json_extract(e.data_json,'$.attributes.test'),0)!=1 AND COALESCE(json_extract(e.data_json,'$.simulated'),json_extract(e.data_json,'$.attributes.simulated'),0)!=1)";values.push(id,variant);}
  if(rule.field==="never_received_message")expression="CASE WHEN EXISTS (SELECT 1 FROM message_events e WHERE e.user_id=u.id AND e.event_type='delivered' AND COALESCE(json_extract(e.data_json,'$.test'),json_extract(e.data_json,'$.attributes.test'),0)!=1 AND COALESCE(json_extract(e.data_json,'$.simulated'),json_extract(e.data_json,'$.attributes.simulated'),0)!=1) THEN 0 ELSE 1 END";
- if(rule.field.startsWith("receipt_alias:")){expression="(SELECT count(*) FROM message_events e WHERE e.user_id=u.id AND e.event_type='clicked' AND COALESCE(json_extract(e.data_json,'$.alias'),json_extract(e.data_json,'$.attributes.alias'))=? AND COALESCE(json_extract(e.data_json,'$.test'),json_extract(e.data_json,'$.attributes.test'),0)!=1 AND COALESCE(json_extract(e.data_json,'$.simulated'),json_extract(e.data_json,'$.attributes.simulated'),0)!=1)";values.push(rule.field.slice(14));}
- if(rule.field.startsWith("feature_enabled:")){const flagId=rule.field.slice(16),flag=listResources("feature-flags").find(flag=>flag.data.flagId===flagId&&flag.status!=="Archived");if(!flag)throw new Error("Choose an available feature flag.");expression="COALESCE((SELECT json_extract(e.data_json,'$.enabled') FROM resources e JOIN campaigns c ON c.id=json_extract(e.data_json,'$.campaignId') WHERE e.type='feature-assignments' AND e.status='Active' AND c.status='Active' AND c.archived_at IS NULL AND json_extract(e.data_json,'$.userId')=u.id AND json_extract(e.data_json,'$.flagId')=? ORDER BY e.updated_at DESC LIMIT 1),campaign_flag_enabled(?,u.id,u.country,u.lifecycle,u.attributes_json))";values.push(flagId,JSON.stringify(flag.data));}
- if(rule.field.startsWith("session_app_count:")||rule.field.startsWith("session_app_first:")||rule.field.startsWith("session_app_last:")){const [kind,...parts]=rule.field.split(":"),id=parts.join(":");if(!getResource(id)||getResource(id)?.type!=="app-settings")throw new Error("Choose an available app.");expression=`(SELECT ${kind==="session_app_count"?"count(*)":kind==="session_app_first"?"min(COALESCE(json_extract(e.data_json,'$.createdAt'),e.updated_at))":"max(COALESCE(json_extract(e.data_json,'$.createdAt'),e.updated_at))"} FROM resources e WHERE e.type='user-events' AND json_extract(e.data_json,'$.userId')=u.id AND e.name IN ('session_start','Start Session') AND COALESCE(json_extract(e.data_json,'$.properties.appId'),json_extract(e.data_json,'$.properties.app_id'))=?)`;values.push(id);}
+ if(rule.field.startsWith("receipt_alias:")||rule.field.startsWith("receipt_alias_any:")){if(!rule.field.slice(rule.field.indexOf(":")+1).trim())throw new Error("Choose an available link alias.");expression="(SELECT count(*) FROM message_events e WHERE e.user_id=u.id AND e.event_type='clicked' AND COALESCE(json_extract(e.data_json,'$.alias'),json_extract(e.data_json,'$.attributes.alias'))=? AND COALESCE(json_extract(e.data_json,'$.test'),json_extract(e.data_json,'$.attributes.test'),0)!=1 AND COALESCE(json_extract(e.data_json,'$.simulated'),json_extract(e.data_json,'$.attributes.simulated'),0)!=1)";values.push(rule.field.slice(rule.field.indexOf(":")+1));if(rule.params?.campaignId){const campaign=getCampaign(String(rule.params.campaignId));if(!campaign||String(campaign.config.workspaceId??"local")!==workspaceId)throw new Error("Choose an available alias Campaign from this workspace.");expression=expression.slice(0,-1)+" AND e.campaign_id=?)";values.push(campaign.id);}}
+ if(rule.field.startsWith("feature_enabled:")){const flagId=rule.field.slice(16),flag=listResources("feature-flags").find(flag=>flag.data.flagId===flagId&&flag.status!=="Archived"&&String(flag.data.workspaceId??"local")===workspaceId);if(!flag)throw new Error("Choose an available feature flag.");expression="COALESCE((SELECT json_extract(e.data_json,'$.enabled') FROM resources e JOIN campaigns c ON c.id=json_extract(e.data_json,'$.campaignId') WHERE e.type='feature-assignments' AND e.status='Active' AND c.status='Active' AND c.archived_at IS NULL AND json_extract(e.data_json,'$.userId')=u.id AND json_extract(e.data_json,'$.flagId')=? ORDER BY e.updated_at DESC LIMIT 1),campaign_flag_enabled(?,u.id,u.country,u.lifecycle,u.attributes_json))";values.push(flagId,JSON.stringify(flag.data));}
+ if(rule.field.startsWith("session_app_count:")||rule.field.startsWith("session_app_first:")||rule.field.startsWith("session_app_last:")){const [kind,...parts]=rule.field.split(":"),id=parts.join(":");if(!getResource(id)||getResource(id)?.type!=="app-settings"||String(getResource(id)?.data.workspaceId??"local")!==workspaceId)throw new Error("Choose an available app.");expression=`(SELECT ${kind==="session_app_count"?"count(*)":kind==="session_app_first"?"min(COALESCE(json_extract(e.data_json,'$.createdAt'),e.updated_at))":"max(COALESCE(json_extract(e.data_json,'$.createdAt'),e.updated_at))"} FROM resources e WHERE e.type='user-events' AND json_extract(e.data_json,'$.userId')=u.id AND e.name IN ('session_start','Start Session') AND COALESCE(json_extract(e.data_json,'$.properties.appId'),json_extract(e.data_json,'$.properties.app_id'))=?)`;values.push(id);}
  if(rule.field.startsWith("session_recent:")){const days=Number(rule.field.slice(15));if(!Number.isInteger(days)||days<1||days>30)throw new Error("Choose between 1 and 30 days for session history.");expression="(SELECT count(*) FROM resources e WHERE e.type='user-events' AND json_extract(e.data_json,'$.userId')=u.id AND e.name IN ('session_start','Start Session') AND julianday(COALESCE(json_extract(e.data_json,'$.createdAt'),e.updated_at)) BETWEEN julianday('now',?) AND julianday('now'))";values.push(`-${days} days`);}
 
  if(rule.field==="session_count")expression="(SELECT count(*) FROM resources e WHERE e.type='user-events' AND json_extract(e.data_json,'$.userId')=u.id AND e.name IN ('session_start','Start Session'))";
  else if(rule.field.startsWith("event_count:")&&rule.field.slice(12)){expression="(SELECT count(*) FROM resources e WHERE e.type='user-events' AND json_extract(e.data_json,'$.userId')=u.id AND e.name=?)";values.push(rule.field.slice(12));}
  else if(["purchase_count","purchase_total"].includes(rule.field))expression=`(SELECT ${rule.field==="purchase_count"?"count(*)":"COALESCE(sum(COALESCE(json_extract(e.data_json,'$.price'),0)*COALESCE(json_extract(e.data_json,'$.quantity'),1)),0)"} FROM resources e WHERE e.type='user-events' AND json_extract(e.data_json,'$.userId')=u.id AND (json_extract(e.data_json,'$.productId') IS NOT NULL OR e.name='purchase'))`;
  else if(rule.field.startsWith("campaign_interaction:")){const kind=rule.field.slice(21);if(!["opened","clicked","delivered","conversion","control"].includes(kind))throw new Error("Choose a supported Campaign interaction.");expression="(SELECT count(*) FROM message_events e WHERE e.user_id=u.id AND e.event_type=? AND COALESCE(json_extract(e.data_json,'$.test'),json_extract(e.data_json,'$.attributes.test'),0)!=1 AND COALESCE(json_extract(e.data_json,'$.simulated'),json_extract(e.data_json,'$.attributes.simulated'),0)!=1)";values.push(kind);}
- else if(rule.field.startsWith("segment:")){const name=rule.field.slice(8);if(!sampleSegmentByName(name)&&!listResources("segments").some(r=>r.name===name))throw new Error(`Unknown audience segment: ${name}.`);const base=audienceCondition(name),extra=audienceFilterClauses(savedSegmentFilters(name));expression=`CASE WHEN ${[base.sql,...extra.clauses].join(" AND ")} THEN 1 ELSE 0 END`;values.push(...base.values,...extra.values);}
- if(!expression){if(!rule.field.startsWith("attr:")||!rule.field.slice(5))throw new Error("Choose a supported audience filter field.");expression="json_extract(u.attributes_json, ?)";values.push(`$.${JSON.stringify(rule.field.slice(5))}`);}
- if(rule.operator==="exists"||rule.operator==="not_exists")return `${rule.operator==="not_exists"?"NOT ":""}(COALESCE(${expression},'')!='')`;
- if(rule.operator==="greater_than"||rule.operator==="less_than"){
-  if(campaignAudienceFieldKind(rule.field)==="date"){if(!Number.isFinite(new Date(rule.value).getTime()))throw new Error("Enter a valid date for the created-at filter.");values.push(rule.value);return `julianday(${expression}) ${rule.operator==="greater_than"?">":"<"} julianday(?)`;}
-  const n=Number(rule.value);if(!Number.isFinite(n))throw new Error("Enter a numeric audience filter value.");values.push(n);return `CAST(${expression} AS REAL) ${rule.operator==="greater_than"?">":"<"} ?`;
+ else if(rule.field.startsWith("segment:")){const reference=rule.field.slice(8),resource=listResources('segments').find(r=>(r.id===reference||r.name===reference)&&r.status!=='Archived'&&String(r.data.workspaceId??'local')===workspaceId);if(!resource)throw new Error(`Unknown audience segment: ${reference}.`);expression=audienceSegmentExpression(resource,values,workspaceId);}
+
+ expression=extendedAudienceExpression(rule,values,workspaceId)??expression;
+ if(rule.field==='created_from'){
+  expression=`CASE lower(${expression}) WHEN 'api' THEN 'REST API' WHEN 'rest api' THEN 'REST API' WHEN 'import' THEN 'CSV Import' WHEN 'csv import' THEN 'CSV Import' ELSE ${expression} END`;
+  const canonical=(value:string)=>({api:'REST API',import:'CSV Import'} as Record<string,string>)[value.toLowerCase()]??value;
+  rule={...rule,value:['is_any_of','is_none_of'].includes(rule.operator)?(()=>{try{return JSON.stringify(JSON.parse(rule.value).map((value:unknown)=>canonical(String(value))));}catch{return rule.value;}})():canonical(rule.value)};
  }
- if(["equals","not_equals"].includes(rule.operator)&&campaignAudienceFieldKind(rule.field)==="date"){if(!Number.isFinite(Date.parse(rule.value)))throw new Error("Enter a valid date for the audience filter.");values.push(rule.value);return `date(${expression}) ${rule.operator==="not_equals"?"!=":"="} date(?)`;}
- if(["equals","not_equals"].includes(rule.operator)&&campaignAudienceFieldKind(rule.field)==="number"){const number=Number(rule.value);if(!rule.value.trim()||!Number.isFinite(number))throw new Error("Enter a numeric audience filter value.");values.push(number);return `${expression} ${rule.operator==="not_equals"?"!=":"="} ?`;}
- const boolean=campaignAudienceFieldKind(rule.field)==="boolean";if(boolean&&["equals","not_equals"].includes(rule.operator)){values.push(["true","1"].includes(rule.value.toLowerCase())?1:0);return `CASE lower(CAST(${expression} AS TEXT)) WHEN 'true' THEN 1 WHEN '1' THEN 1 WHEN '1.0' THEN 1 WHEN 'false' THEN 0 WHEN '0' THEN 0 WHEN '0.0' THEN 0 END ${rule.operator==="not_equals"?"!=":"="} ?`;}
- const value=rule.value;values.push(value);
- if(rule.operator==="contains"||rule.operator==="not_contains")return `instr(lower(COALESCE(${expression},'')),lower(?)) ${rule.operator==="contains"?">":"="} 0`;
- return `lower(CAST(COALESCE(${expression},'') AS TEXT)) ${rule.operator==="not_equals"?"!=":"="} lower(?)`;
+
+ if(!expression){if(!rule.field.startsWith("attr:")||!rule.field.slice(5))throw new Error("Choose a supported audience filter field.");expression="json_extract(u.attributes_json, ?)";values.push(`$.${JSON.stringify(rule.field.slice(5))}`);}
+ // Session and message history share the same workspace and preview exclusions as scoped retargeting.
+ if(!rule.field.startsWith("segment:")&&rule.field!=="membership:segment"&&expression.includes("e.type='user-events'")){expression=expression.replace("e.type='user-events'", "e.type='user-events' AND COALESCE(json_extract(e.data_json,'$.workspaceId'),'local')=?");values.splice(parameterStart,0,workspaceId);}
+ if(!rule.field.startsWith('segment:')&&rule.field!=='membership:segment'&&expression.includes('FROM message_events e WHERE e.user_id=u.id')){
+  expression=expression.replace('FROM message_events e WHERE e.user_id=u.id',`FROM message_events e WHERE e.user_id=u.id AND ${audienceRealEventSQL()} AND (EXISTS(SELECT 1 FROM campaigns scope WHERE scope.id=e.campaign_id AND COALESCE(json_extract(scope.config_json,'$.workspaceId'),'local')=?) OR EXISTS(SELECT 1 FROM resources scope WHERE scope.id=e.campaign_id AND scope.type='canvas' AND COALESCE(json_extract(scope.data_json,'$.workspaceId'),'local')=?))`);
+  values.splice(parameterStart,0,workspaceId,workspaceId);
+ }
+ const declaredKind=campaignAudienceFieldKind(rule.field),inferredKind=rule.field.startsWith('attr:')?audienceAttributeKind(rule.field.slice(5),workspaceId):declaredKind,kind=inferredKind==='text'&&rule.field.startsWith('attr:')&&['less_than_ago','more_than_ago'].includes(rule.operator)&&!listUserAttributeNames(workspaceId).includes(rule.field.slice(5))?'date':inferredKind;
+ const issues=audienceComparisonIssues(rule,kind);if(issues.length)throw new Error(issues.join(' '));
+ values.push(JSON.stringify(rule),kind);
+ return `audience_compare(${expression},?,?)=1`;
 }
+export function configuredAudienceRuleMatches(userId:string,rule:AudienceFilter,workspaceId="local"){
+ const values:(string|number)[]=[],clause=configuredAudienceRuleSQL(rule,values,workspaceId);
+ return Boolean(db().prepare(`SELECT 1 FROM users u WHERE u.id=? AND (${clause})`).get(userId,...values));
+}
+function audienceAttributeKind(name:string,workspaceId='local'):AudienceValueKind{
+ const declared=campaignAudienceFieldKind('attr:'+name);if(declared!=='text')return declared;
+ const rows=db().prepare(`SELECT json_type(attributes_json,?) AS kind,json_extract(attributes_json,?) AS value FROM users u WHERE json_type(attributes_json,?) IS NOT NULL AND ${audienceProfileWorkspaceSQL('u')}=? LIMIT 100`).all(...Array(3).fill('$.'+JSON.stringify(name)),workspaceId) as Array<{kind:string;value:unknown}>;
+ const kinds=new Set(rows.map(row=>row.kind));
+ if(kinds.size===1){if(kinds.has('integer')||kinds.has('real'))return 'number';if(kinds.has('true')||kinds.has('false'))return 'boolean';if(kinds.has('array'))return 'array';if(kinds.has('text')&&rows.length&&rows.every(row=>/^\d{4}-\d{2}-\d{2}(?:T|$)/.test(String(row.value))&&Number.isFinite(Date.parse(String(row.value)))))return 'date';}
+ if([...kinds].every(kind=>['integer','real'].includes(kind))&&kinds.size)return 'number';if([...kinds].every(kind=>['true','false'].includes(kind))&&kinds.size)return 'boolean';
+ return 'text';
+}
+
 function configuredAudienceSQL(campaign: MessageDraft) {
-  const config=campaign.config??{},issues=campaignAudienceIssues(campaign);if(issues.length)throw new Error(issues.join(" "));
-  const clauses:string[]=[],values:(string|number)[]=[];
+  const config=campaign.config??{},workspaceId=String(config.workspaceId??"local"),issues=campaignAudienceIssues(campaign);if(issues.length)throw new Error(issues.join(" "));
+  if(config.segmentOptions!==undefined&&config.audienceGroups!==undefined)segmentGroups(config.audienceGroups);
+  const clauses:string[]=[audienceProfileWorkspaceSQL('u')+'=?'],values:(string|number)[]=[workspaceId];
   const names=Array.isArray(config.audienceSegments)?config.audienceSegments as string[]:[campaign.audience??"All Users"];
   const segments=names.filter(name=>name!=="All Users").map(name=>{
-    if(!sampleSegmentByName(name)&&!listResources("segments").some(row=>row.name===name))throw new Error(`Unknown audience segment: ${name}.`);
-    const base=audienceCondition(name),extra=audienceFilterClauses(savedSegmentFilters(name));values.push(...base.values,...extra.values);return `(${[base.sql,...extra.clauses].join(" AND ")})`;
+    const saved=listResources("segments").find(row=>row.name===name&&row.status!=="Archived"&&String(row.data.workspaceId??"local")===workspaceId);
+    if(saved)return `(${audienceSegmentExpression(saved,values,workspaceId)}=1)`;
+    if(!sampleSegmentByName(name))throw new Error(`Unknown audience segment: ${name}.`);
+    const base=audienceCondition(name);values.push(...base.values);return `(${base.sql})`;
   });
   if(segments.length)clauses.push(`(${segments.join(config.audienceSegmentOperator==="OR"?" OR ":" AND ")})`);
-  for(const group of (config.audienceGroups??[]) as AudienceGroup[]){
-    const rules=group.rules.map(rule=>configuredAudienceRuleSQL(rule,values));
+  if(config.segmentOptions!==undefined&&config.audienceGroups!==undefined)clauses.push(...segmentGroupClauses(config,values,workspaceId));
+  else for(const group of (config.audienceGroups??[]) as AudienceGroup[]){
+    const rules=group.rules.map(rule=>configuredAudienceRuleSQL(rule,values,String(config.workspaceId??"local")));
     clauses.push(`${group.exclude?"NOT ":""}(${rules.join(group.operator==="OR"?" OR ":" AND ")})`);
   }
   if(!Array.isArray(config.audienceGroups)){if(config.audienceCountry){clauses.push("u.country = ?");values.push(String(config.audienceCountry));}if(config.audienceExcludeCountry){clauses.push("u.country != ?");values.push(String(config.audienceExcludeCountry));}}
+  if(config.segmentOptions===undefined||config.audienceGroups===undefined){const apps=segmentAppClause(config.segmentOptions,values,workspaceId);if(apps)clauses.push(apps);}
   return {sql:clauses.length?clauses.join(" AND "):"1 = 1",values};
 }
 export function estimateConfiguredAudience(campaign: MessageDraft,lookup?:string){
-  const query=configuredAudienceSQL(campaign),channel=campaign.channel as Channel,groupId=String(campaign.config?.subscriptionGroupId??"");subscriptionGroupForChannel(groupId,channel);
+  const query=configuredAudienceSQL(campaign),channel=campaign.channel as Channel,groupId=String(campaign.config?.subscriptionGroupId??"");subscriptionGroupForChannel(groupId,channel,String(campaign.config?.workspaceId??'local'));
   const membership=groupId?"LEFT JOIN subscription_group_memberships m ON m.user_id=u.id AND m.group_id=?":"",parameters=groupId?[groupId,...query.values]:query.values;
   const rows=db().prepare(`SELECT u.*,${groupId?"m.state":"NULL"} AS subscription_state FROM users u ${membership} WHERE ${query.sql}`).all(...parameters) as Record<string,unknown>[];
-  const settings=globalControlSettings(),suppressions=listResources("suppression-lists").map(r=>r.name.toLowerCase().replace(/^@/,""));
+  const workspaceId=String(campaign.config?.workspaceId??'local'),settings=globalControlSettings(workspaceId),suppressions=legacySuppressionEntries(workspaceId),suppressionMatches=audienceSuppressionMatcher({workspaceId,channel,tags:campaign.config?.tags});
   const reasons=(row:Record<string,unknown>)=>{
     const result:string[]=[];if(!row.reachable)result.push("No reachable channel");
+    if(channel==='email'&&!String(row.email??'').trim())result.push('No email address');
     if(channel==="email"&&(row.email_subscription_status==="unsubscribed"||campaign.config?.subscribeEligibility==="opted-in"&&row.email_subscription_status!=="opted_in"))result.push("Email subscription status");
     if(groupId&&row.subscription_state!=="subscribed"||["sms","whatsapp","line"].includes(channel)&&!groupId)result.push("Not subscribed to the selected subscription group");
     if(heldByGlobalControl(String(row.id),settings,campaign.config?.tags,channel))result.push("Global Control Group");
-    const email=String(row.email).toLowerCase();if(suppressions.some(s=>email===s||email.endsWith(`@${s}`)))result.push("Suppression list");return result;
+    const email=String(row.email).toLowerCase();if(suppressions.some(s=>email===s||email.endsWith(`@${s}`)))result.push("Suppression list");for(const list of suppressionMatches(String(row.id)))result.push('Suppression list: '+list.name);return result;
   };
-  const lookupRow=lookup?db().prepare("SELECT * FROM users WHERE id=? OR lower(email)=lower(?) OR json_extract(attributes_json,'$.external_id')=? OR json_extract(attributes_json,'$.external_user_id')=? OR json_extract(attributes_json,'$.braze_id')=? LIMIT 1").get(lookup,lookup,lookup,lookup,lookup) as Record<string,unknown>|undefined:undefined;
+  const lookupRow=lookup?db().prepare(`SELECT * FROM users u WHERE ${audienceProfileWorkspaceSQL('u')}=? AND (id=? OR lower(email)=lower(?) OR json_extract(attributes_json,'$.external_id')=? OR json_extract(attributes_json,'$.external_user_id')=? OR json_extract(attributes_json,'$.braze_id')=?) LIMIT 1`).get(String(campaign.config?.workspaceId??'local'),lookup,lookup,lookup,lookup,lookup) as Record<string,unknown>|undefined:undefined;
   const user=lookupRow?mapUser(lookupRow):null,match=user?rows.find(r=>r.id===user.id):null;
   const lookupReasons=user?match?reasons(match):["Does not match the current segments and filters"]:["User not found"];
-  const matchedIds=new Set(rows.map(row=>String(row.id))),purchases=listResources("user-events").filter(event=>matchedIds.has(String(event.data.userId))&&(Boolean(event.data.productId)||event.name==="purchase")),currencies=[...new Set(purchases.map(event=>String(event.data.currency??"USD")))];
-  const ltv=purchases.length&&currencies.length===1?purchases.reduce((sum,event)=>sum+Number(event.data.price??0)*Number(event.data.quantity??1),0):null;
-  return {ltv,ltvCurrency:currencies.length===1?currencies[0]:null,calculatedAt:now(),matching:rows.length,reachable:rows.filter(r=>!reasons(r).length).length,total:(db().prepare("SELECT count(*) AS n FROM users").get() as {n:number}).n,globalControlExcluded:rows.filter(r=>heldByGlobalControl(String(r.id),settings,campaign.config?.tags,channel)).length,...(lookup?{lookup:{exists:Boolean(user),matchesFilters:Boolean(match),eligible:Boolean(match&&!lookupReasons.length),reasons:lookupReasons}}:{})};
+  const matchedIds=new Set(rows.map(row=>String(row.id))),purchases=listResources("user-events").filter(event=>matchedIds.has(String(event.data.userId))&&Boolean(event.data.productId)&&String(event.data.workspaceId??"local")===String(campaign.config?.workspaceId??"local")),currencies=[...new Set(purchases.map(event=>typeof event.data.currency==='string'&&/^[A-Z]{3}$/i.test(event.data.currency.trim())?event.data.currency.trim().toUpperCase():''))];
+  const ltv=purchases.length&&currencies.length===1&&currencies[0]?purchases.reduce((sum,event)=>sum+Number(event.data.price??0)*Number(event.data.quantity??1),0):null;
+  return {ltv,ltvCurrency:currencies.length===1&&currencies[0]?currencies[0]:null,calculatedAt:now(),matching:rows.length,reachable:rows.filter(r=>!reasons(r).length).length,total:(db().prepare(`SELECT count(*) AS n FROM users u WHERE ${audienceProfileWorkspaceSQL('u')}=?`).get(String(campaign.config?.workspaceId??'local')) as {n:number}).n,globalControlExcluded:rows.filter(r=>heldByGlobalControl(String(r.id),settings,campaign.config?.tags,channel)).length,...(lookup?{lookup:{exists:Boolean(user),matchesFilters:Boolean(match),eligible:Boolean(match&&!lookupReasons.length),reasons:lookupReasons}}:{})};
+}
+export function configuredAudienceUsers(campaign:MessageDraft){
+ const query=configuredAudienceSQL(campaign);
+ return (db().prepare(`SELECT u.* FROM users u WHERE ${query.sql} ORDER BY u.id`).all(...query.values) as Record<string,unknown>[]).map(mapUser);
+}
+export function audienceDuplicateUserRows(workspaceId='local'){
+ const rows=db().prepare(`SELECT u.*,
+ COALESCE(json_extract(u.attributes_json,'$.created_at'),(SELECT min(a.created_at) FROM audit_log a WHERE a.entity_type='user' AND a.entity_id=u.id AND a.action IN ('created','imported'))) AS profile_created_at,
+ COALESCE(json_extract(u.attributes_json,'$.updated_at'),(SELECT max(a.created_at) FROM audit_log a WHERE a.entity_type='user' AND a.entity_id=u.id AND a.action IN ('created','imported','profile_updated','email_updated','subscription_changed'))) AS profile_updated_at,
+ COALESCE(json_extract(u.attributes_json,'$.last_session_at'),(SELECT max(COALESCE(json_extract(e.data_json,'$.createdAt'),e.updated_at)) FROM resources e WHERE e.type='user-events' AND e.name IN ('session_start','Start Session') AND json_extract(e.data_json,'$.userId')=u.id AND COALESCE(json_extract(e.data_json,'$.workspaceId'),'local')=?)) AS profile_last_session
+ FROM users u WHERE ${audienceProfileWorkspaceSQL('u')}=? ORDER BY u.id`).all(workspaceId,workspaceId) as Record<string,unknown>[];
+ const date=(value:unknown)=>typeof value==='string'&&Number.isFinite(Date.parse(value))?value:null;
+ return rows.map(row=>({...mapUser(row),createdAt:date(row.profile_created_at),updatedAt:date(row.profile_updated_at),lastSessionAt:date(row.profile_last_session)}));
+}
+export function audienceDuplicatePreview(workspaceId='local'){
+ const settings=listResources('audience-merge-settings').find(row=>String(row.data.workspaceId??'local')===workspaceId),rules=audienceMergeRules(settings?.data.rules),groups=duplicateProfileGroups(audienceDuplicateUserRows(workspaceId),rules),settingsUpdatedAt=settings?.updatedAt??null;
+ const fingerprint=createHash('sha256').update(JSON.stringify({workspaceId,rules,settingsUpdatedAt,groups})).digest('hex');
+ return{rules,groups,settingsUpdatedAt,fingerprint,profileCount:groups.reduce((sum,group)=>sum+group.profiles.length,0),duplicateCount:groups.reduce((sum,group)=>sum+group.profiles.length-1,0),mergeableCount:groups.reduce((sum,group)=>sum+(group.mergeable?group.profiles.length-1:0),0),calculatedAt:now()};
+}
+export function generateAudienceDuplicatePreview(workspaceId='local'){
+ return workspaceTransaction(()=>{const preview=audienceDuplicatePreview(workspaceId),history=createResource({type:'audience-merge-history',name:'Duplicate profiles preview',status:'Previewed',description:'Generated duplicate profiles using the saved merge rules.',data:{workspaceId,requester:'Local user',type:'Manual',runDate:preview.calculatedAt,profilesPreviewed:preview.profileCount,profilesMerged:0,fingerprint:preview.fingerprint,rules:preview.rules}});return{previewId:history.id,...preview};});
+}
+function mergeResourceWorkspace(resource:ResourceRecord){
+ if(resource.data.workspaceId!==undefined)return String(resource.data.workspaceId);
+ const campaignId=typeof resource.data.campaignId==='string'?resource.data.campaignId:undefined,canvasId=typeof resource.data.canvasId==='string'?resource.data.canvasId:undefined;
+ return String((campaignId?getCampaign(campaignId)?.config.workspaceId??getResource(campaignId)?.data.workspaceId:undefined)??(canvasId?getResource(canvasId)?.data.workspaceId:undefined)??'local');
+}
+function assertMergeProfileRelations(ids:string[],workspaceId:string){
+ const conn=db();for(const id of ids){
+  const groups=conn.prepare('SELECT group_id FROM subscription_group_memberships WHERE user_id=?').all(id) as {group_id:string}[];
+  if(groups.some(row=>audienceSubscriptionGroupWorkspace(row.group_id)!==workspaceId))throw new Error('A duplicate profile has subscription memberships in another workspace. Resolve these memberships before merging.');
+  const events=conn.prepare('SELECT DISTINCT campaign_id FROM message_events WHERE user_id=? UNION SELECT DISTINCT campaign_id FROM webhook_attempts WHERE user_id=?').all(id,id) as {campaign_id:string}[];
+  for(const row of events){const campaign=getCampaign(row.campaign_id),canvas=getResource(row.campaign_id);if(campaign&&String(campaign.config.workspaceId??'local')!==workspaceId||canvas&&String(canvas.data.workspaceId??'local')!==workspaceId)throw new Error('A duplicate profile has messaging history in another workspace. Resolve these records before merging.');}
+  const canvasIds=conn.prepare('SELECT canvas_id AS id FROM canvas_entry_history WHERE user_id=? UNION SELECT r.canvas_id AS id FROM canvas_pending_steps p JOIN canvas_runs r ON r.id=p.run_id WHERE p.user_id=?').all(id,id) as {id:string}[];
+  if(canvasIds.some(row=>String(getResource(row.id)?.data.workspaceId??'local')!==workspaceId))throw new Error('A duplicate profile has Canvas activity in another workspace.');
+  const centers=conn.prepare('SELECT DISTINCT center_id FROM preference_center_events WHERE user_id=?').all(id) as {center_id:string}[];
+  if(centers.some(row=>{const center=getPreferenceCenter(row.center_id);return center&&preferenceCenterWorkspace(center.config)!==workspaceId;}))throw new Error('A duplicate profile has preference center activity in another workspace.');
+  const catalogs=conn.prepare('SELECT DISTINCT catalog_id FROM catalog_subscriptions WHERE user_id=?').all(id) as {catalog_id:string}[];if(catalogs.some(row=>{const catalog=getResource(row.catalog_id);return catalog&&String(catalog.data.workspaceId??'local')!==workspaceId;}))throw new Error('A duplicate profile has catalog subscriptions in another workspace.');
+  const resources=conn.prepare("SELECT id FROM resources WHERE json_extract(data_json,'$.userId')=? AND type NOT IN ('audience-merge-history','exports-log')").all(id) as {id:string}[];if(resources.some(row=>{const resource=getResource(row.id);return resource&&mergeResourceWorkspace(resource)!==workspaceId;}))throw new Error('A duplicate profile has associated records in another workspace.');
+ }
+}
+function mergeProfileAttributes(profiles:UserRecord[],winnerId:string){
+ const winner=profiles.find(profile=>profile.id===winnerId)!,attributes={...winner.attributes};
+ for(const profile of profiles)for(const [key,value] of Object.entries(profile.attributes))if(!['workspaceId','workspace_id','external_id','braze_id'].includes(key)&&(attributes[key]===undefined||attributes[key]===null||attributes[key]===''))attributes[key]=value;
+ const aliases:Array<{alias_name:string;alias_label:string}>=[];
+ const addAlias=(name:unknown,label:unknown='')=>{if(typeof name!=='string'||!name)return;const alias_label=String(label);if(!aliases.some(alias=>alias.alias_name===name&&alias.alias_label===alias_label))aliases.push({alias_name:name,alias_label});};
+ for(const profile of profiles){for(const key of ['user_aliases','aliases'])for(const value of Array.isArray(profile.attributes[key])?profile.attributes[key] as unknown[]:[]){if(typeof value==='string')addAlias(value);else{const alias=objectValue(value);addAlias(alias.alias_name??alias.name,alias.alias_label??alias.label);}}if(profile.id!==winnerId){addAlias(profile.id,'merged_user_id');addAlias(profile.attributes.external_id,'merged_external_id');addAlias(profile.attributes.braze_id,'merged_braze_id');if(profile.email&&profile.email.toLowerCase()!==winner.email.toLowerCase())addAlias(profile.email.toLowerCase(),'merged_email');}}
+ if(aliases.length)attributes.user_aliases=aliases;
+ const devices=profiles.flatMap(profile=>Array.isArray(profile.attributes.devices)?profile.attributes.devices:[]),uniqueDevices=new Map<string,unknown>();for(const device of devices){const row=objectValue(device);uniqueDevices.set(String(row.id??row.device_id??JSON.stringify(row)),device);}if(uniqueDevices.size)attributes.devices=[...uniqueDevices.values()];
+ const tokens=[...new Set(profiles.flatMap(profile=>[...(typeof profile.attributes.push_token==='string'?[profile.attributes.push_token]:[]),...(Array.isArray(profile.attributes.push_tokens)?profile.attributes.push_tokens.filter((token):token is string=>typeof token==='string'):[])]))];if(tokens.length)attributes.push_tokens=tokens;
+ return attributes;
+}
+function migrateMergedProfile(winnerId:string,loserId:string,workspaceId:string,timestamp:string){
+ const conn=db();
+ const memberships=conn.prepare('SELECT group_id,state FROM subscription_group_memberships WHERE user_id=?').all(loserId) as {group_id:string;state:string}[];
+ for(const row of memberships)conn.prepare("INSERT INTO subscription_group_memberships VALUES(?,?,?,?) ON CONFLICT(group_id,user_id) DO UPDATE SET state=CASE WHEN subscription_group_memberships.state='unsubscribed' OR excluded.state='unsubscribed' THEN 'unsubscribed' ELSE 'subscribed' END,updated_at=excluded.updated_at").run(row.group_id,winnerId,row.state,timestamp);
+ conn.prepare('DELETE FROM subscription_group_memberships WHERE user_id=?').run(loserId);
+ conn.prepare('INSERT OR IGNORE INTO catalog_subscriptions SELECT catalog_id,?,item_id,subscription_type,created_at FROM catalog_subscriptions WHERE user_id=?').run(winnerId,loserId);conn.prepare('DELETE FROM catalog_subscriptions WHERE user_id=?').run(loserId);
+ conn.prepare('INSERT INTO canvas_entry_history SELECT canvas_id,?,last_entered_at FROM canvas_entry_history WHERE user_id=? ON CONFLICT(canvas_id,user_id) DO UPDATE SET last_entered_at=max(canvas_entry_history.last_entered_at,excluded.last_entered_at)').run(winnerId,loserId);conn.prepare('DELETE FROM canvas_entry_history WHERE user_id=?').run(loserId);
+ conn.prepare('INSERT OR IGNORE INTO canvas_pending_steps SELECT run_id,?,next_node_id,due_at FROM canvas_pending_steps WHERE user_id=?').run(winnerId,loserId);conn.prepare('DELETE FROM canvas_pending_steps WHERE user_id=?').run(loserId);
+ for(const table of ['message_events','webhook_attempts','preference_center_events'])conn.prepare(`UPDATE ${table} SET user_id=? WHERE user_id=?`).run(winnerId,loserId);
+ conn.prepare("UPDATE audit_log SET entity_id=? WHERE entity_type='user' AND entity_id=?").run(winnerId,loserId);
+ const runs=conn.prepare('SELECT id,canvas_id,traces_json FROM canvas_runs WHERE EXISTS(SELECT 1 FROM json_each(traces_json) trace WHERE json_extract(trace.value,\'$.userId\')=?)').all(loserId) as {id:string;canvas_id:string;traces_json:string}[];
+ for(const run of runs){if(String(getResource(run.canvas_id)?.data.workspaceId??'local')!==workspaceId)throw new Error('A duplicate profile has a Canvas run in another workspace.');const traces=parseJson<CanvasTrace[]>(run.traces_json,[]),merged=new Map<string,CanvasTrace>();for(const trace of traces){const id=trace.userId===loserId?winnerId:trace.userId,existing=merged.get(id);if(existing)existing.steps.push(...trace.steps);else merged.set(id,{...trace,userId:id,steps:[...trace.steps]});}for(const trace of merged.values())trace.steps.sort((a,b)=>a.at.localeCompare(b.at));conn.prepare('UPDATE canvas_runs SET traces_json=? WHERE id=?').run(JSON.stringify([...merged.values()]),run.id);}
+ const resources=conn.prepare("SELECT id FROM resources WHERE type NOT IN ('audience-merge-history','exports-log') AND (json_extract(data_json,'$.userId')=? OR EXISTS(SELECT 1 FROM json_each(CASE WHEN json_type(data_json,'$.userIds')='array' THEN json_extract(data_json,'$.userIds') ELSE '[]' END) item WHERE CAST(item.value AS TEXT)=?) OR json_type(data_json,'$.members')='array')").all(loserId,loserId) as {id:string}[];
+ for(const row of resources){const resource=getResource(row.id)!;if(mergeResourceWorkspace(resource)!==workspaceId)continue;const data={...resource.data};let changed=false;if(data.userId===loserId){data.userId=winnerId;if(['campaign-jobs','sdk-messages'].includes(resource.type))data.mergedFromUserIds=[...new Set([...(Array.isArray(data.mergedFromUserIds)?data.mergedFromUserIds:[]),loserId])];changed=true;}if(Array.isArray(data.userIds)&&data.userIds.includes(loserId)){data.userIds=[...new Set(data.userIds.map(id=>id===loserId?winnerId:id))];changed=true;}
+  if(Array.isArray(data.members)){data.members=data.members.map(member=>{if(member===loserId){changed=true;return winnerId;}if(member&&typeof member==='object'&&!Array.isArray(member)){const item={...member};for(const key of ['userId','external_id'])if(item[key]===loserId){item[key]=winnerId;changed=true;}return item;}return member;});if(changed)data.members=[...new Map((data.members as unknown[]).map(member=>[JSON.stringify(member),member])).values()];}
+  if(changed)conn.prepare('UPDATE resources SET data_json=?,updated_at=? WHERE id=?').run(JSON.stringify(data),timestamp,resource.id);
+ }
+ conn.prepare('DELETE FROM users WHERE id=?').run(loserId);
+}
+export function mergeAudienceDuplicates(workspaceId:string,expectedFingerprint:unknown,previewId?:string,type:'Manual'|'Scheduled'='Manual',runAt=now()){
+ return workspaceTransaction(()=>{
+  const preview=audienceDuplicatePreview(workspaceId);if(typeof expectedFingerprint!=='string'||expectedFingerprint!==preview.fingerprint)throw Object.assign(new Error('Duplicate profiles or merge rules changed. Generate a new list before merging.'),{status:409});
+  if(type==='Manual'&&!preview.mergeableCount)throw new Error('No duplicate group has a unique highest-priority profile. Change the merge rules and generate a new list.');
+  const previous=previewId?getResource(previewId):null;if(previewId&&(!previous||previous.type!=='audience-merge-history'||String(previous.data.workspaceId??'local')!==workspaceId||previous.status!=='Previewed'||previous.data.fingerprint!==expectedFingerprint))throw Object.assign(new Error('This duplicate preview is no longer available. Generate a new list.'),{status:409});
+  const participants=preview.groups.filter(group=>group.mergeable).flatMap(group=>group.profiles.map(profile=>profile.id));assertMergeProfileRelations(participants,workspaceId);
+  const merges:Array<{winnerId:string;mergedIds:string[]}>=[],conn=db();
+  for(const group of preview.groups.filter(group=>group.mergeable)){const winner=group.profiles[0],losers=group.profiles.slice(1),attributes=mergeProfileAttributes(group.profiles,winner.id),statuses=group.profiles.map(profile=>profile.emailSubscriptionStatus),status=statuses.includes('unsubscribed')?'unsubscribed':statuses.includes('subscribed')?'subscribed':'opted_in';
+   const firstName=winner.firstName||group.profiles.find(profile=>profile.firstName)?.firstName||'',email=winner.email||group.profiles.find(profile=>profile.email)?.email||'',country=winner.country||group.profiles.find(profile=>profile.country)?.country||'';
+   conn.prepare('UPDATE users SET email=?,first_name=?,country=?,subscribed=?,email_subscription_status=?,reachable=?,attributes_json=? WHERE id=?').run(email,firstName,country,status==='unsubscribed'?0:1,status,Number(group.profiles.some(profile=>profile.reachable)),JSON.stringify(attributes),winner.id);
+   for(const loser of losers)migrateMergedProfile(winner.id,loser.id,workspaceId,runAt);
+   audit('user',winner.id,'merged',{workspaceId,mergedUserIds:losers.map(profile=>profile.id),rules:preview.rules});merges.push({winnerId:winner.id,mergedIds:losers.map(profile=>profile.id)});
+  }
+  const winnerIds=new Set(merges.map(merge=>merge.winnerId)),pending=listResources('campaign-jobs').filter(row=>row.status==='Pending'&&mergeResourceWorkspace(row)===workspaceId&&winnerIds.has(String(row.data.userId))).sort((a,b)=>Number(Array.isArray(a.data.mergedFromUserIds))-Number(Array.isArray(b.data.mergedFromUserIds))),seen=new Map<string,string>();for(const job of pending){const key=JSON.stringify([job.data.campaignId,job.data.userId,job.data.dueAt,job.data.triggerProperties]);if(seen.has(key)&&Array.isArray(job.data.mergedFromUserIds))updateResource(job.id,{status:'Merged',data:{...job.data,deduplicatedInto:seen.get(key)}});else if(!seen.has(key))seen.set(key,job.id);}
+  const cards=listResources('sdk-messages').filter(row=>row.status==='Available'&&winnerIds.has(String(row.data.userId))&&mergeResourceWorkspace(row)===workspaceId).sort((a,b)=>Number(Array.isArray(a.data.mergedFromUserIds))-Number(Array.isArray(b.data.mergedFromUserIds))),seenCards=new Map<string,string>();for(const card of cards){const key=JSON.stringify([card.data.campaignId,card.data.userId,card.data.channel,card.data.variantId,card.data.payload]);if(seenCards.has(key)&&Array.isArray(card.data.mergedFromUserIds))updateResource(card.id,{status:'Removed',data:{...card.data,deduplicatedInto:seenCards.get(key)}});else if(!seenCards.has(key))seenCards.set(key,card.id);}
+  const data={workspaceId,requester:type==='Scheduled'?'Scheduled merge':'Local user',type,runDate:runAt,profilesPreviewed:preview.profileCount,profilesMerged:preview.mergeableCount,unresolvedGroups:preview.groups.filter(group=>!group.mergeable).length,fingerprint:expectedFingerprint,rules:preview.rules,merges};
+  const history=previous?updateResource(previous.id,{name:'Merged duplicate profiles',status:'Completed',data}):createResource({type:'audience-merge-history',name:'Merged duplicate profiles',status:'Completed',description:'Merged profiles and migrated their existing associations.',data});
+  return{history,merges,profilesMerged:preview.mergeableCount,profilesPreviewed:preview.profileCount};
+ });
+}
+/** The authenticated delivery worker also runs one due merge per workspace/day. */
+export function processScheduledAudienceMerges(at:Date|string=new Date()){
+ const timestamp=new Date(at).toISOString(),day=timestamp.slice(0,10),results:Array<{workspaceId:string;status:string;profilesMerged?:number;error?:string}>=[];
+ for(const settings of listResources('audience-merge-settings').filter(row=>row.status!=='Archived'&&row.data.scheduled===true)){
+  const workspaceId=String(settings.data.workspaceId??'local'),enabledDay=String(settings.data.scheduledEnabledAt??settings.updatedAt).slice(0,10);
+  if(day<=enabledDay||listResources('audience-merge-history').some(row=>String(row.data.workspaceId??'local')===workspaceId&&row.data.type==='Scheduled'&&String(row.data.runDate).slice(0,10)===day))continue;
+  try{const result=workspaceTransaction(()=>{const prior=listResources('audience-merge-history').some(row=>String(row.data.workspaceId??'local')===workspaceId&&row.data.type==='Scheduled'&&String(row.data.runDate).slice(0,10)===day);if(prior)return null;const preview=audienceDuplicatePreview(workspaceId);return mergeAudienceDuplicates(workspaceId,preview.fingerprint,undefined,'Scheduled',timestamp);});if(result)results.push({workspaceId,status:'Completed',profilesMerged:result.profilesMerged});}
+  catch(error){const message=error instanceof Error?error.message:'Scheduled merge failed.';createResource({type:'audience-merge-history',name:'Scheduled merge failed',status:'Failed',data:{workspaceId,requester:'Scheduled merge',type:'Scheduled',runDate:timestamp,profilesPreviewed:0,profilesMerged:0,error:message}});results.push({workspaceId,status:'Failed',error:message});}
+ }
+ return{processed:results.length,results};
 }
 export function calculateCampaignAudienceStatistics(campaign:MessageDraft){
  const result=estimateConfiguredAudience(campaign),values=objectValue(campaign.config?.channelValues),children=objectValue(campaign.config?.multichannelMessages),channels:Record<string,string>={...multichannelChannels,SMS:"sms"};
@@ -599,7 +966,14 @@ export function calculateCampaignAudienceStatistics(campaign:MessageDraft){
  const channelBreakdown=[...new Set(targets)].map(channel=>{const child=objectValue(children[channel]),config=objectValue(child.config),stats=channel===campaign.channel?result:estimateConfiguredAudience({...campaign,channel,config:{...campaign.config,subscriptionGroupId:config.subscriptionGroupId}});return{channel,reachable:stats.reachable,ltv:stats.ltv};});
  return{...result,channelBreakdown};
 }
-export function campaignFormCapabilities(workspaceId="local"){return{brazeAI:{available:false,reason:"Optimize with BrazeAI™ is not available for this workspace."},attributes:listUserAttributeNames(),apps:listResources("app-settings").filter(app=>app.status!=="Archived").map(({id,name})=>({id,name})),subscriptionGroups:listSubscriptionGroups().filter(group=>group.status!=="Archived").map(({id,name})=>({id,name})),campaigns:listCampaigns({includeArchived:true,limit:1000,workspaceId}).data.map(campaign=>({id:campaign.id,name:campaign.name,channel:campaign.channel,variants:campaignVariants(campaign).map(({id,name})=>({id,name}))})),featureFlags:listResources("feature-flags").filter(flag=>flag.status!=="Archived").map(flag=>({id:String(flag.data.flagId),name:flag.name})),linkAliases:listResources("link-aliases").filter(alias=>alias.status==="Active").map(alias=>({name:alias.name})),filters:{randomBucket:true,createdFrom:true,pendingDeletion:true,sessionDates:true},intelligentTiming:{profileTimes:true,activityFallback:true,deliveryPreview:true}};}
+export function campaignFormCapabilities(workspaceId="local"){
+ const scoped=(type:string)=>listResources(type).filter(resource=>resource.status!=='Archived'&&String(resource.data.workspaceId??'local')===workspaceId),choices=(type:string)=>scoped(type).map(({id,name})=>({id,name})),attributes=listUserAttributeNames(workspaceId).filter(name=>!['workspaceId','workspace_id'].includes(name)),attributeTypes=Object.fromEntries(attributes.map(name=>[name,audienceAttributeKind(name,workspaceId)])),attributeValues:Record<string,string[]>={};
+ const rows=db().prepare(`SELECT attributes_json FROM users u WHERE ${audienceProfileWorkspaceSQL('u')}=?`).all(workspaceId) as Array<{attributes_json:string}>;
+ for(const name of attributes){const values=new Set<string>();for(const row of rows){const value=parseJson<Record<string,unknown>>(row.attributes_json,{})[name];for(const item of Array.isArray(value)?value:[value])if(['string','number','boolean'].includes(typeof item))values.add(String(item));if(values.size>=100)break;}attributeValues[name]=[...values].slice(0,100).sort();}
+ const smsGroups=listSubscriptionGroups({channel:'SMS',status:'Active'}).filter(group=>audienceSubscriptionGroupWorkspace(group.id)===workspaceId).map(({id,name})=>({id,name,keywordCategories:inboundSMSKeywordCategories}));
+ const eventProperties:Record<string,string[]>={};for(const event of scoped('user-events')){eventProperties[event.name]=[...new Set([...(eventProperties[event.name]??[]),...Object.keys(objectValue(event.data.properties))])].sort();}
+ return {tags:listWorkspaceTags(workspaceId).map(({id,name,path})=>({id,name,path})),brazeAI:{available:false,reason:"Optimize with BrazeAI™ is not available for this workspace."},attributes,attributeTypes,attributeValues,smsGroups,smsSubscriptionGroups:smsGroups,smsKeywordCategories:smsGroups.flatMap(group=>inboundSMSKeywordCategories.map(category=>({...category,subscriptionGroupId:group.id}))),eventProperties,geofenceSets:choices('geofence-sets'),whatsappFlows:choices('whatsapp-flows'),events:[...new Set(scoped('user-events').filter(event=>!event.data.productId).map(event=>event.name))].sort(),segments:choices('segments'),extensions:choices('segment-extensions'),csvImports:[...choices('csv-imports'),...choices('profile-imports'),...scoped('import-users').filter(resource=>audienceCsvImportUsers(resource)!==null).map(({id,name})=>({id,name}))],canvases:scoped('canvas').map(canvas=>{const steps=canvasGraph(canvas).nodes.filter(node=>node.kind==='message').map(node=>({id:node.id,name:node.label,...audienceCanvasStepTargets(canvas,node)})),unique=(key:'buttons'|'pages')=>[...new Map(steps.flatMap(step=>step[key]).map(item=>[item.id,item])).values()];return{id:canvas.id,name:canvas.name,steps,variants:audienceCanvasVariants(canvas),buttons:unique('buttons'),pages:unique('pages')};}),cohorts:[...scoped('cohorts'),...scoped('ai-decisioning')].map(({id,name,data})=>({id,name,provider:String(data.provider??(scoped('ai-decisioning').some(agent=>agent.id===id)?'decisioning_studio_agent':'')).toLowerCase().replace(/[- ]/g,'_')})),surveys:choices('surveys'),landingPages:choices('landing-pages'),apps:choices('app-settings'),subscriptionGroups:listSubscriptionGroups().filter(group=>group.status!=="Archived"&&audienceSubscriptionGroupWorkspace(group.id)===workspaceId).map(({id,name,channel})=>({id,name,channel})),campaigns:listCampaigns({includeArchived:true,limit:1000,workspaceId}).data.map(campaign=>({id:campaign.id,name:campaign.name,channel:campaign.channel,variants:audienceCampaignVariants(campaign),...audienceCampaignInteractionTargets(campaign)})),featureFlags:scoped('feature-flags').map(flag=>({id:String(flag.data.flagId),name:flag.name})),linkAliases:scoped('link-aliases').filter(alias=>alias.status==='Active').map(alias=>({name:alias.name})),filters:{randomBucket:true,createdFrom:true,pendingDeletion:true,sessionDates:true},intelligentTiming:{profileTimes:true,activityFallback:true,deliveryPreview:true}};
+}
 export function intelligentTimingFallback(campaign:MessageDraft){
  const delivery=objectValue(campaign.config?.delivery);if(delivery.intelligentFallback==="custom")return{time:String(delivery.intelligentFallbackTime??"10:00"),source:"custom" as const};
  const hours=new Map<number,number>(),profiles=new Map((db().prepare("SELECT id,attributes_json FROM users").all() as Array<{id:string;attributes_json:string}>).map(row=>[row.id,parseJson<Record<string,unknown>>(row.attributes_json,{})]));
@@ -618,7 +992,7 @@ export function previewCampaignDeliveryTimes(campaign:MessageDraft,channel=campa
  for(const row of rows){if(!isCampaignUserEligible(actual,row.id))continue;const profile=parseJson<Record<string,unknown>>(row.attributes_json,{}),hour=Number(profile.best_send_hour),hasOptimal=profile.best_send_hour!==undefined&&profile.best_send_hour!==null&&Number.isFinite(hour)&&hour>=0&&hour<=23;const zone=String(profile.time_zone??profile.timezone??objectValue(effective.config?.delivery).timezone??"UTC"),time=nextAllowedDeliveryTime(nextScheduledTime(effective,at,profile),objectValue(effective.config?.delivery),zone).toISOString().slice(0,13)+":00:00.000Z";bins.set(time,(bins.get(time)??0)+1);result.reachable++;hasOptimal?result.withOptimalTime++:result.usingFallback++;}
  result.bins=[...bins.entries()].sort(([a],[b])=>a.localeCompare(b)).map(([at,users])=>({at,users}));return result;
 }
-function isCampaignUserEligible(campaign:MessageDraft,userId:string){const query=configuredAudienceSQL(campaign),group=String(campaign.config?.subscriptionGroupId??""),row=db().prepare(`SELECT u.* FROM users u ${group?"LEFT JOIN subscription_group_memberships m ON m.user_id=u.id AND m.group_id=?":""} WHERE (${query.sql}) AND u.id=? AND u.reachable=1 AND ${subscriptionCondition(campaign.channel as Channel,String(campaign.config?.subscribeEligibility??"subscribed"),group)}`).get(...(group?[group]:[]),...query.values,userId) as Record<string,unknown>|undefined;if(!row||heldByGlobalControl(userId,globalControlSettings(),campaign.config?.tags,campaign.channel as Channel))return false;const email=String(row.email).toLowerCase();return !listResources("suppression-lists").some(r=>email===r.name.toLowerCase()||email.endsWith(`@${r.name.toLowerCase().replace(/^@/,"")}`));}
+function isCampaignUserEligible(campaign:MessageDraft,userId:string){const query=configuredAudienceSQL(campaign),group=String(campaign.config?.subscriptionGroupId??"");subscriptionGroupForChannel(group,campaign.channel as Channel,String(campaign.config?.workspaceId??"local"));const row=db().prepare(`SELECT u.* FROM users u ${group?"LEFT JOIN subscription_group_memberships m ON m.user_id=u.id AND m.group_id=?":""} WHERE (${query.sql}) AND u.id=? AND u.reachable=1 AND ${subscriptionCondition(campaign.channel as Channel,String(campaign.config?.subscribeEligibility??"subscribed"),group)}`).get(...(group?[group]:[]),...query.values,userId) as Record<string,unknown>|undefined;if(!row||heldByGlobalControl(userId,globalControlSettings(String(campaign.config?.workspaceId??"local")),campaign.config?.tags,campaign.channel as Channel))return false;const email=String(row.email).toLowerCase();return !legacySuppressionEntries(String(campaign.config?.workspaceId??"local")).some(entry=>email===entry||email.endsWith(`@${entry}`))&&!audienceSuppressionMatches(userId,{workspaceId:String(campaign.config?.workspaceId??"local"),channel:campaign.channel,tags:campaign.config?.tags}).length;}
 function materializeSdkMessage(message:MessageDraft,userId:string,payload:unknown,campaignId:string,variantId:string,force=false){
   const values=objectValue(message.config?.channelValues);if(message.channel==="content"&&values.creationMode!=="launch"&&!force)return null;
   const id=`sdk_${createHash("sha256").update(`${campaignId}:${message.channel}:${userId}`).digest("hex").slice(0,24)}`,existing=getResource(id);if(existing)return existing;
@@ -637,6 +1011,7 @@ function activateCampaignSchedule(campaign:CampaignRecord):CampaignLaunchResult{
 }
 export function triggerCampaign(id:string,userIds:string[],properties:Record<string,unknown>={}){const campaign=getCampaign(id);if(!campaign||campaign.status!=="Active"||campaign.schedule!=="API-triggered")throw new Error("Choose an active API-triggered Campaign.");if(!userIds.length||userIds.length>1000)throw new Error("Provide 1–1,000 user IDs.");let queued=0;const requestId=uid("trigger");for(const userId of [...new Set(userIds)])if(getUser(userId)&&isCampaignUserEligible(campaign,userId)&&enqueueCampaignJob(campaign,userId,now(),properties,requestId))queued++;return{queued,requestId};}
 export async function processCampaignJobs(limit=100){
+ const audienceMerges=processScheduledAudienceMerges(),resumedCanvasSteps=processDueCanvasSteps(now());
  const due=listResources("campaign-jobs").filter(r=>r.status==="Pending"&&new Date(String(r.data.dueAt)).getTime()<=Date.now()).slice(0,Math.min(100,Math.max(1,limit))),results:Array<{id:string;status:string;error?:string}>=[];
  for(const job of due){
   const claimed=db().prepare("UPDATE resources SET status='Processing',updated_at=? WHERE id=? AND status='Pending'").run(now(),job.id);if(!claimed.changes)continue;
@@ -649,7 +1024,7 @@ export async function processCampaignJobs(limit=100){
    if(campaign.schedule==="One time"&&d.frequency&&d.frequency!=="One time")enqueueCampaignJob(campaign,userId,nextAllowedDeliveryTime(nextScheduledTime(withIntelligentTimingData(campaign),new Date(),user.attributes,true),d,zone).toISOString());results.push({id:job.id,status:"Completed"});
   }catch(e){updateResource(job.id,{status:"Failed",data:{...job.data,error:e instanceof Error?e.message:"Delivery failed.",completedAt:now()}});results.push({id:job.id,status:"Failed",error:e instanceof Error?e.message:"Delivery failed."});}
  }
- return{processed:results.length,results,webhookRetries:await processWebhookRetries(limit)};
+ return{processed:results.length,results,webhookRetries:await processWebhookRetries(limit),audienceMerges,resumedCanvasSteps,canvasSms:await processCanvasSmsDeliveries(limit)};
 }
 export function sdkCampaignMessages(userId:string){
   const user=getUser(userId);if(!user)return{banners:[],content_cards:[],in_app_messages:[]};const profile={...user.attributes,first_name:user.firstName,email:user.email,user_id:user.id};
@@ -662,7 +1037,7 @@ export function sdkCampaignMessages(userId:string){
   const eligible=rows.filter(r=>{const campaign=getCampaign(String(r.data.campaignId));return campaign&&isCampaignUserEligible(campaign,userId);});
   return{banners:eligible.filter(r=>r.data.channel==="banner"),content_cards:eligible.filter(r=>r.data.channel==="content").sort((a,b)=>Number(b.data.pinned)-Number(a.data.pinned)),in_app_messages:eligible.filter(r=>r.data.channel==="iam").slice(0,1)};
 }
-export function sdkMessageReceipt(userId:string,messageId:string,event:string){const message=getResource(messageId);if(!message||message.type!=="sdk-messages"||message.data.userId!==userId)throw new Error("Message not found for this user.");if(!["impression","read","clicked","dismissed"].includes(event))throw new Error("Unsupported message receipt.");if(event==="dismissed")updateResource(message.id,{status:"Dismissed"});const eventType=event==="impression"?"delivered":event==="read"?"opened":event;const duplicate=db().prepare("SELECT id FROM message_events WHERE campaign_id=? AND user_id=? AND event_type=? AND json_extract(data_json,'$.sdkMessageId')=?").get(String(message.data.campaignId),userId,eventType,message.id);if(!duplicate)db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"),String(message.data.campaignId),String(message.data.channel),userId,eventType,now(),JSON.stringify({sdkMessageId:message.id,variantId:message.data.variantId}));return{recorded:true,event:eventType};}
+export function sdkMessageReceipt(userId:string,messageId:string,event:string){const message=getResource(messageId);if(!message||message.type!=="sdk-messages"||message.data.userId!==userId)throw new Error("Message not found for this user.");if(!["impression","read","clicked","dismissed"].includes(event))throw new Error("Unsupported message receipt.");if(event==="dismissed")updateResource(message.id,{status:"Dismissed"});const eventType=event==="impression"?"delivered":event==="read"?"opened":event;const duplicate=db().prepare("SELECT id FROM message_events WHERE campaign_id=? AND user_id=? AND event_type=? AND json_extract(data_json,'$.sdkMessageId')=?").get(String(message.data.campaignId),userId,eventType,message.id);if(!duplicate)db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"),String(message.data.campaignId),String(message.data.channel),userId,eventType,now(),JSON.stringify({sdkMessageId:message.id,sdkEvent:event,variantId:message.data.variantId}));return{recorded:true,event:eventType};}
 
 function mapUser(row: Record<string, unknown>): UserRecord {
   return { id: String(row.id), email: String(row.email), firstName: String(row.first_name), country: String(row.country), lifecycle: String(row.lifecycle), subscribed: Boolean(row.subscribed), emailSubscriptionStatus: String(row.email_subscription_status ?? (row.subscribed ? "subscribed" : "unsubscribed")) as UserRecord["emailSubscriptionStatus"], reachable: Boolean(row.reachable), attributes: parseJson(String(row.attributes_json), {}) };
@@ -676,11 +1051,11 @@ export function searchUsers(query = "", start = 0, limit = 20) {
   const total = (db().prepare(`SELECT count(*) AS count FROM users WHERE ${condition}`).get(term, term, term) as { count: number }).count;
   const rows = db().prepare(`SELECT * FROM users WHERE ${condition} ORDER BY CAST(SUBSTR(id, 6) AS INTEGER) LIMIT ? OFFSET ?`).all(term, term, term, pageSize, offset) as Record<string, unknown>[];
   const settings = globalControlSettings();
-  return { data: rows.map(row => ({ ...mapUser(row), globalControlGroup: userGlobalCohort(String(row.id), settings) === "control" })), total, start: offset, limit: pageSize };
+  return { data: rows.map(row => ({ ...mapUser(row), globalControlGroup: userGlobalCohort(String(row.id), globalControlSettings(String(userProfileWorkspace(mapUser(row))))) === "control" })), total, start: offset, limit: pageSize };
 }
 
-export function listUserAttributeNames() {
-  const rows = db().prepare("SELECT attributes_json FROM users").all() as Array<{ attributes_json: string }>;
+export function listUserAttributeNames(workspaceId='local') {
+  const rows = db().prepare(`SELECT attributes_json FROM users u WHERE ${audienceProfileWorkspaceSQL('u')}=?`).all(workspaceId) as Array<{ attributes_json: string }>;
   return [...new Set(rows.flatMap(row => Object.keys(parseJson<Record<string, unknown>>(row.attributes_json, {}))))].sort((left, right) => left.localeCompare(right));
 }
 
@@ -704,14 +1079,20 @@ const userField = (row: Record<string, string>, ...keys: string[]) => {
   return "";
 };
 
-export function importUsers(rows: Array<Record<string, string>>) {
+function audienceProfileWorkspaceSQL(alias:string){return `COALESCE(json_extract(${alias}.attributes_json,'$.workspaceId'),json_extract(${alias}.attributes_json,'$.workspace_id'),'local')`;}
+function userProfileWorkspace(user:UserRecord){return user.attributes.workspaceId??user.attributes.workspace_id??'local';}
+export function importUsers(rows: Array<Record<string, string>>,workspaceId='local') {return workspaceTransaction(()=>importUserRows(rows,workspaceId));}
+function importUserRows(rows: Array<Record<string,string>>,workspaceId:string) {
   const insert = db().prepare("INSERT OR IGNORE INTO users (id, email, first_name, country, lifecycle, subscribed, reachable, attributes_json, email_subscription_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
   const now = Date.now();
+  const userIds=new Set<string>();
   let imported = 0;
   let skipped = 0;
   rows.forEach((row, index) => {
     const id = userField(row, "id", "user_id", "external_id") || `user_import_${now}_${index + 1}`;
-    const email = userField(row, "email") || `${id}@example.test`;
+    const existing=getUser(id);if(existing&&userProfileWorkspace(existing)!==workspaceId)throw new Error('This user ID belongs to another workspace; import it with a distinct user ID.');
+    if([row.workspaceId,row.workspace_id].some(value=>value!==undefined&&value!==workspaceId))throw new Error('Import rows must belong to the selected workspace.');
+    const email = userField(row, "email");
     const firstName = userField(row, "first_name") || "Imported user";
     const country = userField(row, "country") || "US";
     const lifecycle = userField(row, "lifecycle", "segment") || "All Users";
@@ -721,10 +1102,12 @@ export function importUsers(rows: Array<Record<string, string>>) {
     const reachable = Number(!/^(false|0|no|unreachable)$/i.test(userField(row, "reachable")));
     const attributes: Record<string, string> = {};
     for (const [key, value] of Object.entries(row)) if (!["id", "user_id", "external_id", "email", "first_name", "country", "lifecycle", "segment", "subscribed", "reachable", "email_subscription_status"].includes(key) && value) attributes[key] = value.trim();
+    if(workspaceId!=='local')attributes.workspaceId=workspaceId;
     const result = insert.run(id, email, firstName, country, lifecycle, emailStatus === "unsubscribed" ? 0 : 1, reachable, JSON.stringify(attributes), emailStatus);
+    if(getUser(id))userIds.add(id);
     if (result.changes) { imported += 1; audit("user", id, "imported", { email }); } else skipped += 1;
   });
-  return { imported, skipped };
+  return { imported, skipped, userIds:[...userIds] };
 }
 
 export function validateSubscriptionCapabilities(value:unknown):{sms:boolean;mms:boolean;rcs:boolean}{
@@ -734,7 +1117,7 @@ export function validateSubscriptionCapabilities(value:unknown):{sms:boolean;mms
 }
 function subscriptionGroupCapabilities(id:string){const saved=getResource(`subscription-capabilities:${id}`);return saved?validateSubscriptionCapabilities(saved.data):{sms:true,mms:false,rcs:false};}
 function saveSubscriptionCapabilities(id:string,value:{sms:boolean;mms:boolean;rcs:boolean}){db().prepare("INSERT INTO resources VALUES (?, 'subscription-group-capabilities', ?, 'Active', 'Subscription channel capabilities', ?, ?) ON CONFLICT(id) DO UPDATE SET data_json=excluded.data_json,updated_at=excluded.updated_at").run(`subscription-capabilities:${id}`,id,now(),JSON.stringify(value));}
-function assertCampaignSubscriptionCapabilities(campaign:MessageDraft){if(campaign.channel!=="sms")return;const group=subscriptionGroupForChannel(String(campaign.config?.subscriptionGroupId??""),"sms");if(!group)throw new Error("Select an active subscription group for SMS.");const issues=subscriptionCapabilityIssues(campaign,group.capabilities);if(issues.length)throw new Error(issues.join(" "));}
+function assertCampaignSubscriptionCapabilities(campaign:MessageDraft){if(campaign.channel!=="sms")return;const group=subscriptionGroupForChannel(String(campaign.config?.subscriptionGroupId??""),"sms",String(campaign.config?.workspaceId??'local'));if(!group)throw new Error("Select an active subscription group for SMS.");const issues=subscriptionCapabilityIssues(campaign,group.capabilities);if(issues.length)throw new Error(issues.join(" "));}
 function mapSubscriptionGroup(row: Record<string, unknown>): SubscriptionGroupRecord {
   return {
     id: String(row.id), name: String(row.name), description: String(row.description), channel: row.channel as SubscriptionChannel,
@@ -759,23 +1142,32 @@ export function getSubscriptionGroup(id: string) {
   return row ? mapSubscriptionGroup(row) : null;
 }
 
-export function createSubscriptionGroup(input: { name: string; description?: string; channel: SubscriptionChannel; capabilities?:unknown }) {
+function validateSubscriptionGroupName(name:string,workspaceId:string,exceptId?:string){
+  if(listSubscriptionGroups().some(group=>group.id!==exceptId&&group.name.toLowerCase()===name.toLowerCase()&&audienceSubscriptionGroupWorkspace(group.id)===workspaceId))throw new Error("A subscription group with this name already exists in this workspace.");
+}
+
+export function createSubscriptionGroup(input: { name: string; description?: string; channel: SubscriptionChannel; capabilities?:unknown },workspaceId='local') { return workspaceTransaction(()=>{
   const capabilities=validateSubscriptionCapabilities(input.capabilities),name = input.name.trim();
   if (!name) throw new Error("Subscription group name is required.");
+  validateSubscriptionGroupName(name,workspaceId);
   const record: SubscriptionGroupRecord = { id: uid("sg"), name, description: input.description?.trim() || "", channel: input.channel, status: "Active", createdAt: now(), updatedAt: now(), subscriberCount: 0 };
   db().prepare("INSERT INTO subscription_groups VALUES (?, ?, ?, ?, ?, ?, ?)").run(record.id, record.name, record.description, record.channel, record.status, record.createdAt, record.updatedAt);
   saveSubscriptionCapabilities(record.id,capabilities);record.capabilities=capabilities;
   audit("subscription_group", record.id, "created", { channel: record.channel }); return record;
+});
 }
 
-export function updateSubscriptionGroup(id: string, patch: Partial<Pick<SubscriptionGroupRecord, "name" | "description" | "channel" | "status" | "capabilities">>) {
+export function updateSubscriptionGroup(id: string, patch: Partial<Pick<SubscriptionGroupRecord, "name" | "description" | "channel" | "status" | "capabilities">>,workspaceId='local') { return workspaceTransaction(()=>{
   const current = getSubscriptionGroup(id); if (!current) return null;
+  if(audienceSubscriptionGroupWorkspace(id)!==workspaceId)throw new Error("Subscription group not found in this workspace.");
   const capabilities=patch.capabilities===undefined?current.capabilities:validateSubscriptionCapabilities(patch.capabilities);
-  const next = { ...current, name: patch.name?.trim() || current.name, description: patch.description ?? current.description, channel: patch.channel ?? current.channel, status: patch.status ?? current.status, updatedAt: now() };
+  const next = { ...current, name: patch.name?.trim() || current.name, description: patch.description ?? current.description, channel: patch.channel ?? current.channel, status: patch.status ?? current.status, updatedAt: new Date(Math.max(Date.now(),Date.parse(current.updatedAt)+1)).toISOString() };
+  validateSubscriptionGroupName(next.name,workspaceId,id);
   db().prepare("UPDATE subscription_groups SET name = ?, description = ?, channel = ?, status = ?, updated_at = ? WHERE id = ?").run(next.name, next.description, next.channel, next.status, next.updatedAt, id);
   if(capabilities)saveSubscriptionCapabilities(id,capabilities);
   audit("subscription_group", id, next.status === "Archived" ? "archived" : "updated", { channel: next.channel });
   return getSubscriptionGroup(id);
+});
 }
 
 export function listSubscriptionMembers(groupId: string, input: { q?: string; state?: string; start?: number; limit?: number } = {}) {
@@ -807,28 +1199,49 @@ function mapPreferenceCenter(row: Record<string, unknown>): PreferenceCenterReco
   };
 }
 
-export function listPreferenceCenters() { return (db().prepare("SELECT * FROM preference_centers ORDER BY updated_at DESC").all() as Record<string, unknown>[]).map(mapPreferenceCenter); }
+function preferenceCenterWorkspace(config:PreferenceCenterConfig){return String((config as unknown as Record<string,unknown>).workspaceId??'local');}
+function validatePreferenceCenterSelection(name:string,groupIds:string[],config:PreferenceCenterConfig){
+ if(!name.trim()||name.length>280)throw new Error('Preference center name is required (maximum 280 characters).');
+ if(!Array.isArray(groupIds)||groupIds.some(id=>typeof id!=='string'||!id)||new Set(groupIds).size!==groupIds.length)throw new Error('Choose valid, unique subscription groups.');
+ for(const id of groupIds){const group=getSubscriptionGroup(id);if(!group||group.channel!=='Email'||group.status!=='Active'||audienceSubscriptionGroupWorkspace(id)!==preferenceCenterWorkspace(config))throw new Error('Choose active Email subscription groups from this preference center workspace.');}
+}
+function assertPreferenceCenterVersion(center:PreferenceCenterRecord,expectedVersion:unknown){if(expectedVersion!==undefined&&expectedVersion!==center.version)throw Object.assign(new Error('Preference center changed in another tab. Reload before saving.'),{status:409});}
+export function listPreferenceCenters(workspaceId='local') { return (db().prepare("SELECT * FROM preference_centers ORDER BY updated_at DESC").all() as Record<string, unknown>[]).map(mapPreferenceCenter).filter(center=>preferenceCenterWorkspace(center.config)===workspaceId); }
 export function getPreferenceCenter(id: string) {
   const row = db().prepare("SELECT * FROM preference_centers WHERE id = ?").get(id) as Record<string, unknown> | undefined;
   return row ? mapPreferenceCenter(row) : null;
 }
 export function createPreferenceCenter(input: { name: string; description?: string; groupIds?: string[]; status?: PreferenceCenterRecord["status"]; config?: PreferenceCenterConfig }) {
+ return workspaceTransaction(()=>createPreferenceCenterRecord(input));
+}
+function createPreferenceCenterRecord(input: { name: string; description?: string; groupIds?: string[]; status?: PreferenceCenterRecord["status"]; config?: PreferenceCenterConfig }) {
   const name = input.name.trim(); if (!name) throw new Error("Preference center name is required.");
   const status = input.status === "Active" ? "Active" : "Draft";
   const record: PreferenceCenterRecord = { id: uid("pc"), name, description: input.description?.trim() || "", groupIds: input.groupIds ?? [], status, updatedAt: now(), config: normalizePreferenceCenterConfig(input.config), version: 1, publishedVersion: status === "Active" ? 1 : null };
+  record.config={...record.config,createdBy:'Local user',createdAt:record.updatedAt};
+  validatePreferenceCenterSelection(name,record.groupIds,record.config);
+  if(status==='Active'){const issues=preferenceConfigIssues(record.config);if(issues.length)throw new Error(issues.join(' '));}
   db().prepare("INSERT INTO preference_centers (id, name, description, group_ids_json, status, updated_at, config_json, version, published_version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)").run(record.id, record.name, record.description, JSON.stringify(record.groupIds), record.status, record.updatedAt, JSON.stringify(record.config), record.version, record.publishedVersion);
   db().prepare("INSERT INTO preference_center_versions (center_id, version, name, status, config_json, created_at, group_ids_json, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)").run(record.id, record.version, record.name, record.status, JSON.stringify(record.config), record.updatedAt, JSON.stringify(record.groupIds), record.description);
   audit("preference_center", record.id, "created", { groupCount: record.groupIds.length }); return record;
 }
 
-export function updatePreferenceCenter(id: string, patch: Partial<Pick<PreferenceCenterRecord, "name" | "description" | "groupIds" | "status" | "config">>) {
+export function updatePreferenceCenter(id: string, patch: Partial<Pick<PreferenceCenterRecord, "name" | "description" | "groupIds" | "status" | "config">>,expectedVersion?:unknown) {
+ return workspaceTransaction(()=>updatePreferenceCenterRecord(id,patch,expectedVersion));
+}
+function updatePreferenceCenterRecord(id: string, patch: Partial<Pick<PreferenceCenterRecord, "name" | "description" | "groupIds" | "status" | "config">>,expectedVersion?:unknown) {
   const current = getPreferenceCenter(id); if (!current) return null;
-  const name = patch.name?.trim() || current.name;
+  assertPreferenceCenterVersion(current,expectedVersion);
+  const name = patch.name===undefined?current.name:patch.name.trim();
   const description = patch.description === undefined ? current.description : patch.description.trim();
   const groupIds = patch.groupIds ?? current.groupIds;
   const publishNow = patch.status === "Active";
   const status = patch.status === "Archived" ? "Archived" : publishNow ? "Active" : current.publishedVersion && current.status === "Active" ? "Active" : "Draft";
   const config = patch.config ? normalizePreferenceCenterConfig(patch.config) : current.config;
+  config.createdBy=current.config.createdBy;config.createdAt=current.config.createdAt;
+  if(preferenceCenterWorkspace(config)!==preferenceCenterWorkspace(current.config))throw new Error('Preference centers cannot be moved between workspaces.');
+  validatePreferenceCenterSelection(name,groupIds,config);
+  if(publishNow){const issues=preferenceConfigIssues(config);if(issues.length)throw new Error(issues.join(' '));}
   const updatedAt = now();
   const version = current.version + 1;
   const publishedVersion = publishNow ? version : current.publishedVersion;
@@ -838,8 +1251,14 @@ export function updatePreferenceCenter(id: string, patch: Partial<Pick<Preferenc
   return { id, name, description, groupIds, status, updatedAt, config, version, publishedVersion } satisfies PreferenceCenterRecord;
 }
 
-export function publishPreferenceCenter(id: string) {
+export function publishPreferenceCenter(id: string,expectedVersion?:unknown) {
+ return workspaceTransaction(()=>publishPreferenceCenterRecord(id,expectedVersion));
+}
+function publishPreferenceCenterRecord(id: string,expectedVersion?:unknown) {
   const current = getPreferenceCenter(id); if (!current) return null;
+  assertPreferenceCenterVersion(current,expectedVersion);
+  validatePreferenceCenterSelection(current.name,current.groupIds,current.config);
+  const issues=preferenceConfigIssues(current.config);if(issues.length)throw new Error(issues.join(' '));
   const updatedAt = now();
   db().prepare("UPDATE preference_centers SET status = 'Active', published_version = ?, updated_at = ? WHERE id = ?").run(current.version, updatedAt, id);
   db().prepare("UPDATE preference_center_versions SET status = 'Active' WHERE center_id = ? AND version = ?").run(id, current.version);
@@ -904,7 +1323,7 @@ export function getPublicPreferenceCenter(centerId: string, userId: string, toke
   });
   const eventId = uid("pcevt");
   db().prepare("INSERT INTO preference_center_events VALUES (?, ?, ?, 'viewed', ?, ?)").run(eventId, centerId, userId, now(), JSON.stringify({ version: center.version }));
-  return { center, user: { id: user.id, email: user.email, firstName: user.firstName, emailSubscriptionStatus: user.emailSubscriptionStatus }, groups };
+  return { center, user: { id: user.id, email: user.email, firstName: user.firstName, language:typeof user.attributes.language==='string'?user.attributes.language:'',emailSubscriptionStatus: user.emailSubscriptionStatus }, groups };
 }
 export function submitPublicPreferenceCenter(centerId: string, userId: string, token: string | null | undefined, states: Record<string, boolean>, action: "groups" | "global_unsubscribe" = "groups") {
   const center = getPublishedPreferenceCenter(centerId); const user = getUser(userId);
@@ -978,11 +1397,15 @@ function recordWebhookResult(campaignId: string, userId: string, variant: Webhoo
 }
 async function processWebhookRetries(limit:number){
  const rows=listResources("webhook-retries").filter(r=>r.status==="Pending"&&new Date(String(r.data.dueAt)).getTime()<=Date.now()).slice(0,limit);let processed=0;
- for(const row of rows){const campaign=getCampaign(String(row.data.campaignId));if(!campaign||campaign.status!=="Active"||Date.now()>=new Date(String(row.data.expiresAt)).getTime()){updateResource(row.id,{status:"Expired"});continue;}if(!db().prepare("UPDATE resources SET status='Processing' WHERE id=? AND status='Pending'").run(row.id).changes)continue;
+ for(const row of rows){const campaign=getCampaign(String(row.data.campaignId));if(!campaign||campaign.status!=="Active"||Date.now()>=new Date(String(row.data.expiresAt)).getTime()){updateResource(row.id,{status:"Expired"});continue;}if(!isCampaignUserEligible(campaign,String(row.data.userId))){updateResource(row.id,{status:'Suppressed',data:{...row.data,reason:'current_audience_eligibility'}});continue;}if(!db().prepare("UPDATE resources SET status='Processing' WHERE id=? AND status='Pending'").run(row.id).changes)continue;
+  const policy=frequencyPolicy({...campaign.config,...objectValue(campaign.config.delivery)}),frequencyContext:FrequencyDispatch={workspaceId:String(campaign.config.workspaceId??'local'),userId:String(row.data.userId),entityType:'campaign',entityId:campaign.id,channel:'webhook',dispatchId:`${row.id}:${row.data.userId}`,timestamp:now(),obey:policy.frequencyCapping,count:!policy.excludeFromFrequencyCount};
+  const decision=reserveFrequencyDispatch(frequencyContext);
+  if(!decision.allowed){updateResource(row.id,{status:'Frequency capped'});db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),campaign.id,'webhook',frequencyContext.userId,'frequency_capped',frequencyContext.timestamp,JSON.stringify({workspaceId:frequencyContext.workspaceId,cappedRuleIds:decision.cappedRuleIds,retryId:row.id}));processed++;continue;}
   try{const user=getUser(String(row.data.userId)),variant=row.data.variant as WebhookVariant,result=await deliverManagedWebhook(variant,webhookContext(user),String(user?.attributes.language??"en"),1),attempts=Number(row.data.attempts??0)+1,last=result.attempts.at(-1);for(const attempt of result.attempts)db().prepare("INSERT INTO webhook_attempts VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)").run(uid("wha"),campaign.id,String(row.data.userId),0,variant.id,attempts,attempt.statusCode,attempt.outcome,result.method,result.url,attempt.responseBody,attempt.error,attempt.durationMs,now());const retryable=last?.statusCode==null||last.statusCode===408||last.statusCode===429||last.statusCode>=500;
+   finishFrequencyDispatch(frequencyContext,result.delivered);
    updateResource(row.id,{status:result.delivered?"Completed":attempts<5&&retryable?"Pending":"Failed",data:{...row.data,attempts,dueAt:result.retryAt??new Date(Date.now()+webhookRetryDelay(null,attempts)).toISOString(),lastStatus:last?.statusCode}});
-   if(result.delivered)db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"),campaign.id,"webhook",String(row.data.userId),"delivered",now(),JSON.stringify({variantId:variant.id,retryId:row.id}));processed++;
-  }catch(error){updateResource(row.id,{status:"Failed",data:{...row.data,error:error instanceof Error?error.message:"Webhook retry failed."}});}
+   if(result.delivered)db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"),campaign.id,"webhook",String(row.data.userId),"delivered",now(),JSON.stringify({variantId:variant.id,retryId:row.id,workspaceId:frequencyContext.workspaceId,frequencyDispatchId:frequencyContext.dispatchId,frequencyCounted:frequencyContext.count}));processed++;
+  }catch(error){finishFrequencyDispatch(frequencyContext,false);updateResource(row.id,{status:"Failed",data:{...row.data,error:error instanceof Error?error.message:"Webhook retry failed."}});}
  }
  return processed;
 }
@@ -998,7 +1421,7 @@ function recordBlockedWebhook(campaignId: string, userId: string, variant: Webho
 
 type LaunchRun = { prepared?:number;accepted?:number;available?:number;queued?:number; id: string; eligible: number; delivered: number; failed: number; deferred?: number; frequencyCapped?: number; suppressionListHits?: number; quietHoursDeferred?: boolean; alreadyLaunched?: boolean; children?: Array<{ campaignId: string; channel: string; run: LaunchRun }> };
 type CampaignLaunchResult = { campaign: CampaignRecord | null; run: LaunchRun };
-export async function launchCampaign(id: string, approvedParentId?: string, messageOverride?: CampaignRecord, runtimeUserId?:string): Promise<CampaignLaunchResult> {
+export async function launchCampaign(id: string, approvedParentId?: string, messageOverride?: CampaignRecord, runtimeUserId?:string, frequencyGroupId?:string): Promise<CampaignLaunchResult> {
   const conn = db(); const campaign = messageOverride ?? getCampaign(id);
   if (!campaign) throw new Error("Campaign not found");
   if (campaign.status === "Active") {
@@ -1019,39 +1442,25 @@ export async function launchCampaign(id: string, approvedParentId?: string, mess
   if (experimentFlag && Number(experimentFlag.data.rollout ?? 0) > 0) throw new Error("Set the Feature Flag's Everyone else rollout to 0 before starting an experiment.");
   const audienceQuery=configuredAudienceSQL(campaign);
   const subscriptionGroupId=typeof campaign.config.subscriptionGroupId==="string"&&campaign.config.subscriptionGroupId?campaign.config.subscriptionGroupId:null;
-  subscriptionGroupForChannel(subscriptionGroupId??undefined,campaign.channel);
+  subscriptionGroupForChannel(subscriptionGroupId??undefined,campaign.channel,String(campaign.config.workspaceId??'local'));
   if(["sms","whatsapp","line"].includes(campaign.channel)&&!subscriptionGroupId)throw new Error("Select an active subscription group for this channel.");
   const allClauses=[audienceQuery.sql],allValues=audienceQuery.values;
   if(runtimeUserId){allClauses.push("u.id = ?");allValues.push(runtimeUserId);}
   const users = conn.prepare(`SELECT u.id, u.reachable, u.subscribed, u.email, u.email_subscription_status${subscriptionGroupId ? ", m.state AS subscription_state" : ""} FROM users u ${subscriptionGroupId ? "LEFT JOIN subscription_group_memberships m ON m.user_id = u.id AND m.group_id = ?" : ""} WHERE ${allClauses.join(" AND ")} ORDER BY u.id`).all(...(subscriptionGroupId ? [subscriptionGroupId] : []), ...allValues) as { id: string; reachable: number; subscribed: number; email: string; email_subscription_status: string; subscription_state?: SubscriptionState }[];
   // Suppression list entries exclude matching emails and whole domains from sends.
-  const suppressionEntries = listResources("suppression-lists").map(row => row.name.toLowerCase().replace(/^@/, ""));
+  const suppressionEntries = legacySuppressionEntries(String(campaign.config.workspaceId??"local"));
   const isSuppressed = (email: string) => suppressionEntries.some(entry => email.toLowerCase() === entry || email.toLowerCase().endsWith(`@${entry}`));
-  // Frequency capping rules limit delivered messages per user inside each window.
-  const freqRecord = listResources("frequency-capping-rules")[0];
-  const freqData = (freqRecord?.data ?? {}) as { enabled?: boolean; rules?: Array<{ kind: string; limit: number; window: string }> };
-  const freqRules = freqData.enabled === true ? (freqData.rules ?? []).filter(rule => rule.limit > 0) : [];
-  const freqCappedUsers = new Set<string>();
-  for (const rule of freqRules) {
-    const ruleChannel = rule.kind === "In-app message" ? "iam" : rule.kind.toLowerCase();
-    if (rule.kind !== "All channels" && ruleChannel !== campaign.channel) continue;
-    const windowMs = rule.window === "per week" ? 7 * 86400000 : rule.window === "per month" ? 30 * 86400000 : 86400000;
-    const cutoff = new Date(Date.now() - windowMs).toISOString();
-    const channelClause = rule.kind === "All channels" ? "" : " AND channel = ?";
-    const channel = rule.kind === "In-app message" ? "iam" : rule.kind.toLowerCase();
-    const rows = conn.prepare(`SELECT user_id, count(*) AS sent FROM message_events WHERE event_type = 'delivered' AND created_at >= ?${channelClause} GROUP BY user_id`).all(cutoff, ...(rule.kind === "All channels" ? [] : [channel])) as Array<{ user_id: string; sent: number }>;
-    for (const row of rows) if (row.sent >= rule.limit) freqCappedUsers.add(row.user_id);
-  }
   const controlGroup = Math.min(100, Math.max(0, Number(campaign.config.controlGroup ?? 20)));
   const configuredMaxUsers = campaign.config.limitVolume ? Math.max(1, Number(campaign.config.maxUsers ?? 100)) : Infinity;
   const maxUsers = campaign.channel === "webhook" ? Math.min(configuredMaxUsers, Math.max(1, Number(process.env.WEBHOOK_MAX_DELIVERIES_PER_RUN ?? 100))) : configuredMaxUsers;
   const subscribed = (user: { email_subscription_status: string; subscription_state?: SubscriptionState }) => {
-    if (campaign.channel === "email") return user.email_subscription_status !== "unsubscribed" && (campaign.config.subscribeEligibility !== "opted-in" || user.email_subscription_status === "opted_in") && (!subscriptionGroupId || user.subscription_state === "subscribed");
+    if (campaign.channel === "email") return Boolean(String((user as {email?:string}).email??'').trim())&&user.email_subscription_status !== "unsubscribed" && (campaign.config.subscribeEligibility !== "opted-in" || user.email_subscription_status === "opted_in") && (!subscriptionGroupId || user.subscription_state === "subscribed");
     if (campaign.channel === "sms" || campaign.channel === "whatsapp" || campaign.channel === "line") return user.subscription_state === "subscribed";
     return true;
   };
-  const globalSettings = globalControlSettings();
-  const eligible = users.filter(user => user.reachable && subscribed(user) && !heldByGlobalControl(user.id, globalSettings, campaign.config.tags, campaign.channel));
+  const globalSettings = globalControlSettings(String(campaign.config.workspaceId??"local"));
+  const suppressionPreview=audienceSuppressionMatcher({workspaceId:String(campaign.config.workspaceId??"local"),channel:campaign.channel,tags:campaign.config.tags});
+  const eligible = users.filter(user => user.reachable && subscribed(user) && !heldByGlobalControl(user.id, globalSettings, campaign.config.tags, campaign.channel)&&!isSuppressed(user.email)&&!suppressionPreview(user.id).length);
   // Quiet hours defer deliveries whose designated send time falls inside the window.
   const delivery = (campaign.config.delivery ?? {}) as Record<string, unknown>;
   const quietActive = delivery.quietHours === true && typeof delivery.quietStart === "string" && typeof delivery.quietEnd === "string";
@@ -1067,20 +1476,26 @@ export async function launchCampaign(id: string, approvedParentId?: string, mess
   const webhookVariants = campaign.channel === "webhook" ? normalizeWebhookVariants(campaign) : [];
   for (const user of users) {
     const deliverable = user.reachable && subscribed(user);
+    const audienceSuppressions=audienceSuppressionMatches(user.id,{workspaceId:String(campaign.config.workspaceId??"local"),channel:campaign.channel,tags:campaign.config.tags});
     const globalHeld = heldByGlobalControl(user.id, globalSettings, campaign.config.tags, campaign.channel);
     const inControl = deliverable && !globalHeld && createHash("sha256").update(`${campaign.config.holdoutSeed ?? id}:${user.id}`).digest()[0] / 256 * 100 < controlGroup;
     let eventType = !deliverable ? subscribed(user) ? "unreachable" : "suppressed"
       : globalHeld ? "global_control"
-      : isSuppressed(user.email) ? "suppressed"
-      : freqCappedUsers.has(user.id) ? "frequency_capped"
+      : isSuppressed(user.email)||audienceSuppressions.length ? "suppressed"
       : inControl ? "control"
       : (campaign.channel === "webhook" ? webhookProcessed : delivered+prepared+accepted+available) >= maxUsers ? "held_back"
       : quietDeferred || workspaceRateLimited(timestamp) ? "deferred"
       : "delivered";
+    const frequencyOptions=frequencyPolicy({...campaign.config,...objectValue(campaign.config.delivery)});
+    const frequencyContext:FrequencyDispatch={workspaceId:String(campaign.config.workspaceId??'local'),userId:user.id,entityType:'campaign',entityId:id,channel:campaign.channel,dispatchId:`${frequencyGroupId??runId}:${user.id}`,timestamp,obey:frequencyOptions.frequencyCapping,count:!frequencyOptions.excludeFromFrequencyCount};
+    const frequencyAttempt=eventType==='delivered'||eventType==='deferred';
+    const frequencyDecision=frequencyAttempt?reserveFrequencyDispatch(frequencyContext):{allowed:true,cappedRuleIds:[]};
+    if(!frequencyDecision.allowed)eventType='frequency_capped';
+    if(frequencyAttempt&&eventType!=='delivered')finishFrequencyDispatch(frequencyContext,false);
     if (eventType === "suppressed" && deliverable) suppressedCount += 1;
     if (eventType === "frequency_capped") frequencyCapped += 1;
     if (eventType === "deferred") deferredCount += 1;
-    let eventData: Record<string, unknown> = { runId, globalControlGeneration: globalSettings.enabled ? globalSettings.seed : null, globalControlCohort: userGlobalCohort(user.id, globalSettings) };
+    let eventData: Record<string, unknown> = { runId,workspaceId:frequencyContext.workspaceId,frequencyDispatchId:frequencyContext.dispatchId,frequencyCounted:frequencyContext.count,cappedRuleIds:frequencyDecision.cappedRuleIds,...(audienceSuppressions.length?{reason:"audience_suppression_list",suppressionListIds:audienceSuppressions.map(list=>list.id),suppressionListNames:audienceSuppressions.map(list=>list.name)}:{}),globalControlGeneration: globalSettings.enabled ? globalSettings.seed : null, globalControlCohort: userGlobalCohort(user.id, globalSettings) };
     const messageIndex=eventType==="delivered"?pickVariant(campaign,createHash("sha256").update(`${id}:${user.id}:variant`).digest().readUInt32BE(0)/0x100000000):0;
     const messageDraft=variantDraft(campaign,messageIndex);
     eventData.variantId=campaignVariants(campaign)[messageIndex].id;
@@ -1125,7 +1540,7 @@ export async function launchCampaign(id: string, approvedParentId?: string, mess
       catch (cause) { eventType = "failed"; eventData = { ...eventData, error: cause instanceof Error ? cause.message : "LINE compilation failed." }; }
     }
     if(eventType==="delivered"&&campaign.channel==="sms"){
-      try{const profile=getUser(user.id);eventData={...eventData,simulated:true,message:compileSms(messageDraft,{...profile?.attributes,first_name:profile?.firstName,phone:profile?.attributes.phone,language:profile?.attributes.language},url=>shortenMessageLink(url,id,user.id))};}catch(error){eventType="failed";eventData={...eventData,error:error instanceof Error?error.message:"SMS rendering failed."};}
+      try{const userProfile=getUser(user.id),profile={...smsProfile(userProfile),message_name:campaignVariants(campaign)[messageIndex].name,message_api_id:campaignVariants(campaign)[messageIndex].id,dispatch_id:runId,event_properties:objectValue(messageDraft.config?.triggerProperties),api_trigger_properties:objectValue(messageDraft.config?.triggerProperties)};eventData={...eventData,simulated:true,message:compileSms(messageDraft,profile,url=>shortenMessageLink(url,id,user.id),smsWorkspaceVariables(String(messageDraft.config?.workspaceId??'local'),profile,id))};}catch(error){eventType="failed";eventData={...eventData,error:error instanceof Error?error.message:"SMS rendering failed."};}
     }
     if(eventType==="delivered"&&["email","sms","whatsapp","push","line","banner","content","iam"].includes(campaign.channel)){
       try{
@@ -1140,6 +1555,7 @@ export async function launchCampaign(id: string, approvedParentId?: string, mess
       }catch(error){eventType="failed";eventData={...eventData,error:error instanceof Error?error.message:"Message preparation failed."};}
     }
     insertEvent.run(uid("evt"), id, campaign.channel, user.id, eventType, timestamp, JSON.stringify(eventData));
+    if(frequencyAttempt&&frequencyDecision.allowed)finishFrequencyDispatch(frequencyContext,["delivered","accepted"].includes(eventType));
     if (eventType === "delivered") {
       delivered += 1;
 
@@ -1160,20 +1576,21 @@ async function launchMultichannelCampaign(parent: CampaignRecord,runtimeUserId?:
     const channel = channels[label]; if (!channel) throw new Error(`Unsupported delivery channel: ${label}.`);
     const source = messages[channel] ? objectValue(messages[channel]) as unknown as CampaignRecord : links[label] ? getCampaign(String(links[label])) : null;
     if (links[label] && (!source || source.channel !== channel)) throw new Error(`Select an existing ${label} Campaign.`);
-    const config = { ...(channel === "email" ? emailPreferenceCampaignDefaults(getEmailPreferences().data) : {}), ...source?.config, delivery: parent.config.delivery ?? {}, conversionEvents:parent.config.conversionEvents, controlGroup: parent.config.controlGroup ?? 0, holdoutSeed: parent.id, audienceGroups:parent.config.audienceGroups,audienceSegments:parent.config.audienceSegments,audienceSegmentOperator:parent.config.audienceSegmentOperator,audienceCountry: parent.config.audienceCountry, audienceExcludeCountry: parent.config.audienceExcludeCountry, limitVolume: parent.config.limitVolume, maxUsers: parent.config.maxUsers, tags: parent.config.tags };
+    const config = { ...(channel === "email" ? emailPreferenceCampaignDefaults(getEmailPreferences().data) : {}), ...source?.config, delivery: parent.config.delivery ?? {}, conversionEvents:parent.config.conversionEvents, controlGroup: parent.config.controlGroup ?? 0, holdoutSeed: parent.id, workspaceId:parent.config.workspaceId??"local", audienceGroups:parent.config.audienceGroups,audienceSegments:parent.config.audienceSegments,audienceSegmentOperator:parent.config.audienceSegmentOperator,audienceCountry: parent.config.audienceCountry, audienceExcludeCountry: parent.config.audienceExcludeCountry, limitVolume: parent.config.limitVolume, maxUsers: parent.config.maxUsers, tags: parent.config.tags };
     const child: CampaignRecord = { id: parent.id, name: `${parent.name} · ${label}`, channel, status: "Draft", schedule: parent.schedule, audience: parent.audience, subject: source?.subject ?? parent.subject ?? parent.name, body: source?.body ?? String(content[label] ?? ""), conversion: parent.conversion, sent: 0, edited: now(), config };
     const count=campaignVariants(child).length,stored=source?.config?.variantSplits,weights=Array.isArray(stored)&&stored.length===count&&stored.every(weight=>Number.isFinite(Number(weight))&&Number(weight)>=0)?stored.map(Number):Array.from({length:count},()=>1),total=weights.reduce((sum,weight)=>sum+weight,0),remaining=100-Number(child.config.controlGroup??0);
     child.config.variantSplits=weights.map(weight=>total?weight/total*remaining:remaining/count);
     assertCampaignSubscriptionCapabilities(child);
     const issues = [...campaignValidationIssues(child), ...(channel === "email" ? emailVariantSendingIssues(child, getEmailPreferences().data) : [])];
-    if (["sms", "whatsapp", "line"].includes(channel)) subscriptionGroupForChannel(String(child.config.subscriptionGroupId ?? ""), channel);
+    if (["sms", "whatsapp", "line"].includes(channel)) subscriptionGroupForChannel(String(child.config.subscriptionGroupId ?? ""), channel,String(parent.config.workspaceId??'local'));
     if (["sms", "whatsapp", "line"].includes(channel) && !child.config.subscriptionGroupId) issues.push(`Select a configured ${label} Campaign with a subscription group.`);
     if (issues.length) throw new Error(`${label}: ${issues.join(" ")}`);
     return child;
   });
   let eligible = 0, delivered = 0, failed = 0, deferred = 0; const childRuns = [];
+  const frequencyGroupId=uid("dispatch");
   for (const child of children) {
-    const result = await launchCampaign(parent.id, parent.id, child,runtimeUserId);
+    const result = await launchCampaign(parent.id, parent.id, child,runtimeUserId,frequencyGroupId);
     eligible += result.run.eligible; delivered += result.run.delivered; failed += result.run.failed; deferred += "deferred" in result.run ? Number(result.run.deferred) : 0; childRuns.push({ campaignId: child.id, channel: child.channel, run: result.run });
   }
   const id = uid("run"); const timestamp = now();
@@ -1197,7 +1614,7 @@ export async function sendTestCampaign(id: string, input: { recipient?: string; 
     const selected=objectValue(parent.config.channelValues).channels,allowed:Record<string,string>={...multichannelChannels,SMS:"sms"};
     if(!Array.isArray(selected)||!selected.some(label=>typeof label==="string"&&allowed[label]===snapshot.channel))throw new Error("Save this channel in the parent Campaign before testing it.");
    }else if(parent.channel!==snapshot.channel)throw new Error("This channel does not belong to the Campaign.");
-   campaign={...parent,channel:snapshot.channel as Channel,name:typeof snapshot.name==="string"?snapshot.name:parent.name,subject:snapshot.subject,body:snapshot.body,config:snapshot.config??{}};
+   campaign={...parent,channel:snapshot.channel as Channel,name:typeof snapshot.name==="string"?snapshot.name:parent.name,subject:snapshot.subject,body:snapshot.body,config:{...snapshot.config,workspaceId:parent.config.workspaceId??'local'}};
   }else if(combined)throw new Error("Select a configured channel snapshot to test.");
   if(!["email","push","iam","content","banner","sms","webhook","whatsapp","line"].includes(campaign.channel))throw new Error("This Campaign has no testable delivery channel.");
   if(options.customUser!==undefined&&(!options.customUser||typeof options.customUser!=="object"||Array.isArray(options.customUser)))throw new Error("Custom user attributes must be a JSON object.");
@@ -1206,6 +1623,7 @@ export async function sendTestCampaign(id: string, input: { recipient?: string; 
   const recipient = options.recipient?.trim() || "user_1";
   if(campaign.channel==="sms"&&!/^\+\d{8,15}$/.test(recipient))throw new Error("Enter an E.164 test recipient phone number.");
   assertCampaignSubscriptionCapabilities(campaign);
+  subscriptionGroupForChannel(String(campaign.config.subscriptionGroupId??''),campaign.channel,String(parent.config.workspaceId??'local'));
   const timestamp = now();
   if (campaign.channel === "webhook") {
     const issues = campaignComposeIssues(campaign);
@@ -1230,9 +1648,9 @@ export async function sendTestCampaign(id: string, input: { recipient?: string; 
   if (campaign.channel === "whatsapp") return {...prepareWhatsAppTest({ campaignId: id, config: campaign.config, recipients: [recipient], variantId: options.variantId, profile: options.customUser ?? {}, override: options.mode === "custom" }),channel:campaign.channel,campaign:campaign.name};
   const issues=campaignComposeIssues(campaign);if(campaign.channel==="email")issues.push(...emailSendingIssues(campaign,getEmailPreferences().data));if(issues.length)throw new Error(issues.join(" "));
   const previewUser=options.mode==="random"?randomCatalogPreviewUser():getUser(recipient)??searchUsers(recipient,0,20).data.find(u=>u.id===recipient||u.email.toLowerCase()===recipient.toLowerCase());
-  const profile={...previewUser?.attributes,first_name:previewUser?.firstName,user_id:previewUser?.id,language:options.locale??previewUser?.attributes.language,...options.customUser};
+  const profile={...previewUser?.attributes,first_name:previewUser?.firstName,user_id:previewUser?.id,language:options.locale??previewUser?.attributes.language,...options.customUser,...(campaign.channel==="sms"?{message_name:selectedVariant.name,message_api_id:selectedVariant.id,dispatch_id:uid("dispatch")}:{} )};
   const values=objectValue(campaign.config.channelValues);
-  const message:Record<string,unknown>=campaign.channel==="email"?prepareEmailMessage(campaign,previewUser?.id??"","test",options.customUser):campaign.channel==="line"?{messages:compileLineMessages(campaign,profile)}:campaign.channel==="sms"?compileSms(campaign,profile,url=>shortenMessageLink(url,id,previewUser?.id??"test_user")):campaign.channel==="push"?compilePush(campaign,profile):campaign.channel==="content"?compileContentCard(campaign,profile):campaign.channel==="banner"?{html:values.editorMode==="html"?values.html:creativeHtml((values.rows??[]) as CreativeRow[])}:{title:campaign.subject,body:campaign.body,settings:values};
+  const message:Record<string,unknown>=campaign.channel==="email"?prepareEmailMessage(campaign,previewUser?.id??"","test",options.customUser):campaign.channel==="line"?{messages:compileLineMessages(campaign,profile)}:campaign.channel==="sms"?compileSms(campaign,profile,url=>shortenMessageLink(url,id,previewUser?.id??"test_user"),smsWorkspaceVariables(String(campaign.config?.workspaceId??'local'),profile,id)):campaign.channel==="push"?compilePush(campaign,profile):campaign.channel==="content"?compileContentCard(campaign,profile):campaign.channel==="banner"?{html:values.editorMode==="html"?values.html:creativeHtml((values.rows??[]) as CreativeRow[])}:{title:campaign.subject,body:campaign.body,settings:values};
   const actualRecipient=campaign.channel==="line"?String(previewUser?.attributes.native_line_id??recipient):recipient;
   const delivery=await dispatchPreparedMessage(campaign,actualRecipient,message,true);
   db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"),id,campaign.channel,previewUser?.id??"test_user",delivery.mode==="preview"?"test_prepared":delivery.status,timestamp,JSON.stringify({test:true,recipient,variantId:campaign.config.previewVariantId,simulated:delivery.mode==="preview",message,delivery}));
@@ -1261,6 +1679,11 @@ export function prepareInAppTest(input: unknown) {
 }
 
 // SMS tests use the unsaved editor snapshot and never dispatch to a provider.
+export function recordSmsComposerTestEvent(ownerId:string,userId:string,eventType:string,data:Record<string,unknown>){
+ const allowed=['test_prepared','accepted','delivered','failed'];if(!allowed.includes(eventType))throw new Error('Invalid SMS test event.');
+ db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),ownerId,'sms',userId,eventType,now(),JSON.stringify({...data,test:true}));
+ audit('sms-test',ownerId,'test_processed',{eventType,userId,testId:data.testId});
+}
 export function prepareCanvasSmsTest(canvasId: string, input: unknown) {
   if (!getCanvas(canvasId)) throw new Error("Canvas not found.");
   if (!input || typeof input !== "object") throw new Error("Invalid SMS test.");
@@ -1268,16 +1691,19 @@ export function prepareCanvasSmsTest(canvasId: string, input: unknown) {
   if (typeof value.message !== "string" || typeof value.subscriptionGroupId !== "string" || typeof value.nodeId !== "string") throw new Error("Invalid SMS test configuration.");
   const issues = smsIssues(value.message, value.subscriptionGroupId);
   if (issues.length) throw new Error(issues.join(" "));
-  subscriptionGroupForChannel(value.subscriptionGroupId, "sms");
+  subscriptionGroupForChannel(value.subscriptionGroupId, "sms",String(getCanvas(canvasId)?.workspaceId??'local'));
   if (!Array.isArray(value.recipients) || !value.recipients.length || value.recipients.length > 20 || value.recipients.some(recipient => typeof recipient !== "string" || !recipient.trim() || recipient.length > 254)) throw new Error("Provide between 1 and 20 test recipients.");
   if (value.profile !== undefined && (!value.profile || typeof value.profile !== "object" || Array.isArray(value.profile) || JSON.stringify(value.profile).length > 20000)) throw new Error("Invalid preview user attributes.");
   const recipients = [...new Set(value.recipients as string[])];
   // Render all recipients before writing any records so invalid Liquid is atomic.
   const tests = recipients.map(recipient => {
-    const user = getUser(recipient) ?? searchUsers(recipient, 0, 1).data.find(item => item.email.toLowerCase() === recipient.toLowerCase());
-    const profile = value.override ? value.profile as Record<string, unknown> : user ? { ...user.attributes, first_name: user.firstName, email_address: user.email, country: user.country, user_id: user.id } : {};
-    const message = smsPreview(value.message as string, profile ?? {}, value.linkShortening !== false);
-    if (!message.trim()) throw new Error("The rendered SMS message is empty.");
+    const workspaceId=String(getCanvas(canvasId)?.workspaceId??'local'),users=configuredAudienceUsers({channel:'push',config:{workspaceId}});
+    const user=users.find(item=>item.id===recipient||item.email.toLowerCase()===recipient.toLowerCase()||String(item.attributes.phone??item.attributes.phone_number??'')===recipient);
+    if(!user&&!/^\+[1-9]\d{7,14}$/.test(recipient))throw new Error('Test recipient not found in this workspace.');
+    const profile=value.override?value.profile as Record<string,unknown>:smsProfile(user);
+    const message=smsPreview(value.message as string,profile??{},value.linkShortening!==false);
+    if(!message.trim())throw new Error('The rendered SMS message is empty.');
+    if(message.length>1600)throw new Error('SMS/MMS message must be 1,600 characters or fewer after personalization.');
     return { recipient, message, ...smsMetrics(message) };
   });
   const timestamp = now();
@@ -1298,7 +1724,7 @@ export function prepareWhatsAppTest(input: unknown) {
   if (!value.config || typeof value.config !== "object" || Array.isArray(value.config) || JSON.stringify(value.config).length > 200000) throw new Error("Invalid WhatsApp configuration.");
   const config = value.config as Record<string, unknown>;
   if (typeof config.subscriptionGroupId !== "string" || !config.subscriptionGroupId) throw new Error("Select an active WhatsApp subscription group.");
-  subscriptionGroupForChannel(config.subscriptionGroupId, "whatsapp");
+  subscriptionGroupForChannel(config.subscriptionGroupId, "whatsapp",String(canvasId?getCanvas(canvasId)?.workspaceId??'local':getCampaign(campaignId!)?.config.workspaceId??'local'));
   if (!Array.isArray(config.whatsappVariants) || !config.whatsappVariants.length) throw new Error("Configure a WhatsApp message variant.");
   const variant = normalizeWhatsAppVariants({ config }).find(item => item.id === value.variantId) ?? (value.variantId === undefined ? normalizeWhatsAppVariants({ config })[0] : undefined);
   if (!variant) throw new Error("Message variant not found.");
@@ -1323,7 +1749,7 @@ export function prepareWhatsAppTest(input: unknown) {
 export function recordExternalEvent(campaignId: string, input: { userId?: string; event?: string; attributes?: Record<string, unknown> }) {
   const campaign = getCampaign(campaignId);
   if (!campaign) throw new Error("Campaign not found");
-  const allowed = ["sent", "delivered", "opened", "clicked", "conversion", "failed"];
+  const allowed = ["sent", "delivered", "impression", "impressed", "opened", "clicked", "dismissed", "replied", "conversion", "failed"];
   const event = allowed.includes(String(input.event)) ? String(input.event) : null;
   if (!event) throw new Error(`event must be one of: ${allowed.join(", ")}`);
   const userId = String(input.userId ?? "").trim() || "external_user";
@@ -1354,29 +1780,53 @@ export function listWebhookAttempts(campaignId?: string, limit = 100) {
 
 export { webhookDeliveryCapability };
 
-export function listWorkspaceTags() { return listTags(db()); }
-export function workspaceTagAliases() { return listTagAliases(db()); }
-export function resolveWorkspaceTags(names: unknown) { return assignTags(db(), names, "canvas"); }
-export function createWorkspaceTag(input: { name: unknown; parentId?: unknown }) { return createTag(db(), input); }
-export function updateWorkspaceTag(id: string, input: { name?: unknown; parentId?: unknown; expectedUpdatedAt?: unknown }) { return changeTag(db(), id, input); }
-export function deleteWorkspaceTag(id: string, expectedUpdatedAt: unknown) { return changeTag(db(), id, { expectedUpdatedAt }, true); }
-export function bulkTagCampaigns(ids: unknown, tags: unknown) { return tagCampaigns(db(), ids, tags); }
+export function listWorkspaceTags(workspaceId="local") { return listTags(db(),workspaceId); }
+export function workspaceTagAliases(workspaceId="local") { return listTagAliases(db(),workspaceId); }
+export function resolveWorkspaceTags(names:unknown,workspaceId="local") { return assignTags(db(),names,"canvas",workspaceId); }
+export function createWorkspaceTag(input:{name:unknown;parentId?:unknown},workspaceId="local") { return createTag(db(),input,workspaceId); }
+export function updateWorkspaceTag(id:string,input:{name?:unknown;parentId?:unknown;expectedUpdatedAt?:unknown},workspaceId="local") { return changeTag(db(),id,input,false,workspaceId); }
+export function deleteWorkspaceTag(id:string,expectedUpdatedAt:unknown,workspaceId="local") { return changeTag(db(),id,{expectedUpdatedAt},true,workspaceId); }
+export function bulkTagCampaigns(ids:unknown,tags:unknown,workspaceId="local",mode:"merge"|"replace"="merge") { return tagCampaigns(db(),ids,tags,workspaceId,mode); }
+export function bulkTagResources(type:"canvas"|"segments",ids:unknown,tags:unknown,workspaceId="local") { return tagResources(db(),type,ids,tags,workspaceId); }
 
 export function listResources(type: string, q = ""): ResourceRecord[] {
   const rows = db().prepare("SELECT * FROM resources WHERE type = ? AND lower(name) LIKE lower(?) ORDER BY updated_at DESC").all(type, `%${q}%`) as Record<string, unknown>[];
   return rows.map(row => ({ id: String(row.id), type: String(row.type), name: String(row.name), status: String(row.status), description: String(row.description), updatedAt: String(row.updated_at), data: parseJson(String(row.data_json), {}) }));
 }
-export function createResource(input: Pick<ResourceRecord, "type" | "name"> & Partial<ResourceRecord>) {
-  if (input.type === "tag-management") { const tag = createWorkspaceTag({ name: input.name, parentId: input.data?.parentId }); return getResource(tag.id)!; }
+function validateSegmentTagFilters(data:Record<string,unknown>){
+ if(data.audienceGroups!==undefined){const values:(string|number)[]=[];segmentGroupClauses(data,values,String(data.workspaceId??'local'));return;}
+ segmentOptions(data.segmentOptions);
+ const filters=Array.isArray(data.filters)?data.filters:[];
+ const rules=filters.filter(filter=>filter&&typeof filter.field==='string'&&filter.operator&&!['is','is_not'].includes(filter.operator)).map((filter,index)=>({...filter,id:'segment-tag-'+index})) as AudienceRule[];
+ if(!rules.length)return;
+ const campaign:MessageDraft={channel:'push',config:{workspaceId:String(data.workspaceId??'local'),audienceGroups:[{id:'tag-validation',operator:'AND',exclude:false,rules}]}};
+ const issues=campaignAudienceIssues(campaign);if(issues.length)throw new Error(issues.join(' '));
+ for(const rule of rules)configuredAudienceRuleSQL(rule,[],String(data.workspaceId??'local'));
+}
+export function createResource(input: Pick<ResourceRecord, "type" | "name"> & Partial<ResourceRecord>){ return workspaceTransaction(()=>createResourceRecord(input)); }
+function validateAudienceLocationResource(type:string,input:{name:string;status?:string;description?:string;data?:Record<string,unknown>}){
+ if(type==='geofence-sets')validateGeofenceSet({name:input.name,status:input.status,data:input.data??{}});
+ if(type==='location-settings'){const data=input.data??{};if(!Array.isArray(data.enabledAppIds)||data.enabledAppIds.some(id=>typeof id!=='string'))throw new Error('Choose valid apps for geofences.');for(const id of data.enabledAppIds)audienceScopedResource(id,['app-settings'],String(data.workspaceId??'local'));}
+ if(type==='audience-merge-settings')validateAudienceMergeSettings(input.data??{});
+ if(type==='audience-suppression-lists')validateAudienceSuppressionList(input);
+}
+function createResourceRecord(input: Pick<ResourceRecord, "type" | "name"> & Partial<ResourceRecord>) {
+  if(input.type==="canvas")validateFrequencyAssignment(db(),String(input.data?.workspaceId??"local"),objectValue(objectValue(input.data?.wizard).send));
+  if(input.type==="frequency-capping-rules")input={...input,data:validateFrequencyResource(db(),input.data??{})};
+  validateAudienceLocationResource(input.type,input);
+  if (input.type === "tag-management") { const tag = createWorkspaceTag({ name: input.name, parentId: input.data?.parentId },String(input.data?.workspaceId??"local")); return getResource(tag.id)!; }
   if (input.type === "global-control-group") throw new Error("Use the versioned Global Control Group endpoint.");
   if (workspaceModules[input.type]) {
     validateModule(input.type, input);
     if (workspaceModules[input.type].singleton && listResources(input.type).length) throw new Error("Settings already exist. Reload before saving.");
     assertModuleUnique(input.type, input.data ?? {});
   }
-  const record: ResourceRecord = { id: input.id && ["sdk-messages","campaign-jobs","webhook-retries","webhook-hosts"].includes(input.type)?input.id:uid("res"), type: input.type, name: input.name, status: input.status ?? "Draft", description: input.description ?? "New local resource", updatedAt: now(), data: input.type === "email-templates" ? { ...emailPreferenceCampaignDefaults(getEmailPreferences().data), ...input.data } : input.type === "content-blocks" ? { emailBlockTheme: getEmailPreferences().data.editor, width: getEmailPreferences().data.editor.blockWidthMode === "full" ? "100%" : getEmailPreferences().data.editor.blockWidth, ...input.data } : input.data ?? {} };
+  const record: ResourceRecord = { id: input.id && ["sdk-messages","campaign-jobs","webhook-retries","webhook-hosts","canvas-send-time"].includes(input.type)?input.id:uid("res"), type: input.type, name: input.name, status: input.status ?? "Draft", description: input.description ?? "New local resource", updatedAt: now(), data: input.type === "email-templates" ? { ...emailPreferenceCampaignDefaults(getEmailPreferences().data), ...input.data } : input.type === "content-blocks" ? { emailBlockTheme: getEmailPreferences().data.editor, width: getEmailPreferences().data.editor.blockWidthMode === "full" ? "100%" : getEmailPreferences().data.editor.blockWidth, ...input.data } : input.data ?? {} };
+  if(record.type==="segments"){validateSegmentTagFilters(record.data);record.data={...record.data,apiIdentifier:randomUUID(),createdAt:record.updatedAt,createdBy:'Local user',lastEditedBy:'Local user'};}
+  if(record.type==='audience-suppression-lists')record.data=normalizeAudienceSuppressionData(record.data,record.status);
+  if(record.type==='audience-merge-settings')record.data={...record.data,scheduledEnabledAt:record.data.scheduled?record.updatedAt:null};
   if(record.type==="webhook-credentials")record.data=normalizeWebhookCredential(record.data);
-  if (record.data.tags !== undefined) record.data = { ...record.data, tags: assignTags(db(), record.data.tags, record.type) };
+  if (record.data.tags !== undefined) record.data = { ...record.data, tags: assignTags(db(),record.data.tags,record.type,String(record.data.workspaceId??"local")) };
   db().prepare("INSERT INTO resources VALUES (?, ?, ?, ?, ?, ?, ?)").run(record.id, record.type, record.name, record.status, record.description, record.updatedAt, JSON.stringify(record.data));
   audit("resource", record.id, "created", { type: record.type }); return record;
 }
@@ -1386,10 +1836,16 @@ export function getResource(id: string): ResourceRecord | null {
   return row ? { id: String(row.id), type: String(row.type), name: String(row.name), status: String(row.status), description: String(row.description), updatedAt: String(row.updated_at), data: parseJson(String(row.data_json), {}) } : null;
 }
 
-export function updateResource(id: string, input: { name?: string; status?: string; description?: string; data?: Record<string, unknown> }, expectedUpdatedAt?: string) {
+export function updateResource(id: string, input: { name?: string; status?: string; description?: string; data?: Record<string, unknown> }, expectedUpdatedAt?: string){ return workspaceTransaction(()=>updateResourceRecord(id,input,expectedUpdatedAt)); }
+function updateResourceRecord(id: string, input: { name?: string; status?: string; description?: string; data?: Record<string, unknown> }, expectedUpdatedAt?: string) {
   const existing = getResource(id);
   if (!existing) throw new Error("Resource not found");
-  if (existing.type === "tag-management") { updateWorkspaceTag(id, { name: input.name, parentId: input.data?.parentId, expectedUpdatedAt }); return getResource(id)!; }
+  if(existing.type==="canvas")validateFrequencyAssignment(db(),String(input.data?.workspaceId??existing.data.workspaceId??"local"),objectValue(objectValue((input.data??existing.data).wizard).send));
+  if(existing.type==="frequency-capping-rules")input={...input,data:validateFrequencyResource(db(),{...existing.data,...input.data},{id:existing.id,type:existing.type,data_json:JSON.stringify(existing.data),updated_at:existing.updatedAt})};
+  if(existing.type==='audience-suppression-lists')input={...input,data:normalizeAudienceSuppressionData(input.data??existing.data,input.status??existing.status)};
+  if(existing.type==='audience-merge-settings'&&input.data)input={...input,data:{...input.data,scheduledEnabledAt:input.data.scheduled?(existing.data.scheduled?existing.data.scheduledEnabledAt??existing.updatedAt:now()):null}};
+  validateAudienceLocationResource(existing.type,{name:input.name??existing.name,status:input.status??existing.status,description:input.description??existing.description,data:input.data??existing.data});
+  if (existing.type === "tag-management") { updateWorkspaceTag(id,{name:input.name,parentId:input.data?.parentId,expectedUpdatedAt},String(existing.data.workspaceId??"local")); return getResource(id)!; }
   if(existing.type==="webhook-credentials"&&input.data!==undefined)input={...input,data:normalizeWebhookCredential(input.data)};
   if (existing.type === "global-control-group") throw new Error("Use the versioned Global Control Group endpoint.");
   if (existing.type === "email-preferences") throw new Error("Use the versioned email-preferences endpoint to change workspace settings.");
@@ -1398,8 +1854,13 @@ export function updateResource(id: string, input: { name?: string; status?: stri
     validateModule(existing.type, { name: input.name ?? existing.name, status: input.status ?? existing.status, data: input.data ?? existing.data }, existing);
     assertModuleUnique(existing.type, input.data ?? existing.data, id);
   }
-  if (input.data?.tags !== undefined) input = { ...input, data: { ...input.data, tags: assignTags(db(), input.data.tags, existing.type) } };
-  const updatedAt = now();
+  if(existing.type==="segments"){
+   const data=input.data??existing.data;
+   if(data.audienceGroups!==undefined){audienceSegmentStack.add(id);try{validateSegmentTagFilters(data);}finally{audienceSegmentStack.delete(id);}}else validateSegmentTagFilters(data);
+   if(input.data)input={...input,data:{...input.data,apiIdentifier:existing.data.apiIdentifier??input.data.apiIdentifier??randomUUID(),createdAt:existing.data.createdAt,createdBy:existing.data.createdBy,lastEditedBy:'Local user'}};
+  }
+  if (input.data?.tags !== undefined) input = { ...input, data: { ...input.data, tags: assignTags(db(),input.data.tags,existing.type,String(input.data.workspaceId??existing.data.workspaceId??"local")) } };
+  const updatedAt = existing.type === "frequency-capping-rules" ? new Date(Math.max(Date.now(), Date.parse(existing.updatedAt) + 1)).toISOString() : now();
   db().prepare("UPDATE resources SET name = ?, status = ?, description = ?, updated_at = ?, data_json = ? WHERE id = ?")
     .run(input.name ?? existing.name, input.status ?? existing.status, input.description ?? existing.description, updatedAt, JSON.stringify(input.data ?? existing.data), id);
   audit("resource", id, "updated", { type: existing.type });
@@ -1410,7 +1871,8 @@ export function deleteResource(id: string, expectedUpdatedAt?: string) {
   const existing = getResource(id);
   if (!existing) throw new Error("Resource not found");
   if (expectedUpdatedAt !== undefined && existing.updatedAt !== expectedUpdatedAt) throw new Error("Resource changed in another tab. Reload before deleting.");
-  if (existing.type === "tag-management") { deleteWorkspaceTag(id, expectedUpdatedAt); return existing; }
+  if (existing.type === "tag-management") { deleteWorkspaceTag(id,expectedUpdatedAt,String(existing.data.workspaceId??"local")); return existing; }
+  if(existing.type==="frequency-capping-rules"&&!getFrequencyCappingSnapshot(String(existing.data.workspaceId??"local")).capabilities.canEdit)throw Object.assign(new Error("Edit Frequency Capping Rules permission is required."),{status:403});
   if (existing.type === "global-control-group") throw new Error("Disable the Global Control Group using its settings endpoint.");
   if (existing.type === "email-preferences") throw new Error("Use the versioned email-preferences endpoint to change workspace settings.");
   db().prepare("DELETE FROM resources WHERE id = ?").run(id);
@@ -1445,34 +1907,37 @@ export function saveEmailPreferences(data: EmailPreferences, expectedUpdatedAt: 
 }
 
 const localCanvasId = "canvas_local_main";
-export type CanvasRecord = { id: string; name: string; status: string; description: string; updatedAt: string; createdAt: string; createdBy: string; lastEditedBy: string; tags: string[]; team: string; experience: string; targetSegment: string; alertsConfigured: boolean; wizard: CanvasWizardConfig };
+export type CanvasRecord = { workspaceId?: string; id: string; name: string; status: string; description: string; updatedAt: string; createdAt: string; createdBy: string; lastEditedBy: string; tags: string[]; team: string; experience: string; targetSegment: string; alertsConfigured: boolean; expiredInteractionData?:boolean; optimizedWithAI?:boolean; exceedsTargetingComplexity?:boolean; wizard: CanvasWizardConfig };
 function canvasResource(id: string) {
   const resource = getResource(id);
   return resource?.type === "canvas" ? resource : null;
 }
 function canvasGraph(resource: ResourceRecord): CanvasGraph {
-  return isCanvasGraph(resource.data) && resource.data.nodes.length ? resource.data as CanvasGraph : structuredClone(initialCanvasGraph);
+  return isCanvasGraph(resource.data) && resource.data.nodes.length ? {nodes:resource.data.nodes,edges:resource.data.edges,...(resource.data.variants?{variants:resource.data.variants}:{})} : structuredClone(initialCanvasGraph);
 }
 function canvasRecord(resource: ResourceRecord): CanvasRecord {
   const metadata = resource.data;
-  return { id: resource.id, name: resource.name, status: resource.status, description: resource.description,
+  return { id: resource.id, workspaceId:String(metadata.workspaceId??"local"), name: resource.name, status: resource.status, description: resource.description,
     updatedAt: resource.updatedAt, createdAt: typeof metadata.createdAt === "string" ? metadata.createdAt : resource.updatedAt,
     createdBy: typeof metadata.createdBy === "string" ? metadata.createdBy : "Local workspace",
     lastEditedBy: typeof metadata.lastEditedBy === "string" ? metadata.lastEditedBy : "Local workspace",
     tags: Array.isArray(metadata.tags) ? metadata.tags.filter((tag): tag is string => typeof tag === "string") : [],
     team: typeof metadata.team === "string" ? metadata.team : "", experience: typeof metadata.experience === "string" ? metadata.experience : "Canvas Flow",
     targetSegment: typeof metadata.targetSegment === "string" ? metadata.targetSegment : "All Users", alertsConfigured: metadata.alertsConfigured === true,
+    expiredInteractionData:metadata.expiredInteractionData===true,optimizedWithAI:metadata.optimizedWithAI===true,exceedsTargetingComplexity:metadata.exceedsTargetingComplexity===true,
     wizard: normalizeCanvasWizard(metadata.wizard) };
 }
-export function listCanvases() { return listResources("canvas").map(canvasRecord); }
+export function listCanvases(workspaceId="local") { return listResources("canvas").filter(resource=>String(resource.data.workspaceId??"local")===workspaceId).map(canvasRecord); }
 export function getCanvas(id: string) { const resource = canvasResource(id); return resource ? canvasRecord(resource) : null; }
-export function createCanvas(input: { name: string; description?: string; tags?: string[]; graph?: CanvasGraph; wizard?: CanvasWizardConfig }) {
+export function createCanvas(input: { name: string; description?: string; tags?: string[]; graph?: CanvasGraph; wizard?: CanvasWizardConfig; workspaceId?:string }){ return workspaceTransaction(()=>createCanvasRecord(input)); }
+function createCanvasRecord(input: { name: string; description?: string; tags?: string[]; graph?: CanvasGraph; wizard?: CanvasWizardConfig; workspaceId?:string }) {
+  validateFrequencyAssignment(db(),input.workspaceId??"local",objectValue(input.wizard?.send));
   const name = input.name.trim();
   if (!name || name.length > 120) throw new Error("Canvas name must be 1–120 characters.");
-  if (listCanvases().some(item => item.name.toLowerCase() === name.toLowerCase() && item.status !== "Archived")) throw new Error("A Canvas with this name already exists.");
+  if (listCanvases(input.workspaceId??"local").some(item => item.name.toLowerCase() === name.toLowerCase() && item.status !== "Archived")) throw new Error("A Canvas with this name already exists.");
   const timestamp = now();
   const resource: ResourceRecord = { id: crypto.randomUUID(), type: "canvas", name, status: "Draft", description: input.description?.trim() ?? "", updatedAt: timestamp,
-    data: { ...(input.graph ?? structuredClone(initialCanvasGraph)), createdAt: timestamp, createdBy: "Local workspace", lastEditedBy: "Local workspace", tags: assignTags(db(), input.tags, "canvas"), experience: "Canvas Flow", targetSegment: "All Users", alertsConfigured: false, wizard: input.wizard ?? structuredClone(defaultCanvasWizard) } };
+    data: { ...(input.graph ?? structuredClone(initialCanvasGraph)), workspaceId:input.workspaceId??"local", createdAt: timestamp, createdBy: "Local workspace", lastEditedBy: "Local workspace", tags: assignTags(db(), input.tags, "canvas",input.workspaceId??"local"), experience: "Canvas Flow", targetSegment: "All Users", alertsConfigured: false, wizard: input.wizard ?? structuredClone(defaultCanvasWizard) } };
   db().prepare("INSERT INTO resources VALUES (?, ?, ?, ?, ?, ?, ?)").run(resource.id, resource.type, resource.name, resource.status, resource.description, resource.updatedAt, JSON.stringify(resource.data));
   audit("canvas", resource.id, "created", {});
   return canvasRecord(resource);
@@ -1482,10 +1947,10 @@ export function updateCanvas(id: string, input: { name?: string; description?: s
   if (!existing) throw new Error("Canvas not found.");
   const name = input.name?.trim() ?? existing.name;
   if (!name || name.length > 120) throw new Error("Canvas name must be 1–120 characters.");
-  if (input.status && !["Draft", "Active", "Stopped", "Archived"].includes(input.status)) throw new Error("Invalid Canvas status.");
+  if (input.status && !["Draft", "Active", "Stopped", "Archived", "Idle"].includes(input.status)) throw new Error("Invalid Canvas status.");
   if (input.tags && (!Array.isArray(input.tags) || input.tags.some(tag => typeof tag !== "string"))) throw new Error("Invalid tags.");
   if (existing.status === "Active" && input.wizard && JSON.stringify(normalizeCanvasWizard(input.wizard).conversionEvents) !== JSON.stringify(normalizeCanvasWizard(existing.data.wizard).conversionEvents)) throw new Error("Conversion events cannot be changed after a Canvas has launched.");
-  if (listCanvases().some(item => item.id !== id && item.name.toLowerCase() === name.toLowerCase() && item.status !== "Archived")) throw new Error("A Canvas with this name already exists.");
+  if (listCanvases(String(existing.data.workspaceId??"local")).some(item => item.id !== id && item.name.toLowerCase() === name.toLowerCase() && item.status !== "Archived")) throw new Error("A Canvas with this name already exists.");
   return canvasRecord(updateResource(id, { name, description: input.description ?? existing.description, status: input.status ?? existing.status,
     data: { ...existing.data, tags: input.tags ?? existing.data.tags ?? [], alertsConfigured: input.alertsConfigured ?? existing.data.alertsConfigured ?? false,
       wizard: input.wizard ? normalizeCanvasWizard(input.wizard) : existing.data.wizard ?? structuredClone(defaultCanvasWizard), lastEditedBy: "Local workspace" } }, expectedUpdatedAt));
@@ -1494,10 +1959,23 @@ export function duplicateCanvas(id: string) {
   const source = canvasResource(id);
   if (!source) throw new Error("Canvas not found.");
   let name = `${source.name} copy`; let suffix = 2;
-  while (listCanvases().some(item => item.name.toLowerCase() === name.toLowerCase() && item.status !== "Archived")) name = `${source.name} copy ${suffix++}`;
+  while (listCanvases(String(source.data.workspaceId??"local")).some(item => item.name.toLowerCase() === name.toLowerCase() && item.status !== "Archived")) name = `${source.name} copy ${suffix++}`;
   const graph = canvasGraph(source);
-  return createCanvas({ name, description: source.description, tags: canvasRecord(source).tags, wizard: canvasRecord(source).wizard,
+  return createCanvas({ name, workspaceId:String(source.data.workspaceId??"local"), description: source.description, tags: canvasRecord(source).tags, wizard: canvasRecord(source).wizard,
     graph: { ...graph, nodes: graph.nodes.map(node => node.config?.linkedCampaignId ? { ...node, config: { ...node.config, linkedCampaignId: undefined } } : node) } });
+}
+export function copyCanvasToWorkspace(id:string,targetWorkspaceId:string){
+ const source=canvasResource(id);if(!source)throw new Error('Canvas not found.');
+ const target=listCampaignWorkspaces().find(workspace=>workspace.id===targetWorkspaceId);if(!target)throw new Error('Choose an available workspace.');
+ if(target.id===String(source.data.workspaceId??'local'))throw new Error('Choose a different workspace.');
+ const wizard=normalizeCanvasWizard(source.data.wizard),graph=structuredClone(canvasGraph(source));
+ wizard.audience={...structuredClone(defaultCanvasWizard.audience)};
+ wizard.send.frequencyCategoryId="";
+ wizard.entry={...wizard.entry,triggers:[]};wizard.conversionEvents=wizard.conversionEvents.map(event=>({...event,appScope:'all'}));
+ for(const node of graph.nodes){if(!node.config)continue;for(const key of ['linkedCampaignId','subscriptionGroupId','appId','canvasId','destinationCanvasId','destinationId','featureFlagId','cohortId','agentId','segmentIds','filterGroups','audienceGroups','surveyId'])delete node.config[key];if(Array.isArray(node.config.paths))node.config.paths=node.config.paths.map(path=>({...path,segmentIds:[],filterGroups:[],triggers:[]}));}
+ let name=source.name+' (Copy)',suffix=2;const names=new Set(listCanvases(target.id).map(item=>item.name.toLowerCase()));while(names.has(name.toLowerCase()))name=source.name+` (Copy ${suffix++})`;
+ const result=createCanvas({name,description:source.description,workspaceId:target.id,graph,wizard,tags:[]});
+ audit('canvas',result.id,'copied_to_workspace',{sourceCanvasId:id,sourceWorkspaceId:source.data.workspaceId??'local',targetWorkspaceId:target.id});return result;
 }
 function resolveCanvasLinkedMessages(graph: CanvasGraph): CanvasGraph {
   return { ...graph, nodes: graph.nodes.map(node => {
@@ -1520,6 +1998,8 @@ export function getCanvasWorkspace(canvasId = localCanvasId) {
 export function saveCanvasGraph(graph: CanvasGraph, expectedUpdatedAt?: string | null, canvasId = localCanvasId) {
   const existing = canvasResource(canvasId);
   if (existing && expectedUpdatedAt !== undefined && expectedUpdatedAt !== existing.updatedAt) throw new Error("Canvas draft changed in another tab. Reload before saving.");
+  if(existing)for(const node of graph.nodes){if(!node.config?.linkedCampaignId)continue;const campaign=getCampaign(node.config.linkedCampaignId);if(!campaign||String(campaign.config.workspaceId??'local')!==String(existing.data.workspaceId??'local'))throw new Error('Choose a linked Campaign from this Canvas workspace.');}
+  if(existing&&JSON.stringify(canvasGraph(existing))!==JSON.stringify(graph))createResource({type:'canvas-versions',name:existing.name,status:'Saved',data:{canvasId,workspaceId:String(existing.data.workspaceId??'local'),savedAt:existing.updatedAt,graph:structuredClone(canvasGraph(existing))}});
   graph = resolveCanvasLinkedMessages({ ...graph, nodes: graph.nodes.map(node => node.kind === "message" && node.config?.channel === "email" ? { ...node, config: { ...emailPreferenceCampaignDefaults(getEmailPreferences().data), ...((existing?.data as unknown as CanvasGraph)?.nodes?.find(saved => saved.id === node.id)?.config ?? {}), ...node.config } } : node) });
   const updatedAt = now();
   if (!existing && canvasId !== localCanvasId) throw new Error("Canvas not found.");
@@ -1528,23 +2008,62 @@ export function saveCanvasGraph(graph: CanvasGraph, expectedUpdatedAt?: string |
   audit("canvas", canvasId, existing ? "updated" : "created", { nodeCount: graph.nodes.length, edgeCount: graph.edges.length });
   return { graph, updatedAt };
 }
+export function listCanvasVersions(canvasId:string,workspaceId:string){const canvas=getCanvas(canvasId);if(!canvas||(canvas.workspaceId??'local')!==workspaceId)throw new Error('Canvas not found.');return listResources('canvas-versions').filter(version=>version.data.canvasId===canvasId&&String(version.data.workspaceId??'local')===workspaceId).map(version=>({id:version.id,savedAt:String(version.data.savedAt??version.updatedAt),graph:version.data.graph})).sort((a,b)=>b.savedAt.localeCompare(a.savedAt)).slice(0,30);}
+export function restoreCanvasVersion(canvasId:string,versionId:string,workspaceId:string,updatedAt?:string){const version=listCanvasVersions(canvasId,workspaceId).find(version=>version.id===versionId);if(!version||!isCanvasGraph(version.graph))throw new Error('Choose an available Canvas version.');return saveCanvasGraph(version.graph,updatedAt,canvasId);}
 
+export function canvasWorkspaceQuietHours(workspaceId='local'){const value=getResource(`canvas-quiet-hours:${workspaceId}`);return{start:String(value?.data.start??'00:00'),end:String(value?.data.end??'08:00'),configured:Boolean(value),updatedAt:value?.updatedAt??null};}
+export function saveCanvasWorkspaceQuietHours(workspaceId:string,input:{start:string;end:string;updatedAt:string|null}){
+ const previous=canvasWorkspaceQuietHours(workspaceId);if(input.updatedAt!==previous.updatedAt)throw new Error('Workspace quiet hours changed. Reload before saving.');
+ const minutes=(value:string)=>/^([01]\d|2[0-3]):[0-5]\d$/.test(value)?Number(value.slice(0,2))*60+Number(value.slice(3)):NaN;
+ const duration=(minutes(input.end)-minutes(input.start)+1440)%1440;if(!Number.isFinite(duration)||duration===0||duration>1200)throw new Error('Quiet hours must be longer than zero and no more than 20 hours.');
+ const timestamp=now();db().prepare("INSERT INTO resources VALUES (?, 'workspace-quiet-hours', 'Workspace quiet hours', 'Active', '', ?, ?) ON CONFLICT(id) DO UPDATE SET updated_at=excluded.updated_at,data_json=excluded.data_json").run(`canvas-quiet-hours:${workspaceId}`,timestamp,JSON.stringify({workspaceId,start:input.start,end:input.end}));return canvasWorkspaceQuietHours(workspaceId);
+}
+function canvasStepAudienceMatches(config:NonNullable<CanvasNode['config']>,user:UserRecord,workspaceId:string){
+ const segments=Array.isArray(config.segmentIds)?config.segmentIds as string[]:[],groups=Array.isArray(config.filterGroups)?config.filterGroups as AudienceGroup[]:[];
+ const segmentResults=segments.map(id=>canvasSegmentMatches(id,user,workspaceId));
+ const groupResults=groups.filter(group=>group.rules.length).map(group=>{const matches=group.rules.map(rule=>configuredAudienceRuleMatches(user.id,rule,workspaceId));const result=group.operator==='OR'?matches.some(Boolean):matches.every(Boolean);return group.exclude?!result:result;});
+ return [...segmentResults,...groupResults].every(Boolean);
+}
+function canvasStepContextValues(user:UserRecord,config:NonNullable<CanvasNode['config']>,prior:Record<string,unknown>={}){
+ const result:Record<string,unknown>={},render=(value:string)=>resolveLiquidPreview(value.replace(/\{\{\s*canvas_context\.([a-zA-Z0-9_]+)\s*\}\}/g,(_,key)=>{const item={...prior,...result}[key];return typeof item==='object'?JSON.stringify(item):String(item??'');}),{...user.attributes,first_name:user.firstName,user_id:user.id,email:user.email,country:user.country},'en',emailWorkspaceLiquid(),true);
+ for(const variable of (Array.isArray(config.contextVariables)?config.contextVariables:[]) as CanvasContextVariable[]){const value=render(variable.value);try{let typed:unknown=value;if(variable.type==='Number'){if(!value.trim()||!Number.isFinite(Number(value)))continue;typed=Number(value);}else if(variable.type==='Boolean'){if(!['true','false'].includes(value.toLowerCase()))continue;typed=value.toLowerCase()==='true';}else if(variable.type==='Array'||variable.type==='Object'){typed=JSON.parse(value);if(variable.type==='Array'?!Array.isArray(typed):!typed||typeof typed!=='object'||Array.isArray(typed))continue;}else if(variable.type==='Time'){if(!Number.isFinite(Date.parse(value)))continue;typed=new Date(value).toISOString();}result[variable.name]=typed;}catch{}}
+ return result;
+}
+export function previewCanvasStep(node:CanvasNode,lookup:string,workspaceId='local'){
+ const issues=canvasStepIssues(node);if(issues.length)throw new Error(issues.join(' '));
+ const record=db().prepare('SELECT id FROM users WHERE id=? OR lower(email)=lower(?) LIMIT 1').get(lookup,lookup) as {id:string}|undefined;
+ const user=record?getUser(record.id):null;if(!user||String(user.attributes.workspaceId??'local')!==workspaceId)return{found:false};
+ if(node.kind==='branch')return{found:true,userId:user.id,matches:canvasStepAudienceMatches(node.config??{},user,workspaceId)};
+ if(node.kind==='audience_paths'){const paths=Array.isArray(node.config?.paths)?node.config.paths as Array<{id:string;name:string;exit?:boolean;segmentIds?:string[];filterGroups?:AudienceGroup[]}>:[],path=paths.find(path=>path.id!=='everyone_else'&&canvasStepAudienceMatches(path,user,workspaceId))??paths.find(path=>path.id==='everyone_else');return{found:true,userId:user.id,path:path?.name??'No matching group',exit:path?.exit??false};}
+ if(node.kind==='update'){const before={...user.attributes,country:user.country,lifecycle:user.lifecycle,subscribed:user.subscribed};return{found:true,userId:user.id,before,after:canvasUpdatedProfile(before,node.config??{},value=>resolveLiquidPreview(value,{...user.attributes,first_name:user.firstName,email:user.email,user_id:user.id},'en',emailWorkspaceLiquid(),true))};}
+ if(node.kind==='context')return{found:true,userId:user.id,context:canvasStepContextValues(user,node.config??{})};
+ throw new Error('Preview is not available until this step has a configured provider.');
+}
 function advanceCanvasUser(graph: CanvasGraph, canvasId: string, runId: string, userId: string, startNodeId: string, timestamp: string, steps: CanvasTrace["steps"]) {
-  const globalSettings = globalControlSettings();
+  const globalSettings = globalControlSettings(String(canvasResource(canvasId)?.data.workspaceId??"local"));
   const canvasTags = canvasResource(canvasId)?.data.tags;
   // Also recheck resumed users: enabling holdout must stop pending sends.
   if (heldByGlobalControl(userId, globalSettings, canvasTags)) return { completed: true, messages: 0 };
   let current = graph.nodes.find(node => node.id === startNodeId);
   let messages = 0;
+  const contextId=`canvas-context:${runId}:${userId}`;
+  let runtimeContext=(getResource(contextId)?.data.values??{}) as Record<string,unknown>;
   while (current) {
     steps.push({ nodeId: current.id, label: current.label, kind: current.kind, at: timestamp });
     const routes = graph.edges.filter(([from]) => from === current!.id);
+    if(current.kind==='context'){const user=getUser(userId);if(user){runtimeContext={...runtimeContext,...canvasStepContextValues(user,current.config??{},runtimeContext)};db().prepare("INSERT INTO resources VALUES (?, 'canvas-context', ?, 'Active', '', ?, ?) ON CONFLICT(id) DO UPDATE SET updated_at=excluded.updated_at,data_json=excluded.data_json").run(contextId,current.label,timestamp,JSON.stringify({canvasId,runId,userId,workspaceId:String(canvasResource(canvasId)?.data.workspaceId??'local'),values:runtimeContext}));}}
     if (current.kind === "delay" && routes[0]) {
-      const dueAt = new Date(new Date(timestamp).getTime() + Number(current.config?.durationHours) * 3_600_000).toISOString();
-      db().prepare("INSERT INTO canvas_pending_steps VALUES (?, ?, ?, ?) ON CONFLICT(run_id,user_id) DO UPDATE SET next_node_id=excluded.next_node_id, due_at=excluded.due_at").run(runId, userId, routes[0][1], dueAt);
-      return { completed: false, messages };
+      const delayConfig={...current.config},user=getUser(userId);
+      if(delayConfig.personalizeDelay){const value=resolveLiquidPreview(String(delayConfig.delayExpression??'').replace(/\{\{\s*canvas_context\.([a-zA-Z0-9_]+)\s*\}\}/g,(_,key)=>String(runtimeContext[key]??'')),{...user?.attributes,first_name:user?.firstName,user_id:userId},'en',emailWorkspaceLiquid(),true);if(delayConfig.delayMode==='date')delayConfig.delayDate=value.slice(0,10);else{if(!value.trim()||!Number.isFinite(Number(value))||Number(value)<=0)throw new Error('The personalized delay did not return a positive number.');delayConfig.delayValue=Number(value);}}
+      const dueAt = canvasDelayDue(delayConfig,timestamp,String(user?.attributes.timezone??'UTC'));
+      if(dueAt>timestamp){db().prepare("INSERT INTO canvas_pending_steps VALUES (?, ?, ?, ?) ON CONFLICT(run_id,user_id) DO UPDATE SET next_node_id=excluded.next_node_id, due_at=excluded.due_at").run(runId, userId, routes[0][1], dueAt);return { completed: false, messages };}
     }
-    if (current.kind === "update" && current.config?.attribute) {
+    if(current.kind==='update'&&current.config?.updateMode){
+      const user=getUser(userId);if(user){const before={...user.attributes,country:user.country,lifecycle:user.lifecycle,subscribed:user.subscribed},after=canvasUpdatedProfile(before,current.config,value=>resolveLiquidPreview(value,{...user.attributes,first_name:user.firstName,user_id:user.id,email:user.email},'en',emailWorkspaceLiquid(),true)),{country,lifecycle,subscribed,...attributes}=after;
+       if(subscribed!==undefined&&typeof subscribed!=='boolean')throw new Error('Set subscribed to true or false.');
+       db().prepare('UPDATE users SET country=?,lifecycle=?,attributes_json=? WHERE id=?').run(String(country??''),String(lifecycle??''),JSON.stringify(attributes),userId);if(subscribed!==undefined&&subscribed!==user.subscribed)setUserSubscription(userId,Boolean(subscribed));
+      }
+    }else if (current.kind === "update" && current.config?.attribute) {
       if (current.config.attribute === "subscribed") {
         if (current.config.value !== "true" && current.config.value !== "false") throw new Error("Set subscribed to true or false before launching.");
         setUserSubscription(userId, current.config.value === "true");
@@ -1560,64 +2079,137 @@ function advanceCanvasUser(graph: CanvasGraph, canvasId: string, runId: string, 
       const groupId = typeof current.config?.subscriptionGroupId === "string" ? current.config.subscriptionGroupId : undefined;
       const group = groupId ? getSubscriptionGroup(groupId) : null;
       const user = getUser(userId);
-      const expectedChannel = channel === "email" ? "Email" : channel === "sms" ? "SMS" : channel === "whatsapp" ? "WhatsApp" : null;
+      const expectedChannel = channel === "email" ? "Email" : channel === "sms" ? "SMS" : channel === "whatsapp" ? "WhatsApp" :channel==='line'?'LINE': null;
       const member = group ? db().prepare("SELECT state FROM subscription_group_memberships WHERE group_id = ? AND user_id = ?").get(group.id, userId) as { state: SubscriptionState } | undefined : undefined;
       const sendMode = normalizeCanvasWizard(canvasResource(canvasId)?.data.wizard).send.subscriptionMode;
       const emailEligible = sendMode === "all" || (sendMode === "opted_in_only" ? user?.emailSubscriptionStatus === "opted_in" : user?.emailSubscriptionStatus !== "unsubscribed");
-      const eligible = Boolean(user?.reachable) && (channel !== "email" || emailEligible)
+      const audienceSuppressions=audienceSuppressionMatches(userId,{workspaceId:String(canvasResource(canvasId)?.data.workspaceId??'local'),channel,tags:canvasTags}),legacyHeld=legacySuppressionEntries(String(canvasResource(canvasId)?.data.workspaceId??'local')).some(entry=>user?.email.toLowerCase()===entry||user?.email.toLowerCase().endsWith('@'+entry)),listHeld=audienceSuppressions.length>0||legacyHeld;
+      const workspaceId=String(canvasResource(canvasId)?.data.workspaceId??'local'),wizard=normalizeCanvasWizard(canvasResource(canvasId)?.data.wizard);
+      const audienceValid=!current.config?.deliveryValidation||Boolean(user&&canvasAudienceMatches(wizard.audience,user,workspaceId));
+      const eligible = audienceValid&&!listHeld&&Boolean(user?.reachable) && (channel !== "email" || emailEligible&&Boolean(user?.email.trim()))
         && (channel !== "sms" && channel !== "whatsapp" || Boolean(groupId))
-        && (!groupId || group?.status === "Active" && group.channel === expectedChannel && member?.state === "subscribed");
+        && (!groupId || group?.status === "Active" && group.channel === expectedChannel && member?.state === "subscribed"&&audienceSubscriptionGroupWorkspace(groupId)===String(canvasResource(canvasId)?.data.workspaceId??'local'));
+      const messageWorkspace=String(canvasResource(canvasId)?.data.workspaceId??'local'),delivery=canvasDeliverySettings(current.config??{});
+      if(eligible&&channel==='iam'&&delivery.deliveryValidationEnabled&&user&&!canvasStepAudienceMatches({segmentIds:delivery.deliverySegmentIds,filterGroups:delivery.deliveryFilterGroups},user,messageWorkspace)){
+        db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,channel,userId,'suppressed',timestamp,JSON.stringify({canvasRunId:runId,nodeId:current.id,reason:'delivery_validation',behavior:delivery.deliveryFailure,simulated:true}));
+        if(delivery.deliveryFailure==='exit')return{completed:true,messages};current=graph.nodes.find(node=>node.id===routes[0]?.[1]);continue;
+      }
+      if(eligible&&channel==='sms'&&current.config?.intelligentTiming){
+        const timing=listResources('canvas-message-timing').find(row=>row.data.runId===runId&&row.data.userId===userId&&row.data.nodeId===current!.id);
+        if(!timing){const profiles=configuredAudienceUsers({channel:'push',config:{workspaceId}}),popular=popularCanvasSmsTime(profiles,listResources('user-events').filter(row=>['session_start','Start Session'].includes(row.name)&&String(row.data.workspaceId??'local')===workspaceId).map(row=>({userId:String(row.data.userId),at:String(row.data.createdAt??row.updatedAt)}))),dueAt=canvasSmsDeliveryTime(current.config,timestamp,user?.attributes??{},popular);
+          createResource({type:'canvas-message-timing',name:'Intelligent Timing',status:'Scheduled',data:{workspaceId,canvasId,runId,userId,nodeId:current.id,dueAt}});
+          if(dueAt>timestamp){db().prepare("INSERT INTO canvas_pending_steps VALUES (?, ?, ?, ?) ON CONFLICT(run_id,user_id) DO UPDATE SET next_node_id=excluded.next_node_id,due_at=excluded.due_at").run(runId,userId,current.id,dueAt);db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,channel,userId,'deferred',timestamp,JSON.stringify({canvasRunId:runId,nodeId:current.id,reason:'intelligent_timing',dueAt,simulated:true}));return{completed:false,messages};}
+        }
+      }
+
+      if(eligible&&delivery.intelligentTiming&&channel!=='iam'&&channel!=='sms'&&user){
+        const timingId=`canvas-send-time:${runId}:${userId}:${current.id}`;let timing=getResource(timingId);
+        if(!timing){const scopedProfiles=(db().prepare(`SELECT id,attributes_json FROM users u WHERE ${audienceProfileWorkspaceSQL('u')}=?`).all(messageWorkspace) as Array<{id:string;attributes_json:string}>).map(row=>({id:row.id,attributes:parseJson<Record<string,unknown>>(row.attributes_json,{})})),byId=new Map(scopedProfiles.map(profile=>[profile.id,profile.attributes])),hours=new Map<number,number>();
+          for(const event of listResources('user-events').filter(event=>byId.has(String(event.data.userId))&&(event.data.workspaceId===undefined||String(event.data.workspaceId)===messageWorkspace)&&['session_start','Start Session'].includes(event.name))){try{const attrs=byId.get(String(event.data.userId))!,hour=Number(new Intl.DateTimeFormat('en-US',{timeZone:String(attrs.time_zone??attrs.timezone??'UTC'),hour:'2-digit',hourCycle:'h23'}).format(new Date(String(event.data.createdAt??event.updatedAt))));hours.set(hour,(hours.get(hour)??0)+1);}catch{}}
+          if(!hours.size)for(const profile of scopedProfiles){const hour=profile.attributes.best_send_hour;if(hour!==undefined&&Number.isFinite(Number(hour))&&Number(hour)>=0&&Number(hour)<=23)hours.set(Math.floor(Number(hour)),(hours.get(Math.floor(Number(hour)))??0)+1);}
+          const popular=[...hours].sort((a,b)=>b[1]-a[1]||a[0]-b[0])[0]?.[0],fallback=popular===undefined?'17:00':`${String(popular).padStart(2,'0')}:00`,dueAt=nextScheduledTime({channel,config:{delivery:{timing:'intelligent',intelligentFallback:delivery.intelligentFallback,intelligentFallbackTime:delivery.intelligentFallbackTime,intelligentPopularTime:fallback}}},new Date(timestamp),{...user.attributes}).toISOString();
+          timing=createResource({id:timingId,type:'canvas-send-time',name:current.label,status:'Scheduled',data:{canvasId,runId,userId,nodeId:current.id,workspaceId:messageWorkspace,dueAt}});
+        }
+        if(String(timing.data.dueAt)>timestamp){const dueAt=String(timing.data.dueAt);db().prepare('INSERT INTO canvas_pending_steps VALUES (?,?,?,?) ON CONFLICT(run_id,user_id) DO UPDATE SET next_node_id=excluded.next_node_id,due_at=excluded.due_at').run(runId,userId,current.id,dueAt);db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,channel,userId,'deferred',timestamp,JSON.stringify({canvasRunId:runId,nodeId:current.id,reason:'intelligent_timing',dueAt,simulated:true}));return{completed:false,messages};}
+      }
       if (eligible && workspaceRateLimited(timestamp)) {
         const dueAt = new Date(new Date(timestamp).getTime() + 60000).toISOString();
         db().prepare("INSERT INTO canvas_pending_steps VALUES (?, ?, ?, ?) ON CONFLICT(run_id,user_id) DO UPDATE SET next_node_id=excluded.next_node_id, due_at=excluded.due_at").run(runId, userId, current.id, dueAt);
         db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), canvasId, channel, userId, "deferred", timestamp, JSON.stringify({ canvasRunId: runId, nodeId: current.id, reason: "workspace_rate_limit", dueAt }));
         return { completed: false, messages };
       }
-      const frequencyHeld = eligible && workspaceFrequencyCapped(userId, channel, timestamp);
+      const send=normalizeCanvasWizard(canvasResource(canvasId)?.data.wizard).send;
+      const frequencyOptions=frequencyPolicy(send);
+      const frequencyContext:FrequencyDispatch={workspaceId:String(canvasResource(canvasId)?.data.workspaceId??'local'),userId,entityType:'canvas',entityId:canvasId,channel,dispatchId:`${runId}:${current.id}:${userId}`,timestamp,obey:frequencyOptions.frequencyCapping,count:!frequencyOptions.excludeFromFrequencyCount};
+      const frequencyDecision=eligible?reserveFrequencyDispatch(frequencyContext):{allowed:true,cappedRuleIds:[]};
+      const frequencyHeld=eligible&&!frequencyDecision.allowed;
+      const workspaceQuiet=send.quietMode==='workspace'?canvasWorkspaceQuietHours(String(canvasResource(canvasId)?.data.workspaceId??'local')):null;
+      const quiet={quietHours:send.quietEnabled&&current.config?.messageQuietHours!==false,quietStart:workspaceQuiet?.start??send.quietStart,quietEnd:workspaceQuiet?.end??send.quietEnd};
+      const quietActive=eligible&&!frequencyHeld&&inQuietHours(new Date(timestamp),quiet,String(user?.attributes.timezone??'UTC'));
+      if(quietActive&&send.quietFallback==='next_available'){
+       finishFrequencyDispatch(frequencyContext,false);
+       const dueAt=nextAllowedDeliveryTime(new Date(timestamp),quiet,String(user?.attributes.timezone??'UTC')).toISOString();db().prepare("INSERT INTO canvas_pending_steps VALUES (?, ?, ?, ?) ON CONFLICT(run_id,user_id) DO UPDATE SET next_node_id=excluded.next_node_id,due_at=excluded.due_at").run(runId,userId,current.id,dueAt);
+       db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,channel,userId,'deferred',timestamp,JSON.stringify({canvasRunId:runId,nodeId:current.id,reason:'quiet_hours',dueAt,simulated:true}));return{completed:false,messages};
+      }
+      if(eligible&&!frequencyHeld&&!quietActive&&send.rateEnabled){
+       const names:Record<string,string>={'Email':'email','Push':'push','Push notifications':'push','SMS':'sms','SMS/MMS/RCS':'sms','In-app message':'iam','Content Card':'content','Webhook':'webhook','WhatsApp':'whatsapp','LINE':'line'};
+       const limit=send.rateMode==='shared'?send.ratePerMinute:send.channelLimits.find(item=>(names[item.channel]??item.channel)===channel)?.perMinute;
+       if(limit){const start=new Date(timestamp);start.setUTCSeconds(0,0);const dueAt=new Date(start.getTime()+60000).toISOString();const sent=db().prepare(`SELECT count(*) AS n FROM message_events WHERE campaign_id=? AND event_type='delivered' AND created_at>=? AND created_at<? ${send.rateMode==='channel'?'AND channel=?':''}`).get(canvasId,start.toISOString(),dueAt,...(send.rateMode==='channel'?[channel]:[])) as {n:number};
+        if(sent.n>=limit){finishFrequencyDispatch(frequencyContext,false);db().prepare("INSERT INTO canvas_pending_steps VALUES (?, ?, ?, ?) ON CONFLICT(run_id,user_id) DO UPDATE SET next_node_id=excluded.next_node_id,due_at=excluded.due_at").run(runId,userId,current.id,dueAt);db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,channel,userId,'deferred',timestamp,JSON.stringify({canvasRunId:runId,nodeId:current.id,reason:'canvas_rate_limit',dueAt,simulated:true}));return{completed:false,messages};}
+       }
+      }
+      if(eligible&&channel!=='iam'&&!frequencyHeld&&!quietActive&&delivery.deliveryValidationEnabled&&user&&!canvasStepAudienceMatches({segmentIds:delivery.deliverySegmentIds,filterGroups:delivery.deliveryFilterGroups},user,messageWorkspace)){
+        db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,channel,userId,'suppressed',timestamp,JSON.stringify({canvasRunId:runId,nodeId:current.id,reason:'delivery_validation',behavior:delivery.deliveryFailure,simulated:true}));
+        finishFrequencyDispatch(frequencyContext,false);if(delivery.deliveryFailure==='exit')return{completed:true,messages};current=graph.nodes.find(node=>node.id===routes[0]?.[1]);continue;
+      }
       let eventData: Record<string, unknown> = eligible && !frequencyHeld && channel === "email"
         ? { canvasRunId: runId, nodeId: current.id, simulated: true, message: prepareEmailMessage({ subject: current.config?.subject, body: current.config?.message, config: current.config }, userId, "campaign") }
-        : { canvasRunId: runId, nodeId: current.id, simulated: true, reason: eligible ? undefined : "subscription_or_reachability" };
-      let eventType = eligible ? frequencyHeld ? "frequency_capped" : "delivered" : "suppressed";
-      eventData = { ...eventData, globalControlGeneration: globalSettings.enabled ? globalSettings.seed : null, globalControlCohort: userGlobalCohort(userId, globalSettings) };
+        : { canvasRunId: runId, nodeId: current.id, simulated: true, reason: listHeld?'audience_suppression_list':eligible ? undefined : "subscription_or_reachability",...(audienceSuppressions.length?{suppressionListIds:audienceSuppressions.map(list=>list.id),suppressionListNames:audienceSuppressions.map(list=>list.name)}:{}) };
+      let eventType = eligible ? frequencyHeld ? "frequency_capped" : quietActive?'quiet_hours_aborted':"delivered" : "suppressed";
+      if(quietActive)eventData={...eventData,reason:'quiet_hours',simulated:true};
+      eventData = { ...eventData,workspaceId:frequencyContext.workspaceId,frequencyDispatchId:frequencyContext.dispatchId,frequencyCounted:frequencyContext.count,cappedRuleIds:frequencyDecision.cappedRuleIds, globalControlGeneration: globalSettings.enabled ? globalSettings.seed : null, globalControlCohort: userGlobalCohort(userId, globalSettings) };
+      if(eventType==='delivered'&&channel==='sms'){
+        try{
+          const snapshot=normalizeSmsSnapshot({message:current.config?.message??'',subscriptionGroupId:groupId??'',values:{appendStop:false,...objectValue(current.config?.channelValues)}}),issues=[...smsCapabilityIssues(snapshot,group),...channelConfigurationIssues(smsSnapshotDraft(snapshot,workspaceId,canvasId))];if(issues.length)throw new Error(issues.join(' '));
+          const profile:Record<string,unknown>={...smsProfile(user),canvas_context:runtimeContext},message=compileSmsSnapshot(snapshot,profile,url=>shortenMessageLink(url,canvasId,userId),smsWorkspaceVariables(workspaceId,profile,canvasId));
+          const capability=messageDeliveryCapability('sms');
+          if(capability.enabled&&capability.configured){const to=String(profile.phone??profile.phone_number??'').replace(/[ ()-]/g,'');if(!/^\+[1-9]\d{7,14}$/.test(to))throw new Error('The user does not have a valid SMS phone number.');const job=createResource({type:'canvas-sms-deliveries',name:current.label,status:'Pending',data:{workspaceId,canvasId,runId,nodeId:current.id,userId,to,snapshot,frequencyContext,validateAudience:delivery.deliveryValidationEnabled,validateEntryAudience:Boolean(current.config?.deliveryValidation),deliverySettings:delivery,resumeNodeId:routes[0]?.[1]??null,context:runtimeContext,message}});eventType='queued';eventData={...eventData,message,jobId:job.id,simulated:false};}
+          else{eventType='prepared';eventData={...eventData,message,simulated:true,delivery:{mode:'preview',status:'prepared',delivered:false,reason:capability.configured?'Live delivery is disabled.':'Connect an SMS provider to deliver messages.'}};}
+        }catch(error){eventType='failed';eventData={...eventData,error:error instanceof Error?error.message:'SMS rendering failed.'};}
+      }
       if (eventType === "delivered" && channel === "whatsapp") {
         try { const config = current.config ?? {}; const variants = normalizeWhatsAppVariants({ config }); const index = createHash("sha256").update(`${canvasId}:${current.id}:${userId}`).digest()[0] % variants.length; const eligibility = whatsAppResponseEligibility(variants[index].mode, latestWhatsAppInbound(user?.attributes, listResources("user-events").filter(event => event.data.userId === userId), timestamp), timestamp); if (!eligibility.eligible) throw new Error(eligibility.reason); eventData = { ...eventData, conversationEligibility: eligibility, variantId: variants[index].id, message: prepareWhatsAppMessage(variants[index], customWhatsAppTemplates({ config }), { ...user?.attributes, first_name: user?.firstName, country: user?.country, user_id: userId }) }; }
         catch (cause) { eventType = "failed"; eventData = { ...eventData, error: cause instanceof Error ? cause.message : "WhatsApp rendering failed." }; }
       }
       db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), canvasId, channel, userId, eventType, timestamp, JSON.stringify(eventData));
-      if (eventType === "delivered") messages += 1;
+      if(eventType!=="queued")finishFrequencyDispatch(frequencyContext,["delivered","accepted"].includes(eventType));
+      if (["delivered","prepared","queued"].includes(eventType)) messages += 1;
+      if(eventType==='queued')return{completed:false,messages};
     }
     const user = getUser(userId);
-    const condition = current.kind === "branch" && current.config?.attribute
+    const condition = current.kind === "branch" && (Array.isArray(current.config?.filterGroups)||Array.isArray(current.config?.segmentIds))&&user?canvasStepAudienceMatches(current.config??{},user,String(canvasResource(canvasId)?.data.workspaceId??'local')):current.kind === "branch" && current.config?.attribute
       ? String(current.config.attribute === "subscribed" ? user?.subscribed : current.config.attribute === "country" ? user?.country : user?.lifecycle) === current.config.value : true;
-    const nextId = routes[current.kind === "branch" && !condition ? 1 : 0]?.[1];
+    let nextId = current.kind==='branch'&&current.config?.branchTargets?(current.config.branchTargets as {yes?:string;no?:string})[condition?'yes':'no']:routes[current.kind === "branch" && !condition ? 1 : 0]?.[1];
+    if(['audience_paths','experiment_paths'].includes(current.kind)){
+      const paths=Array.isArray(current.config?.paths)?current.config.paths as Array<{id:string;weight?:number;exit?:boolean;segmentIds?:string[];filterGroups?:AudienceGroup[];nextNodeId?:string}>:[];
+      let index=-1;
+      if(current.kind==='audience_paths'&&user){index=paths.findIndex(path=>path.id!=='everyone_else'&&canvasStepAudienceMatches(path,user,String(canvasResource(canvasId)?.data.workspaceId??'local')));if(index<0)index=paths.findIndex(path=>path.id==='everyone_else');}
+      else{const bucket=createHash('sha256').update(`${canvasId}:${current.id}:${userId}:${current.config?.randomizedPaths?runId:''}`).digest().readUInt32BE(0)/0x100000000*100;let accumulated=0;index=paths.findIndex(path=>{accumulated+=Number(path.weight??0);return bucket<accumulated;});}
+      if(index<0||paths[index].exit)return{completed:true,messages};nextId=paths.some(path=>path.nextNodeId)?paths[index].nextNodeId:routes[index]?.[1];
+    }
     current = graph.nodes.find(node => node.id === nextId);
   }
   return { completed: true, messages };
 }
 
-function canvasFilterMatches(filter: CanvasFilter, user: UserRecord) {
-  const actual = filter.field === "emailSubscriptionStatus" ? user.emailSubscriptionStatus : user[filter.field];
+function canvasFilterMatches(filter: CanvasFilter, user: UserRecord,workspaceId="local") {
+  if(!['is','is_not'].includes(filter.operator))return configuredAudienceRuleMatches(user.id,filter,workspaceId);
+  const actual = filter.field === "emailSubscriptionStatus" ? user.emailSubscriptionStatus : user[filter.field as 'country'|'lifecycle'];
   const matches = String(actual).toLowerCase() === filter.value.trim().toLowerCase();
   return filter.operator === "is_not" ? !matches : matches;
 }
 
-function canvasAudienceMatches(config: CanvasWizardConfig["audience"], user: UserRecord) {
-  const segments = listResources("segments");
-  const inSegments = config.segmentIds.every(id => {
-    const resource = segments.find(segment => segment.id === id);
-    const rule = (resource?.data.filters as Array<{ field?: string; value?: unknown; attribute?: string }> | undefined)?.[0];
-    if (!rule) return false;
-    const actual = rule.field === "attribute" && rule.attribute ? user.attributes[rule.attribute] : rule.field === "subscribed" ? Number(user.subscribed) : rule.field === "reachable" ? Number(user.reachable) : rule.field === "country" ? user.country : rule.field === "lifecycle" ? user.lifecycle : undefined;
-    return String(actual) === String(rule.value);
-  });
-  const filtersMatch = config.filters.length === 0 || (config.filterOperator === "AND" ? config.filters.every(filter => canvasFilterMatches(filter, user)) : config.filters.some(filter => canvasFilterMatches(filter, user)));
-  return inSegments && filtersMatch && !config.exclusionFilters.some(filter => canvasFilterMatches(filter, user)) && !config.exitSegmentIds.some(id => {
-    const segment = segments.find(item => item.id === id);
-    const rule = (segment?.data.filters as Array<{ field?: string; value?: unknown; attribute?: string }> | undefined)?.[0];
-    if (!rule) return false;
-    const actual = rule.field === "attribute" && rule.attribute ? user.attributes[rule.attribute] : rule.field === "subscribed" ? Number(user.subscribed) : rule.field === "reachable" ? Number(user.reachable) : rule.field === "country" ? user.country : rule.field === "lifecycle" ? user.lifecycle : undefined;
-    return String(actual) === String(rule.value);
-  }) && !config.exitFilters.some(filter => canvasFilterMatches(filter, user));
+function canvasSegmentMatches(id:string,user:UserRecord,workspaceId:string){
+ const segment=getResource(id);if(!segment||segment.type!=='segments'||String(segment.data.workspaceId??'local')!==workspaceId)throw new Error('Choose a Segment from this Canvas workspace.');
+ if(segment.status==='Archived')throw new Error('Choose an active Segment from this Canvas workspace.');
+ if(segment.data.audienceGroups!==undefined||segment.data.segmentOptions!==undefined){const values:(string|number)[]=[],expression=audienceSegmentExpression(segment,values,workspaceId);return Boolean(db().prepare(`SELECT 1 FROM users u WHERE u.id=? AND (${expression})=1`).get(user.id,...values));}
+ const filters=Array.isArray(segment.data.filters)?segment.data.filters as AudienceFilter[]:[];
+ const {clauses,values}=audienceFilterClauses(filters,workspaceId);
+ return Boolean(db().prepare(`SELECT 1 FROM users u WHERE u.id=?${clauses.length?' AND '+clauses.map(clause=>'('+clause+')').join(' AND '):''}`).get(user.id,...values));
+}
+function canvasAudienceMatches(config: CanvasWizardConfig["audience"], user: UserRecord,workspaceId="local") {
+ const inSegments=config.segmentIds.every(id=>canvasSegmentMatches(id,user,workspaceId));
+ const matches=(filter:CanvasFilter)=>canvasFilterMatches(filter,user,workspaceId);
+ const filtersMatch=!config.filters.length||(config.filterOperator==='AND'?config.filters.every(matches):config.filters.some(matches));
+ return inSegments&&filtersMatch&&!config.exclusionFilters.some(matches)&&!config.exitSegmentIds.some(id=>canvasSegmentMatches(id,user,workspaceId))&&!config.exitFilters.some(matches);
+}
+export function previewCanvasAudience(audience:CanvasWizardConfig['audience'],workspaceId='local',lookup?:string){
+ const config=normalizeCanvasWizard({audience}).audience;
+ // Validate every rule even for an empty population or short-circuited OR group.
+ for(const list of [config.filters,config.exclusionFilters,config.exitFilters])validateSegmentTagFilters({filters:list,workspaceId});
+ const users=(db().prepare(`SELECT id FROM users u WHERE ${audienceProfileWorkspaceSQL('u')}=? ORDER BY id`).all(workspaceId) as {id:string}[]).map(row=>getUser(row.id)!).filter(Boolean),matched=users.filter(user=>canvasAudienceMatches(config,user,workspaceId));
+ const found=lookup?users.find(user=>user.id===lookup||user.email.toLowerCase()===lookup.toLowerCase()):undefined;
+ return {total:users.length,matching:matched.length,reachable:matched.filter(user=>user.reachable).length,...(lookup?{lookup:{found:Boolean(found),userId:found?.id,matchesFilters:Boolean(found&&matched.some(user=>user.id===found.id))}}:{})};
 }
 
 export function launchCanvasGraph(canvasId = localCanvasId): CanvasRun {
@@ -1628,17 +2220,20 @@ export function launchCanvasGraph(canvasId = localCanvasId): CanvasRun {
   const graph = resolveCanvasLinkedMessages(canvasGraph(saved));
   const wizard = saved.data.wizard ? normalizeCanvasWizard(saved.data.wizard) : null;
   const issues = [...(wizard ? canvasWizardIssues(wizard, graph).map(issue => issue.detail) : validateCanvasGraph(graph)), ...graph.nodes.filter(node => node.kind === "message" && node.config?.channel === "email").flatMap(node => emailSendingIssues({ config: node.config }, getEmailPreferences().data))];
+  if(wizard?.send.quietEnabled&&wizard.send.quietMode==='workspace'&&!canvasWorkspaceQuietHours(String(saved.data.workspaceId??'local')).configured)issues.push('Configure workspace quiet hours or choose custom quiet hours before launching.');
+  for(const node of graph.nodes)if(node.kind==='message'&&typeof node.config?.subscriptionGroupId==='string')subscriptionGroupForChannel(node.config.subscriptionGroupId,node.config.channel as Channel,String(saved.data.workspaceId??'local'));
   if (issues.length) throw new Error(issues.join(" "));
+  if(wizard)previewCanvasAudience(wizard.audience,String(saved.data.workspaceId??"local"));
   const timestamp = getDemoState().simulatedTime;
   const entry = graph.nodes.find(node => node.kind === "entry")!;
   const reEntry = wizard ? wizard.audience.reentryEnabled ? "window" : "none" : entry.config?.reEntry ?? "none";
   const cutoff = wizard && reEntry === "window" ? wizard.audience.reentryValue * (wizard.audience.reentryUnit === "Hours" ? 3_600_000 : 86_400_000) : reEntry === "after1d" ? 86_400_000 : reEntry === "after7d" ? 7 * 86_400_000 : 0;
-  const candidates = db().prepare("SELECT id FROM users WHERE reachable = 1 ORDER BY id LIMIT 100").all() as { id: string }[];
-  const globalSettings = globalControlSettings();
+  const candidates = db().prepare(`SELECT id FROM users u WHERE reachable = 1 AND ${audienceProfileWorkspaceSQL('u')}=? ORDER BY id LIMIT 100`).all(String(saved.data.workspaceId??'local')) as { id: string }[];
+  const globalSettings = globalControlSettings(String(saved.data.workspaceId??"local"));
   const users = candidates.filter(user => {
     if (heldByGlobalControl(user.id, globalSettings, saved.data.tags)) return false;
     const profile = wizard ? getUser(user.id) : null;
-    if (wizard && (!profile || !canvasAudienceMatches(wizard.audience, profile))) return false;
+    if (wizard && (!profile || !canvasAudienceMatches(wizard.audience, profile,String(saved.data.workspaceId??"local")))) return false;
     const history = db().prepare("SELECT last_entered_at FROM canvas_entry_history WHERE canvas_id = ? AND user_id = ?").get(canvasId, user.id) as { last_entered_at: string } | undefined;
     const pending = db().prepare("SELECT 1 FROM canvas_pending_steps p JOIN canvas_runs r ON r.id = p.run_id WHERE r.canvas_id = ? AND p.user_id = ? LIMIT 1").get(canvasId, user.id);
     return !pending && (!history || reEntry === "always" || cutoff > 0 && new Date(timestamp).getTime() - new Date(history.last_entered_at).getTime() >= cutoff);
@@ -1665,6 +2260,39 @@ export function launchCanvasGraph(canvasId = localCanvasId): CanvasRun {
   } catch (error) { db().exec("ROLLBACK"); throw error; }
 }
 
+function resumeCanvasSmsDelivery(job:ResourceRecord,exit=false){
+ const runId=String(job.data.runId),userId=String(job.data.userId),row=db().prepare('SELECT * FROM canvas_runs WHERE id=?').get(runId) as Record<string,unknown>|undefined;if(!row)return;
+ const traces=parseJson(String(row.traces_json),[] as CanvasTrace[]),trace=traces.find(item=>item.userId===userId),graph=parseJson(String(row.snapshot_json),{nodes:[],edges:[]} as CanvasGraph),next=typeof job.data.resumeNodeId==='string'?job.data.resumeNodeId:null;
+ const result=exit||!next?{completed:true,messages:0}:advanceCanvasUser(graph,String(job.data.canvasId),runId,userId,next,now(),trace?.steps??[]);
+ db().prepare('UPDATE canvas_runs SET completed_count=completed_count+?,message_count=message_count+?,traces_json=? WHERE id=?').run(result.completed?1:0,result.messages,JSON.stringify(traces),runId);
+}
+export async function processCanvasSmsDeliveries(limit=100){
+ const capability=messageDeliveryCapability('sms');if(!capability.enabled||!capability.configured)return{processed:0,results:[] as Array<{id:string;status:string}>};
+ const results:Array<{id:string;status:string}>=[];
+ for(const job of listResources('canvas-sms-deliveries').filter(row=>row.status==='Pending').slice(0,Math.max(1,Math.min(limit,100)))){
+  // Claim synchronously before the first network await. Failed/processing jobs are never retried implicitly.
+  updateResource(job.id,{status:'Processing',data:{...job.data,startedAt:now()}});
+  const canvasId=String(job.data.canvasId),workspaceId=String(job.data.workspaceId??'local'),userId=String(job.data.userId),user=getUser(userId),canvas=canvasResource(canvasId),timestamp=now();
+  if(job.data.frequencyContext)finishFrequencyDispatch(job.data.frequencyContext as FrequencyDispatch,false);
+  const policy=frequencyPolicy(normalizeCanvasWizard(canvas?.data.wizard).send);
+  const frequencyContext:FrequencyDispatch={workspaceId,userId,entityType:'canvas',entityId:canvasId,channel:'sms',dispatchId:`${job.data.runId}:${job.data.nodeId}:${userId}`,timestamp,obey:policy.frequencyCapping,count:!policy.excludeFromFrequencyCount};
+  try{
+   const groupId=String(objectValue(job.data.snapshot).subscriptionGroupId??''),group=getSubscriptionGroup(groupId),member=db().prepare('SELECT state FROM subscription_group_memberships WHERE group_id=? AND user_id=?').get(groupId,userId) as {state:string}|undefined;
+   const validation=canvasDeliverySettings(objectValue(job.data.deliverySettings)),audienceOk=(!job.data.validateEntryAudience||Boolean(user&&canvasAudienceMatches(normalizeCanvasWizard(canvas?.data.wizard).audience,user,workspaceId)))&&(!job.data.validateAudience||Boolean(user&&canvasStepAudienceMatches({segmentIds:validation.deliverySegmentIds,filterGroups:validation.deliveryFilterGroups},user,workspaceId)));
+   if(!canvas||canvas.status!=='Active'||String(canvas.data.workspaceId??'local')!==workspaceId||!user||String(user.attributes.workspaceId??user.attributes.workspace_id??'local')!==workspaceId||!user.reachable||!audienceOk||legacySuppressionEntries(workspaceId).some(entry=>user.email.toLowerCase()===entry||user.email.toLowerCase().endsWith('@'+entry))||group?.status!=='Active'||group.channel!=='SMS'||audienceSubscriptionGroupWorkspace(groupId)!==workspaceId||member?.state!=='subscribed'||heldByGlobalControl(userId,globalControlSettings(workspaceId),canvas.data.tags)||audienceSuppressionMatches(userId,{workspaceId,channel:'sms',tags:canvas.data.tags}).length){updateResource(job.id,{status:'Suppressed',data:{...job.data,completedAt:timestamp}});db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,'sms',userId,'suppressed',timestamp,JSON.stringify({jobId:job.id,nodeId:job.data.nodeId,reason:'delivery_validation',simulated:false}));resumeCanvasSmsDelivery(job,validation.deliveryFailure==='exit');results.push({id:job.id,status:'Suppressed'});continue;}
+   const snapshot=normalizeSmsSnapshot(job.data.snapshot),profile:Record<string,unknown>={...smsProfile(user),canvas_context:objectValue(job.data.context)},issues=smsCapabilityIssues(snapshot,group);if(issues.length)throw new Error(issues.join(' '));
+   const message=compileSmsSnapshot(snapshot,profile,url=>shortenMessageLink(url,canvasId,userId),smsWorkspaceVariables(workspaceId,profile,canvasId)),to=String(profile.phone??profile.phone_number??'').replace(/[ ()-]/g,'');
+   if(!/^\+[1-9]\d{7,14}$/.test(to))throw new Error('The user does not have a valid SMS phone number.');
+   const decision=reserveFrequencyDispatch(frequencyContext);
+   if(!decision.allowed){updateResource(job.id,{status:'Frequency capped',data:{...job.data,completedAt:timestamp,cappedRuleIds:decision.cappedRuleIds}});db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,'sms',userId,'frequency_capped',timestamp,JSON.stringify({workspaceId,frequencyDispatchId:frequencyContext.dispatchId,canvasRunId:job.data.runId,nodeId:job.data.nodeId,cappedRuleIds:decision.cappedRuleIds}));resumeCanvasSmsDelivery(job);results.push({id:job.id,status:'frequency_capped'});continue;}
+   const delivery=await dispatchPreparedMessage(smsSnapshotDraft(snapshot,workspaceId,canvasId),to,message);
+   finishFrequencyDispatch(frequencyContext,["accepted","delivered"].includes(delivery.status));
+   updateResource(job.id,{status:delivery.mode==='preview'?'Prepared':'Completed',data:{...job.data,completedAt:now(),message,delivery}});
+   db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,'sms',userId,delivery.status,now(),JSON.stringify({workspaceId,frequencyDispatchId:frequencyContext.dispatchId,frequencyCounted:frequencyContext.count,jobId:job.id,canvasRunId:job.data.runId,nodeId:job.data.nodeId,message,delivery,simulated:delivery.mode==='preview'}));resumeCanvasSmsDelivery(job);results.push({id:job.id,status:delivery.status});
+  }catch(error){finishFrequencyDispatch(frequencyContext,false);const detail=error instanceof Error?error.message:'SMS delivery failed.';updateResource(job.id,{status:'Failed',data:{...job.data,error:detail,completedAt:now()}});db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,'sms',userId,'failed',now(),JSON.stringify({jobId:job.id,nodeId:job.data.nodeId,error:detail,simulated:false}));resumeCanvasSmsDelivery(job);results.push({id:job.id,status:'Failed'});}
+ }
+ return{processed:results.length,results};
+}
 function processDueCanvasSteps(timestamp: string) {
   const pending = db().prepare("SELECT run_id, user_id, next_node_id FROM canvas_pending_steps WHERE due_at <= ? ORDER BY due_at, run_id, user_id").all(timestamp) as Array<{ run_id: string; user_id: string; next_node_id: string }>;
   let resumed = 0;
@@ -1880,7 +2508,7 @@ export function removeCatalogSelection(catalogId: string, name: string) {
 
 export function getUser(id: string) {
   const row = db().prepare("SELECT * FROM users WHERE id = ?").get(id) as Record<string, unknown> | undefined;
-  return row ? { ...mapUser(row), globalControlGroup: userGlobalCohort(id, globalControlSettings()) === "control" } : null;
+  return row ? { ...mapUser(row), globalControlGroup: userGlobalCohort(id, globalControlSettings(String(userProfileWorkspace(mapUser(row))))) === "control" } : null;
 }
 
 export function randomCatalogPreviewUser() {
@@ -1968,6 +2596,14 @@ export function activityLog(limit = 50) {
   return db().prepare(`SELECT e.*, COALESCE(c.name, r.name) AS campaign_name FROM message_events e LEFT JOIN campaigns c ON c.id = e.campaign_id LEFT JOIN resources r ON r.id = e.campaign_id ORDER BY e.created_at DESC LIMIT ?`).all(limit) as Record<string, unknown>[];
 }
 
+export function audienceUserMessageHistory(userId:string,workspaceId='local') {
+  return db().prepare(`SELECT e.*, COALESCE(c.name,r.name) AS campaign_name FROM message_events e LEFT JOIN campaigns c ON c.id=e.campaign_id LEFT JOIN resources r ON r.id=e.campaign_id WHERE e.user_id=? AND (c.id IS NOT NULL OR r.id IS NOT NULL) AND COALESCE(json_extract(c.config_json,'$.workspaceId'),json_extract(r.data_json,'$.workspaceId'),'local')=? ORDER BY e.created_at DESC,e.id DESC`).all(userId,workspaceId) as Record<string,unknown>[];
+}
+
+export function getAudienceUserSubscriptionState(groupId:string,userId:string) {
+  return (db().prepare("SELECT state FROM subscription_group_memberships WHERE group_id=? AND user_id=?").get(groupId,userId) as {state:'subscribed'|'unsubscribed'}|undefined)?.state??null;
+}
+
 export function getDemoState() {
   const saved = db().prepare("SELECT value FROM demo_state WHERE key = 'simulated_time'").get() as { value: string } | undefined;
   const pending = db().prepare("SELECT count(*) AS count FROM message_events e LEFT JOIN demo_receipts d ON d.delivery_id = e.id WHERE e.event_type = 'delivered' AND d.delivery_id IS NULL").get() as { count: number };
@@ -2033,6 +2669,18 @@ export function syncEmailLinkAliases(campaign: CampaignRecord) {
     else createResource({ type: "link-aliases", name: link.alias, status: link.tracking === false ? "Inactive" : "Active", data });
   }
 }
+export function smsWorkspaceVariables(workspaceId:string,profile:Record<string,unknown>,ownerId=''){
+ const scoped=(type:string)=>listResources(type).filter(row=>row.status!=='Archived'&&String(row.data.workspaceId??'local')===workspaceId);
+ const catalogs=listCatalogs().filter(row=>row.status!=='Archived'&&String(row.data.workspaceId??'local')===workspaceId),campaign=getCampaign(ownerId),canvas=getCanvas(ownerId);
+ const catalogItems=Object.fromEntries(catalogs.map(row=>[row.name,listCatalogItems(row.id).map(item=>({id:item.id,name:item.name,...item.fields}))]));
+ const selections:Record<string,Array<Record<string,unknown>>>={};
+ for(const recommendation of scoped('recommendations')){const catalog=catalogs.find(row=>row.id===recommendation.data.catalogId),selection=catalog?getCatalogSelection(catalog.id,String(recommendation.data.selectionName)):null;if(catalog&&selection)selections[recommendation.name]=selectCatalogRows(listCatalogItems(catalog.id),selection,profile,`${catalog.id}:${recommendation.name}`).map(row=>({id:row.id,name:row.name,...row.fields}));}
+ const preferenceLinks:Record<string,string>={},preferenceUser=getUser(String(profile.user_id??''));
+ if(preferenceUser&&String(preferenceUser.attributes.workspaceId??preferenceUser.attributes.workspace_id??'local')===workspaceId)for(const center of listPreferenceCenters(workspaceId).filter(row=>row.status==='Active'&&row.publishedVersion!==null)){const link=createPreferenceCenterLink(center.id,preferenceUser.id);if(link)preferenceLinks[center.id]=`${messagePublicOrigin()}/preferences/${center.id}?${new URLSearchParams({user:preferenceUser.id,token:link.token})}`;}
+ const sms={...objectValue(profile.sms),subscribed_state:Object.fromEntries(scopedSubscriptionIds(workspaceId).map(id=>[id,getAudienceUserSubscriptionState(id,preferenceUser&&String(preferenceUser.attributes.workspaceId??preferenceUser.attributes.workspace_id??'local')===workspaceId?preferenceUser.id:'')]))};
+ return{content_blocks:Object.fromEntries(scoped('content-blocks').map(row=>[row.name,String(row.data.content??'')])),__catalogs:catalogItems,__catalogSelections:selections,campaign:campaign&&String(campaign.config.workspaceId??'local')===workspaceId?{name:campaign.name,api_id:campaign.id,message_name:profile.message_name??profile.variant_name,message_api_id:profile.message_api_id??profile.variant_api_id,dispatch_id:profile.dispatch_id}:{},canvas:canvas&&canvas.workspaceId===workspaceId?{name:canvas.name,api_id:canvas.id}:{},canvas_entry_properties:objectValue(profile.canvas_entry_properties),canvas_context:objectValue(profile.canvas_context),sms,whats_app:objectValue(profile.whats_app??profile.whatsapp),whatsapp:objectValue(profile.whats_app??profile.whatsapp),event_properties:objectValue(profile.event_properties),api_trigger_properties:objectValue(profile.api_trigger_properties),most_recently_used_device:objectValue(profile.most_recently_used_device),preference_center:preferenceLinks,landing_page:Object.fromEntries(scoped('landing-pages').filter(row=>row.status==='Published'&&typeof row.data.slug==='string').map(row=>[row.id,typeof row.data.url==='string'&&/^https:\/\//i.test(row.data.url)?row.data.url:`${messagePublicOrigin()}/pages/${encodeURIComponent(String(row.data.slug))}`]))};
+}
+function scopedSubscriptionIds(workspaceId:string){return listSubscriptionGroups().filter(group=>group.status!=='Archived'&&group.channel==='SMS'&&audienceSubscriptionGroupWorkspace(group.id)===workspaceId).map(group=>group.id);}
 export function emailWorkspaceLiquid(): WorkspaceLiquid {
   const catalogs = listResources("catalogs");
   return { footer: getEmailPreferences().data.pages.footer.enabled ? getEmailPreferences().data.pages.footer.html : "", contentBlocks: Object.fromEntries(listResources("content-blocks").filter(row => row.status !== "Archived").map(row => [row.name,workspaceContentBlockHtml(String(row.data.content ?? ""), row.data.width)])), promotionCodes: Object.fromEntries(listResources("promotion-codes").filter(row => row.status !== "Archived").map(row => [row.name, Array.isArray(row.data.codes) ? row.data.codes as string[] : []])), catalogItems: Object.fromEntries(catalogs.map(catalog => [catalog.name.toLowerCase(), listCatalogItems(catalog.id)])), catalogSelections: Object.fromEntries(catalogs.map(catalog => [catalog.name.toLowerCase(), listCatalogSelections(catalog.id)])) };
@@ -2044,13 +2692,16 @@ function assertModuleUnique(type: string, data: Record<string, unknown>, id?: st
 }
 
 /** User-data operations used by ingestion, transformations and public forms. */
-export function applyProfileRows(rows: Array<Record<string, unknown>>) {
+export function applyProfileRows(rows: Array<Record<string, unknown>>,workspaceId?:string) {
   if (!Array.isArray(rows) || !rows.length || rows.length > 1000) throw new Error("Provide between 1 and 1,000 rows.");
   for (const row of rows) {
     const id = row.external_id ?? row.id;
     if (typeof id !== "string" || !id.trim() || id.length > 200) throw new Error("Every row needs a valid external_id.");
     if (row.email !== undefined && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(row.email))) throw new Error(`Invalid email for ${id}.`);
     if (row.email_subscription_status !== undefined && !["opted_in", "subscribed", "unsubscribed"].includes(String(row.email_subscription_status))) throw new Error("Invalid email subscription status.");
+    const attributes=objectValue(row.attributes),declared=attributes.workspaceId??attributes.workspace_id??row.workspaceId??row.workspace_id,scope=workspaceId??declared??'local';
+    if(typeof scope!=='string'||!scope||scope.length>200||declared!==undefined&&declared!==scope)throw new Error('Profile rows must belong to the selected workspace.');
+    const existing=getUser(id);if(existing&&userProfileWorkspace(existing)!==scope)throw new Error('This user ID belongs to another workspace; use a distinct user ID instead of overwriting the profile.');
   }
   const conn = db(); let created = 0; let updated = 0;
   conn.exec("SAVEPOINT profile_sync");
@@ -2058,8 +2709,9 @@ export function applyProfileRows(rows: Array<Record<string, unknown>>) {
     for (const row of rows) {
       const id = String(row.external_id ?? row.id); const existing = getUser(id);
       const { external_id: _external, id: _id, email, first_name, country, lifecycle, email_subscription_status, attributes, ...custom } = row;
+      const profileAttributes=objectValue(attributes),scope=workspaceId??profileAttributes.workspaceId??profileAttributes.workspace_id??row.workspaceId??row.workspace_id??'local';
       const status = String(email_subscription_status ?? existing?.emailSubscriptionStatus ?? "subscribed");
-      conn.prepare(`INSERT INTO users (id,email,first_name,country,lifecycle,subscribed,reachable,attributes_json,email_subscription_status) VALUES (?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET email=excluded.email,first_name=excluded.first_name,country=excluded.country,lifecycle=excluded.lifecycle,subscribed=excluded.subscribed,attributes_json=excluded.attributes_json,email_subscription_status=excluded.email_subscription_status`).run(id, String(email ?? existing?.email ?? `${id}@example.test`), String(first_name ?? existing?.firstName ?? ""), String(country ?? existing?.country ?? ""), String(lifecycle ?? existing?.lifecycle ?? "New"), status === "unsubscribed" ? 0 : 1, existing?.reachable === false ? 0 : 1, JSON.stringify({ ...existing?.attributes, ...custom, ...objectValue(attributes) }), status);
+      conn.prepare(`INSERT INTO users (id,email,first_name,country,lifecycle,subscribed,reachable,attributes_json,email_subscription_status) VALUES (?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET email=excluded.email,first_name=excluded.first_name,country=excluded.country,lifecycle=excluded.lifecycle,subscribed=excluded.subscribed,attributes_json=excluded.attributes_json,email_subscription_status=excluded.email_subscription_status`).run(id, String(email ?? existing?.email ?? ''), String(first_name ?? existing?.firstName ?? ""), String(country ?? existing?.country ?? ""), String(lifecycle ?? existing?.lifecycle ?? "New"), status === "unsubscribed" ? 0 : 1, existing?.reachable === false ? 0 : 1, JSON.stringify({ ...existing?.attributes, ...custom, ...profileAttributes,...(scope!=='local'?{workspaceId:scope}:{}) }), status);
       existing ? updated++ : created++;
       audit("user", id, existing ? "profile_updated" : "created", { fields: Object.keys(row) });
     }
@@ -2086,7 +2738,7 @@ function attributeCampaignConversions(userId:string,event:{name:string;propertie
  }
 }
 export function trackProfileEvent(input: { userId: string; name: string; properties?: Record<string, unknown>; productId?: string; price?: number; quantity?: number; currency?: string; createdAt?: string }) {
-  if (!getUser(input.userId)) throw new Error("User not found.");
+  const profile=getUser(input.userId);if(!profile)throw new Error('User not found.');const workspaceId=String(userProfileWorkspace(profile));
   if (!input.name.trim()) throw new Error("Event name is required.");
   if (!input.productId && listResources("event-blocklist").some(row => row.name === input.name && row.status === "Blocked")) throw new Error("Tracking is blocked for this custom event.");
   if (input.productId && (!Number.isFinite(input.price) || Number(input.price) < 0 || !Number.isFinite(input.quantity ?? 1) || Number(input.quantity ?? 1) <= 0 || !/^[A-Z]{3}$/.test(input.currency ?? "USD"))) throw new Error("Purchases require a nonnegative price, a positive quantity and a three-letter currency.");
@@ -2095,13 +2747,13 @@ export function trackProfileEvent(input: { userId: string; name: string; propert
     if (product?.data.trackingEnabled === false) throw new Error("Purchase tracking is disabled for this product.");
   }
   const timestamp=input.createdAt??now();if(!Number.isFinite(new Date(timestamp).getTime()))throw new Error("Choose a valid event timestamp.");
-  const event = createResource({ type: "user-events", name: input.name, status: "Recorded", data: { ...input, createdAt: timestamp } });
+  const event = createResource({ type: "user-events", name: input.name, status: "Recorded", data: { ...input, workspaceId,createdAt: timestamp } });
   attributeCampaignConversions(input.userId,input,event.id,timestamp);
   for(const card of listResources("sdk-messages").filter(r=>r.data.userId===input.userId&&r.data.channel==="content"&&r.status==="Available")){
     const matching=card.data.removalEvent==="purchase"?Boolean(input.productId)||input.name==="purchase":card.data.removalEvent==="custom_event"&&input.name===card.data.removalEventName;
     if(matching&&((card.data.removalProperties??[]) as Array<{key:string;value:string}>).every(p=>String(input.properties?.[p.key]??"")===p.value))updateResource(card.id,{status:"Removed",data:{...card.data,removedAt:now(),removalEventId:event.id}});
   }
-  for(const campaign of runtimeActiveCampaigns().filter(c=>c.schedule==="Action-based")){
+  for(const campaign of runtimeActiveCampaigns().filter(c=>c.schedule==="Action-based"&&String(c.config.workspaceId??'local')===workspaceId)){
     if(!campaignTriggeredBy(campaign,input)||!isCampaignUserEligible(campaign,input.userId)||!isWithinCampaignDuration(campaign))continue;const delivery=objectValue(campaign.config.delivery),previous=listResources("campaign-jobs").filter(r=>r.data.campaignId===campaign.id&&r.data.userId===input.userId).sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt));
     if(previous.length&&(!delivery.reeligible||new Date(previous[0].updatedAt).getTime()+Number(delivery.reentryDays??1)*86400000>Date.now()))continue;
     const due=new Date(Date.now()+Number(delivery.delayMinutes??0)*60000).toISOString();enqueueCampaignJob(campaign,input.userId,due,input.properties??{},event.id);
@@ -2145,18 +2797,10 @@ function workspaceRateLimited(timestamp: string, pending = 0) {
   return counts(at - 60000) + pending >= Number(limits.maxPerMinute) || counts(at - 86400000) + pending >= Number(limits.maxPerDay);
 }
 
-function workspaceFrequencyCapped(userId: string, channel: string, timestamp: string) {
-  const config = listResources("frequency-capping-rules")[0]?.data;
-  if (config?.enabled !== true || !Array.isArray(config.rules)) return false;
-  return (config.rules as Array<{ kind: string; limit: number; window: string }>).some(rule => {
-    const target = rule.kind === "In-app message" ? "iam" : rule.kind.toLowerCase();
-    if (rule.kind !== "All channels" && target !== channel) return false;
-    const window = rule.window === "per week" ? 7 * 86400000 : rule.window === "per month" ? 30 * 86400000 : 86400000;
-    const cutoff = new Date(new Date(timestamp).getTime() - window).toISOString();
-    const count = db().prepare(`SELECT count(*) AS count FROM message_events WHERE user_id = ? AND event_type = 'delivered' AND created_at >= ?${rule.kind === "All channels" ? "" : " AND channel = ?"}`).get(userId, cutoff, ...(rule.kind === "All channels" ? [] : [target])) as { count: number };
-    return count.count >= Number(rule.limit);
-  });
-}
+export function getFrequencyCappingSnapshot(workspaceId='local'){return frequencySnapshot(db(),workspaceId);}
+export function saveFrequencyCapping(input:unknown,expectedUpdatedAt:unknown,workspaceId='local'){return workspaceTransaction(()=>{const result=saveFrequencySettings(db(),input,expectedUpdatedAt,workspaceId);audit('workspace',workspaceId,'frequency_capping_updated',{rules:result.settings.rules.length});return result;});}
+export function reserveFrequencyDispatch(context:FrequencyDispatch){return reserveDispatch(db(),context);}
+export function finishFrequencyDispatch(context:FrequencyDispatch,sent:boolean){return finishDispatch(db(),context,sent);}
 export function prepareEmailMessage(message: { id?: string; subject?: string; body?: string; config?: Record<string, unknown> }, userId: string, kind: "campaign" | "test" | "seed", custom?: Record<string, unknown>) {
   const user = getUser(userId); const profile = { ...user?.attributes, user_id: user?.id, subscribed: user?.subscribed, first_name: user?.firstName, email: user?.email, country: user?.country, ...custom };
   const deploymentHost = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
@@ -2198,6 +2842,7 @@ export function copyCampaignToWorkspace(id:string,targetWorkspaceId:string){
  const target=listCampaignWorkspaces().find(workspace=>workspace.id===targetWorkspaceId);if(!target)throw new Error("Choose an existing local workspace.");
  const config=structuredClone(campaign.config);for(const key of ["apiIdentifier","publicId","createdAt","createdBy","lastEditedBy","conversionsLocked","monitoring","approval","approvalFingerprint"])delete config[key];
  config.workspaceId=target.id;config.copiedFrom={campaignId:id,workspaceId:campaign.config.workspaceId??"local"};
+ config.frequencyCategoryId="";if(config.delivery)config.delivery={...objectValue(config.delivery),frequencyCategoryId:""};
  const copy=upsertCampaign({...campaign,id:uid("cmp"),name:`${campaign.name} (Copy)`,status:"Draft",sent:0,config});
  audit("campaign",copy.id,"copied_to_workspace",{user:"Local user",category:"Workspace",before:{sourceCampaignId:id},after:{workspaceId:target.id}});
  return copy;

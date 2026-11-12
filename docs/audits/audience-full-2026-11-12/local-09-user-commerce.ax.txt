@@ -1,0 +1,96 @@
+Browser tab: 14, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/users/user_search/user-search/local?locale=en&workspace=local&query=user_1&tab=Commerce".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/user_search/user-search/local?locale=en&workspace=local&query=user_1&tab=Commerce
+	1 container
+		219 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			220 image
+		4 text Braze Demo — Thinkingai
+		5 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		6 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			7 text Local workspace
+			8 image
+		9 container Side navigation
+			10 text Quick links
+			11 button Canvas
+			12 button Campaigns
+			13 button Segments
+			14 button Getting Started
+			15 button Home
+			16 button AI Decisioning
+			17 button Agent Console
+			18 button Messaging
+			19 button Audience
+			20 button Content
+			21 button Analytics
+			22 button Partner Integrations
+			23 button Data Settings
+			24 button Settings
+		25 button Home
+			26 image Braze
+		27 container
+			28 text ◷   8 days left in your free trial.
+			29 button Connect with sales
+		30 container
+			31 button Search workspace ⌘K
+				32 image
+				33 text Search workspace
+				34 text ⌘K
+			35 button Take a tour
+			36 image Community
+			37 button (collapsed) Description: Language, Secondary Actions: Expand
+			38 button Notifications
+			39 button (collapsed) Description: Profile, Secondary Actions: Expand
+			40 image
+			41 button Open BrazeAI Operator
+		42 container
+			43 heading Search users, Value: 1
+				44 text Search users
+			45 image
+			46 text Limited access
+			47 text field (settable) Description: Email address, phone number or External User ID, Value: <redacted>
+			48 button Clear Selection
+				49 image
+			50 button Search
+				51 image
+			52 text Search for users by their External User ID
+			53 image The identifier assigned to a user by your company.
+			54 text User Alias
+			55 image Look up a user's alias name, or label:name.
+			56 text email, phone number, or push token.
+			57 container
+				58 heading Customer 1, Value: 2
+					59 text Customer 1
+				60 text User ID: user_1 Braze ID: --
+				61 image
+				62 text user1@example.test
+				63 image
+				64 text None
+				65 button (disabled) User aliases
+			66 button Refresh user profile
+				67 image
+			68 tab group User profile
+				69 tab (selectable, settable, boolean) Overview, Value: 0
+				70 tab (selectable, settable, boolean) Engagement, Value: 0
+				71 tab (selectable, settable, boolean) Messaging History, Value: 0
+				72 tab (selectable, settable, boolean) Event History, Value: 0
+				73 tab (selected, settable, boolean) Commerce, Value: 1
+				74 tab (selectable, settable, boolean) Feature Flags Eligibility, Value: 0
+			221 heading Active Cart, Value: 2
+				222 text Active Cart
+			223 text Cart is empty
+			224 heading Order Activity, Value: 2
+				225 text Order Activity
+			226 definition list
+				227 container Total Revenue
+					228 text Total Revenue
+				229 text --
+				230 container Total Refunds
+					231 text Total Refunds
+				232 text --
+				233 container Total Orders
+					234 text Total Orders
+				235 text 0
+			236 heading Purchase History (Legacy), Value: 2
+				237 text Purchase History (Legacy)
+			238 text This user has not made any purchases.
+
+The focused UI element is 73 tab (selected, settable, boolean) Commerce, Value: 1

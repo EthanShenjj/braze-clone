@@ -1,0 +1,5 @@
+import {listCanvasVersions,restoreCanvasVersion} from '@/lib/braze-store';
+export const runtime='nodejs';
+type Context={params:Promise<{id:string}>};
+export async function GET(request:Request,{params}:Context){try{const{id}=await params;return Response.json({data:listCanvasVersions(id,new URL(request.url).searchParams.get('workspaceId')??'local')});}catch(error){return Response.json({error:error instanceof Error?error.message:'Could not load Canvas versions.'},{status:404});}}
+export async function POST(request:Request,{params}:Context){try{const{id}=await params,input=await request.json();if(typeof input.versionId!=='string'||typeof input.updatedAt!=='string')throw new Error('Choose a version and reload the current Canvas before restoring.');return Response.json(restoreCanvasVersion(id,input.versionId,typeof input.workspaceId==='string'?input.workspaceId:'local',input.updatedAt));}catch(error){return Response.json({error:error instanceof Error?error.message:'Could not restore Canvas version.'},{status:409});}}

@@ -1,0 +1,24 @@
+Browser tab: 6, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3220/engagement/canvas/322ef7c3-bd70-4553-81df-819a884b95cf?locale=en&workspace=local&step=sendSettings&workspaceId=local".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3220/engagement/canvas/322ef7c3-bd70-4553-81df-819a884b95cf?locale=en&workspace=local&step=sendSettings&workspaceId=local
+	2 container Workspace quiet hours
+		3 text Workspace quiet hours
+		4 text Canvases using workspace quiet hours will follow these settings. All times are in the recipient's local time zone.
+		5 container
+			6 text Start time
+			7 time field (settable) Description: Workspace quiet hours start, Value: 22:00
+				8 container
+					9 stepper
+					10 stepper
+				11 pop up button 显示时间选择器 显示时间选择器
+		12 container
+			13 text End time
+			14 time field (settable) Description: Workspace quiet hours end, Value: 08:00
+				15 container
+					16 stepper
+					17 stepper
+				18 pop up button 显示时间选择器 显示时间选择器
+		19 text Quiet hours cannot exceed 20 hours.
+		20 button Cancel
+		21 button Save changes
+
+The focused UI element is 10 stepper

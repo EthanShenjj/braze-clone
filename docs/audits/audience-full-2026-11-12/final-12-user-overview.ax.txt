@@ -1,0 +1,147 @@
+Browser tab: 15, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/users/user_search/user-search/local?locale=en&workspace=local&query=user_1".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/user_search/user-search/local?locale=en&workspace=local&query=user_1
+	1 container
+		2 text Braze Demo — Thinkingai
+		3 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		4 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			5 text Local workspace
+			6 image
+		7 container Side navigation
+			8 text Quick links
+			9 button Canvas
+			10 button Campaigns
+			11 button Segments
+			12 button Getting Started
+			13 button Home
+			14 button AI Decisioning
+			15 button Agents
+			16 button Messaging
+			17 button Audience
+			18 button Content
+			19 button Analytics
+			20 button Partner Integrations
+			21 button Data Settings
+			22 button Settings
+		23 button Home
+			24 image Braze
+		25 container
+			26 text ◷   8 days left in your free trial.
+			27 button Connect with sales
+		28 container
+			29 button Search workspace ⌘K
+				30 image
+				31 text Search workspace
+				32 text ⌘K
+			33 button Take a tour
+			34 image Community
+			35 button (collapsed) Description: Language, Secondary Actions: Expand
+			36 button Notifications
+			37 button (collapsed) Description: Profile, Secondary Actions: Expand
+			38 image
+			39 button Open BrazeAI Operator
+		40 container
+			41 heading Search users, Value: 1
+				42 text Search users
+			43 image
+			44 text Limited access
+			45 text field (settable) Description: Email address, phone number or External User ID, Value: <redacted>
+			46 button Clear Selection
+				47 image
+			48 button Search
+				49 image
+			50 text Search for users by their External User ID
+			51 image The identifier assigned to a user by your company.
+			52 text User Alias
+			53 image Look up a user's alias name, or label:name.
+			54 text email, phone number, or push token.
+			55 container
+				56 heading Customer 1, Value: 2
+					57 text Customer 1
+				58 text User ID: user_1 Braze ID: --
+				59 image
+				60 text user1@example.test
+				61 image
+				62 text None
+				63 button (disabled) User aliases
+			64 button Refresh user profile
+				65 image
+			66 tab group User profile
+				67 tab (selected, settable, boolean) Overview, Value: 1
+				68 tab (selectable, settable, boolean) Engagement, Value: 0
+				69 tab (selectable, settable, boolean) Messaging History, Value: 0
+				70 tab (selectable, settable, boolean) Event History, Value: 0
+				71 tab (selectable, settable, boolean) Commerce, Value: 0
+				72 tab (selectable, settable, boolean) Feature Flags Eligibility, Value: 0
+			73 heading Profile, Value: 2
+				74 text Profile
+			75 definition list
+				76 container Gender
+					77 text Gender
+				78 text --
+				79 container Age Group
+					80 text Age Group
+				81 text --
+				82 container Country
+					83 text Country
+				84 text GB
+				85 container City
+					86 text City
+				87 text --
+				88 container Language
+					89 text Language
+				90 text en
+				91 container Most Recent Device Locale
+					92 text Most Recent Device Locale
+				93 text --
+				94 container Time Zone
+					95 text Time Zone
+				96 text --
+				97 container Birthday
+					98 text Birthday
+				99 text --
+			100 heading Recent Devices, Value: 2
+				101 text Recent Devices
+			102 definition list
+				103 container Number of Devices
+					104 text Number of Devices
+				105 text 0
+			106 heading Sessions Overview, Value: 2
+				107 text Sessions Overview
+			108 definition list
+				109 container Sessions
+					110 text Sessions
+				111 text 0
+				112 container Last Used
+					113 text Last Used
+				114 text --
+				115 container First Used
+					116 text First Used
+				117 text --
+			118 heading Custom Events, Value: 2
+				119 text Custom Events
+			120 container
+				121 table
+					122 row
+						123 cell
+							124 button Name
+								125 text Name
+								126 image
+						127 cell
+							128 button Count
+								129 text Count
+								130 image
+						131 cell
+							132 button Last Time
+								133 text Last Time
+								134 image
+				135 text No custom events recorded.
+			136 heading Custom Attributes, Value: 2
+				137 text Custom Attributes
+			138 table
+				139 row
+					140 cell
+						141 text plan
+					142 cell
+						143 text pro
+
+The focused UI element is 0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/user_search/user-search/local?locale=en&workspace=local&query=user_1

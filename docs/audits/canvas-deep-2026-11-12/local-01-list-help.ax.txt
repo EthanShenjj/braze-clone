@@ -1,0 +1,140 @@
+Browser tab: 12, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3221/engagement/canvas?locale=en".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3221/engagement/canvas?locale=en
+	1 container
+		2 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		3 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			4 text Local workspace
+			5 image
+		6 container Side navigation
+			7 text Quick links
+			8 button Canvas
+			9 button Campaigns
+			10 button Segments
+			11 button Getting Started
+			12 button Home
+			13 button AI Decisioning
+			14 button Agents
+			15 button Messaging
+			16 button Audience
+			17 button Content
+			18 button Analytics
+			19 button Partner Integrations
+			20 button Data Settings
+			21 button Settings
+		22 button Home
+			23 image Braze
+	24 container
+		25 text ◷   8 days left in your free trial.
+		26 button Connect with sales
+		27 button Search workspace ⌘K
+			28 image
+			29 text Search workspace
+			30 text ⌘K
+		31 button Take a tour
+		32 image Community
+		33 button (collapsed) Description: Language, Secondary Actions: Expand
+		34 button Notifications
+		35 button (collapsed) Description: Profile, Secondary Actions: Expand
+		36 image
+		37 button Open BrazeAI Operator
+		38 button Canvas
+		39 heading Canvas Limited access, Value: 1
+			40 text Canvas Limited access
+		41 text Design and launch customer journeys with Canvas. Drag, drop, and connect messaging across channels to create seamless, automated experiences.
+		121 container
+			122 button (expanded) Description: More options, Secondary Actions: Collapse
+				123 text More options
+				124 image
+			125 link Description: View documentation, Value: braze.com/docs/user_guide/messaging/canvas
+			126 link Description: Browse case studies, Value: braze.com/customers?topic=Canvas+Flow
+			127 button Watch a tutorial
+			128 link Description: Take an eLearning course, Value: dashboard-09.braze.com/lms/auth?next=%2Fintroduction-to-canvas-flow
+			129 link Description: Try the Braze demo app, Value: dashboard-09.braze.com/deeplink?asset_type=campaign&workspace=demo&asset_name=Referral+Offer+IAM
+		45 button Take a tour
+		46 button Create Canvas
+			47 text Create Canvas
+			48 image
+		49 text Status
+		50 container
+			51 combo box (collapsed, settable) Description: Status, Value: Draft, Secondary Actions: Expand
+			52 button Toggle Status
+				53 image
+		54 text Tags
+		55 container
+			56 combo box (collapsed, settable) Description: Tags, Secondary Actions: Expand
+			57 button Toggle Tags
+				58 image
+		59 button (collapsed) Filters, Secondary Actions: Expand
+			60 image
+			61 text Filters
+		62 button (collapsed) Columns, Secondary Actions: Expand
+			63 image
+			64 text Columns
+		65 button Reset filters
+		66 container
+			67 image
+			68 text field (settable) Search Canvases
+		69 button Status: Draft
+			70 text Status: 
+			71 text Draft
+			72 image
+		73 container
+			74 text 1 Result
+		75 table
+			76 row
+				77 cell
+					78 checkbox (settable, integer) Description: Select all Canvas rows, Value: 0
+				79 cell
+					80 button Select to sort by Name in alphabetical order
+						81 text Name 
+						82 text ↕
+				83 cell
+					84 text Status
+				85 cell
+					86 text Description
+				87 cell
+					88 text Last edited by
+				89 cell
+					90 button Last edited ↓
+						91 text Last edited 
+						92 text ↓
+				93 cell
+					94 text Alerts Configured
+				95 cell
+					96 text Actions
+			97 row
+				98 cell
+					99 checkbox (settable, integer) Description: Select Canvas Welcome journey, Value: 0
+				100 cell
+					101 button Welcome journey
+				130 cell
+					131 text Draft
+				132 cell
+					133 text Entry, delay, email and conversion journey
+				134 cell
+					135 text Local workspace
+				136 cell
+					137 text 5 minutes ago
+				138 cell
+					139 text —
+				102 cell
+					103 button Actions for Welcome journey
+						104 image
+		105 text Showing rows  1  -  1  of  1
+		106 container
+			107 text Rows per page:
+			108 pop up button (collapsed, settable) Rows per page:, Value: 20, Secondary Actions: Expand
+				109 menu
+					110 10
+					111 (selected) 20
+					112 40
+					113 60
+					114 100
+		115 button (disabled) Previous page
+			116 image
+		117 button Current Page, Page 1
+		118 button (disabled) Next page
+			119 image
+		120 button Priority Sorter
+
+The focused UI element is 122 button (expanded) Description: More options, Secondary Actions: Collapse

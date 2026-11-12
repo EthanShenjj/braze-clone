@@ -1,0 +1,185 @@
+Browser tab: 15, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/users/user_search/user-search/local?locale=en&workspace=local&query=user_1&tab=Engagement".
+1 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/user_search/user-search/local?locale=en&workspace=local&query=user_1&tab=Engagement
+	2 container
+		3 text Braze Demo — Thinkingai
+		4 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		5 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			6 text Local workspace
+			7 image
+		8 container Side navigation
+			9 text Quick links
+			10 button Canvas
+			11 button Campaigns
+			12 button Segments
+			13 button Getting Started
+			14 button Home
+			15 button AI Decisioning
+			16 button Agents
+			17 button Messaging
+			18 button Audience
+			19 button Content
+			20 button Analytics
+			21 button Partner Integrations
+			22 button Data Settings
+			23 button Settings
+		24 button Home
+			25 image Braze
+		26 container
+			27 text ◷   8 days left in your free trial.
+			28 button Connect with sales
+		29 container
+			30 button Search workspace ⌘K
+				31 image
+				32 text Search workspace
+				33 text ⌘K
+			34 button Take a tour
+			35 image Community
+			36 button (collapsed) Description: Language, Secondary Actions: Expand
+			37 button Notifications
+			38 button (collapsed) Description: Profile, Secondary Actions: Expand
+			39 image
+			40 button Open BrazeAI Operator
+		41 container
+			42 heading Search users, Value: 1
+				43 text Search users
+			44 image
+			45 text Limited access
+			46 text field (settable) Description: Email address, phone number or External User ID, Value: <redacted>
+			47 button Clear Selection
+				48 image
+			49 button Search
+				50 image
+			51 text Search for users by their External User ID
+			52 image The identifier assigned to a user by your company.
+			53 text User Alias
+			54 image Look up a user's alias name, or label:name.
+			55 text email, phone number, or push token.
+			56 container
+				57 heading Customer 1, Value: 2
+					58 text Customer 1
+				59 text User ID: user_1 Braze ID: --
+				60 image
+				61 text user1@example.test
+				62 image
+				63 text None
+				64 button (disabled) User aliases
+			65 button Refresh user profile
+				66 image
+			67 tab group User profile
+				68 tab (selectable, settable, boolean) Overview, Value: 0
+				69 tab (selected, settable, boolean) Engagement, Value: 1
+				70 tab (selectable, settable, boolean) Messaging History, Value: 0
+				71 tab (selectable, settable, boolean) Event History, Value: 0
+				72 tab (selectable, settable, boolean) Commerce, Value: 0
+				73 tab (selectable, settable, boolean) Feature Flags Eligibility, Value: 0
+			74 heading Contact Settings, Value: 2
+				75 text Contact Settings
+			76 container
+				77 heading Email, Value: 3
+					78 text Email
+				79 text Global subscription state
+				80 container
+					81 combo box (collapsed, settable) Description: Global subscription state, Value: Subscribed, Secondary Actions: Expand
+					82 button Toggle Global subscription state
+						83 image
+				84 heading Subscription Groups, Value: 4
+					85 text Subscription Groups
+				86 text Product updates
+				87 switch (settable, boolean) Description: Product updates, Value: 1
+				88 text Promotions
+				89 switch (settable, boolean) Description: Promotions, Value: 1
+				90 heading Email Open/Click Tracking Pixel, Value: 4
+					91 text Email Open/Click Tracking Pixel
+				92 definition list
+					93 container Open Tracking
+						94 text Open Tracking
+					95 text Enabled
+					96 container Click Tracking
+						97 text Click Tracking
+					98 text Enabled
+				99 text Manage this workspace's open/click tracking in 
+				100 link Description: Email Preferences, Value: 127.0.0.1:3213/email-preferences
+				101 text .
+				102 heading SMS/MMS/RCS, Value: 3
+					103 text SMS/MMS/RCS
+				104 heading Phone Number, Value: 4
+					105 text Phone Number
+				106 text -- SMS alerts
+				107 switch (settable, boolean) Description: SMS alerts, Value: 1
+				108 heading WhatsApp, Value: 3
+					109 text WhatsApp
+				110 heading Phone Number, Value: 4
+					111 text Phone Number
+				112 text -- WhatsApp updates
+				113 switch (settable, boolean) Description: WhatsApp updates, Value: 1
+				114 heading LINE, Value: 3
+					115 text LINE
+				116 definition list
+					117 container LINE User ID
+						118 text LINE User ID
+					119 text --
+				120 heading Push, Value: 3
+					121 text Push
+				122 checkbox Unsubscribed, Value: 0
+				123 checkbox Subscribed, Value: 0
+				124 checkbox Opted In, Value: 0
+			125 heading Communication Stats, Value: 2
+				126 text Communication Stats
+			127 definition list
+				128 container Last Received Any Campaign
+					129 text Last Received Any Campaign
+				130 text --
+				131 container Last Received Push
+					132 text Last Received Push
+				133 text --
+				134 container Last Interacted With Email
+					135 text Last Interacted With Email
+				136 text --
+				137 container Last Received LINE
+					138 text Last Received LINE
+				139 text --
+				140 container Last Received SMS/MMS/RCS
+					141 text Last Received SMS/MMS/RCS
+				142 text --
+				143 container Last Received Webhook
+					144 text Last Received Webhook
+				145 text --
+				146 container Last Received WhatsApp
+					147 text Last Received WhatsApp
+				148 text --
+			149 heading Campaigns Received, Value: 2
+				150 text Campaigns Received
+			151 text This user has not received any campaigns.
+			152 heading Install Attribution, Value: 2
+				153 text Install Attribution
+			154 text No install attribution information.
+			155 heading Miscellaneous, Value: 2
+				156 text Miscellaneous
+			157 definition list
+				158 container Random Bucket
+					159 text Random Bucket
+				160 text 4095
+				161 container Global Control Group
+					162 text Global Control Group
+				163 text No
+			164 heading Segments, Value: 2
+				165 text Segments
+			166 container
+				167 combo box (collapsed, settable) Description: Segment membership check, Secondary Actions: Expand
+				168 button Toggle Segment membership check
+					169 image
+			170 text Search by Segment name
+			171 heading Canvas Messages Received, Value: 2
+				172 text Canvas Messages Received
+			173 text Displaying recent messages only
+			174 text This user has not received any messages from any Canvases.
+			175 heading Predictions, Value: 2
+				176 text Predictions
+			177 heading Churn Prediction, Value: 3
+				178 text Churn Prediction
+			179 text This user has not been assigned any scores.
+			180 heading Event Prediction, Value: 3
+				181 text Event Prediction
+			182 text This user has not been assigned any scores.
+
+The focused UI element is 69 tab (selected, settable, boolean) Engagement, Value: 1

@@ -1,0 +1,181 @@
+Browser tab: 14, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3213/users/user_search/user-search/local?locale=en&workspace=local&query=user_1&tab=Messaging+History".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3213/users/user_search/user-search/local?locale=en&workspace=local&query=user_1&tab=Messaging+History
+	1 container
+		219 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+			220 image
+		4 text Braze Demo — Thinkingai
+		5 button (expanded) Description: Minimize menu, Secondary Actions: Collapse
+		6 button (collapsed) Description: Select workspace, Secondary Actions: Expand
+			7 text Local workspace
+			8 image
+		9 container Side navigation
+			10 text Quick links
+			11 button Canvas
+			12 button Campaigns
+			13 button Segments
+			14 button Getting Started
+			15 button Home
+			16 button AI Decisioning
+			17 button Agent Console
+			18 button Messaging
+			19 button Audience
+			20 button Content
+			21 button Analytics
+			22 button Partner Integrations
+			23 button Data Settings
+			24 button Settings
+		25 button Home
+			26 image Braze
+		27 container
+			28 text ◷   8 days left in your free trial.
+			29 button Connect with sales
+		30 container
+			31 button Search workspace ⌘K
+				32 image
+				33 text Search workspace
+				34 text ⌘K
+			35 button Take a tour
+			36 image Community
+			37 button (collapsed) Description: Language, Secondary Actions: Expand
+			38 button Notifications
+			39 button (collapsed) Description: Profile, Secondary Actions: Expand
+			40 image
+			41 button Open BrazeAI Operator
+		42 container
+			43 heading Search users, Value: 1
+				44 text Search users
+			45 image
+			46 text Limited access
+			47 text field (settable) Description: Email address, phone number or External User ID, Value: <redacted>
+			48 button Clear Selection
+				49 image
+			50 button Search
+				51 image
+			52 text Search for users by their External User ID
+			53 image The identifier assigned to a user by your company.
+			54 text User Alias
+			55 image Look up a user's alias name, or label:name.
+			56 text email, phone number, or push token.
+			57 container
+				58 heading Customer 1, Value: 2
+					59 text Customer 1
+				60 text User ID: user_1 Braze ID: --
+				61 image
+				62 text user1@example.test
+				63 image
+				64 text None
+				65 button (disabled) User aliases
+			66 button Refresh user profile
+				67 image
+			68 tab group User profile
+				69 tab (selectable, settable, boolean) Overview, Value: 0
+				70 tab (selectable, settable, boolean) Engagement, Value: 0
+				71 tab (selected, settable, boolean) Messaging History, Value: 1
+				72 tab (selectable, settable, boolean) Event History, Value: 0
+				73 tab (selectable, settable, boolean) Commerce, Value: 0
+				74 tab (selectable, settable, boolean) Feature Flags Eligibility, Value: 0
+			187 image
+			188 text Events are shown for the past 30 days. Please share your comments and suggestions with us at 
+			189 link Description: user-targeting@braze.com, Value: mailto:user-targeting@braze.com
+			190 text . 
+			191 link Description: Learn more, Value: braze.com/docs/user_guide/engagement_tools/segments/user_profiles/#messaging-history-tab
+			192 button Filters
+			193 table
+				194 row
+					195 cell
+						196 button Channel
+							197 text Channel
+							198 image
+					199 cell
+						200 button Event
+							201 text Event
+							202 image
+					203 cell
+						204 button Time
+							205 text Time
+							206 image
+					207 cell
+						208 button Campaign/Canvas
+							209 text Campaign/Canvas
+							210 image
+					211 cell
+						212 button Message Sent
+							213 text Message Sent
+							214 image
+					215 cell
+						216 button Destination
+							217 text Destination
+							218 image
+			221 image
+			222 heading There are no events for this user in the past 30 days, Value: 2
+				223 text There are no events for this user in the past 30 days
+			224 container Filters
+				225 container
+					226 heading Filters, Value: 2
+						227 text Filters
+					228 button Close drawer
+						229 image
+				230 container
+					231 container Email
+						232 checkbox (settable, integer) Description: Email, Value: 0
+						233 checkbox (settable, integer) Description: Abort, Value: 0
+						234 checkbox (settable, integer) Description: Bounce, Value: 0
+						235 checkbox (settable, integer) Description: Click, Value: 0
+						236 checkbox (settable, integer) Description: Deferral, Value: 0
+						237 checkbox (settable, integer) Description: Delivery, Value: 0
+						238 checkbox (settable, integer) Description: Frequency capped, Value: 0
+						239 checkbox (settable, integer) Description: Mark as spam, Value: 0
+						240 checkbox (settable, integer) Description: Open, Value: 0
+						241 checkbox (settable, integer) Description: Send, Value: 0
+						242 checkbox (settable, integer) Description: Soft bounce, Value: 0
+						243 checkbox (settable, integer) Description: Unsubscribe, Value: 0
+					244 container SMS/MMS
+						245 checkbox (settable, integer) Description: SMS/MMS, Value: 0
+						246 checkbox (settable, integer) Description: Abort, Value: 0
+						247 checkbox (settable, integer) Description: Carrier send, Value: 0
+						248 checkbox (settable, integer) Description: Delivery, Value: 0
+						249 checkbox (settable, integer) Description: Delivery failure, Value: 0
+						250 checkbox (settable, integer) Description: Frequency capped, Value: 0
+						251 checkbox (settable, integer) Description: Inbound receive, Value: 0
+						252 checkbox (settable, integer) Description: Rejection, Value: 0
+						253 checkbox (settable, integer) Description: Send, Value: 0
+					254 container Push
+						255 checkbox (settable, integer) Description: Push, Value: 0
+						256 checkbox (settable, integer) Description: Abort, Value: 0
+						257 checkbox (settable, integer) Description: Bounce, Value: 0
+						258 checkbox (settable, integer) Description: Frequency capped, Value: 0
+						259 checkbox (settable, integer) Description: Influenced open, Value: 0
+						260 checkbox (settable, integer) Description: iOS Foreground, Value: 0
+						261 checkbox (settable, integer) Description: Open, Value: 0
+						262 checkbox (settable, integer) Description: Send, Value: 0
+					263 container In-App Message
+						264 checkbox (settable, integer) Description: In-App Message, Value: 0
+						265 checkbox (settable, integer) Description: Click, Value: 0
+						266 checkbox (settable, integer) Description: Frequency capped, Value: 0
+						267 checkbox (settable, integer) Description: Impression, Value: 0
+					268 container Content Card
+						269 checkbox (settable, integer) Description: Content Card, Value: 0
+						270 checkbox (settable, integer) Description: Click, Value: 0
+						271 checkbox (settable, integer) Description: Dismiss, Value: 0
+						272 checkbox (settable, integer) Description: Frequency capped, Value: 0
+						273 checkbox (settable, integer) Description: Impression, Value: 0
+						274 checkbox (settable, integer) Description: Send, Value: 0
+					275 container Webhook
+						276 checkbox (settable, integer) Description: Webhook, Value: 0
+						277 checkbox (settable, integer) Description: Abort, Value: 0
+						278 checkbox (settable, integer) Description: Frequency capped, Value: 0
+						279 checkbox (settable, integer) Description: Send, Value: 0
+					280 container WhatsApp
+						281 checkbox (settable, integer) Description: WhatsApp, Value: 0
+						282 checkbox (settable, integer) Description: Abort, Value: 0
+						283 checkbox (settable, integer) Description: Delivery, Value: 0
+						284 checkbox (settable, integer) Description: Failure, Value: 0
+						285 checkbox (settable, integer) Description: Frequency capped, Value: 0
+						286 checkbox (settable, integer) Description: Inbound receive, Value: 0
+						287 checkbox (settable, integer) Description: Read, Value: 0
+						288 checkbox (settable, integer) Description: Send, Value: 0
+				289 container
+					290 button Select All
+					291 button Apply
+
+The focused UI element is 192 button Filters

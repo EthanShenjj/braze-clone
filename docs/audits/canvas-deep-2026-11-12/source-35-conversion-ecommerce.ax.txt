@@ -1,0 +1,197 @@
+Browser tab: 7, Title: "Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=basics&initialConditionsCollapsed=false".
+0 AXWebArea Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=basics&initialConditionsCollapsed=false
+	1 container
+		194 container body-wrapper
+			195 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=basics&initialConditionsCollapsed=false#main-col
+			196 container
+				197 container Side navigation
+					198 container
+						199 button Minimize menu
+						200 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+							201 image
+							202 text Demo – ittor
+						203 text Quick links
+						204 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+						205 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+						206 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+						207 button Getting Started
+							208 image
+							209 container
+								210 text Getting Started
+								211 container
+									212 text 8 %
+						213 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+						214 button AI Decisioning
+							215 image
+							216 text AI Decisioning
+						217 button Agents
+							218 image
+							219 text Agents
+						220 button Messaging
+							221 image
+							222 text Messaging
+						223 button Audience
+							224 image
+							225 text Audience
+						226 button Content
+							227 image
+							228 text Content
+						229 button Analytics
+							230 image
+							231 text Analytics
+						232 button Partner Integrations
+							233 image
+							234 text Partner Integrations
+						235 button Data Settings
+							236 image
+							237 text Data Settings
+						238 button Settings
+							239 image
+							240 text Settings
+					241 container Footer Logo
+						242 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+				243 text 14 days left in your free trial.
+				244 button Connect with sales
+				245 container Top navigation
+					246 container Left top navigation
+						247 button Search workspace ⌘+K
+							248 image
+							249 text Search workspace
+							250 text ⌘+K
+					251 container Right top navigation
+						252 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							253 image
+						254 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							255 image
+						256 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+							257 image
+						258 container
+							259 button Notifications
+								260 image
+						261 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							262 image
+						263 button BrazeAI Operator™
+							264 image
+			265 container main
+				266 container main-col
+					267 tab group Open page tabs
+						268 tab (selectable, settable, boolean) Canvas, Value: 0, ID: canvas
+						269 tab (selected, settable, boolean) Edit 'Canvas fidelity audit - 2026-11-12 (temporary)' Close tab, Description: Close tab, ID: 6af5503cd8512f008c15c8bd, Value: 1
+Edit 'Canvas fidelity audit - 2026-11-12 (temporary)'
+					279 container
+						280 text Limited access
+						281 container progress
+							282 text Progress Tracker with 6 steps: Basics, Entry Schedule, Target Audience, Send Settings, Build Canvas, Summary
+						283 button Step Basics
+							284 text 1
+							285 text Basics
+						286 button Step Entry Schedule
+							287 text 2
+							288 text Entry Schedule
+						289 button Step Target Audience
+							290 text 3
+							291 text Target Audience
+						292 button Step Send Settings
+							293 text 4
+							294 text Send Settings
+						295 button Step Build Canvas
+							296 text 5
+							297 text Build Canvas
+						298 button Step Summary
+							299 text 6
+							300 text Summary
+						301 container
+							302 heading Set Up Canvas Details, Value: 3
+								303 heading Set Up Canvas Details, Value: 3
+									304 text Set Up Canvas Details
+							305 container
+								306 text Canvas Name
+								307 text field (settable) Canvas fidelity audit - 2026-11-12 (temporary)
+								308 button Add description
+							309 button Tags
+							310 heading Canvas brief, Value: 4
+								311 text Canvas brief
+							312 text Attach a brief so BrazeAI Operator can build your Canvas and your Standards can review it against your goals
+							313 container
+								314 heading Attach a Canvas brief (optional), Value: 5
+									315 text Attach a Canvas brief (optional)
+								316 text PDF, TXT, MD, CSV, DOCX, XLSX up to 15MB
+								317 button Upload file
+							318 text Canvas ID
+							319 text field Canvas ID, Value: 8df1bd9e-8d6d-4898-87e3-02a69777a263, ID: api-sendable-id-copy
+							320 button Copy
+							321 container
+								322 text This is the unique key for this Canvas. Use it to identify which Canvas to send in a request to the Canvas Trigger API.
+						323 container
+							324 heading Assign Conversion Events, Value: 3
+								325 heading Assign Conversion Events, Value: 3
+									326 text Assign Conversion Events
+							327 text Define up to 4 conversion events to track for this Canvas. The conversion events must be assigned during Canvas creation, and cannot be changed once a Canvas has launched.
+							328 content list
+								329 container
+									330 heading Primary Conversion Event - A, Value: 4
+										331 text Primary Conversion Event - A
+									332 button Remove Conversion Event
+									333 text Conversion event type
+									383 container
+										384 text option View product, selected.
+									334 container
+										335 text View product
+										336 combo box (collapsed, settable) Description: Conversion event type, ID: react-select-41-input, Secondary Actions: Expand
+									385 text Custom event name
+									386 container
+										387 text Choose a custom event
+										388 combo box (collapsed, settable) Description: Choose a custom event, ID: react-select-45-input, Secondary Actions: Expand
+									389 checkbox (settable, integer) Description: Add property filters, Value: 0, ID: bc-checkbox-3139890733
+									390 text Add property filters Conversion deadline Define the maximum time that may pass between a user entering a Canvas and the conversion. Minimum time is the maximum length of the longest path (0 seconds).
+									343 stepper (settable, integer) Conversion deadline, Value: 3, ID: db-conversion-deadline-time-input--4071112911
+									344 container
+										345 text Days
+										346 combo box (collapsed, settable) Description: Time unit for Conversion deadline, ID: react-select-43-input, Secondary Actions: Expand
+									347 definition list
+										348 container Longest path inside Canvas:
+											349 text Longest path inside Canvas :
+										350 text 0 seconds
+										351 image Information
+										352 container Conversion deadline:
+											353 text Conversion deadline :
+										354 text 3 days
+										355 container Final conversion deadline:
+											356 text Final conversion deadline :
+										357 text 3 days
+							358 button Add Conversion Event
+						359 pop up button (disabled) Back
+						360 container
+							361 container progress
+								362 text Progress Tracker with 6 steps: Basics, Entry Schedule, Target Audience, Send Settings, Build Canvas, Summary
+							363 button Step Basics
+								364 text 1
+								365 text Basics
+							366 button Step Entry Schedule
+								367 text 2
+								368 text Entry Schedule
+							369 button Step Target Audience
+								370 text 3
+								371 text Target Audience
+							372 button Step Send Settings
+								373 text 4
+								374 text Send Settings
+							375 button Step Build Canvas
+								376 text 5
+								377 text Build Canvas
+							378 button Step Summary
+								379 text 6
+								380 text Summary
+						381 pop up button Forward
+						382 button Save
+				271 container
+					272 text © Braze 2026
+					273 text Opening in a new tab
+					274 link Description: Opening in a new tab, Value: braze.statuspage.io/
+					275 text Opening in a new tab
+					276 link Description: Opening in a new tab, Value: braze.com/terms
+					277 text Opening in a new tab
+					278 link Description: Opening in a new tab, Value: braze.com/privacy
+		193 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+
+The focused UI element is 336 combo box (collapsed, settable) Description: Conversion event type, ID: react-select-41-input, Secondary Actions: Expand

@@ -1,0 +1,254 @@
+- link "Skip to main content":
+  - /url: "#main-container"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Demo – ittor":
+    - generic: Demo – ittor
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agents":
+    - generic: Agents
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 14 days left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- main:
+  - banner:
+    - heading "Build email preference centers on Landing Pages" [level=4]
+    - generic: Use your own branded domain and drag-and-drop editor to design email preference pages. Add form blocks to collect subscriber interests, frequency, and more, then track how subscribers engage.
+    - button "Create landing page":
+      - generic: Create landing page
+    - button "Close":
+  - heading "Subscription group timeseries" [level=3]
+  - generic: Subscription group
+  - log
+  - generic: LINE Messaging Service 0A
+  - combobox "Subscription group"
+  - generic: Date range
+  - textbox "Date range" [active]: Last 30 Days
+  - generic: Select a shortcut using the menu
+  - button "Calculate today’s statistics":
+    - img: 
+    - generic: Calculate today’s statistics
+  - generic: You don’t have any subscription group timeseries data yet
+  - heading "Subscription groups" [level=3]
+  - button "Create email subscription group":
+    - generic: Create email subscription group
+  - generic: Status
+  - log
+  - generic: Active
+  - combobox "Status"
+  - generic: Channel
+  - log
+  - generic: All Channels
+  - combobox "Channel"
+  - generic "Inline Tag 0":
+    - generic: "Status: Active"
+    - button "close":
+  - heading "5 Results" [level=4]:
+    - generic: 5 Results
+  - textbox "Search subscription group name"
+  - button "Search" [disabled]:
+  - grid:
+    - rowgroup:
+      - row "Name column, unsorted. Select to sort ascending Channel column, unsorted. Select to sort descending ID Description Status column, unsorted. Select to sort descending":
+        - columnheader "Name column, unsorted. Select to sort ascending":
+          - button "Name column, unsorted. Select to sort ascending": Name
+        - columnheader "Channel column, unsorted. Select to sort descending":
+          - button "Channel column, unsorted. Select to sort descending": Channel
+        - columnheader "ID"
+        - columnheader "Description"
+        - columnheader "Status column, unsorted. Select to sort descending":
+          - button "Status column, unsorted. Select to sort descending": Status
+        - columnheader
+    - rowgroup:
+      - row "LINE Messaging Service 0A LINE 412f30ed-647c-4780-8636-c57893bda1d6 Users must be subscribed to this group to receive LINE messages from \"LINE Messaging Service 0A\" Active Archive Edit":
+        - gridcell "LINE Messaging Service 0A":
+          - button "LINE Messaging Service 0A":
+            - generic: LINE Messaging Service 0A
+        - gridcell "LINE":
+          - img: 
+          - generic: LINE
+        - gridcell "412f30ed-647c-4780-8636-c57893bda1d6":
+          - textbox: 412f30ed-647c-4780-8636-c57893bda1d6
+          - button:
+            - img: 
+        - gridcell "Users must be subscribed to this group to receive LINE messages from \"LINE Messaging Service 0A\""
+        - gridcell "Active":
+          - generic: Active
+        - gridcell "Archive Edit":
+          - list:
+            - button "Archive":
+            - button "Edit":
+      - row "LINE Messaging Service 0B LINE edf004ee-1b2b-437f-af35-291497fc0535 Users must be subscribed to this group to receive LINE messages from \"LINE Messaging Service 0B\" Active Archive Edit":
+        - gridcell "LINE Messaging Service 0B":
+          - button "LINE Messaging Service 0B":
+            - generic: LINE Messaging Service 0B
+        - gridcell "LINE":
+          - img: 
+          - generic: LINE
+        - gridcell "edf004ee-1b2b-437f-af35-291497fc0535":
+          - textbox: edf004ee-1b2b-437f-af35-291497fc0535
+          - button:
+            - img: 
+        - gridcell "Users must be subscribed to this group to receive LINE messages from \"LINE Messaging Service 0B\""
+        - gridcell "Active":
+          - generic: Active
+        - gridcell "Archive Edit":
+          - list:
+            - button "Archive":
+            - button "Edit":
+      - row "SMS Canvas Subscription Group SMS/MMS/RCS d1d038f7-75c9-4bff-bed2-2b9f6698b65c Users must be subscribed to this group to receive SMS from \"SMS Canvas Subscription Group\" Active Archive Edit":
+        - gridcell "SMS Canvas Subscription Group":
+          - button "SMS Canvas Subscription Group":
+            - generic: SMS Canvas Subscription Group
+        - gridcell "SMS/MMS/RCS":
+          - generic: SMS/MMS/RCS
+        - gridcell "d1d038f7-75c9-4bff-bed2-2b9f6698b65c":
+          - textbox: d1d038f7-75c9-4bff-bed2-2b9f6698b65c
+          - button:
+            - img: 
+        - gridcell "Users must be subscribed to this group to receive SMS from \"SMS Canvas Subscription Group\""
+        - gridcell "Active":
+          - generic: Active
+        - gridcell "Archive Edit":
+          - list:
+            - button "Archive":
+            - button "Edit":
+      - row "WhatsApp Fake Messaging Service A WhatsApp 52556f48-9865-421d-b174-880a5aad347e Users must be subscribed to this group to receive WhatsApp messages from \"WhatsApp Fake Messaging Service A\" Active Archive Edit":
+        - gridcell "WhatsApp Fake Messaging Service A":
+          - button "WhatsApp Fake Messaging Service A":
+            - generic: WhatsApp Fake Messaging Service A
+        - gridcell "WhatsApp":
+          - img: 
+          - generic: WhatsApp
+        - gridcell "52556f48-9865-421d-b174-880a5aad347e":
+          - textbox: 52556f48-9865-421d-b174-880a5aad347e
+          - button:
+            - img: 
+        - gridcell "Users must be subscribed to this group to receive WhatsApp messages from \"WhatsApp Fake Messaging Service A\""
+        - gridcell "Active":
+          - generic: Active
+        - gridcell "Archive Edit":
+          - list:
+            - button "Archive":
+            - button "Edit":
+      - row "WhatsApp Fake Messaging Service B WhatsApp 36eb2660-f089-4f04-83e8-bdc5593ac9fa Users must be subscribed to this group to receive WhatsApp messages from \"WhatsApp Fake Messaging Service B\" Active Archive Edit":
+        - gridcell "WhatsApp Fake Messaging Service B":
+          - button "WhatsApp Fake Messaging Service B":
+            - generic: WhatsApp Fake Messaging Service B
+        - gridcell "WhatsApp":
+          - img: 
+          - generic: WhatsApp
+        - gridcell "36eb2660-f089-4f04-83e8-bdc5593ac9fa":
+          - textbox: 36eb2660-f089-4f04-83e8-bdc5593ac9fa
+          - button:
+            - img: 
+        - gridcell "Users must be subscribed to this group to receive WhatsApp messages from \"WhatsApp Fake Messaging Service B\""
+        - gridcell "Active":
+          - generic: Active
+        - gridcell "Archive Edit":
+          - list:
+            - button "Archive":
+            - button "Edit":
+  - generic: Showing rows 1 - 5 of 5
+  - generic: "Rows per page:"
+  - combobox:
+    - option "10" [selected]
+    - option "20"
+    - option "40"
+    - option "60"
+    - option "100"
+  - navigation:
+    - list:
+      - button "Previous page" [disabled]:
+        - img: 
+      - button "Current Page, Page 1":
+        - generic: "1"
+      - button "Next page" [disabled]:
+        - img: 
+- generic: © Braze 2026
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://braze.statuspage.io
+  - text: Status
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/terms
+  - text: Terms
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/privacy
+  - text: Privacy Policy
+- text:          
+- iframe
+- 'menu "Shortcuts menu: custom range or pre-configured date ranges"':
+  - menuitem "Custom Range":
+    - generic: Custom Range
+  - menuitem "Today Nov 12, 2026":
+    - generic: Today
+    - generic: Nov 12, 2026
+  - menuitem "Yesterday Nov 11, 2026":
+    - generic: Yesterday
+    - generic: Nov 11, 2026
+  - menuitem "Last 7 Days Nov 5, 2026 - Nov 12, 2026":
+    - generic: Last 7 Days
+    - generic: Nov 5, 2026 - Nov 12, 2026
+  - menuitem "Last 30 Days Oct 13, 2026 - Nov 12, 2026":
+    - img: 
+    - generic: Last 30 Days
+    - generic: Oct 13, 2026 - Nov 12, 2026
+  - menuitem "This Month to Date Nov 1, 2026 - Nov 12, 2026":
+    - generic: This Month to Date
+    - generic: Nov 1, 2026 - Nov 12, 2026
+  - menuitem "All Time Mar 29, 2011 - Nov 12, 2026":
+    - generic: All Time
+    - generic: Mar 29, 2011 - Nov 12, 2026

@@ -1,0 +1,46 @@
+Browser tab: 4, Title: "Engagement - Canvas - Edit 'New Canvas - November 11, 2026'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'New Canvas - November 11, 2026', URL: dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container
+		171 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		172 container Step 10 step editor
+			173 container
+				174 text Step 10
+				175 button
+				176 text DISCONNECTED Incomplete Messages
+				177 button Content Optimizer
+					178 image
+					179 text Content Optimizer
+				180 button Quiet hours:ON 
+					181 definition list
+						182 container Quiet hours:
+							183 text Quiet hours :
+						184 container
+							185 text ON
+				186 text All users who enter this step advance to the next step
+			187 button Done
+			188 container
+				189 text Content Optimizer setup
+				190 button BrazeAI Operator™
+					191 image
+				192 tab group Message step
+					193 tab (selected, settable, boolean) Description: Messaging channels, Value: 1, ID: content
+					194 tab (selectable, settable, boolean) Description: Delivery settings, Value: 0, ID: settings
+					195 tab (selectable, settable, boolean) Description: Content Optimizer settings, ID: content-optimizer-settings, Value: 0
+Content Optimizer settings
+					196 tab (selectable, settable, boolean) Description: Agentic Standards results, Value: 0, ID: message-step-tab-standards-results
+				197 text You're using the free version of Content Optimizer
+				198 container
+					199 text Each workspace can have one active Content Optimizer step. You can continue editing this Canvas, but launching another active step isn't available until you stop or archive an existing one.
+					200 button Request an upgrade
+				201 heading Select Message Channel, Value: 3
+					202 text Select Message Channel
+				203 text Start by choosing your first message channel for this step.
+				204 content list
+					205 button Email
+						206 text Email
+					207 button Push notifications
+						208 text Push notifications
+					209 button SMS/MMS/RCS
+						210 text SMS/MMS/RCS
+
+The focused UI element is 172 container Step 10 step editor

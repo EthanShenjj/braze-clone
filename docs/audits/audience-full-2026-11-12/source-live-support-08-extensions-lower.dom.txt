@@ -1,0 +1,134 @@
+- link "Skip to main content":
+  - /url: "#main-container"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Live – ittor":
+    - generic: Live – ittor
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6af4374b46d3080087f1c558?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6af4374b46d3080087f1c558?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6af4374b46d3080087f1c558?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6af4374b46d3080087f1c558?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agents":
+    - generic: Agents
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 14 days left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- main:
+  - heading "Build more precise audiences with Segment Extensions" [level=3]
+  - button "Connect with sales":
+    - generic: Connect with sales
+  - navigation:
+    - tablist:
+      - tab "Segment Extensions" [selected]:
+        - text: 
+        - generic: Segment Extensions
+  - tabpanel:
+    - heading "AVAILABLE FOR PAID PLANS" [level=5]
+    - heading "Build more precise audiences with Segment Extensions" [level=1]
+    - button "Connect with sales":
+      - generic: Connect with sales
+    - heading "Target customers within a broader timeframe" [level=3]
+    - text: Engage customers based on specific actions they took in the past two years to get a holistic view into their long-term actions and behaviors.
+    - heading "Get granular with custom event properties" [level=3]
+    - text: Make your messaging even more personalized by adding event properties, like the exact product that was viewed, to your segmentation criteria.
+    - heading "Unlock new segmentation use cases" [level=3]
+    - text: Segment your audience on additional data types and order of events using SQL advanced segmentation to describe the relationship of data.
+    - img "Explore our other audience capabilities"
+    - heading "Explore our other audience capabilities" [level=2]
+    - heading "Segments" [level=3]
+    - text: Create tailored audiences using customers’ demographic, behavioral, and technical characteristics and actions.
+    - generic: Opening in a new tab
+    - link "Opening in a new tab":
+      - /url: /engagement/segmenter/6af4374b46d3080087f1c558
+      - text: Segments
+    - heading "Segment Insights" [level=3]
+    - text: Compare how one segment is performing against other segments across a range of KPIs.
+    - generic: Opening in a new tab
+    - link "Opening in a new tab":
+      - /url: /engagement/segmenter/segment_insights/6af4374b46d3080087f1c558
+      - text: Segment Insights
+    - heading "Predictive Events" [level=3]
+    - text: Identify and engage customers based on their likelihood to make a purchase or perform any other high value action.
+    - generic: Opening in a new tab
+    - link "Opening in a new tab":
+      - /url: /engagement/predictions/predictions/6af4374b46d3080087f1c558?modelType=%22purchase%22
+      - text: Predictive Events
+    - heading "See how others are reaching customers in Braze" [level=2]
+    - img "torchie"
+    - generic: Email
+    - generic: Retention
+    - generic: "Read the case study: Showmax"
+    - generic: 3 minute read
+    - img "torchie"
+    - generic: Email
+    - generic: Braze Alloys
+    - generic: "Read the case study: Yonder"
+    - generic: 4 minute read
+    - img "Banner Image"
+    - heading "Got a Braze question? Crowdsource advice from Braze Bonfire." [level=3]
+    - generic: Opening in a new tab
+    - link "Opening in a new tab":
+      - /url: https://community.braze.com/
+      - button "Join the conversation":
+        - generic: Join the conversation
+- generic: © Braze 2026
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://braze.statuspage.io
+  - text: Status
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/terms
+  - text: Terms
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/privacy
+  - text: Privacy Policy
+- text:     

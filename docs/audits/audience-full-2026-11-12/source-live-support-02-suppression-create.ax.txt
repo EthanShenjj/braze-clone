@@ -1,0 +1,15 @@
+Browser tab: 1, Title: "Suppression Lists", URL: "https://dashboard-09.braze.com/engagement/suppression_lists/6af4374b46d3080087f1c558?locale=en".
+1 AXWebArea Suppression Lists, URL: dashboard-09.braze.com/engagement/suppression_lists/6af4374b46d3080087f1c558?locale=en
+	2 container
+		3 heading Create Suppression List, Value: 2
+			4 text Create Suppression List
+		5 container
+			6 text Suppression List Name
+			7 text field (settable)
+			11 text Suppression List Description 0/250 characters
+			12 text entry area (settable)
+			8 button Remove description
+		9 button Cancel
+		10 button Create Suppression List
+
+The focused UI element is 8 button Remove description

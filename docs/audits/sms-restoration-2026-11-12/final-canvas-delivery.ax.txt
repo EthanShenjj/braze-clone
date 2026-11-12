@@ -1,0 +1,71 @@
+Browser tab: 24, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3216/engagement/canvas/06748311-79d2-46ac-9cf7-7d733eebd8e2?step=build&workspace=sms_qa_f730215b&locale=en".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3216/engagement/canvas/06748311-79d2-46ac-9cf7-7d733eebd8e2?step=build&workspace=sms_qa_f730215b&locale=en
+	1 container SMS Message step editor
+		2 container
+			3 text SMS Message
+			4 button Messages
+				5 image
+				6 text Messages
+			7 image
+			8 image
+			9 text All users who enter this step advance to the next step
+			10 button Done
+		11 container
+			12 text Set up Messages
+			13 button BrazeAI Operator
+				14 image
+			15 tab group Message step
+				16 tab (selectable, settable, boolean) Messaging channels, Value: 0
+				17 tab (selected, settable, boolean) Delivery settings, Value: 1
+			18 heading Delivery Schedule, Value: 3
+				19 text Delivery Schedule
+			20 text Deliver this message 
+			21 container
+				22 text at the optimal time .
+			23 checkbox (settable, integer) Description: Using Intelligent Timing, Value: 1
+			24 text Select a time to send messages when a user's profile does not have enough data to calculate an optimal time:
+			25 radio button (settable, integer) Description: the most popular time to use the app amongst all users, Value: 0
+			26 radio button (settable, integer) Description: a specific custom fallback time (in the user's local time zone), Value: 1
+			27 time field (settable) Description: Intelligent Timing fallback time, Value: 15:30
+				28 container
+					29 stepper
+					30 stepper
+				31 pop up button 显示时间选择器 显示时间选择器
+			32 heading Delivery validations, Value: 3
+				33 text Delivery validations
+			34 text Double-check that your audience meets your delivery criteria at message send. For in-app messages, delivery validations are checked when the user enters the step, not when the message is displayed.
+			35 checkbox (settable, integer) Description: Delivery Validation enabled for this message, Value: 1
+			36 text Validate audience at message send
+			37 text Recommended if you're using quiet hours, Intelligent Timing, or rate limiting.
+			38 text Segments
+			39 combo box (collapsed, settable) Segments, Secondary Actions: Expand
+			40 button (collapsed) Description: Toggle Segments, Secondary Actions: Expand
+				41 image
+			42 heading Additional Filters, Value: 3
+				43 text Additional Filters
+			44 container Filter group
+				45 text Filter group
+				46 pop up button (collapsed, settable) Description: Filter group operator, Value: OR, Secondary Actions: Expand
+					47 menu
+						48 (selected) OR
+						49 AND
+				50 button (disabled) Remove filter group
+					51 image
+				52 container
+					53 combo box (collapsed, settable) Description: Select filter, Secondary Actions: Expand
+					54 button (collapsed) Description: Toggle filter catalog, Secondary Actions: Expand
+			55 button ＋ Add filter group
+				56 text ＋ Add 
+				57 text filter
+				58 text  group
+			59 button ＋ Add exclusion group
+				60 text ＋ Add 
+				61 text exclusion
+				62 text  group
+			63 heading Delivery validations advancement behavior, Value: 3
+				64 text Delivery validations advancement behavior
+			65 text If delivery validations are not met:
+			66 radio button (settable, integer) Description: Exit the user from the Canvas, Value: 1
+			67 radio button (settable, integer) Description: Skip this message send and progress the user to the next step in the Canvas, Value: 0
+
+The focused UI element is 17 tab (selected, settable, boolean) Delivery settings, Value: 1

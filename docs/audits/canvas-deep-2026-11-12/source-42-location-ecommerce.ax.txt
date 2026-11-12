@@ -1,0 +1,219 @@
+Browser tab: 7, Title: "Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build&initialConditionsCollapsed=false".
+0 AXWebArea Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build&initialConditionsCollapsed=false
+	1 container
+		193 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		194 container Step 2 step editor
+			195 container
+				196 text Step 2
+				197 button
+				198 text DISCONNECTED
+				199 button Window: 1 day Ranking: Off Advance: Immediately
+					200 container
+						201 text Window : 1 day
+					202 container
+						203 text Ranking : Off
+					204 container
+						205 text Advance : Immediately
+				206 container
+					207 button 1 1 Group 1
+						208 image
+							209 text 1
+						210 text Group 1
+				211 button 2 2 Everyone Else
+					212 image
+						213 text 2
+					214 text Everyone Else
+				215 button Add Action Group
+			216 button Done
+			217 container action-path-step-editor1482
+				218 container
+					219 image
+						220 text 1
+					221 text Group 1
+					222 button BrazeAI Operator™
+						223 image
+				224 container
+					225 text Action Group Name
+					226 text field (settable) Group 1
+					227 checkbox (settable, integer) Description: I want this group to exit the Canvas, Value: 0, ID: bc-checkbox-2012456610
+					228 text I want this group to exit the Canvas
+					229 text Interact With Campaign
+					230 container
+						231 container
+							232 text Choose an Interaction...
+							233 combo box (collapsed, settable) Description: Interaction, ID: react-select-46-input, Secondary Actions: Expand
+						234 text Please select an interaction for campaign
+						235 container
+							236 text Choose Campaign...
+							237 combo box (collapsed, settable) Description: for campaign, ID: react-select-47-input, Secondary Actions: Expand
+						238 text Please select a campaign
+					239 button close
+					240 text Start Session
+					241 text OR
+					242 container radio-button--375487583
+						243 container
+							244 radio button (settable, integer) Description: Start session in any app, Value: 1, ID: radio-button-314727587
+							245 text Start session in any app
+						246 container
+							247 radio button (settable, integer) Description: Start session in a specific app, Value: 0, ID: radio-button-828421476
+							248 text Start session in a specific app
+					249 button close
+					250 text Change Custom Attribute Value
+					251 text OR
+					252 container
+						253 container
+							338 text account_type
+							255 combo box (collapsed, settable) Description: Choose An Attribute..., ID: react-select-48-input, Secondary Actions: Expand
+						256 text to
+						261 container
+							262 text the specific value
+							263 combo box (collapsed, settable) Description: to, ID: react-select-49-input, Secondary Actions: Expand
+						339 text field (settable) Value
+					267 button close
+					268 text Update Subscription Status
+					269 text OR
+					270 container
+						271 text Update their
+						272 container
+							340 text email subscription status
+							274 combo box (collapsed, settable) Description: Subscription type, ID: react-select-50-input, Secondary Actions: Expand
+						341 text to
+						276 container
+							342 text subscribed
+							278 combo box (collapsed, settable) Description: Subscription state, ID: react-select-51-input, Secondary Actions: Expand
+					280 button close
+					281 text Update Subscription Group Status
+					282 text OR
+					283 container
+						284 text Update their
+						285 container
+							286 text email subscription group status
+							287 combo box (collapsed, settable) Description: Subscription type, ID: react-select-52-input, Secondary Actions: Expand
+						288 text to
+						289 container
+							290 text Select...
+							291 combo box (collapsed, settable) Description: Subscription state, ID: react-select-53-input, Secondary Actions: Expand
+						292 text Please select a subscription state for subscription group
+						293 container
+							294 text Select Subscription Group
+							295 combo box (collapsed, settable) Description: Subscription group, ID: react-select-54-input, Secondary Actions: Expand
+						296 text Please select a subscription group where update source is
+						297 container
+							298 text Select...
+							299 combo box (collapsed, settable) Description: Update source, ID: react-select-55-input, Secondary Actions: Expand
+						300 text Please select an update source
+					301 button close
+					302 text Send an SMS inbound message
+					303 text OR
+					304 container
+						305 text Sent inbound SMS to subscription group
+						306 container
+							307 text Select a subscription group
+							308 combo box (collapsed, settable) Description: Select a subscription group, ID: react-select-56-input, Secondary Actions: Expand
+						309 text within keyword category
+						310 container
+							311 text Select SMS Keyword
+							312 combo box (collapsed, settable) Description: Select SMS Keyword, ID: react-select-57-input, Secondary Actions: Expand
+					313 button close
+					314 text Interact With Step
+					315 text OR
+					316 container
+						317 container
+							318 text Choose an Interaction...
+							319 combo box (collapsed, settable) Description: Interaction, ID: react-select-58-input, Secondary Actions: Expand
+						320 text Please select an interaction
+					321 button close
+					322 text Perform Custom Event
+					323 text OR
+					324 text Custom event name
+					325 container
+						326 container
+							327 text activated_feature
+							328 combo box (collapsed, settable) Description: Choose a custom event, ID: react-select-59-input, Secondary Actions: Expand
+					329 checkbox (settable, integer) Description: Add property filters, Value: 0, ID: bc-checkbox-1460864101
+					330 text Add property filters
+					331 button close
+					343 text Perform Conversion Event
+					344 text OR
+					345 text Perform this Canvas's Primary Conversion Event
+					346 button close
+					347 text Interact with Landing Page
+					348 text OR
+					349 container
+						350 container
+							351 text Choose an Interaction...
+							352 combo box (collapsed, settable) Description: Interaction, ID: react-select-61-input, Secondary Actions: Expand
+						353 text Please select an interaction
+					354 button close
+					355 text Send a WhatsApp inbound message
+					356 text OR
+					357 container
+						358 text Subscription group
+						359 container
+							360 text Select a subscription group
+							361 combo box (collapsed, settable) Description: Select a subscription group, ID: react-select-62-input, Secondary Actions: Expand
+						362 container Condition to match
+							363 text Condition to match
+							364 container
+								365 radio button (settable, integer) Description: None, Value: 1, ID: radio-button-988868255
+								366 text None
+							367 container
+								368 radio button (settable, integer) Description: Message body text, Value: 0, ID: radio-button-279122006
+								369 text Message body text
+							370 container
+								371 radio button (settable, integer) Description: Responded to Flow, Value: 0, ID: radio-button-192476977
+								372 text Responded to Flow
+							373 container
+								374 radio button (settable, integer) Description: Responded to contact info request, Value: 0, ID: radio-button-5926867
+								375 text Responded to contact info request
+					376 button close
+					377 text Send a LINE inbound message
+					378 text OR
+					379 container
+						380 text Sent Inbound LINE Message
+						381 container
+							382 text Select a subscription group
+							383 combo box (collapsed, settable) Description: Select a subscription group, ID: react-select-63-input, Secondary Actions: Expand
+						384 checkbox (settable, integer) Description: Where the message body, Value: 0, ID: checkbox--2730614044
+						385 text Where the message body
+						386 image Information
+					387 button close
+					388 text Enter a Location
+					389 text OR
+					390 container
+						391 container
+							392 text within circle
+							393 combo box (collapsed, settable) Description: Location comparison type, ID: react-select-64-input, Secondary Actions: Expand
+						394 button 5 miles (8.05 km) of 40.75, -74
+					395 button close
+					396 text Trigger a Geofence
+					397 text OR
+					398 container
+						399 checkbox (settable, integer) Description: Enter, Value: 0, ID: checkbox--3211364518
+						400 text Enter
+						401 checkbox (settable, integer) Description: Exit, Value: 0, ID: checkbox--2979027287
+						402 text Exit
+						403 text Please select whether to enter or exit or both Geofence Set
+						404 container
+							405 text Choose a Geofence Set...
+							406 combo box (collapsed, settable) Description: Geofence Set, ID: react-select-65-input, Secondary Actions: Expand
+						407 text Please select a geofence set
+					408 button close
+					409 text View product
+					410 text OR
+					411 text Custom event name
+					412 container
+						413 container
+							414 text ecommerce.product_viewed
+							415 combo box (collapsed, settable) Description: Choose a custom event, ID: react-select-66-input, Secondary Actions: Expand
+					416 checkbox (settable, integer) Description: Add property filters, Value: 0, ID: bc-checkbox-1478735566
+					417 text Add property filters
+					418 button close
+					332 text Evaluate if user takes specified actions
+					333 container
+						334 container
+							419 text Select Trigger
+							336 combo box (collapsed, settable) Description: Select Trigger, ID: react-select-60-input, Secondary Actions: Expand
+					337 button (disabled) Add Trigger
+
+The focused UI element is 0 AXWebArea Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build&initialConditionsCollapsed=false

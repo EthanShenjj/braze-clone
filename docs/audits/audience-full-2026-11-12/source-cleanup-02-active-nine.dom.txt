@@ -1,0 +1,303 @@
+- link "Skip to main content":
+  - /url: "#main-container"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Demo – ittor":
+    - generic: Demo – ittor
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agents":
+    - generic: Agents
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 14 days left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- main:
+  - navigation:
+    - tablist:
+      - tab "Segments" [selected]:
+        - text: 
+        - generic: Segments
+      - tab "Edit (unnamed) Close tab":
+        - generic: Edit (unnamed)
+        - button "Close tab":
+  - heading "Segments" [level=2]
+  - generic: Find and reach the right audience with segments. Group users based on their behaviors, preferences, or past actions to send messages that truly matter to them.
+  - button "Send feedback":
+    - img: 
+  - button "Take a tour":
+    - generic: Take a tour
+  - button "More options":
+    - img: 
+  - button "Create Segment":
+    - generic: Create Segment
+    - img: 
+  - generic: Status
+  - log
+  - generic: Active
+  - combobox "Status"
+  - generic: Tags
+  - log
+  - generic: All Tags
+  - combobox "Tags"
+  - button "Filters":
+    - generic: Filters
+  - button "Columns":
+    - generic: Columns
+  - checkbox "Show starred only"
+  - generic: Show starred only
+  - textbox "Search for segments"
+  - button "Search" [disabled]:
+  - heading "9 Results" [level=4]:
+    - generic: 9 Results
+  - generic "Inline Tag 0":
+    - generic: "Status: Active"
+    - button "close":
+  - grid:
+    - rowgroup:
+      - row "Select all rows Segment name column, unsorted. Select to sort ascending Status Last edited by Last edited column, sorted descending. Select to sort ascending":
+        - columnheader "Select all rows":
+          - checkbox "Select all rows"
+        - columnheader
+        - columnheader "Segment name column, unsorted. Select to sort ascending":
+          - button "Segment name column, unsorted. Select to sort ascending": Segment name
+        - columnheader "Status"
+        - columnheader "Last edited by"
+        - columnheader "Last edited column, sorted descending. Select to sort ascending":
+          - button "Last edited column, sorted descending. Select to sort ascending":
+            - text: Last edited
+            - img "Information":
+        - columnheader
+    - rowgroup:
+      - 'row "Select row Quick view: test test Active tor dom Nov 11, 2026 More Actions"':
+        - gridcell "Select row":
+          - checkbox "Select row"
+        - 'gridcell "Quick view: test"':
+          - 'button "Quick view: test"':
+            - img: 
+        - gridcell "test":
+          - link "test":
+            - /url: /engagement/segmenter/edit/6af4454946feb1008ccf036e/6af4374c46d3080087f1c5d2?locale=en
+            - generic: test
+        - gridcell "Active":
+          - generic: Active
+        - gridcell "tor dom"
+        - gridcell "Nov 11, 2026"
+        - gridcell "More Actions":
+          - list:
+            - button "More Actions":
+      - 'row "Select row Quick view: Non-Adopters Non-Adopters Active Braze Demo Nov 11, 2026 More Actions"':
+        - gridcell "Select row":
+          - checkbox "Select row"
+        - 'gridcell "Quick view: Non-Adopters"':
+          - 'button "Quick view: Non-Adopters"':
+            - img: 
+        - gridcell "Non-Adopters":
+          - link "Non-Adopters":
+            - /url: /engagement/segmenter/edit/6af4375220abdf005fc2eef9/6af4374c46d3080087f1c5d2?locale=en
+            - generic: Non-Adopters
+        - gridcell "Active":
+          - generic: Active
+        - gridcell "Braze Demo"
+        - gridcell "Nov 11, 2026"
+        - gridcell "More Actions":
+          - list:
+            - button "More Actions":
+      - 'row "Select row Quick view: New Users New Users Active Braze Demo Nov 11, 2026 More Actions"':
+        - gridcell "Select row":
+          - checkbox "Select row"
+        - 'gridcell "Quick view: New Users"':
+          - 'button "Quick view: New Users"':
+            - img: 
+        - gridcell "New Users":
+          - link "New Users":
+            - /url: /engagement/segmenter/edit/6af4375220abdf005fc2eef4/6af4374c46d3080087f1c5d2?locale=en
+            - generic: New Users
+        - gridcell "Active":
+          - generic: Active
+        - gridcell "Braze Demo"
+        - gridcell "Nov 11, 2026"
+        - gridcell "More Actions":
+          - list:
+            - button "More Actions":
+      - 'row "Select row Quick view: Lapsed Users Lapsed Users Active Braze Demo Nov 11, 2026 More Actions"':
+        - gridcell "Select row":
+          - checkbox "Select row"
+        - 'gridcell "Quick view: Lapsed Users"':
+          - 'button "Quick view: Lapsed Users"':
+            - img: 
+        - gridcell "Lapsed Users":
+          - link "Lapsed Users":
+            - /url: /engagement/segmenter/edit/6af4375220abdf005fc2eef3/6af4374c46d3080087f1c5d2?locale=en
+            - generic: Lapsed Users
+        - gridcell "Active":
+          - generic: Active
+        - gridcell "Braze Demo"
+        - gridcell "Nov 11, 2026"
+        - gridcell "More Actions":
+          - list:
+            - button "More Actions":
+      - 'row "Select row Quick view: Active Frequent Users Active Frequent Users Active Braze Demo Nov 11, 2026 More Actions"':
+        - gridcell "Select row":
+          - checkbox "Select row"
+        - 'gridcell "Quick view: Active Frequent Users"':
+          - 'button "Quick view: Active Frequent Users"':
+            - img: 
+        - gridcell "Active Frequent Users":
+          - link "Active Frequent Users":
+            - /url: /engagement/segmenter/edit/6af4375220abdf005fc2eef2/6af4374c46d3080087f1c5d2?locale=en
+            - generic: Active Frequent Users
+        - gridcell "Active":
+          - generic: Active
+        - gridcell "Braze Demo"
+        - gridcell "Nov 11, 2026"
+        - gridcell "More Actions":
+          - list:
+            - button "More Actions":
+      - 'row "Select row Quick view: All Users (iOS Demo App) All Users (iOS Demo App) Active More Actions"':
+        - gridcell "Select row":
+          - checkbox "Select row"
+        - 'gridcell "Quick view: All Users (iOS Demo App)"':
+          - 'button "Quick view: All Users (iOS Demo App)"':
+            - img: 
+        - gridcell "All Users (iOS Demo App)":
+          - link "All Users (iOS Demo App)":
+            - /url: /engagement/segmenter/edit/6af4375120abdf005fc2ee80/6af4374c46d3080087f1c5d2?locale=en
+            - generic: All Users (iOS Demo App)
+        - gridcell "Active":
+          - generic: Active
+        - gridcell
+        - gridcell
+        - gridcell "More Actions":
+          - list:
+            - button "More Actions":
+      - 'row "Select row Quick view: All Users (Android Demo App) All Users (Android Demo App) Active More Actions"':
+        - gridcell "Select row":
+          - checkbox "Select row"
+        - 'gridcell "Quick view: All Users (Android Demo App)"':
+          - 'button "Quick view: All Users (Android Demo App)"':
+            - img: 
+        - gridcell "All Users (Android Demo App)":
+          - link "All Users (Android Demo App)":
+            - /url: /engagement/segmenter/edit/6af4375120abdf005fc2ee81/6af4374c46d3080087f1c5d2?locale=en
+            - generic: All Users (Android Demo App)
+        - gridcell "Active":
+          - generic: Active
+        - gridcell
+        - gridcell
+        - gridcell "More Actions":
+          - list:
+            - button "More Actions":
+      - 'row "Select row Quick view: All Users (Web Demo App) All Users (Web Demo App) Active More Actions"':
+        - gridcell "Select row":
+          - checkbox "Select row"
+        - 'gridcell "Quick view: All Users (Web Demo App)"':
+          - 'button "Quick view: All Users (Web Demo App)"':
+            - img: 
+        - gridcell "All Users (Web Demo App)":
+          - link "All Users (Web Demo App)":
+            - /url: /engagement/segmenter/edit/6af4375120abdf005fc2ee82/6af4374c46d3080087f1c5d2?locale=en
+            - generic: All Users (Web Demo App)
+        - gridcell "Active":
+          - generic: Active
+        - gridcell
+        - gridcell
+        - gridcell "More Actions":
+          - list:
+            - button "More Actions":
+      - 'row "Select row Quick view: All Users (Landing Page - Landing Page) All Users (Landing Page - Landing Page) Active More Actions"':
+        - gridcell "Select row":
+          - checkbox "Select row"
+        - 'gridcell "Quick view: All Users (Landing Page - Landing Page)"':
+          - 'button "Quick view: All Users (Landing Page - Landing Page)"':
+            - img: 
+        - gridcell "All Users (Landing Page - Landing Page)":
+          - link "All Users (Landing Page - Landing Page)":
+            - /url: /engagement/segmenter/edit/6af4376820abdf005fc2f5af/6af4374c46d3080087f1c5d2?locale=en
+            - generic: All Users (Landing Page - Landing Page)
+        - gridcell "Active":
+          - generic: Active
+        - gridcell
+        - gridcell
+        - gridcell "More Actions":
+          - list:
+            - button "More Actions":
+  - generic: Showing rows 1 - 9 of 9
+  - generic: "Rows per page:"
+  - combobox:
+    - option "10"
+    - option "20" [selected]
+    - option "40"
+    - option "60"
+    - option "100"
+  - navigation:
+    - list:
+      - button "Previous page" [disabled]:
+        - img: 
+      - button "Current Page, Page 1":
+        - generic: "1"
+      - button "Next page" [disabled]:
+        - img: 
+- generic: © Braze 2026
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://braze.statuspage.io
+  - text: Status
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/terms
+  - text: Terms
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/privacy
+  - text: Privacy Policy
+- text:          
+- iframe

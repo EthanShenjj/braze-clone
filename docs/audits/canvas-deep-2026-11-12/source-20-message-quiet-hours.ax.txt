@@ -1,0 +1,69 @@
+Browser tab: 7, Title: "Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build&initialConditionsCollapsed=false".
+0 AXWebArea Engagement - Canvas - Edit 'Canvas fidelity audit - 2026-11-12 (temporary)', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build&initialConditionsCollapsed=false
+	1 container
+		193 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		194 container Step step editor
+			195 container
+				196 text Step
+				197 button
+				198 text DISCONNECTED Incomplete Messages
+				199 button Content Optimizer Clicks 1 combination
+					200 image
+					201 text Content Optimizer
+					202 text Clicks
+					203 text 1 combination
+				204 button Intelligent Timing:ON Quiet hours:ON 
+					205 definition list
+						206 container Intelligent Timing:
+							207 text Intelligent Timing :
+						208 container
+							209 text ON
+						210 container Quiet hours:
+							211 text Quiet hours :
+						212 container
+							213 text ON
+				214 text All users who enter this step advance to the next step
+			215 button Done
+			216 container
+				217 text Content Optimizer setup
+				218 button BrazeAI Operator™
+					219 image
+				220 tab group Message step
+					221 tab (selectable, settable, boolean) Description: Messaging channels, Value: 0, ID: content
+					222 tab (selected, settable, boolean) Description: Delivery settings, Value: 1, ID: settings
+					223 tab (selectable, settable, boolean) Description: Content Optimizer settings, ID: content-optimizer-settings, Value: 0
+Content Optimizer settings
+					224 tab (selectable, settable, boolean) Description: Agentic Standards results, Value: 0, ID: message-step-tab-standards-results
+				225 heading Delivery Schedule, Value: 3
+					226 text Delivery Schedule
+				227 container
+					228 text Deliver this message  at the optimal time.
+				229 container
+					230 checkbox (settable, integer) Description: Using Intelligent Timing, Value: 1, ID: bc-checkbox-2343066205
+					231 container
+						232 text Using Intelligent Timing 
+						233 image Information
+					234 container Select a time to send messages when a user's profile does not have enough data to calculate an optimal time:
+						235 text Select a time to send messages when a user's profile does not have enough data to calculate an optimal time:
+						236 container
+							237 radio button (settable, integer) Description: Fallback to the most popular time to use the app amongst all users, Value: 1, ID: radio-button-175397973
+							238 text the most popular time to use the app amongst all users
+						239 container
+							240 radio button (settable, integer) Description: Fallback to a specific custom time (in the user's local time zone), Value: 0, ID: radio-button-449748366
+							241 text a specific custom fallback time (in the user's local time zone)
+							242 container
+								243 text field (disabled) 5:00 pm
+					244 heading Quiet Hours, Value: 4
+						245 text Quiet Hours
+					246 image Information
+					247 checkbox (settable, integer) Description: Enforce quiet hours for this step, Value: 1, ID: bc-checkbox-3145890734
+					248 text Enforce quiet hours for this step
+					249 text Prevent sending messages during specific hours in a recipient's local time
+				250 heading Delivery validations, Value: 3
+					251 text Delivery validations
+				252 text Double-check that your audience meets your delivery criteria at message send. For in-app messages, delivery validations are checked when the user enters the step, not when the message is displayed.
+				253 checkbox (settable, integer) Description: Delivery Validation enabled for this message, Value: 0, ID: bcl-switch__input-375129114
+				254 text Validate audience at message send
+				255 text Recommended if you're using quiet hours, Intelligent Timing, or rate limiting.
+
+The focused UI element is 222 tab (selected, settable, boolean) Description: Delivery settings, Value: 1, ID: settings

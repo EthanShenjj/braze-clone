@@ -1,0 +1,120 @@
+- link "Skip to main content":
+  - /url: "#main-container"
+- navigation "Side navigation":
+  - button "Minimize menu":
+  - button "Live – ittor":
+    - generic: Live – ittor
+    - img: 
+  - generic: Quick links
+  - link "Canvas":
+    - /url: /engagement/canvas/canvas/6af4374b46d3080087f1c558?locale=en
+    - generic: Canvas
+  - link "Campaigns":
+    - /url: /engagement/campaigns/campaigns/6af4374b46d3080087f1c558?locale=en
+    - generic: Campaigns
+  - link "Segments":
+    - /url: /engagement/segmenter/segmenter/6af4374b46d3080087f1c558?locale=en
+    - generic: Segments
+  - button "Getting Started":
+    - generic: Getting Started
+    - generic: 8%
+  - link "Performance Overview":
+    - /url: /dashboard/app_usage/6af4374b46d3080087f1c558?locale=en
+    - generic: Home
+  - button "AI Decisioning":
+    - generic: AI Decisioning
+  - button "Agents":
+    - generic: Agents
+  - button "Messaging":
+    - generic: Messaging
+  - button "Audience":
+    - generic: Audience
+  - button "Content":
+    - generic: Content
+  - button "Analytics":
+    - generic: Analytics
+  - button "Partner Integrations":
+    - generic: Partner Integrations
+  - button "Data Settings":
+    - generic: Data Settings
+  - button "Settings":
+    - generic: Settings
+  - generic "Footer Logo":
+    - link:
+      - /url: /dashboard/app_usage?locale=en
+- img: 
+- generic: 14 days left in your free trial.
+- button "Connect with sales":
+  - generic: Connect with sales
+- navigation "Top navigation":
+  - navigation "Left top navigation":
+    - button "Search workspace ⌘+K":
+      - generic: Search workspace
+      - generic: ⌘+K
+  - navigation "Right top navigation":
+    - button "Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+    - button "Select your language (English language active)":
+    - button "Notifications":
+    - button "[object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key":
+      - img: 
+    - button "BrazeAI Operator™":
+- text:                 
+- main:
+  - banner:
+    - heading "Build email preference centers on Landing Pages" [level=4]
+    - generic: Use your own branded domain and drag-and-drop editor to design email preference pages. Add form blocks to collect subscriber interests, frequency, and more, then track how subscribers engage.
+    - button "Create landing page":
+      - generic: Create landing page
+    - button "Close":
+  - heading "Subscription groups" [level=3]
+  - button "Create email subscription group":
+    - generic: Create email subscription group
+  - generic: Status
+  - log
+  - generic: Active
+  - combobox "Status"
+  - generic: Channel
+  - log
+  - generic: All Channels
+  - combobox "Channel"
+  - generic "Inline Tag 0":
+    - generic: "Status: Active"
+    - button "close":
+  - heading "No Results Found" [level=4]:
+    - generic: No Results Found
+  - textbox "Search subscription group name"
+  - button "Search" [disabled]:
+  - grid:
+    - rowgroup:
+      - row "Name column, unsorted. Select to sort descending Channel column, unsorted. Select to sort descending ID Description Status column, unsorted. Select to sort descending":
+        - columnheader "Name column, unsorted. Select to sort descending":
+          - button "Name column, unsorted. Select to sort descending": Name
+        - columnheader "Channel column, unsorted. Select to sort descending":
+          - button "Channel column, unsorted. Select to sort descending": Channel
+        - columnheader "ID"
+        - columnheader "Description"
+        - columnheader "Status column, unsorted. Select to sort descending":
+          - button "Status column, unsorted. Select to sort descending": Status
+        - columnheader
+    - rowgroup:
+      - row "You don’t have subscription groups yet Manage your subscription groups for applicable channels. Create email subscription group":
+        - gridcell "You don’t have subscription groups yet Manage your subscription groups for applicable channels. Create email subscription group":
+          - generic: You don’t have subscription groups yet
+          - generic: Manage your subscription groups for applicable channels.
+          - button "Create email subscription group":
+            - generic: Create email subscription group
+- generic: © Braze 2026
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://braze.statuspage.io
+  - text: Status
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/terms
+  - text: Terms
+- generic: Opening in a new tab
+- link "Opening in a new tab":
+  - /url: https://www.braze.com/privacy
+  - text: Privacy Policy
+- text:     

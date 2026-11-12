@@ -1,0 +1,132 @@
+▲ Next.js 16.3.5 (Turbopack)
+✓ Running next.config.ts took 169ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 7.1s
+  Running TypeScript ...
+  Finished TypeScript in 9.2s ...
+  Collecting page data using 7 workers ...
+(node:37884) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:37885) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:37886) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:37887) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:37890) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:37889) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:37888) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  Generating static pages using 7 workers (0/53) ...
+  Generating static pages using 7 workers (13/53) 
+  Generating static pages using 7 workers (26/53) 
+  Generating static pages using 7 workers (39/53) 
+✓ Generating static pages using 7 workers (53/53) in 637ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /[...path]
+├ ƒ /api/activity
+├ ƒ /api/audience/estimate
+├ ƒ /api/campaign-briefs
+├ ƒ /api/campaign-briefs/[id]
+├ ƒ /api/campaign-operator
+├ ƒ /api/campaign-workspaces
+├ ƒ /api/campaigns
+├ ƒ /api/campaigns/[id]
+├ ƒ /api/campaigns/[id]/analytics
+├ ƒ /api/campaigns/[id]/copy
+├ ƒ /api/campaigns/[id]/events
+├ ƒ /api/campaigns/[id]/launch
+├ ƒ /api/campaigns/[id]/test
+├ ƒ /api/campaigns/[id]/trigger
+├ ƒ /api/campaigns/[id]/webhook-attempts
+├ ƒ /api/campaigns/audience-calculations
+├ ƒ /api/campaigns/audience-preview
+├ ƒ /api/campaigns/delivery-preview
+├ ƒ /api/campaigns/form-capabilities
+├ ƒ /api/campaigns/process
+├ ƒ /api/canvas
+├ ƒ /api/canvases
+├ ƒ /api/canvases/[id]
+├ ƒ /api/canvases/[id]/graph
+├ ƒ /api/canvases/[id]/launch
+├ ƒ /api/canvases/[id]/sms-test
+├ ƒ /api/canvases/audience-preview
+├ ƒ /api/catalogs
+├ ƒ /api/catalogs/[id]
+├ ƒ /api/catalogs/[id]/items
+├ ƒ /api/catalogs/[id]/items/[itemId]
+├ ƒ /api/catalogs/[id]/items/import
+├ ƒ /api/catalogs/[id]/notify
+├ ƒ /api/catalogs/[id]/selections
+├ ƒ /api/catalogs/[id]/selections/[name]
+├ ƒ /api/catalogs/[id]/selections/[name]/preview
+├ ƒ /api/catalogs/[id]/subscriptions
+├ ƒ /api/demo
+├ ƒ /api/email-preferences
+├ ƒ /api/email-preferences/preview
+├ ƒ /api/email-preferences/share
+├ ƒ /api/email-tracking/[token]
+├ ƒ /api/global-control-group
+├ ƒ /api/global-control-group/export
+├ ƒ /api/global-control-group/report
+├ ƒ /api/iam/media
+├ ƒ /api/iam/media/[id]
+├ ƒ /api/iam/preview
+├ ƒ /api/iam/priorities
+├ ƒ /api/iam/test
+├ ƒ /api/integration/feature-flags
+├ ƒ /api/integration/users/track
+├ ƒ /api/message-assets
+├ ƒ /api/message-assets/[id]
+├ ƒ /api/message-links/[id]
+├ ƒ /api/messages/assist
+├ ƒ /api/messages/capability
+├ ƒ /api/messages/inbox-vision
+├ ƒ /api/messages/nps
+├ ƒ /api/pages/[slug]
+├ ƒ /api/preference-centers
+├ ƒ /api/preference-centers/[id]
+├ ƒ /api/preference-centers/[id]/insights
+├ ƒ /api/preference-centers/[id]/public
+├ ƒ /api/preference-centers/[id]/publish
+├ ƒ /api/recommendations
+├ ƒ /api/recommendations/[id]
+├ ƒ /api/reports/overview
+├ ƒ /api/resources/[type]
+├ ƒ /api/sdk
+├ ƒ /api/sms/preview
+├ ƒ /api/subscription-groups
+├ ƒ /api/subscription-groups/[id]
+├ ƒ /api/subscription-groups/[id]/members
+├ ƒ /api/tags
+├ ƒ /api/tags/[id]
+├ ƒ /api/tags/campaigns
+├ ƒ /api/tags/resolve
+├ ƒ /api/tags/resources
+├ ƒ /api/users
+├ ƒ /api/users/attributes
+├ ƒ /api/webhooks/capability
+├ ƒ /api/whatsapp/media
+├ ƒ /api/whatsapp/media/[id]
+├ ƒ /api/whatsapp/preview
+├ ƒ /api/whatsapp/templates
+├ ƒ /api/whatsapp/test
+├ ƒ /api/workspace/[module]
+├ ƒ /email/preview/[token]
+├ ƒ /email/subscription/[token]
+├ ƒ /pages/[slug]
+├ ƒ /preferences/[id]
+├ ƒ /sms/preview/[id]
+└ ƒ /whatsapp/preview/[id]
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

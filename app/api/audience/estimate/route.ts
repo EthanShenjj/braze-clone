@@ -5,12 +5,13 @@ export const runtime = "nodejs";
 export function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const audience = searchParams.get("audience") ?? "All Users";
+  const workspaceId=searchParams.get('workspaceId')??searchParams.get('workspace')??'local';
   // A saved segment resource with the requested name contributes its filters to the estimate.
-  const saved = listResources("segments").find(row => row.name.toLowerCase() === audience.toLowerCase());
+  const saved = listResources("segments").find(row => row.name.toLowerCase() === audience.toLowerCase()&&String(row.data.workspaceId??'local')===workspaceId);
   const savedData = (saved?.data ?? {}) as Record<string, unknown>;
   const filters = (Array.isArray(savedData.filters) ? savedData.filters : []) as AudienceFilter[];
   try {
     const engagement = searchParams.get("engagement") === "campaign" ? { tags: searchParams.getAll("tag") } : undefined;
-    return Response.json(estimateAudience(audience, searchParams.get("country") ?? undefined, searchParams.get("excludeCountry") ?? undefined, searchParams.get("eligibility") ?? "subscribed", searchParams.get("subscriptionGroupId") ?? undefined, filters, (searchParams.get("channel") ?? "email") as Channel, engagement));
+    return Response.json(estimateAudience(audience, searchParams.get("country") ?? undefined, searchParams.get("excludeCountry") ?? undefined, searchParams.get("eligibility") ?? "subscribed", searchParams.get("subscriptionGroupId") ?? undefined, filters, (searchParams.get("channel") ?? "email") as Channel, engagement,workspaceId));
   } catch (error) { return Response.json({ error: error instanceof Error ? error.message : "Unable to estimate audience." }, { status: 400 }); }
 }

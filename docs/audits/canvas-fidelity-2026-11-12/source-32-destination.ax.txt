@@ -1,0 +1,28 @@
+Browser tab: 4, Title: "Engagement - Canvas - Edit 'New Canvas - November 11, 2026'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+0 AXWebArea Engagement - Canvas - Edit 'New Canvas - November 11, 2026', URL: dashboard-09.braze.com/engagement/canvas/6af522bcc759ad008e444c3c/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build
+	1 container
+		171 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+		172 container Step 9 step editor
+			173 container
+				174 text Step 9
+				175 button
+				176 text DISCONNECTED
+				177 button Send to Destination Define destination type and destination
+					178 text Send to Destination
+					179 text Define destination type and destination
+			180 button Done
+			181 container
+				182 text Settings
+				183 button BrazeAI Operator™
+					184 image
+				185 text Opening in a new tab
+				186 link Description: Opening in a new tab, Value: braze.com/docs/user_guide/messaging/canvas/canvas_components/send_to_destination/#how-it-works
+				187 text  lets you send users to another destination while they keep progressing in this Canvas. The destination decides which users it accepts based on its own entry rules. Source
+				188 text field Source, Value: New Canvas - November 11, 2026, ID: send-to-destination-step--source-canvas
+				189 text This is the canvas that you're editing right now Destination type
+				190 container send-to-destination-step--destination-type
+					191 container
+						192 text Select...
+						193 combo box (collapsed, settable) Description: Destination type, ID: send-to-destination-step--destination-type-input, Secondary Actions: Expand
+
+The focused UI element is 172 container Step 9 step editor

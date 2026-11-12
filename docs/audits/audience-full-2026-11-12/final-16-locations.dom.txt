@@ -1,0 +1,97 @@
+- alert
+- complementary:
+  - button "Minimize menu" [expanded]
+  - button "Select workspace":
+    - generic: Local workspace
+  - navigation "Side navigation":
+    - generic: Quick links
+    - button "Canvas":
+      - generic: Canvas
+    - button "Campaigns":
+      - generic: Campaigns
+    - button "Segments":
+      - generic: Segments
+    - button "Getting Started":
+      - generic: Getting Started
+    - button "Home":
+      - generic: Home
+    - button "AI Decisioning":
+      - generic: AI Decisioning
+    - button "Agents":
+      - generic: Agents
+    - button "Messaging":
+      - generic: Messaging
+    - button "Audience":
+      - generic: Audience
+    - button "Content":
+      - generic: Content
+    - button "Analytics":
+      - generic: Analytics
+    - button "Partner Integrations":
+      - generic: Partner Integrations
+    - button "Data Settings":
+      - generic: Data Settings
+    - button "Settings":
+      - generic: Settings
+  - button "Home":
+    - img "Braze"
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - generic "Community":
+    - img "Community"
+  - button "Language"
+  - button "Notifications"
+  - button "Profile"
+  - button "Open BrazeAI Operator"
+  - textbox "Search map":
+    - /placeholder: Search
+  - button "Clear search": ×
+  - button "Zoom in":
+  - button "Zoom out":
+  - link "Leaflet":
+    - /url: https://leafletjs.com/
+  - text: "| ©"
+  - link "Mapbox":
+    - /url: https://mapbox.com/
+  - text: ©
+  - link "OpenStreetMap":
+    - /url: https://www.openstreetmap.org/copyright
+  - heading "0 of 0 Apps with Geofences enabled" [level=2]
+  - button "Manage Apps"
+  - button "Create Geofence Set":
+    - text: Create Geofence Set
+  - text: Status
+  - combobox "Status":
+    - option "All"
+    - option "Active" [selected]
+    - option "Archived"
+    - option "Draft"
+  - text: Tags
+  - combobox "Tags"
+  - button "Toggle Tags":
+  - textbox "Search Geofence Sets"
+  - 'button "Status: Active"':
+    - text: "Status: Active"
+  - heading "1 Geofence Set" [level=3]
+  - table:
+    - rowgroup:
+      - row "Select all rows Name Number of Geofences Last Edited":
+        - columnheader "Select all rows":
+          - checkbox "Select all rows"
+        - columnheader "Name"
+        - columnheader "Number of Geofences"
+        - columnheader "Last Edited":
+          - text: Last Edited
+    - rowgroup:
+      - row "Select Audience QA geofences Audience QA geofences 1 2026/11/12 11:58:53":
+        - cell "Select Audience QA geofences":
+          - checkbox "Select Audience QA geofences"
+        - cell "Audience QA geofences":
+          - button "Audience QA geofences"
+        - cell "1"
+        - cell "2026/11/12 11:58:53"

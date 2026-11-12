@@ -1,0 +1,294 @@
+Browser tab: 2, Title: "Engagement - Canvas - Edit 'Onboarding flow'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af4375920abdf005fc2f151/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true".
+0 AXWebArea Engagement - Canvas - Edit 'Onboarding flow', URL: dashboard-09.braze.com/engagement/canvas/6af4375920abdf005fc2f151/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true
+	1 container
+		259 container body-wrapper
+			260 link Description: Skip to main content, Value: dashboard-09.braze.com/engagement/canvas/6af4375920abdf005fc2f151/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true#main-col
+			261 container
+				262 container Side navigation
+					263 container
+						264 button Minimize menu
+						265 pop up button (collapsed) Description: Demo – ittor, ID: workspace-navigation-menu-trigger, Secondary Actions: Expand
+							266 image
+							267 text Demo – ittor
+						268 text Quick links
+						269 link Description: Canvas, Value: dashboard-09.braze.com/engagement/canvas/canvas/6af4374c46d3080087f1c5d2?locale=en
+						270 link Description: Campaigns, Value: dashboard-09.braze.com/engagement/campaigns/campaigns/6af4374c46d3080087f1c5d2?locale=en
+						271 link Description: Segments, Value: dashboard-09.braze.com/engagement/segmenter/segmenter/6af4374c46d3080087f1c5d2?locale=en
+						272 button Getting Started
+							273 image
+							274 container
+								275 text Getting Started
+								276 container
+									277 text 0 %
+						278 link Description: Performance Overview, Value: dashboard-09.braze.com/dashboard/app_usage/6af4374c46d3080087f1c5d2?locale=en
+						279 button AI Decisioning
+							280 image
+							281 text AI Decisioning
+						282 button Agents
+							283 image
+							284 text Agents
+						285 button Messaging
+							286 image
+							287 text Messaging
+						288 button Audience
+							289 image
+							290 text Audience
+						291 button Content
+							292 image
+							293 text Content
+						294 button Analytics
+							295 image
+							296 text Analytics
+						297 button Partner Integrations
+							298 image
+							299 text Partner Integrations
+						300 button Data Settings
+							301 image
+							302 text Data Settings
+						303 button Settings
+							304 image
+							305 text Settings
+					306 container Footer Logo
+						307 link dashboard-09.braze.com/dashboard/app_usage?locale=en
+				308 text 14 days left in your free trial.
+				309 button Connect with sales
+				310 container Top navigation
+					311 container Left top navigation
+						312 button Search workspace ⌘+K
+							313 image
+							314 text Search workspace
+							315 text ⌘+K
+					316 container Right top navigation
+						317 pop up button (collapsed) ID: support-button, Secondary Actions: Expand, Description: Support. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							318 image
+						319 pop up button (collapsed) ID: community-button, Secondary Actions: Expand, Description: Community. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							320 image
+						321 pop up button (collapsed) Description: Select your language (English language active), ID: language-selector-button, Secondary Actions: Expand
+							322 image
+						323 container
+							324 button Notifications
+								325 image
+						326 pop up button (collapsed) ID: profile-button, Secondary Actions: Expand, Description: [object Object]. Use Enter to open sub-menu, down or up arrow key to select sub-menu items, to close, press the escape key
+							327 image
+						328 button BrazeAI Operator™
+							329 image
+			330 container main
+				340 container main-col
+					341 tab group Open page tabs
+						342 tab (selectable, settable, boolean) Canvas, Value: 0, ID: canvas
+						343 tab (selected, settable, boolean) Edit 'Onboarding flow' Close tab, Description: Close tab, ID: 6af4375920abdf005fc2f151, Value: 1
+Edit 'Onboarding flow'
+					344 container
+						345 container
+							346 heading Onboarding flow, Value: 4
+								347 text Onboarding flow
+							348 container
+								349 text View Only
+							350 text Create cross-platform onboarding journeys that promote strong initial adoption and encourage lasting relationships with your customers
+							351 link more 
+								352 text more 
+							353 text Send Settings
+							354 content list
+								355 container
+									356 AXListMarker • 
+									357 text No limitations on the rate at which users will receive messages.
+								358 container
+									359 AXListMarker • 
+									360 text Workspace Messaging Rate Limits OFF
+								361 container
+									362 AXListMarker • 
+									363 text Quiet hours OFF
+							364 text Conversion Events
+							365 text Performed Custom Event within 2 days (completed_account_signup)
+						366 button Expand
+						367 container
+							368 container
+								369 text Entry Rules
+							370 container
+								371 text Schedule Send Canvas
+								372 content list
+									373 container
+										374 AXListMarker • 
+										375 text Schedule delay:  immediately after trigger criteria are met
+									376 container
+										377 AXListMarker • 
+										378 text Canvas start:  May 14, 2024 at 3:25 PM
+							379 container
+								380 text Audience account_type matches regex Free
+							381 container
+								382 image
+								383 text Exit Criteria No exit criteria selected.
+							384 container
+								385 text Controls Users are not eligible to re-enter this Canvas.
+							386 image
+							387 image
+							388 container
+								389 image
+								390 button (disabled) Add Variant
+							391 container
+								392 container
+									393 text 100 %
+								394 text Variant 1
+							395 image
+							396 container
+								397 container
+									398 text Action Path
+									399 text DRAFT
+									400 button Window: 1 day Ranking: Off Advance: Immediately
+										401 container
+											402 text Window : 1 day
+										403 container
+											404 text Ranking : Off
+										405 container
+											406 text Advance : Immediately
+									407 button 1 1 Applied Code
+										408 image
+											409 text 1
+										410 text Applied Code
+									411 button 2 2 Everyone Else
+										412 image
+											413 text 2
+										414 text Everyone Else
+								415 image
+									416 text 1
+								417 text Applied Code
+								418 image
+									419 text 2
+								420 text Everyone Else
+								421 image
+							422 image
+							423 image
+							424 container
+								425 container
+									426 text Subscription status
+									427 text DRAFT
+									428 button 1 1 SMS subscribed
+										429 image
+											430 text 1
+										431 text SMS subscribed
+									432 button 2 2 Everyone Else
+										433 image
+											434 text 2
+										435 text Everyone Else
+								436 image
+									437 text 1
+								438 text SMS subscribed
+								439 image
+									440 text 2
+								441 text Everyone Else
+								442 image
+							443 image
+							444 image
+							445 container
+								446 container
+									447 text Renew Offer Experiment
+									448 text DRAFT
+									449 button Experiment Path Type: Off
+										450 text Experiment
+										451 container
+											452 text Path Type:  Off
+								453 button 33%
+									454 text 33%
+								455 text 10% Off
+								456 button 33%
+									457 text 33%
+								458 text 20% Off
+								459 button 34%
+									460 text 34%
+								461 text 0% Off - Nudge
+								462 image
+							463 image
+							464 image
+							465 image
+							466 container
+								467 container
+									468 text Feedback IAM+SMS
+									469 text DRAFT Incomplete Messages
+									470 button Messages How was your Decorumsoft onboarding experience? Reply with one of these ratings: 1 - Great! 2 - Ok 3 - Bad Or tell us more at https://www.braze.com/. Reply STOP to opt out What did you think about your Decorumsoft onboarding experience? Expires: 1 day
+										471 text Messages
+										472 text How was your Decorumsoft onboarding experience? Reply with one of these ratings: 1 - Great! 2 - Ok 3 - Bad Or tell us more at https://www.braze.com/. Reply STOP to opt out
+										473 text What did you think about your Decorumsoft onboarding experience?
+										474 text Expires: 1 day
+									475 text All users who enter this step advance to the next step
+							476 container
+								477 container
+									478 text Check-in SMS
+									479 text DRAFT Incomplete Messages
+									480 button Messages Hi {{${first_name} | default: 'friend'}} 👋 How is your Decorsumsoft experience so far? Let us know at https://www.braze.com/! Reply STOP to opt out.
+										481 text Messages
+										482 text Hi {{${first_name} | default: 'friend'}} 👋 How is your Decorsumsoft experience so far? Let us know at https://www.braze.com/! Reply STOP to opt out.
+									483 text All users who enter this step advance to the next step
+							484 image
+							485 container
+								486 container
+									487 text 0% Off Prem
+									488 text DRAFT
+									489 button Messages Enjoying your free account? Premium may be for YOU
+										490 text Messages
+										491 text Enjoying your free account? Premium may be for YOU
+									492 text All users who enter this step advance to the next step
+							493 image
+							494 container
+								495 container
+									496 text Welcome Email + IAM
+									497 text DRAFT
+									498 button Messages Welcome to Decorumsoft!
+										499 text Messages
+										500 text Welcome to Decorumsoft!
+									501 text All users who enter this step advance to the next step
+							502 image
+							503 container
+								504 container
+									505 text 10% Off Prem
+									506 text DRAFT
+									507 button Messages Enjoying your free account? Premium deals for YOU inside
+										508 text Messages
+										509 text Enjoying your free account? Premium deals for YOU inside
+									510 text All users who enter this step advance to the next step
+							511 image
+							512 container
+								513 container
+									514 text Check-in Push
+									515 text DRAFT
+									516 button Messages Look at you go 🚀
+										517 text Messages
+										518 text Look at you go 🚀
+									519 text All users who enter this step advance to the next step
+							520 image
+							521 container
+								522 container
+									523 text Winback Nudge
+									524 text DRAFT
+									525 button Messages Don't feel like going Premium yet?
+										526 text Messages
+										527 text Don't feel like going Premium yet?
+									528 text All users who enter this step advance to the next step
+							529 image
+							530 container
+								531 container
+									532 text 20% Off Prem
+									533 text DRAFT
+									534 button Messages Enjoying your free account? Premium deals for YOU inside
+										535 text Messages
+										536 text Enjoying your free account? Premium deals for YOU inside
+									537 text All users who enter this step advance to the next step
+							538 image
+						539 pop up button (collapsed) Description: Canvas zoom and view, Secondary Actions: Expand
+							540 text Detailed View
+							541 text , 
+							542 text 100%
+						543 pop up button Enter full screen
+						544 heading Maximum Duration, Value: 4
+							545 pop up button (collapsed) Description: Maximum Duration, Secondary Actions: Expand
+						546 button View Analytics
+				332 container
+					333 text © Braze 2026
+					334 text Opening in a new tab
+					335 link Description: Opening in a new tab, Value: braze.statuspage.io/
+					336 text Opening in a new tab
+					337 link Description: Opening in a new tab, Value: braze.com/terms
+					338 text Opening in a new tab
+					339 link Description: Opening in a new tab, Value: braze.com/privacy
+		258 AXWebArea Developer Sync, URL: braze.com/docs/assets/developer-sync.html
+
+The focused UI element is 0 AXWebArea Engagement - Canvas - Edit 'Onboarding flow', URL: dashboard-09.braze.com/engagement/canvas/6af4375920abdf005fc2f151/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true

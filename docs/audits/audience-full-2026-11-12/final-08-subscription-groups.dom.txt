@@ -1,0 +1,167 @@
+- alert
+- complementary:
+  - button "Minimize menu" [expanded]
+  - button "Select workspace":
+    - generic: Local workspace
+  - navigation "Side navigation":
+    - generic: Quick links
+    - button "Canvas":
+      - generic: Canvas
+    - button "Campaigns":
+      - generic: Campaigns
+    - button "Segments":
+      - generic: Segments
+    - button "Getting Started":
+      - generic: Getting Started
+    - button "Home":
+      - generic: Home
+    - button "AI Decisioning":
+      - generic: AI Decisioning
+    - button "Agents":
+      - generic: Agents
+    - button "Messaging":
+      - generic: Messaging
+    - button "Audience":
+      - generic: Audience
+    - button "Content":
+      - generic: Content
+    - button "Analytics":
+      - generic: Analytics
+    - button "Partner Integrations":
+      - generic: Partner Integrations
+    - button "Data Settings":
+      - generic: Data Settings
+    - button "Settings":
+      - generic: Settings
+  - button "Home":
+    - img "Braze"
+- main:
+  - text: ◷ 8 days left in your free trial.
+  - button "Connect with sales"
+  - button "Search workspace ⌘K":
+    - text: Search workspace
+    - generic: ⌘K
+  - button "Take a tour"
+  - generic "Community":
+    - img "Community"
+  - button "Language"
+  - button "Notifications"
+  - button "Profile"
+  - button "Open BrazeAI Operator"
+  - complementary:
+    - heading "Build email preference centers on Landing Pages" [level=2]
+    - paragraph: Use your own branded domain and drag-and-drop editor to design email preference pages. Add form blocks to collect subscriber interests, frequency, and more, then track how subscribers engage.
+    - button "Create landing page"
+    - button "Close":
+  - article:
+    - heading "Subscription group timeseries" [level=2]
+    - text: Subscription group
+    - combobox "Subscription group":
+      - option "Select subscription group" [disabled]
+      - option "Product updates" [selected]
+      - option "Promotions"
+      - option "SMS alerts"
+      - option "WhatsApp updates"
+    - text: Date range
+    - button "Date range":
+      - text: Last 30 Days
+    - button "Calculate today’s statistics":
+      - text: Calculate today’s statistics
+    - strong:
+      - text: You don’t have any subscription group timeseries
+      - text: data yet
+  - article:
+    - heading "Subscription groups" [level=2]
+    - button "Create email subscription group"
+    - text: Status
+    - combobox "Status":
+      - option "Active" [selected]
+      - option "Archived"
+      - option "All Statuses"
+    - text: Channel
+    - combobox "Channel":
+      - option "All Channels" [selected]
+      - option "Email"
+      - option "SMS/MMS/RCS"
+      - option "WhatsApp"
+      - option "LINE"
+    - textbox "Search subscription group name"
+    - button "Search" [disabled]:
+    - 'button "Status: Active"':
+      - text: "Status: Active"
+    - heading "4 Results" [level=3]
+    - table:
+      - rowgroup:
+        - row "Name Channel ID Description Status":
+          - columnheader "Name":
+            - button "Name":
+              - text: Name
+          - columnheader "Channel":
+            - button "Channel":
+              - text: Channel
+          - columnheader "ID"
+          - columnheader "Description"
+          - columnheader "Status":
+            - button "Status":
+              - text: Status
+          - columnheader
+      - rowgroup:
+        - row "Product updates Email sg_product_updates Copy Product updates ID Feature launches, release notes, and product education. Active Archive Edit":
+          - cell "Product updates":
+            - button "Product updates"
+          - cell "Email"
+          - cell "sg_product_updates Copy Product updates ID":
+            - textbox "Product updates ID": sg_product_updates
+            - button "Copy Product updates ID":
+          - cell "Feature launches, release notes, and product education."
+          - cell "Active"
+          - cell "Archive Edit":
+            - button "Archive"
+            - button "Edit"
+        - row "Promotions Email sg_promotions Copy Promotions ID Offers, seasonal campaigns, and member-only savings. Active Archive Edit":
+          - cell "Promotions":
+            - button "Promotions"
+          - cell "Email"
+          - cell "sg_promotions Copy Promotions ID":
+            - textbox "Promotions ID": sg_promotions
+            - button "Copy Promotions ID":
+          - cell "Offers, seasonal campaigns, and member-only savings."
+          - cell "Active"
+          - cell "Archive Edit":
+            - button "Archive"
+            - button "Edit"
+        - row "SMS alerts SMS/MMS/RCS sg_sms_alerts Copy SMS alerts ID Time-sensitive order and account notifications. Active Archive Edit":
+          - cell "SMS alerts":
+            - button "SMS alerts"
+          - cell "SMS/MMS/RCS"
+          - cell "sg_sms_alerts Copy SMS alerts ID":
+            - textbox "SMS alerts ID": sg_sms_alerts
+            - button "Copy SMS alerts ID":
+          - cell "Time-sensitive order and account notifications."
+          - cell "Active"
+          - cell "Archive Edit":
+            - button "Archive"
+            - button "Edit"
+        - row "WhatsApp updates WhatsApp sg_whatsapp_updates Copy WhatsApp updates ID Approved WhatsApp template updates. Active Archive Edit":
+          - cell "WhatsApp updates":
+            - button "WhatsApp updates"
+          - cell "WhatsApp"
+          - cell "sg_whatsapp_updates Copy WhatsApp updates ID":
+            - textbox "WhatsApp updates ID": sg_whatsapp_updates
+            - button "Copy WhatsApp updates ID":
+          - cell "Approved WhatsApp template updates."
+          - cell "Active"
+          - cell "Archive Edit":
+            - button "Archive"
+            - button "Edit"
+    - generic: Showing rows 1 - 4 of 4
+    - text: "Rows per page:"
+    - combobox "Rows per page":
+      - option "10" [selected]
+      - option "20"
+      - option "40"
+      - option "60"
+      - option "100"
+    - button "Previous page" [disabled]: ‹
+    - button "Current Page, Page 1": "1"
+    - button "Next page" [disabled]: ›
