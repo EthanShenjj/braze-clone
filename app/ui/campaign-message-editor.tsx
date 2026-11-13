@@ -3,13 +3,15 @@ import PushCampaignEditor from "./push-campaign-editor";
 import ContentCardEditor from "./content-card-editor";
 import BannerCampaignEditor from "./banner-campaign-editor";
 import LineCampaignEditor from "./line-campaign-editor";
+import CanvasEditorSmsComposer,{type SmsEditorContext} from './canvas-editor-sms-composer';
 import { MessageVariants,NativeMessagePreview,type MessageEditorProps } from "./message-controls";
 import { campaignVariants,variantDraft,multichannelChannels,type MessageDraft } from "@/lib/campaign-shared";
 import { normalizeWebhookVariants,redactHeaders } from "@/lib/webhook-model";
 import { normalizeWhatsAppVariants,customWhatsAppTemplates,renderWhatsAppVariant,prepareWhatsAppMessage } from "@/lib/whatsapp-model";
 import { variantsFor } from "@/lib/in-app-model";
 import styles from "./campaign-editors.module.css";
-export function CampaignMessageEditor(props:MessageEditorProps){
+export function CampaignMessageEditor(props:MessageEditorProps&{smsContext?:SmsEditorContext}){
+ if(props.draft.channel==='sms')return <CanvasEditorSmsComposer {...props}/>;
  const Editor=props.draft.channel==="push"?PushCampaignEditor:props.draft.channel==="content"?ContentCardEditor:props.draft.channel==="banner"?BannerCampaignEditor:LineCampaignEditor;
  return <MessageVariants {...props}>{(draft,update)=><Editor draft={draft} update={update} openTest={props.openTest}/>}</MessageVariants>;
 }

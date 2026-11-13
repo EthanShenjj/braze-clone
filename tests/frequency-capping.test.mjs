@@ -5,6 +5,8 @@ import {existsSync,mkdtempSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {join} from 'node:path';
 import {tmpdir} from 'node:os';
+import {DatabaseSync} from 'node:sqlite';
+import {reserveDispatch} from '../lib/frequency-capping-store.ts';
 registerHooks({resolve(specifier,context,next){if(specifier==='server-only')return{url:'data:text/javascript,export {}',shortCircuit:true};if(specifier.startsWith('@/'))return next(new URL('../'+specifier.slice(2)+'.ts',import.meta.url).href,context);if(specifier.startsWith('.')&&context.parentURL?.startsWith('file:')){const candidate=new URL(specifier,context.parentURL);if(!/\.[a-z]+$/i.test(candidate.pathname)&&existsSync(fileURLToPath(candidate)+'.ts'))return next(candidate.href+'.ts',context);}return next(specifier,context);}});
 process.env.BRAZE_DATABASE_PATH=join(mkdtempSync(join(tmpdir(),'frequency-capping-')),'test.sqlite');
 process.env.MESSAGE_DELIVERY_ENABLED='false';
@@ -15,6 +17,12 @@ let seq=0;
 function entity(workspaceId='local',patch={}){const id='cmp_frequency_'+(++seq);return store.upsertCampaign({id,name:id,channel:'push',subject:'Hello',body:'Message',config:{workspaceId,...patch}});}
 const context=(campaign,dispatchId,timestamp='2026-11-12T12:00:00.000Z',patch={})=>({workspaceId:campaign.config.workspaceId??'local',userId:'frequency_user',entityType:'campaign',entityId:campaign.id,channel:'push',dispatchId,timestamp,obey:true,count:true,...patch});
 function sent(ctx){const result=store.reserveFrequencyDispatch(ctx);assert.equal(result.allowed,true);store.finishFrequencyDispatch(ctx,true);}
+
+test('frequency reservations recover when the first enclosing Canvas transaction rolls back',()=>{
+ const campaign=entity('rollback-reservations'),conn=new DatabaseSync(process.env.BRAZE_DATABASE_PATH),ctx=context(campaign,'after-rollback');
+ try{conn.exec('SAVEPOINT first_canvas');assert.equal(reserveDispatch(conn,ctx).allowed,true);conn.exec('ROLLBACK TO first_canvas; RELEASE first_canvas');assert.equal(reserveDispatch(conn,ctx).allowed,true);}
+ finally{conn.close();}
+});
 
 test('resource writes reject more than the workspace rule allowance',()=>{
  assert.throws(()=>settings('over-limit',Array.from({length:11},(_,i)=>rule('r'+i))),/10|limit|rules/i);

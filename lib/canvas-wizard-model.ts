@@ -2,6 +2,8 @@ import {frequencyPolicy} from "./frequency-capping-model.ts";
 import { type CanvasGraph, validateCanvasGraph } from "./canvas-model.ts";
 import { audienceRuleIssues, type AudienceRule } from "./campaign-shared.ts";
 import { findTagInteraction } from "./tag-interactions.ts";
+import type {CanvasStepTrigger} from './canvas-step-model.ts';
+import {canvasTriggerIssues} from './canvas-action-model.ts';
 
 export const canvasSteps = ["basics", "entrySchedule", "audience", "sendSettings", "build", "summary"] as const;
 export type CanvasStep = typeof canvasSteps[number];
@@ -29,11 +31,11 @@ export type CanvasWizardConfig = {
     timing: "immediate" | "designated";
     frequency: "" | "Once" | "Daily" | "Weekly" | "Monthly";
     startDate: string; startTime: string; localTimeZone: boolean;
-    triggers: string[]; timeZone: string; endEnabled: boolean; endDate: string; endTime: string;
+    triggers: string[]; triggerDetails?:CanvasStepTrigger[]; timeZone: string; endEnabled: boolean; endDate: string; endTime: string;
   };
   audience: {
     segmentIds: string[]; filters: CanvasFilter[]; filterOperator: "AND" | "OR";
-    exclusionFilters: CanvasFilter[]; exitSegmentIds: string[]; exitFilters: CanvasFilter[]; exceptions: string[];
+    exclusionFilters: CanvasFilter[]; exitSegmentIds: string[]; exitFilters: CanvasFilter[]; exceptions: string[]; exceptionDetails?:CanvasStepTrigger[];
     reentryEnabled: boolean; reentryMode: "duration" | "window"; reentryValue: number; reentryUnit: "Hours" | "Days";
     volumeEnabled: boolean; maxEntries: number; cadence: "Hourly" | "Daily" | "Lifetime of Canvas";
   };
@@ -100,14 +102,14 @@ export function normalizeCanvasWizard(value: unknown): CanvasWizardConfig {
   return {
     ...(input.brief===null?{brief:null}:input.brief&&typeof input.brief==='object'&&typeof input.brief.id==='string'&&typeof input.brief.name==='string'?{brief:{id:input.brief.id,name:input.brief.name,size:Number(input.brief.size)||0,type:String(input.brief.type??''),url:`/api/campaign-briefs/${encodeURIComponent(input.brief.id)}`}}:{}),
     conversionEvents: normalizeCanvasConversions(input.conversionEvents),
-    entry: { ...defaultCanvasWizard.entry, ...entry, triggers: Array.isArray(entry.triggers) ? entry.triggers.filter(value => typeof value === "string") : [] },
+    entry: { ...defaultCanvasWizard.entry, ...entry, triggers: Array.isArray(entry.triggers) ? entry.triggers.filter(value => typeof value === "string") : [],...(entry.triggerDetails!==undefined?{triggerDetails:Array.isArray(entry.triggerDetails)?entry.triggerDetails.filter(value=>value&&typeof value.id==='string'&&typeof value.type==='string').map(value=>structuredClone(value)):[]}:{}) },
     audience: { ...defaultCanvasWizard.audience, ...audience,
       segmentIds: Array.isArray(audience.segmentIds) ? audience.segmentIds.filter(value => typeof value === "string") : [],
       filters: normalizeFilters(audience.filters),
       exclusionFilters: normalizeFilters(audience.exclusionFilters),
       exitSegmentIds: Array.isArray(audience.exitSegmentIds) ? audience.exitSegmentIds.filter(value => typeof value === "string") : [],
       exitFilters: normalizeFilters(audience.exitFilters),
-      exceptions: Array.isArray(audience.exceptions) ? audience.exceptions.filter(value => typeof value === "string") : [] },
+      exceptions: Array.isArray(audience.exceptions) ? audience.exceptions.filter(value => typeof value === "string") : [],...(audience.exceptionDetails!==undefined?{exceptionDetails:Array.isArray(audience.exceptionDetails)?audience.exceptionDetails.filter(value=>value&&typeof value.id==='string'&&typeof value.type==='string').map(value=>structuredClone(value)):[]}:{}) },
     send: { ...defaultCanvasWizard.send, ...send,...frequencyPolicy(send as unknown as Record<string,unknown>), quietMode:send.quietMode==='workspace'||send.quietMode==='custom'?send.quietMode:send.quietEnabled?'custom':'workspace',channelLimits: Array.isArray(send.channelLimits) ? send.channelLimits.filter(item => item && typeof item.channel === "string" && typeof item.perMinute === "number") : [] },
   };
 }
@@ -119,10 +121,10 @@ export function canvasWizardIssues(config: CanvasWizardConfig, graph: CanvasGrap
   for(const event of config.conversionEvents)for(const detail of canvasConversionIssues(event))issues.push({step:'basics',title:'Incomplete conversion event',detail});
   if (config.entry.type === "scheduled" && config.entry.timing === "designated" && !config.entry.frequency) issues.push({ step: "entrySchedule", title: "Entry frequency required", detail: "Choose Once, Daily, Weekly, or Monthly." });
   if (config.entry.type === "scheduled" && config.entry.timing === "designated" && config.entry.frequency && !config.entry.startDate) issues.push({ step: "entrySchedule", title: "Start date required", detail: "Choose a date for scheduled entry." });
-  if (config.entry.type === "scheduled" && config.entry.timing === "designated") issues.push({ step: "entrySchedule", title: "Local simulation unavailable", detail: "Designated-time entry needs the scheduler; choose immediate entry for the local simulation." });
   if (config.entry.type === "action" && config.entry.triggers.length === 0) issues.push({ step: "entrySchedule", title: "No entry trigger", detail: "Add at least one action-based trigger." });
   if (config.entry.type === "action" && !config.entry.startDate) issues.push({ step: "entrySchedule", title: "Entry window required", detail: "Choose a start date for the entry window." });
-  if (config.entry.type !== "scheduled") issues.push({ step: "entrySchedule", title: "Local simulation unavailable", detail: "Action-Based and API-Triggered entry require an event or API request; manual simulation cannot launch them." });
+  if(config.entry.type==='action')for(const trigger of config.entry.triggerDetails??[])for(const detail of canvasTriggerIssues(trigger))issues.push({step:'entrySchedule',title:'Incomplete entry trigger',detail});
+  for(const trigger of config.audience.exceptionDetails??[])if(config.audience.exceptions.includes(trigger.type))for(const detail of canvasTriggerIssues(trigger))issues.push({step:'audience',title:'Incomplete exit trigger',detail});
   if (config.audience.segmentIds.length === 0 && config.audience.filters.length === 0) issues.push({ step: "audience", title: "Empty entry audience", detail: "You must select at least one segment or at least one filter for Canvas entry." });
   for (const filter of [...config.audience.filters, ...config.audience.exclusionFilters, ...config.audience.exitFilters]) {
     const details = isCanvasProfileFilter(filter)
@@ -139,6 +141,11 @@ export function canvasWizardIssues(config: CanvasWizardConfig, graph: CanvasGrap
     const minutes=(value:string)=>/^([01]\d|2[0-3]):[0-5]\d$/.test(value)?Number(value.slice(0,2))*60+Number(value.slice(3)):NaN;
     const duration=(minutes(config.send.quietEnd)-minutes(config.send.quietStart)+1440)%1440;
     if(!Number.isFinite(duration)||duration===0||duration>1200)issues.push({step:'sendSettings',title:'Invalid quiet hours',detail:'Choose valid start and end times with a quiet period of no more than 20 hours.'});
+  }
+  for(const node of graph.nodes.filter(node=>node.kind==='experiment_paths'&&node.config?.winningPath)){
+   const c=node.config??{},paths=Array.isArray(c.paths)?c.paths:[],legacy=String(c.conversionEvent??''),metric=String(c.winningPathMetric??(['opens','clicks'].includes(legacy)?legacy:'conversion')),eventId=String(c.winningPathConversionEventId??(!['opens','clicks'].includes(legacy)?legacy:''));
+   if(config.entry.type==='scheduled'&&(config.entry.timing==='immediate'||config.entry.frequency==='Once')&&paths.length>3)issues.push({step:'build',title:'Too many experiment paths',detail:'One-time Winning Path supports up to three experiment paths to reserve the Delay Group.'});
+   if(!['conversion','opens','clicks'].includes(metric)||metric==='conversion'&&(!config.conversionEvents.length||eventId&&!config.conversionEvents.some(event=>event.id===eventId)))issues.push({step:'build',title:'Winning Path metric required',detail:'Choose a Winning Path conversion event defined on this Canvas, or select Opens or Clicks.'});
   }
   for (const detail of validateCanvasGraph(graph)) issues.push({ step: "build", title: "Canvas step error", detail });
   return issues;

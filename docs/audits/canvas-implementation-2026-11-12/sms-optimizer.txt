@@ -1,0 +1,65 @@
+Browser tab: 5, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3240/engagement/canvas/06c094dd-3d59-48b1-bf91-789afa1d0500?locale=en&step=build&workspaceId=local".
+0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3240/engagement/canvas/06c094dd-3d59-48b1-bf91-789afa1d0500?locale=en&step=build&workspaceId=local
+	1 container Content Optimizer step editor
+		2 container
+			3 text field (settable) Description: Step name, Value: SMS Optimizer acceptance
+			4 text Content Optimizer Clicks 2  combinations SMS/MMS/RCS All users who enter this step  advance to the next step
+			5 button Done
+		6 container
+			7 text Content Optimizer setup
+			8 tab group Message step
+				9 tab (selected, settable, boolean) Messaging channels, Value: 1
+				10 tab (selectable, settable, boolean) Delivery settings, Value: 0
+				11 tab (selectable, settable, boolean) Content Optimizer settings, Value: 0
+				12 tab (selectable, settable, boolean) Agentic Standards results, Value: 0
+			13 heading Channels, Value: 4
+				14 text Channels
+			15 tab group Channels
+				16 tab (selected, settable, boolean) SMS/MMS/RCS, Value: 1
+			17 container SMS/MMS/RCS Composer
+				18 heading SMS/MMS/RCS Composer, Value: 2
+					19 text SMS/MMS/RCS Composer
+				20 container
+					21 heading Variants, Value: 3
+						22 text Variants
+					23 tab group Message variants
+						24 tab (selected, settable, boolean) Variant 1 Message configured, Description: Message configured, Value: 1
+Variant 1
+✓
+						25 button Add message variant
+					26 button (collapsed) Description: Variant actions, Secondary Actions: Expand
+					27 text Subscription Group
+					28 image
+					29 combo box (collapsed, settable) Description: Subscription Group, Value: Canvas SMS acceptance, Secondary Actions: Expand
+					30 button Toggle Subscription Group
+						31 image
+					32 heading Preview, Value: 5
+						33 text Preview
+					34 text {% message_component 'Body Content' %}
+					35 text Actual rendering may not be identical to this preview depending on the user's environment.
+					36 tab group SMS composer sections
+						37 tab (selected, settable, boolean) Compose, Value: 1
+						38 tab (selectable, settable, boolean) Contact Card Generator, Value: 0
+						39 tab (selectable, settable, boolean) Test, Value: 0
+					40 heading Language, Value: 4
+						41 text Language
+					42 button Add languages
+						43 image
+						44 text Add languages
+					45 heading Content, Value: 4
+						46 text Content
+					47 text Message
+					48 container Character count excludes Liquid. The rendered message may use more billable segments.
+						49 image
+						50 text 0  |  0  Billable Segment s
+						51 image
+					52 button BrazeAI Operator
+						53 image
+					54 text entry area (settable) Description: Message, Value: {% message_component 'Body Content' %}, ID: sms-message-optimizer
+					55 button Add Liquid
+						56 image
+					57 checkbox (settable, integer) Description: Link shortening, Value: 1
+					58 link Description: Shorten the URL , Value: braze.com/docs/en/user_guide/message_building_by_channel/sms/campaign/link_shortening
+					59 text  contained in your message and better understand message engagement.
+
+The focused UI element is 9 tab (selected, settable, boolean) Messaging channels, Value: 1

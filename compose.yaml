@@ -1,0 +1,46 @@
+name: braze-clone
+
+x-app: &app
+  image: braze-clone-self-hosted:local
+  build:
+    context: .
+  init: true
+  restart: unless-stopped
+  stop_grace_period: 120s
+  env_file:
+    - path: ${BRAZE_ENV_FILE:-./.env.self-hosted}
+      required: false
+  environment: &runtime-environment
+    NODE_ENV: production
+    BRAZE_DATABASE_PATH: /app/data/braze.sqlite
+    CANVAS_WORKER_HEALTH_FILE: /app/data/canvas-worker-health.json
+  volumes:
+    - canvas_data:/app/data
+
+services:
+  web:
+    <<: *app
+    ports:
+      - "127.0.0.1:${BRAZE_HTTP_PORT:-3100}:3000"
+    depends_on:
+      worker:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(response=>process.exit(response.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+
+  worker:
+    <<: *app
+    command: ["node", "--conditions=react-server", "--experimental-transform-types", "--import", "./scripts/register-runtime.mjs", "./scripts/canvas-worker.mjs"]
+    healthcheck:
+      test: ["CMD", "node", "scripts/canvas-worker.mjs", "--health-check"]
+      interval: 15s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+
+volumes:
+  canvas_data:

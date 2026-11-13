@@ -27,7 +27,7 @@ export type CanvasNode = {
 };
 export type CanvasVariant = { id: string; name: string; weight: number };
 export type CanvasGraph = { nodes: CanvasNode[]; edges: [string, string][]; variants?: CanvasVariant[] };
-export type CanvasTrace = { userId: string; steps: { nodeId: string; label: string; kind: CanvasNodeKind; at: string }[] };
+export type CanvasTrace = { userId: string; variantId?:string; steps: { nodeId: string; label: string; kind: CanvasNodeKind; at: string }[] };
 export type CanvasRun = { id: string; createdAt: string; entered: number; completed: number; messages: number; traces: CanvasTrace[]; nextDueAt?: string | null };
 
 export const initialCanvasGraph: CanvasGraph = {
@@ -59,7 +59,6 @@ export function validateCanvasGraph(graph: CanvasGraph): string[] {
   if (graph.nodes.length < 2) issues.push("Add at least one step after Audience entry.");
   if (ids.size !== graph.nodes.length) issues.push("Each step must have a unique ID.");
   if (graph.variants && (graph.variants.length === 0 || graph.variants.reduce((total, variant) => total + variant.weight, 0) !== 100)) issues.push("Canvas variant percentages must total 100%.");
-  if (graph.variants && graph.variants.length > 1) issues.push("Multiple variants are not supported by the local simulation.");
   const edges = new Set<string>();
   for (const [from, to] of graph.edges) {
     if (!ids.has(from) || !ids.has(to) || from === to) issues.push("Remove invalid or self-referencing connections.");
@@ -71,12 +70,12 @@ export function validateCanvasGraph(graph: CanvasGraph): string[] {
 
   const outgoing = (id: string) => graph.edges.filter(edge => edge[0] === id).map(edge => edge[1]);
   for (const node of graph.nodes) {
-    if (!["entry", "delay", "message", "branch", "update", "context", "audience_paths", "experiment_paths"].includes(node.kind)) issues.push(`The ${node.label} component is not supported by the local simulation.`);
     if (node.kind === "branch") {
       const targets=node.config?.branchTargets as {yes?:string;no?:string}|undefined;
       if (targets ? !targets.yes || !targets.no || outgoing(node.id).length>2 : outgoing(node.id).length!==2) issues.push(`Action path “${node.label}” needs exactly two routes.`);
     }
-    if (node.kind !== "branch" && outgoing(node.id).length > canvasMaxRoutes(node)) issues.push(`Step “${node.label}” supports only ${canvasMaxRoutes(node)===1?'one':canvasMaxRoutes(node)} outgoing route${canvasMaxRoutes(node)===1?'':'s'}.`);
+    const maxRoutes=node.kind==='entry'&&graph.variants?.length?Math.max(1,graph.variants.length):canvasMaxRoutes(node);
+    if (node.kind !== "branch" && outgoing(node.id).length > maxRoutes) issues.push(`Step “${node.label}” supports only ${maxRoutes===1?'one':maxRoutes} outgoing route${maxRoutes===1?'':'s'}.`);
     if (node.kind === "delay" && !node.config?.delayMode && (!Number.isFinite(node.config?.durationHours) || Number(node.config?.durationHours) <= 0)) issues.push(`Set a positive delay on “${node.label}”.`);
     if(node.kind==='action_paths')for(const path of canvasPaths(node))for(const trigger of path.triggers??[])issues.push(...canvasTriggerIssues(trigger));
     if(node.kind==='message')issues.push(...canvasDeliveryIssues(node.config??{}));
@@ -94,7 +93,7 @@ export function validateCanvasGraph(graph: CanvasGraph): string[] {
     if (node.kind === "branch" && !Array.isArray(node.config?.filterGroups) && !(Array.isArray(node.config?.segmentIds)&&node.config.segmentIds.length) && (!node.config?.attribute || !["country", "lifecycle", "subscribed"].includes(node.config.attribute) || !node.config?.value)) issues.push(`Configure the condition on “${node.label}”.`);
     if (node.kind === "update" && !node.config?.updateMode && (!node.config?.attribute || typeof node.config.value !== "string")) issues.push(`Configure an attribute and value on “${node.label}”.`);
     if (node.kind === "update" && node.config?.attribute === "subscribed" && !["true", "false"].includes(String(node.config.value))) issues.push(`Set subscribed to true or false on “${node.label}”.`);
-    if(node.config?.delayMode||node.config?.updateMode||Array.isArray(node.config?.filterGroups)||['context','audience_paths','experiment_paths','action_paths'].includes(node.kind))issues.push(...canvasStepIssues(node));
+    if(node.config?.delayMode||node.config?.updateMode||Array.isArray(node.config?.filterGroups)||['context','audience_paths','experiment_paths','action_paths','agent','destination','feature_flag','audience_sync'].includes(node.kind))issues.push(...canvasStepIssues(node));
     for(const target of [...Object.values((node.config?.branchTargets??{}) as Record<string,string>),...(Array.isArray(node.config?.paths)?node.config.paths as Array<{nextNodeId?:string}>:[]).flatMap(path=>path.nextNodeId?[path.nextNodeId]:[])])if(!ids.has(target)||!outgoing(node.id).includes(target))issues.push(`Connect an available destination for “${node.label}”.`);
   }
   const visited = new Set<string>();

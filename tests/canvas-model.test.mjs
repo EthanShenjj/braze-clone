@@ -39,11 +39,15 @@ test("global subscription updates accept only explicit booleans", () => {
   deepEqual(validateCanvasGraph(graph), []);
 });
 
-test("Braze-style draft components are valid graph data but cannot launch locally", () => {
+test("Agent configuration and variant weights validate without a blanket unsupported-component guard", () => {
   const graph = clone();
   graph.nodes.push({ id: "agent", label: "Agent Step", kind: "agent", x: 600, y: 600 });
   graph.edges.push(["email", "agent"]);
-  ok(validateCanvasGraph(graph).some(issue => issue.includes("Agent Step component")));
+  ok(validateCanvasGraph(graph).some(issue => issue.includes("Choose an agent")));
+  graph.nodes.at(-1).config={agentId:'configured-agent',outputVariable:'offer',outputType:'String'};
+  deepEqual(validateCanvasGraph(graph),[]);
   graph.variants = [{ id: "one", name: "Variant 1", weight: 50 }, { id: "two", name: "Variant 2", weight: 50 }];
-  ok(validateCanvasGraph(graph).some(issue => issue.includes("Multiple variants")));
+  deepEqual(validateCanvasGraph(graph),[]);
+  graph.variants[1].weight=40;
+  ok(validateCanvasGraph(graph).some(issue=>issue.includes('total 100')));
 });

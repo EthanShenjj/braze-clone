@@ -1,0 +1,20 @@
+Browser tab: 7, Title: "Braze Demo — Thinkingai", URL: "https://braze-clone.vercel.app/engagement/canvas/canvas_welcome?locale=en&step=build&workspaceId=local&initialConditionsCollapsed=false".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~0 AXWebArea Braze Demo — Thinkingai, URL: braze-clone.vercel.app/engagement/canvas/canvas_welcome?locale=en&step=build&workspaceId=local&initialConditionsCollapsed=false
++			163 button Edit
++			164 heading Welcome journey, Value: 2
++				165 text Welcome journey
++			166 text Entry, delay, email and conversion journey
++			167 button (collapsed) Tags, Secondary Actions: Expand
++				168 image
++				169 text Tags
++				170 image
++			171 text Send Settings
++			172 text No quiet hours  ·  No rate limit
++			173 button Edit
++			174 text Conversion Events
++			175 text No conversion events
++			176 button Edit
+~					105 button Collapse
+~						106 text Collapse
+The focused UI element is 105 button Collapse

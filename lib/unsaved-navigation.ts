@@ -1,4 +1,8 @@
 "use client";
-let pendingGuard: ((action: () => void) => void) | null = null;
-export function requestAppNavigation(action: () => void) { if (pendingGuard) pendingGuard(action); else action(); }
-export function registerUnsavedNavigation(guard: (action: () => void) => void) { pendingGuard = guard; return () => { if (pendingGuard === guard) pendingGuard = null; }; }
+const guards: Array<{guard:(action: () => void) => void}> = [];
+export function requestAppNavigation(action: () => void) { const current=guards.at(-1); if (current) current.guard(action); else action(); }
+export function registerUnsavedNavigation(guard: (action: () => void) => void) {
+  const registration={guard};
+  guards.push(registration);
+  return () => { const index=guards.indexOf(registration); if(index!==-1)guards.splice(index,1); };
+}

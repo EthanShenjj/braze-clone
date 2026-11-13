@@ -46,8 +46,8 @@ export function saveFrequencySettings(db: DatabaseSync, input: unknown, expected
 }
 export type FrequencyDispatch = { workspaceId: string; userId: string; entityType: "campaign" | "canvas"; entityId: string; channel: string; dispatchId: string; timestamp: string; obey: boolean; count: boolean };
 type DispatchRow = { dispatch_id: string; entity_type: "campaign" | "canvas"; entity_id: string; created_at: string; channels_json: string; sent_json: string; expires_at: string };
-const initialized = new WeakSet<DatabaseSync>();
-function initialize(db: DatabaseSync) { if (initialized.has(db)) return; db.exec("CREATE TABLE IF NOT EXISTS frequency_dispatches (workspace_id TEXT NOT NULL,user_id TEXT NOT NULL,dispatch_id TEXT NOT NULL,entity_type TEXT NOT NULL,entity_id TEXT NOT NULL,created_at TEXT NOT NULL,channels_json TEXT NOT NULL,sent_json TEXT NOT NULL,expires_at TEXT NOT NULL,PRIMARY KEY(workspace_id,user_id,dispatch_id)); CREATE INDEX IF NOT EXISTS frequency_dispatch_history ON frequency_dispatches(workspace_id,user_id,created_at)"); initialized.add(db); }
+// DDL can be rolled back by an enclosing Canvas transaction; connection identity cannot cache it.
+function initialize(db: DatabaseSync) { db.exec("CREATE TABLE IF NOT EXISTS frequency_dispatches (workspace_id TEXT NOT NULL,user_id TEXT NOT NULL,dispatch_id TEXT NOT NULL,entity_type TEXT NOT NULL,entity_id TEXT NOT NULL,created_at TEXT NOT NULL,channels_json TEXT NOT NULL,sent_json TEXT NOT NULL,expires_at TEXT NOT NULL,PRIMARY KEY(workspace_id,user_id,dispatch_id)); CREATE INDEX IF NOT EXISTS frequency_dispatch_history ON frequency_dispatches(workspace_id,user_id,created_at)"); }
 function metadata(db: DatabaseSync, entityType: string, id: string) {
   const row = entityType === "canvas" ? db.prepare("SELECT data_json AS value FROM resources WHERE type='canvas' AND id=?").get(id) : db.prepare("SELECT config_json AS value FROM campaigns WHERE id=?").get(id);
   const data = row ? object(String(row.value)) : {};

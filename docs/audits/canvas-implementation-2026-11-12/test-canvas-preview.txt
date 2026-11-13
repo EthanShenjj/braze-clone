@@ -1,0 +1,3 @@
+Browser tab: 4, Title: "Braze Demo — Thinkingai", URL: "http://127.0.0.1:3240/engagement/canvas/canvas_welcome?locale=en&step=build&workspaceId=local".
+There has been no change in the accessibility tree.
+The focused UI element is 0 AXWebArea Braze Demo — Thinkingai, URL: 127.0.0.1:3240/engagement/canvas/canvas_welcome?locale=en&step=build&workspaceId=local

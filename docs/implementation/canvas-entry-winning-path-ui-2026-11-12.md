@@ -1,0 +1,15 @@
+# Canvas entry trigger details and Winning Path controls
+
+Implemented on 2026-11-12. Browser acceptance remains part of the root agent's fixed-viewport verification.
+
+`CanvasEntryTriggerDetails` accepts `{workspaceId, types, details, onChange}`. It loads trigger choices from the selected workspace and reuses `CanvasActionTriggerFields` for each selected type. Entry-only types without shared fields retain their type, ID and existing details. The parent handles adding/removing selected types. Default details are display-only until a field changes, so opening an older draft does not mark it dirty; editing one trigger preserves its selected siblings.
+
+`CanvasStepEditor` accepts optional `entryOnce` and `conversionEvents: CanvasConversionFields[]`. Winning Path stores the selected Canvas conversion ID, or `opens` / `clicks`, in `config.conversionEvent`. Its fallback is `winningPathFallback: 'best' | 'mix'`, defaulting to `best`. Window controls support Hours and Days while retaining `experimentWindowDays` as the runtime value; `experimentWindowUnit` records the presentation unit. The window starts with the first entrant, and the interface explains the first-message restriction for engagement metrics and saved-order tie breaking.
+
+The independent `winningPathDelayWeight` represents the one-time-entry holdout. It is never inserted into `paths` or connected as an ordinary graph edge. One-time Winning Path supports three experiment paths plus the Delay Group; other experiments support four paths. Editing the holdout rescales experimental weights proportionally. Turning Winning Path off, or switching to recurring/triggered entry, clears the holdout and restores the experimental total to 100%.
+
+The one-time initialization uses **80% Delay Group and 20% shared proportionally among existing paths**. Thus two equally weighted paths become 10% / 10% / 80%. These values are taken from the [official one-time example diagram](https://www.braze.com/docs/assets/img/experiment_step/experiment_one_time.png). **They are an example-based initialization, not a verified Braze default.** The existing path ratios are preserved, so 70% / 30% becomes 14% / 6% / 80%. Rounding uses hundredths and assigns the remainder to the final path to keep the total exact.
+
+Rules were checked against [Braze Winning Path documentation](https://www.braze.com/docs/user_guide/messaging/canvas/canvas_components/experiment_step/winning_path), including best/mix fallback, first-listed ties, holdout availability and the four-group limit. No exposure-count or 30-user minimum was added.
+
+Validation: `tests/canvas-editor-entry-triggers.test.mjs` and `tests/canvas-editor-experiment.test.mjs` exercise real rendered controls and their change callbacks. Tests cover trigger-detail preservation, conversion IDs, fallback, proportional holdout allocation, window conversion, path limits and reopening after entry mode changes. The root agent owns runtime execution, model validation and Wizard/LiveCanvas prop wiring.

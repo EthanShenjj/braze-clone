@@ -1,0 +1,7 @@
+Browser tab: 6, Title: "Engagement - Canvas - Edit 'New Canvas - November 12, 2026'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 97, 104
++								254 container
++									255 AXListMarker •
++									256 text Workspace Messaging Rate Limits OFF
+The focused UI element is 0 AXWebArea Engagement - Canvas - Edit 'New Canvas - November 12, 2026', URL: dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build

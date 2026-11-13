@@ -1,5 +1,6 @@
 import "server-only";
 import {frequencyPolicy} from "./frequency-capping-model";
+import {canvasWorkspaceRateLimited} from './canvas-workspace-rate';
 import {frequencySnapshot,saveFrequencySettings,validateFrequencyResource,validateFrequencyAssignment,reserveDispatch,finishDispatch,type FrequencyDispatch} from "./frequency-capping-store";
 import {compareAudienceValue,audienceComparisonIssues,type AudienceValueKind} from "./audience-rule-model";
 import { validateModule, workspaceModules, objectValue, evaluateFlag, stableBucket } from "./workspace-modules";
@@ -10,7 +11,7 @@ import { initializeTags, assignTags, listTags, listTagAliases, createTag, change
 
 import { createHash, createHmac, randomBytes, randomUUID, timingSafeEqual } from "node:crypto";
 import { globalControlCohort, hasGlobalControlExemption, normalizeGlobalControl, validateGlobalControlCommand, type GlobalControlSettings, type GlobalControlSnapshot } from "./global-control-model";
-import { mkdirSync } from "node:fs";
+import { mkdirSync,readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
@@ -37,6 +38,12 @@ import { initialCanvasGraph, isCanvasGraph, type CanvasGraph, type CanvasNode, t
 import {canvasDeliverySettings} from './canvas-builder-model';
 import {canvasDelayDue,canvasStepIssues,canvasUpdatedProfile,type CanvasContextVariable} from './canvas-step-model';
 import { canvasWizardIssues, defaultCanvasWizard, normalizeCanvasWizard, type CanvasFilter, type CanvasWizardConfig } from "./canvas-wizard-model";
+import {canvasConversionMatches} from './canvas-conversion-model';
+import {CanvasRuntimePersistence} from './canvas-runtime-persistence';
+import {canvasNextEntryAt,canvasTriggerMatches,canvasAssignedVariant,canvasActionPathDecision,canvasWinningPathDecision,canvasOptimizerDecision,type CanvasRuntimeEvent} from './canvas-runtime-model';
+import {canvasConnectorCapability,executeCanvasConnector} from './canvas-connectors';
+import {canvasProfileRuntimeEvent,canvasMessageRuntimeEvent,canvasProfileRuntimeChanges} from './canvas-event-model';
+import {canvasOptimizerPreviewDraft} from './canvas-optimizer-preview-model';
 import { sampleCatalogId, sampleCatalogRows, sampleRecommendationId } from "./sample-catalog";
 import { sampleSegmentByName, sampleSegments } from "./sample-segments";
 import { deliverWebhook, webhookDeliveryCapability, type WebhookDeliveryResult } from "./webhook-delivery";
@@ -82,13 +89,17 @@ let database: DatabaseSync | undefined;
 function now() { return new Date().toISOString(); }
 export function messagePublicOrigin(){const host=process.env.VERCEL_PROJECT_PRODUCTION_URL??process.env.VERCEL_URL;return (process.env.BRAZE_PUBLIC_URL??(host?`https://${host}`:"http://localhost:3100")).replace(/\/$/,"");}
 export function messageShortLinkPlaceholder(){return `${messagePublicOrigin()}/api/message-links/res_0000000000000000`;}
-export function shortenMessageLink(url:string,campaignId:string,userId:string){
+export function shortenMessageLink(url:string,campaignId:string,userId:string,nodeId?:string,test=false){
   if(!/^https?:\/\//i.test(url))throw new Error("Only HTTP and HTTPS links can be shortened.");
-  const existing=listResources("message-links").find(r=>r.data.campaignId===campaignId&&r.data.userId===userId&&r.data.url===url);
-  const record=existing??createResource({type:"message-links",name:"Message link",status:"Active",data:{campaignId,userId,url}});
+  const existing=listResources("message-links").find(r=>r.data.campaignId===campaignId&&r.data.userId===userId&&r.data.url===url&&r.data.nodeId===nodeId&&Boolean(r.data.test)===test);
+  const record=existing??createResource({type:"message-links",name:"Message link",status:"Active",data:{campaignId,userId,url,nodeId,...(test?{test:true}:{})}});
   return `${messagePublicOrigin()}/api/message-links/${record.id}`;
 }
-export function followMessageLink(id:string){const resource=getResource(id);if(!resource||resource.type!=="message-links"||resource.status!=="Active")return null;const url=String(resource.data.url);if(!/^https?:\/\//i.test(url))return null;const campaign=getCampaign(String(resource.data.campaignId));if(campaign)db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"),campaign.id,campaign.channel,String(resource.data.userId),"clicked",now(),JSON.stringify({linkId:id,url}));return url;}
+export function followMessageLink(id:string){
+ const resource=getResource(id);if(!resource||resource.type!=='message-links'||resource.status!=='Active')return null;const url=String(resource.data.url);if(!/^https?:\/\//i.test(url))return null;
+ const ownerId=String(resource.data.campaignId);if(getCampaign(ownerId)||getCanvas(ownerId))recordExternalEvent(ownerId,{userId:String(resource.data.userId),event:'clicked',attributes:{linkId:id,url,nodeId:resource.data.nodeId,test:resource.data.test===true}});
+ return url;
+}
 function uid(prefix: string) { return `${prefix}_${crypto.randomUUID().replaceAll("-", "").slice(0, 16)}`; }
 function parseJson<T>(value: string | null | undefined, fallback: T): T { try { return value ? JSON.parse(value) as T : fallback; } catch { return fallback; } }
 
@@ -107,6 +118,8 @@ function db() {
   database.exec(`
     PRAGMA journal_mode = WAL;
     PRAGMA busy_timeout = 5000;
+    CREATE TABLE IF NOT EXISTS workspace_write_lock (id INTEGER PRIMARY KEY, version INTEGER NOT NULL);
+    INSERT OR IGNORE INTO workspace_write_lock VALUES (1,0);
     CREATE TABLE IF NOT EXISTS campaigns (
       id TEXT PRIMARY KEY, name TEXT NOT NULL, channel TEXT NOT NULL, status TEXT NOT NULL,
       schedule TEXT NOT NULL, sent INTEGER NOT NULL DEFAULT 0, edited_at TEXT NOT NULL,
@@ -776,7 +789,18 @@ function configuredAudienceRuleSQL(rule:AudienceFilter,values:(string|number)[],
  if(rule.field.startsWith("receipt_variant:")||rule.field.startsWith("feature_variant:")){const [,id,...variantParts]=rule.field.split(":"),variant=variantParts.join(":");const campaign=getCampaign(id);if(!campaign||String(campaign.config.workspaceId??"local")!==workspaceId||!audienceCampaignVariants(campaign).some(v=>v.id===variant)||rule.field.startsWith("feature_variant:")&&campaign.channel!=="feature")throw new Error("Choose an available Campaign variant from this workspace.");expression="(SELECT count(*) FROM message_events e WHERE e.user_id=u.id AND e.campaign_id=? AND e.event_type='delivered' AND COALESCE(json_extract(e.data_json,'$.variantId'),json_extract(e.data_json,'$.attributes.variantId'))=? AND COALESCE(json_extract(e.data_json,'$.test'),json_extract(e.data_json,'$.attributes.test'),0)!=1 AND COALESCE(json_extract(e.data_json,'$.simulated'),json_extract(e.data_json,'$.attributes.simulated'),0)!=1)";values.push(id,variant);}
  if(rule.field==="never_received_message")expression="CASE WHEN EXISTS (SELECT 1 FROM message_events e WHERE e.user_id=u.id AND e.event_type='delivered' AND COALESCE(json_extract(e.data_json,'$.test'),json_extract(e.data_json,'$.attributes.test'),0)!=1 AND COALESCE(json_extract(e.data_json,'$.simulated'),json_extract(e.data_json,'$.attributes.simulated'),0)!=1) THEN 0 ELSE 1 END";
  if(rule.field.startsWith("receipt_alias:")||rule.field.startsWith("receipt_alias_any:")){if(!rule.field.slice(rule.field.indexOf(":")+1).trim())throw new Error("Choose an available link alias.");expression="(SELECT count(*) FROM message_events e WHERE e.user_id=u.id AND e.event_type='clicked' AND COALESCE(json_extract(e.data_json,'$.alias'),json_extract(e.data_json,'$.attributes.alias'))=? AND COALESCE(json_extract(e.data_json,'$.test'),json_extract(e.data_json,'$.attributes.test'),0)!=1 AND COALESCE(json_extract(e.data_json,'$.simulated'),json_extract(e.data_json,'$.attributes.simulated'),0)!=1)";values.push(rule.field.slice(rule.field.indexOf(":")+1));if(rule.params?.campaignId){const campaign=getCampaign(String(rule.params.campaignId));if(!campaign||String(campaign.config.workspaceId??"local")!==workspaceId)throw new Error("Choose an available alias Campaign from this workspace.");expression=expression.slice(0,-1)+" AND e.campaign_id=?)";values.push(campaign.id);}}
- if(rule.field.startsWith("feature_enabled:")){const flagId=rule.field.slice(16),flag=listResources("feature-flags").find(flag=>flag.data.flagId===flagId&&flag.status!=="Archived"&&String(flag.data.workspaceId??"local")===workspaceId);if(!flag)throw new Error("Choose an available feature flag.");expression="COALESCE((SELECT json_extract(e.data_json,'$.enabled') FROM resources e JOIN campaigns c ON c.id=json_extract(e.data_json,'$.campaignId') WHERE e.type='feature-assignments' AND e.status='Active' AND c.status='Active' AND c.archived_at IS NULL AND json_extract(e.data_json,'$.userId')=u.id AND json_extract(e.data_json,'$.flagId')=? ORDER BY e.updated_at DESC LIMIT 1),campaign_flag_enabled(?,u.id,u.country,u.lifecycle,u.attributes_json))";values.push(flagId,JSON.stringify(flag.data));}
+ if(rule.field.startsWith("feature_enabled:")){
+  const flagId=rule.field.slice(16),flag=listResources("feature-flags").find(flag=>flag.data.flagId===flagId&&flag.status!=="Archived"&&String(flag.data.workspaceId??"local")===workspaceId);
+  if(!flag)throw new Error("Choose an available feature flag.");
+  expression=`COALESCE((SELECT COALESCE(json_extract(e.data_json,'$.enabled'),0) FROM resources e
+   LEFT JOIN resources canvas ON canvas.type='canvas' AND canvas.id=COALESCE(json_extract(e.data_json,'$.canvasId'),json_extract(e.data_json,'$.campaignId'))
+   LEFT JOIN campaigns c ON c.id=json_extract(e.data_json,'$.campaignId')
+   WHERE e.type='feature-assignments' AND e.status!='Archived' AND json_extract(e.data_json,'$.userId')=u.id AND json_extract(e.data_json,'$.flagId')=?
+   AND ((canvas.id IS NOT NULL AND canvas.status='Active' AND COALESCE(json_extract(canvas.data_json,'$.workspaceId'),'local')=? AND COALESCE(json_extract(e.data_json,'$.workspaceId'),json_extract(canvas.data_json,'$.workspaceId'),'local')=?)
+    OR (canvas.id IS NULL AND c.status='Active' AND c.archived_at IS NULL AND COALESCE(json_extract(c.config_json,'$.workspaceId'),'local')=? AND COALESCE(json_extract(e.data_json,'$.workspaceId'),json_extract(c.config_json,'$.workspaceId'),'local')=?))
+   ORDER BY e.updated_at DESC LIMIT 1),campaign_flag_enabled(?,u.id,u.country,u.lifecycle,u.attributes_json))`;
+  values.push(flagId,workspaceId,workspaceId,workspaceId,workspaceId,JSON.stringify(flag.data));
+ }
  if(rule.field.startsWith("session_app_count:")||rule.field.startsWith("session_app_first:")||rule.field.startsWith("session_app_last:")){const [kind,...parts]=rule.field.split(":"),id=parts.join(":");if(!getResource(id)||getResource(id)?.type!=="app-settings"||String(getResource(id)?.data.workspaceId??"local")!==workspaceId)throw new Error("Choose an available app.");expression=`(SELECT ${kind==="session_app_count"?"count(*)":kind==="session_app_first"?"min(COALESCE(json_extract(e.data_json,'$.createdAt'),e.updated_at))":"max(COALESCE(json_extract(e.data_json,'$.createdAt'),e.updated_at))"} FROM resources e WHERE e.type='user-events' AND json_extract(e.data_json,'$.userId')=u.id AND e.name IN ('session_start','Start Session') AND COALESCE(json_extract(e.data_json,'$.properties.appId'),json_extract(e.data_json,'$.properties.app_id'))=?)`;values.push(id);}
  if(rule.field.startsWith("session_recent:")){const days=Number(rule.field.slice(15));if(!Number.isInteger(days)||days<1||days>30)throw new Error("Choose between 1 and 30 days for session history.");expression="(SELECT count(*) FROM resources e WHERE e.type='user-events' AND json_extract(e.data_json,'$.userId')=u.id AND e.name IN ('session_start','Start Session') AND julianday(COALESCE(json_extract(e.data_json,'$.createdAt'),e.updated_at)) BETWEEN julianday('now',?) AND julianday('now'))";values.push(`-${days} days`);}
 
@@ -995,10 +1019,12 @@ export function previewCampaignDeliveryTimes(campaign:MessageDraft,channel=campa
 function isCampaignUserEligible(campaign:MessageDraft,userId:string){const query=configuredAudienceSQL(campaign),group=String(campaign.config?.subscriptionGroupId??"");subscriptionGroupForChannel(group,campaign.channel as Channel,String(campaign.config?.workspaceId??"local"));const row=db().prepare(`SELECT u.* FROM users u ${group?"LEFT JOIN subscription_group_memberships m ON m.user_id=u.id AND m.group_id=?":""} WHERE (${query.sql}) AND u.id=? AND u.reachable=1 AND ${subscriptionCondition(campaign.channel as Channel,String(campaign.config?.subscribeEligibility??"subscribed"),group)}`).get(...(group?[group]:[]),...query.values,userId) as Record<string,unknown>|undefined;if(!row||heldByGlobalControl(userId,globalControlSettings(String(campaign.config?.workspaceId??"local")),campaign.config?.tags,campaign.channel as Channel))return false;const email=String(row.email).toLowerCase();return !legacySuppressionEntries(String(campaign.config?.workspaceId??"local")).some(entry=>email===entry||email.endsWith(`@${entry}`))&&!audienceSuppressionMatches(userId,{workspaceId:String(campaign.config?.workspaceId??"local"),channel:campaign.channel,tags:campaign.config?.tags}).length;}
 function materializeSdkMessage(message:MessageDraft,userId:string,payload:unknown,campaignId:string,variantId:string,force=false){
   const values=objectValue(message.config?.channelValues);if(message.channel==="content"&&values.creationMode!=="launch"&&!force)return null;
-  const id=`sdk_${createHash("sha256").update(`${campaignId}:${message.channel}:${userId}`).digest("hex").slice(0,24)}`,existing=getResource(id);if(existing)return existing;
+  const canvas=getCanvas(campaignId),canvasRunId=message.config?.canvasRunId,nodeId=message.config?.canvasNodeId??message.config?.nodeId;
+  const identity=canvas?JSON.stringify([campaignId,canvasRunId,nodeId,message.channel,userId]):`${campaignId}:${message.channel}:${userId}`;
+  const id=`sdk_${createHash("sha256").update(identity).digest("hex").slice(0,24)}`,existing=getResource(id);if(existing)return existing;
   const run=db().prepare("SELECT created_at FROM execution_runs WHERE campaign_id=? ORDER BY created_at ASC LIMIT 1").get(campaignId) as {created_at:string}|undefined;
-  const launchedAt=run?.created_at??now(),expiresAt=message.channel==="content"?new Date(new Date(launchedAt).getTime()+Math.min(30,Math.max(.01,Number(values.expirationDays??30)))*86400000).toISOString():undefined;
-  return createResource({id,type:"sdk-messages",name:message.name??"Message",status:"Available",data:{campaignId,userId,channel:message.channel,payload,variantId,createdAt:now(),expiresAt,pinned:values.pinned===true,priority:values.priority??objectValue(message.config?.delivery).iamPriority??"Medium",order:Number(objectValue(message.config?.delivery).iamOrder??0),placement:values.placement,removalEvent:values.removalEvent,removalEventName:values.removalEventName,removalProperties:values.removalProperties??[]}});
+  const test=message.config?.test===true,launchedAt=run?.created_at??now(),expiresAt=test?new Date(Date.now()+3600000).toISOString():message.channel==="content"?new Date(new Date(launchedAt).getTime()+Math.min(30,Math.max(.01,Number(values.expirationDays??30)))*86400000).toISOString():undefined;
+  return createResource({id,type:"sdk-messages",name:message.name??"Message",status:"Available",data:{campaignId,...(canvas?{canvasId:campaignId,canvasRunId,nodeId,workspaceId:canvas.workspaceId,deliverySettings:canvasDeliverySettings(message.config??{})}:{}),...(test?{test:true}:{}),userId,channel:message.channel,payload,variantId,createdAt:now(),expiresAt,pinned:values.pinned===true,priority:values.priority??objectValue(message.config?.delivery).iamPriority??"Medium",order:Number(objectValue(message.config?.delivery).iamOrder??0),placement:values.placement,removalEvent:values.removalEvent,removalEventName:values.removalEventName,removalProperties:values.removalProperties??[]}});
 }
 function enqueueCampaignJob(campaign:CampaignRecord,userId:string,dueAt:string,triggerProperties:Record<string,unknown>={},key=dueAt){
  const id=`job_${createHash("sha256").update(`${campaign.id}:${userId}:${key}`).digest("hex").slice(0,28)}`;if(getResource(id))return null;
@@ -1017,7 +1043,7 @@ export async function processCampaignJobs(limit=100){
   const claimed=db().prepare("UPDATE resources SET status='Processing',updated_at=? WHERE id=? AND status='Pending'").run(now(),job.id);if(!claimed.changes)continue;
   try{const campaign=getCampaign(String(job.data.campaignId)),userId=String(job.data.userId),user=getUser(userId);if(!campaign||campaign.status!=="Active"||!user){updateResource(job.id,{status:"Cancelled"});continue;}const d=objectValue(campaign.config.delivery);if(campaign.schedule!=="API-triggered"&&d.endEnabled&&!isWithinCampaignDuration({channel:campaign.channel,config:{delivery:{endEnabled:true,endTime:d.endTime,timezone:d.timezone}}})){updateResource(job.id,{status:"Expired"});continue;}
    const zone=String(user.attributes.time_zone??user.attributes.timezone??d.timezone??"UTC");
-   if(inQuietHours(new Date(),d,["Company time","User local time"].includes(zone)?"UTC":zone)||workspaceRateLimited(now())){updateResource(job.id,{status:"Pending",data:{...job.data,dueAt:new Date(Date.now()+15*60000).toISOString()}});results.push({id:job.id,status:"Deferred"});continue;}
+   if(inQuietHours(new Date(),d,["Company time","User local time"].includes(zone)?"UTC":zone)||workspaceRateLimited(now(),0,String(campaign.config.workspaceId??'local'))){updateResource(job.id,{status:"Pending",data:{...job.data,dueAt:new Date(Date.now()+15*60000).toISOString()}});results.push({id:job.id,status:"Deferred"});continue;}
    const result=await launchCampaign(campaign.id,campaign.id,{...campaign,status:"Draft",config:{...campaign.config,triggerProperties:job.data.triggerProperties,delivery:{...d,quietHours:false}}},userId);
    updateResource(job.id,{status:"Completed",data:{...job.data,completedAt:now(),run:result.run}});
    if(result.run.delivered)db().prepare("UPDATE campaigns SET sent=sent+? WHERE id=?").run(result.run.delivered,campaign.id);
@@ -1033,11 +1059,28 @@ export function sdkCampaignMessages(userId:string){
     const index=pickVariant(campaign,createHash("sha256").update(`${campaign.id}:${userId}:variant`).digest().readUInt32BE(0)/0x100000000),draft=variantDraft(campaign,index),values=objectValue(draft.config.channelValues);
     if(campaign.channel==="content"&&values.creationMode!=="launch")materializeSdkMessage(draft,userId,compileContentCard(draft,profile),campaign.id,campaignVariants(campaign)[index].id,true);
   }
-  const priority:Record<string,number>={High:0,Medium:1,Normal:1,Low:2},rows=listResources("sdk-messages").filter(r=>r.data.userId===userId&&r.status==="Available"&&(!r.data.expiresAt||new Date(String(r.data.expiresAt)).getTime()>Date.now())&&getCampaign(String(r.data.campaignId))?.status==="Active").sort((a,b)=>(priority[String(a.data.priority)]??1)-(priority[String(b.data.priority)]??1)||Number(a.data.order)-Number(b.data.order));
-  const eligible=rows.filter(r=>{const campaign=getCampaign(String(r.data.campaignId));return campaign&&isCampaignUserEligible(campaign,userId);});
+  const priority:Record<string,number>={High:0,Medium:1,Normal:1,Low:2},rows=listResources("sdk-messages").filter(r=>r.data.userId===userId&&r.status==="Available"&&(!r.data.expiresAt||new Date(String(r.data.expiresAt)).getTime()>Date.now())).sort((a,b)=>(priority[String(a.data.priority)]??1)-(priority[String(b.data.priority)]??1)||Number(a.data.order)-Number(b.data.order));
+  const eligible=rows.filter(r=>{
+   const campaign=getCampaign(String(r.data.campaignId));if(campaign)return campaign.status==='Active'&&isCampaignUserEligible(campaign,userId);
+   const canvas=getCanvas(String(r.data.canvasId??r.data.campaignId));if(!canvas||canvas.workspaceId!==String(userProfileWorkspace(user)))return false;
+   if(r.data.test===true)return String(r.data.workspaceId)===canvas.workspaceId;
+   if(canvasRuntimeUserExited(canvas.id,userId,typeof r.data.canvasRunId==='string'?r.data.canvasRunId:undefined))return false;
+   if(canvas.status!=='Active'||!user.reachable||heldByGlobalControl(userId,globalControlSettings(canvas.workspaceId),canvas.tags)||audienceSuppressionMatches(userId,{workspaceId:canvas.workspaceId,channel:String(r.data.channel),tags:canvas.tags}).length)return false;
+   const delivery=canvasDeliverySettings(objectValue(r.data.deliverySettings));return !delivery.deliveryValidationEnabled||canvasStepAudienceMatches({segmentIds:delivery.deliverySegmentIds,filterGroups:delivery.deliveryFilterGroups},user,canvas.workspaceId);
+  });
   return{banners:eligible.filter(r=>r.data.channel==="banner"),content_cards:eligible.filter(r=>r.data.channel==="content").sort((a,b)=>Number(b.data.pinned)-Number(a.data.pinned)),in_app_messages:eligible.filter(r=>r.data.channel==="iam").slice(0,1)};
 }
-export function sdkMessageReceipt(userId:string,messageId:string,event:string){const message=getResource(messageId);if(!message||message.type!=="sdk-messages"||message.data.userId!==userId)throw new Error("Message not found for this user.");if(!["impression","read","clicked","dismissed"].includes(event))throw new Error("Unsupported message receipt.");if(event==="dismissed")updateResource(message.id,{status:"Dismissed"});const eventType=event==="impression"?"delivered":event==="read"?"opened":event;const duplicate=db().prepare("SELECT id FROM message_events WHERE campaign_id=? AND user_id=? AND event_type=? AND json_extract(data_json,'$.sdkMessageId')=?").get(String(message.data.campaignId),userId,eventType,message.id);if(!duplicate)db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"),String(message.data.campaignId),String(message.data.channel),userId,eventType,now(),JSON.stringify({sdkMessageId:message.id,sdkEvent:event,variantId:message.data.variantId}));return{recorded:true,event:eventType};}
+export function sdkMessageReceipt(userId:string,messageId:string,event:string){
+ const message=getResource(messageId),user=getUser(userId);if(!message||!user||message.type!=='sdk-messages'||message.data.userId!==userId)throw new Error('Message not found for this user.');
+ const canvas=getCanvas(String(message.data.canvasId??message.data.campaignId));if(canvas&&canvas.workspaceId!==String(userProfileWorkspace(user)))throw new Error('Message not found in this workspace.');
+ if(canvas&&message.data.test!==true)canvasRuntimeUserExited(canvas.id,userId,typeof message.data.canvasRunId==='string'?message.data.canvasRunId:undefined);
+ if(!['impression','read','clicked','dismissed'].includes(event))throw new Error('Unsupported message receipt.');
+ if(event==='dismissed')updateResource(message.id,{status:'Dismissed'});
+ const eventType=event==='impression'?'delivered':event==='read'?'opened':event,ownerId=String(message.data.campaignId),channel=String(message.data.channel);
+ const duplicate=db().prepare("SELECT id FROM message_events WHERE campaign_id=? AND user_id=? AND event_type=? AND json_extract(data_json,'$.sdkMessageId')=?").get(ownerId,userId,eventType,message.id);
+ if(!duplicate){const id=uid('evt'),at=now(),data={sdkMessageId:message.id,sdkEvent:event,variantId:message.data.variantId,test:message.data.test===true,...(canvas?{canvasId:canvas.id,nodeId:message.data.nodeId,canvasRunId:message.data.canvasRunId,workspaceId:canvas.workspaceId}:{})};db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(id,ownerId,channel,userId,eventType,at,JSON.stringify(data));ingestCanvasMessageFact({id,ownerId,channel,userId,event:eventType,at,data});}
+ return{recorded:true,event:eventType};
+}
 
 function mapUser(row: Record<string, unknown>): UserRecord {
   return { id: String(row.id), email: String(row.email), firstName: String(row.first_name), country: String(row.country), lifecycle: String(row.lifecycle), subscribed: Boolean(row.subscribed), emailSubscriptionStatus: String(row.email_subscription_status ?? (row.subscribed ? "subscribed" : "unsubscribed")) as UserRecord["emailSubscriptionStatus"], reachable: Boolean(row.reachable), attributes: parseJson(String(row.attributes_json), {}) };
@@ -1064,11 +1107,14 @@ export function setUserSubscription(id: string, subscribed: boolean) {
 }
 
 export function setUserEmailSubscriptionStatus(id: string, status: UserRecord["emailSubscriptionStatus"]) {
+  const before=getUser(id);
   const result = db().prepare("UPDATE users SET subscribed = ?, email_subscription_status = ? WHERE id = ?").run(status === "unsubscribed" ? 0 : 1, status, id);
   if (!result.changes) return null;
   audit("user", id, "subscription_changed", { status });
   const row = db().prepare("SELECT * FROM users WHERE id = ?").get(id) as Record<string, unknown>;
-  return mapUser(row);
+  const after=mapUser(row);
+  if(before)for(const event of canvasProfileRuntimeChanges(before,after,{id:uid('profile_change'),workspaceId:String(userProfileWorkspace(after)),userId:id,at:now(),updateSource:'api'}))ingestCanvasRuntimeEvent(event);
+  return after;
 }
 
 const userField = (row: Record<string, string>, ...keys: string[]) => {
@@ -1184,9 +1230,12 @@ export function listSubscriptionMembers(groupId: string, input: { q?: string; st
 
 export function setSubscriptionMember(groupId: string, userId: string, state: SubscriptionState) {
   if (!getSubscriptionGroup(groupId) || !getUser(userId)) return null;
+  if(audienceSubscriptionGroupWorkspace(groupId)!==String(userProfileWorkspace(getUser(userId)!)))throw new Error('The user and subscription group must belong to the same workspace.');
+  const previous=db().prepare('SELECT state FROM subscription_group_memberships WHERE group_id=? AND user_id=?').get(groupId,userId) as {state:string}|undefined;
   const timestamp = now();
   db().prepare("INSERT INTO subscription_group_memberships VALUES (?, ?, ?, ?) ON CONFLICT(group_id,user_id) DO UPDATE SET state=excluded.state, updated_at=excluded.updated_at").run(groupId, userId, state, timestamp);
   audit("subscription_group", groupId, "member_subscription_changed", { userId, state });
+  if(previous?.state!==state)ingestCanvasRuntimeEvent({id:uid('membership_change'),workspaceId:audienceSubscriptionGroupWorkspace(groupId),userId,at:timestamp,kind:'subscription_group',subscriptionGroupId:groupId,subscriptionType:getSubscriptionGroup(groupId)!.channel.toLowerCase(),subscriptionState:state,previousValue:previous?.state,value:state,updateSource:'api'});
   return { groupId, userId, state, updatedAt: timestamp };
 }
 
@@ -1484,7 +1533,7 @@ export async function launchCampaign(id: string, approvedParentId?: string, mess
       : isSuppressed(user.email)||audienceSuppressions.length ? "suppressed"
       : inControl ? "control"
       : (campaign.channel === "webhook" ? webhookProcessed : delivered+prepared+accepted+available) >= maxUsers ? "held_back"
-      : quietDeferred || workspaceRateLimited(timestamp) ? "deferred"
+      : quietDeferred || workspaceRateLimited(timestamp,0,String(campaign.config.workspaceId??'local')) ? "deferred"
       : "delivered";
     const frequencyOptions=frequencyPolicy({...campaign.config,...objectValue(campaign.config.delivery)});
     const frequencyContext:FrequencyDispatch={workspaceId:String(campaign.config.workspaceId??'local'),userId:user.id,entityType:'campaign',entityId:id,channel:campaign.channel,dispatchId:`${frequencyGroupId??runId}:${user.id}`,timestamp,obey:frequencyOptions.frequencyCapping,count:!frequencyOptions.excludeFromFrequencyCount};
@@ -1745,19 +1794,33 @@ export function prepareWhatsAppTest(input: unknown) {
   return { id: record.id, tests, capability: { mode: "simulation", delivered: false } };
 }
 
-// API campaigns receive externally-sent message events for attribution.
+function ingestCanvasMessageFact(input:{id:string;ownerId:string;userId:string;channel:string;event:string;at:string;data?:Record<string,unknown>}){
+ const user=getUser(input.userId),canvas=getCanvas(input.ownerId),campaign=getCampaign(input.ownerId);if(!user)return;
+ const workspaceId=canvas?.workspaceId??String(campaign?.config.workspaceId??'local');if(workspaceId!==String(userProfileWorkspace(user)))return;
+ const event=canvasMessageRuntimeEvent({id:input.id,workspaceId,userId:user.id,campaignId:input.ownerId,channel:input.channel,event:input.event,at:input.at,...(canvas?{canvasId:canvas.id}:{}),nodeId:typeof input.data?.nodeId==='string'?input.data.nodeId:undefined,data:input.data});
+ if(event)ingestCanvasRuntimeEvent(event);
+}
+
+// Provider and SDK receipts feed attribution and scoped Canvas action triggers.
 export function recordExternalEvent(campaignId: string, input: { userId?: string; event?: string; attributes?: Record<string, unknown> }) {
-  const campaign = getCampaign(campaignId);
-  if (!campaign) throw new Error("Campaign not found");
+  const campaign = getCampaign(campaignId),canvas=getCanvas(campaignId);
+  if (!campaign&&!canvas) throw new Error("Campaign or Canvas not found");
   const allowed = ["sent", "delivered", "impression", "impressed", "opened", "clicked", "dismissed", "replied", "conversion", "failed"];
   const event = allowed.includes(String(input.event)) ? String(input.event) : null;
   if (!event) throw new Error(`event must be one of: ${allowed.join(", ")}`);
   const userId = String(input.userId ?? "").trim() || "external_user";
   const timestamp = now();
   const attributes = input.attributes ?? {};
+  const profile=getUser(userId),workspaceId=canvas?.workspaceId??String(campaign!.config.workspaceId??'local');
+  if(canvas&&!profile||profile&&String(userProfileWorkspace(profile))!==workspaceId)throw new Error('Choose a user from this message workspace.');
+  const node=canvas?canvasGraph(canvasResource(canvas.id)!).nodes.find(node=>node.id===attributes.nodeId&&['message','optimizer'].includes(node.kind)):null;
+  if(canvas&&!node)throw new Error('Choose a message step from this Canvas.');
+  const channel=campaign?.channel??String(node!.config?.channel??'email'),eventId=uid('evt');
   const bot = event === "clicked" && isBotClick(attributes);
   const filtered = bot && getEmailPreferences().data.removeBotClicks;
-  db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), campaignId, campaign.channel, userId, filtered ? "bot_clicked" : event, timestamp, JSON.stringify({ external: true, bot, filtered, attributes }));
+  const data={external:true,bot,filtered,test:attributes.test===true,seed:attributes.seed===true,attributes,workspaceId,...(canvas?{canvasId:canvas.id,nodeId:node!.id}:{})};
+  db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(eventId, campaignId, channel, userId, filtered ? "bot_clicked" : event, timestamp, JSON.stringify(data));
+  ingestCanvasMessageFact({id:eventId,ownerId:campaignId,userId,channel,event:filtered?'bot_clicked':event,at:timestamp,data});
   if (event === "clicked" && !filtered && typeof attributes.alias === "string") {
     const alias = listResources("link-aliases").find(row => row.name === attributes.alias && row.data.campaignId === campaignId && row.status === "Active");
     const user = getUser(userId); if (alias && user) {
@@ -1765,10 +1828,10 @@ export function recordExternalEvent(campaignId: string, input: { userId?: string
       db().prepare("UPDATE users SET attributes_json = ? WHERE id = ?").run(JSON.stringify({ ...user.attributes, recentLinkClicks: [{ alias: alias.name, url: alias.data.url, clickedAt: timestamp }, ...clicks].slice(0,100) }), userId);
     }
   }
-  if(!filtered&&!["conversion","failed","sent","delivered"].includes(event))attributeCampaignConversions(userId,{name:event,properties:{...attributes,campaignId}},uid("external"),timestamp);
-  evaluateCampaignMonitoring(campaignId);
-  audit("campaign", campaignId, "external_event", { userId, event });
-  return { recorded: true, campaign: campaign.name, event, userId, createdAt: timestamp };
+  if(!filtered&&attributes.test!==true&&attributes.seed!==true&&!["conversion","failed","sent","delivered"].includes(event))attributeCampaignConversions(userId,{name:event,properties:{...attributes,campaignId}},eventId,timestamp);
+  if(campaign)evaluateCampaignMonitoring(campaignId);
+  audit(canvas?'canvas':"campaign", campaignId, "external_event", { userId, event });
+  return { recorded: true, campaign: campaign?.name??canvas!.name, event, userId, createdAt: timestamp };
 }
 
 export function listWebhookAttempts(campaignId?: string, limit = 100) {
@@ -1929,12 +1992,32 @@ function canvasRecord(resource: ResourceRecord): CanvasRecord {
 }
 export function listCanvases(workspaceId="local") { return listResources("canvas").filter(resource=>String(resource.data.workspaceId??"local")===workspaceId).map(canvasRecord); }
 export function getCanvas(id: string) { const resource = canvasResource(id); return resource ? canvasRecord(resource) : null; }
+export function importCanvasBrowserDraft(input:unknown,workspaceId:string){
+ const draft=objectValue(input),source=objectValue(draft.canvas);
+ if(!workspaceId||String(source.workspaceId??'local')!==workspaceId)throw new Error('Import a browser draft from the selected workspace.');
+ if(typeof source.id!=='string'||!source.id||source.id.length>200||typeof source.name!=='string'||!isCanvasGraph(draft.graph)||draft.graph.nodes.length>1000||draft.graph.edges.length>5000)throw new Error('The browser draft is invalid or too large.');
+ const graph=draft.graph;
+ return workspaceTransaction(()=>{
+  const ledger=new CanvasRuntimePersistence(db()),key=[source.id as string],prior=ledger.get('browser_import',workspaceId,'browser-drafts',key),existing=prior?getCanvas(String(prior.data.serverCanvasId)):null;
+  if(existing)return existing;
+  const names=new Set(listCanvases(workspaceId).filter(canvas=>canvas.status!=='Archived').map(canvas=>canvas.name.toLowerCase()));
+  let name=source.name as string,index=1;while(names.has(name.toLowerCase())){const suffix=` (imported${index>1?' '+index:''})`;name=(source.name as string).slice(0,120-suffix.length)+suffix;index++;}
+  const imported=createCanvas({workspaceId,name,description:typeof source.description==='string'?source.description:'',tags:Array.isArray(source.tags)?source.tags.filter((tag):tag is string=>typeof tag==='string'):[],wizard:normalizeCanvasWizard(source.wizard),graph:structuredClone(graph)});
+  ledger.put('browser_import',workspaceId,'browser-drafts',key,{serverCanvasId:imported.id,sourceId:source.id,importedAt:now()});
+  return imported;
+ });
+}
 export function createCanvas(input: { name: string; description?: string; tags?: string[]; graph?: CanvasGraph; wizard?: CanvasWizardConfig; workspaceId?:string }){ return workspaceTransaction(()=>createCanvasRecord(input)); }
 function createCanvasRecord(input: { name: string; description?: string; tags?: string[]; graph?: CanvasGraph; wizard?: CanvasWizardConfig; workspaceId?:string }) {
   validateFrequencyAssignment(db(),input.workspaceId??"local",objectValue(input.wizard?.send));
   const name = input.name.trim();
   if (!name || name.length > 120) throw new Error("Canvas name must be 1–120 characters.");
   if (listCanvases(input.workspaceId??"local").some(item => item.name.toLowerCase() === name.toLowerCase() && item.status !== "Archived")) throw new Error("A Canvas with this name already exists.");
+  for(const node of input.graph?.nodes??[]){
+    if(node.config?.linkedCampaignId===undefined)continue;
+    const campaign=typeof node.config.linkedCampaignId==='string'?getCampaign(node.config.linkedCampaignId):null;
+    if(!campaign||String(campaign.config.workspaceId??'local')!==(input.workspaceId??'local')||campaign.channel!==node.config.channel)throw new Error('Choose a linked Campaign from this Canvas workspace with the same message channel.');
+  }
   const timestamp = now();
   const resource: ResourceRecord = { id: crypto.randomUUID(), type: "canvas", name, status: "Draft", description: input.description?.trim() ?? "", updatedAt: timestamp,
     data: { ...(input.graph ?? structuredClone(initialCanvasGraph)), workspaceId:input.workspaceId??"local", createdAt: timestamp, createdBy: "Local workspace", lastEditedBy: "Local workspace", tags: assignTags(db(), input.tags, "canvas",input.workspaceId??"local"), experience: "Canvas Flow", targetSegment: "All Users", alertsConfigured: false, wizard: input.wizard ?? structuredClone(defaultCanvasWizard) } };
@@ -1949,7 +2032,7 @@ export function updateCanvas(id: string, input: { name?: string; description?: s
   if (!name || name.length > 120) throw new Error("Canvas name must be 1–120 characters.");
   if (input.status && !["Draft", "Active", "Stopped", "Archived", "Idle"].includes(input.status)) throw new Error("Invalid Canvas status.");
   if (input.tags && (!Array.isArray(input.tags) || input.tags.some(tag => typeof tag !== "string"))) throw new Error("Invalid tags.");
-  if (existing.status === "Active" && input.wizard && JSON.stringify(normalizeCanvasWizard(input.wizard).conversionEvents) !== JSON.stringify(normalizeCanvasWizard(existing.data.wizard).conversionEvents)) throw new Error("Conversion events cannot be changed after a Canvas has launched.");
+  if ((existing.status === "Active"||existing.data.firstLaunchedAt||db().prepare('SELECT 1 FROM canvas_runs WHERE canvas_id=? LIMIT 1').get(id)) && input.wizard && JSON.stringify(normalizeCanvasWizard(input.wizard).conversionEvents) !== JSON.stringify(normalizeCanvasWizard(existing.data.wizard).conversionEvents)) throw new Error("Conversion events cannot be changed after a Canvas has launched.");
   if (listCanvases(String(existing.data.workspaceId??"local")).some(item => item.id !== id && item.name.toLowerCase() === name.toLowerCase() && item.status !== "Archived")) throw new Error("A Canvas with this name already exists.");
   return canvasRecord(updateResource(id, { name, description: input.description ?? existing.description, status: input.status ?? existing.status,
     data: { ...existing.data, tags: input.tags ?? existing.data.tags ?? [], alertsConfigured: input.alertsConfigured ?? existing.data.alertsConfigured ?? false,
@@ -1977,11 +2060,11 @@ export function copyCanvasToWorkspace(id:string,targetWorkspaceId:string){
  const result=createCanvas({name,description:source.description,workspaceId:target.id,graph,wizard,tags:[]});
  audit('canvas',result.id,'copied_to_workspace',{sourceCanvasId:id,sourceWorkspaceId:source.data.workspaceId??'local',targetWorkspaceId:target.id});return result;
 }
-function resolveCanvasLinkedMessages(graph: CanvasGraph): CanvasGraph {
+function resolveCanvasLinkedMessages(graph: CanvasGraph,workspaceId:string): CanvasGraph {
   return { ...graph, nodes: graph.nodes.map(node => {
     if (node.kind !== "message" || !node.config?.linkedCampaignId) return node;
     const campaign = getCampaign(node.config.linkedCampaignId);
-    if (!campaign || campaign.channel !== node.config.channel) return node;
+    if (!campaign || campaign.channel !== node.config.channel || String(campaign.config.workspaceId??'local')!==workspaceId) return node;
     return { ...node, config: { ...node.config, ...campaign.config, subject: campaign.subject ?? node.config.subject, message: campaign.body ?? node.config.message, linkedCampaignId: campaign.id } };
   }) };
 }
@@ -1992,7 +2075,7 @@ export function getCanvasWorkspace(canvasId = localCanvasId) {
     const due = db().prepare("SELECT min(due_at) AS due_at FROM canvas_pending_steps WHERE run_id = ?").get(String(row.id)) as { due_at: string | null };
     return { id: String(row.id), createdAt: String(row.created_at), entered: Number(row.entered_count), completed: Number(row.completed_count), messages: Number(row.message_count), traces: parseJson(String(row.traces_json), [] as CanvasTrace[]), nextDueAt: due.due_at };
   });
-  return { graph: resource ? resolveCanvasLinkedMessages(canvasGraph(resource)) : null, updatedAt: resource?.updatedAt ?? null, runs, canvas: resource ? canvasRecord(resource) : null };
+  return { graph: resource ? resolveCanvasLinkedMessages(canvasGraph(resource),String(resource.data.workspaceId??'local')) : null, updatedAt: resource?.updatedAt ?? null, runs, canvas: resource ? canvasRecord(resource) : null };
 }
 
 export function saveCanvasGraph(graph: CanvasGraph, expectedUpdatedAt?: string | null, canvasId = localCanvasId) {
@@ -2000,7 +2083,7 @@ export function saveCanvasGraph(graph: CanvasGraph, expectedUpdatedAt?: string |
   if (existing && expectedUpdatedAt !== undefined && expectedUpdatedAt !== existing.updatedAt) throw new Error("Canvas draft changed in another tab. Reload before saving.");
   if(existing)for(const node of graph.nodes){if(!node.config?.linkedCampaignId)continue;const campaign=getCampaign(node.config.linkedCampaignId);if(!campaign||String(campaign.config.workspaceId??'local')!==String(existing.data.workspaceId??'local'))throw new Error('Choose a linked Campaign from this Canvas workspace.');}
   if(existing&&JSON.stringify(canvasGraph(existing))!==JSON.stringify(graph))createResource({type:'canvas-versions',name:existing.name,status:'Saved',data:{canvasId,workspaceId:String(existing.data.workspaceId??'local'),savedAt:existing.updatedAt,graph:structuredClone(canvasGraph(existing))}});
-  graph = resolveCanvasLinkedMessages({ ...graph, nodes: graph.nodes.map(node => node.kind === "message" && node.config?.channel === "email" ? { ...node, config: { ...emailPreferenceCampaignDefaults(getEmailPreferences().data), ...((existing?.data as unknown as CanvasGraph)?.nodes?.find(saved => saved.id === node.id)?.config ?? {}), ...node.config } } : node) });
+  graph = resolveCanvasLinkedMessages({ ...graph, nodes: graph.nodes.map(node => node.kind === "message" && node.config?.channel === "email" ? { ...node, config: { ...emailPreferenceCampaignDefaults(getEmailPreferences().data), ...((existing?.data as unknown as CanvasGraph)?.nodes?.find(saved => saved.id === node.id)?.config ?? {}), ...node.config } } : node) },String(existing?.data.workspaceId??'local'));
   const updatedAt = now();
   if (!existing && canvasId !== localCanvasId) throw new Error("Canvas not found.");
   db().prepare("INSERT INTO resources VALUES (?, 'canvas', ?, 'Draft', ?, ?, ?) ON CONFLICT(id) DO UPDATE SET updated_at=excluded.updated_at, data_json=excluded.data_json")
@@ -2024,9 +2107,9 @@ function canvasStepAudienceMatches(config:NonNullable<CanvasNode['config']>,user
  const groupResults=groups.filter(group=>group.rules.length).map(group=>{const matches=group.rules.map(rule=>configuredAudienceRuleMatches(user.id,rule,workspaceId));const result=group.operator==='OR'?matches.some(Boolean):matches.every(Boolean);return group.exclude?!result:result;});
  return [...segmentResults,...groupResults].every(Boolean);
 }
-function canvasStepContextValues(user:UserRecord,config:NonNullable<CanvasNode['config']>,prior:Record<string,unknown>={}){
- const result:Record<string,unknown>={},render=(value:string)=>resolveLiquidPreview(value.replace(/\{\{\s*canvas_context\.([a-zA-Z0-9_]+)\s*\}\}/g,(_,key)=>{const item={...prior,...result}[key];return typeof item==='object'?JSON.stringify(item):String(item??'');}),{...user.attributes,first_name:user.firstName,user_id:user.id,email:user.email,country:user.country},'en',emailWorkspaceLiquid(),true);
- for(const variable of (Array.isArray(config.contextVariables)?config.contextVariables:[]) as CanvasContextVariable[]){const value=render(variable.value);try{let typed:unknown=value;if(variable.type==='Number'){if(!value.trim()||!Number.isFinite(Number(value)))continue;typed=Number(value);}else if(variable.type==='Boolean'){if(!['true','false'].includes(value.toLowerCase()))continue;typed=value.toLowerCase()==='true';}else if(variable.type==='Array'||variable.type==='Object'){typed=JSON.parse(value);if(variable.type==='Array'?!Array.isArray(typed):!typed||typeof typed!=='object'||Array.isArray(typed))continue;}else if(variable.type==='Time'){if(!Number.isFinite(Date.parse(value)))continue;typed=new Date(value).toISOString();}result[variable.name]=typed;}catch{}}
+function canvasStepContextValues(user:UserRecord,config:NonNullable<CanvasNode['config']>,prior:Record<string,unknown>={},workspaceId=String(userProfileWorkspace(user)),entryProperties:Record<string,unknown>={}){
+ const result:Record<string,unknown>={},render=(value:string)=>resolveLiquidPreview(value.replace(/\{\{\s*canvas_context\.([a-zA-Z0-9_]+)\s*\}\}/g,(_,key)=>{const item={...prior,...result}[key];return typeof item==='object'?JSON.stringify(item):String(item??'');}),{...user.attributes,first_name:user.firstName,user_id:user.id,email:user.email,country:user.country,canvas_entry_properties:entryProperties,canvas_context:{...prior,...result}},'en',emailWorkspaceLiquid(workspaceId),true);
+ for(const variable of (Array.isArray(config.contextVariables)?config.contextVariables:[]) as CanvasContextVariable[]){const value=render(variable.value);let typed:unknown=value;if(variable.type==='Number'){if(!value.trim()||!Number.isFinite(Number(value)))throw new Error(`Context ${variable.name} must be a number.`);typed=Number(value);}else if(variable.type==='Boolean'){if(!['true','false'].includes(value.toLowerCase()))throw new Error(`Context ${variable.name} must be a Boolean.`);typed=value.toLowerCase()==='true';}else if(variable.type==='Array'||variable.type==='Object'){typed=JSON.parse(value);if(variable.type==='Array'?!Array.isArray(typed):!typed||typeof typed!=='object'||Array.isArray(typed))throw new Error(`Context ${variable.name} has an invalid type.`);}else if(variable.type==='Time'){if(!Number.isFinite(Date.parse(value)))throw new Error(`Context ${variable.name} must be a time.`);typed=new Date(value).toISOString();}result[variable.name]=typed;}
  return result;
 }
 export function previewCanvasStep(node:CanvasNode,lookup:string,workspaceId='local'){
@@ -2035,11 +2118,229 @@ export function previewCanvasStep(node:CanvasNode,lookup:string,workspaceId='loc
  const user=record?getUser(record.id):null;if(!user||String(user.attributes.workspaceId??'local')!==workspaceId)return{found:false};
  if(node.kind==='branch')return{found:true,userId:user.id,matches:canvasStepAudienceMatches(node.config??{},user,workspaceId)};
  if(node.kind==='audience_paths'){const paths=Array.isArray(node.config?.paths)?node.config.paths as Array<{id:string;name:string;exit?:boolean;segmentIds?:string[];filterGroups?:AudienceGroup[]}>:[],path=paths.find(path=>path.id!=='everyone_else'&&canvasStepAudienceMatches(path,user,workspaceId))??paths.find(path=>path.id==='everyone_else');return{found:true,userId:user.id,path:path?.name??'No matching group',exit:path?.exit??false};}
- if(node.kind==='update'){const before={...user.attributes,country:user.country,lifecycle:user.lifecycle,subscribed:user.subscribed};return{found:true,userId:user.id,before,after:canvasUpdatedProfile(before,node.config??{},value=>resolveLiquidPreview(value,{...user.attributes,first_name:user.firstName,email:user.email,user_id:user.id},'en',emailWorkspaceLiquid(),true))};}
+ if(node.kind==='update'){const before={...user.attributes,country:user.country,lifecycle:user.lifecycle,subscribed:user.subscribed};return{found:true,userId:user.id,before,after:canvasUpdatedProfile(before,node.config??{},value=>resolveLiquidPreview(value,{...user.attributes,first_name:user.firstName,email:user.email,user_id:user.id},'en',emailWorkspaceLiquid(workspaceId),true))};}
  if(node.kind==='context')return{found:true,userId:user.id,context:canvasStepContextValues(user,node.config??{})};
  throw new Error('Preview is not available until this step has a configured provider.');
 }
+export function searchCanvasTestUsers(workspaceId:string,q=''){
+ const query=`%${q.trim().slice(0,200)}%`;
+ return db().prepare(`SELECT id,email,first_name AS firstName FROM users u WHERE ${audienceProfileWorkspaceSQL('u')}=? AND (id LIKE ? OR email LIKE ? OR first_name LIKE ?) ORDER BY id LIMIT 50`).all(workspaceId,query,query,query) as Array<{id:string;email:string;firstName:string}>;
+}
+function withCanvasPreviewProfile<T>(canvasId:string,userId:string,profile:Record<string,unknown>,action:(user:UserRecord,canvas:CanvasRecord)=>T):T{
+ const canvas=getCanvas(canvasId),user=getUser(userId);if(!canvas||!user||String(userProfileWorkspace(user))!==(canvas.workspaceId??'local'))throw new Error('Choose a test user from this Canvas workspace.');
+ const conn=db(),savepoint=uid('canvas_preview'),attributes={...user.attributes,...profile,workspaceId:canvas.workspaceId??'local'};
+ conn.exec(`SAVEPOINT ${savepoint}`);
+ try{
+  conn.prepare('UPDATE users SET country=?,lifecycle=?,email=?,subscribed=?,reachable=?,email_subscription_status=?,attributes_json=? WHERE id=?').run(String(profile.country??user.country),String(profile.lifecycle??user.lifecycle),String(profile.email??user.email),typeof profile.subscribed==='boolean'?Number(profile.subscribed):Number(user.subscribed),typeof profile.reachable==='boolean'?Number(profile.reachable):Number(user.reachable),['opted_in','subscribed','unsubscribed'].includes(String(profile.emailSubscriptionStatus))?String(profile.emailSubscriptionStatus):user.emailSubscriptionStatus,JSON.stringify(attributes),userId);
+  return action(getUser(userId)!,canvas);
+ }finally{conn.exec(`ROLLBACK TO ${savepoint}; RELEASE ${savepoint}`);}
+}
+export function previewCanvasConditionsOnProfile(canvasId:string,userId:string,config:Record<string,unknown>,profile:Record<string,unknown>){return withCanvasPreviewProfile(canvasId,userId,profile,(user,canvas)=>canvasStepAudienceMatches(config,user,canvas.workspaceId??'local'));}
+export function canvasTestMessageEligibility(canvasId:string,userId:string,node:CanvasNode,profile:Record<string,unknown>,at:string){
+ const canvas=getCanvas(canvasId),user=getUser(userId);if(!canvas||!user||String(userProfileWorkspace(user))!==(canvas.workspaceId??'local'))throw new Error('Choose a test user from this Canvas workspace.');
+ const workspaceId=canvas.workspaceId??'local',channel=String(node.config?.channel??'email'),policy=frequencyPolicy(canvas.wizard.send),ctx:FrequencyDispatch={workspaceId,userId,entityType:'canvas',entityId:canvasId,channel,dispatchId:uid('preview'),timestamp:at,obey:policy.frequencyCapping,count:false};
+ // Initialize the quota ledger outside the rolled-back profile snapshot; no slot is reserved.
+ reserveFrequencyDispatch(ctx);
+ return withCanvasPreviewProfile(canvasId,userId,profile,(current,record)=>{
+  const reasons:string[]=[],send=record.wizard.send,groupId=String(node.config?.subscriptionGroupId??''),group=groupId?getSubscriptionGroup(groupId):null,expected:Record<string,string>={email:'Email',sms:'SMS',whatsapp:'WhatsApp',line:'LINE'};
+  if(!current.reachable)reasons.push('The user is not reachable.');
+  if(heldByGlobalControl(userId,globalControlSettings(workspaceId),record.tags,channel))reasons.push('The user is in the workspace control group.');
+  if(channel==='email'&&(!current.email||send.subscriptionMode!=='all'&&(send.subscriptionMode==='opted_in_only'?current.emailSubscriptionStatus!=='opted_in':current.emailSubscriptionStatus==='unsubscribed')))reasons.push('The user does not meet email subscription eligibility.');
+  if(['sms','whatsapp','line'].includes(channel)&&!groupId)reasons.push('Choose a subscription group for this channel.');
+  if(groupId&&(!group||group.status!=='Active'||group.channel!==expected[channel]||audienceSubscriptionGroupWorkspace(groupId)!==workspaceId||getAudienceUserSubscriptionState(groupId,userId)!=='subscribed'))reasons.push('The user is not subscribed to this channel group.');
+  if(legacySuppressionEntries(workspaceId).some(entry=>current.email.toLowerCase()===entry||current.email.toLowerCase().endsWith('@'+entry))||audienceSuppressionMatches(userId,{workspaceId,channel,tags:record.tags}).length)reasons.push('The user matches a suppression list.');
+  if(!reserveFrequencyDispatch(ctx).allowed)reasons.push('The user has reached a workspace frequency cap.');
+  const quiet=send.quietMode==='workspace'?canvasWorkspaceQuietHours(workspaceId):{start:send.quietStart,end:send.quietEnd},settings={quietHours:send.quietEnabled&&node.config?.messageQuietHours!==false,quietStart:quiet.start,quietEnd:quiet.end};
+  if(send.quietFallback==='abort'&&inQuietHours(new Date(at),settings,String(current.attributes.timezone??current.attributes.time_zone??'UTC')))reasons.push('This message is skipped during quiet hours.');
+  return{eligible:reasons.length===0,reasons};
+ });
+}
+function compileCanvasRuntimeMessage(draft:MessageDraft,user:UserRecord,profile:Record<string,unknown>,test=false):Record<string,unknown>{
+ if(draft.channel==='email')return prepareEmailMessage(draft,user.id,test?'test':'campaign',profile);
+ if(draft.channel==='sms')return compileSms(draft,profile,url=>shortenMessageLink(url,String(draft.id),user.id,typeof draft.config?.nodeId==='string'?draft.config.nodeId:undefined,test),smsWorkspaceVariables(String(draft.config?.workspaceId??'local'),profile,String(draft.id)));
+ if(draft.channel==='push')return compilePush(draft,profile);
+ if(draft.channel==='line')return{messages:compileLineMessages(draft,profile)};
+ if(draft.channel==='content')return compileContentCard(draft,profile);
+ if(draft.channel==='iam')return prepareInAppPreview(inAppVariants(draft)[0],profile);
+ if(draft.channel==='whatsapp'){const variant=normalizeWhatsAppVariants(draft)[0];return prepareWhatsAppMessage(variant,customWhatsAppTemplates(draft),profile);}
+ if(draft.channel==='banner'){const values=objectValue(draft.config?.channelValues);return{html:renderBrazeLiquid(values.editorMode==='html'?String(values.html):creativeHtml((values.rows??[]) as CreativeRow[]),profile),placement:values.placement,priority:values.priority??'Medium'};}
+ return {subject:renderBrazeLiquid(draft.subject??'',profile),body:renderBrazeLiquid(draft.body??'',profile)};
+}
+export async function sendCanvasTestMessages(canvasId:string,preview:import('./canvas-preview').CanvasPreviewResult,recipients:Record<string,string>){
+ const canvas=getCanvas(canvasId),user=getUser(preview.userId);if(!canvas||!user||preview.canvasId!==canvasId||preview.workspaceId!==(canvas.workspaceId??'local')||String(userProfileWorkspace(user))!==preview.workspaceId)throw new Error('Choose a test user from this Canvas workspace.');
+ const graph=canvasGraph(canvasResource(canvasId)!),steps=preview.steps.filter(step=>step.message&&step.eligibility.eligible&&step.status==='passed');
+ for(const step of steps){const node=graph.nodes.find(node=>node.id===step.nodeId);if(!node||!['message','optimizer'].includes(node.kind)||!step.message||String(node.config?.channel)!==step.message.channel)throw new Error('Save the current message configuration before sending a Canvas test.');if(typeof recipients[step.message.channel]!=='string'||!recipients[step.message.channel].trim())throw new Error(`Choose a test recipient for ${step.message.channel}.`);}
+ for(const step of steps){const channel=step.message!.channel;if(['iam','banner','content'].includes(channel)){const recipient=getUser(recipients[channel].trim());if(!recipient||String(userProfileWorkspace(recipient))!==preview.workspaceId)throw new Error(`Choose a ${channel} test recipient user ID from this workspace.`);}}
+ const results:Array<{nodeId:string;channel:string;recipient:string;status:string;mode:string;delivered:boolean;providerId?:string;messageId?:string;reason?:string;error?:string}>=[];
+ for(const step of steps){
+  const message=step.message!,recipient=recipients[message.channel].trim(),node=graph.nodes.find(item=>item.id===step.nodeId)!,profile={...user.attributes,user_id:user.id,first_name:user.firstName,email:user.email,country:user.country,...preview.profileBefore,...objectValue(message.profile),canvas_context:step.context??{}};
+  const authored=node.kind==='optimizer'?canvasOptimizerPreviewDraft(node,message.optimizerSelections??{}):{channel:message.channel,subject:node.config?.subject,body:node.config?.message,config:node.config};
+  const savedDraft:MessageDraft={...authored,id:canvasId,config:{...authored.config,nodeId:node.id,workspaceId:preview.workspaceId}};
+  const variantIndex=message.variantId?campaignVariants(savedDraft).findIndex(variant=>variant.id===message.variantId):0;
+  if(variantIndex<0)throw new Error('The selected message variant no longer exists. Run the Canvas test again.');
+  // Preview text is already rendered. Compile the saved source exactly once with the profile at this step.
+  const draft=variantDraft(savedDraft,variantIndex);
+  try{const prepared=compileCanvasRuntimeMessage(draft,user,profile,true),delivery=await dispatchPreparedMessage(draft,recipient,prepared,true),sdk=delivery.mode==='sdk'?materializeSdkMessage({...draft,config:{...draft.config,test:true,canvasRunId:uid('canvas_test'),canvasNodeId:node.id}},recipient,prepared,canvasId,String(draft.config?.previewVariantId??'test'),true):null;db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,draft.channel,user.id,`test_${delivery.status}`,now(),JSON.stringify({test:true,nodeId:step.nodeId,message:prepared,delivery,workspaceId:preview.workspaceId,...(sdk?{sdkMessageId:sdk.id}:{})}));results.push({nodeId:step.nodeId,channel:draft.channel,recipient,...delivery,...(sdk?{messageId:sdk.id}:{})});}
+  catch(error){results.push({nodeId:step.nodeId,channel:draft.channel,recipient,status:'failed',mode:'provider',delivered:false,error:error instanceof Error?error.message:'Canvas test delivery failed.'});}
+ }
+ return results;
+}
+const canvasEventDrains=new Set<string>();
+function canvasStoredEvents(workspaceId:string,userId:string):CanvasRuntimeEvent[]{return new CanvasRuntimePersistence(db()).list('event',{workspaceId,canvasId:'',userId}).map(row=>row.data.event as CanvasRuntimeEvent).filter(Boolean);}
+function canvasRuntimeExitReason(canvas:ResourceRecord,user:UserRecord,event?:CanvasRuntimeEvent,previousStepId?:string):'exception'|'segment'|'filter'|null{
+ const workspaceId=String(canvas.data.workspaceId??'local');if(userProfileWorkspace(user)!==workspaceId||event&&(event.workspaceId!==workspaceId||event.userId!==user.id))return null;
+ const audience=normalizeCanvasWizard(canvas.data.wizard).audience,details=(audience as typeof audience&{exceptionDetails?:NonNullable<CanvasWizardConfig['entry']['triggerDetails']>}).exceptionDetails??[];
+ if(event){const triggers=audience.exceptions.flatMap((type,index)=>details.some(trigger=>trigger.type===type)?details.filter(trigger=>trigger.type===type):[{id:'exit-'+index,type}]);if(triggers.some(trigger=>canvasTriggerMatches(trigger,event,{workspaceId,userId:user.id,canvasId:canvas.id,previousStepId})))return'exception';}
+ if(audience.exitSegmentIds.some(id=>canvasSegmentMatches(id,user,workspaceId)))return'segment';
+ if(audience.exitFilters.some(filter=>canvasFilterMatches(filter,user,workspaceId)))return'filter';return null;
+}
+function canvasRuntimeDelay(canvasId:string,workspaceId:string,runId:string,userId:string):{dueAt:string;nodeId:string;resumeNodeId:string}|null{
+ const pending=db().prepare('SELECT next_node_id,due_at FROM canvas_pending_steps WHERE run_id=? AND user_id=?').get(runId,userId) as {next_node_id:string;due_at:string}|undefined;if(!pending)return null;
+ const window=new CanvasRuntimePersistence(db()).get('delay-window',workspaceId,canvasId,[runId,userId]);
+ if(window?.status==='Waiting'&&window.data.dueAt===pending.due_at&&window.data.resumeNodeId===pending.next_node_id)return{dueAt:pending.due_at,nodeId:String(window.data.nodeId),resumeNodeId:pending.next_node_id};
+ // Older persisted runs predate delay-window records. A final Delay trace plus its pending
+ // continuation identifies that wait without treating Action Paths or delivery deferrals as Delay.
+ if(window)return null;
+ const row=db().prepare('SELECT traces_json FROM canvas_runs WHERE id=? AND canvas_id=?').get(runId,canvasId) as {traces_json:string}|undefined,last=row?parseJson(row.traces_json,[] as CanvasTrace[]).find(trace=>trace.userId===userId)?.steps.at(-1):undefined;
+ return last?.kind==='delay'?{dueAt:pending.due_at,nodeId:last.nodeId,resumeNodeId:pending.next_node_id}:null;
+}
+function canvasExitRuntimeEnrollment(canvasId:string,workspaceId:string,runId:string,userId:string,timestamp:string,reason:string,eventId?:string){
+ return canvasRuntimeAtomic(()=>{
+  const state=new CanvasRuntimePersistence(db()),old=state.get('enrollment',workspaceId,canvasId,[runId,userId]);if(!old)return false;
+  db().prepare('UPDATE resources SET status=status WHERE id=?').run(old.id);
+  const current=state.get('enrollment',workspaceId,canvasId,[runId,userId])!;
+  const delay=canvasRuntimeDelay(canvasId,workspaceId,runId,userId),exitReason=String(current.data.exitReason??reason),exitEventId=current.data.exitEventId as string|undefined??eventId,markedAt=String(current.data.exitMarkedAt??timestamp),pendingUntil=typeof current.data.exitPendingUntil==='string'?current.data.exitPendingUntil:reason==='exception'&&delay&&Date.parse(timestamp)<Date.parse(delay.dueAt)?delay.dueAt:undefined,deferred=Boolean(pendingUntil&&Date.parse(timestamp)<Date.parse(pendingUntil));
+  const resources=db().prepare("SELECT id,type,status,data_json FROM resources WHERE json_extract(data_json,'$.workspaceId')=? AND json_extract(data_json,'$.canvasId')=? AND json_extract(data_json,'$.userId')=? AND (json_extract(data_json,'$.runId')=? OR json_extract(data_json,'$.canvasRunId')=?) AND (type='canvas-runtime-state' AND json_extract(data_json,'$.kind') IN ('delivery','connector') OR type IN ('canvas-sms-deliveries','sdk-messages'))").all(workspaceId,canvasId,userId,runId,runId) as Array<{id:string;type:string;status:string;data_json:string}>;
+  for(const row of resources){const data=parseJson(row.data_json,{} as Record<string,unknown>),sdk=row.type==='sdk-messages',connector=row.type==='canvas-runtime-state'&&data.kind==='connector',cancel=sdk?row.status==='Available':['Pending','Configuration required'].includes(row.status)||connector&&row.status==='Accepted';if(!cancel)continue;
+   if(data.frequencyContext)finishFrequencyDispatch(data.frequencyContext as FrequencyDispatch,false);
+   db().prepare('UPDATE resources SET status=?,updated_at=?,data_json=json_set(data_json,\'$.exitedAt\',?,\'$.exitReason\',?,\'$.exitEventId\',?) WHERE id=? AND status=?').run(sdk?'Removed':'Cancelled',timestamp,timestamp,exitReason,exitEventId??null,row.id,row.status);
+  }
+  if(deferred){if(!current.data.exitMarkedAt){state.put('enrollment',workspaceId,canvasId,[runId,userId],{exitMarkedAt:markedAt,exitPendingUntil:pendingUntil,exitReason,exitEventId:exitEventId??null,completionReason:'Marked to exit after the current Delay ends.'},'Waiting');audit('canvas',canvasId,'user_exit_marked',{runId,userId,workspaceId,reason:exitReason,eventId:exitEventId,deadline:pendingUntil});}return true;}
+  db().prepare('DELETE FROM canvas_pending_steps WHERE run_id=? AND user_id=?').run(runId,userId);
+  const completedAt=pendingUntil??timestamp;
+  if(!current.data.exitedAt)state.put('enrollment',workspaceId,canvasId,[runId,userId],{exitMarkedAt:markedAt,exitedAt:completedAt,exitReason,exitEventId:exitEventId??null,completedAt,completionReason:'Exited by Canvas exit criteria.'},'Completed');
+  if(delay)state.put('delay-window',workspaceId,canvasId,[runId,userId],{completedAt,exitReason},'Completed');
+  if(current.status!=='Completed'){db().prepare('UPDATE canvas_runs SET completed_count=completed_count+1 WHERE id=? AND canvas_id=?').run(runId,canvasId);audit('canvas',canvasId,'user_exited',{runId,userId,workspaceId,reason:exitReason,eventId:exitEventId});}
+  return true;
+ });
+}
+/** Scoped exit guard for live dispatch and SDK reads; entry-audience predicates are deliberately separate. */
+export function canvasRuntimeUserExited(canvasId:string,userId:string,runId?:string,at=now()):boolean{
+ const canvas=canvasResource(canvasId),user=getUser(userId);if(!canvas||!user||String(canvas.data.workspaceId??'local')!==userProfileWorkspace(user))return true;
+ const workspaceId=String(canvas.data.workspaceId??'local'),state=new CanvasRuntimePersistence(db()),records=state.list('enrollment',{workspaceId,canvasId,userId,...(runId?{runId}:{})});let exited=false;
+ for(const record of records){if(!runId&&record.status==='Completed'&&!db().prepare("SELECT 1 FROM resources WHERE type='sdk-messages' AND status='Available' AND json_extract(data_json,'$.workspaceId')=? AND json_extract(data_json,'$.canvasId')=? AND json_extract(data_json,'$.userId')=? AND json_extract(data_json,'$.canvasRunId')=? LIMIT 1").get(workspaceId,canvasId,userId,String(record.data.runId)))continue;if(record.data.exitedAt){exited=true;continue;}
+  if(record.data.exitMarkedAt){if(!record.data.exitPendingUntil||Date.parse(at)>=Date.parse(String(record.data.exitPendingUntil)))canvasExitRuntimeEnrollment(canvasId,workspaceId,String(record.data.runId),userId,at,String(record.data.exitReason??'exception'),typeof record.data.exitEventId==='string'?record.data.exitEventId:undefined);exited=true;continue;}
+  const delay=canvasRuntimeDelay(canvasId,workspaceId,String(record.data.runId),userId);if(delay&&Date.parse(at)<Date.parse(delay.dueAt))continue;
+  const reason=canvasRuntimeExitReason(canvas,user);if(reason){canvasExitRuntimeEnrollment(canvasId,workspaceId,String(record.data.runId),userId,at,reason);exited=true;}}
+ return exited;
+}
+function processCanvasRuntimeExits(timestamp:string,limit:number){
+ const rows=db().prepare("SELECT data_json FROM resources e WHERE e.type='canvas-runtime-state' AND json_extract(e.data_json,'$.kind')='enrollment' AND json_extract(e.data_json,'$.exitedAt') IS NULL AND (e.status IN ('Processing','Waiting','Pending') OR EXISTS(SELECT 1 FROM resources s WHERE s.type='sdk-messages' AND s.status='Available' AND json_extract(s.data_json,'$.workspaceId')=json_extract(e.data_json,'$.workspaceId') AND json_extract(s.data_json,'$.canvasId')=json_extract(e.data_json,'$.canvasId') AND json_extract(s.data_json,'$.userId')=json_extract(e.data_json,'$.userId') AND json_extract(s.data_json,'$.canvasRunId')=json_extract(e.data_json,'$.runId'))) ORDER BY e.id").all() as {data_json:string}[];let exited=0;
+ for(const row of rows){if(exited>=limit)break;const data=parseJson(row.data_json,{} as Record<string,unknown>);if(data.exitMarkedAt&&data.exitPendingUntil&&Date.parse(timestamp)<Date.parse(String(data.exitPendingUntil)))continue;const canvas=canvasResource(String(data.canvasId));if(canvas?.status==='Active'&&String(canvas.data.workspaceId??'local')===data.workspaceId&&canvasRuntimeUserExited(canvas.id,String(data.userId),String(data.runId),timestamp))exited++;}return exited;
+}
+function canvasActionEntryOpen(entry:CanvasWizardConfig['entry'],at:string){
+ const instant=(date:string,time:string)=>canvasNextEntryAt({...entry,type:'scheduled',timing:'designated',frequency:'Once',startDate:date,startTime:time,localTimeZone:false,endEnabled:false},new Date(Date.parse(date+'T00:00:00Z')-172800000).toISOString());
+ const start=entry.startDate?instant(entry.startDate,entry.startTime):null,end=entry.endEnabled&&entry.endDate?instant(entry.endDate,entry.endTime):null;
+ return Boolean(start&&at>=start&&(!entry.endEnabled||end&&at<=end));
+}
+function canvasResumePending(job:{run_id:string;user_id:string;next_node_id:string;due_at:string},at:string){
+ return canvasRuntimeAtomic(()=>{
+  const row=db().prepare('SELECT * FROM canvas_runs WHERE id=?').get(job.run_id) as Record<string,unknown>|undefined;if(!row)return false;
+  const canvas=canvasResource(String(row.canvas_id)),user=getUser(job.user_id);if(!canvas||canvas.status!=='Active'||!user||userProfileWorkspace(user)!==String(canvas.data.workspaceId??'local'))return false;
+  const workspaceId=String(canvas.data.workspaceId??'local'),delay=canvasRuntimeDelay(canvas.id,workspaceId,job.run_id,job.user_id);if(delay&&Date.parse(at)<Date.parse(delay.dueAt))return false;
+  if(canvasRuntimeUserExited(canvas.id,job.user_id,job.run_id,at))return true;
+  const claimed=db().prepare('DELETE FROM canvas_pending_steps WHERE run_id=? AND user_id=? AND next_node_id=? AND due_at=?').run(job.run_id,job.user_id,job.next_node_id,job.due_at);if(!claimed.changes)return false;
+  const graph=parseJson(String(row.snapshot_json),{nodes:[],edges:[]} as CanvasGraph),traces=parseJson(String(row.traces_json),[] as CanvasTrace[]),trace=traces.find(item=>item.userId===job.user_id);
+  if(delay)new CanvasRuntimePersistence(db()).put('delay-window',workspaceId,canvas.id,[job.run_id,job.user_id],{nodeId:delay.nodeId,dueAt:delay.dueAt,resumeNodeId:delay.resumeNodeId,completedAt:at},'Completed');
+  const result=advanceCanvasUser(graph,canvas.id,job.run_id,job.user_id,job.next_node_id,at,trace?.steps??[]),state=new CanvasRuntimePersistence(db());
+  const alreadyCompleted=state.get('enrollment',String(canvas.data.workspaceId??'local'),canvas.id,[job.run_id,job.user_id])?.status==='Completed';
+  if(!alreadyCompleted)state.put('enrollment',String(canvas.data.workspaceId??'local'),canvas.id,[job.run_id,job.user_id],{...(result.completed?{completedAt:at}:{})},result.completed?'Completed':'Waiting');
+  db().prepare('UPDATE canvas_runs SET completed_count=completed_count+?,message_count=message_count+?,traces_json=? WHERE id=?').run(result.completed&&!alreadyCompleted?1:0,result.messages,JSON.stringify(traces),job.run_id);return true;
+ });
+}
+function drainCanvasRuntimeEvents(workspaceId:string,limit=256){
+ if(canvasEventDrains.has(workspaceId))return{entered:0,resumed:0,processed:0};
+ canvasEventDrains.add(workspaceId);const state=new CanvasRuntimePersistence(db());let entered=0,resumed=0,processed=0;
+ try{while(processed<limit){
+  const pendingEvent=db().prepare("SELECT id,data_json FROM resources WHERE type='canvas-runtime-state' AND json_extract(data_json,'$.kind')='event' AND json_extract(data_json,'$.workspaceId')=? AND status='Recorded' ORDER BY json_extract(data_json,'$.event.at'),id LIMIT 1").get(workspaceId) as {id:string;data_json:string}|undefined;
+  const record=pendingEvent?{id:pendingEvent.id,data:parseJson(pendingEvent.data_json,{} as Record<string,unknown>)}:null;if(!record)break;
+  canvasRuntimeAtomic(()=>{
+   if(!db().prepare("UPDATE resources SET status='Processing' WHERE id=? AND status='Recorded'").run(record.id).changes)return;
+   const event=record.data.event as CanvasRuntimeEvent;
+   const exitedCanvases=new Set<string>(),user=getUser(event.userId!);
+   if(user&&userProfileWorkspace(user)===workspaceId)for(const enrollment of state.list('enrollment',{workspaceId,userId:user.id})){
+    const canvas=canvasResource(String(enrollment.data.canvasId));if(!canvas||canvas.status!=='Active'||String(canvas.data.workspaceId??'local')!==workspaceId||event.at<String(enrollment.data.enteredAt))continue;
+    const available=Boolean(db().prepare("SELECT 1 FROM resources WHERE type='sdk-messages' AND status='Available' AND json_extract(data_json,'$.workspaceId')=? AND json_extract(data_json,'$.canvasId')=? AND json_extract(data_json,'$.userId')=? AND json_extract(data_json,'$.canvasRunId')=? LIMIT 1").get(workspaceId,canvas.id,user.id,String(enrollment.data.runId)));
+    if(enrollment.status==='Completed'&&!available)continue;
+    const run=db().prepare('SELECT traces_json FROM canvas_runs WHERE id=? AND canvas_id=?').get(String(enrollment.data.runId),canvas.id) as {traces_json:string}|undefined,trace=run?parseJson(run.traces_json,[] as CanvasTrace[]).find(trace=>trace.userId===user.id):undefined,previous=trace?.steps.slice().reverse().find(step=>['message','optimizer'].includes(step.kind))?.nodeId,reason=canvasRuntimeExitReason(canvas,user,event,previous);
+    const delay=canvasRuntimeDelay(canvas.id,workspaceId,String(enrollment.data.runId),user.id);
+    if(reason&&(reason==='exception'||!delay||Date.parse(event.at)>=Date.parse(delay.dueAt))){canvasExitRuntimeEnrollment(canvas.id,workspaceId,String(enrollment.data.runId),user.id,event.at,reason,event.id);exitedCanvases.add(canvas.id);}
+   }
+   for(const canvas of listResources('canvas').filter(row=>row.status==='Active'&&String(row.data.workspaceId??'local')===workspaceId)){
+    const wizard=normalizeCanvasWizard(canvas.data.wizard),activation=state.get('activation',workspaceId,canvas.id);
+    if(exitedCanvases.has(canvas.id)||wizard.entry.type!=='action'||activation&&event.at<String(activation.data.activatedAt)||!canvasActionEntryOpen(wizard.entry,event.at))continue;
+    const details=wizard.entry.triggerDetails??[],triggers=wizard.entry.triggers.flatMap((type,index)=>details.some(trigger=>trigger.type===type)?details.filter(trigger=>trigger.type===type):[{id:'entry-'+index,type}]);
+    if(triggers.some(trigger=>canvasTriggerMatches(trigger,event,{workspaceId,userId:event.userId,canvasId:canvas.id})))entered+=enterCanvasUsers(canvas.id,{userIds:[event.userId!],at:event.at,properties:event.properties??{},sourceKey:'event:'+event.id}).entered;
+   }
+   const pending=db().prepare('SELECT p.* FROM canvas_pending_steps p JOIN canvas_runs r ON r.id=p.run_id JOIN resources c ON c.id=r.canvas_id WHERE p.user_id=? AND c.status=\'Active\' AND json_extract(c.data_json,\'$.workspaceId\')=?').all(event.userId!,workspaceId) as Array<{run_id:string;user_id:string;next_node_id:string;due_at:string}>;
+   for(const job of pending){const row=db().prepare('SELECT snapshot_json FROM canvas_runs WHERE id=?').get(job.run_id) as {snapshot_json:string};const graph=parseJson(row.snapshot_json,{nodes:[],edges:[]} as CanvasGraph);if(graph.nodes.find(node=>node.id===job.next_node_id)?.kind==='action_paths'&&canvasResumePending(job,event.at))resumed++;}
+   state.put('event',workspaceId,'',[String(event.id)],{processedAt:event.at},'Processed');processed++;
+  });
+ }}finally{canvasEventDrains.delete(workspaceId);}
+ return{entered,resumed,processed};
+}
+export function ingestCanvasRuntimeEvent(event:CanvasRuntimeEvent){
+ const workspaceId=event.workspaceId,userId=event.userId,user=userId?getUser(userId):null;
+ if(!workspaceId||!userId||!user||userProfileWorkspace(user)!==workspaceId||!Number.isFinite(Date.parse(event.at)))throw new Error('Canvas events require an existing user from the selected workspace and a valid timestamp.');
+ if(event.canvasId){const canvas=canvasResource(event.canvasId);if(!canvas||String(canvas.data.workspaceId??'local')!==workspaceId)throw new Error('Choose an event Canvas from the user workspace.');}
+ const id=event.id??createHash('sha256').update(JSON.stringify(event)).digest('hex'),state=new CanvasRuntimePersistence(db());
+ const recorded=state.insertIfAbsent('event',workspaceId,'',[id],{userId,event:{...event,id}},'Recorded');
+ const result=recorded?drainCanvasRuntimeEvents(workspaceId):{entered:0,resumed:0};return{recorded,entered:result.entered,resumed:result.resumed};
+}
+
+function canvasRuntimeMessageFacts(canvasId:string){
+ const rows=db().prepare('SELECT id,user_id,channel,event_type,created_at,data_json FROM message_events WHERE campaign_id=? ORDER BY created_at,id').all(canvasId) as Array<{id:string;user_id:string;channel:string;event_type:string;created_at:string;data_json:string}>;
+ return rows.flatMap(row=>{const data=parseJson(row.data_json,{} as Record<string,unknown>),attributes=objectValue(data.attributes),marked=(value:unknown)=>value===true||value===1||value==='true';if([data,attributes].some(record=>['test','seed','simulated','filtered','bot'].some(key=>marked(record[key]))))return[];return[{...row,data:{...attributes,...data},nodeId:String(data.nodeId??data.canvasNodeId??attributes.nodeId??''),runId:String(data.canvasRunId??data.runId??attributes.canvasRunId??attributes.runId??'')}];});
+}
+function canvasFirstMessageNode(graph:CanvasGraph,start:string|undefined):string|null{
+ const node=graph.nodes.find(node=>node.id===start);return node&&['message','optimizer'].includes(node.kind)?node.id:null;
+}
+function canvasWinningDecision(graph:CanvasGraph,node:CanvasGraph['nodes'][number],workspaceId:string,canvasId:string,timestamp:string){
+ const state=new CanvasRuntimePersistence(db()),existing=state.get('experiment',workspaceId,canvasId,[node.id]);
+ if(existing?.status==='Assigned')return existing.data.decision as ReturnType<typeof canvasWinningPathDecision>;
+ const startedAt=String(existing?.data.startedAt??timestamp),records=state.list('experiment-exposure',{workspaceId,canvasId}).filter(row=>row.data.nodeId===node.id),facts=canvasRuntimeMessageFacts(canvasId),wizard=normalizeCanvasWizard(canvasResource(canvasId)?.data.wizard),legacy=node.config?.conversionEvent,selectedEvent=node.config?.winningPathConversionEventId??(legacy&&!['opens','clicks'].includes(String(legacy))?legacy:undefined),index=selectedEvent?wizard.conversionEvents.findIndex(event=>event.id===selectedEvent):0,metric=String(node.config?.winningPathMetric??(['opens','clicks'].includes(String(legacy))?legacy:'conversion'));
+ const exposures=records.map(row=>({id:row.id,userId:String(row.data.userId),pathId:String(row.data.pathId),at:String(row.data.enteredAt)})),conversions=records.flatMap(row=>facts.filter(fact=>fact.user_id===row.data.userId&&fact.created_at>=String(row.data.enteredAt)&&(!fact.runId||fact.runId===row.data.runId)&&(metric==='conversion'?fact.event_type==='conversion'&&Number(fact.data.conversionIndex??-1)===index:fact.nodeId===row.data.firstMessageNodeId&&(metric==='opens'?['opened','open'].includes(fact.event_type):['clicked','click'].includes(fact.event_type)))).map(fact=>({exposureId:row.id,at:fact.created_at})));
+ const decision=canvasWinningPathDecision(node.config??{},{startedAt,now:timestamp,exposures,conversions});
+ state.put('experiment',workspaceId,canvasId,[node.id],{nodeId:node.id,startedAt,metric,conversionEventId:wizard.conversionEvents[index]?.id??null,decision,graph},decision.status==='assigned'?'Assigned':'Running');return decision;
+}
+function processCanvasWinningPaths(timestamp:string,limit:number){
+ const rows=db().prepare("SELECT data_json FROM resources WHERE type='canvas-runtime-state' AND json_extract(data_json,'$.kind')='experiment' AND status='Running' AND json_extract(data_json,'$.decision.deadline')<=? ORDER BY json_extract(data_json,'$.decision.deadline'),id LIMIT ?").all(timestamp,limit) as {data_json:string}[];let processed=0;
+ for(const row of rows){const data=parseJson(row.data_json,{} as Record<string,unknown>),canvas=canvasResource(String(data.canvasId));if(!canvas||canvas.status!=='Active'||String(canvas.data.workspaceId??'local')!==data.workspaceId)continue;const graph=data.graph as CanvasGraph,node=graph?.nodes?.find(node=>node.id===data.nodeId);if(!node)continue;canvasRuntimeAtomic(()=>{db().prepare('UPDATE resources SET status=status WHERE id=?').run(canvas.id);canvasWinningDecision(graph,node,String(data.workspaceId),canvas.id,timestamp);});processed++;}return processed;
+}
+function canvasOptimizerOutcomes(workspaceId:string,canvasId:string,nodeId:string){
+ const selections=new CanvasRuntimePersistence(db()).list('optimizer-selection',{workspaceId,canvasId}).filter(row=>row.data.nodeId===nodeId),facts=canvasRuntimeMessageFacts(canvasId);
+ return selections.map(row=>{const later=selections.filter(other=>other.data.userId===row.data.userId&&String(other.data.enteredAt)>String(row.data.enteredAt)).map(other=>String(other.data.enteredAt)).sort()[0],events=facts.filter(fact=>fact.user_id===row.data.userId&&fact.nodeId===nodeId&&fact.created_at>=String(row.data.enteredAt)&&(fact.runId?fact.runId===row.data.runId:!later||fact.created_at<later)),exposed=events.some(fact=>['accepted','delivered','impression','impressed'].includes(fact.event_type));return{selections:objectValue(row.data.selections) as Record<string,string>,exposures:exposed?1:0,opens:exposed&&events.some(fact=>['opened','open'].includes(fact.event_type))?1:0,clicks:exposed&&events.some(fact=>['clicked','click'].includes(fact.event_type))?1:0};});
+}
+function canvasMessageRateLimited(canvasId:string,channel:string,timestamp:string,excludeJobId?:string){
+ const send=normalizeCanvasWizard(canvasResource(canvasId)?.data.wizard).send;if(!send.rateEnabled)return false;
+ const names:Record<string,string>={'Email':'email','Push':'push','Push notifications':'push','SMS':'sms','SMS/MMS/RCS':'sms','In-app message':'iam','Content Card':'content','Webhook':'webhook','WhatsApp':'whatsapp','LINE':'line'},limit=send.rateMode==='shared'?send.ratePerMinute:send.channelLimits.find(item=>(names[item.channel]??item.channel)===channel)?.perMinute;if(!limit)return false;
+ const start=new Date(timestamp);start.setUTCSeconds(0,0);const end=new Date(start.getTime()+60000).toISOString(),dispatches=new Set<string>();
+ for(const fact of canvasRuntimeMessageFacts(canvasId).filter(fact=>fact.created_at>=start.toISOString()&&fact.created_at<end&&['accepted','delivered','impression','impressed'].includes(fact.event_type))){if(send.rateMode==='channel'&&fact.channel!==channel)continue;dispatches.add(String(fact.runId&&fact.nodeId?JSON.stringify([fact.runId,fact.nodeId,fact.user_id]):fact.data.jobId??fact.data.frequencyDispatchId??fact.data.sdkMessageId??fact.id));}
+ const processing=db().prepare("SELECT id,data_json FROM resources WHERE ((type='canvas-runtime-state' AND json_extract(data_json,'$.kind')='delivery') OR type='canvas-sms-deliveries') AND json_extract(data_json,'$.canvasId')=? AND status='Processing' AND json_extract(data_json,'$.startedAt')>=? AND id!=?").all(canvasId,start.toISOString(),excludeJobId??'') as Array<{id:string;data_json:string}>;
+ return dispatches.size+processing.filter(row=>send.rateMode!=='channel'||String(parseJson(row.data_json,{} as Record<string,unknown>).channel??'sms')===channel).length>=limit;
+}
+function canvasExperimentAssignment(canvasId:string,workspaceId:string,node:CanvasGraph['nodes'][number],runId:string,userId:string,allocations:Array<{id:string;weight:number}>){
+ const state=new CanvasRuntimePersistence(db()),previous=state.get('path-assignment',workspaceId,canvasId,[node.id,userId]),randomized=node.config?.randomizedPaths===true,old=String(previous?.data.pathId??'');
+ if(!randomized&&allocations.some(path=>path.id===old&&path.weight>0))return old;
+ const assigned=canvasAssignedVariant(`${canvasId}:${node.id}`,randomized?JSON.stringify([userId,runId]):userId,allocations.map(path=>({...path,name:path.id})));
+ if(assigned&&!randomized)state.put('path-assignment',workspaceId,canvasId,[node.id,userId],{nodeId:node.id,userId,pathId:assigned.id},'Assigned');return assigned?.id;
+}
+
 function advanceCanvasUser(graph: CanvasGraph, canvasId: string, runId: string, userId: string, startNodeId: string, timestamp: string, steps: CanvasTrace["steps"]) {
+  const saved=canvasResource(canvasId),workspaceId=String(saved?.data.workspaceId??'local'),userScope=getUser(userId);
+  if(!saved||saved.status!=='Active'||!userScope||userProfileWorkspace(userScope)!==workspaceId)return{completed:true,messages:0};
+  const state=new CanvasRuntimePersistence(db()),enrollment=state.get('enrollment',workspaceId,canvasId,[runId,userId]),entryProperties=objectValue(enrollment?.data.entryProperties);
+  if(canvasRuntimeUserExited(canvasId,userId,runId,timestamp))return{completed:state.get('enrollment',workspaceId,canvasId,[runId,userId])?.status==='Completed',messages:0};
   const globalSettings = globalControlSettings(String(canvasResource(canvasId)?.data.workspaceId??"local"));
   const canvasTags = canvasResource(canvasId)?.data.tags;
   // Also recheck resumed users: enabling holdout must stop pending sends.
@@ -2048,30 +2349,85 @@ function advanceCanvasUser(graph: CanvasGraph, canvasId: string, runId: string, 
   let messages = 0;
   const contextId=`canvas-context:${runId}:${userId}`;
   let runtimeContext=(getResource(contextId)?.data.values??{}) as Record<string,unknown>;
+  let visits=0;
   while (current) {
-    steps.push({ nodeId: current.id, label: current.label, kind: current.kind, at: timestamp });
+    if(canvasRuntimeUserExited(canvasId,userId,runId,timestamp))return{completed:state.get('enrollment',workspaceId,canvasId,[runId,userId])?.status==='Completed',messages};
+    if(++visits>1000)throw new Error('This Canvas exceeded the safe number of consecutive steps. Remove a cycle or add a wait.');
+    if(current.config?.variantId&&current.config.variantId!==enrollment?.data.variantId)throw new Error('A Canvas variant is connected to a step owned by another variant.');
+    if(steps.at(-1)?.nodeId!==current.id)steps.push({ nodeId: current.id, label: current.label, kind: current.kind, at: timestamp });
     const routes = graph.edges.filter(([from]) => from === current!.id);
-    if(current.kind==='context'){const user=getUser(userId);if(user){runtimeContext={...runtimeContext,...canvasStepContextValues(user,current.config??{},runtimeContext)};db().prepare("INSERT INTO resources VALUES (?, 'canvas-context', ?, 'Active', '', ?, ?) ON CONFLICT(id) DO UPDATE SET updated_at=excluded.updated_at,data_json=excluded.data_json").run(contextId,current.label,timestamp,JSON.stringify({canvasId,runId,userId,workspaceId:String(canvasResource(canvasId)?.data.workspaceId??'local'),values:runtimeContext}));}}
+    if(current.kind==='entry'&&graph.variants?.length){const targets=objectValue(current.config?.variantTargets),variantId=String(enrollment?.data.variantId??''),next=current.config?.variantTargets!==undefined?targets[variantId]:routes.length===1?routes[0][1]:undefined;if(typeof next!=='string')throw new Error('Connect the assigned Canvas variant to its entry step.');current=graph.nodes.find(node=>node.id===next);continue;}
+    if(current.kind==='action_paths'){
+      const keys=[runId,userId,current.id],old=state.get('action-window',workspaceId,canvasId,keys),events=canvasStoredEvents(workspaceId,userId);
+      const enteredAt=String(old?.data.enteredAt??timestamp),baseline=old?.data.baselineEventIds as string[]|undefined??events.map(event=>event.id!).filter(Boolean);
+      const decision=canvasActionPathDecision(current.config??{},enteredAt,timestamp,events.filter(event=>!baseline.includes(event.id??'')),{workspaceId,userId,canvasId,previousStepId:steps.slice(0,-1).reverse().find(step=>['message','optimizer'].includes(step.kind))?.nodeId});
+      state.put('action-window',workspaceId,canvasId,keys,{runId,userId,nodeId:current.id,enteredAt,baselineEventIds:baseline,deadline:decision.deadline,pathId:decision.nextPath?.id??null,eventId:decision.eventId??null},decision.status==='waiting'?'Waiting':'Completed');
+      if(decision.status==='waiting'){db().prepare('INSERT INTO canvas_pending_steps VALUES(?,?,?,?) ON CONFLICT(run_id,user_id) DO UPDATE SET next_node_id=excluded.next_node_id,due_at=excluded.due_at').run(runId,userId,current.id,decision.deadline);return{completed:false,messages};}
+      if(!decision.nextPath||decision.nextPath.exit)return{completed:true,messages};
+      const paths=Array.isArray(current.config?.paths)?current.config.paths as Array<{id:string}>:[],index=paths.findIndex(path=>path.id===decision.nextPath!.id);timestamp=decision.at??timestamp;current=graph.nodes.find(node=>node.id===(decision.nextPath?.nextNodeId??routes[index]?.[1]));continue;
+    }
+    if(current.kind==='experiment_paths'&&current.config?.winningPath){
+     const decision=canvasWinningDecision(graph,current,workspaceId,canvasId,timestamp),paths=Array.isArray(current.config.paths)?current.config.paths as Array<{id:string;weight?:number;nextNodeId?:string;exit?:boolean}>:[],keys=[runId,userId,current.id],old=state.get('experiment-exposure',workspaceId,canvasId,keys),delay=Number(current.config.winningPathDelayWeight??0),delayId='\u0000canvas-delay-group';
+     const allocations=decision.status==='assigned'?decision.allocations.map(path=>({id:path.pathId,weight:path.weight})):[...paths.map(path=>({id:path.id,weight:Number(path.weight??0)})),...(delay>0?[{id:delayId,weight:delay}]:[])];
+     const pathId=decision.winnerPathId??(old?.data.pathId as string|undefined)??canvasExperimentAssignment(canvasId,workspaceId,current,runId,userId,allocations);
+     if(pathId===delayId&&decision.status==='waiting'){state.put('experiment-delay',workspaceId,canvasId,keys,{runId,userId,nodeId:current.id,enteredAt:timestamp,deadline:decision.deadline},'Waiting');db().prepare('INSERT INTO canvas_pending_steps VALUES(?,?,?,?) ON CONFLICT(run_id,user_id) DO UPDATE SET next_node_id=excluded.next_node_id,due_at=excluded.due_at').run(runId,userId,current.id,decision.deadline);return{completed:false,messages};}
+     const index=paths.findIndex(path=>path.id===pathId),path=paths[index];if(!path)return{completed:true,messages};const next=path.nextNodeId??routes[index]?.[1];
+     state.insertIfAbsent('experiment-exposure',workspaceId,canvasId,keys,{runId,userId,nodeId:current.id,pathId:path.id,enteredAt:timestamp,firstMessageNodeId:canvasFirstMessageNode(graph,next)},'Exposed');
+     if(state.get('experiment-delay',workspaceId,canvasId,keys))state.put('experiment-delay',workspaceId,canvasId,keys,{pathId:path.id,completedAt:timestamp},'Completed');
+     if(path.id==='control')db().prepare('INSERT INTO message_events VALUES(?,?,?,?,?,?,?)').run(uid('evt'),canvasId,'canvas',userId,'control',timestamp,JSON.stringify({workspaceId,canvasRunId:runId,nodeId:current.id,pathId:path.id,simulated:false}));
+     if(path.exit)return{completed:true,messages};current=graph.nodes.find(node=>node.id===next);continue;
+    }
+    if(current.kind==='optimizer'){
+     const keys=[runId,userId,current.id],old=state.get('optimizer-selection',workspaceId,canvasId,keys),decision=canvasOptimizerDecision(current.config??{},`${canvasId}:${current.id}`,userId,canvasOptimizerOutcomes(workspaceId,canvasId,current.id));
+     if(decision.status==='unavailable')throw new Error(decision.reason??'Configure authored Optimizer components.');
+     const selections=old?objectValue(old.data.selections) as Record<string,string>:decision.selections,draft=canvasOptimizerPreviewDraft(current,selections);
+     if(!old)state.put('optimizer-selection',workspaceId,canvasId,keys,{runId,userId,nodeId:current.id,enteredAt:timestamp,selections,status:decision.status,exposures:decision.exposures,outcomes:decision.outcomes,rate:decision.rate,policy:'Local 30-exposure exploration policy using actual accepted deliveries and receipts.'},'Selected');
+     current={...current,kind:'message',config:{...draft.config,subject:draft.subject,message:draft.body}};
+    }
+    if(current.kind==='feature_flag'){
+     const flag=listResources('feature-flags').find(row=>row.status!=='Archived'&&String(row.data.workspaceId??'local')===workspaceId&&(row.data.flagId===current!.config?.featureFlagId||row.id===current!.config?.featureFlagId));
+     if(!flag)throw new Error('Choose a Feature Flag from this Canvas workspace.');
+     const decision=evaluateFlag(flag.data,getUser(userId)!),id='canvas-flag:'+createHash('sha256').update(JSON.stringify([canvasId,runId,current.id,userId])).digest('hex'),data={workspaceId,canvasId,campaignId:canvasId,runId,nodeId:current.id,userId,flagId:flag.data.flagId,enabled:decision.enabled,properties:decision.properties,assignedAt:timestamp};
+     if(!getResource(id))createResource({id,type:'feature-assignments',name:String(flag.data.flagId),status:'Active',data});
+     state.put('step-result',workspaceId,canvasId,[runId,userId,current.id],{runId,userId,nodeId:current.id,output:decision},'Completed');
+    }
+    if(current.kind==='destination'&&current.config?.destinationType==='canvas'){
+     const target=canvasResource(String(current.config.destinationId)),ancestors=Array.isArray(enrollment?.data.ancestors)?enrollment.data.ancestors as string[]:[];
+     if(!target||target.status!=='Active'||String(target.data.workspaceId??'local')!==workspaceId)throw new Error('Choose an active destination Canvas from this workspace.');
+     if(target.id===canvasId||ancestors.includes(target.id))throw new Error('The destination would create a Canvas enrollment cycle.');
+     const result=enterCanvasUsers(target.id,{at:timestamp,userIds:[userId],properties:entryProperties,sourceKey:`destination:${runId}:${current.id}:${userId}`,ancestors:[...ancestors,canvasId]});
+     state.put('step-result',workspaceId,canvasId,[runId,userId,current.id],{runId,userId,nodeId:current.id,output:{canvasId:target.id,runId:result.id,entered:result.entered}},'Completed');
+    }else if(['agent','audience_sync','destination'].includes(current.kind)){
+     const config={...current.config},kind=current.kind as 'agent'|'audience_sync'|'destination';
+     if(kind==='agent'){
+      const agent=getResource(String(config.agentId));if(!agent||!['canvas-step-agents','data-agents','catalog-agents','ai-decisioning'].includes(agent.type)||agent.status==='Archived'||String(agent.data.workspaceId??'local')!==workspaceId)throw new Error('Choose an agent from this Canvas workspace.');
+      if(typeof agent.data.instructions==='string')config.agentInstructions=agent.data.instructions;else if(typeof agent.data.objective==='string')config.agentInstructions=agent.data.objective;
+     }
+     if(kind==='destination'){
+      const agent=getResource(String(config.destinationId));if(!agent||!['ai-decisioning','cohorts'].includes(agent.type)||agent.type==='cohorts'&&agent.data.provider!=='decisioning_studio_agent'||agent.status==='Archived'||String(agent.data.workspaceId??'local')!==workspaceId)throw new Error('Choose a Decisioning Studio destination from this Canvas workspace.');
+     }
+     for(const key of ['accountId','audienceId'])if(config[key]){const resource=getResource(String(config[key]));if(resource&&String(resource.data.workspaceId??'local')!==workspaceId)throw new Error('Choose audience connector resources from this Canvas workspace.');}
+     state.insertIfAbsent('connector',workspaceId,canvasId,[runId,userId,current.id],{runId,userId,nodeId:current.id,connectorKind:kind,config,context:runtimeContext,entryProperties,resumeNodeId:routes[0]?.[1]??null,dueAt:timestamp,attempts:0},'Pending');
+     return{completed:false,messages};
+    }
+    if(current.kind==='context'){const user=getUser(userId);if(user){runtimeContext={...runtimeContext,...canvasStepContextValues(user,current.config??{},runtimeContext,workspaceId,entryProperties)};db().prepare("INSERT INTO resources VALUES (?, 'canvas-context', ?, 'Active', '', ?, ?) ON CONFLICT(id) DO UPDATE SET updated_at=excluded.updated_at,data_json=excluded.data_json").run(contextId,current.label,timestamp,JSON.stringify({canvasId,runId,userId,workspaceId,values:runtimeContext}));}}
     if (current.kind === "delay" && routes[0]) {
       const delayConfig={...current.config},user=getUser(userId);
-      if(delayConfig.personalizeDelay){const value=resolveLiquidPreview(String(delayConfig.delayExpression??'').replace(/\{\{\s*canvas_context\.([a-zA-Z0-9_]+)\s*\}\}/g,(_,key)=>String(runtimeContext[key]??'')),{...user?.attributes,first_name:user?.firstName,user_id:userId},'en',emailWorkspaceLiquid(),true);if(delayConfig.delayMode==='date')delayConfig.delayDate=value.slice(0,10);else{if(!value.trim()||!Number.isFinite(Number(value))||Number(value)<=0)throw new Error('The personalized delay did not return a positive number.');delayConfig.delayValue=Number(value);}}
+      if(delayConfig.personalizeDelay){const value=resolveLiquidPreview(String(delayConfig.delayExpression??''),{...user?.attributes,first_name:user?.firstName,user_id:userId,canvas_context:runtimeContext,canvas_entry_properties:entryProperties},'en',emailWorkspaceLiquid(workspaceId),true);if(delayConfig.delayMode==='date')delayConfig.delayDate=value.slice(0,10);else{if(!value.trim()||!Number.isFinite(Number(value))||Number(value)<=0)throw new Error('The personalized delay did not return a positive number.');delayConfig.delayValue=Number(value);}}
       const dueAt = canvasDelayDue(delayConfig,timestamp,String(user?.attributes.timezone??'UTC'));
-      if(dueAt>timestamp){db().prepare("INSERT INTO canvas_pending_steps VALUES (?, ?, ?, ?) ON CONFLICT(run_id,user_id) DO UPDATE SET next_node_id=excluded.next_node_id, due_at=excluded.due_at").run(runId, userId, routes[0][1], dueAt);return { completed: false, messages };}
+      if(dueAt>timestamp){state.put('delay-window',workspaceId,canvasId,[runId,userId],{runId,userId,nodeId:current.id,enteredAt:timestamp,dueAt,resumeNodeId:routes[0][1]},'Waiting');db().prepare("INSERT INTO canvas_pending_steps VALUES (?, ?, ?, ?) ON CONFLICT(run_id,user_id) DO UPDATE SET next_node_id=excluded.next_node_id, due_at=excluded.due_at").run(runId, userId, routes[0][1], dueAt);return { completed: false, messages };}
     }
-    if(current.kind==='update'&&current.config?.updateMode){
-      const user=getUser(userId);if(user){const before={...user.attributes,country:user.country,lifecycle:user.lifecycle,subscribed:user.subscribed},after=canvasUpdatedProfile(before,current.config,value=>resolveLiquidPreview(value,{...user.attributes,first_name:user.firstName,user_id:user.id,email:user.email},'en',emailWorkspaceLiquid(),true)),{country,lifecycle,subscribed,...attributes}=after;
-       if(subscribed!==undefined&&typeof subscribed!=='boolean')throw new Error('Set subscribed to true or false.');
-       db().prepare('UPDATE users SET country=?,lifecycle=?,attributes_json=? WHERE id=?').run(String(country??''),String(lifecycle??''),JSON.stringify(attributes),userId);if(subscribed!==undefined&&subscribed!==user.subscribed)setUserSubscription(userId,Boolean(subscribed));
-      }
-    }else if (current.kind === "update" && current.config?.attribute) {
-      if (current.config.attribute === "subscribed") {
-        if (current.config.value !== "true" && current.config.value !== "false") throw new Error("Set subscribed to true or false before launching.");
-        setUserSubscription(userId, current.config.value === "true");
-      }
-      else if (current.config.attribute === "country" || current.config.attribute === "lifecycle") db().prepare(`UPDATE users SET ${current.config.attribute} = ? WHERE id = ?`).run(current.config.value ?? "", userId);
-      else {
-        const user = getUser(userId);
-        if (user) db().prepare("UPDATE users SET attributes_json = ? WHERE id = ?").run(JSON.stringify({ ...user.attributes, [current.config.attribute]: current.config.value }), userId);
+    if(current.kind==='update'){
+      const user=getUser(userId);if(user){
+       const before={...user.attributes,first_name:user.firstName,email:user.email,country:user.country,lifecycle:user.lifecycle,subscribed:user.subscribed,email_subscription_status:user.emailSubscriptionStatus};
+       const after=canvasUpdatedProfile(before,current.config??{},value=>resolveLiquidPreview(value,{...before,user_id:user.id,canvas_context:runtimeContext,canvas_entry_properties:entryProperties},'en',emailWorkspaceLiquid(workspaceId),true));
+       if(after.subscribed!==undefined&&typeof after.subscribed!=='boolean')throw new Error('Set subscribed to true or false.');
+       let status=String(after.emailSubscriptionStatus??after.email_subscription_status??user.emailSubscriptionStatus);
+       if(after.subscribed!==undefined&&after.subscribed!==user.subscribed&&status===user.emailSubscriptionStatus)status=after.subscribed?'subscribed':'unsubscribed';
+       if(!['opted_in','subscribed','unsubscribed'].includes(status))throw new Error('Choose a valid email subscription state.');
+       const {country,lifecycle,email,first_name,subscribed:ignored,email_subscription_status:ignoredStatus,emailSubscriptionStatus:ignoredCamel,...attributes}=after;
+       db().prepare('UPDATE users SET country=?,lifecycle=?,email=?,first_name=?,subscribed=?,email_subscription_status=?,attributes_json=? WHERE id=?').run(String(country??''),String(lifecycle??''),String(email??''),String(first_name??''),status==='unsubscribed'?0:1,status,JSON.stringify(attributes),userId);
+       const changed=getUser(userId)!;for(const event of canvasProfileRuntimeChanges(user as unknown as Record<string,unknown>,changed as unknown as Record<string,unknown>,{id:`canvas-update:${runId}:${current.id}:${userId}`,workspaceId,userId,at:timestamp,updateSource:'Canvas User Update Step'}))ingestCanvasRuntimeEvent(event);
       }
     }
     if (current.kind === "message") {
@@ -2112,7 +2468,7 @@ function advanceCanvasUser(graph: CanvasGraph, canvasId: string, runId: string, 
         }
         if(String(timing.data.dueAt)>timestamp){const dueAt=String(timing.data.dueAt);db().prepare('INSERT INTO canvas_pending_steps VALUES (?,?,?,?) ON CONFLICT(run_id,user_id) DO UPDATE SET next_node_id=excluded.next_node_id,due_at=excluded.due_at').run(runId,userId,current.id,dueAt);db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,channel,userId,'deferred',timestamp,JSON.stringify({canvasRunId:runId,nodeId:current.id,reason:'intelligent_timing',dueAt,simulated:true}));return{completed:false,messages};}
       }
-      if (eligible && workspaceRateLimited(timestamp)) {
+      if (eligible && workspaceRateLimited(timestamp,0,workspaceId)) {
         const dueAt = new Date(new Date(timestamp).getTime() + 60000).toISOString();
         db().prepare("INSERT INTO canvas_pending_steps VALUES (?, ?, ?, ?) ON CONFLICT(run_id,user_id) DO UPDATE SET next_node_id=excluded.next_node_id, due_at=excluded.due_at").run(runId, userId, current.id, dueAt);
         db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), canvasId, channel, userId, "deferred", timestamp, JSON.stringify({ canvasRunId: runId, nodeId: current.id, reason: "workspace_rate_limit", dueAt }));
@@ -2131,12 +2487,8 @@ function advanceCanvasUser(graph: CanvasGraph, canvasId: string, runId: string, 
        const dueAt=nextAllowedDeliveryTime(new Date(timestamp),quiet,String(user?.attributes.timezone??'UTC')).toISOString();db().prepare("INSERT INTO canvas_pending_steps VALUES (?, ?, ?, ?) ON CONFLICT(run_id,user_id) DO UPDATE SET next_node_id=excluded.next_node_id,due_at=excluded.due_at").run(runId,userId,current.id,dueAt);
        db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,channel,userId,'deferred',timestamp,JSON.stringify({canvasRunId:runId,nodeId:current.id,reason:'quiet_hours',dueAt,simulated:true}));return{completed:false,messages};
       }
-      if(eligible&&!frequencyHeld&&!quietActive&&send.rateEnabled){
-       const names:Record<string,string>={'Email':'email','Push':'push','Push notifications':'push','SMS':'sms','SMS/MMS/RCS':'sms','In-app message':'iam','Content Card':'content','Webhook':'webhook','WhatsApp':'whatsapp','LINE':'line'};
-       const limit=send.rateMode==='shared'?send.ratePerMinute:send.channelLimits.find(item=>(names[item.channel]??item.channel)===channel)?.perMinute;
-       if(limit){const start=new Date(timestamp);start.setUTCSeconds(0,0);const dueAt=new Date(start.getTime()+60000).toISOString();const sent=db().prepare(`SELECT count(*) AS n FROM message_events WHERE campaign_id=? AND event_type='delivered' AND created_at>=? AND created_at<? ${send.rateMode==='channel'?'AND channel=?':''}`).get(canvasId,start.toISOString(),dueAt,...(send.rateMode==='channel'?[channel]:[])) as {n:number};
-        if(sent.n>=limit){finishFrequencyDispatch(frequencyContext,false);db().prepare("INSERT INTO canvas_pending_steps VALUES (?, ?, ?, ?) ON CONFLICT(run_id,user_id) DO UPDATE SET next_node_id=excluded.next_node_id,due_at=excluded.due_at").run(runId,userId,current.id,dueAt);db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,channel,userId,'deferred',timestamp,JSON.stringify({canvasRunId:runId,nodeId:current.id,reason:'canvas_rate_limit',dueAt,simulated:true}));return{completed:false,messages};}
-       }
+      if(eligible&&!frequencyHeld&&!quietActive&&canvasMessageRateLimited(canvasId,channel,timestamp)){
+       const start=new Date(timestamp);start.setUTCSeconds(0,0);const dueAt=new Date(start.getTime()+60000).toISOString();finishFrequencyDispatch(frequencyContext,false);db().prepare('INSERT INTO canvas_pending_steps VALUES(?,?,?,?) ON CONFLICT(run_id,user_id) DO UPDATE SET next_node_id=excluded.next_node_id,due_at=excluded.due_at').run(runId,userId,current.id,dueAt);return{completed:false,messages};
       }
       if(eligible&&channel!=='iam'&&!frequencyHeld&&!quietActive&&delivery.deliveryValidationEnabled&&user&&!canvasStepAudienceMatches({segmentIds:delivery.deliverySegmentIds,filterGroups:delivery.deliveryFilterGroups},user,messageWorkspace)){
         db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,channel,userId,'suppressed',timestamp,JSON.stringify({canvasRunId:runId,nodeId:current.id,reason:'delivery_validation',behavior:delivery.deliveryFailure,simulated:true}));
@@ -2151,9 +2503,9 @@ function advanceCanvasUser(graph: CanvasGraph, canvasId: string, runId: string, 
       if(eventType==='delivered'&&channel==='sms'){
         try{
           const snapshot=normalizeSmsSnapshot({message:current.config?.message??'',subscriptionGroupId:groupId??'',values:{appendStop:false,...objectValue(current.config?.channelValues)}}),issues=[...smsCapabilityIssues(snapshot,group),...channelConfigurationIssues(smsSnapshotDraft(snapshot,workspaceId,canvasId))];if(issues.length)throw new Error(issues.join(' '));
-          const profile:Record<string,unknown>={...smsProfile(user),canvas_context:runtimeContext},message=compileSmsSnapshot(snapshot,profile,url=>shortenMessageLink(url,canvasId,userId),smsWorkspaceVariables(workspaceId,profile,canvasId));
+          const profile:Record<string,unknown>={...smsProfile(user),canvas_context:runtimeContext,canvas_entry_properties:entryProperties},message=compileSmsSnapshot(snapshot,profile,url=>shortenMessageLink(url,canvasId,userId,current!.id),smsWorkspaceVariables(workspaceId,profile,canvasId));
           const capability=messageDeliveryCapability('sms');
-          if(capability.enabled&&capability.configured){const to=String(profile.phone??profile.phone_number??'').replace(/[ ()-]/g,'');if(!/^\+[1-9]\d{7,14}$/.test(to))throw new Error('The user does not have a valid SMS phone number.');const job=createResource({type:'canvas-sms-deliveries',name:current.label,status:'Pending',data:{workspaceId,canvasId,runId,nodeId:current.id,userId,to,snapshot,frequencyContext,validateAudience:delivery.deliveryValidationEnabled,validateEntryAudience:Boolean(current.config?.deliveryValidation),deliverySettings:delivery,resumeNodeId:routes[0]?.[1]??null,context:runtimeContext,message}});eventType='queued';eventData={...eventData,message,jobId:job.id,simulated:false};}
+          if(capability.enabled&&capability.configured){const to=String(profile.phone??profile.phone_number??'').replace(/[ ()-]/g,'');if(!/^\+[1-9]\d{7,14}$/.test(to))throw new Error('The user does not have a valid SMS phone number.');const job=createResource({type:'canvas-sms-deliveries',name:current.label,status:'Pending',data:{workspaceId,canvasId,runId,nodeId:current.id,userId,to,snapshot,frequencyContext,validateAudience:delivery.deliveryValidationEnabled,validateEntryAudience:Boolean(current.config?.deliveryValidation),deliverySettings:delivery,resumeNodeId:routes[0]?.[1]??null,context:runtimeContext,entryProperties,message,dueAt:timestamp}});eventType='queued';eventData={...eventData,message,jobId:job.id,simulated:false};}
           else{eventType='prepared';eventData={...eventData,message,simulated:true,delivery:{mode:'preview',status:'prepared',delivered:false,reason:capability.configured?'Live delivery is disabled.':'Connect an SMS provider to deliver messages.'}};}
         }catch(error){eventType='failed';eventData={...eventData,error:error instanceof Error?error.message:'SMS rendering failed.'};}
       }
@@ -2161,9 +2513,22 @@ function advanceCanvasUser(graph: CanvasGraph, canvasId: string, runId: string, 
         try { const config = current.config ?? {}; const variants = normalizeWhatsAppVariants({ config }); const index = createHash("sha256").update(`${canvasId}:${current.id}:${userId}`).digest()[0] % variants.length; const eligibility = whatsAppResponseEligibility(variants[index].mode, latestWhatsAppInbound(user?.attributes, listResources("user-events").filter(event => event.data.userId === userId), timestamp), timestamp); if (!eligibility.eligible) throw new Error(eligibility.reason); eventData = { ...eventData, conversationEligibility: eligibility, variantId: variants[index].id, message: prepareWhatsAppMessage(variants[index], customWhatsAppTemplates({ config }), { ...user?.attributes, first_name: user?.firstName, country: user?.country, user_id: userId }) }; }
         catch (cause) { eventType = "failed"; eventData = { ...eventData, error: cause instanceof Error ? cause.message : "WhatsApp rendering failed." }; }
       }
+      if(eventType==='delivered'&&channel!=='sms'&&user){
+       try{
+        const config={...current.config,workspaceId,canvasRunId:runId,canvasNodeId:current.id,nodeId:current.id},draft:MessageDraft={id:canvasId,name:current.label,channel,subject:current.config?.subject,body:current.config?.message,config},profile={...user.attributes,user_id:user.id,first_name:user.firstName,email:user.email,country:user.country,canvas_context:runtimeContext,canvas_entry_properties:entryProperties};
+        const selected=pickVariant(draft,createHash('sha256').update(JSON.stringify([canvasId,current.id,userId])).digest().readUInt32BE(0)/4294967296),messageDraft=variantDraft(draft,selected),message=compileCanvasRuntimeMessage(messageDraft,user,profile),variantId=campaignVariants(draft)[selected]?.id??String(enrollment?.data.variantId??'');
+        if(['iam','content','banner'].includes(channel)){
+         const sdk=materializeSdkMessage(messageDraft,userId,message,canvasId,variantId,true);if(!sdk)throw new Error('This SDK message could not be materialized.');updateResource(sdk.id,{data:{...sdk.data,frequencyContext}});eventType='available';eventData={...eventData,message,sdkMessageId:sdk.id,variantId,simulated:false,delivery:{mode:'sdk',status:'available',delivered:false}};
+        }else{
+         const capability=messageDeliveryCapability(channel),webhook=channel==='webhook'&&webhookDeliveryCapability().enabled&&webhookDeliveryCapability().allowedHosts.length>0;
+         if(webhook||capability.enabled&&capability.configured){const keys=[runId,userId,current.id];state.insertIfAbsent('delivery',workspaceId,canvasId,keys,{runId,userId,nodeId:current.id,channel,draft:messageDraft,context:runtimeContext,entryProperties,frequencyContext,resumeNodeId:routes[0]?.[1]??null,dueAt:timestamp,variantId,message},'Pending');const job=state.get('delivery',workspaceId,canvasId,keys)!;eventType='queued';eventData={...eventData,message,variantId,jobId:job.id,simulated:false};}
+         else{eventType='prepared';eventData={...eventData,message,variantId,simulated:true,delivery:{mode:'preview',status:'prepared',delivered:false,reason:capability.configured?'Live delivery is disabled.':`Configure a ${channel} delivery provider to send this message.`}};}
+        }
+       }catch(error){eventType='failed';eventData={...eventData,error:error instanceof Error?error.message:'Message compilation failed.'};}
+      }
       db().prepare("INSERT INTO message_events VALUES (?, ?, ?, ?, ?, ?, ?)").run(uid("evt"), canvasId, channel, userId, eventType, timestamp, JSON.stringify(eventData));
       if(eventType!=="queued")finishFrequencyDispatch(frequencyContext,["delivered","accepted"].includes(eventType));
-      if (["delivered","prepared","queued"].includes(eventType)) messages += 1;
+      if (["delivered","accepted","available","prepared","queued"].includes(eventType)) messages += 1;
       if(eventType==='queued')return{completed:false,messages};
     }
     const user = getUser(userId);
@@ -2174,7 +2539,7 @@ function advanceCanvasUser(graph: CanvasGraph, canvasId: string, runId: string, 
       const paths=Array.isArray(current.config?.paths)?current.config.paths as Array<{id:string;weight?:number;exit?:boolean;segmentIds?:string[];filterGroups?:AudienceGroup[];nextNodeId?:string}>:[];
       let index=-1;
       if(current.kind==='audience_paths'&&user){index=paths.findIndex(path=>path.id!=='everyone_else'&&canvasStepAudienceMatches(path,user,String(canvasResource(canvasId)?.data.workspaceId??'local')));if(index<0)index=paths.findIndex(path=>path.id==='everyone_else');}
-      else{const bucket=createHash('sha256').update(`${canvasId}:${current.id}:${userId}:${current.config?.randomizedPaths?runId:''}`).digest().readUInt32BE(0)/0x100000000*100;let accumulated=0;index=paths.findIndex(path=>{accumulated+=Number(path.weight??0);return bucket<accumulated;});}
+      else{const assigned=canvasExperimentAssignment(canvasId,workspaceId,current,runId,userId,paths.map(path=>({id:path.id,weight:Number(path.weight??0)})));index=paths.findIndex(path=>path.id===assigned);if(paths[index]?.id==='control')db().prepare('INSERT INTO message_events VALUES(?,?,?,?,?,?,?)').run(uid('evt'),canvasId,'canvas',userId,'control',timestamp,JSON.stringify({workspaceId,canvasRunId:runId,nodeId:current.id,pathId:'control',simulated:false}));}
       if(index<0||paths[index].exit)return{completed:true,messages};nextId=paths.some(path=>path.nextNodeId)?paths[index].nextNodeId:routes[index]?.[1];
     }
     current = graph.nodes.find(node => node.id === nextId);
@@ -2212,106 +2577,241 @@ export function previewCanvasAudience(audience:CanvasWizardConfig['audience'],wo
  return {total:users.length,matching:matched.length,reachable:matched.filter(user=>user.reachable).length,...(lookup?{lookup:{found:Boolean(found),userId:found?.id,matchesFilters:Boolean(found&&matched.some(user=>user.id===found.id))}}:{})};
 }
 
-export function launchCanvasGraph(canvasId = localCanvasId): CanvasRun {
-  const saved = canvasResource(canvasId);
-  if (!saved) throw new Error("Save the Canvas draft before launching.");
-  if (saved.status === "Archived") throw new Error("Archived Canvases cannot be launched.");
-  assertWorkspaceApproval("canvas", canvasId);
-  const graph = resolveCanvasLinkedMessages(canvasGraph(saved));
-  const wizard = saved.data.wizard ? normalizeCanvasWizard(saved.data.wizard) : null;
-  const issues = [...(wizard ? canvasWizardIssues(wizard, graph).map(issue => issue.detail) : validateCanvasGraph(graph)), ...graph.nodes.filter(node => node.kind === "message" && node.config?.channel === "email").flatMap(node => emailSendingIssues({ config: node.config }, getEmailPreferences().data))];
-  if(wizard?.send.quietEnabled&&wizard.send.quietMode==='workspace'&&!canvasWorkspaceQuietHours(String(saved.data.workspaceId??'local')).configured)issues.push('Configure workspace quiet hours or choose custom quiet hours before launching.');
-  for(const node of graph.nodes)if(node.kind==='message'&&typeof node.config?.subscriptionGroupId==='string')subscriptionGroupForChannel(node.config.subscriptionGroupId,node.config.channel as Channel,String(saved.data.workspaceId??'local'));
-  if (issues.length) throw new Error(issues.join(" "));
-  if(wizard)previewCanvasAudience(wizard.audience,String(saved.data.workspaceId??"local"));
-  const timestamp = getDemoState().simulatedTime;
-  const entry = graph.nodes.find(node => node.kind === "entry")!;
-  const reEntry = wizard ? wizard.audience.reentryEnabled ? "window" : "none" : entry.config?.reEntry ?? "none";
-  const cutoff = wizard && reEntry === "window" ? wizard.audience.reentryValue * (wizard.audience.reentryUnit === "Hours" ? 3_600_000 : 86_400_000) : reEntry === "after1d" ? 86_400_000 : reEntry === "after7d" ? 7 * 86_400_000 : 0;
-  const candidates = db().prepare(`SELECT id FROM users u WHERE reachable = 1 AND ${audienceProfileWorkspaceSQL('u')}=? ORDER BY id LIMIT 100`).all(String(saved.data.workspaceId??'local')) as { id: string }[];
-  const globalSettings = globalControlSettings(String(saved.data.workspaceId??"local"));
-  const users = candidates.filter(user => {
-    if (heldByGlobalControl(user.id, globalSettings, saved.data.tags)) return false;
-    const profile = wizard ? getUser(user.id) : null;
-    if (wizard && (!profile || !canvasAudienceMatches(wizard.audience, profile,String(saved.data.workspaceId??"local")))) return false;
-    const history = db().prepare("SELECT last_entered_at FROM canvas_entry_history WHERE canvas_id = ? AND user_id = ?").get(canvasId, user.id) as { last_entered_at: string } | undefined;
-    const pending = db().prepare("SELECT 1 FROM canvas_pending_steps p JOIN canvas_runs r ON r.id = p.run_id WHERE r.canvas_id = ? AND p.user_id = ? LIMIT 1").get(canvasId, user.id);
-    return !pending && (!history || reEntry === "always" || cutoff > 0 && new Date(timestamp).getTime() - new Date(history.last_entered_at).getTime() >= cutoff);
-  }).slice(0, wizard?.audience.volumeEnabled ? Math.min(10, wizard.audience.maxEntries) : 10);
-  const runId = uid("canvasrun");
-  let messages = 0; let completed = 0;
-  const traces: CanvasTrace[] = [];
-  db().exec("BEGIN");
-  try {
-    for (const user of users) {
-      db().prepare("INSERT INTO canvas_entry_history VALUES (?, ?, ?) ON CONFLICT(canvas_id,user_id) DO UPDATE SET last_entered_at=excluded.last_entered_at").run(canvasId, user.id, timestamp);
-      const steps: CanvasTrace["steps"] = [];
-      const result = advanceCanvasUser(graph, canvasId, runId, user.id, entry.id, timestamp, steps);
-      messages += result.messages;
-      if (result.completed) completed += 1;
-      traces.push({ userId: user.id, steps });
+function canvasEntryCapacity(canvasId:string,wizard:CanvasWizardConfig|null,timestamp:string){
+ if(!wizard?.audience.volumeEnabled)return Infinity;
+ if(wizard.audience.cadence==='Hourly'){const start=new Date(timestamp);start.setUTCMinutes(0,0,0);const end=new Date(start.getTime()+3600000).toISOString(),used=db().prepare('SELECT COALESCE(sum(entered_count),0) AS n FROM canvas_runs WHERE canvas_id=? AND created_at>=? AND created_at<?').get(canvasId,start.toISOString(),end) as {n:number};return Math.max(0,wizard.audience.maxEntries-used.n);}
+ const window=wizard.audience.cadence==='Daily'?86400000:null;
+ const used=db().prepare(`SELECT COALESCE(sum(entered_count),0) AS n FROM canvas_runs WHERE canvas_id=?${window?' AND created_at>?':''}`).get(canvasId,...(window?[new Date(Date.parse(timestamp)-window).toISOString()]:[])) as {n:number};
+ return Math.max(0,wizard.audience.maxEntries-used.n);
+}
+let canvasTransactionSerial=0;
+function canvasRuntimeAtomic<T>(action:()=>T):T{
+ const conn=db();
+ // A SAVEPOINT is deferred. Acquire the writer before action() reads any rows, otherwise
+ // another process can commit in between and SQLite cannot upgrade the old WAL snapshot.
+ // Repeat initialization because an enclosing transaction can roll this table back.
+ conn.exec('CREATE TABLE IF NOT EXISTS canvas_runtime_write_lock(id INTEGER PRIMARY KEY,version INTEGER NOT NULL); INSERT OR IGNORE INTO canvas_runtime_write_lock VALUES(1,0)');
+ const name='canvas_runtime_'+(++canvasTransactionSerial);conn.exec('SAVEPOINT '+name);
+ try{conn.exec('UPDATE canvas_runtime_write_lock SET version=version WHERE id=1');const result=action();conn.exec('RELEASE '+name);return result;}catch(error){conn.exec('ROLLBACK TO '+name+'; RELEASE '+name);throw error;}
+}
+type CanvasEntryOptions={at?:string;userIds?:string[];properties?:Record<string,unknown>;sourceKey?:string;activate?:boolean;ancestors?:string[]};
+function enterCanvasUsers(canvasId:string,options:CanvasEntryOptions={}):CanvasRun{
+ const saved=canvasResource(canvasId);if(!saved)throw new Error('Save the Canvas draft before launching.');
+ if(saved.status==='Archived')throw new Error('Archived Canvases cannot be launched.');
+ if(!options.activate&&saved.status!=='Active')throw new Error('Choose an active Canvas.');
+ assertWorkspaceApproval('canvas',canvasId);
+  const graph=resolveCanvasLinkedMessages(canvasGraph(saved),String(saved.data.workspaceId??'local')),wizard=saved.data.wizard?normalizeCanvasWizard(saved.data.wizard):null,workspaceId=String(saved.data.workspaceId??'local');
+ const issues=[...(wizard?canvasWizardIssues(wizard,graph).map(issue=>issue.detail):validateCanvasGraph(graph)),...graph.nodes.filter(node=>node.kind==='message'&&node.config?.channel==='email').flatMap(node=>emailSendingIssues({config:node.config},getEmailPreferences().data))];
+ if(wizard?.send.quietEnabled&&wizard.send.quietMode==='workspace'&&!canvasWorkspaceQuietHours(workspaceId).configured)issues.push('Configure workspace quiet hours or choose custom quiet hours before launching.');
+ for(const node of graph.nodes)if(node.kind==='message'&&typeof node.config?.subscriptionGroupId==='string')subscriptionGroupForChannel(node.config.subscriptionGroupId,node.config.channel as Channel,workspaceId);
+ const entry=graph.nodes.find(node=>node.kind==='entry');if(!entry)throw new Error('Add an Audience entry step.');
+ const targets=objectValue(entry.config?.variantTargets);
+ for(const node of graph.nodes.filter(node=>node.kind==='experiment_paths'&&node.config?.winningPath)){
+  const paths=Array.isArray(node.config?.paths)?node.config.paths:[],once=wizard?.entry.type==='scheduled'&&(wizard.entry.timing==='immediate'||wizard.entry.frequency==='Once');
+  if(once&&paths.length>3)issues.push('One-time Winning Path supports up to three experiment paths.');
+  if(Number(node.config?.winningPathDelayWeight??0)>0&&!once)issues.push('The Winning Path Delay Group requires one-time scheduled Canvas entry.');
+  if(node.config?.winningPathFallback==='mix'&&!(paths as Array<{weight?:number}>).some(path=>Number(path.weight)>0))issues.push('Keeping the path distribution requires a positive experiment path percentage.');
+  if(node.config?.winningPathConversionEventId&&!wizard?.conversionEvents.some(event=>event.id===node.config?.winningPathConversionEventId))issues.push('Choose a current Canvas conversion event for Winning Path.');
+ }
+ if(graph.variants?.length&&entry.config?.variantTargets!==undefined)for(const variant of graph.variants.filter(variant=>variant.weight>0))if(typeof targets[variant.id]!=='string'||!graph.nodes.some(node=>node.id===targets[variant.id])||!graph.edges.some(([from,to])=>from===entry.id&&to===targets[variant.id]))issues.push('Connect every positive-weight Canvas variant to its entry step.');
+ if(issues.length)throw new Error(issues.join(' '));
+ if(wizard)previewCanvasAudience(wizard.audience,workspaceId);
+ const timestamp=new Date(options.at??now()).toISOString(),runId=uid('canvasrun'),state=new CanvasRuntimePersistence(db());
+ return canvasRuntimeAtomic(()=>{
+  db().prepare('UPDATE resources SET status=status WHERE id=?').run(canvasId);
+  const priorActivation=state.get('activation',workspaceId,canvasId);
+  if(options.activate){db().prepare("UPDATE resources SET status='Active',data_json=json_set(data_json,'$.firstLaunchedAt',COALESCE(json_extract(data_json,'$.firstLaunchedAt'),?)) WHERE id=?").run(timestamp,canvasId);if(saved.status!=='Active'||!priorActivation)state.put('activation',workspaceId,canvasId,[],{activatedAt:timestamp,generation:uid('activation')},'Active');}
+  const shouldEnter=!options.activate||!wizard||wizard.entry.type==='scheduled'&&wizard.entry.timing==='immediate';
+  const sourceKey=options.sourceKey??'launch:'+runId;
+  if(!state.insertIfAbsent('entry-request',workspaceId,canvasId,[sourceKey],{runId,sourceKey,at:timestamp},'Processing'))return{id:String(state.get('entry-request',workspaceId,canvasId,[sourceKey])?.data.runId??runId),createdAt:timestamp,entered:0,completed:0,messages:0,traces:[]};
+  const reEntry=wizard?wizard.audience.reentryEnabled?'window':'none':entry.config?.reEntry??'none',cutoff=wizard&&reEntry==='window'?wizard.audience.reentryValue*(wizard.audience.reentryUnit==='Hours'?3600000:86400000):reEntry==='after1d'?86400000:reEntry==='after7d'?7*86400000:0;
+  const candidates=options.userIds?[...new Set(options.userIds)].map(id=>({id})):(db().prepare(`SELECT id FROM users u WHERE reachable=1 AND ${audienceProfileWorkspaceSQL('u')}=? ORDER BY id`).all(workspaceId) as {id:string}[]),globalSettings=globalControlSettings(workspaceId);
+  if(options.userIds)for(const candidate of candidates){const profile=getUser(candidate.id);if(!profile||userProfileWorkspace(profile)!==workspaceId)throw new Error('Choose users from this Canvas workspace.');}
+  const users=shouldEnter?candidates.filter(candidate=>{
+   const profile=getUser(candidate.id);if(!profile||userProfileWorkspace(profile)!==workspaceId||!profile.reachable||heldByGlobalControl(profile.id,globalSettings,saved.data.tags)||wizard&&!canvasAudienceMatches(wizard.audience,profile,workspaceId))return false;
+   const history=db().prepare('SELECT last_entered_at FROM canvas_entry_history WHERE canvas_id=? AND user_id=?').get(canvasId,profile.id) as {last_entered_at:string}|undefined;
+   if(state.list('enrollment',{workspaceId,canvasId,userId:profile.id}).some(row=>['Pending','Waiting','Processing'].includes(row.status)))return false;
+   return !history||reEntry==='always'||cutoff>0&&Date.parse(timestamp)-Date.parse(history.last_entered_at)>=cutoff;
+  }).slice(0,canvasEntryCapacity(canvasId,wizard,timestamp)):[];
+  const traces:Array<CanvasTrace&{variantId?:string}>=users.map(user=>{const variant=graph.variants?.length?canvasAssignedVariant(canvasId,user.id,graph.variants):null;if(graph.variants?.length&&!variant)throw new Error('Configure a valid Canvas variant distribution.');return{userId:user.id,steps:[],...(variant?{variantId:variant.id}:{})};});
+  db().prepare('INSERT INTO canvas_runs VALUES(?,?,?,?,?,?,?,?)').run(runId,canvasId,timestamp,users.length,0,0,JSON.stringify({...graph,wizard}),JSON.stringify(traces));
+  let messages=0,completed=0;
+  for(const trace of traces){
+   state.insertIfAbsent('enrollment',workspaceId,canvasId,[runId,trace.userId],{runId,userId:trace.userId,variantId:trace.variantId,entryProperties:options.properties??{},ancestors:options.ancestors??[],enteredAt:timestamp,sourceKey},'Processing');
+   db().prepare('INSERT INTO canvas_entry_history VALUES(?,?,?) ON CONFLICT(canvas_id,user_id) DO UPDATE SET last_entered_at=excluded.last_entered_at').run(canvasId,trace.userId,timestamp);
+   const result=advanceCanvasUser(graph,canvasId,runId,trace.userId,entry.id,timestamp,trace.steps);messages+=result.messages;if(result.completed)completed++;
+   state.put('enrollment',workspaceId,canvasId,[runId,trace.userId],{...(result.completed?{completedAt:timestamp}:{} )},result.completed?'Completed':'Waiting');
+   db().prepare('UPDATE canvas_runs SET completed_count=?,message_count=?,traces_json=? WHERE id=?').run(completed,messages,JSON.stringify(traces),runId);
+  }
+  state.put('entry-request',workspaceId,canvasId,[sourceKey],{runId,entered:users.length},'Completed');
+  audit('canvas',canvasId,options.activate?'launched':'entered',{runId,entered:users.length,completed,messages,sourceKey});
+  return{id:runId,createdAt:timestamp,entered:users.length,completed,messages,traces};
+ });
+}
+export function launchCanvasGraph(canvasId=localCanvasId,options:{at?:string}={}):CanvasRun{return enterCanvasUsers(canvasId,{at:options.at,activate:true});}
+export function triggerCanvas(canvasId:string,userIds:string[],properties:Record<string,unknown>={},requestId=uid('trigger'),at?:string):CanvasRun{
+ const canvas=canvasResource(canvasId);if(!canvas||canvas.status!=='Active'||normalizeCanvasWizard(canvas.data.wizard).entry.type!=='api')throw new Error('Choose an active API-triggered Canvas.');
+ if(!Array.isArray(userIds)||!userIds.length||userIds.some(id=>typeof id!=='string'||!id))throw new Error('Provide at least one valid user ID.');
+ if(!properties||typeof properties!=='object'||Array.isArray(properties))throw new Error('Entry properties must be a JSON object.');
+ return enterCanvasUsers(canvasId,{userIds,properties,sourceKey:'api:'+requestId,at});
+}
+function processCanvasSchedules(timestamp:string,limit:number){
+ const state=new CanvasRuntimePersistence(db());let processed=0,entered=0;
+ for(const canvas of listResources('canvas').filter(row=>row.status==='Active')){
+  if(processed>=limit)break;
+  const wizard=normalizeCanvasWizard(canvas.data.wizard);if(wizard.entry.type!=='scheduled'||wizard.entry.timing!=='designated')continue;
+  const workspaceId=String(canvas.data.workspaceId??'local'),activation=state.get('activation',workspaceId,canvas.id);if(!activation)continue;
+  const generation=String(activation.data.generation),users=(db().prepare(`SELECT id FROM users u WHERE ${audienceProfileWorkspaceSQL('u')}=? ORDER BY id`).all(workspaceId) as {id:string}[]),groups=new Map<string,string[]>();
+  for(const {id} of users){
+   const previous=state.get('schedule',workspaceId,canvas.id,[generation,id]),user=getUser(id)!;
+   const cursor=String(activation.data.lastSweepAt??new Date(Date.parse(String(activation.data.activatedAt))-1).toISOString());
+   const next=previous&&Object.hasOwn(previous.data,'nextDueAt')?previous.data.nextDueAt as string|null:canvasNextEntryAt(wizard.entry,cursor,String(user.attributes.timezone??user.attributes.time_zone??'UTC'));
+   if(!previous)state.put('schedule',workspaceId,canvas.id,[generation,id],{userId:id,nextDueAt:next},next?'Scheduled':'Completed');
+   if(next&&next<=timestamp)groups.set(next,[...(groups.get(next)??[]),id]);
+  }
+  for(const [dueAt,userIds] of [...groups].sort(([one],[two])=>one.localeCompare(two)).slice(0,Math.max(0,limit-processed))){
+   canvasRuntimeAtomic(()=>{
+    const result=enterCanvasUsers(canvas.id,{userIds,at:dueAt,sourceKey:'scheduled:'+generation+':'+dueAt});entered+=result.entered;
+    for(const userId of userIds){const user=getUser(userId)!,next=canvasNextEntryAt(wizard.entry,dueAt,String(user.attributes.timezone??user.attributes.time_zone??'UTC'));state.put('schedule',workspaceId,canvas.id,[generation,userId],{userId,lastOccurrenceAt:dueAt,nextDueAt:next},next?'Scheduled':'Completed');}
+   });processed++;
+  }
+  state.put('activation',workspaceId,canvas.id,[],{lastSweepAt:timestamp},'Active');
+ }
+ return{processed,entered};
+}
+function resumeCanvasRuntimeJob(data:Record<string,unknown>,timestamp:string,exit=false,completionReason?:string){
+ return canvasRuntimeAtomic(()=>{
+  const canvasId=String(data.canvasId),workspaceId=String(data.workspaceId),runId=String(data.runId),userId=String(data.userId),state=new CanvasRuntimePersistence(db()),enrollment=state.get('enrollment',workspaceId,canvasId,[runId,userId]);
+  if(!enrollment||enrollment.status==='Completed')return;
+  if(canvasRuntimeUserExited(canvasId,userId,runId,timestamp))return;
+  const row=db().prepare('SELECT * FROM canvas_runs WHERE id=? AND canvas_id=?').get(runId,canvasId) as Record<string,unknown>|undefined;if(!row)return;
+  const traces=parseJson(String(row.traces_json),[] as CanvasTrace[]),trace=traces.find(item=>item.userId===userId),graph=parseJson(String(row.snapshot_json),{nodes:[],edges:[]} as CanvasGraph),next=typeof data.resumeNodeId==='string'?data.resumeNodeId:null;
+  const result=exit||!next?{completed:true,messages:0}:advanceCanvasUser(graph,canvasId,runId,userId,next,timestamp,trace?.steps??[]);
+  const alreadyCompleted=state.get('enrollment',workspaceId,canvasId,[runId,userId])?.status==='Completed';
+  if(!alreadyCompleted)state.put('enrollment',workspaceId,canvasId,[runId,userId],{...(result.completed?{completedAt:timestamp,...(completionReason?{completionReason}:{})}:{})},result.completed?'Completed':'Waiting');
+  db().prepare('UPDATE canvas_runs SET completed_count=completed_count+?,message_count=message_count+?,traces_json=? WHERE id=?').run(result.completed&&!alreadyCompleted?1:0,result.messages,JSON.stringify(traces),runId);
+ });
+}
+function canvasRuntimeRecipient(channel:string,user:UserRecord):string{
+ if(channel==='email')return user.email;
+ const attrs=user.attributes;return String(channel==='push'?attrs.push_token??attrs.pushToken??attrs.device_token??'':channel==='line'?attrs.native_line_id??attrs.line_user_id??'':channel==='whatsapp'?attrs.whatsapp_id??attrs.phone??attrs.phone_number??'':attrs.phone??attrs.phone_number??user.id);
+}
+async function processCanvasDeliveryJobs(timestamp:string,limit:number){
+ const state=new CanvasRuntimePersistence(db()),rows=db().prepare("SELECT id,data_json FROM resources WHERE type='canvas-runtime-state' AND json_extract(data_json,'$.kind')='delivery' AND status IN ('Pending','Configuration required') AND json_extract(data_json,'$.dueAt')<=? ORDER BY json_extract(data_json,'$.dueAt'),id LIMIT ?").all(timestamp,limit) as {id:string;data_json:string}[],results:Array<{id:string;status:string;error?:string}>=[];
+ for(const row of rows){
+  if(!db().prepare("UPDATE resources SET status='Processing',updated_at=?,data_json=json_set(data_json,'$.startedAt',?) WHERE id=? AND status IN ('Pending','Configuration required')").run(timestamp,timestamp,row.id).changes)continue;
+  const data=parseJson(row.data_json,{} as Record<string,unknown>),workspaceId=String(data.workspaceId),canvasId=String(data.canvasId),userId=String(data.userId),keys=[String(data.runId),userId,String(data.nodeId)],frequency=data.frequencyContext as FrequencyDispatch;
+  try{
+   const canvas=canvasResource(canvasId),user=getUser(userId),channel=String(data.channel),draft=data.draft as MessageDraft,validation=canvasDeliverySettings(draft.config??{});
+   if(!canvas||canvas.status!=='Active'||String(canvas.data.workspaceId??'local')!==workspaceId||!user||userProfileWorkspace(user)!==workspaceId){state.put('delivery',workspaceId,canvasId,keys,{error:'The Canvas or user is no longer active in this workspace.'},'Cancelled');if(frequency)finishFrequencyDispatch(frequency,false);resumeCanvasRuntimeJob(data,timestamp,true,'Message cancelled because its Canvas or user is no longer active in this workspace.');results.push({id:row.id,status:'Cancelled'});continue;}
+   if(canvasRuntimeUserExited(canvasId,userId,String(data.runId),timestamp)){if(frequency)finishFrequencyDispatch(frequency,false);state.put('delivery',workspaceId,canvasId,keys,{exitedAt:timestamp,reason:'exit_criteria'},'Cancelled');results.push({id:row.id,status:'Cancelled'});continue;}
+   const send=normalizeCanvasWizard(canvas.data.wizard).send,groupId=String(draft.config?.subscriptionGroupId??''),group=groupId?getSubscriptionGroup(groupId):null,expected:Record<string,string>={email:'Email',sms:'SMS',whatsapp:'WhatsApp',line:'LINE'};
+   const eligible=user.reachable&&!heldByGlobalControl(userId,globalControlSettings(workspaceId),canvas.data.tags,channel as Channel)&&!legacySuppressionEntries(workspaceId).some(entry=>user.email.toLowerCase()===entry||user.email.toLowerCase().endsWith('@'+entry))&&!audienceSuppressionMatches(userId,{workspaceId,channel,tags:canvas.data.tags}).length&&(channel!=='email'||Boolean(user.email)&& (send.subscriptionMode==='all'||(send.subscriptionMode==='opted_in_only'?user.emailSubscriptionStatus==='opted_in':user.emailSubscriptionStatus!=='unsubscribed')))&&(!['sms','whatsapp','line'].includes(channel)||Boolean(groupId))&&(!groupId||group?.status==='Active'&&group.channel===expected[channel]&&audienceSubscriptionGroupWorkspace(groupId)===workspaceId&&getAudienceUserSubscriptionState(groupId,userId)==='subscribed')&&(!draft.config?.deliveryValidation||canvasAudienceMatches(normalizeCanvasWizard(canvas.data.wizard).audience,user,workspaceId))&&(!validation.deliveryValidationEnabled||canvasStepAudienceMatches({segmentIds:validation.deliverySegmentIds,filterGroups:validation.deliveryFilterGroups},user,workspaceId));
+   if(!eligible){if(frequency)finishFrequencyDispatch(frequency,false);state.put('delivery',workspaceId,canvasId,keys,{completedAt:timestamp,reason:'delivery_validation'},'Suppressed');db().prepare('INSERT INTO message_events VALUES(?,?,?,?,?,?,?)').run(uid('evt'),canvasId,channel,userId,'suppressed',timestamp,JSON.stringify({workspaceId,canvasRunId:data.runId,nodeId:data.nodeId,jobId:row.id,reason:'delivery_validation',simulated:false}));resumeCanvasRuntimeJob(data,timestamp,validation.deliveryValidationEnabled&&validation.deliveryFailure==='exit');results.push({id:row.id,status:'Suppressed'});continue;}
+   const capability=messageDeliveryCapability(channel),webhook=channel==='webhook'&&webhookDeliveryCapability().enabled&&webhookDeliveryCapability().allowedHosts.length>0;
+   if(!webhook&&(!capability.enabled||!capability.configured)){if(frequency)finishFrequencyDispatch(frequency,false);const error=capability.configured?'Enable live message delivery before retrying this queued job.':`Configure a ${channel} message provider before retrying this queued job.`;state.put('delivery',workspaceId,canvasId,keys,{error},'Configuration required');results.push({id:row.id,status:'Configuration required',error});continue;}
+   const zone=String(user.attributes.timezone??user.attributes.time_zone??'UTC'),workspaceQuiet=send.quietMode==='workspace'?canvasWorkspaceQuietHours(workspaceId):null,quiet={quietHours:send.quietEnabled&&draft.config?.messageQuietHours!==false,quietStart:workspaceQuiet?.start??send.quietStart,quietEnd:workspaceQuiet?.end??send.quietEnd};
+   const processing=db().prepare("SELECT count(*) AS n FROM resources WHERE id!=? AND (type='canvas-runtime-state' AND json_extract(data_json,'$.kind')='delivery' OR type='canvas-sms-deliveries') AND json_extract(data_json,'$.workspaceId')=? AND status='Processing' AND json_extract(data_json,'$.startedAt')>=?").get(row.id,workspaceId,new Date(Date.parse(timestamp)-60000).toISOString()) as {n:number};
+   const quietNow=inQuietHours(new Date(timestamp),quiet,zone);
+   if(workspaceRateLimited(timestamp,processing.n,workspaceId)||canvasMessageRateLimited(canvasId,channel,timestamp,row.id)||quietNow&&send.quietFallback==='next_available'){
+    if(frequency)finishFrequencyDispatch(frequency,false);const minute=new Date(timestamp);minute.setUTCSeconds(0,0);const dueAt=quietNow?nextAllowedDeliveryTime(new Date(timestamp),quiet,zone).toISOString():new Date(minute.getTime()+60000).toISOString();state.put('delivery',workspaceId,canvasId,keys,{dueAt,error:quietNow?'Deferred for quiet hours.':'Deferred for a message rate limit.'},'Pending');results.push({id:row.id,status:'Deferred'});continue;
+   }
+   if(quietNow){if(frequency)finishFrequencyDispatch(frequency,false);state.put('delivery',workspaceId,canvasId,keys,{completedAt:timestamp,reason:'quiet_hours'},'Skipped');resumeCanvasRuntimeJob(data,timestamp);results.push({id:row.id,status:'Skipped'});continue;}
+   if(frequency)finishFrequencyDispatch(frequency,false);
+   const policy=frequencyPolicy(send),currentFrequency:FrequencyDispatch={...frequency,workspaceId,userId,entityType:'canvas',entityId:canvasId,channel,dispatchId:frequency?.dispatchId??row.id,timestamp,obey:policy.frequencyCapping,count:!policy.excludeFromFrequencyCount};
+   if(!reserveFrequencyDispatch(currentFrequency).allowed){state.put('delivery',workspaceId,canvasId,keys,{completedAt:timestamp},'Frequency capped');resumeCanvasRuntimeJob(data,timestamp);results.push({id:row.id,status:'Frequency capped'});continue;}
+   const profile={...user.attributes,first_name:user.firstName,email:user.email,user_id:user.id,country:user.country,canvas_context:objectValue(data.context),canvas_entry_properties:objectValue(data.entryProperties)},message=compileCanvasRuntimeMessage(draft,user,profile),recipient=canvasRuntimeRecipient(channel,user);
+   if(channel!=='webhook'&&!recipient)throw new Error(`The user has no ${channel} delivery address or device token.`);
+   const delivery=channel==='webhook'?await(async()=>{const result=await deliverManagedWebhook(normalizeWebhookVariants(draft)[0],{...webhookContext(user),canvas_context:objectValue(data.context),canvas_entry_properties:objectValue(data.entryProperties)},'en');if(!result.delivered)throw new Error('The configured webhook did not accept this request.');return{mode:'provider',status:'delivered',delivered:true};})():await dispatchPreparedMessage({...draft,config:{...draft.config,runtimeDispatchId:row.id}},recipient,message);
+   finishFrequencyDispatch(currentFrequency,['accepted','delivered'].includes(delivery.status));
+   canvasRuntimeUserExited(canvasId,userId,String(data.runId),timestamp);
+   state.put('delivery',workspaceId,canvasId,keys,{delivery,message,completedAt:timestamp,error:null},delivery.status==='accepted'?'Accepted':delivery.status==='delivered'?'Completed':'Prepared');
+   const eventId=uid('evt'),eventData={workspaceId,canvasRunId:data.runId,nodeId:data.nodeId,jobId:row.id,frequencyDispatchId:currentFrequency.dispatchId,frequencyCounted:currentFrequency.count,variantId:data.variantId,message,delivery,simulated:delivery.mode==='preview'};
+   db().prepare('INSERT INTO message_events VALUES(?,?,?,?,?,?,?)').run(eventId,canvasId,channel,userId,delivery.status,timestamp,JSON.stringify(eventData));
+   resumeCanvasRuntimeJob(data,timestamp);ingestCanvasMessageFact({id:eventId,ownerId:canvasId,userId,channel,event:delivery.status,at:timestamp,data:eventData});results.push({id:row.id,status:delivery.status});
+  }catch(error){if(frequency)finishFrequencyDispatch(frequency,false);const detail=error instanceof Error?error.message:'Canvas delivery failed.';state.put('delivery',workspaceId,canvasId,keys,{error:detail,failedAt:timestamp},'Failed');db().prepare('INSERT INTO message_events VALUES(?,?,?,?,?,?,?)').run(uid('evt'),canvasId,String(data.channel),userId,'failed',timestamp,JSON.stringify({workspaceId,canvasRunId:data.runId,nodeId:data.nodeId,jobId:row.id,error:detail,delivered:false,simulated:false}));resumeCanvasRuntimeJob(data,timestamp,false,'Continued after the message failed.');results.push({id:row.id,status:'Failed',error:detail});}
+ }
+ return{processed:results.length,results};
+}
+async function processCanvasConnectorJobs(timestamp:string,limit:number){
+ const state=new CanvasRuntimePersistence(db()),rows=db().prepare("SELECT id,data_json FROM resources WHERE type='canvas-runtime-state' AND json_extract(data_json,'$.kind')='connector' AND status IN ('Pending','Configuration required','Accepted') AND json_extract(data_json,'$.dueAt')<=? ORDER BY json_extract(data_json,'$.dueAt'),id LIMIT ?").all(timestamp,limit) as {id:string;data_json:string}[],results:Array<{id:string;status:string;error?:string}>=[];
+ for(const row of rows){
+  if(!db().prepare("UPDATE resources SET status='Processing',updated_at=? WHERE id=? AND status IN ('Pending','Configuration required','Accepted')").run(timestamp,row.id).changes)continue;
+  const data=parseJson(row.data_json,{} as Record<string,unknown>),workspaceId=String(data.workspaceId),canvasId=String(data.canvasId),userId=String(data.userId),nodeId=String(data.nodeId),keys=[String(data.runId),userId,nodeId],kind=data.connectorKind as 'agent'|'audience_sync'|'destination';
+  try{
+   const canvas=canvasResource(canvasId),user=getUser(userId);if(!canvas||canvas.status!=='Active'||String(canvas.data.workspaceId??'local')!==workspaceId||!user||userProfileWorkspace(user)!==workspaceId){state.put('connector',workspaceId,canvasId,keys,{error:'The Canvas or user is no longer active in this workspace.'},'Cancelled');resumeCanvasRuntimeJob(data,timestamp,true,'Connector cancelled because its Canvas or user is no longer active in this workspace.');results.push({id:row.id,status:'Cancelled'});continue;}
+   if(canvasRuntimeUserExited(canvasId,userId,String(data.runId),timestamp)){state.put('connector',workspaceId,canvasId,keys,{exitedAt:timestamp,reason:'exit_criteria'},'Cancelled');results.push({id:row.id,status:'Cancelled'});continue;}
+   const config=objectValue(data.config),reference=kind==='agent'?config.agentId:kind==='destination'?config.destinationId:undefined;
+   if(reference){const resource=getResource(String(reference));if(!resource||resource.status==='Archived'||String(resource.data.workspaceId??'local')!==workspaceId)throw new Error('The connector resource no longer belongs to this workspace.');}
+   const capability=canvasConnectorCapability(kind);if(!capability.configured){const error=capability.reason??'Configure the Canvas connector before retrying this step.';state.put('connector',workspaceId,canvasId,keys,{error},'Configuration required');results.push({id:row.id,status:'Configuration required',error});continue;}
+   const result=await executeCanvasConnector({kind,jobId:row.id,workspaceId,canvasId,nodeId,userId,config,profile:{...user.attributes,id:user.id,user_id:user.id,first_name:user.firstName,email:user.email,country:user.country,lifecycle:user.lifecycle},context:objectValue(data.context),entryProperties:objectValue(data.entryProperties)});
+   const waiting=result.status==='accepted'&&kind==='agent';
+   const exited=canvasRuntimeUserExited(canvasId,userId,String(data.runId),timestamp);
+   state.put('connector',workspaceId,canvasId,keys,{providerId:result.providerId,output:result.output,details:result.details,error:null,...(waiting?{dueAt:new Date(Date.parse(timestamp)+10000).toISOString()}:{dueAt:null,completedAt:timestamp})},result.status==='accepted'?'Accepted':'Completed');
+   if(!waiting&&!exited){
+    if(kind==='agent'){
+     const id=`canvas-context:${data.runId}:${userId}`,existing=getResource(id),values={...objectValue(existing?.data.values),[String(config.outputVariable)]:result.output};
+     db().prepare("INSERT INTO resources(id,type,name,status,description,updated_at,data_json) VALUES(?,'canvas-context',?,'Active','',?,?) ON CONFLICT(id) DO UPDATE SET updated_at=excluded.updated_at,data_json=excluded.data_json").run(id,'Canvas context',timestamp,JSON.stringify({workspaceId,canvasId,runId:data.runId,userId,values}));
     }
-    const run: CanvasRun = { id: runId, createdAt: timestamp, entered: users.length, completed, messages, traces };
-    db().prepare("INSERT INTO canvas_runs VALUES (?, ?, ?, ?, ?, ?, ?, ?)").run(run.id, canvasId, timestamp, run.entered, run.completed, run.messages, JSON.stringify(graph), JSON.stringify(traces));
-    db().prepare("UPDATE resources SET status = 'Active' WHERE id = ?").run(canvasId);
-    audit("canvas", canvasId, "launched", { runId, entered: run.entered, completed, messages });
-    db().exec("COMMIT");
-    return run;
-  } catch (error) { db().exec("ROLLBACK"); throw error; }
+    resumeCanvasRuntimeJob(data,timestamp);
+   }
+   results.push({id:row.id,status:result.status});
+  }catch(error){
+   const detail=error instanceof Error?error.message:'The Canvas connector failed.',retryable=Boolean(error&&typeof error==='object'&&(error as {retryable?:boolean}).retryable),attempts=Number(data.attempts??0)+1,retry=retryable&&attempts<3;
+   state.put('connector',workspaceId,canvasId,keys,{error:detail,attempts,retryable,...(retry?{dueAt:new Date(Date.parse(timestamp)+1000*2**attempts).toISOString()}:{failedAt:timestamp})},retry?'Pending':'Failed');results.push({id:row.id,status:retry?'Retry scheduled':'Failed',error:detail});
+   if(!retry){db().prepare('INSERT INTO message_events VALUES(?,?,?,?,?,?,?)').run(uid('evt'),canvasId,kind,userId,'failed',timestamp,JSON.stringify({workspaceId,canvasRunId:data.runId,nodeId,jobId:row.id,error:detail,delivered:false,simulated:false}));resumeCanvasRuntimeJob(data,timestamp,true,'The connector failed without a valid output.');}
+  }
+ }
+ return{processed:results.length,results};
+}
+export async function processCanvasRuntime(at=now(),limit=100){
+ db();if(!Number.isFinite(limit)||limit<1)throw new Error('Choose a positive Canvas processing limit.');const timestamp=new Date(at).toISOString(),maximum=Math.max(1,Math.min(10000,Math.floor(limit)));
+ const exited=processCanvasRuntimeExits(timestamp,maximum);
+ const scheduled=processCanvasSchedules(timestamp,maximum),workspaces=db().prepare("SELECT DISTINCT json_extract(data_json,'$.workspaceId') AS workspaceId FROM resources WHERE type='canvas-runtime-state' AND json_extract(data_json,'$.kind')='event' AND status='Recorded'").all() as {workspaceId:string}[];
+ let eventEntered=0,eventResumed=0;for(const workspace of workspaces){const result=drainCanvasRuntimeEvents(workspace.workspaceId,maximum);eventEntered+=result.entered;eventResumed+=result.resumed;}
+ const experiments=processCanvasWinningPaths(timestamp,maximum),resumed=processDueCanvasSteps(timestamp,maximum),connectors=await processCanvasConnectorJobs(timestamp,maximum),delivery=await processCanvasDeliveryJobs(timestamp,maximum),sms=await processCanvasSmsDeliveries(maximum,timestamp);
+ return{at:timestamp,processed:exited+scheduled.processed+experiments+resumed+eventResumed+connectors.processed+delivery.processed+sms.processed,entered:scheduled.entered+eventEntered,resumed:resumed+eventResumed,exited,experiments,connectors,delivery,sms};
 }
 
-function resumeCanvasSmsDelivery(job:ResourceRecord,exit=false){
- const runId=String(job.data.runId),userId=String(job.data.userId),row=db().prepare('SELECT * FROM canvas_runs WHERE id=?').get(runId) as Record<string,unknown>|undefined;if(!row)return;
- const traces=parseJson(String(row.traces_json),[] as CanvasTrace[]),trace=traces.find(item=>item.userId===userId),graph=parseJson(String(row.snapshot_json),{nodes:[],edges:[]} as CanvasGraph),next=typeof job.data.resumeNodeId==='string'?job.data.resumeNodeId:null;
- const result=exit||!next?{completed:true,messages:0}:advanceCanvasUser(graph,String(job.data.canvasId),runId,userId,next,now(),trace?.steps??[]);
- db().prepare('UPDATE canvas_runs SET completed_count=completed_count+?,message_count=message_count+?,traces_json=? WHERE id=?').run(result.completed?1:0,result.messages,JSON.stringify(traces),runId);
+function resumeCanvasSmsDelivery(job:ResourceRecord,exit=false,timestamp=now()){
+ resumeCanvasRuntimeJob(job.data,timestamp,exit);
 }
-export async function processCanvasSmsDeliveries(limit=100){
- const capability=messageDeliveryCapability('sms');if(!capability.enabled||!capability.configured)return{processed:0,results:[] as Array<{id:string;status:string}>};
+export async function processCanvasSmsDeliveries(limit=100,at=now()){
+ const timestamp=new Date(at).toISOString(),capability=messageDeliveryCapability('sms');
  const results:Array<{id:string;status:string}>=[];
- for(const job of listResources('canvas-sms-deliveries').filter(row=>row.status==='Pending').slice(0,Math.max(1,Math.min(limit,100)))){
+ for(const job of listResources('canvas-sms-deliveries').filter(row=>['Pending','Configuration required'].includes(row.status)&&String(row.data.dueAt??'')<=timestamp).slice(0,Math.max(1,Math.min(limit,10000)))){
   // Claim synchronously before the first network await. Failed/processing jobs are never retried implicitly.
-  updateResource(job.id,{status:'Processing',data:{...job.data,startedAt:now()}});
-  const canvasId=String(job.data.canvasId),workspaceId=String(job.data.workspaceId??'local'),userId=String(job.data.userId),user=getUser(userId),canvas=canvasResource(canvasId),timestamp=now();
+  if(!db().prepare("UPDATE resources SET status='Processing',updated_at=?,data_json=json_set(data_json,'$.startedAt',?) WHERE id=? AND status IN ('Pending','Configuration required')").run(timestamp,timestamp,job.id).changes)continue;
+  const canvasId=String(job.data.canvasId),workspaceId=String(job.data.workspaceId??'local'),userId=String(job.data.userId),user=getUser(userId),canvas=canvasResource(canvasId);
   if(job.data.frequencyContext)finishFrequencyDispatch(job.data.frequencyContext as FrequencyDispatch,false);
   const policy=frequencyPolicy(normalizeCanvasWizard(canvas?.data.wizard).send);
   const frequencyContext:FrequencyDispatch={workspaceId,userId,entityType:'canvas',entityId:canvasId,channel:'sms',dispatchId:`${job.data.runId}:${job.data.nodeId}:${userId}`,timestamp,obey:policy.frequencyCapping,count:!policy.excludeFromFrequencyCount};
   try{
+   if(canvasRuntimeUserExited(canvasId,userId,String(job.data.runId),timestamp)){updateResource(job.id,{status:'Cancelled',data:{...job.data,exitedAt:timestamp,reason:'exit_criteria'}});results.push({id:job.id,status:'Cancelled'});continue;}
+   if(!capability.enabled||!capability.configured){updateResource(job.id,{status:'Configuration required',data:{...job.data,error:'Configure and enable an SMS provider before retrying this queued message.'}});results.push({id:job.id,status:'Configuration required'});continue;}
    const groupId=String(objectValue(job.data.snapshot).subscriptionGroupId??''),group=getSubscriptionGroup(groupId),member=db().prepare('SELECT state FROM subscription_group_memberships WHERE group_id=? AND user_id=?').get(groupId,userId) as {state:string}|undefined;
    const validation=canvasDeliverySettings(objectValue(job.data.deliverySettings)),audienceOk=(!job.data.validateEntryAudience||Boolean(user&&canvasAudienceMatches(normalizeCanvasWizard(canvas?.data.wizard).audience,user,workspaceId)))&&(!job.data.validateAudience||Boolean(user&&canvasStepAudienceMatches({segmentIds:validation.deliverySegmentIds,filterGroups:validation.deliveryFilterGroups},user,workspaceId)));
-   if(!canvas||canvas.status!=='Active'||String(canvas.data.workspaceId??'local')!==workspaceId||!user||String(user.attributes.workspaceId??user.attributes.workspace_id??'local')!==workspaceId||!user.reachable||!audienceOk||legacySuppressionEntries(workspaceId).some(entry=>user.email.toLowerCase()===entry||user.email.toLowerCase().endsWith('@'+entry))||group?.status!=='Active'||group.channel!=='SMS'||audienceSubscriptionGroupWorkspace(groupId)!==workspaceId||member?.state!=='subscribed'||heldByGlobalControl(userId,globalControlSettings(workspaceId),canvas.data.tags)||audienceSuppressionMatches(userId,{workspaceId,channel:'sms',tags:canvas.data.tags}).length){updateResource(job.id,{status:'Suppressed',data:{...job.data,completedAt:timestamp}});db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,'sms',userId,'suppressed',timestamp,JSON.stringify({jobId:job.id,nodeId:job.data.nodeId,reason:'delivery_validation',simulated:false}));resumeCanvasSmsDelivery(job,validation.deliveryFailure==='exit');results.push({id:job.id,status:'Suppressed'});continue;}
-   const snapshot=normalizeSmsSnapshot(job.data.snapshot),profile:Record<string,unknown>={...smsProfile(user),canvas_context:objectValue(job.data.context)},issues=smsCapabilityIssues(snapshot,group);if(issues.length)throw new Error(issues.join(' '));
-   const message=compileSmsSnapshot(snapshot,profile,url=>shortenMessageLink(url,canvasId,userId),smsWorkspaceVariables(workspaceId,profile,canvasId)),to=String(profile.phone??profile.phone_number??'').replace(/[ ()-]/g,'');
+   if(!canvas||canvas.status!=='Active'||String(canvas.data.workspaceId??'local')!==workspaceId||!user||String(user.attributes.workspaceId??user.attributes.workspace_id??'local')!==workspaceId||!user.reachable||!audienceOk||legacySuppressionEntries(workspaceId).some(entry=>user.email.toLowerCase()===entry||user.email.toLowerCase().endsWith('@'+entry))||group?.status!=='Active'||group.channel!=='SMS'||audienceSubscriptionGroupWorkspace(groupId)!==workspaceId||member?.state!=='subscribed'||heldByGlobalControl(userId,globalControlSettings(workspaceId),canvas.data.tags)||audienceSuppressionMatches(userId,{workspaceId,channel:'sms',tags:canvas.data.tags}).length){updateResource(job.id,{status:'Suppressed',data:{...job.data,completedAt:timestamp}});db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,'sms',userId,'suppressed',timestamp,JSON.stringify({jobId:job.id,nodeId:job.data.nodeId,reason:'delivery_validation',simulated:false}));resumeCanvasSmsDelivery(job,validation.deliveryFailure==='exit',timestamp);results.push({id:job.id,status:'Suppressed'});continue;}
+   const send=normalizeCanvasWizard(canvas.data.wizard).send,workspaceQuiet=send.quietMode==='workspace'?canvasWorkspaceQuietHours(workspaceId):null,quiet={quietHours:send.quietEnabled,quietStart:workspaceQuiet?.start??send.quietStart,quietEnd:workspaceQuiet?.end??send.quietEnd},zone=String(user.attributes.timezone??user.attributes.time_zone??'UTC'),quietNow=inQuietHours(new Date(timestamp),quiet,zone),otherProcessing=db().prepare("SELECT count(*) AS n FROM resources WHERE id!=? AND status='Processing' AND json_extract(data_json,'$.workspaceId')=? AND (type='canvas-sms-deliveries' OR type='canvas-runtime-state' AND json_extract(data_json,'$.kind')='delivery') AND json_extract(data_json,'$.startedAt')>=?").get(job.id,workspaceId,new Date(Date.parse(timestamp)-60000).toISOString()) as {n:number};
+   if(workspaceRateLimited(timestamp,otherProcessing.n,workspaceId)||canvasMessageRateLimited(canvasId,'sms',timestamp,job.id)||quietNow&&send.quietFallback==='next_available'){const minute=new Date(timestamp);minute.setUTCSeconds(0,0);const dueAt=quietNow?nextAllowedDeliveryTime(new Date(timestamp),quiet,zone).toISOString():new Date(minute.getTime()+60000).toISOString();updateResource(job.id,{status:'Pending',data:{...job.data,dueAt}});results.push({id:job.id,status:'Deferred'});continue;}
+   if(quietNow){updateResource(job.id,{status:'Skipped',data:{...job.data,completedAt:timestamp,reason:'quiet_hours'}});resumeCanvasSmsDelivery(job,false,timestamp);results.push({id:job.id,status:'Skipped'});continue;}
+   const snapshot=normalizeSmsSnapshot(job.data.snapshot),profile:Record<string,unknown>={...smsProfile(user),canvas_context:objectValue(job.data.context),canvas_entry_properties:objectValue(job.data.entryProperties)},issues=smsCapabilityIssues(snapshot,group);if(issues.length)throw new Error(issues.join(' '));
+   const message=compileSmsSnapshot(snapshot,profile,url=>shortenMessageLink(url,canvasId,userId,String(job.data.nodeId)),smsWorkspaceVariables(workspaceId,profile,canvasId)),to=String(profile.phone??profile.phone_number??'').replace(/[ ()-]/g,'');
    if(!/^\+[1-9]\d{7,14}$/.test(to))throw new Error('The user does not have a valid SMS phone number.');
    const decision=reserveFrequencyDispatch(frequencyContext);
-   if(!decision.allowed){updateResource(job.id,{status:'Frequency capped',data:{...job.data,completedAt:timestamp,cappedRuleIds:decision.cappedRuleIds}});db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,'sms',userId,'frequency_capped',timestamp,JSON.stringify({workspaceId,frequencyDispatchId:frequencyContext.dispatchId,canvasRunId:job.data.runId,nodeId:job.data.nodeId,cappedRuleIds:decision.cappedRuleIds}));resumeCanvasSmsDelivery(job);results.push({id:job.id,status:'frequency_capped'});continue;}
-   const delivery=await dispatchPreparedMessage(smsSnapshotDraft(snapshot,workspaceId,canvasId),to,message);
+   if(!decision.allowed){updateResource(job.id,{status:'Frequency capped',data:{...job.data,completedAt:timestamp,cappedRuleIds:decision.cappedRuleIds}});db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,'sms',userId,'frequency_capped',timestamp,JSON.stringify({workspaceId,frequencyDispatchId:frequencyContext.dispatchId,canvasRunId:job.data.runId,nodeId:job.data.nodeId,cappedRuleIds:decision.cappedRuleIds}));resumeCanvasSmsDelivery(job,false,timestamp);results.push({id:job.id,status:'frequency_capped'});continue;}
+   const raw=smsSnapshotDraft(snapshot,workspaceId,canvasId),delivery=await dispatchPreparedMessage({...raw,config:{...raw.config,runtimeDispatchId:job.id,nodeId:String(job.data.nodeId),canvasNodeId:String(job.data.nodeId),canvasRunId:String(job.data.runId)}},to,message);
    finishFrequencyDispatch(frequencyContext,["accepted","delivered"].includes(delivery.status));
-   updateResource(job.id,{status:delivery.mode==='preview'?'Prepared':'Completed',data:{...job.data,completedAt:now(),message,delivery}});
-   db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,'sms',userId,delivery.status,now(),JSON.stringify({workspaceId,frequencyDispatchId:frequencyContext.dispatchId,frequencyCounted:frequencyContext.count,jobId:job.id,canvasRunId:job.data.runId,nodeId:job.data.nodeId,message,delivery,simulated:delivery.mode==='preview'}));resumeCanvasSmsDelivery(job);results.push({id:job.id,status:delivery.status});
-  }catch(error){finishFrequencyDispatch(frequencyContext,false);const detail=error instanceof Error?error.message:'SMS delivery failed.';updateResource(job.id,{status:'Failed',data:{...job.data,error:detail,completedAt:now()}});db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,'sms',userId,'failed',now(),JSON.stringify({jobId:job.id,nodeId:job.data.nodeId,error:detail,simulated:false}));resumeCanvasSmsDelivery(job);results.push({id:job.id,status:'Failed'});}
+   canvasRuntimeUserExited(canvasId,userId,String(job.data.runId),timestamp);
+   updateResource(job.id,{status:delivery.status==='accepted'?'Accepted':delivery.mode==='preview'?'Prepared':'Completed',data:{...job.data,completedAt:timestamp,message,delivery}});
+   const eventId=uid('evt'),eventData={workspaceId,frequencyDispatchId:frequencyContext.dispatchId,frequencyCounted:frequencyContext.count,jobId:job.id,canvasRunId:job.data.runId,nodeId:job.data.nodeId,message,delivery,simulated:delivery.mode==='preview'};db().prepare('INSERT INTO message_events VALUES(?,?,?,?,?,?,?)').run(eventId,canvasId,'sms',userId,delivery.status,timestamp,JSON.stringify(eventData));resumeCanvasSmsDelivery(job,false,timestamp);ingestCanvasMessageFact({id:eventId,ownerId:canvasId,userId,channel:'sms',event:delivery.status,at:timestamp,data:eventData});results.push({id:job.id,status:delivery.status});
+  }catch(error){finishFrequencyDispatch(frequencyContext,false);const detail=error instanceof Error?error.message:'SMS delivery failed.';updateResource(job.id,{status:'Failed',data:{...job.data,error:detail,completedAt:timestamp}});db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(uid('evt'),canvasId,'sms',userId,'failed',timestamp,JSON.stringify({workspaceId,canvasRunId:job.data.runId,jobId:job.id,nodeId:job.data.nodeId,error:detail,delivered:false,simulated:false}));resumeCanvasSmsDelivery(job,false,timestamp);results.push({id:job.id,status:'Failed'});}
  }
  return{processed:results.length,results};
 }
-function processDueCanvasSteps(timestamp: string) {
-  const pending = db().prepare("SELECT run_id, user_id, next_node_id FROM canvas_pending_steps WHERE due_at <= ? ORDER BY due_at, run_id, user_id").all(timestamp) as Array<{ run_id: string; user_id: string; next_node_id: string }>;
-  let resumed = 0;
-  for (const job of pending) {
-    db().exec("BEGIN");
-    try {
-      const row = db().prepare("SELECT * FROM canvas_runs WHERE id = ?").get(job.run_id) as Record<string, unknown> | undefined;
-      if (!row) { db().prepare("DELETE FROM canvas_pending_steps WHERE run_id = ? AND user_id = ?").run(job.run_id, job.user_id); db().exec("COMMIT"); continue; }
-      const graph = parseJson(String(row.snapshot_json), { nodes: [], edges: [] } as CanvasGraph);
-      const traces = parseJson(String(row.traces_json), [] as CanvasTrace[]);
-      const trace = traces.find(item => item.userId === job.user_id);
-      db().prepare("DELETE FROM canvas_pending_steps WHERE run_id = ? AND user_id = ?").run(job.run_id, job.user_id);
-      const result = advanceCanvasUser(graph, String(row.canvas_id), job.run_id, job.user_id, job.next_node_id, timestamp, trace?.steps ?? []);
-      db().prepare("UPDATE canvas_runs SET completed_count = completed_count + ?, message_count = message_count + ?, traces_json = ? WHERE id = ?").run(result.completed ? 1 : 0, result.messages, JSON.stringify(traces), job.run_id);
-      resumed += 1;
-      db().exec("COMMIT");
-    } catch (error) { db().exec("ROLLBACK"); throw error; }
-  }
-  return resumed;
+function processDueCanvasSteps(timestamp:string,limit=10000){
+ const pending=db().prepare("SELECT p.* FROM canvas_pending_steps p JOIN canvas_runs r ON r.id=p.run_id JOIN resources c ON c.id=r.canvas_id WHERE p.due_at<=? AND c.status='Active' ORDER BY p.due_at,p.run_id,p.user_id LIMIT ?").all(timestamp,limit) as Array<{run_id:string;user_id:string;next_node_id:string;due_at:string}>;
+ let resumed=0;for(const job of pending)if(canvasResumePending(job,job.due_at))resumed++;return resumed;
 }
 
 export function listCatalogs() {
@@ -2656,7 +3156,10 @@ export function updateUserEmail(id: string, email: string) {
   const subscribed = changed && getEmailPreferences().data.sending.resubscribe && !suppressed ? true : user.subscribed;
   const emailStatus = subscribed ? changed && !user.subscribed ? "subscribed" : user.emailSubscriptionStatus : "unsubscribed";
   db().prepare("UPDATE users SET email = ?, subscribed = ?, email_subscription_status = ? WHERE id = ?").run(email, subscribed ? 1 : 0, emailStatus, id);
-  audit("user", id, "email_updated", { changed, subscribed }); return getUser(id);
+  const after=getUser(id)!;
+  audit("user", id, "email_updated", { changed, subscribed });
+  for(const event of canvasProfileRuntimeChanges(user,after,{id:uid('email_change'),workspaceId:String(userProfileWorkspace(after)),userId:id,at:now(),updateSource:'api'}))ingestCanvasRuntimeEvent(event);
+  return getUser(id);
 }
 export function syncEmailLinkAliases(campaign: CampaignRecord) {
   const explicit = Array.isArray(campaign.config.emailLinkAliases) ? campaign.config.emailLinkAliases as Array<{ alias: string; url: string; tracking: boolean }> : [];
@@ -2681,9 +3184,10 @@ export function smsWorkspaceVariables(workspaceId:string,profile:Record<string,u
  return{content_blocks:Object.fromEntries(scoped('content-blocks').map(row=>[row.name,String(row.data.content??'')])),__catalogs:catalogItems,__catalogSelections:selections,campaign:campaign&&String(campaign.config.workspaceId??'local')===workspaceId?{name:campaign.name,api_id:campaign.id,message_name:profile.message_name??profile.variant_name,message_api_id:profile.message_api_id??profile.variant_api_id,dispatch_id:profile.dispatch_id}:{},canvas:canvas&&canvas.workspaceId===workspaceId?{name:canvas.name,api_id:canvas.id}:{},canvas_entry_properties:objectValue(profile.canvas_entry_properties),canvas_context:objectValue(profile.canvas_context),sms,whats_app:objectValue(profile.whats_app??profile.whatsapp),whatsapp:objectValue(profile.whats_app??profile.whatsapp),event_properties:objectValue(profile.event_properties),api_trigger_properties:objectValue(profile.api_trigger_properties),most_recently_used_device:objectValue(profile.most_recently_used_device),preference_center:preferenceLinks,landing_page:Object.fromEntries(scoped('landing-pages').filter(row=>row.status==='Published'&&typeof row.data.slug==='string').map(row=>[row.id,typeof row.data.url==='string'&&/^https:\/\//i.test(row.data.url)?row.data.url:`${messagePublicOrigin()}/pages/${encodeURIComponent(String(row.data.slug))}`]))};
 }
 function scopedSubscriptionIds(workspaceId:string){return listSubscriptionGroups().filter(group=>group.status!=='Archived'&&group.channel==='SMS'&&audienceSubscriptionGroupWorkspace(group.id)===workspaceId).map(group=>group.id);}
-export function emailWorkspaceLiquid(): WorkspaceLiquid {
-  const catalogs = listResources("catalogs");
-  return { footer: getEmailPreferences().data.pages.footer.enabled ? getEmailPreferences().data.pages.footer.html : "", contentBlocks: Object.fromEntries(listResources("content-blocks").filter(row => row.status !== "Archived").map(row => [row.name,workspaceContentBlockHtml(String(row.data.content ?? ""), row.data.width)])), promotionCodes: Object.fromEntries(listResources("promotion-codes").filter(row => row.status !== "Archived").map(row => [row.name, Array.isArray(row.data.codes) ? row.data.codes as string[] : []])), catalogItems: Object.fromEntries(catalogs.map(catalog => [catalog.name.toLowerCase(), listCatalogItems(catalog.id)])), catalogSelections: Object.fromEntries(catalogs.map(catalog => [catalog.name.toLowerCase(), listCatalogSelections(catalog.id)])) };
+export function emailWorkspaceLiquid(workspaceId?:string): WorkspaceLiquid {
+  const scoped=(type:string)=>listResources(type).filter(row=>row.status!=='Archived'&&(workspaceId===undefined||String(row.data.workspaceId??'local')===workspaceId));
+  const catalogs = scoped("catalogs");
+  return { footer: getEmailPreferences().data.pages.footer.enabled ? getEmailPreferences().data.pages.footer.html : "", contentBlocks: Object.fromEntries(scoped("content-blocks").map(row => [row.name,workspaceContentBlockHtml(String(row.data.content ?? ""), row.data.width)])), promotionCodes: Object.fromEntries(scoped("promotion-codes").map(row => [row.name, Array.isArray(row.data.codes) ? row.data.codes as string[] : []])), catalogItems: Object.fromEntries(catalogs.map(catalog => [catalog.name.toLowerCase(), listCatalogItems(catalog.id)])), catalogSelections: Object.fromEntries(catalogs.map(catalog => [catalog.name.toLowerCase(), listCatalogSelections(catalog.id)])) };
 }
 
 function assertModuleUnique(type: string, data: Record<string, unknown>, id?: string) {
@@ -2693,6 +3197,9 @@ function assertModuleUnique(type: string, data: Record<string, unknown>, id?: st
 
 /** User-data operations used by ingestion, transformations and public forms. */
 export function applyProfileRows(rows: Array<Record<string, unknown>>,workspaceId?:string) {
+ return workspaceTransaction(()=>applyProfileRowRecords(rows,workspaceId));
+}
+function applyProfileRowRecords(rows:Array<Record<string,unknown>>,workspaceId?:string){
   if (!Array.isArray(rows) || !rows.length || rows.length > 1000) throw new Error("Provide between 1 and 1,000 rows.");
   for (const row of rows) {
     const id = row.external_id ?? row.id;
@@ -2704,8 +3211,6 @@ export function applyProfileRows(rows: Array<Record<string, unknown>>,workspaceI
     const existing=getUser(id);if(existing&&userProfileWorkspace(existing)!==scope)throw new Error('This user ID belongs to another workspace; use a distinct user ID instead of overwriting the profile.');
   }
   const conn = db(); let created = 0; let updated = 0;
-  conn.exec("SAVEPOINT profile_sync");
-  try {
     for (const row of rows) {
       const id = String(row.external_id ?? row.id); const existing = getUser(id);
       const { external_id: _external, id: _id, email, first_name, country, lifecycle, email_subscription_status, attributes, ...custom } = row;
@@ -2714,9 +3219,10 @@ export function applyProfileRows(rows: Array<Record<string, unknown>>,workspaceI
       conn.prepare(`INSERT INTO users (id,email,first_name,country,lifecycle,subscribed,reachable,attributes_json,email_subscription_status) VALUES (?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET email=excluded.email,first_name=excluded.first_name,country=excluded.country,lifecycle=excluded.lifecycle,subscribed=excluded.subscribed,attributes_json=excluded.attributes_json,email_subscription_status=excluded.email_subscription_status`).run(id, String(email ?? existing?.email ?? ''), String(first_name ?? existing?.firstName ?? ""), String(country ?? existing?.country ?? ""), String(lifecycle ?? existing?.lifecycle ?? "New"), status === "unsubscribed" ? 0 : 1, existing?.reachable === false ? 0 : 1, JSON.stringify({ ...existing?.attributes, ...custom, ...profileAttributes,...(scope!=='local'?{workspaceId:scope}:{}) }), status);
       existing ? updated++ : created++;
       audit("user", id, existing ? "profile_updated" : "created", { fields: Object.keys(row) });
+      const after=getUser(id)!;
+      for(const event of canvasProfileRuntimeChanges(existing??{},after,{id:uid('profile_sync'),workspaceId:String(scope),userId:id,at:now(),updateSource:'api'}))ingestCanvasRuntimeEvent(event);
     }
-    conn.exec("RELEASE profile_sync"); return { created, updated, processed: rows.length };
-  } catch (error) { conn.exec("ROLLBACK TO profile_sync; RELEASE profile_sync"); throw error; }
+    return { created, updated, processed: rows.length };
 }
 
 function runtimeActiveCampaigns(){return (db().prepare("SELECT * FROM campaigns WHERE status='Active' AND archived_at IS NULL").all() as Record<string,unknown>[]).map(mapCampaign);}
@@ -2737,6 +3243,23 @@ function attributeCampaignConversions(userId:string,event:{name:string;propertie
   }
  }
 }
+function attributeCanvasConversions(userId:string,event:{name:string;properties?:Record<string,unknown>;productId?:string;price?:number;quantity?:number;currency?:string},sourceEventId:string,timestamp:string){
+ const profile=getUser(userId);if(!profile)return;
+ const workspaceId=String(userProfileWorkspace(profile)),seen=new Set<string>(),properties=event.properties??{};
+ const runs=db().prepare("SELECT id,canvas_id,created_at,snapshot_json,traces_json FROM canvas_runs WHERE created_at<=? AND EXISTS(SELECT 1 FROM json_each(traces_json) trace WHERE json_extract(trace.value,'$.userId')=?) ORDER BY created_at DESC,id DESC").all(timestamp,userId) as Array<{id:string;canvas_id:string;created_at:string;snapshot_json:string;traces_json:string}>;
+ for(const run of runs){
+  const canvas=getCanvas(run.canvas_id);if(!canvas||(canvas.workspaceId??'local')!==workspaceId)continue;
+  const snapshot=objectValue(parseJson(run.snapshot_json,{})),wizard=normalizeCanvasWizard(snapshot.wizard??canvas.wizard),trace=parseJson<CanvasTrace[]>(run.traces_json,[]).find(item=>item.userId===userId);
+  for(const [conversionIndex,definition] of wizard.conversionEvents.entries()){
+   const key=`${run.canvas_id}:${conversionIndex}`;if(seen.has(key)||!canvasConversionMatches(definition,{name:event.name,at:timestamp,properties,appId:String(properties.appId??properties.app_id??'')},run.created_at))continue;seen.add(key);
+   if(db().prepare("SELECT 1 FROM message_events WHERE campaign_id=? AND user_id=? AND event_type='conversion' AND json_extract(data_json,'$.canvasRunId')=? AND json_extract(data_json,'$.conversionIndex')=?").get(run.canvas_id,userId,run.id,conversionIndex))continue;
+   const revenue=event.productId?Number(event.price??0)*Number(event.quantity??1):Number(properties.revenue??properties.total_price??properties.value??0);
+   const eventId=uid('evt'),data={workspaceId,canvasRunId:run.id,conversionIndex,conversionType:definition.type,sourceEventId,variantId:(trace as CanvasTrace&{variantId?:string}|undefined)?.variantId,revenue:Number.isFinite(revenue)?revenue:0,currency:event.currency??properties.currency??'USD'};
+   db().prepare('INSERT INTO message_events VALUES (?,?,?,?,?,?,?)').run(eventId,run.canvas_id,'canvas',userId,'conversion',timestamp,JSON.stringify(data));
+   ingestCanvasMessageFact({id:eventId,ownerId:run.canvas_id,userId,channel:'canvas',event:'conversion',at:timestamp,data});
+  }
+ }
+}
 export function trackProfileEvent(input: { userId: string; name: string; properties?: Record<string, unknown>; productId?: string; price?: number; quantity?: number; currency?: string; createdAt?: string }) {
   const profile=getUser(input.userId);if(!profile)throw new Error('User not found.');const workspaceId=String(userProfileWorkspace(profile));
   if (!input.name.trim()) throw new Error("Event name is required.");
@@ -2749,6 +3272,8 @@ export function trackProfileEvent(input: { userId: string; name: string; propert
   const timestamp=input.createdAt??now();if(!Number.isFinite(new Date(timestamp).getTime()))throw new Error("Choose a valid event timestamp.");
   const event = createResource({ type: "user-events", name: input.name, status: "Recorded", data: { ...input, workspaceId,createdAt: timestamp } });
   attributeCampaignConversions(input.userId,input,event.id,timestamp);
+  attributeCanvasConversions(input.userId,input,event.id,timestamp);
+  ingestCanvasRuntimeEvent(canvasProfileRuntimeEvent({id:event.id,workspaceId,userId:input.userId,name:input.name,at:timestamp,properties:input.properties,productId:input.productId,price:input.price,quantity:input.quantity,currency:input.currency}));
   for(const card of listResources("sdk-messages").filter(r=>r.data.userId===input.userId&&r.data.channel==="content"&&r.status==="Available")){
     const matching=card.data.removalEvent==="purchase"?Boolean(input.productId)||input.name==="purchase":card.data.removalEvent==="custom_event"&&input.name===card.data.removalEventName;
     if(matching&&((card.data.removalProperties??[]) as Array<{key:string;value:string}>).every(p=>String(input.properties?.[p.key]??"")===p.value))updateResource(card.id,{status:"Removed",data:{...card.data,removedAt:now(),removalEventId:event.id}});
@@ -2762,15 +3287,41 @@ export function trackProfileEvent(input: { userId: string; name: string; propert
   return event;
 }
 
-export function workspaceTransaction<T>(action: () => T): T { const conn = db(); conn.exec("SAVEPOINT workspace_action"); try { const result = action(); conn.exec("RELEASE workspace_action"); return result; } catch (error) { conn.exec("ROLLBACK TO workspace_action; RELEASE workspace_action"); throw error; } }
+let workspaceTransactionSerial=0;
+export function workspaceTransaction<T>(action: () => T): T {
+ const conn=db(),name='workspace_action_'+(++workspaceTransactionSerial);
+ conn.exec('SAVEPOINT '+name);
+ try{
+  // Acquire the SQLite writer before callback reads establish a WAL snapshot.
+  // A deferred read cannot upgrade after another process has committed (517).
+  conn.exec('UPDATE workspace_write_lock SET version=version WHERE id=1');
+  const result=action();conn.exec('RELEASE '+name);return result;
+ }catch(error){conn.exec('ROLLBACK TO '+name+'; RELEASE '+name);throw error;}
+}
 
 export function workspaceAudit(limit = 100) { return db().prepare("SELECT * FROM audit_log ORDER BY created_at DESC LIMIT ?").all(Math.min(10000, Math.max(1, limit))) as Array<{ id: string; entity_type: string; entity_id: string; action: string; created_at: string; detail_json: string }>; }
 export function workspaceEventRows(limit = 10000) { return activityLog(Math.min(10000, limit)); }
 export function workspaceUsage() { const conn = db(); const count = (table: string) => (conn.prepare(`SELECT count(*) AS count FROM ${table}`).get() as { count: number }).count; return { users: count("users"), campaigns: count("campaigns"), events: count("message_events"), resources: count("resources"), canvasRuns: count("canvas_runs"), customEvents: listResources("user-events").length }; }
+export function canvasStorageHealth(){
+ const result=db().prepare('PRAGMA quick_check(1)').get() as Record<string,unknown>;
+ if(Object.values(result)[0]!=='ok')throw new Error('SQLite health check failed.');
+ let worker:{configured:boolean;ready?:boolean}={configured:false};
+ if(process.env.CANVAS_WORKER_HEALTH_FILE){
+  const heartbeat=objectValue(JSON.parse(readFileSync(process.env.CANVAS_WORKER_HEALTH_FILE,'utf8'))),age=Date.now()-Date.parse(String(heartbeat.heartbeatAt)),maxAge=Number(process.env.CANVAS_WORKER_HEALTH_STALE_MS??45000);
+  if(heartbeat.schemaVersion!==1||!['running','idle'].includes(String(heartbeat.status))||heartbeat.consecutiveFailures!==0||!Number.isFinite(age)||age<0||!Number.isFinite(maxAge)||maxAge<=0||age>maxAge)throw new Error('Canvas worker is not ready.');
+  worker={configured:true,ready:true};
+ }
+ return{available:true,engine:'sqlite',persistenceConfigured:Boolean(process.env.BRAZE_DATABASE_PATH)&&!process.env.VERCEL,worker};
+}
 export function userFeatureFlags(userId: string) {
   const user = getUser(userId); if (!user) throw new Error("User not found.");
-  const assignments = listResources("feature-assignments").filter(r => r.data.userId === userId && getCampaign(String(r.data.campaignId))?.status === "Active");
-  return listResources("feature-flags").filter(r => r.status !== "Archived").map(r => { const assignment = assignments.find(a => a.data.flagId === r.data.flagId); return { name: r.name, ...evaluateFlag(r.data, user), ...(assignment ? { enabled: Boolean(assignment.data.enabled), properties: objectValue(assignment.data.properties), matchedRule: "Campaign experiment", campaignId: assignment.data.campaignId } : {}) }; });
+  const workspaceId=String(userProfileWorkspace(user));
+  const assignments = listResources("feature-assignments").filter(r => {
+   if(r.data.userId!==userId||r.status==='Archived')return false;
+   const canvas=getCanvas(String(r.data.canvasId??r.data.campaignId));if(canvas)return canvas.status==='Active'&&canvas.workspaceId===workspaceId&&String(r.data.workspaceId??canvas.workspaceId)===workspaceId;
+   const campaign=getCampaign(String(r.data.campaignId));return campaign?.status==='Active'&&String(campaign.config.workspaceId??'local')===workspaceId&&String(r.data.workspaceId??campaign.config.workspaceId??'local')===workspaceId;
+  });
+  return listResources("feature-flags").filter(r => r.status !== "Archived"&&String(r.data.workspaceId??'local')===workspaceId).map(r => { const assignment = assignments.find(a => a.data.flagId === r.data.flagId); return { name: r.name, ...evaluateFlag(r.data, user), ...(assignment ? { enabled: Boolean(assignment.data.enabled), properties: objectValue(assignment.data.properties), matchedRule: assignment.data.canvasId?'Canvas step':"Campaign experiment", campaignId: assignment.data.campaignId,...(assignment.data.canvasId?{canvasId:assignment.data.canvasId}:{}) } : {}) }; });
 }
 
 function canonical(value: unknown): unknown { if (Array.isArray(value)) return value.map(canonical); if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).sort(([a], [b]) => a.localeCompare(b)).map(([key, v]) => [key, canonical(v)])); return value; }
@@ -2789,12 +3340,8 @@ function assertWorkspaceApproval(entity: "campaign" | "canvas", id: string) {
   if (!approved) throw new Error("Approval is required for the current version. Request review from Approval Workflow before launching.");
 }
 
-function workspaceRateLimited(timestamp: string, pending = 0) {
-  const limits = listResources("messaging-rate-limits")[0]?.data;
-  if (limits?.enforce !== true) return false;
-  const at = new Date(timestamp).getTime();
-  const counts = (since: number) => Number((db().prepare("SELECT count(*) AS count FROM message_events WHERE event_type = 'delivered' AND created_at >= ? AND created_at <= ?").get(new Date(since).toISOString(), timestamp) as { count: number }).count);
-  return counts(at - 60000) + pending >= Number(limits.maxPerMinute) || counts(at - 86400000) + pending >= Number(limits.maxPerDay);
+function workspaceRateLimited(timestamp:string,pending=0,workspaceId='local') {
+  return canvasWorkspaceRateLimited(db(),workspaceId,timestamp,pending);
 }
 
 export function getFrequencyCappingSnapshot(workspaceId='local'){return frequencySnapshot(db(),workspaceId);}
@@ -2805,15 +3352,17 @@ export function prepareEmailMessage(message: { id?: string; subject?: string; bo
   const user = getUser(userId); const profile = { ...user?.attributes, user_id: user?.id, subscribed: user?.subscribed, first_name: user?.firstName, email: user?.email, country: user?.country, ...custom };
   const deploymentHost = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
   const base = (process.env.BRAZE_PUBLIC_URL ?? (deploymentHost ? `https://${deploymentHost}` : "http://localhost:3100")).replace(/\/$/, "");
-  const unsubscribe = createResource({ type: "email-subscription-token", name: "Email subscription link", data: { userId, campaignId: message.id, action: "unsubscribe", expiresAt: Date.now() + 30 * 86400000 } });
+  const trackingScope={nodeId:message.config?.canvasNodeId??message.config?.nodeId,test:kind==='test',seed:kind==='seed'};
+  const unsubscribe = createResource({ type: "email-subscription-token", name: "Email subscription link", data: { userId, campaignId: message.id,...trackingScope, action: "unsubscribe", expiresAt: Date.now() + 30 * 86400000 } });
   const optIn = createResource({ type: "email-subscription-token", name: "Email opt-in link", data: { userId, action: "optIn", expiresAt: Date.now() + 30 * 86400000 } });
   const unsubscribeUrl = `${base}/email/subscription/${unsubscribe.id}`, optInUrl = `${base}/email/subscription/${optIn.id}`;
   const preferences = getEmailPreferences().data;
-  const workspace = emailWorkspaceLiquid();
+  const workspaceId=String(message.config?.workspaceId??(user?userProfileWorkspace(user):'local'));
+  const workspace = emailWorkspaceLiquid(workspaceId);
   if (kind === "campaign") {
     const names = [...new Set([...JSON.stringify(message).matchAll(/\{%\s*promotion_code\s+['"]([^'"]+)['"]/g)].map(match => match[1]))];
     for (const name of names) {
-      const list = listResources("promotion-codes").find(r => r.name === name && r.status !== "Archived");
+      const list = listResources("promotion-codes").find(r => r.name === name && r.status !== "Archived"&&String(r.data.workspaceId??'local')===workspaceId);
       if (!list) throw new Error(`Promotion code list ${name} was not found.`);
       const allocations = listResources("promotion-code-allocations").filter(r => r.data.listId === list.id);
       const existing = allocations.find(r => r.data.userId === userId);
@@ -2828,7 +3377,7 @@ export function prepareEmailMessage(message: { id?: string; subject?: string; bo
   return compileWorkspaceEmail(message, preferences, { profile, kind, attachments, unsubscribeUrl, optInUrl, pixelUrl: `${base}/api/email-tracking/${unsubscribe.id}?event=opened`, render: source => resolveLiquidPreview(source, { ...profile, unsubscribe_url: unsubscribeUrl, unsubscribe_link: unsubscribeUrl, optin_url: optInUrl, opt_in_url: optInUrl }, "en", workspace, true), trackLink: (url, alias) => {
     const existing = listResources("link-aliases").find(row => row.name === alias && row.status === "Active" && row.data.campaignId === message.id);
     if (!existing) return url;
-    const token = createResource({ type: "email-tracking-token", name: alias, data: { userId, campaignId: existing.data.campaignId, alias, url, expiresAt: Date.now() + 30 * 86400000 } });
+    const token = createResource({ type: "email-tracking-token", name: alias, data: { userId, campaignId: existing.data.campaignId,...trackingScope, alias, url, expiresAt: Date.now() + 30 * 86400000 } });
     return `${base}/api/email-tracking/${token.id}?event=clicked`;
   } });
 }

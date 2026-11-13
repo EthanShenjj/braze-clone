@@ -12,14 +12,14 @@ const briefParserPackages = [
 const nextConfig: NextConfig = {
   distDir: process.env.NEXT_BUILD_DIR || ".next",
   reactStrictMode: true,
-  experimental: { turbopackFileSystemCacheForBuild: process.env.NEXT_DISABLE_BUILD_CACHE !== "1" },
+  experimental: { turbopackFileSystemCacheForBuild: process.env.NEXT_DISABLE_BUILD_CACHE !== "1",turbopackFileSystemCacheForDev:process.env.NEXT_DISABLE_DEV_CACHE !== '1' },
   serverExternalPackages: ["unpdf", "mammoth"],
   outputFileTracingIncludes: {
     "/api/campaign-operator": briefParserPackages.map(name => `./node_modules/${name}/**/*`),
   },
   turbopack: { root: process.cwd() },
   allowedDevOrigins: ["127.0.0.1", "localhost"],
-  env: { NEXT_PUBLIC_CANVAS_BROWSER_STORAGE: process.env.VERCEL ? "true" : "false" },
+  env: { NEXT_PUBLIC_CANVAS_BROWSER_STORAGE: process.env.NEXT_PUBLIC_CANVAS_BROWSER_STORAGE === "true" ? "true" : "false" },
 };
 
 export default nextConfig;

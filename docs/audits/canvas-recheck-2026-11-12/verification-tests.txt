@@ -1,0 +1,308 @@
+
+> braze-local-demo@0.1.0 test:canvas
+> node --experimental-transform-types --test tests/canvas-model.test.mjs tests/canvas-browser-store.test.mjs tests/canvas-wizard-tags.test.mjs tests/canvas-wizard-audience.test.mjs tests/canvas-fidelity.test.mjs tests/canvas-deep.test.mjs
+
+TAP version 13
+# (node:37853) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37853) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/canvas-browser-store.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: browser Canvas drafts survive reads, edits, graph saves, and duplication
+ok 1 - browser Canvas drafts survive reads, edits, graph saves, and duplication
+  ---
+  duration_ms: 10.252292
+  type: 'test'
+  ...
+# Subtest: duplicate active names are rejected without losing existing drafts
+ok 2 - duplicate active names are rejected without losing existing drafts
+  ---
+  duration_ms: 1.116375
+  type: 'test'
+  ...
+# Subtest: registry renames update persisted browser draft tags and future duplicates without editing journey data
+ok 3 - registry renames update persisted browser draft tags and future duplicates without editing journey data
+  ---
+  duration_ms: 1.80825
+  type: 'test'
+  ...
+# Subtest: deleted registry names remain removable and no-op reconciliation does not write storage
+ok 4 - deleted registry names remain removable and no-op reconciliation does not write storage
+  ---
+  duration_ms: 1.151
+  type: 'test'
+  ...
+# Subtest: in-progress Canvas tag changes follow renames without removing unknown or deleted selections
+ok 5 - in-progress Canvas tag changes follow renames without removing unknown or deleted selections
+  ---
+  duration_ms: 0.109208
+  type: 'test'
+  ...
+# Subtest: Canvas Tag as replaces the full set for selected browser drafts and supports removing all tags
+ok 6 - Canvas Tag as replaces the full set for selected browser drafts and supports removing all tags
+  ---
+  duration_ms: 4.453458
+  type: 'test'
+  ...
+# Subtest: Canvas Tag as validates every selected draft and the tag limit before one storage write
+ok 7 - Canvas Tag as validates every selected draft and the tag limit before one storage write
+  ---
+  duration_ms: 1.30625
+  type: 'test'
+  ...
+# Subtest: browser Canvas lists, same-name drafts, edits and duplicates stay in their workspace
+ok 8 - browser Canvas lists, same-name drafts, edits and duplicates stay in their workspace
+  ---
+  duration_ms: 0.710167
+  type: 'test'
+  ...
+# Subtest: browser tag renames and bulk replacement cannot cross workspace boundaries
+ok 9 - browser tag renames and bulk replacement cannot cross workspace boundaries
+  ---
+  duration_ms: 1.119166
+  type: 'test'
+  ...
+# Subtest: legacy browser drafts without a workspace remain local
+ok 10 - legacy browser drafts without a workspace remain local
+  ---
+  duration_ms: 0.462
+  type: 'test'
+  ...
+# (node:37854) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37854) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/canvas-builder-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: source rate presets and custom dialog accept the full observed range
+ok 11 - source rate presets and custom dialog accept the full observed range
+  ---
+  duration_ms: 3.4755
+  type: 'test'
+  ...
+# Subtest: optimizer has seven real component types, Liquid snippet, and nonempty variant validation
+ok 12 - optimizer has seven real component types, Liquid snippet, and nonempty variant validation
+  ---
+  duration_ms: 0.947417
+  type: 'test'
+  ...
+# Subtest: malformed saved components and delivery groups can be edited without crashing
+ok 13 - malformed saved components and delivery groups can be edited without crashing
+  ---
+  duration_ms: 1.337625
+  type: 'test'
+  ...
+# Subtest: maximum duration follows the longest connected route and flags dynamic delays and loops
+ok 14 - maximum duration follows the longest connected route and flags dynamic delays and loops
+  ---
+  duration_ms: 2.084875
+  type: 'test'
+  ...
+# Subtest: delivery settings retain legacy drafts and require a valid custom fallback time
+ok 15 - delivery settings retain legacy drafts and require a valid custom fallback time
+  ---
+  duration_ms: 0.692625
+  type: 'test'
+  ...
+# Subtest: conversion drafts retain app choices and property groups through normalization
+ok 16 - conversion drafts retain app choices and property groups through normalization
+  ---
+  duration_ms: 1.549542
+  type: 'test'
+  ...
+# Subtest: conversion matching respects entry window, specific app, actual event name and typed properties
+ok 17 - conversion matching respects entry window, specific app, actual event name and typed properties
+  ---
+  duration_ms: 3.414167
+  type: 'test'
+  ...
+# Subtest: deep action options match source catalogs and validate conditional fields
+ok 18 - deep action options match source catalogs and validate conditional fields
+  ---
+  duration_ms: 0.88025
+  type: 'test'
+  ...
+# (node:37855) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37855) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/canvas-step-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: legacy delay and attribute drafts retain their settings in the new editor
+ok 19 - legacy delay and attribute drafts retain their settings in the new editor
+  ---
+  duration_ms: 3.497417
+  type: 'test'
+  ...
+# Subtest: duration, calendar, weekday and late-entry delay modes use the requested timezone
+ok 20 - duration, calendar, weekday and late-entry delay modes use the requested timezone
+  ---
+  duration_ms: 72.910958
+  type: 'test'
+  ...
+# Subtest: invalid calendar dates do not throw while validating a draft
+ok 21 - invalid calendar dates do not throw while validating a draft
+  ---
+  duration_ms: 0.5015
+  type: 'test'
+  ...
+# Subtest: user update UI and Braze attributes JSON apply changes without replacing unrelated data
+ok 22 - user update UI and Braze attributes JSON apply changes without replacing unrelated data
+  ---
+  duration_ms: 0.839334
+  type: 'test'
+  ...
+# Subtest: audience groups and experimental paths retain their independent configurations
+ok 23 - audience groups and experimental paths retain their independent configurations
+  ---
+  duration_ms: 0.280708
+  type: 'test'
+  ...
+# Subtest: Context variables require complete typed values and unique names
+ok 24 - Context variables require complete typed values and unique names
+  ---
+  duration_ms: 4.02125
+  type: 'test'
+  ...
+# Subtest: brief and quiet-hour modes survive normalization; legacy custom times are retained
+ok 25 - brief and quiet-hour modes survive normalization; legacy custom times are retained
+  ---
+  duration_ms: 3.505042
+  type: 'test'
+  ...
+# Subtest: Canvas list advanced filters evaluate actual flags, Segment IDs and date ranges
+ok 26 - Canvas list advanced filters evaluate actual flags, Segment IDs and date ranges
+  ---
+  duration_ms: 0.128666
+  type: 'test'
+  ...
+# Subtest: named branch routes can merge and deleting their destination preserves variants
+ok 27 - named branch routes can merge and deleting their destination preserves variants
+  ---
+  duration_ms: 0.949375
+  type: 'test'
+  ...
+# Subtest: path connection IDs survive rank changes and target deletion
+ok 28 - path connection IDs survive rank changes and target deletion
+  ---
+  duration_ms: 0.838208
+  type: 'test'
+  ...
+# (node:37856) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37856) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/canvas-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: seed journey is launchable
+ok 29 - seed journey is launchable
+  ---
+  duration_ms: 1.605667
+  type: 'test'
+  ...
+# Subtest: unconnected action path cannot launch
+ok 30 - unconnected action path cannot launch
+  ---
+  duration_ms: 0.254833
+  type: 'test'
+  ...
+# Subtest: cycle and missing message content are rejected
+ok 31 - cycle and missing message content are rejected
+  ---
+  duration_ms: 0.666166
+  type: 'test'
+  ...
+# Subtest: only action paths can fan out
+ok 32 - only action paths can fan out
+  ---
+  duration_ms: 0.183458
+  type: 'test'
+  ...
+# Subtest: global subscription updates accept only explicit booleans
+ok 33 - global subscription updates accept only explicit booleans
+  ---
+  duration_ms: 0.703958
+  type: 'test'
+  ...
+# Subtest: Braze-style draft components are valid graph data but cannot launch locally
+ok 34 - Braze-style draft components are valid graph data but cannot launch locally
+  ---
+  duration_ms: 0.15175
+  type: 'test'
+  ...
+# (node:37857) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37857) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/canvas-wizard-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: every category and Other Filters leaf survives Canvas entry, exclusion and exit save snapshots
+ok 35 - every category and Other Filters leaf survives Canvas entry, exclusion and exit save snapshots
+  ---
+  duration_ms: 10.923875
+  type: 'test'
+  ...
+# Subtest: expanded operators, second bounds, multi values, relative dates and family parameters remain intact
+ok 36 - expanded operators, second bounds, multi values, relative dates and family parameters remain intact
+  ---
+  duration_ms: 3.055084
+  type: 'test'
+  ...
+# Subtest: incomplete generic drafts are retained and use the same validation in all Canvas groups
+ok 37 - incomplete generic drafts are retained and use the same validation in all Canvas groups
+  ---
+  duration_ms: 1.976875
+  type: 'test'
+  ...
+# Subtest: legacy profile drafts remain compatible while generic profile operators are preserved
+ok 38 - legacy profile drafts remain compatible while generic profile operators are preserved
+  ---
+  duration_ms: 0.412125
+  type: 'test'
+  ...
+# Subtest: normalization creates independent parameter objects and ignores non-rule input
+ok 39 - normalization creates independent parameter objects and ignores non-rule input
+  ---
+  duration_ms: 0.696084
+  type: 'test'
+  ...
+# Subtest: browser draft save, reload and duplicate retain complete generic audience snapshots
+ok 40 - browser draft save, reload and duplicate retain complete generic audience snapshots
+  ---
+  duration_ms: 2.031625
+  type: 'test'
+  ...
+# (node:37858) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:37858) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ethanshen/Desktop/LLM/untitled%20folder/braze-clone/lib/canvas-wizard-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/ethanshen/Desktop/LLM/untitled folder/braze-clone/package.json.
+# Subtest: Canvas normalization retains mixed profile and tagged rules in entry, exclusion and exit groups
+ok 41 - Canvas normalization retains mixed profile and tagged rules in entry, exclusion and exit groups
+  ---
+  duration_ms: 3.328083
+  type: 'test'
+  ...
+# Subtest: incomplete tagged drafts survive normalization and produce actionable Canvas validation
+ok 42 - incomplete tagged drafts survive normalization and produce actionable Canvas validation
+  ---
+  duration_ms: 1.400167
+  type: 'test'
+  ...
+# Subtest: all source interaction choices are valid and missing interactions remain invalid for existence comparisons
+ok 43 - all source interaction choices are valid and missing interactions remain invalid for existence comparisons
+  ---
+  duration_ms: 0.591416
+  type: 'test'
+  ...
+# Subtest: Canvas tagged filters reject unsupported events, operators, invalid counts and relative time configurations
+ok 44 - Canvas tagged filters reject unsupported events, operators, invalid counts and relative time configurations
+  ---
+  duration_ms: 0.94275
+  type: 'test'
+  ...
+1..44
+# tests 44
+# suites 0
+# pass 44
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 798.564334

@@ -1,0 +1,30 @@
+Browser tab: 6, Title: "Engagement - Canvas - Edit 'New Canvas - November 12, 2026'", URL: "https://dashboard-09.braze.com/engagement/canvas/6af5503cd8512f008c15c8bd/6af4374c46d3080087f1c5d2?locale=en&version=flow&isEditing=true&step=build&initialConditionsCollapsed=false".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 89-96, 98-103, 105-111, 254-256
++						254 container
++							255 text Limited access
++							256 heading New Canvas - November 12, 2026, Value: 4
++								257 text New Canvas - November 12, 2026
++							258 text No description
++							259 button Tags
++							260 button 0 Changes Since Last Viewed
++								261 text 0 Changes Since Last Viewed
++							262 button Edit
++						263 container
++							264 text Send Settings
++							265 content list
++								266 container
++									267 AXListMarker •
++									268 text No limitations on the rate at which users will receive messages.
++								269 container
++									270 AXListMarker •
++									271 text Workspace Messaging Rate Limits OFF
++								272 container
++									273 AXListMarker •
++									274 text Quiet hours OFF
++							275 button Edit
++						276 container
++							277 text Conversion Events
++							278 text No conversion event selected for this Canvas
++							279 button Edit
+The focused UI element is 112 button Collapse

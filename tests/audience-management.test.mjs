@@ -110,10 +110,12 @@ test('subscription groups, keywords and calculated history stay scoped and prese
  assert.ok(management.scopedSubscriptionGroups().some(row=>row.id===group.id));
  assert.ok(!management.scopedSubscriptionGroups().some(row=>row.id===remote.id));
  assert.throws(()=>management.scopedSubscriptionGroup(remote.id),/workspace/);
- store.setSubscriptionMember(remote.id,'am_a','subscribed');
+ assert.throws(()=>store.setSubscriptionMember(remote.id,'am_a','subscribed'),/workspace/);
+ store.applyProfileRows([{external_id:'am_remote_a'},{external_id:'am_remote_b'}],'remote');
+ store.setSubscriptionMember(remote.id,'am_remote_a','subscribed');
  assert.deepEqual(management.subscriptionStatistics(remote.id,'remote'),[]);
  const first=management.calculateSubscriptionStatistics(remote.id,'remote');assert.equal(first.subscribed,1);assert.equal(first.unsubscribed,0);
- store.setSubscriptionMember(remote.id,'am_b','unsubscribed');
+ store.setSubscriptionMember(remote.id,'am_remote_b','unsubscribed');
  const second=management.calculateSubscriptionStatistics(remote.id,'remote');assert.equal(second.subscribed,1);assert.equal(second.unsubscribed,1);assert.equal(management.subscriptionStatistics(remote.id,'remote').length,1);
  const settings=subscriptionSettings(undefined);settings.languages.push('French');settings.keywords.French=[{id:'custom',category:'Offers',keywords:['offres'],response:'Bonjour',linkShortening:true}];
  const saved=management.updateManagedSubscriptionGroup(remote.id,{settings,expectedUpdatedAt:remote.updatedAt},'remote');assert.deepEqual(saved.settings.keywords.French[0].keywords,['OFFRES']);

@@ -1,0 +1,40 @@
+{
+  "source": {
+    "nameInput": {
+      "height": 40,
+      "width": 437,
+      "x": 329,
+      "y": 351
+    },
+    "saveButton": {
+      "height": 40,
+      "width": 82.0625,
+      "x": 1186.9375,
+      "y": 653
+    },
+    "saveDisabled": true,
+    "viewport": {
+      "height": 720,
+      "width": 1280
+    }
+  },
+  "production": {
+    "nameInput": {
+      "height": 40,
+      "width": 620,
+      "x": 333,
+      "y": 360.5
+    },
+    "saveButton": {
+      "height": 40,
+      "width": 65.7734375,
+      "x": 1102.5703125,
+      "y": 1194.09375
+    },
+    "saveDisabled": false,
+    "viewport": {
+      "height": 720,
+      "width": 1280
+    }
+  }
+}

@@ -11,7 +11,9 @@
     "build": "next build",
     "test:iam": "node --experimental-strip-types --test tests/in-app-model.test.mjs tests/in-app-runtime.test.mjs tests/in-app-traditional.test.mjs",
     "test:tags": "node --experimental-transform-types --test tests/tag-system.test.mjs tests/tag-fidelity-integrity.test.mjs tests/tag-audience.test.mjs tests/tag-canvas-audience.test.mjs",
-    "test:canvas": "node --experimental-transform-types --test tests/canvas-model.test.mjs tests/canvas-browser-store.test.mjs tests/canvas-wizard-tags.test.mjs tests/canvas-wizard-audience.test.mjs tests/canvas-fidelity.test.mjs tests/canvas-deep.test.mjs",
+    "test:canvas": "node --experimental-transform-types --test --test-concurrency=4 tests/canvas-*.test.mjs",
+    "test:all": "node --experimental-transform-types --test --test-concurrency=4 tests/*.test.mjs",
+    "canvas:worker": "node --conditions=react-server --experimental-transform-types --import ./scripts/register-runtime.mjs ./scripts/canvas-worker.mjs",
     "test:i18n": "node --experimental-strip-types --test tests/i18n.test.mjs",
     "test:navigation": "node --experimental-strip-types --test tests/navigation.test.mjs",
     "test:whatsapp": "node --experimental-strip-types --test tests/whatsapp-model.test.mjs",
@@ -36,6 +38,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sanitize-html": "^2.18.1",
+    "server-only": "0.0.1",
     "typescript": "^5.7.2",
     "unpdf": "1.4.0"
   },

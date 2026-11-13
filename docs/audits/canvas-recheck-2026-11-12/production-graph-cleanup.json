@@ -1,0 +1,21 @@
+{
+  "canvasId": "canvas_welcome",
+  "nodes": [
+    {
+      "id": "entry",
+      "kind": "entry",
+      "label": "Audience entry"
+    },
+    {
+      "id": "delay",
+      "kind": "delay",
+      "label": "Delay \u00b7 1 day"
+    },
+    {
+      "id": "email",
+      "kind": "message",
+      "label": "Email message"
+    }
+  ],
+  "auditOptimizerPersisted": false
+}

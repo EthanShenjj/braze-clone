@@ -1,0 +1,43 @@
+Verification date: 2026-11-13 Asia/Shanghai
+Runtime: Node 22.22.3; Next.js 16.3.5
+External message delivery: disabled
+
+Command: npm run test:all
+tests 702; pass 702; fail 0; cancelled 0; skipped 0; todo 0
+duration_ms 89838.289541
+Includes two independent Node child processes, separate SQLite connections,
+concurrent profile ingestion, two rounds of 80 due delays, direct runtime and
+the synchronous portion inside an API workspace transaction. Each user resumes
+once per round; both children's profile attributes survive.
+
+Command: npx tsc --noEmit --incremental false
+Exit: 0
+
+Command: NEXT_DISABLE_BUILD_CACHE=1 npm run build
+Exit: 0
+Compiled successfully in 42s; Finished TypeScript in 33.4s;
+route collection and page generation completed.
+
+Production HTTP acceptance, with Web and an independent worker both running:
+BASE_URL=http://127.0.0.1:3240
+BRAZE_DATABASE_PATH=/private/tmp/canvas-parity-final-clean-20261113/db.sqlite
+NODE_BINARY=/Users/ethanshen/.nvm/versions/node/v22.22.3/bin/node
+python3 tests/canvas-runtime-api.py
+Exit: 0
+Fixture workspace: canvas_http_8904099e9bce4604b6e24c545156102f
+PASS: 125 users, delay/resume, prepared outcomes, no re-entry and foreign-write isolation
+PASS: pure preview, profile/event immutability, scoped users and persisted Standards evaluation
+PASS: API activation, requested recipients, request deduplication and foreign-workspace 404
+PASS: actual Action-Based ingestion and designated-time execution without early or repeated enrollment
+PASS: current Canvas HTTP acceptance
+
+Final GET /api/health:
+{"status":"ok","storage":{"available":true,"engine":"sqlite","persistenceConfigured":true,"worker":{"configured":true,"ready":true}}}
+Worker snapshot: idle; successfulPasses 14; consecutiveFailures 0; lastErrorCode null.
+No failed/error entries in the clean production Web/worker logs.
+
+CUA evidence: basics-1280.png, basics-measurements.json,
+test-canvas-preview.png, standards-evaluation.png, sms-optimizer.png.
+Source comparison uses the captured 2026-11-12 evidence; source login expired.
+Docker Compose schema validated; Docker daemon unavailable, so no image run.
+No external server deployment: user has no target server yet.

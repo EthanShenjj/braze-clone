@@ -1,0 +1,3 @@
+Browser tab: 7, Title: "Braze Demo — Thinkingai", URL: "https://braze-clone.vercel.app/engagement/canvas/canvas_welcome?locale=en&step=sendSettings&workspaceId=local".
+There has been no change in the accessibility tree.
+The focused UI element is 57 button 4 Send Settings

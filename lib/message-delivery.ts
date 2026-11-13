@@ -1,4 +1,5 @@
 import "server-only";
+import {createHash} from 'node:crypto';
 import type { MessageDraft } from "./campaign-shared";
 export type DeliveryResult={mode:"preview"|"provider"|"sdk";status:"prepared"|"accepted"|"delivered"|"available";delivered:boolean;providerId?:string;reason?:string};
 export function messageDeliveryCapability(channel:string){
@@ -12,6 +13,9 @@ export async function dispatchPreparedMessage(campaign:MessageDraft,recipient:st
  const capability=messageDeliveryCapability(campaign.channel);
  if(!capability.enabled||!capability.configured)return{mode:"preview",status:"prepared",delivered:false,reason:!capability.configured?`Connect a ${campaign.channel} delivery provider to send messages.`:"Live delivery is disabled for this workspace."};
  let response:Response;
+ const dispatchId=campaign.config?.runtimeDispatchId;
+ if(dispatchId!==undefined&&(typeof dispatchId!=='string'||!dispatchId||dispatchId.length>200||/[^\x21-\x7e]/.test(dispatchId)))throw new Error('Provide a valid message dispatch ID.');
+ const idempotencyHeaders:Record<string,string>=dispatchId?{'Idempotency-Key':dispatchId}:{};
  if(capability.provider==="Resend"){
   if(message.ipPool)throw new Error("This email selects an IP pool. Select a delivery connector that supports IP-pool routing.");
   if(message.extras && typeof message.extras === "object" && Object.keys(message.extras).length)throw new Error("This email uses Extras. Select a delivery connector that supports email metadata.");
@@ -19,7 +23,7 @@ export async function dispatchPreparedMessage(campaign:MessageDraft,recipient:st
   const fromName=String(message.fromName??"").replace(/[\r\n]/g,"").trim();
   const from=fromName?`${JSON.stringify(fromName)} <${String(message.from??"")}>`:message.from;
   const attachments=Array.isArray(message.attachments)?message.attachments as Array<{name:string;content?:string;url?:string}>:[];
-  response=await fetch("https://api.resend.com/emails",{method:"POST",headers:{Authorization:`Bearer ${process.env.RESEND_API_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({from,to:[recipient],subject:message.subject,html:message.html,text:message.text,...(message.replyTo?{reply_to:message.replyTo}:{}),...(message.bcc?{bcc:[message.bcc]}:{}),headers:message.headers,attachments:attachments.map(a=>({filename:a.name,...(a.content?{content:a.content}:{path:publicUrl(a.url??"")})}))}),signal:AbortSignal.timeout(20000)});
+  response=await fetch("https://api.resend.com/emails",{method:"POST",headers:{Authorization:`Bearer ${process.env.RESEND_API_KEY}`,"Content-Type":"application/json",...idempotencyHeaders},body:JSON.stringify({from,to:[recipient],subject:message.subject,html:message.html,text:message.text,...(message.replyTo?{reply_to:message.replyTo}:{}),...(message.bcc?{bcc:[message.bcc]}:{}),headers:message.headers,attachments:attachments.map(a=>({filename:a.name,...(a.content?{content:a.content}:{path:publicUrl(a.url??"")})}))}),signal:AbortSignal.timeout(20000)});
  }else if(capability.provider==="Twilio"){
   if(!/^\+\d{8,15}$/.test(recipient))throw new Error("Enter an E.164 recipient phone number.");
   const values=(campaign.config?.channelValues??{}) as Record<string,unknown>,body=new URLSearchParams({To:recipient});
@@ -30,10 +34,12 @@ export async function dispatchPreparedMessage(campaign:MessageDraft,recipient:st
  }else if(capability.provider==="LINE"){
   if(!/^U[a-f0-9]{32}$/i.test(recipient))throw new Error("Choose a user with a native_line_id for this Official Account.");
   const absolute=(value:unknown):unknown=>typeof value==="string"?value.startsWith("/api/message-assets/")?publicUrl(value):value:Array.isArray(value)?value.map(absolute):value&&typeof value==="object"?Object.fromEntries(Object.entries(value).map(([k,v])=>[k,absolute(v)])):value;
-  response=await fetch("https://api.line.me/v2/bot/message/push",{method:"POST",headers:{Authorization:`Bearer ${process.env.LINE_CHANNEL_ACCESS_TOKEN}`,"Content-Type":"application/json","X-Line-Retry-Key":crypto.randomUUID()},body:JSON.stringify({to:recipient,messages:absolute(message.messages)}),signal:AbortSignal.timeout(20000)});
+  const hex=dispatchId?createHash('sha256').update('canvas-line:'+dispatchId).digest('hex'):null,retryKey=hex?`${hex.slice(0,8)}-${hex.slice(8,12)}-4${hex.slice(13,16)}-${((parseInt(hex[16],16)&3)|8).toString(16)}${hex.slice(17,20)}-${hex.slice(20,32)}`:crypto.randomUUID();
+  response=await fetch("https://api.line.me/v2/bot/message/push",{method:"POST",headers:{Authorization:`Bearer ${process.env.LINE_CHANNEL_ACCESS_TOKEN}`,"Content-Type":"application/json","X-Line-Retry-Key":retryKey},body:JSON.stringify({to:recipient,messages:absolute(message.messages)}),signal:AbortSignal.timeout(20000)});
+  if(response.status===409&&response.headers.get('x-line-accepted-request-id'))return{mode:'provider',status:'accepted',delivered:false,providerId:response.headers.get('x-line-accepted-request-id')!};
  }else{
   const endpoint=new URL(process.env.MESSAGE_DELIVERY_ENDPOINT!);if(endpoint.protocol!=="https:"&&!(process.env.NODE_ENV!=="production"&&["localhost","127.0.0.1"].includes(endpoint.hostname)))throw new Error("The message delivery connector must use HTTPS.");
-  response=await fetch(endpoint,{method:"POST",headers:{Authorization:`Bearer ${process.env.MESSAGE_DELIVERY_API_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({campaignId:campaign.id,channel:campaign.channel,recipient,message,test}),signal:AbortSignal.timeout(20000)});
+  response=await fetch(endpoint,{method:"POST",headers:{Authorization:`Bearer ${process.env.MESSAGE_DELIVERY_API_KEY}`,"Content-Type":"application/json",...idempotencyHeaders},body:JSON.stringify({campaignId:campaign.id,channel:campaign.channel,recipient,message,test}),signal:AbortSignal.timeout(20000)});
  }
  const payload=await response.json().catch(()=>({}));if(!response.ok)throw new Error(String(payload.message??payload.error?.message??payload.error??`Provider returned ${response.status}.`));
  const delivered=payload.status==="delivered"||payload.delivered===true;
