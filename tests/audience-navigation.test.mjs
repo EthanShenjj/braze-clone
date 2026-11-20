@@ -8,3 +8,12 @@ test('native list routes preserve actual scopes while existing clone local route
 test('explicit query workspace overrides native scope and unknown paths are ignored',()=>{assert.equal(audienceWorkspaceId(`/users/user_import/${ws}`,new URLSearchParams('workspace=remote')),'remote');assert.equal(audienceWorkspaceId(`/users/user_import/${ws}`,new URLSearchParams('workspaceId=other')),'other');assert.deepEqual(audiencePathContext('/settings/unobserved/anything'),{});assert.equal(audiencePathContext(`/engagement/locations/create_location_set/${ws}`).locationNew,true);});
 
 test('observed Global Control Group path preserves workspace',()=>{assert.deepEqual(audiencePathContext(`/engagement/global_message_settings/global-control-settings/${ws}`),{page:'global-control-group',workspaceId:ws});});
+
+test('frequency settings keep the same workspace when navigating from native paths to sidebar pages',()=>{
+ const path=`/engagement/global_message_settings/global-message-settings/${ws}`;
+ assert.deepEqual(audiencePathContext(path),{page:'frequency-capping-rules',workspaceId:ws});
+ assert.equal(audienceWorkspaceId(path,new URLSearchParams()),ws);
+ assert.equal(audienceWorkspaceId('/frequency-capping-rules',new URLSearchParams(`workspace=${ws}`)),ws);
+ assert.equal(audienceWorkspaceId(path,new URLSearchParams('workspace=local&workspaceId=other')),'local');
+ assert.equal(audienceWorkspaceId('/engagement/global_message_settings/global-message-settings/6aa75e37db69160082adb7ae',new URLSearchParams()),'local');
+});

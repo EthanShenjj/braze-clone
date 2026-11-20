@@ -7,7 +7,7 @@ import { frequencyChannelLabels, frequencyPolicy, frequencyWindowLabel, type Fre
 import styles from "./frequency-capping.module.css";
 export function useFrequencyWorkspace() {
   const path = usePathname(), params = useSearchParams();
-  return params.get("workspaceId") || params.get("workspace") || path.match(/\/global-message-settings\/([^/]+)/)?.[1] || audienceWorkspaceId(path, params);
+  return audienceWorkspaceId(path, params);
 }
 export function publishFrequencyChanges(workspaceId: string) {
   window.dispatchEvent(new CustomEvent("braze:frequency-changed", { detail: { workspaceId } }));

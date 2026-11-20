@@ -1,9 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import { frequencyChannels, frequencyChannelLabels, frequencyWindowLabel, validateFrequencySettings, type FrequencyRule, type FrequencySettings } from "@/lib/frequency-capping-model";
 import { publishFrequencyChanges, useFrequencySnapshot, useFrequencyWorkspace } from "./frequency-capping-controls";
 import { useUnsavedChanges } from "./workspace-unsaved";
+import { registerUnsavedNavigation } from "@/lib/unsaved-navigation";
 import styles from "./frequency-capping.module.css";
 function WindowField({ rule, change }: { rule: FrequencyRule; change: (patch: Partial<FrequencyRule>) => void }) {
   const [unit, setUnit] = useState(rule.seconds % 604800 === 0 ? 604800 : rule.seconds % 86400 === 0 ? 86400 : 60);
@@ -11,18 +12,32 @@ function WindowField({ rule, change }: { rule: FrequencyRule; change: (patch: Pa
 }
 export default function FrequencyCappingWorkspace({ notify }: { locale: Locale; notify: (message: string) => void }) {
   const workspaceId = useFrequencyWorkspace(), state = useFrequencySnapshot(workspaceId, false), [draft, setDraft] = useState<FrequencySettings | null>(null), [busy, setBusy] = useState(false), [error, setError] = useState(""), [categoryName, setCategoryName] = useState(""), [revision, setRevision] = useState(0);
+  const pendingSave = useRef<Promise<boolean> | null>(null);
   useEffect(() => { setDraft(state.snapshot ? structuredClone(state.snapshot.settings) : null); setError(""); }, [state.snapshot]);
   const dirty = Boolean(draft && state.snapshot && JSON.stringify(draft) !== JSON.stringify(state.snapshot.settings));
-  useUnsavedChanges(dirty);
+  useUnsavedChanges(dirty || busy);
+  useEffect(() => {
+    const saving = pendingSave.current;
+    if (!busy || !saving) return;
+    return registerUnsavedNavigation(action => { void saving.then(saved => { if (saved) action(); }); });
+  }, [busy]);
   const patch = (value: Partial<FrequencySettings>) => setDraft(current => current ? { ...current, ...value } : current);
-  const save = async () => {
-    if (!draft || !state.snapshot || busy) return;
-    try {
-      validateFrequencySettings(draft, state.snapshot.capabilities.maxRules); setBusy(true); setError("");
-      const response = await fetch("/api/frequency-capping", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ workspaceId, settings: draft, expectedUpdatedAt: state.snapshot.updatedAt }) });
-      const result = await response.json(); if (!response.ok) throw new Error(result.error ?? "Unable to save frequency rules.");
-      state.setSnapshot(result); publishFrequencyChanges(workspaceId); notify("Frequency capping rules saved.");
-    } catch (failure) { setError(failure instanceof Error ? failure.message : "Unable to save frequency rules."); } finally { setBusy(false); }
+  const save = (settings = draft): Promise<boolean> => {
+    if (pendingSave.current) return pendingSave.current;
+    if (!settings || !state.snapshot || state.loading || !state.snapshot.capabilities.canEdit) return Promise.resolve(false);
+    const snapshot = state.snapshot;
+    const request = (async () => {
+      try {
+        validateFrequencySettings(settings, snapshot.capabilities.maxRules); setBusy(true); setError("");
+        const response = await fetch("/api/frequency-capping", { method: "PUT", keepalive: true, headers: { "Content-Type": "application/json" }, body: JSON.stringify({ workspaceId, settings, expectedUpdatedAt: snapshot.updatedAt }) });
+        const result = await response.json(); if (!response.ok) throw new Error(result.error ?? "Unable to save frequency rules.");
+        state.setSnapshot(result); publishFrequencyChanges(workspaceId); notify("Frequency capping rules saved.");
+        return true;
+      } catch (failure) { setError(failure instanceof Error ? failure.message : "Unable to save frequency rules."); return false; } finally { setBusy(false); }
+    })();
+    pendingSave.current = request;
+    void request.finally(() => { pendingSave.current = null; });
+    return request;
   };
   const addCategory = () => { const name = categoryName.trim(); if (!draft || !name) return; if (draft.categories.some(c => c.name.toLowerCase() === name.toLowerCase())) { setError("A category with this name already exists."); return; } patch({ categories: [...draft.categories, { id: crypto.randomUUID(), name }] }); setCategoryName(""); };
   const update = (id: string, value: Partial<FrequencyRule>) => draft && patch({ rules: draft.rules.map(rule => rule.id === id ? { ...rule, ...value } : rule) });
@@ -31,7 +46,7 @@ export default function FrequencyCappingWorkspace({ notify }: { locale: Locale; 
     {!state.snapshot && !state.error && <p>Loading frequency rules…</p>}
     {state.snapshot && draft && <>
       <fieldset className={styles.card} disabled={busy || state.loading || !state.snapshot.capabilities.canEdit}>
-        <div className={styles.toolbar}><label className={styles.check}><input type="checkbox" checked={draft.enabled} onChange={e => patch({ enabled: e.target.checked })}/>Enable workspace frequency capping</label><span>{draft.rules.length} / {state.snapshot.capabilities.maxRules} rules</span></div>
+        <div className={styles.toolbar}><label className={styles.check}><input type="checkbox" checked={draft.enabled} onChange={e => { const next = { ...draft, enabled: e.target.checked }; setDraft(next); void save(next); }}/>Enable workspace frequency capping</label><span>{draft.rules.length} / {state.snapshot.capabilities.maxRules} rules</span></div>
         <p className={styles.help}>Every applicable rule must be satisfied. Windows support minutes, days and weeks, up to 30 days. Daily windows use the recipient&apos;s local calendar.</p>
         {!draft.rules.length && <div className={styles.empty}>You have not yet defined any frequency limits. Select Add rule to create one.</div>}
         {draft.rules.map((rule, index) => <section className={styles.rule} key={`${state.snapshot?.updatedAt}:${revision}:${rule.id}`} aria-label={`Frequency rule ${index + 1}`}><div className={styles.toolbar}><h3>Rule {index + 1}</h3><button className={styles.remove} aria-label={`Delete rule ${index + 1}`} onClick={() => patch({ rules: draft.rules.filter(row => row.id !== rule.id) })}>Delete rule</button></div><div className={styles.fields}>

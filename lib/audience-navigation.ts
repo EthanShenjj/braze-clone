@@ -1,9 +1,10 @@
 /** Native Audience paths observed in the source audit; query parameters take priority in callers. */
-export type AudiencePathContext={workspaceId?:string;segmentId?:string;groupId?:string;preferenceNew?:boolean;locationNew?:boolean;page?:'segments'|'segment-insights'|'segment-extensions'|'global-control-group'|'subscription-group-management'|'email-preference-centers'|'search-users'|'manage-audience'|'import-users'|'locations'};
+export type AudiencePathContext={workspaceId?:string;segmentId?:string;groupId?:string;preferenceNew?:boolean;locationNew?:boolean;page?:'segments'|'segment-insights'|'segment-extensions'|'global-control-group'|'frequency-capping-rules'|'subscription-group-management'|'email-preference-centers'|'search-users'|'manage-audience'|'import-users'|'locations'};
 const legacyLocalWorkspaces=new Set(['local','6aa75e37db69160082adb7ae']);
 function workspace(id:string):string{return legacyLocalWorkspaces.has(id)?'local':id;}
 export function audiencePathContext(pathname:string):AudiencePathContext {
  const path=pathname.split(/[?#]/,1)[0].replace(/\/$/,'');let match:RegExpMatchArray|null;
+ if((match=path.match(/^\/engagement\/global_message_settings\/global-message-settings\/([^/]+)$/)))return{page:'frequency-capping-rules',workspaceId:workspace(match[1])};
  if((match=path.match(/^\/engagement\/global_message_settings\/global-control-settings\/([^/]+)$/)))return{page:'global-control-group',workspaceId:workspace(match[1])};
  if((match=path.match(/^\/engagement\/segmenter\/edit\/([^/]+)\/([^/]+)$/)))return{page:'segments',segmentId:match[1],workspaceId:workspace(match[2])};
  if((match=path.match(/^\/engagement\/segmenter\/segmenter\/([^/]+)$/)))return{page:'segments',workspaceId:workspace(match[1])};
